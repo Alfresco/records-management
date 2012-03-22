@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<template-instance>
+   <template-type>org/alfresco/rm/record-category-details</template-type>
+   <properties>
+      <pageFamily>documentlibrary</pageFamily>
+      <container>documentLibrary</container>
+   </properties>
+   <components>
+
+      <!-- Title -->
+      <component>
+         <region-id>title</region-id>
+         <sub-components>
+            <sub-component id="default">
+               <evaluations>
+                  <!-- if in site: Site title -->
+                  <evaluation id="site">
+                     <evaluators>
+                        <evaluator type="site.component.evaluator"/>
+                     </evaluators>
+                     <url>/components/title/collaboration-title</url>
+                  </evaluation>
+                  <!-- otherwise: Repository title -->
+                  <evaluation id="repo">
+                     <url>/components/title/simple-title</url>
+                     <properties>
+                        <title>title.repository</title>
+                        <subtitle>title.browser</subtitle>
+                     </properties>
+                  </evaluation>
+               </evaluations>
+            </sub-component>
+         </sub-components>
+      </component>
+
+      <!-- Site Navigation -->
+      <component>
+         <region-id>navigation</region-id>
+         <sub-components>
+            <sub-component id="default">
+               <evaluations>
+                  <!-- if in site: Site navigation -->
+                  <evaluation id="site">
+                     <evaluators>
+                        <evaluator type="site.component.evaluator"/>
+                     </evaluators>
+                     <url>/components/navigation/collaboration-navigation</url>
+                  </evaluation>
+               </evaluations>
+            </sub-component>
+         </sub-components>
+      </component>
+
+      <!-- Folder Header -->
+      <component>
+         <region-id>node-header</region-id>
+         <sub-components>
+            <sub-component id="default">
+               <evaluations>
+                  <!-- if in site: Site header -->
+                  <evaluation id="site">
+                     <evaluators>
+                        <evaluator type="site.component.evaluator"/>
+                     </evaluators>
+                     <url>/components/node-details/node-header</url>
+                     <properties>
+                        <nodeRef>{nodeRef}</nodeRef>
+                        <rootPage>documentlibrary</rootPage>
+                        <rootLabelId>path.documents</rootLabelId>
+                        <showFavourite>false</showFavourite>
+                        <showLikes>false</showLikes>
+                        <showComments>false</showComments>
+                     </properties>
+                  </evaluation>
+                  <!-- otherwise: Repo header -->
+                  <evaluation id="repo">
+                     <url>/components/node-details/node-header</url>
+                     <properties>
+                        <nodeRef>{nodeRef}</nodeRef>
+                        <rootPage>repository</rootPage>
+                        <rootLabelId>path.repository</rootLabelId>
+                        <showFavourite>false</showFavourite>
+                        <showLikes>false</showLikes>
+                        <showComments>false</showComments>
+                     </properties>
+                  </evaluation>
+               </evaluations>
+            </sub-component>
+         </sub-components>
+      </component>
+
+      <!-- Disposition Instructions -->
+      <component>
+         <region-id>disposition</region-id>
+         <url>/rm/components/fileplan/disposition</url>
+      </component>
+
+      <!-- Folder Actions (incl commons) -->
+      <component>
+         <region-id>folder-actions</region-id>
+         <url>/rm/components/folder-details/folder-actions</url>
+         <properties>
+            <nodeRef>{nodeRef}</nodeRef>
+         </properties>
+      </component>
+      <component>
+         <region-id>actions-common</region-id>
+         <url>/rm/components/documentlibrary/actions-common</url>
+         <properties>
+            <nodeRef>{nodeRef}</nodeRef>
+         </properties>
+      </component>
+
+      <!-- Folder Links -->
+      <component>
+         <region-id>folder-links</region-id>
+         <url>/components/folder-details/folder-links</url>
+         <properties>
+            <nodeRef>{nodeRef}</nodeRef>
+         </properties>
+      </component>
+
+      <!-- Folder Metadata -->
+      <component>
+         <region-id>folder-metadata</region-id>
+         <url>/components/folder-details/folder-metadata</url>
+         <properties>
+            <nodeRef>{nodeRef}</nodeRef>
+            <formId>rm</formId>
+         </properties>
+      </component>
+
+      <!-- Custom Code -->
+      <component>
+         <region-id>doclib-custom</region-id>
+         <url>/components/documentlibrary/doclib-custom</url>
+      </component>
+
+   </components>
+</template-instance>

@@ -1,0 +1,17 @@
+<toolbar>
+   <actions>
+      <action id="onActionCutoff" permission="cutoff" label="menu.selected-items.cutoff" />
+      <action id="onActionDestroy" permission="destroy" label="menu.selected-items.destroy" />
+      <action id="onActionTransfer" permission="transfer" label="menu.selected-items.transfer" />
+      <action id="onActionTransferComplete" permission="transferComplete" label="menu.selected-items.transfer-complete" />
+      <action id="onActionAccession" permission="accession" label="menu.selected-items.accession" />
+      <action id="onActionUndoCutoff" permission="undoCutoff" label="menu.selected-items.undo-cutoff" />
+      <action id="onActionFreeze" permission="freeze" label="menu.selected-items.freeze" />
+      <action id="onActionUnfreeze" permission="unfreeze" label="menu.selected-items.unfreeze" />
+      <action id="onActionCopyTo" permission="" label="menu.selected-items.copy-to" />
+      <action id="onActionMoveTo" permission="Delete" label="menu.selected-items.move-to" />
+      <action id="onActionFileTo" permission="" label="menu.selected-items.file-to" />
+      <action id="onActionExport" permission="" label="menu.selected-items.export" />
+      <action id="onActionDelete" permission="Delete" label="menu.selected-items.delete" />
+   </actions>
+</toolbar>

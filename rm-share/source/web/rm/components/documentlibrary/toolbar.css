@@ -1,0 +1,109 @@
+/* Header- and Navigation-Bar Buttons */
+
+.toolbar .import button
+{
+   background: transparent url(actions/rm-import-16.png) no-repeat 12px 4px;
+   padding-left: 32px; 
+}
+.toolbar .import .yui-button-disabled button
+{
+   background-image: url(actions/rm-import-disabled-16.png);
+}
+
+.toolbar .export-all button
+{
+   background: transparent url(actions/rm-export-16.png) no-repeat 12px 4px;
+   padding-left: 32px; 
+}
+.toolbar .export-all .yui-button-disabled button
+{
+   background-image: url(actions/rm-export-disabled-16.png);
+}
+
+.toolbar .report button
+{
+   background: transparent url(actions/rm-file-report-16.png) no-repeat 12px 4px;
+   padding-left: 32px;
+}
+
+.toolbar .selected-items
+{
+   float: left;
+}
+
+/* Multi-Select Actions */
+
+.toolbar .onActionAccession
+{
+   background-image: url(actions/rm-accession-16.png);
+}
+
+.toolbar .onActionCutoff
+{
+   background-image: url(actions/rm-cutoff-16.png);
+}
+
+.toolbar .onActionDestroy
+{
+   background-image: url(actions/rm-destroy-16.png);
+}
+
+.toolbar .onActionExport
+{
+   background-image: url(actions/rm-export-16.png);
+}
+
+.toolbar .onActionFileTo
+{
+   background-image: url(actions/rm-file-to-16.png);
+}
+
+.toolbar .onActionFreeze
+{
+   background-image: url(actions/rm-freeze-16.png);
+}
+
+.toolbar .onActionSplitEmail
+{
+   background-image: url(actions/rm-split-email-16.png);
+}
+
+.toolbar .onActionTransfer
+{
+   background-image: url(actions/rm-transfer-16.png);
+}
+
+.toolbar .onActionTransferComplete
+{
+   background-image: url(actions/rm-transfer-complete-16.png);
+}
+
+.toolbar .onActionUndoCutoff
+{
+   background-image: url(actions/rm-undo-cutoff-16.png);
+}
+
+.toolbar .onActionUnfreeze
+{
+   background-image: url(actions/rm-unfreeze-16.png);
+}
+
+
+/* Messages (e.g. Delete confirmation) */
+.toolbar-file-list span.record-category,
+.toolbar-file-list span.record-folder
+{
+   background-image: url(indicators/rm-open-16.png);
+}
+
+.toolbar-file-list span.record,
+.toolbar-file-list span.undeclared-record
+{
+   background-image: url(../../../components/images/generic-16.png);
+}
+
+.form-container .form-fields
+{
+   border-bottom: medium none;
+   padding: 1em;
+}

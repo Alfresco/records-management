@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>file-transfer-report</shortname>
+  <description>File Transfer Report module for Records Management Document Library</description>
+  <url>/rm/modules/documentlibrary/file-transfer-report</url>
+</webscript>

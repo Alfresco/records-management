@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<page>
+   <!--
+      Kept for backward compability w previous installations having navigation links to this page.
+      When creating links, do that to rm-search page instead.
+   -->
+   <title>Records Search</title>
+   <title-id>page.rmSearch.title</title-id>
+   <description>Records Management Search page</description>
+   <description-id>page.rmSearch.description</description-id>
+   <template-instance>rm-search</template-instance>
+   <authentication>user</authentication>
+</page>

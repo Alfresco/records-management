@@ -1,0 +1,618 @@
+<extension>
+   <modules>
+
+      <module>
+         <id>Alfresco :: Records Management Site</id>
+         <auto-deploy>true</auto-deploy>
+
+         <!-- Base evaluator that decides if any of the component bindings should be used at all -->
+         <evaluator type="site.module.evaluator">
+	         <params>
+	            <sites>.*</sites>
+	            <sitePresets>rm-site-dashboard</sitePresets>
+               <applyForNonSites>false</applyForNonSites>
+	         </params>
+         </evaluator>
+
+         <!-- Apply the following customizations when the base evaluator above passes -->
+         <customizations>
+            <customization>
+               <targetPackageRoot>org.alfresco</targetPackageRoot>
+               <sourcePackageRoot>org.alfresco.rm.customizations</sourcePackageRoot>
+            </customization>
+         </customizations>
+
+
+         <!-- Apply the following configurations when the base evaluator above passes -->
+         <configurations>
+
+            <config evaluator="string-compare" condition="DocumentLibrary" replace="true">
+               <!-- Document List -->
+               <doclist>
+                  <!-- Make sure the doclib's document list is using RM's file plan doclist webscript -->
+                  <data-url-resolver>resolver.rm.doclib.doclistDataUrl</data-url-resolver>
+               </doclist>
+            </config>
+
+            <config evaluator="string-compare" condition="DocLibActions" replace="true">
+               <!-- Action Group Resolver -->
+               <actionGroupResolver>resolver.rm.doclib.actionGroup</actionGroupResolver>
+            </config>
+
+         </configurations>
+
+         <!-- Apply the following component bindings when the base evaluator above passes -->
+         <components>
+
+            <!-- DOCUMENT LIBRARY (SITE) -->
+
+            <!-- Hide Documents filter -->
+            <component>
+               <scope>template</scope>
+               <region-id>filter</region-id>
+               <source-id>documentlibrary</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!--
+               Replace with RM specific tree,
+               Add RM File Plan filter &
+               Add RM Saved Search filter
+            -->
+            <component>
+               <scope>template</scope>
+               <region-id>tree</region-id>
+               <source-id>documentlibrary</source-id>
+               <sub-components>
+                  <!-- Replace with RM specific tree -->
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-tree">
+                           <url>/rm/components/documentlibrary/tree</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+                  <!-- Add RM File Plan filter -->
+                  <sub-component id="rm-fileplan">
+                     <evaluations>
+                        <evaluation id="rm-fileplan">
+                           <url>/rm/components/documentlibrary/fileplan</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+                  <!-- Add RM Saved Search filter -->
+                  <sub-component id="rm-savedsearch">
+                     <evaluations>
+                        <evaluation id="rm-savedsearch">
+                           <url>/rm/components/documentlibrary/savedsearch</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Hide documents Tags filter -->
+            <component>
+               <scope>template</scope>
+               <region-id>tags</region-id>
+               <source-id>documentlibrary</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Replace with RM specific Toolbar -->
+            <component>
+               <scope>template</scope>
+               <region-id>toolbar</region-id>
+               <source-id>documentlibrary</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-toolbar">
+                           <url>/rm/components/documentlibrary/toolbar</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Replace with RM specific Actions -->
+            <component>
+               <scope>template</scope>
+               <region-id>actions-common</region-id>
+               <source-id>documentlibrary</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-actionsCommon">
+                           <url>/rm/components/documentlibrary/actions-common</url>
+                           <properties>
+                              <nodeRef>{nodeRef}</nodeRef>
+                           </properties>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Replace with RM specific Document List -->
+            <component>
+               <scope>template</scope>
+               <region-id>documentlist</region-id>
+               <source-id>documentlibrary</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-documentlist">
+                           <url>/rm/components/documentlibrary/documentlist</url>
+                           <properties>
+                              <pagination>true</pagination>
+                           </properties>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Replace with RM specific File Upload -->
+            <component>
+               <scope>template</scope>
+               <region-id>file-upload</region-id>
+               <source-id>documentlibrary</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-fileUpload">
+                           <url>/rm/components/upload/file-upload</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Replace with RM specific Flash Upload -->
+            <component>
+               <scope>template</scope>
+               <region-id>flash-upload</region-id>
+               <source-id>documentlibrary</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-flashUpload">
+                           <url>/rm/components/upload/flash-upload</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Replace with RM specific Html Upload -->
+            <component>
+               <scope>template</scope>
+               <region-id>html-upload</region-id>
+               <source-id>documentlibrary</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-htmlUpload">
+                           <url>/rm/components/upload/html-upload</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+
+            <!-- DOCUMENT DETAILS -->
+
+            <!-- Records Management Document Header -->
+            <component>
+               <scope>template</scope>
+               <region-id>node-header</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <!-- Site header -->
+                        <evaluation id="rm-nodeHeader">
+                           <url>/components/node-details/node-header</url>
+                           <properties>
+                              <nodeRef>{nodeRef}</nodeRef>
+                              <rootPage>documentlibrary</rootPage>
+                              <rootLabelId>path.fileplan</rootLabelId>
+                              <showFavourite>false</showFavourite>
+                              <showLikes>false</showLikes>
+                              <showComments>false</showComments>
+                           </properties>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Add RM Events -->
+            <component>
+               <scope>template</scope>
+               <region-id>web-preview</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="rm-events">
+                     <evaluations>
+                        <evaluation id="rm-events">
+                           <url>/rm/components/fileplan/events</url>
+                           <properties>
+                              <nodeRef>{nodeRef}</nodeRef>
+                           </properties>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Hide Comments -->
+            <component id="template.comments.document-details">
+               <scope>template</scope>
+               <region-id>comments</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Replace with RM specific Actions -->
+            <component>
+               <scope>template</scope>
+               <region-id>document-actions</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <!-- RM specific Actions -->
+                        <evaluation id="rm-documentActions">
+                           <url>/rm/components/document-details/document-actions</url>
+                           <properties>
+                              <nodeRef>{nodeRef}</nodeRef>
+                           </properties>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+            <component>
+               <scope>template</scope>
+               <region-id>actions-common</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <!-- RM specific Actions (common) -->
+                        <evaluation id="rm-actionsCommon">
+                           <url>/rm/components/documentlibrary/actions-common</url>
+                           <properties>
+                              <nodeRef>{nodeRef}</nodeRef>
+                           </properties>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Hide Document Tags -->
+            <component>
+               <scope>template</scope>
+               <region-id>document-tags</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!--
+               Replace with RM specific view form,
+               Add RM references
+             -->
+            <component>
+               <scope>template</scope>
+               <region-id>document-metadata</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <!-- Replace with RM specific metadata -->
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-documentMetadata">
+                           <url>/components/document-details/document-metadata</url>
+                           <properties>
+                              <nodeRef>{nodeRef}</nodeRef>
+                              <formId>rm</formId>
+                           </properties>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+                  <!-- Add RM references -->
+                  <sub-component id="rm-references">
+                     <evaluations>
+                        <evaluation id="rm-references">
+                           <url>/rm/components/document-details/document-references</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Hide Document Permissions -->
+            <component>
+               <scope>template</scope>
+               <region-id>document-permissions</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Hide Document Workflows -->
+            <component>
+               <scope>template</scope>
+               <region-id>document-workflows</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Hide Version History -->
+            <component>
+               <scope>template</scope>
+               <region-id>document-versions</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Hide Publishing -->
+            <component>
+               <scope>template</scope>
+               <region-id>document-publishing</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+
+            <!-- EDIT METADATA -->
+
+            <!-- Replace with RM specific Form Manager -->
+            <component>
+               <scope>template</scope>
+               <region-id>edit-metadata-mgr</region-id>
+               <source-id>edit-metadata</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-editMetadataMgr">
+                           <url>/rm/components/edit-metadata/edit-metadata-mgr</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Replace with RM specific Form -->
+            <component>
+               <scope>template</scope>
+               <region-id>edit-metadata</region-id>
+               <source-id>edit-metadata</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-form">
+                           <url>/components/form</url>
+                           <properties>
+                              <itemKind>node</itemKind>
+                              <itemId>{nodeRef}</itemId>
+                              <formId>rm</formId>
+                              <mode>edit</mode>
+                              <submitType>json</submitType>
+                              <showCaption>true</showCaption>
+                              <showCancelButton>true</showCancelButton>
+                           </properties>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+
+            <!-- FOLDER DETAILS -->
+
+            <!--
+               NOTE!
+
+               The folder-details page shall actually never be used from a Records Management site,
+               but if somebody happens to manipulate a url for a record-serie, record-category or a record-folder
+               its important that we DON't display any "un-versioned" data. Therefore we hide all the usual components
+               on the folder-details page and make sure to only display the node's metadata below a header.
+            -->
+
+            <!--
+               Hide Comments,
+               Add metadata header &
+               Add RM specific metadata
+             -->
+            <component>
+               <scope>template</scope>
+               <region-id>comments</region-id>
+               <source-id>folder-details</source-id>
+               <sub-components>
+                  <!-- Hide comments -->
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+                  <!-- Add Metadata Header -->
+                  <sub-component id="rm-folderMetadataHeader">
+                     <evaluations>
+                        <evaluation id="rm-folderMetadataHeader">
+                           <url>/components/folder-details/folder-metadata-header</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+                  <!-- Add RM Metadata -->
+                  <sub-component id="rm-folderMetadata">
+                     <evaluations>
+                        <evaluation id="rm-folderMetadata">
+                           <url>/components/form</url>
+                           <properties>
+                              <itemKind>node</itemKind>
+                              <itemId>{nodeRef}</itemId>
+                              <formId>rm</formId>
+                              <mode>view</mode>
+                           </properties>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Hide Folder Metadata Header -->
+            <component>
+               <scope>template</scope>
+               <region-id>folder-metadata-header</region-id>
+               <source-id>folder-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Hide Folder Metadata Header -->
+            <component>
+               <scope>template</scope>
+               <region-id>folder-metadata</region-id>
+               <source-id>folder-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Hide Folder Info -->
+            <component>
+               <scope>template</scope>
+               <region-id>folder-info</region-id>
+               <source-id>folder-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!-- Hide Folder Actions -->
+            <component>
+               <scope>template</scope>
+               <region-id>folder-actions</region-id>
+               <source-id>folder-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+
+            <!-- Hide Folder Links -->
+            <component>
+               <scope>template</scope>
+               <region-id>folder-links</region-id>
+               <source-id>folder-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+         </components>
+
+      </module>
+
+   </modules>
+</extension>

@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Recrods Html File upload</shortname>
+  <description>Records Management - File upload component that uses the browser standard file picker</description>
+  <url>/rm/components/upload/html-upload</url>
+</webscript>

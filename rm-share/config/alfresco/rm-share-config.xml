@@ -1,0 +1,546 @@
+<alfresco-config>
+
+   <config evaluator="string-compare" condition="GlobalFolder">
+
+      <siteTree>
+         <container type="rma:filePlan">
+            <rootLabel>path.fileplan</rootLabel>
+            <uri>slingshot/doclib/rm/treenode/site/{site}/{container}{path}?children={evaluateChildFoldersSite}&amp;max={maximumFolderCountSite}</uri>
+         </container>
+      </siteTree>
+
+   </config>
+
+   <!-- Document Library config section -->
+   <config evaluator="string-compare" condition="DocumentLibrary">
+
+      <!--
+         Status Indicators
+      -->
+      <indicators>
+			<!-- Awaiting Completion in Accession {0} -->
+         <indicator id="rm-accession" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-accession-16.png">
+            <evaluator>evaluator.rm.indicator.accession</evaluator>
+         </indicator>
+			<!-- Accessioned to NARA -->
+         <indicator id="rm-accessioned" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-accessioned-16.png">
+            <evaluator>evaluator.rm.indicator.accessioned</evaluator>
+         </indicator>
+			<!-- Record Folder is Closed -->
+         <indicator id="rm-closed" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-closed-16.png">
+            <evaluator>evaluator.rm.indicator.closed</evaluator>
+         </indicator>
+			<!-- Cut Off -->
+         <indicator id="rm-cutoff" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-cutoff-16.png">
+            <evaluator>evaluator.rm.indicator.cutoff</evaluator>
+         </indicator>
+			<!-- Cut Off (implies Record Folder is Closed) -->
+         <indicator id="rm-cutoff-folder" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-cutoff-folder-16.png">
+            <evaluator>evaluator.rm.indicator.cutoffFolder</evaluator>
+         </indicator>
+			<!-- Destroyed -->
+         <indicator id="rm-destroyed" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-destroyed-16.png">
+            <evaluator>evaluator.rm.indicator.destroyed</evaluator>
+         </indicator>
+			<!-- Record is Frozen -->
+         <indicator id="rm-frozen" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-frozen-16.png">
+            <evaluator>evaluator.rm.indicator.frozen</evaluator>
+         </indicator>
+			<!-- Record has been Filed in {0} Record Folders -->
+         <indicator id="rm-multi-parent" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-multi-parent-16.png">
+            <evaluator>evaluator.rm.indicator.multiParent</evaluator>
+         </indicator>
+			<!-- Record Folder is Open -->
+         <indicator id="rm-open" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-open-16.png">
+            <evaluator>evaluator.rm.indicator.open</evaluator>
+         </indicator>
+			<!-- Awaiting Completion in Transfer {0} -->
+         <indicator id="rm-transfer" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-transfer-16.png">
+            <evaluator>evaluator.rm.indicator.transfer</evaluator>
+         </indicator>
+			<!-- Transferred to: {0} -->
+         <indicator id="rm-transferred" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-transferred-16.png">
+            <evaluator>evaluator.rm.indicator.transferred</evaluator>
+         </indicator>
+			<!-- Vital Record Indicator -->
+         <indicator id="rm-vital-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-vital-record-16.png">
+            <evaluator>evaluator.rm.indicator.vitalRecord</evaluator>
+         </indicator>
+
+      </indicators>
+
+      <!--
+         Custom Metadata Templates for the Document Library Browse View
+
+         Use view="simple" or view="detailed" to limit the display to one particular view.
+      -->
+      <metadata-templates>
+         <!-- Record Category -->
+         <template id="rmRecordCategory">
+            <evaluator>evaluator.rm.common.isRecordCategory</evaluator>
+            <line index="10" id="identifier">{rma_identifier details.category.identifier}</line>
+            <line index="20" id="dispositionAuthority" view="detailed">{rma_dispositionAuthority details.category.disposition-authority}</line>
+            <line index="30" id="dispositionInstructions" view="detailed">{rma_dispositionInstructions details.category.disposition-instructions}</line>
+            <line index="40" id="vitalRecord" view="detailed">{RM_vitalRecordIndicator details.category.vital-record-indicator}</line>
+            <line index="50" id="createdByModifiedOn">{RM_createdBy details.created.by}{RM_modifiedOn details.modified.on}</line>
+         </template>
+
+         <!-- Record Folder -->
+         <template id="rmRecordFolder">
+            <evaluator>evaluator.rm.common.isRecordFolder</evaluator>
+            <line index="10" id="identifier">{rma_identifier details.folder.identifier}</line>
+            <line index="20" id="vitalRecord" view="detailed">{RM_vitalRecordIndicator details.folder.vital-record-indicator}</line>
+            <line index="30" id="createdByModifiedOn">{RM_createdBy details.created.by}{RM_modifiedOn details.modified.on}</line>
+         </template>
+
+         <!-- Record -->
+         <template id="rmRecord">
+            <evaluator>evaluator.rm.common.isRecord</evaluator>
+            <line index="10" id="identifier">{rma_identifier details.record.identifier}</line>
+            <line index="20" id="datesFiledAndPublication" view="detailed">{RM_dateFiled details.record.date-filed}{RM_publicationDate details.record.publication-date}</line>
+            <line index="30" id="recordOriginator" view="detailed">{rma_originator details.record.originator}{rma_originatingOrganization details.record.originating-organization}</line>
+         </template>
+
+         <!-- Undeclared Record -->
+         <template id="rmUndeclaredRecord">
+            <evaluator>evaluator.rm.common.isUndeclaredRecord</evaluator>
+            <banner index="10" id="undeclaredRecord">{i18nLabel details.undeclared-record.info}</banner>
+            <line index="10" id="identifier" view="detailed">{rma_identifier details.record.identifier}</line>
+            <line index="20" id="modifiedByModifiedOn">{RM_modifiedBy details.modified.by}{RM_modifiedOn details.modified.on}{size}</line>
+            <line index="30" id="description" view="detailed">{description label.description}</line>
+         </template>
+
+         <!-- Metadata Stub -->
+         <template id="rmMetadataStub">
+            <evaluator>evaluator.rm.common.isMetadataStub</evaluator>
+            <line index="10" id="identifier">{rma_identifier details.record.identifier}</line>
+            <line index="20" id="datesFiledAndPublication" view="detailed">{RM_dateFiled details.record.date-filed}{RM_publicationDate details.record.publication-date}</line>
+            <line index="30" id="recordOriginator" view="detailed">{rma_originator details.record.originator}{rma_originatingOrganization details.record.originating-organization}</line>
+         </template>
+
+         <!-- Metadata Stub Folder -->
+         <template id="rmMetadataStubFolder">
+            <evaluator>evaluator.rm.common.isMetadataStubFolder</evaluator>
+            <line index="10" id="identifier">{rma_identifier details.folder.identifier}</line>
+            <line index="20" id="vitalRecord" view="detailed">{RM_vitalRecordIndicator details.folder.vital-record-indicator}</line>
+            <line index="30" id="createdByModifiedOn">{RM_createdBy details.created.by}{RM_modifiedOn details.modified.on}</line>
+         </template>
+
+         <!-- Transfer Container -->
+         <template id="rmTransferContainer">
+            <evaluator>evaluator.rm.common.isTransferContainer</evaluator>
+            <title>{RM_transferContainer}</title>
+            <line index="10" id="createdByModifiedOn">{RM_createdBy details.created.by}{RM_modifiedOn details.modified.on}</line>
+            <line index="20" id="accessionIndicator">{rma_transferAccessionIndicator details.transfer-container.is-accession}</line>
+         </template>
+
+         <!-- Hold Container -->
+         <template id="rmHoldContainer">
+            <evaluator>evaluator.rm.common.isHoldContainer</evaluator>
+            <title>{RM_holdContainer}</title>
+            <line index="10" id="holdReason">{RM_holdReason details.hold-container.reason}</line>
+         </template>
+
+         <!-- Metadata Stub -->
+      </metadata-templates>
+
+   </config>
+
+   <!-- Document Library Actions config section -->
+   <config evaluator="string-compare" condition="DocLibActions">
+
+      <!--
+         Action definitions
+      -->
+      <actions>
+         <!-- View record category details -->
+         <action id="rm-record-category-view-details" type="pagelink" label="actions.view-details" icon="folder-view-details">
+            <param name="page">rm-record-category-details?nodeRef={node.nodeRef}</param>
+         </action>
+
+         <!-- View record folder details -->
+         <action id="rm-record-folder-view-details" type="pagelink" label="actions.view-details" icon="folder-view-details">
+            <param name="page">rm-record-folder-details?nodeRef={node.nodeRef}</param>
+         </action>
+
+         <!-- Edit properties page -->
+         <action id="rm-edit-details" type="pagelink" label="actions.edit-details" icon="document-edit-metadata">
+            <param name="page">edit-metadata?nodeRef={node.nodeRef}</param>
+            <evaluator>evaluator.rm.action.edit-details</evaluator>
+         </action>
+
+         <!-- File to -->
+         <action id="rm-file-to" type="javascript" label="actions.file-to" icon="../../../rm/components/documentlibrary/actions/rm-file-to">
+            <param name="function">onActionFileTo</param>
+            <evaluator>evaluator.rm.action.file-to</evaluator>
+         </action>
+
+         <!-- Manage permissions -->
+         <action id="rm-manage-permissions" type="pagelink" label="actions.document.manage-permissions" icon="document-manage-permissions">
+            <param name="page">{managePermissionsUrl}</param>
+            <evaluator>evaluator.rm.action.manage-permissions</evaluator>
+         </action>
+
+         <!-- View Audit Log -->
+         <action id="rm-view-audit-log" type="javascript" label="actions.view-audit-log" icon="../../../rm/components/documentlibrary/actions/rm-view-audit-log">
+            <param name="function">onActionViewAuditLog</param>
+            <evaluator>evaluator.rm.action.view-audit-log</evaluator>
+         </action>
+
+         <!-- Close Folder -->
+         <action id="rm-close-folder" type="javascript" label="actions.close-folder" icon="../../../rm/components/documentlibrary/actions/rm-close-folder">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">closeRecordFolder</param>
+            <param name="message">message.close</param>
+            <evaluator>evaluator.rm.action.close-folder</evaluator>
+         </action>
+
+         <!-- Open Folder -->
+         <action id="rm-open-folder" type="javascript" label="actions.open-folder" icon="../../../rm/components/documentlibrary/actions/rm-open-folder">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">openRecordFolder</param>
+            <param name="message">message.open-folder</param>
+            <evaluator>evaluator.rm.action.open-folder</evaluator>
+         </action>
+
+         <!-- Reviewed -->
+         <action id="rm-reviewed" type="javascript" label="actions.reviewed" icon="../../../rm/components/documentlibrary/actions/rm-reviewed">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">reviewed</param>
+            <param name="message">message.reviewed</param>
+            <evaluator>evaluator.rm.action.reviewed</evaluator>
+         </action>
+
+         <!-- Review All -->
+         <action id="rm-review-all" type="javascript" label="actions.review-all" icon="../../../rm/components/documentlibrary/actions/rm-review-all">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">reviewed</param>
+            <param name="message">message.review-all</param>
+            <evaluator>evaluator.rm.action.review-all</evaluator>
+         </action>
+
+         <!-- Cutoff -->
+         <action id="rm-cutoff" type="javascript" label="actions.cutoff" icon="../../../rm/components/documentlibrary/actions/rm-cutoff">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">cutoff</param>
+            <param name="message">message.cutoff</param>
+            <evaluator>evaluator.rm.action.cutoff</evaluator>
+         </action>
+
+         <!-- Destroy -->
+         <action id="rm-destroy" type="javascript" label="actions.destroy" icon="../../../rm/components/documentlibrary/actions/rm-destroy">
+            <param name="function">onActionDestroy</param>
+            <evaluator>evaluator.rm.action.destroy</evaluator>
+         </action>
+
+         <!-- Transfer -->
+         <action id="rm-transfer" type="javascript" label="actions.transfer" icon="../../../rm/components/documentlibrary/actions/rm-transfer">
+            <param name="function">onActionTransfer</param>
+            <evaluator>evaluator.rm.action.transfer</evaluator>
+         </action>
+
+         <!-- Accession -->
+         <action id="rm-accession" type="javascript" label="actions.accession" icon="../../../rm/components/documentlibrary/actions/rm-accession">
+            <param name="function">onActionAccession</param>
+            <evaluator>evaluator.rm.action.accession</evaluator>
+         </action>
+
+         <!-- Undo Cutoff -->
+         <action id="rm-undo-cutoff" type="javascript" label="actions.undo-cutoff" icon="../../../rm/components/documentlibrary/actions/rm-undo-cutoff">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">unCutoff</param>
+            <param name="message">message.undo-cutoff</param>
+            <evaluator>evaluator.rm.action.undo-cutoff</evaluator>
+         </action>
+
+         <!-- Edit Disposition As Of Date -->
+         <action id="rm-edit-disposition-as-of-date" type="javascript" label="actions.edit-disposition-as-of-date" icon="../../../rm/components/documentlibrary/actions/rm-edit-disposition-as-of-date">
+            <param name="function">onActionEditDispositionAsOf</param>
+            <evaluator>evaluator.rm.action.edit-disposition-as-of-date</evaluator>
+         </action>
+
+         <!-- Freeze -->
+         <action id="rm-freeze" type="javascript" label="actions.freeze" icon="../../../rm/components/documentlibrary/actions/rm-freeze">
+            <param name="function">onActionFreeze</param>
+            <evaluator>evaluator.rm.action.freeze</evaluator>
+         </action>
+
+         <!-- Unfreeze -->
+         <action id="rm-unfreeze" type="javascript" label="actions.unfreeze"  icon="../../../rm/components/documentlibrary/actions/rm-unfreeze">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">unfreeze</param>
+            <param name="message">message.unfreeze</param>
+            <evaluator>evaluator.rm.action.unfreeze</evaluator>
+         </action>
+
+         <!-- Unfreeze All -->
+         <action id="rm-unfreeze-all" type="javascript" label="actions.unfreeze-all" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-all">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">unfreezeAll</param>
+            <param name="message">message.unfreeze-all</param>
+            <evaluator>evaluator.rm.action.unfreeze-all</evaluator>
+         </action>
+
+         <!-- Download Electronic Record -->
+         <action id="rm-download" type="link" label="actions.download" icon="../../../rm/components/documentlibrary/actions/rm-download">
+            <param name="href">{downloadUrl}</param>
+            <evaluator>evaluator.rm.common.isElectronicRecord</evaluator>
+         </action>
+
+         <!-- Edit Review As Of Date -->
+         <action id="rm-edit-review-as-of-date" type="javascript" label="actions.edit-review-as-of-date" icon="../../../rm/components/documentlibrary/actions/rm-edit-review-as-of-date">
+            <param name="function">onActionEditReviewAsOf</param>
+            <evaluator>evaluator.rm.action.edit-review-as-of-date</evaluator>
+         </action>
+
+         <!-- Declare Record -->
+         <action id="rm-declare" type="javascript" label="actions.declare" icon="../../../rm/components/documentlibrary/actions/rm-declare">
+            <param name="function">onActionDeclare</param>
+            <evaluator>evaluator.rm.action.declare</evaluator>
+         </action>
+
+         <!-- Undeclare Record -->
+         <action id="rm-undeclare" type="javascript" label="actions.undeclare" icon="../../../rm/components/documentlibrary/actions/rm-undeclare">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">undeclareRecord</param>
+            <param name="message">message.undeclare</param>
+            <evaluator>evaluator.rm.action.undeclare</evaluator>
+         </action>
+
+         <!-- Add Record Metadata -->
+         <action id="rm-add-record-metadata" type="javascript" label="actions.add-record-metadata" icon="../../../rm/components/documentlibrary/actions/rm-add-record-metadata">
+            <param name="function">onActionAddRecordMetadata</param>
+            <evaluator>evaluator.rm.action.add-record-metadata</evaluator>
+         </action>
+
+         <!-- Split Email -->
+         <action id="rm-split-email" type="javascript" label="actions.split-email" icon="../../../rm/components/documentlibrary/actions/rm-split-email">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">splitEmail</param>
+            <param name="message">message.split-email</param>
+            <evaluator>evaluator.rm.action.split-email</evaluator> <!-- undeclared record, mimetype = message/rfc822 -->
+         </action>
+
+         <!-- Download Zip -->
+         <action id="rm-download-zip" type="link" label="actions.download-zip" icon="../../../rm/components/documentlibrary/actions/rm-download-zip">
+            <param name="href">{transfersZipUrl}</param>
+            <evaluator>evaluator.rm.action.download-zip</evaluator>
+         </action>
+
+         <!-- File Transfer Report -->
+         <action id="rm-file-report" type="javascript" label="actions.file-report" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
+            <param name="function">onActionFileTransferReport</param>
+            <evaluator>evaluator.rm.action.file-report</evaluator>
+         </action>
+
+         <!-- Transfer Complete -->
+         <action id="rm-transfer-complete" type="javascript" label="actions.transfer-complete" icon="../../../rm/components/documentlibrary/actions/rm-transfer-complete">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">transferComplete</param>
+            <param name="message">message.transfer-complete</param>
+            <evaluator>evaluator.rm.action.transfer-complete</evaluator>
+         </action>
+
+         <!-- Relinquish -->
+         <action id="rm-relinquish" type="javascript" label="actions.relinquish" icon="../../../rm/components/documentlibrary/actions/rm-relinquish">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">relinquishHold</param>
+            <param name="message">message.relinquish</param>
+            <evaluator>evaluator.rm.action.relinquish</evaluator>
+         </action>
+
+         <!-- Edit Hold Details -->
+         <action id="rm-edit-reason" type="javascript" label="actions.edit-reason" icon="../../../rm/components/documentlibrary/actions/rm-edit-reason">
+            <param name="function">onActionEditHoldDetails</param>
+            <evaluator>evaluator.rm.action.edit-reason</evaluator>
+         </action>
+      </actions>
+
+      <!--
+         Action Group definitions
+      -->
+      <actionGroups>
+         <actionGroup id="empty"/>
+
+         <actionGroup id="rm-fileplan-details">
+         </actionGroup>
+
+         <actionGroup id="rm-record-category-browse">
+            <action index="100" id="rm-record-category-view-details" />
+            <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-manage-permissions" />
+            <action index="130" id="document-copy-to" />
+            <action index="140" id="document-move-to" />
+            <action index="150" id="document-delete" label="actions.delete" />
+            <action index="160" id="rm-view-audit-log" />
+         </actionGroup>
+         <actionGroup id="rm-record-category-details">
+            <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-manage-permissions" />
+            <action index="130" id="document-copy-to" />
+            <action index="140" id="document-move-to" />
+            <action index="150" id="document-delete" label="actions.delete" />
+            <action index="160" id="rm-view-audit-log" />
+         </actionGroup>
+
+         <actionGroup id="rm-record-folder-browse">
+            <action index="100" id="rm-record-folder-view-details" />
+            <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-close-folder" />
+            <action index="130" id="rm-open-folder" />
+            <action index="140" id="rm-review-all" />
+            <action index="150" id="rm-cutoff" icon="../../../rm/components/documentlibrary/actions/rm-cutoff-folder" />
+            <action index="160" id="rm-destroy" />
+            <action index="170" id="rm-transfer" />
+            <action index="180" id="rm-accession" />
+            <action index="190" id="rm-undo-cutoff" />
+            <action index="200" id="rm-edit-disposition-as-of-date" />
+            <action index="210" id="rm-freeze" icon="../../../rm/components/documentlibrary/actions/rm-freeze-folder" />
+            <action index="220" id="rm-unfreeze" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-folder" />
+            <action index="230" id="document-copy-to" />
+            <action index="240" id="document-move-to" />
+            <action index="250" id="rm-file-to" />
+            <action index="260" id="rm-manage-permissions" />
+            <action index="270" id="document-delete" label="actions.delete" />
+            <action index="280" id="rm-view-audit-log" />
+         </actionGroup>
+         <actionGroup id="rm-record-folder-details">
+            <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-close-folder" />
+            <action index="130" id="rm-open-folder" />
+            <action index="140" id="rm-review-all" />
+            <action index="150" id="rm-cutoff" icon="../../../rm/components/documentlibrary/actions/rm-cutoff-folder" />
+            <action index="160" id="rm-destroy" />
+            <action index="170" id="rm-transfer" />
+            <action index="180" id="rm-accession" />
+            <action index="190" id="rm-undo-cutoff" />
+            <action index="200" id="rm-edit-disposition-as-of-date" />
+            <action index="210" id="rm-freeze" icon="../../../rm/components/documentlibrary/actions/rm-freeze-folder" />
+            <action index="220" id="rm-unfreeze" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-folder" />
+            <action index="230" id="document-copy-to" />
+            <action index="240" id="document-move-to" />
+            <action index="250" id="rm-file-to" />
+            <action index="260" id="rm-manage-permissions" />
+            <action index="270" id="document-delete" label="actions.delete" />
+            <action index="280" id="rm-view-audit-log" />
+         </actionGroup>
+
+         <actionGroup id="rm-record-browse">
+            <action index="100" id="document-download" />
+            <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-reviewed" />
+            <action index="130" id="rm-edit-review-as-of-date" />
+            <action index="140" id="rm-undeclare" />
+            <action index="150" id="rm-cutoff" />
+            <action index="160" id="rm-destroy" />
+            <action index="170" id="rm-transfer" />
+            <action index="180" id="rm-accession" />
+            <action index="190" id="rm-undo-cutoff" />
+            <action index="200" id="rm-edit-disposition-as-of-date" />
+            <action index="210" id="rm-freeze" />
+            <action index="220" id="rm-unfreeze" />
+            <action index="230" id="document-copy-to" />
+            <action index="240" id="document-move-to" />
+            <action index="250" id="rm-file-to" />
+            <action index="260" id="rm-manage-permissions" />
+            <action index="270" id="document-delete" label="actions.delete" />
+            <action index="280" id="rm-view-audit-log" />
+         </actionGroup>
+         <actionGroup id="rm-record-details">
+            <action index="100" id="document-download" />
+            <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-reviewed" />
+            <action index="130" id="rm-edit-review-as-of-date" />
+            <action index="140" id="rm-undeclare" />
+            <action index="150" id="rm-cutoff" />
+            <action index="160" id="rm-destroy" />
+            <action index="170" id="rm-transfer" />
+            <action index="180" id="rm-accession" />
+            <action index="190" id="rm-undo-cutoff" />
+            <action index="200" id="rm-edit-disposition-as-of-date" />
+            <action index="210" id="rm-freeze" />
+            <action index="220" id="rm-unfreeze" />
+            <action index="230" id="document-copy-to" />
+            <action index="240" id="document-move-to" />
+            <action index="250" id="rm-file-to" />
+            <action index="260" id="rm-manage-permissions" />
+            <action index="270" id="document-delete" label="actions.delete" />
+            <action index="280" id="rm-view-audit-log" />
+         </actionGroup>
+
+         <actionGroup id="rm-undeclared-record-browse">
+            <action index="100" id="document-download" />
+            <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-declare" />
+            <action index="130" id="rm-add-record-metadata" />
+            <action index="140" id="rm-split-email" />
+            <action index="150" id="document-copy-to" />
+            <action index="160" id="document-move-to" />
+            <action index="170" id="rm-file-to" />
+            <action index="180" id="rm-manage-permissions" />
+            <action index="190" id="document-delete" label="actions.delete" />
+            <action index="200" id="rm-view-audit-log" />
+         </actionGroup>
+         <actionGroup id="rm-undeclared-record-details">
+            <action index="100" id="document-download" />
+            <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-declare" />
+            <action index="130" id="rm-add-record-metadata" />
+            <action index="140" id="rm-split-email" />
+            <action index="150" id="document-copy-to" />
+            <action index="160" id="document-move-to" />
+            <action index="170" id="rm-file-to" />
+            <action index="180" id="rm-manage-permissions" />
+            <action index="190" id="document-delete" label="actions.delete" />
+            <action index="200" id="rm-view-audit-log" />
+         </actionGroup>
+
+         <actionGroup id="rm-metadata-stub-folder-browse">
+            <action index="100" id="rm-record-folder-view-details" />
+            <action index="110" id="rm-manage-permissions" />
+            <action index="120" id="document-delete" label="actions.delete" />
+            <action index="130" id="rm-view-audit-log" />
+         </actionGroup>
+         <actionGroup id="rm-metadata-stub-folder-details">
+            <action index="110" id="rm-manage-permissions" />
+            <action index="120" id="document-delete" label="actions.delete" />
+            <action index="130" id="rm-view-audit-log" />
+         </actionGroup>
+
+         <actionGroup id="rm-metadata-stub-browse">
+            <action index="100" id="document-delete" label="actions.delete" />
+            <action index="110" id="rm-view-audit-log" />
+         </actionGroup>
+         <actionGroup id="rm-metadata-stub-details">
+            <action index="100" id="document-delete" label="actions.delete" />
+            <action index="110" id="rm-view-audit-log" />
+         </actionGroup>
+
+         <actionGroup id="rm-transfer-container-browse">
+            <action index="100" id="rm-download-zip" />
+            <action index="110" id="rm-file-report" />
+            <action index="120" id="rm-transfer-complete" />
+            <action index="130" id="rm-view-audit-log" />
+         </actionGroup>
+         <actionGroup id="rm-transfer-container-details">
+            <action index="100" id="rm-download-zip" />
+            <action index="110" id="rm-file-report" />
+            <action index="120" id="rm-transfer-complete" />
+            <action index="130" id="rm-view-audit-log" />
+         </actionGroup>
+
+         <actionGroup id="rm-hold-container-browse">
+            <action index="100" id="rm-relinquish" />
+            <action index="110" id="rm-unfreeze-all" />
+            <action index="120" id="rm-edit-reason" />
+            <action index="130" id="rm-view-audit-log" />
+         </actionGroup>
+         <actionGroup id="rm-hold-container-details">
+            <action index="100" id="rm-relinquish" />
+            <action index="110" id="rm-unfreeze-all" />
+            <action index="120" id="rm-edit-reason" />
+            <action index="130" id="rm-view-audit-log" />
+         </actionGroup>
+      </actionGroups>
+   </config>
+</alfresco-config>

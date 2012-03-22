@@ -1,0 +1,37 @@
+/* DocList bar Select menu */
+
+.doclist .file-select .selectRecords
+{
+   background-image: url(images/select-records-16.png);
+}
+
+.doclist .file-select .selectUndeclaredRecords
+{
+   background-image: url(images/select-undeclared-16.png);
+}
+
+.doclist .file-select .selectAll
+{
+   background-image: url(images/select-all-rm-16.png);
+}
+
+.doclist .file-select .selectNone
+{
+   background-image: url(images/select-none-rm-16.png);
+}
+
+/* File Plan Filter Styling */
+
+.fileplan-filter span.holds
+{
+   background-image: url(actions/rm-freeze-16.png);
+   background-repeat: no-repeat;
+   padding-left: 20px;
+}
+
+.fileplan-filter span.transfers
+{
+   background-image: url(actions/rm-transfer-16.png);
+   background-repeat: no-repeat;
+   padding-left: 20px;
+}
