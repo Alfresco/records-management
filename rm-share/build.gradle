@@ -1,0 +1,8 @@
+amp {
+	amp 'rm-share.amp'
+	module 'config/module'
+	jar 'build/libs/rm-share.jar'
+}
+	
+
+	
