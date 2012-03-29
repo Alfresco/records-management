@@ -1,25 +1,4 @@
-dependantWar.warName = 'share.war'
-dependantWar.warFile = file('share.war')
 
-tomcatRun.httpPort = 8081
-tomcatRun.stopPort = 8086
-prepTomcat.warName = 'share.war'
-war.baseName = 'share'
-
-jar.baseName = JAR_NAME
-
-amp.amp = AMP_NAME
-amp.module = 'config/module'
-amp.jar = "build/libs/${JAR_NAME}.jar"
-amp.web = 'source/web'
-
-installAmp.ampFileLocation = file('build/dist/' + AMP_NAME)
-installAmp.warFileLocation = file('build/tomcat/share.war')
-
-copyWar {
-	from 'share.war'
-	into 'build/tomcat'
-}
 
 
 
