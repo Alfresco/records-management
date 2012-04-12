@@ -1,8 +1,30 @@
 <extension>
    <modules>
+   
+     <module>
+         <id>Alfresco :: Records Management Global (1)</id>
+         <auto-deploy>true</auto-deploy>
+
+         <!-- Base evaluator that decides if any of the component bindings should be used at all -->
+         <evaluator type="site.module.evaluator">
+            <params>
+               <sites>.*</sites>
+               <sitePresets>rm-site-dashboard</sitePresets>
+               <applyForNonSites>true</applyForNonSites>
+            </params>
+         </evaluator>
+
+         <!-- Apply the following customizations when the base evaluator above passes -->
+         <customizations>
+            <customization>
+               <targetPackageRoot>org.alfresco</targetPackageRoot>
+               <sourcePackageRoot>org.alfresco.rm.customizations</sourcePackageRoot>
+            </customization>
+         </customizations>
+      </module>
 
       <module>
-         <id>Alfresco :: Records Management Site</id>
+         <id>Alfresco :: Records Management Site (2)</id>
          <auto-deploy>true</auto-deploy>
 
          <!-- Base evaluator that decides if any of the component bindings should be used at all -->
@@ -13,15 +35,6 @@
                <applyForNonSites>false</applyForNonSites>
 	         </params>
          </evaluator>
-
-         <!-- Apply the following customizations when the base evaluator above passes -->
-         <customizations>
-            <customization>
-               <targetPackageRoot>org.alfresco</targetPackageRoot>
-               <sourcePackageRoot>org.alfresco.rm.customizations</sourcePackageRoot>
-            </customization>
-         </customizations>
-
 
          <!-- Apply the following configurations when the base evaluator above passes -->
          <configurations>
