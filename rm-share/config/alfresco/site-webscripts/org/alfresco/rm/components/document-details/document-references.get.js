@@ -46,7 +46,7 @@ function getDocNames(nodeRefs)
  */
 function getDocReferences(nodeRef)
 {
-   var result = remote.call("/api/node/" + nodeRef + "/customreferences");
+   var result = remote.call("/api/node/" + nodeRef.replace(":/", "") + "/customreferences");
 
    var marshallDocRefs = function marshallDocRefs(docrefs, type)
    {

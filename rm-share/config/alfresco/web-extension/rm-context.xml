@@ -113,9 +113,11 @@
    <!-- File Plan Action Evaluators -->
    <!--                             -->
    <bean id="evaluator.rm.common.actionEvaluator" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.ActionEvaluator" />
-   <bean id="evaluator.rm.action.editDetails" parent="evaluator.rm.common.actionEvaluator">
+   
+   <bean id="evaluator.rm.action.edit-details" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="editDetails" />
    </bean>
+   
    <bean id="evaluator.rm.action.file-to" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="fileTo" />
    </bean>
