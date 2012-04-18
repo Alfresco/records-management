@@ -96,11 +96,11 @@
          this.registerRenderer("RM_transferContainer", function rma_transferContainer(record, label)
          {
             var properties = record.jsNode.properties,
-               transferTitle = scope.msg("details.transfer-container.title", $html(record.displayName)),
+               transferTitle = this.msg("details.transfer-container.title", $html(record.displayName)),
                filterObj =
                {
                   filterId: "transfers",
-                  filterData: nodeRef,
+                  filterData: record.nodeRef,
                   filterDisplay: transferTitle
                };
 
