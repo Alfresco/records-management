@@ -310,17 +310,17 @@
             Dom.setStyle(elCell.parentNode, "text-align", "center");
 
             var url = me._getBrowseUrlForRecord(oRecord);
-            var imageUrl = Alfresco.constants.URL_RESCONTEXT + 'components/documentlibrary/images/record-32.png';
+            var imageUrl = Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/record-32.png';
             switch (oRecord.getData("type"))
             {
                case "dod:recordSeries":
-                  imageUrl = Alfresco.constants.URL_RESCONTEXT + 'components/documentlibrary/images/record-series-32.png';
+                  imageUrl = Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/record-series-32.png';
                   break;
                case "dod:recordCategory":
-                  imageUrl = Alfresco.constants.URL_RESCONTEXT + 'components/documentlibrary/images/record-category-32.png';
+                  imageUrl = Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/record-category-32.png';
                   break;
                case "rma:recordFolder":
-                  imageUrl = Alfresco.constants.URL_RESCONTEXT + 'components/documentlibrary/images/record-folder-32.png';
+                  imageUrl = Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/record-folder-32.png';
                   break;
             }
 
@@ -342,7 +342,7 @@
                var html;
                if (Alfresco.util.fromISO8601(reviewDate) < new Date())
                {
-                  var imageUrl = Alfresco.constants.URL_RESCONTEXT + 'components/documentlibrary/images/warning-16.png';
+                  var imageUrl = Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/warning-16.png';
                   var review = $html(me._msg("label.dueForReview"));
                   html = '<span>' + $html(me._msg("label.yes")) + '&nbsp;<img src="' + imageUrl + '" alt="' + review + '" title="' + review + '"/></span>';
                }
