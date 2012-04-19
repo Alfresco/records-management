@@ -150,6 +150,7 @@
          
          this.widgets.documentPicker = new Alfresco.module.DocumentPicker(this.id + '-docPicker', Alfresco.rm.module.ObjectRenderer);
 
+         parentNodeRef = Alfresco.util.getQueryStringParameter('parentNodeRef') 
          this.widgets.documentPicker.setOptions(
          {
             controlId: this.options.controlId,

@@ -111,6 +111,7 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
                      Dom.setStyle(this.id + "-create-site", "display", "none");
                      Dom.setStyle(this.id + "-display-site", "display", "block");
                      Dom.setStyle(this.id + "-load-data", "display", "block");
+                     Dom.setStyle(this.id + "-rm-console", "display", "block");
                      Alfresco.util.Anim.pulse(this.id + "-display-site");
                      
                      // reset feedback message - to allow another action if required

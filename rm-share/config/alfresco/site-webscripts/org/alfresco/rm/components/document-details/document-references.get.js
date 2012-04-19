@@ -135,7 +135,8 @@ function main()
    var nodeDetails = AlfrescoUtil.getNodeDetails(model.nodeRef, model.site, null);
    if (nodeDetails)
    {
-      model.parentNodeRef = nodeDetails.item.location.container.nodeRef;
+      //model.parentNodeRef = nodeDetails.item.location.container.nodeRef;
+	  model.parentNodeRef = nodeDetails.item.node.rmNode.filePlan;
       model.docName = nodeDetails.item.displayName;
       model.allowEditReferences = false;
       var actions = nodeDetails.item.node.rmNode.actions;

@@ -34,7 +34,7 @@
        Event = YAHOO.util.Event;
 
    /**
-    * RM_ObjectRenderer componentconstructor.
+    * RM_ObjectRenderer component constructor.
     * 
     * @param {object} Instance of the DocumentPicker
     * @return {Alfresco.module.ObjectRenderer} The new ObjectRenderer instance
@@ -47,7 +47,7 @@
       return this;
    };
     
-   YAHOO.extend(Alfresco.rm.module.ObjectRenderer, Alfresco.module.ObjectRenderer,
+   YAHOO.extend(Alfresco.rm.module.ObjectRenderer, Alfresco.ObjectRenderer,
    {
 /**
     * Generate item icon URL - displays RM icons depending on type
