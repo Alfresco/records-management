@@ -1,0 +1,3 @@
+dependencies {
+	testRuntime group: 'org.alfresco.enterprise', name: 'share', version: alfrescoBaseVersion, type: 'war'
+}
