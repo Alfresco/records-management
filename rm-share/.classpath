@@ -9,11 +9,7 @@
 	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/abdera-i18n-0.4.0-incubating.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/abdera-parser-0.4.0-incubating.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/activation-1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/alfresco-core-4.0.d.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/alfresco-jlan-embed-4.0.d.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/alfresco-opencmis-extension-0.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/alfresco-share-4.0.d.jar" sourcepath="C:/mywork/projects/v4/code/root/projects/slingshot"/>
-	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/alfresco-web-framework-commons-4.0.d.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/axiom-api-1.2.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/axiom-impl-1.2.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/chemistry-opencmis-client-api-0.6.0.jar"/>
@@ -75,5 +71,9 @@
 	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/stax-ex-1.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/streambuffer-0.9.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/mywork/projects/rmhead/code/rm-share/explodedDeps/lib/urlrewritefilter-3.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="explodedDeps/lib/alfresco-core-4.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="explodedDeps/lib/alfresco-jlan-embed-4.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="explodedDeps/lib/alfresco-share-4.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="explodedDeps/lib/alfresco-web-framework-commons-4.0.1.jar" sourcepath="C:/mywork/projects/v4/code/root/projects/web-framework-commons/source/java"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

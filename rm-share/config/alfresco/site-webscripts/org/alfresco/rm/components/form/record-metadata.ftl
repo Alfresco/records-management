@@ -62,9 +62,6 @@
       <div class="set-panel">
          <div class="set-panel-heading">${msg("label.set.record")}</div>
          <div class="set-panel-body">
-            <#if form.fields["prop_rmRecordType"]?? && form.mode == "view">
-               <@formLib.renderField field=form.fields["prop_rmRecordType"] />
-            </#if>
             <@formLib.renderField field=form.fields["prop_rma_originator"] />
             <@formLib.renderField field=form.fields["prop_rma_originatingOrganization"] />
             <#if form.mode == "view">
