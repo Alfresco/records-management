@@ -24,7 +24,9 @@
    </bean>
    
    <!--  Override form get to extend with RM form config -->
-   <bean id="webscript.org.alfresco.components.form.form.get" class="org.alfresco.module.org_alfresco_module_rm_share.forms.FormUIGet" parent="webscript">
+   <bean id="webscript.org.alfresco.components.form.form.get" 
+         class="org.alfresco.module.org_alfresco_module_rm_share.forms.FormUIGet" 
+         parent="webscript">
       <property name="configService" ref="web.config" />
    </bean>
 
