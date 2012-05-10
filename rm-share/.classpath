@@ -75,5 +75,6 @@
 	<classpathentry exported="true" kind="lib" path="explodedDeps/lib/alfresco-jlan-embed-4.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="explodedDeps/lib/alfresco-share-4.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="explodedDeps/lib/alfresco-web-framework-commons-4.0.1.jar" sourcepath="C:/mywork/projects/v4/code/root/projects/web-framework-commons/source/java"/>
+	<classpathentry kind="lib" path="explodedDeps/lib/abdera-client-0.4.0-incubating.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

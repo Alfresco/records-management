@@ -127,6 +127,12 @@
    <bean id="evaluator.rm.action.delete" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="delete" />
    </bean>   
+    <bean id="evaluator.rm.action.copy" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="copy" />
+   </bean>  
+    <bean id="evaluator.rm.action.move" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="move" />
+   </bean>  
    <bean id="evaluator.rm.action.file-to" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="fileTo" />
    </bean>
