@@ -130,8 +130,14 @@
     <bean id="evaluator.rm.action.copy" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="copy" />
    </bean>  
-    <bean id="evaluator.rm.action.move" parent="evaluator.rm.common.actionEvaluator">
-      <property name="action" value="move" />
+    <bean id="evaluator.rm.action.moveRecord" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="moveRecord" />
+   </bean>  
+    <bean id="evaluator.rm.action.moveRecordFolder" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="moveRecordFolder" />
+   </bean>  
+    <bean id="evaluator.rm.action.moveRecordCategory" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="moveRecordCategory" />
    </bean>  
    <bean id="evaluator.rm.action.file-to" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="fileTo" />

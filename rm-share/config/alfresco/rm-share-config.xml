@@ -169,9 +169,19 @@
             <evaluator>evaluator.rm.action.copy</evaluator>
          </action>
 
-         <action id="rm-move-to" type="javascript" label="actions.document.move-to" icon="document-move-to">
+         <action id="rm-move-record-to" type="javascript" label="actions.document.move-to" icon="document-move-to">
             <param name="function">onActionMoveTo</param>
-            <evaluator>evaluator.rm.action.move</evaluator>
+            <evaluator>evaluator.rm.action.moveRecord</evaluator>
+         </action>
+
+         <action id="rm-move-recordfolder-to" type="javascript" label="actions.document.move-to" icon="document-move-to">
+            <param name="function">onActionMoveTo</param>
+            <evaluator>evaluator.rm.action.moveRecordFolder</evaluator>
+         </action>
+
+         <action id="rm-move-recordcategory-to" type="javascript" label="actions.document.move-to" icon="document-move-to">
+            <param name="function">onActionMoveTo</param>
+            <evaluator>evaluator.rm.action.moveRecordCategory</evaluator>
          </action>
                
          <!-- View record category details -->
@@ -391,7 +401,7 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-manage-permissions" />
             <action index="130" id="rm-copy-to" />
-            <action index="140" id="rm-move-to" />
+            <action index="140" id="rm-move-recordcategory-to" />
             <action index="150" id="rm-delete" label="actions.delete" />
             <action index="160" id="rm-view-audit-log" />
          </actionGroup>
@@ -399,7 +409,7 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-manage-permissions" />
             <action index="130" id="rm-copy-to" />
-            <action index="140" id="rm-move-to" />
+            <action index="140" id="rm-move-recordcategory-to" />
             <action index="150" id="rm-delete" label="actions.delete" />
             <action index="160" id="rm-view-audit-log" />
          </actionGroup>
@@ -419,7 +429,7 @@
             <action index="210" id="rm-freeze" icon="../../../rm/components/documentlibrary/actions/rm-freeze-folder" />
             <action index="220" id="rm-unfreeze" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-folder" />
             <action index="230" id="rm-copy-to" />
-            <action index="240" id="rm-move-to" />
+            <action index="240" id="rm-move-recordfolder-to" />
             <action index="250" id="rm-file-to" />
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
@@ -439,7 +449,7 @@
             <action index="210" id="rm-freeze" icon="../../../rm/components/documentlibrary/actions/rm-freeze-folder" />
             <action index="220" id="rm-unfreeze" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-folder" />
             <action index="230" id="rm-copy-to" />
-            <action index="240" id="rm-move-to" />
+            <action index="240" id="rm-move-recordfolder-to" />
             <action index="250" id="rm-file-to" />
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
@@ -461,7 +471,7 @@
             <action index="210" id="rm-freeze" />
             <action index="220" id="rm-unfreeze" />
             <action index="230" id="rm-copy-to" />
-            <action index="240" id="rm-move-to" />
+            <action index="240" id="rm-move-record-to" />
             <action index="250" id="rm-file-to" />
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
@@ -481,7 +491,7 @@
             <action index="210" id="rm-freeze" />
             <action index="220" id="rm-unfreeze" />
             <action index="230" id="rm-copy-to" />
-            <action index="240" id="rm-move-to" />
+            <action index="240" id="rm-move-record-to" />
             <action index="250" id="rm-file-to" />
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
@@ -495,7 +505,7 @@
             <action index="130" id="rm-add-record-metadata" />
             <action index="140" id="rm-split-email" />
             <action index="150" id="rm-copy-to" />
-            <action index="160" id="rm-move-to" />
+            <action index="160" id="rm-move-record-to" />
             <action index="170" id="rm-file-to" />
             <action index="180" id="rm-manage-permissions" />
             <action index="190" id="rm-delete" label="actions.delete" />
@@ -507,7 +517,7 @@
             <action index="130" id="rm-add-record-metadata" />
             <action index="140" id="rm-split-email" />
             <action index="150" id="rm-copy-to" />
-            <action index="160" id="rm-move-to" />
+            <action index="160" id="rm-move-record-to" />
             <action index="170" id="rm-file-to" />
             <action index="180" id="rm-manage-permissions" />
             <action index="190" id="rm-delete" label="actions.delete" />
