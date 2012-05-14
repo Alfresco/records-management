@@ -473,7 +473,6 @@
             <action index="230" id="rm-copy-to" />
             <action index="240" id="rm-move-record-to" />
             <action index="250" id="rm-file-to" />
-            <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
          </actionGroup>
@@ -493,7 +492,6 @@
             <action index="230" id="rm-copy-to" />
             <action index="240" id="rm-move-record-to" />
             <action index="250" id="rm-file-to" />
-            <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
          </actionGroup>
@@ -507,7 +505,6 @@
             <action index="150" id="rm-copy-to" />
             <action index="160" id="rm-move-record-to" />
             <action index="170" id="rm-file-to" />
-            <action index="180" id="rm-manage-permissions" />
             <action index="190" id="rm-delete" label="actions.delete" />
             <action index="200" id="rm-view-audit-log" />
          </actionGroup>
@@ -519,7 +516,6 @@
             <action index="150" id="rm-copy-to" />
             <action index="160" id="rm-move-record-to" />
             <action index="170" id="rm-file-to" />
-            <action index="180" id="rm-manage-permissions" />
             <action index="190" id="rm-delete" label="actions.delete" />
             <action index="200" id="rm-view-audit-log" />
          </actionGroup>
