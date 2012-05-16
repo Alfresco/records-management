@@ -286,6 +286,161 @@
          });
 
       },
+      
+      _getRmUserInput: function RDLA_getRmUserInput(config)
+      {
+         if (Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[0].text === null)
+         {
+            /**
+             * This default value could not be set at instantion time since the
+             * localized messages weren't present at that time
+             */
+        	 Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[0].text = Alfresco.util.message("button.ok", this.name);
+         }
+         if (Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[1].text === null)
+         {
+        	 Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[1].text = Alfresco.util.message("button.cancel", this.name);
+         }
+         
+         // Merge users config and the default config and check manadatory properties
+         var c = YAHOO.lang.merge(Alfresco.util.PopupManager.defaultGetUserInputConfig, config);
+
+         // Create the SimpleDialog that will display the text
+         var prompt = new YAHOO.widget.SimpleDialog("userInput",
+         {
+            close: c.close,
+            constraintoviewport: c.constraintoviewport,
+            draggable: c.draggable,
+            effect: c.effect,
+            modal: c.modal,
+            visible: c.visible,
+            zIndex: this.zIndex++
+         });
+
+         // Show the title if it exists
+         if (c.title)
+         {
+            prompt.setHeader($html(c.title));
+         }
+
+         // Generate the HTML mark-up if not overridden
+         var html = c.html,
+            id = Alfresco.util.generateDomId();
+
+         if (html === null)
+         {
+            html = "";
+            if (c.text)
+            {
+               html += '<label for="' + id + '">' + (c.noEscape ? c.text : $html(c.text)) + '</label><br/>';
+            }
+            if (c.input == "textarea")
+            {
+               html += '<textarea id="' + id + '" tabindex="0">' + c.value + '</textarea>';
+            }
+            else if (c.input == "text")
+            {
+               html += '<input id="' + id + '" tabindex="0" type="text" value="' + c.value + '"/>';
+            }
+         }
+         prompt.setBody(html);
+
+         // Show the icon if it exists
+         if (c.icon)
+         {
+            prompt.cfg.setProperty("icon", c.icon);
+         }
+
+         // Add the buttons to the dialog
+         if (c.buttons)
+         {
+            if (c.okButtonText)
+            {
+               // Override OK button label
+               c.buttons[0].text = c.okButtonText;
+            }
+            
+            // Default handler if no custom button passed-in
+            if (typeof config.buttons == "undefined" || typeof config.buttons[0] == "undefined")
+            {
+               // OK button click handler
+               c.buttons[0].handler = {
+                  fn: function(event, obj)
+                  {
+                     // Grab the input, destroy the pop-up, then callback with the value
+                     var value = null;
+                     if (YUIDom.get(obj.id))
+                     {
+                        var inputEl = YUIDom.get(obj.id);
+                        value = YAHOO.lang.trim(inputEl.value || inputEl.text);
+                     }
+                     this.destroy();
+                     if (obj.callback.fn)
+                     {
+                        obj.callback.fn.call(obj.callback.scope || window, value, obj.callback.obj);
+                     }
+                  },
+                  obj:
+                  {
+                     id: id,
+                     callback: c.callback
+                  }
+               };
+            }
+            prompt.cfg.queueProperty("buttons", c.buttons);
+         }
+
+         // Add the dialog to the dom, center it and show it (unless flagged not to).
+         prompt.render(document.body);
+
+         // Make sure ok button only is enabled  if textfield contains content
+         if (c.html === null && prompt.getButtons().length > 0)
+         {
+            // Make sure button only is disabled if textinput has a proper value
+            var okButton = prompt.getButtons()[0];
+            YAHOO.util.Event.addListener(id, "keyup", function(event, okButton)
+            {
+               okButton.set("disabled", YAHOO.lang.trim(this.value || this.text || "").length == 0);
+            }, okButton);
+            okButton.set("disabled", YAHOO.lang.trim(c.value).length == 0)
+         }
+
+         // Center and display
+         prompt.center();
+         if (c.initialShow)
+         {
+            prompt.show();
+         }
+         
+         // If a default value was given, set the selectionStart and selectionEnd properties
+         if (c.html === null && c.value !== "")
+         {
+            YUIDom.get(id).selectionStart = 0;
+            YUIDom.get(id).selectionEnd = c.value.length;
+         }
+
+         // Register the ESC key to close the panel
+         var escapeListener = new YAHOO.util.KeyListener(document,
+         {
+            keys: YAHOO.util.KeyListener.KEY.ESCAPE
+         },
+         {
+            fn: function(id, keyEvent)
+            {
+               this.destroy();
+            },
+            scope: prompt,
+            correctScope: true
+         });
+         escapeListener.enable();
+         
+         if (YUIDom.get(id))
+         {
+            YUIDom.get(id).focus();
+         }
+         
+         return prompt;
+      },
 
       /**
        * Edit Disposition As Of Date action.
@@ -297,11 +452,12 @@
       {
          var calendarId = Alfresco.util.generateDomId(),
             properties = assets.jsNode.properties,
-            asOfDate = Alfresco.util.fromExplodedJSONDate(properties.rma_recordSearchDispositionActionAsOf),
             panel,
             calendar;
          
-         panel = Alfresco.util.PopupManager.getUserInput(
+         var asOfDate = Alfresco.util.fromISO8601(properties.rma_recordSearchDispositionActionAsOf),
+         
+         panel = this._getRmUserInput(
          {
             title: this.msg("message.edit-disposition-as-of-date.title"),
             html: '<div id="' + calendarId + '"></div>',
@@ -410,14 +566,14 @@
          }
          else 
          {
-            asOfDate = Alfresco.util.fromExplodedJSONDate(properties.rma_reviewAsOf);
+            asOfDate = Alfresco.util.fromISO8601(properties.rma_reviewAsOf.iso8601);
          }
 
          var calendarId = Alfresco.util.generateDomId(),
             panel,
             calendar;
          
-         panel = Alfresco.util.PopupManager.getUserInput(
+         panel = this._getRmUserInput(
          {
             title: this.msg("message.edit-review-as-of-date.title"),
             html: '<div id="' + calendarId + '"></div>',
