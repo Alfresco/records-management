@@ -1,3 +1,4 @@
+<#include "/org/alfresco/components/component.head.inc">
 
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/yui/menu/assets/menu.css" />
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/yui/datatable/assets/datatable.css" />
@@ -13,3 +14,5 @@
 <@script type="text/javascript" src="${url.context}/res/modules/documentlibrary/site-folder.js"></@script>
 <@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/select-audit-record-location.js"></@script>
 <@script type="text/javascript" src="${url.context}/res/modules/documentlibrary/doclib-actions.js"></@script>
+
+

@@ -15,8 +15,8 @@
       <h1>${msg("label.title")}</h1>
    </#if>
    <div class="auditActions">
-      <button id="${htmlid}-audit-export" name="audit-export" class="audit-export">${msg("label.button-export")}</button>
-      <button id="${htmlid}-audit-file-record" name="audit-file-record" class="audit-file-record">${msg("label.button-file-record")}</button>            
+      <button id="${htmlid}-audit-export" name="${htmlid}-audit-export" class="audit-export">${msg("label.button-export")}</button>
+      <button id="${htmlid}-audit-file-record" name="${htmlid}-audit-file-record" class="audit-file-record">${msg("label.button-file-record")}</button>            
    </div>
    <div class="audit-info">
    <#-- only for full log (not noderef) -->

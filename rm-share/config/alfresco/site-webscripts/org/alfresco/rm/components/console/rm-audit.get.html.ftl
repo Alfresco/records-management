@@ -29,9 +29,9 @@
       </div>
       <div class="yui-u">
          <div id="${htmlid}-auditActions" class="rm-auditActions">
-            <button id="${htmlid}-audit-toggle" disabled name="${htmlid}-audit-toggle" class="rm-audit-toggle"><#if enabled>${msg('label.button-start')}<#else>${msg('label.button-stop')}</#if></button>
-            <button id="${htmlid}-audit-view" name="audit-view" class="rm-audit-view">${msg("label.button-view-log")}</button>
-            <button id="${htmlid}-audit-clear" name="audit-clear" class="rm-audit-clear">${msg("label.button-clear")}</button>
+            <button id="${htmlid}-audit-toggle" disabled name="${htmlid}-audit-toggle" class="audit-toggle"><#if enabled>${msg('label.button-start')}<#else>${msg('label.button-stop')}</#if></button>
+            <button id="${htmlid}-audit-view" name="${htmlid}-audit-view" class="audit-view">${msg("label.button-view-log")}</button>
+            <button id="${htmlid}-audit-clear" name="${htmlid}-audit-clear" class="audit-clear">${msg("label.button-clear")}</button>
          </div>
       </div>
     </div>    
@@ -107,7 +107,7 @@
                   <div class="bd">
                      <label for="audit-specifyfilter">${msg("label.show-log-for")}</label> 
                      <div id="${htmlid}-audit-personFilter" class="personFilter"><span>${msg("label.all-users")}</span><a id="${htmlid}-personFilterRemove" class="personFilterRemove"><img src="${page.url.context}/res/components/images/remove-icon-16.png"  alt="${msg('label.remove-filter')}"/></a></div>
-                     <button id="${htmlid}-audit-specifyfilter" name="audit-specifyfilter" class="rm-audit-specifyfilter">${msg("label.button-specify")}</button>
+                     <button id="${htmlid}-audit-specifyfilter" name="audit-specifyfilter" class="audit-specifyfilter">${msg("label.button-specify")}</button>
                      <div id="${htmlid}-audit-peoplefinder" class="rm-audit-peoplefinder"></div>
                   </div>
                </div>
@@ -115,7 +115,7 @@
             <div class="yui-u">
                <div class="filter">
                   <div class="hd">
-                     <button id="${htmlid}-apply" class="rm-audit-apply">${msg('label.button-apply')}</button>
+                     <button id="${htmlid}-apply" class="audit-apply">${msg('label.button-apply')}</button>
                   </div>
                </div>
             </div>
@@ -123,12 +123,14 @@
       </div>
    </div>    
     <div id="${htmlid}-audit-log" class="yui-gc audit-log">
+      
       <div class="yui-u">
-         <button id="${htmlid}-audit-export" disabled name="audit-export" class="rm-audit-export">${msg("label.button-export")}</button>
-         <button id="${htmlid}-audit-file-record" disabled name="audit-file-record" class="rm-audit-file-record">${msg("label.button-file-record")}</button>
-         <div id="${htmlid}-audit-auditDT" class="rm-auditDT">
-         </div>    
-      </div>
+         <button id="${htmlid}-audit-export" name="${htmlid}-audit-export" class="audit-export">${msg("label.button-export")}</button>
+         <button id="${htmlid}-audit-file-record" name="${htmlid}-audit-file-record" class="audit-file-record">${msg("label.button-file-record")}</button>
+      </div>    
+      
+      <div id="${htmlid}-audit-auditDT" class="rm-auditDT" />   
+     
     </div>
   </div>
 </#if>

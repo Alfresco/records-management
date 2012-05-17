@@ -116,6 +116,7 @@
                }                   
             ]);
          }
+         
          this.registerEventHandler('click',
          [
             {
@@ -468,7 +469,7 @@
       {
          var openAuditLogWindow = function openAuditLogWindow()
          {
-            return window.open(Alfresco.constants.URL_PAGECONTEXT + 'site/' + this.options.siteId + '/rmaudit', 'Audit_Log', 'resizable=yes,location=no,menubar=no,scrollbars=yes,status=yes,width=400,height=400');
+            return window.open(Alfresco.constants.URL_PAGECONTEXT + 'site/' + this.options.siteId + '/rm-audit', 'Audit_Log', 'resizable=yes,location=no,menubar=no,scrollbars=yes,status=yes,width=400,height=400');
          };
          // haven't yet opened window yet
          if (!this.fullLogWindowReference)
