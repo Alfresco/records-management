@@ -22,7 +22,7 @@
             <div class="file-upload"><button id="${el}-fileUpload-button">${msg("button.upload")}</button></div>
          </div>
          <div id="${el}-import-section" class="hideable toolbar-hidden DocListTree">
-            <div class="import"><button id="${el}-import-button" class="no-access-check">${msg("button.import")}</button></div>
+            <div class="import"><button id="${el}-import-button">${msg("button.import")}</button></div>
          </div>
          <div class="hideable toolbar-hidden DocListTree">
             <div class="export-all"><button id="${el}-exportAll-button">${msg("button.export-all")}</button></div>
