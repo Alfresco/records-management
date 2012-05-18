@@ -675,7 +675,7 @@
 
 
       /**
-       * Called from the hidden ifram if the Export action fails.
+       * Called from the hidden iframe if the Export action fails.
        *
        * @method onExportFailure
        * @param error {object} Object literal describing the error
@@ -711,7 +711,7 @@
             siteId: this.options.siteId,
             containerId: this.options.containerId,
             path: this.currentPath,
-            fileplanNodeRef: this.doclistMetadata.filePlan,
+            fileplanNodeRef: this.doclistMetadata.container,
             transfer: assets
          }).showDialog();
       },

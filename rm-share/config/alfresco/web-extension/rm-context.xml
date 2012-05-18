@@ -214,6 +214,9 @@
    <bean id="evaluator.rm.action.transfer-complete" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="transferComplete" />
    </bean>
+   <bean id="evaluator.rm.action.accession-complete" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="accessionComplete" />
+   </bean>
    <bean id="evaluator.rm.action.relinquish" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="relinquish" />
    </bean>

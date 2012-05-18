@@ -371,6 +371,13 @@
             <param name="message">message.transfer-complete</param>
             <evaluator>evaluator.rm.action.transfer-complete</evaluator>
          </action>
+         
+         <action id="rm-accession-complete" type="javascript" label="actions.transfer-complete" icon="../../../rm/components/documentlibrary/actions/rm-transfer-complete">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">accessionComplete</param>
+            <param name="message">message.transfer-complete</param>
+            <evaluator>evaluator.rm.action.accession-complete</evaluator>
+         </action>
 
          <!-- Relinquish -->
          <action id="rm-relinquish" type="javascript" label="actions.relinquish" icon="../../../rm/components/documentlibrary/actions/rm-relinquish">
@@ -549,12 +556,14 @@
             <action index="100" id="rm-download-zip" />
             <action index="110" id="rm-file-report" />
             <action index="120" id="rm-transfer-complete" />
+            <action index="125" id="rm-accession-complete" />
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
          <actionGroup id="rm-transfer-container-details">
             <action index="100" id="rm-download-zip" />
             <action index="110" id="rm-file-report" />
             <action index="120" id="rm-transfer-complete" />
+            <action index="125" id="rm-accession-complete" />
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
 
