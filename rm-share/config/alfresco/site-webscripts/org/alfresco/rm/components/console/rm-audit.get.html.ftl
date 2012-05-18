@@ -129,7 +129,7 @@
          <button id="${htmlid}-audit-file-record" name="${htmlid}-audit-file-record" class="audit-file-record">${msg("label.button-file-record")}</button>
       </div>    
       
-      <div id="${htmlid}-audit-auditDT" class="rm-auditDT" />   
+      <div id="${htmlid}-audit-auditDT" class="rm-auditDT"></div>
      
     </div>
   </div>
