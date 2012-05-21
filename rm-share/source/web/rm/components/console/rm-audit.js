@@ -856,12 +856,8 @@
       onShowDetails: function RM_Audit__showDetails(e)
       {
          var el = Event.getTarget(e);
-         var id = el.id.match(/-([0-9]+)-/)[1];
-         var data = null;
-         if (this.options.results[id])
-         {
-            data = this.options.results[id];
-         }
+         var data = this.widgets.auditDataTable.getRecord(el).getData();
+
          if (!this.widgets.auditDialog)
          {
             // Construct the YUI Dialog that will display the message
