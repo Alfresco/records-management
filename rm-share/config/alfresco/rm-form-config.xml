@@ -9,7 +9,7 @@
    <config>
       <forms>
          <dependencies>
-            <js src="/rm/js/validation.js" />
+            <js src="/rm/js/validation-min.js" />
          </dependencies>
       </forms>   
    </config>
