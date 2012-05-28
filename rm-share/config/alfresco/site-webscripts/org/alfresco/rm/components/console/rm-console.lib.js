@@ -8,23 +8,35 @@
  */
 function hasCapability(conn, cap)
 {
-   var hasCapability = false;
-   var res = conn.get("/api/rma/admin/rmroles?user=" + encodeURIComponent(user.name));
-   if (res.status == 200)
-   {
-      var roles = eval('(' + res + ')').data;
-      for each (var role in roles)
-      {
-         for each (var c in role.capabilities)
-         {
-            if (c == cap)
-            {
-               hasCapability = true;
-               break;
-            }
-         }
-         if (hasCapability) break;
-      }
-   }
-   return hasCapability;
+	var capabilities = getCapabilities(conn);
+	return hasCapability(cap, capabilities);
+}
+
+function hasCapability(cap, capabilities)
+{
+	var result = false;
+	if (capabilities !== null)
+	{
+		for each (var c in capabilities)
+		{
+			if (c == cap)
+			{
+				result = true;
+				break;
+			}
+		}
+	}
+	return result;	
+}
+
+function getCapabilities(conn)
+{
+	var result = null;
+	var res = conn.get("/api/capabilities?includeAll=true");
+	if (res.status == 200)
+	{
+		var data = eval('(' + res + ')').data;
+		result = data.capabilities;
+	}
+	return result;
 }
