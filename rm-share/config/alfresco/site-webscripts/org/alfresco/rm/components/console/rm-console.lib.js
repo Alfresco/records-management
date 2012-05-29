@@ -9,10 +9,10 @@
 function hasCapability(conn, cap)
 {
 	var capabilities = getCapabilities(conn);
-	return hasCapability(cap, capabilities);
+	return hasCapabilityImpl(cap, capabilities);
 }
 
-function hasCapability(cap, capabilities)
+function hasCapabilityImpl(cap, capabilities)
 {
 	var result = false;
 	if (capabilities !== null)
