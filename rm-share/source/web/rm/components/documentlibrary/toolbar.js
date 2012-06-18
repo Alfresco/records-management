@@ -93,12 +93,13 @@
             value: "import"
          });
 
-         // Report button
-         this.widgets.reportButton = Alfresco.util.createYUIButton(this, "report-button", this.onPrintReport,
+         
+         // RM-318 - removing Report button temporarily
+         /*this.widgets.reportButton = Alfresco.util.createYUIButton(this, "report-button", this.onPrintReport,
          {
             disabled: true
-         });
-
+         });*/
+       
          // Export All button: user needs "export" access
          this.widgets.exportAllButton = Alfresco.util.createYUIButton(this, "exportAll-button", this.onExportAll,
          {

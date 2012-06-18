@@ -28,10 +28,12 @@
             <div class="export-all"><button id="${el}-exportAll-button">${msg("button.export-all")}</button></div>
          </div>
          
+         <#-- RM-318 - removing Report button temporarily
          <div class="hideable toolbar-hidden DocListTree">
             <div class="report"><button id="${el}-report-button">${msg("button.report")}</button></div>
          </div>
-
+         -->
+         
          <div class="selected-items">
             <button id="${el}-selectedItems-button" class="no-access-check">${msg("menu.selected-items")}</button>
             <div id="${el}-selectedItems-menu" class="yuimenu">
