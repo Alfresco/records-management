@@ -53,8 +53,10 @@
       //YAHOO.Bubbling.on("PropertyMenuSelected", this.onPropertyMenuSelected, this);
       
       this.showingFilter = false;
+      
       //search filter person
       this.activePerson = "";
+      
       //query parameters for datasource
       this.queryParams = {};
       
@@ -65,88 +67,75 @@
    {
       VIEW_MODE_DEFAULT: "",
       VIEW_MODE_COMPACT: "COMPACT"
-   });    
+   });
       
    YAHOO.extend(Alfresco.rm.component.RMAudit, Alfresco.component.Base,
    {
+      /**
+       * Fired by YUI when parent element is available for scripting
+       * @method onReady
+       */
+      onReady: function RM_Audit_onReady()
+      {
+         this.initEvents();
+         
+         // Create "Export" and "File As Record" buttons...
+         this.widgets.exportButton = Alfresco.util.createYUIButton(this, "export", this.onExportLog);
+         this.widgets.fileRecordButton = Alfresco.util.createYUIButton(this, "file-record", this.onFileRecord);
+         
+         // Create the logging control buttons...
+         this.widgets.toggLogleButton = Alfresco.util.createYUIButton(this, "toggle", this.onToggleLog);
+         this.widgets.viewLogButton = Alfresco.util.createYUIButton(this, "view", this.onViewLog);
+         this.widgets.clearLogButton = Alfresco.util.createYUIButton(this, "clear", this.onClearLog);
+         
+         // Create the filter buttons...
+         this.widgets.specifyfilterButton = Alfresco.util.createYUIButton(this, "specifyfilter", this.onSpecifyFilterLog);
+         this.widgets.applyFilterButton = Alfresco.util.createYUIButton(this, "apply", this.onApplyFilters);
+        
+         // Initialize data URI
+         // An audit log for node and not in console (all nodes)
+         if (this.options.nodeRef)
+         {
+            var nodeRef = this.options.nodeRef.split('/');
+            this.dataUri = YAHOO.lang.substitute(Alfresco.constants.PROXY_URI + "api/node/{store_type}/{store_id}/{id}/rmauditlog", { store_type: nodeRef[0], store_id: nodeRef[1], id: nodeRef[2] });
+         }
+         else {
+            this.dataUri = Alfresco.constants.PROXY_URI+'api/rma/admin/rmauditlog';
+         }
+
+         this.initWidgets();
+      },
+      
       /**
        * Initialises event listening and custom events
        */
       initEvents : function RM_Audit_initEvents()
       {
          Event.on(this.id, 'click', this.onInteractionEvent, null, this);
-         //register event
+         
+         // Register events
          if (this.options.viewMode === Alfresco.rm.component.RMAudit.VIEW_MODE_DEFAULT)
          {
             this.registerEventHandler('click',[
-               {
-                  rule : 'button.audit-toggle',
-                  o : {
-                        handler:this.onToggleLog,
-                        scope : this
-                  }
-               },
-               {
-                  rule : 'button.audit-clear',
-                  o : {
-                        handler:this.onClearLog,
-                        scope : this
-                  }
-               },
-               {
-                  rule : 'button.audit-view',
-                  o : {
-                        handler:this.onViewLog,
-                        scope : this
-                  }
-               },
                {
                   rule : 'button.audit-details',
                   o : {
                      handler: this.onShowDetails,
                      scope : this
                   }
-               },
-               {
-                  rule : 'button.audit-apply',
-                  o : {
-                     handler: this.onApplyFilters,
-                     scope : this
-                  }
-               }                   
+               }
             ]);
          }
          
          this.registerEventHandler('click',
          [
             {
-               rule : 'button.audit-specifyfilter',
-               o : {
-                     handler:this.onSpecifyFilterLog,
-                     scope : this
-               }
-            },
-            {
                rule : 'a.personFilterRemove img',
                o : {
                      handler:this.onRemoveFilter,
                      scope : this
                }
-            },
-            {
-               rule : 'button.audit-export',
-               o : {
-                  handler: this.onExportLog,
-                  scope : this
-               }
-            },
-            {
-               rule : 'button.audit-file-record',
-               o : {
-                  handler: this.onFileRecord,
-                  scope : this
-               }
-            }                     
+            }
          ]);
          
          // Decoupled event listeners
@@ -161,24 +150,10 @@
       initWidgets: function RM_Audit_initWidgets()
       {
          var me = this; 
-         
-         //init buttons
-         var buttons = Sel.query('button',this.id).concat(Sel.query('input[type=submit]',this.id));
-         // Create widget button while reassigning classname to src element (since YUI removes classes). 
-         // We need the classname so we can identify what action to take when it is interacted with (event delegation).
-         for (var i=0, len = buttons.length; i<len; i++)
-         {
-            var button= buttons[i];
-            if (button.id.indexOf('-button')==-1)
-            {
-              var id = button.id.replace(this.id+'-','');
-              this.widgets[id] = new YAHOO.widget.Button(button.id);
-              this.widgets[id]._button.className=button.className;
-            }
-         }
+
          if (this.options.viewMode==Alfresco.rm.component.RMAudit.VIEW_MODE_DEFAULT)
          {
-            //initialize dates in UI
+            // Initialize dates in UI
             this.widgets['status-date'] = Dom.get(this.id+'-status-date');
 
 //            this.validAuditDates = (this.options.startDate!=="");
@@ -191,7 +166,7 @@
 //               }
 //            }
             
-            //initialise menus
+            // Initialise menus
             /*
             //events menu
             this.widgets['eventMenu'] = new YAHOO.widget.Button(this.id + "-events",
@@ -218,8 +193,8 @@
             });
             */
             
-            //initialise calendar pickers
-            //fromDate calendar
+            // Initialise calendar pickers
+            // fromDate calendar
             var theDate = new Date();
             var page = (theDate.getMonth() + 1) + "/" + theDate.getFullYear();
             var selected = (theDate.getMonth() + 1) + "/" + theDate.getDate() + "/" + theDate.getFullYear();
@@ -238,7 +213,7 @@
             Event.addListener(this.id + "-toDate-icon", "click", function () { this.widgets.fromCalendar.hide();this.widgets.toCalendar.show(); }, this, true);         
             // render the calendar control
             this.widgets.fromCalendar.render();
-            this.widgets.toCalendar.render();             
+            this.widgets.toCalendar.render();
 
             this.toggleUI();
             
@@ -261,16 +236,17 @@
             DS.doBeforeCallback = function ( oRequest , oFullResponse , oParsedResponse , oCallback )
             {
                me.options.results = oFullResponse.data.entries;
-               //enable/disable export and file record buttons
+               
+               // Enable/disable export and file record buttons
                if (me.options.results.length===0)
                {
-                  me.widgets['export'].set('disabled',true);
-                  me.widgets['file-record'].set('disabled',true);
+                  me.widgets.exportButton.set('disabled',true);
+                  me.widgets.fileRecordButton.set('disabled',true);
                }
                else
                {
-                  me.widgets['export'].set('disabled',false);
-                  me.widgets['file-record'].set('disabled',false);               
+                  me.widgets.exportButton.set('disabled',false);
+                  me.widgets.fileRecordButton.set('disabled',false);
                }
                return oParsedResponse;
             };
@@ -301,9 +277,9 @@
                var but = new YAHOO.widget.Button(
                {
                   label:me.msg('label.button-details'),
-                  //use an id that easily references the results using an array index.               
+                  //use an id that easily references the results using an array index.
                   id:'log-' + me.recCount++,
-                  container:elLiner       
+                  container:elLiner
                });
                //need this for display
                but.addClass('audit-details-button');
@@ -329,7 +305,7 @@
             //accumulates for all requests, not just the current request which is what we need. 
             this.widgets['auditDataTable'].doBeforeLoadData = function doBeforeLoadData(sRequest , oResponse , oPayload)
             {
-               // reset           
+               // reset
                me.recCount = 0; 
                return true;
             };
@@ -356,27 +332,6 @@
       },
       
       /**
-       * Fired by YUI when parent element is available for scripting
-       * @method onReady
-       */
-      onReady: function RM_Audit_onReady()
-      {
-         this.initEvents();
-         //initialize data uri         
-         //an audit log for node and not in console (all nodes)
-         if (this.options.nodeRef)
-         {
-            var nodeRef = this.options.nodeRef.split('/');
-            this.dataUri = YAHOO.lang.substitute(Alfresco.constants.PROXY_URI + "api/node/{store_type}/{store_id}/{id}/rmauditlog", { store_type: nodeRef[0], store_id: nodeRef[1], id: nodeRef[2] });
-         }
-         else {
-            this.dataUri = Alfresco.constants.PROXY_URI+'api/rma/admin/rmauditlog';
-         }
-
-         this.initWidgets();
-      },
-      
-      /**
        * Updates the UI to show status of UI and start/stop buttons
        */
       toggleUI: function toggleUI()
@@ -389,12 +344,15 @@
          //update start/stop button
          if (this.options.viewMode==Alfresco.rm.component.RMAudit.VIEW_MODE_DEFAULT)
          {   
-            this.widgets['toggle'].set('disabled',false);
-            //if (YAHOO.lang.isUndefined(this.options.enabled) == false)
-            //{
-               this.widgets['toggle'].set('value',this.options.enabled);               
-               this.widgets['toggle'].set('label',(this.options.enabled)? this.msg('label.button-stop') : this.msg('label.button-start'));
-            //}
+            if (this.widgets['toggle'])
+            {
+               this.widgets['toggle'].set('disabled',false);
+               //if (YAHOO.lang.isUndefined(this.options.enabled) == false)
+               //{
+                  this.widgets['toggle'].set('value',this.options.enabled);
+                  this.widgets['toggle'].set('label',(this.options.enabled)? this.msg('label.button-stop') : this.msg('label.button-start'));
+               //}
+            }
          }
       },
       
@@ -427,7 +385,7 @@
                isDefault: false
             }
             ]
-         });         
+         });
       },
       
       /**
@@ -506,7 +464,7 @@
 
       /**
        * Handler for file as record log button. Files log as record
-       */      
+       */
       onFileRecord: function RM_Audit_onFileRecord()
       {  
          //show location dialog
@@ -580,7 +538,7 @@
                                  this.destroy();
                               },
                               isDefault: true
-                           }               
+                           }
                            ]
                         });
                      }
@@ -592,7 +550,7 @@
                            modal: true,
                            noEscape: true,
                            displayTime: 1
-                        });                        
+                        });
                      }
                   }
                },
@@ -618,11 +576,11 @@
                            isDefault: false
                         }
                         ]
-                     });                     
+                     });
                   }
                }
             }
-         });         
+         });
       },
       
       /**
@@ -660,13 +618,13 @@
          {
             Dom.addClass(this.widgets['people-finder'], 'active');
             this.modules.peopleFinder.clearResults();
-            this.widgets['specifyfilter'].set('label',Alfresco.util.message('label.button-cancel', 'Alfresco.rm.component.RMAudit'));
-            this.showingFilter = true;            
+            this.widgets.specifyfilterButton.set('label',Alfresco.util.message('label.button-cancel', 'Alfresco.rm.component.RMAudit'));
+            this.showingFilter = true;
          }
          else
          {
             Dom.removeClass(this.widgets['people-finder'], 'active');
-            this.widgets['specifyfilter'].set('label',this.msg('label.button-specify'));
+            this.widgets.specifyfilterButton.set('label',this.msg('label.button-specify'));
             this.showingFilter = false;
          }
       },
@@ -679,7 +637,7 @@
          Dom.addClass(Sel.query('.personFilter',this.id)[0], 'active');
          var person = args[1];
          this._changeFilterText(person.firstName + ' ' + person.lastName);
-         this.widgets['specifyfilter'].set('label',this.msg('label.button-specify'));
+         this.widgets.specifyfilterButton.set('label',this.msg('label.button-specify'));
          Dom.removeClass(this.widgets['people-finder'],'active');
          this.showingFilter = false;
          YAHOO.Bubbling.fire('PersonFilterActivated',{person:person}); 

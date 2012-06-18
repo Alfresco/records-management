@@ -254,6 +254,12 @@
    float: right;
 }
 
+.rm-audit-apply-filter
+{
+   height: 4em;
+   margin-top: 0.5em;
+}
+
 /* dialog */
 
 #auditEntry
