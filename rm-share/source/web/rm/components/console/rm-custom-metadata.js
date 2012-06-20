@@ -494,11 +494,17 @@
                {
                   fn: function(res)
                   {
-                     var json = Alfresco.util.parseJSON(res.serverResponse.responseText);
+                     var json = Alfresco.util.parseJSON(res.serverResponse.responseText),
+                         failureMsg = res.serverResponse.responseText;
+                     if (json != null && json.message != null)
+                     {
+                        failureMsg = json.message;
+                     }
+                     
                      Alfresco.util.PopupManager.displayPrompt(
                      {
                         title: parent._msg("message.failure"),
-                        text: parent._msg("message.create-failure", json.message)
+                        text: parent._msg("message.create-failure", failureMsg)
                      });
                   },
                   scope: this
