@@ -47,7 +47,7 @@
     */
    YAHOO.lang.augmentProto(Alfresco.rm.doclib.FolderActions, Alfresco.rm.doclib.Actions, true);
 
-   YAHOO.lang.augmentProto(Alfresco.rm.doclib.FolderActions, {
+   YAHOO.lang.augmentObject(Alfresco.rm.doclib.FolderActions.prototype, {
       /**
        * Refresh component in response to filesPermissionsUpdated event
        *
