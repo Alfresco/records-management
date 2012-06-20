@@ -371,9 +371,10 @@
             {
                fn: function DLTB__newContainer_failure(response)
                {
+                  var msgKey = (folderType == "rma:recordCategory") ? "message.new-category.failure": "message.new-folder.failure";
                   Alfresco.util.PopupManager.displayMessage(
                   {
-                     text: this.msg("message.new-folder.failure")
+                     text: this.msg(msgKey)
                   });
                },
                scope: this
