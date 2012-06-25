@@ -84,7 +84,7 @@
          this.widgets.fileRecordButton = Alfresco.util.createYUIButton(this, "file-record", this.onFileRecord);
          
          // Create the logging control buttons...
-         this.widgets.toggLogleButton = Alfresco.util.createYUIButton(this, "toggle", this.onToggleLog);
+         this.widgets.toggleLogleButton = Alfresco.util.createYUIButton(this, "toggle", this.onToggleLog);
          this.widgets.viewLogButton = Alfresco.util.createYUIButton(this, "view", this.onViewLog);
          this.widgets.clearLogButton = Alfresco.util.createYUIButton(this, "clear", this.onClearLog);
          
@@ -344,13 +344,13 @@
          //update start/stop button
          if (this.options.viewMode==Alfresco.rm.component.RMAudit.VIEW_MODE_DEFAULT)
          {   
-            if (this.widgets['toggle'])
+            if (this.widgets['toggleLogleButton'])
             {
-               this.widgets['toggle'].set('disabled',false);
+               this.widgets['toggleLogleButton'].set('disabled',false);
                //if (YAHOO.lang.isUndefined(this.options.enabled) == false)
                //{
-                  this.widgets['toggle'].set('value',this.options.enabled);
-                  this.widgets['toggle'].set('label',(this.options.enabled)? this.msg('label.button-stop') : this.msg('label.button-start'));
+                  this.widgets['toggleLogleButton'].set('value',this.options.enabled);
+                  this.widgets['toggleLogleButton'].set('label',(this.options.enabled)? this.msg('label.button-stop') : this.msg('label.button-start'));
                //}
             }
          }
