@@ -519,6 +519,25 @@
                         this._loadListOfValues();
                      },
                      scope: this
+                  },
+                  onFailure:
+                  {
+                     fn: function(response)
+                     {
+                        var json = Alfresco.util.parseJSON(response.serverResponse.responseText),
+                        failureMsg = response.serverResponse.responseText;
+                        if (json != null && json.message != null)
+                        {
+                             failureMsg = json.message;
+                        }
+                          
+                        Alfresco.util.PopupManager.displayPrompt(
+                        {
+                           title: parent.msg("message.addlist.failure.title"),
+                           text: parent.msg("message.addlist.failure.text", failureMsg)
+                        });
+                     },
+                     scope: this
                   }
                });
             }
