@@ -94,7 +94,9 @@
           * @type {object} with objects like { label: string}
           *       and the action name/type {string} as the key.
           */
-         actions: {}
+         actions: {},
+         
+         recordLevelDisposition: false
       },
 
       /**
@@ -170,6 +172,9 @@
                         actions = schedule.actions ? schedule.actions : [],
                         action,
                         actionEl;
+                     
+                     this.options.recordLevelDisposition = schedule.recordLevelDisposition;
+                     
                      if (actions.length == 0)
                      {
                         dummyEl.innerHTML = this.msg("message.noSteps");  
@@ -184,6 +189,68 @@
                            actionEl = this._createAction(action);
                            actionEl = this.widgets.actionListEl.appendChild(actionEl);
                            this._setupActionForm(action, actionEl);
+                        }
+                     }
+                  }
+                  this.widgets.createActionButton.set("disabled", false);
+               },
+               scope: this
+            },
+            failureCallback:
+            {
+               fn: function(response)
+               {                  
+                  Alfresco.util.PopupManager.displayPrompt(
+                  {
+                     text: this.msg("message.getActionFailure", this.name)
+                  });
+               },
+               scope: this
+            }
+         });
+      },
+      
+      /**
+       * Loads disposition properties from the server
+       *
+       * @method _loadDispositionProperties
+       * @private
+       */
+      _loadDispositionProperties: function DispositionEdit__loadDispostionProperties(action, actionEl)
+      {
+    	 var remoteUrl = Alfresco.constants.PROXY_URI_RELATIVE + "/api/rma/dispositionproperties?recordlevel=" + this.options.recordLevelDisposition + "&dispositionaction=" + action.name;  
+    	  
+    	 Alfresco.util.Ajax.jsonGet(
+         {
+            url: remoteUrl,
+            successCallback:
+            {
+               fn: function(response)
+               {
+                  if (response.json)
+                  {                	  
+                     var periodActionEl = Dom.getElementsByClassName("period-action", "select", actionEl)[0],
+                         data = response.json.data,
+                         properties = data.properties ? data.properties : [],
+                         property,
+                         option;
+                     
+                     if (properties.length !== 0)
+                     {
+                        for (var i = 0, ii = properties.length; i < ii; i++)
+                        {
+                           property = properties[i];
+                           
+                           option = document.createElement("option");
+                     	   option.text = property.label;
+                     	   option.value = property.value;
+                     	   
+                     	   if (action.periodProperty === property.value)
+                     	   {
+                     		   option.selected = true;
+                     	   }                     	   
+                     	   
+                     	   periodActionEl.add(option, null); 
                         }
                      }
                   }
@@ -274,14 +341,13 @@
             actionEl: actionEl
          }, this);
 
-         // Period Action
-         var periodAction = action.periodProperty,
-            periodActionEl = Dom.getElementsByClassName("period-action", "select", actionEl)[0];
-         Alfresco.util.setSelectedIndex(periodActionEl, periodAction);
+         // Load the disposition properties
+         this._loadDispositionProperties(action, actionEl);
 
          // Period Unit
          var periodUnit = (period && period.length > 0) ? period[0] : null,
-            periodUnitEl = Dom.getElementsByClassName("period-unit", "select", actionEl)[0];
+             periodActionEl = Dom.getElementsByClassName("period-action", "select", actionEl)[0],	 
+             periodUnitEl = Dom.getElementsByClassName("period-unit", "select", actionEl)[0];
          Event.addListener(periodUnitEl, "change", this.onPeriodUnitSelectChange,
          {
             actionEl: actionEl,

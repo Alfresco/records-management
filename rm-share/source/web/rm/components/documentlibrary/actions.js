@@ -455,7 +455,7 @@
             panel,
             calendar;
          
-         var asOfDate = Alfresco.util.fromISO8601(properties.rma_recordSearchDispositionActionAsOf),
+         var asOfDate = Alfresco.util.fromISO8601(properties.rma_recordSearchDispositionActionAsOf.iso8601),
          
          panel = this._getRmUserInput(
          {
@@ -494,7 +494,7 @@
          // Only now can we set the panel button's callback reference to the calendar, as it was undefined on panel creation
          panel.cfg.getProperty("buttons")[0].handler.obj.callback.obj = calendar;
          panel.center();
-         panel.show();
+         panel.show();      	 	 
       },
 
       /**

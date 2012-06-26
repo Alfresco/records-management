@@ -111,9 +111,6 @@
                      </select>
                      ${msg("label.from")}
                      <select name="periodProperty" class="period-action">
-                     <#list periodProperties as periodProperty>
-                        <option value="${periodProperty.value?html}">${periodProperty.label?html}</option>
-                     </#list>
                      </select>
                      <span class="or-relation">${msg("label.or")}</span>
                      <span class="and-relation">${msg("label.and")}</span>
