@@ -49,7 +49,10 @@
                <show id="rma:file" force="true" />
             </field-visibility>
             <create-form template="/org/alfresco/rm/components/form/create-container.ftl" />
-            <appearance>
+            <appearance>               
+               
+               <set id="rm-custom" label-id="label.set.customMetadata" appearance="panel" /> 
+               
                <field id="cm:title" mandatory="true">
                   <control template="/org/alfresco/components/form/controls/textfield.ftl" />
                </field>
