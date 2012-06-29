@@ -34,7 +34,12 @@
     */
    Alfresco.rm.doclib.FolderActions = function(htmlId)
    {
-      return Alfresco.rm.doclib.FolderActions.superclass.constructor.call(this, htmlId);
+      Alfresco.rm.doclib.FolderActions.superclass.constructor.call(this, htmlId);
+      YAHOO.Bubbling.on("metadataRefresh", function() {
+         YAHOO.Bubbling.unsubscribe("metadataRefresh", this.doRefresh, this);
+         window.location.reload(true);
+      }, this);
+      return this;
    };
    
    /**
@@ -58,7 +63,6 @@
          YAHOO.Bubbling.unsubscribe("filesPermissionsUpdated", this.doRefresh, this);
          this.refresh('rm/components/folder-details/folder-actions?nodeRef={nodeRef}' + (this.options.siteId ? '&site={siteId}' : ''));
       }
-
    }, true);
 
 })();
