@@ -140,6 +140,10 @@
             params:'filterType=rma:dispositionSchedule,rma:dispositionActionDefinition,rma:dispositionAction,rma:hold,rma:transfer,cm:thumbnail'
          });
          
+         // Clear the previous selection...
+         this.widgets.documentPicker.selectedItems = [];
+         Alfresco.util.setVar('DocumentPickerSelection',[]);
+         
          // RM-398 - Override default onCancel function which does not re-enable the select button
          //          when the picker is cancelled. It was not possible to fix this in the core for 
          //          2.0 because the targeted Alfresco release was already frozen.
@@ -149,6 +153,11 @@
             this.widgets.showPicker.set("disabled", false);
             this.resetSelection();
             Event.preventDefault(e);
+         };
+         
+         this.widgets.documentPicker.resetSelection = function()
+         {
+            // No operation needed.
          };
          
          YAHOO.Bubbling.on('onDocumentsSelected', this.updateSelectionField, this);
@@ -185,6 +194,8 @@
             Dom.removeClass(selectedEl,'active');
             this.options.currentValue = "";
          }
+         
+         this.widgets.documentPicker.widgets.showPicker.set("disabled", false);
          this.checkRequiredFields();
       },
       
