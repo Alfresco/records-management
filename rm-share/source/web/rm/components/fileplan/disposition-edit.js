@@ -242,15 +242,22 @@
                            property = properties[i];
                            
                            option = document.createElement("option");
-                     	   option.text = property.label;
-                     	   option.value = property.value;
-                     	   
-                     	   if (action.periodProperty === property.value)
-                     	   {
-                     		   option.selected = true;
-                     	   }                     	   
-                     	   
-                     	   periodActionEl.add(option, null); 
+                           option.text = property.label;
+                           option.value = property.value;
+                           if (action.periodProperty === property.value)
+                           {
+                              option.selected = true;
+                           }
+                           try
+                           {
+                              periodActionEl.add(option, null);
+                           }
+                           catch(ex)
+                           {
+                              // IE catch
+                              var index = (periodActionEl.selectedIndex != -1) ? periodActionEl.selectedIndex : periodActionEl.length;
+                              periodActionEl.add(option, index);
+                           }
                         }
                      }
                   }
