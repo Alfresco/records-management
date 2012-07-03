@@ -64,12 +64,12 @@
                 <label for="${htmlid}-audit-fromDate">${msg('label.header-from')}:</label>
              </div>
              <div class="bd">
-                <input type="text" name="${htmlid}-audit-fromDate" value="" id="${htmlid}-audit-fromDate" />
+                <input type="text" name="${htmlid}-audit-fromDate" value="" id="${htmlid}-audit-fromDate" readonly="true"/>
                 <a id="${htmlid}-audit-fromDate-icon" class="datepicker-icon">
                    <img class="datepicker-icon" src="${url.context}/res/components/form/images/calendar.png" />
                 </a>
                 <div id="${htmlid}-audit-fromDate-cal" class="datepicker"></div>
-                <label for="${htmlid}-audit-toDate">${msg('label.header-to')}:</label><input type="text"  name="${htmlid}-audit-toDate" value="" id="${htmlid}-audit-toDate" />
+                <label for="${htmlid}-audit-toDate">${msg('label.header-to')}:</label><input type="text"  name="${htmlid}-audit-toDate" value="" id="${htmlid}-audit-toDate"  readonly="true"/>
                 <a id="${htmlid}-audit-toDate-icon" class="datepicker-icon">
                    <img class="datepicker-icon" src="${url.context}/res/components/form/images/calendar.png" />
                 </a>

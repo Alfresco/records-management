@@ -204,6 +204,12 @@
             this.widgets.fromCalendar.selectEvent.subscribe(this.onDatePickerSelection,  {cal:this.widgets.fromCalendar,el:Dom.get(this.id+'-fromDate'),scope:this},true);
 
             Event.addListener(this.id + "-fromDate-icon", "click", function () { this.widgets.toCalendar.hide();this.widgets.fromCalendar.show(); }, this, true);
+            
+            YAHOO.util.Event.on(this.id + "-fromDate", "click", function() {
+               me.widgets.toCalendar.hide();
+               me.widgets.fromCalendar.show();
+            });
+            
             //toDate calendar
             this.widgets.toCalendar = new YAHOO.widget.Calendar(null, this.id + "-toDate-cal", { title: this.msg("message.select-to-date"), close: true });
             this.widgets.toCalendar.cfg.setProperty("pagedate", page);
@@ -211,10 +217,21 @@
             this.widgets.toCalendar.selectEvent.subscribe(this.onDatePickerSelection, {cal:this.widgets.toCalendar,el:Dom.get(this.id+'-toDate'),scope:this}, true );  
 
             Event.addListener(this.id + "-toDate-icon", "click", function () { this.widgets.fromCalendar.hide();this.widgets.toCalendar.show(); }, this, true);         
+            
+            YAHOO.util.Event.on(this.id + "-toDate", "click", function() {
+               me.widgets.fromCalendar.hide();
+               me.widgets.toCalendar.show();
+            });
+            
             // render the calendar control
             this.widgets.fromCalendar.render();
             this.widgets.toCalendar.render();
 
+            YAHOO.util.Event.on(this.id + "-entries", "keyup", function() {
+               var field = Dom.get(this.id);
+               me.widgets.applyFilterButton.set("disabled", isNaN(field.value));
+            });
+            
             this.toggleUI();
             
             //Sets up datatable and datasource.
