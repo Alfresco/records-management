@@ -610,12 +610,22 @@
                   obj.cancelButton.set("disabled", false);
                   Dom.removeClass(obj.actionEl, "expanded");
                   Dom.addClass(obj.actionEl, "collapsed");
+                  
+                  // Get the created action id
+                  var newActionId = serverResponse.json.data.id;
 
                   // Save new info for future cancels and hide details div
-                  Dom.getElementsByClassName("id", "input", actionEl)[0].value = serverResponse.json.data.id;
+                  Dom.getElementsByClassName("id", "input", actionEl)[0].value = newActionId;
                   action = YAHOO.lang.merge(action, serverResponse.json.data);
                   var details = Dom.getElementsByClassName("details", "div", actionEl)[0];
                   Dom.setStyle(details, "display", "none");
+                  
+                  // Update form action
+                  if (newActionId && newActionId.length > 0)
+                  {
+                     actionForm.setAjaxSubmitMethod(Alfresco.util.Ajax.PUT);
+                     formEl.attributes.action.nodeValue = Alfresco.constants.PROXY_URI_RELATIVE + "api/node/" + this.options.nodeRef.replace(":/", "") + "/dispositionschedule/dispositionactiondefinitions/" + newActionId;
+                  }
 
                   // Refresh the title from the choices
                   this._refreshTitle(obj.actionEl);
