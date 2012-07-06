@@ -81,12 +81,12 @@
          maxResults: 500,
 
          /**
-          * Custom rm meta fields
+          * Custom property groups
           *
-          * @property customFields
+          * @property groups
           * @type Array
           */
-         customFields: [],
+         groups: [],
 
          /**
           * Saved searches
@@ -239,7 +239,7 @@
          // Initial image background css
          Dom.setStyle(this.id + "-options-toggle", "url(" + Alfresco.constants.URL_RESCONTEXT + "components/images/expanded.png)");
 
-         // add the well known 'cm', 'rma' and 'dod' namespace fields
+         // add the well known fields
          var fields =
          [
             "nodeRef", "type", "name", "title", "description", "modifiedOn", "modifiedByUser", "modifiedBy",
@@ -251,19 +251,19 @@
             "properties.rma_recordSearchDispositionActionName", "properties.rma_recordSearchDispositionActionAsOf",
             "properties.rma_recordSearchDispositionInstructions", "properties.rma_recordSearchDispositionAuthority",
             "properties.rma_recordSearchDispositionPeriod", "properties.rma_recordSearchDispositionEventsEligible",
-            "properties.rma_recordSearchVitalRecordReviewPeriod", "properties.rma_recordSearchHoldReason",
-            "properties.dod_scannedFormatVersion", "properties.dod_resolutionX", "properties.dod_resolutionY", "properties.dod_scannedBitDepth",
-            "properties.dod_producingApplication", "properties.dod_producingApplicationVersion", "properties.dod_pdfVersion", "properties.dod_creatingApplication",
-            "properties.dod_documentSecuritySettings", "properties.dod_caption", "properties.dod_photographer", "properties.dod_copyright",
-            "properties.dod_bitDepth", "properties.dod_imageSizeX", "properties.dod_imageSizeY", "properties.dod_imageSource",
-            "properties.dod_compression", "properties.dod_iccIcmProfile", "properties.dod_exifInformation", "properties.dod_webFileName",
-            "properties.dod_webPlatform", "properties.dod_webSiteName", "properties.dod_webSiteURL", "properties.dod_captureMethod",
-            "properties.dod_captureDate", "properties.dod_contact", "properties.dod_contentManagementSystem"
+            "properties.rma_recordSearchVitalRecordReviewPeriod", "properties.rma_recordSearchHoldReason"
          ];
-         // add the custom meta fields - 'rmc' namespace
-         for (var i=0, j=this.options.customFields.length; i<j; i++)
+         
+         // add the custom groups of properties
+         for (var l=0, k=this.options.groups.length; l<k; l++)
          {
-            fields.push("properties.rmc_" + this.options.customFields[i].id);
+        	 var group = this.options.groups[l];
+        	 
+	         for (var i=0, j=group.properties.length; i<j; i++)
+	         {
+	        	var property = group.properties[i];
+	            fields.push("properties." + property.prefix + "_" + property.name);
+	         }
          }
 
          // DataSource definition
@@ -313,10 +313,7 @@
             var imageUrl = Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/record-32.png';
             switch (oRecord.getData("type"))
             {
-               case "dod:recordSeries":
-                  imageUrl = Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/record-series-32.png';
-                  break;
-               case "dod:recordCategory":
+               case "rma:recordCategory":
                   imageUrl = Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/record-category-32.png';
                   break;
                case "rma:recordFolder":
@@ -471,45 +468,22 @@
             { key: "dispositionInstructions", label: me._msg("label.dispositionInstructions"), field: "properties.rma_recordSearchDispositionInstructions", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
             { key: "dispositionAuthority", label: me._msg("label.dispositionAuthority"), field: "properties.rma_recordSearchDispositionAuthority", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
             { key: "holdReason", label: me._msg("label.holdReason"), field: "properties.rma_recordSearchHoldReason", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "vitalRecordReviewPeriod", label: me._msg("label.vitalRecordReviewPeriod"), field: "properties.rma_recordSearchVitalRecordReviewPeriod", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-
-            { key: "scannedFormatVersion", label: me._msg("label.dod.scannedFormatVersion"), field: "properties.dod_scannedFormatVersion", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "resolutionX", label: me._msg("label.dod.resolutionX"), field: "properties.dod_resolutionX", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "resolutionY", label: me._msg("label.dod.resolutionY"), field: "properties.dod_resolutionY", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "scannedBitDepth", label: me._msg("label.dod.scannedBitDepth"), field: "properties.dod_scannedBitDepth", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "producingApplication", label: me._msg("label.dod.producingApplication"), field: "properties.dod_producingApplication", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "producingApplicationVersion", label: me._msg("label.dod.producingApplicationVersion"), field: "properties.dod_producingApplicationVersion", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "pdfVersion", label: me._msg("label.dod.pdfVersion"), field: "properties.dod_pdfVersion", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "creatingApplication", label: me._msg("label.dod.creatingApplication"), field: "properties.dod_creatingApplication", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "documentSecuritySettings", label: me._msg("label.dod.documentSecuritySettings"), field: "properties.dod_documentSecuritySettings", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "caption", label: me._msg("label.dod.caption"), field: "properties.dod_caption", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "photographer", label: me._msg("label.dod.photographer"), field: "properties.dod_photographer", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "copyright", label: me._msg("label.dod.copyright"), field: "properties.dod_copyright", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "bitDepth", label: me._msg("label.dod.bitDepth"), field: "properties.dod_bitDepth", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "imageSizeX", label: me._msg("label.dod.imageSizeX"), field: "properties.dod_imageSizeX", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "imageSizeY", label: me._msg("label.dod.imageSizeY"), field: "properties.dod_imageSizeY", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "imageSource", label: me._msg("label.dod.imageSource"), field: "properties.dod_imageSource", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "compression", label: me._msg("label.dod.compression"), field: "properties.dod_compression", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "iccIcmProfile", label: me._msg("label.dod.iccIcmProfile"), field: "properties.dod_iccIcmProfile", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "exifInformation", label: me._msg("label.dod.exifInformation"), field: "properties.dod_exifInformation", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "webFileName", label: me._msg("label.dod.webFileName"), field: "properties.dod_webFileName", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "webPlatform", label: me._msg("label.dod.webPlatform"), field: "properties.dod_webPlatform", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "webSiteName", label: me._msg("label.dod.webSiteName"), field: "properties.dod_webSiteName", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "webSiteURL", label: me._msg("label.dod.webSiteURL"), field: "properties.dod_webSiteURL", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "captureMethod", label: me._msg("label.dod.captureMethod"), field: "properties.dod_captureMethod", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "captureDate", label: me._msg("label.dod.captureDate"), field: "properties.dod_captureDate", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "contact", label: me._msg("label.dod.contact"), field: "properties.dod_contact", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "contentManagementSystem", label: me._msg("label.dod.contentManagementSystem"), field: "properties.dod_contentManagementSystem", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true }
+            { key: "vitalRecordReviewPeriod", label: me._msg("label.vitalRecordReviewPeriod"), field: "properties.rma_recordSearchVitalRecordReviewPeriod", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true }
          ];
 
-         // Add the custom metadata columns
-         for (var i=0, j=this.options.customFields.length; i<j; i++)
+         // add the custom groups of properties
+         for (var l=0, k=this.options.groups.length; l<k; l++)
          {
-            var prop = this.options.customFields[i];
-            columnDefinitions.push(
-               { key: prop.id, label: prop.title, field: "properties.rmc_" + prop.id, sortable: true, resizeable: true, hidden: true }
-            );
-         }
+        	 var group = this.options.groups[l];
+        	 
+	         for (var i=0, j=group.properties.length; i<j; i++)
+	         {
+	        	var prop = group.properties[i];
+	        	columnDefinitions.push(
+	                    { key: prop.name, label: prop.label, field: "properties." + prop.prefix + "_" + prop.name, sortable: true, resizeable: true, hidden: true }
+	                 );	        	
+	         }
+         }        
 
          // DataTable definition
          this.widgets.dataTable = new YAHOO.widget.DataTable(this.id + "-results", columnDefinitions, this.widgets.dataSource,

@@ -261,7 +261,6 @@
             params += "&vital=" + (Dom.get(this.id + "-vital").checked);
             params += "&folders=" + (Dom.get(this.id + "-folders").checked);
             params += "&categories=" + (Dom.get(this.id + "-categories").checked);
-            params += "&series=" + (Dom.get(this.id + "-series").checked);
             params += "&frozen=" + (Dom.get(this.id + "-frozen").checked);
             params += "&cutoff=" + (Dom.get(this.id + "-cutoff").checked);
             
@@ -576,18 +575,7 @@
     	  else
     	  {
     		  filters += "false";
-    	  }
-    	  
-    	  filters += ",series/";
-    	  if (Dom.get(this.id + "-series").checked)
-    	  {
-    		  filters += "true";
-    	  }
-    	  else
-    	  {
-    		  filters += "false";
-    	  }
-    	  
+    	  }    	  
     	  filters += ",frozen/";
     	  if (Dom.get(this.id + "-frozen").checked)
     	  {
@@ -715,14 +703,7 @@
                      {
                         Dom.get(me.id + "-categories").checked = (pair[1] === "true");
                         break;
-                     }
-                     
-                     case "series":
-                     {
-                        Dom.get(me.id + "-series").checked = (pair[1] === "true");
-                        break;
-                     }
-                     
+                     }                     
                      case "frozen":
                      {
                         Dom.get(me.id + "-frozen").checked = (pair[1] === "true");

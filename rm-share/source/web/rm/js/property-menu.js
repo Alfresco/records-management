@@ -116,12 +116,12 @@
          updateButtonLabel: true,
          
          /**
-          * Custom rmc meta fields to display - objects with 'id' and 'title' properties
+          * Groups of custom properties
           * 
-          * @property customFields
+          * @property group
           * @type Array
-          */
-         customFields: []
+          */         
+         groups: []
       },
       
       /**
@@ -304,84 +304,40 @@
             });
          }
          
-         if (this.options.showSpecialTypeFields)
+         // Add groups of properties to the property menu
+         for (var i=0, j=this.options.groups.length; i<j; i++)
          {
-            // insert special type fields menu
-            items.push(
-            {
-               text: this.msg("label.menu.specialtypes"),
-               submenu:
-               { 
-                  id: this.id + "_specialtypes",
-                  itemdata:
-                  [ 
-                     [
-                     { text: this.msg("label.dod.scannedFormatVersion"), value: "dod:scannedFormatVersion" },
-                     { text: this.msg("label.dod.resolutionX"), value: "dod:resolutionX" },
-                     { text: this.msg("label.dod.resolutionY"), value: "dod:resolutionY" },
-                     { text: this.msg("label.dod.scannedBitDepth"), value: "dod:scannedBitDepth" }
-                     ],
-                     [
-                     { text: this.msg("label.dod.producingApplication"), value: "dod:producingApplication" },
-                     { text: this.msg("label.dod.producingApplicationVersion"), value: "dod:producingApplicationVersion" },
-                     { text: this.msg("label.dod.pdfVersion"), value: "dod:pdfVersion" },
-                     { text: this.msg("label.dod.creatingApplication"), value: "dod:creatingApplication" },
-                     { text: this.msg("label.dod.documentSecuritySettings"), value: "dod:documentSecuritySettings" }
-                     ],
-                     [
-                     { text: this.msg("label.dod.caption"), value: "dod:caption" },
-                     { text: this.msg("label.dod.photographer"), value: "dod:photographer" },
-                     { text: this.msg("label.dod.copyright"), value: "dod:copyright" },
-                     { text: this.msg("label.dod.bitDepth"), value: "dod:bitDepth" },
-                     { text: this.msg("label.dod.imageSizeX"), value: "dod:imageSizeX" },
-                     { text: this.msg("label.dod.imageSizeY"), value: "dod:imageSizeY" },
-                     { text: this.msg("label.dod.imageSource"), value: "dod:imageSource" },
-                     { text: this.msg("label.dod.compression"), value: "dod:compression" },
-                     { text: this.msg("label.dod.iccIcmProfile"), value: "dod:iccIcmProfile" },
-                     { text: this.msg("label.dod.exifInformation"), value: "dod:exifInformation" }
-                     ],
-                     [
-                     { text: this.msg("label.dod.webFileName"), value: "dod:webFileName" },
-                     { text: this.msg("label.dod.webPlatform"), value: "dod:webPlatform" },
-                     { text: this.msg("label.dod.webSiteName"), value: "dod:webSiteName" },
-                     { text: this.msg("label.dod.webSiteURL"), value: "dod:webSiteURL" },
-                     { text: this.msg("label.dod.captureMethod"), value: "dod:captureMethod" },
-                     { text: this.msg("label.dod.captureDate"), value: "dod:captureDate" },
-                     { text: this.msg("label.dod.contact"), value: "dod:contact" },
-                     { text: this.msg("label.dod.contentManagementSystem"), value: "dod:contentManagementSystem" }
-                     ]
-                  ]
-               }
-            });
-         }
+        	 var group = this.options.groups[i];
+        	 
+        	 var newMenuItem =
+             {
+                text: group.label,
+                submenu:
+                { 
+                   id: this.id + "_" + group.id,
+                   itemdata:
+                   [
+                   ]
+                }
+             };
+        	 
+        	 if (group.properties.length != 0)
+        	 {
+	        	 var itemdata = newMenuItem.submenu.itemdata;
+	             for (var l=0, k=group.properties.length; l<k; l++)
+	             {
+	                var prop = group.properties[l];
+	                itemdata.push(
+	                {
+	                   text: $html(prop.label),
+	                   value: prop.prefix + ":" + prop.name
+	                });
+	             }
+        	 }
+        	 
+        	 items.push(newMenuItem);
+         } 
          
-         // add custom fields menu
-         var customMenu =
-         {
-            text: this.msg("label.menu.custom"),
-            submenu:
-            { 
-               id: this.id + "_custom",
-               itemdata:
-               [
-               ]
-            }
-         };
-         if (this.options.customFields.length !== 0)
-         {
-            // specified in the options as an array of objects with 'id' and 'title' fields
-            var itemdata = customMenu.submenu.itemdata;
-            for (var i=0, j=this.options.customFields.length; i<j; i++)
-            {
-               var prop = this.options.customFields[i];
-               itemdata.push(
-               {
-                  text: $html(prop.title),
-                  value: prop.id
-               });
-            }
-         }
-         items.push(customMenu);
          
          // menu button widget setup
          this.widgets.menubtn = new YAHOO.widget.Button(this.id,
