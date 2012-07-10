@@ -480,6 +480,7 @@
             {
                // Validation
                p_form.addValidation(parent.id + "-newList-constraintTitle", Alfresco.forms.validation.mandatory, null, "keyup");
+               p_form.addValidation(parent.id + "-newList-constraintTitle", Alfresco.forms.validation.nodeName, null, "keyup");
                p_form.setShowSubmitStateDynamically(true, false);
             };
             var createListUrl = Alfresco.constants.PROXY_URI + "api/rma/admin/rmconstraints";
