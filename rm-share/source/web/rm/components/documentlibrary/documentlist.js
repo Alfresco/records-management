@@ -166,7 +166,7 @@
          // Modified on
          this.registerRenderer("RM_modifiedOn", function(record, label)
          {
-            return '<span class="item">' + label + Alfresco.util.formatDate($jsonDate(record.jsNode.properties.modified.iso8601)) + '</span>';
+            return '<span class="item">' + label + Alfresco.util.formatDate(record.jsNode.properties.modified.iso8601) + '</span>';
          });
 
          // Date Filed
@@ -178,7 +178,7 @@
          // Publication Date
          this.registerRenderer("RM_publicationDate", function(record, label)
          {
-            return '<span class="item">' + label + Alfresco.util.formatDate($jsonDate(record.jsNode.properties.rma_publicationDate), "defaultDateOnly") + '</span>';
+            return '<span class="item">' + label + Alfresco.util.formatDate(record.jsNode.properties.rma_publicationDate.iso8601, "ddd d mmm yyyy") + '</span>';
          });
 
          // Hold Reason
