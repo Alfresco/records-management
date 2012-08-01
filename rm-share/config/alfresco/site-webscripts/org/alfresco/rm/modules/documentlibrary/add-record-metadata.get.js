@@ -21,7 +21,7 @@ function main()
    if (result.status == 200)
    {
       var rmAspects = eval('(' + result + ')').data.recordMetaDataAspects;
-      result = remote.call("/slingshot/node/" + args.nodeRef.replace("://", "/"));
+      result = remote.call("/api/rmmetadata?extended=true&noderef=" + args.nodeRef);
       var nodeAspects = eval('(' + result + ')').aspects;
 
       var recordTypes = [];

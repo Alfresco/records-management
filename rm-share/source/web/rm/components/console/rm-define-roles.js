@@ -229,8 +229,8 @@
          }
          else
          {
-            // build a safe role id - replacing whitespace and encoding characters
-            roleId = roleName.replace(/\s/g, "_");
+            // build a safe role id - replace spaces & remove anything that isn't a number, letter or -
+            roleId = roleName.replace(/\s/g, "_").replace(/[^0-9a-zA-Z\-_]/g, "");
          }
 
          // collect up an array of capability id strings

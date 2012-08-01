@@ -1,5 +1,11 @@
 <alfresco-config>
    
+   <plug-ins>
+      <evaluators>
+         <evaluator id="rm-kind" class="org.alfresco.module.org_alfresco_module_rm_share.forms.KindEvaluator" />
+      </evaluators>
+   </plug-ins>
+   
    <config>
       <forms>
          <dependencies>
@@ -7,142 +13,7 @@
          </dependencies>
       </forms>   
    </config>
-
-   <!-- Records Management Creation Forms -->
-   <config evaluator="model-type" condition="rma:recordCategory">
-      <forms>
-         <form>
-            <field-visibility>
-               <hide id="sys:node-uuid" />
-               <hide id="sys:store-protocol" />
-               <hide id="sys:store-identifier" />
-               <hide id="sys:node-dbid" />
-               <hide id="sys:locale" />
-               <hide id="cm:created" />
-               <hide id="cm:creator" />
-               <hide id="cm:modified" />
-               <hide id="cm:modifier" />
-               <hide id="cm:accessed" />
-               <hide id="cm:contains" />
-               <hide id="rma:identifier" />
-               <hide id="rma:dbUniquenessId" />
-               <hide id="rma:dispositionSchedule" />
-               <hide id="rma:rootNodeRef" />       
-            </field-visibility>
-            <create-form template="/org/alfresco/rm/components/form/create-container.ftl" />
-            <appearance>
-               <set id="name" />
-               <set id="title" />
-               <set id="description" />
-               <set id="other" />
-               <set id="rm-custom" />
-               <field id="cm:description" mandatory="true" />
-               <field id="rma:vitalRecordIndicator">
-                  <control template="/org/alfresco/rm/components/form/controls/vital-record-indicator.ftl" />
-               </field> 
-               <field id="rma:reviewPeriod">
-                  <constraint-handlers>
-                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.rmVitalRecordPeriodMandatory" />
-                  </constraint-handlers>
-               </field>
-            </appearance>
-         </form>
-      </forms>
-   </config>
    
-   <!--  Included for backwards compatibility with RM 1.0 -->
-   <config evaluator="model-type" condition="dod:recordSeries">
-      <forms>
-         <form>
-            <field-visibility>
-               <hide id="sys:node-uuid" />
-               <hide id="sys:store-protocol" />
-               <hide id="sys:store-identifier" />
-               <hide id="sys:node-dbid" />
-               <hide id="sys:locale" />
-               <hide id="cm:created" />
-               <hide id="cm:creator" />
-               <hide id="cm:modified" />
-               <hide id="cm:modifier" />
-               <hide id="cm:accessed" />
-               <hide id="cm:contains" />
-               <hide id="rma:identifier" />
-               <hide id="rma:dbUniquenessId" />
-               <hide id="rma:dispositionSchedule" />
-               <hide id="rma:rootNodeRef" />       
-            </field-visibility>
-            <create-form template="/org/alfresco/rm/components/form/create-container.ftl" />
-            <appearance>
-               <set id="name" />
-               <set id="title" />
-               <set id="description" />
-               <set id="other" />
-               <set id="rm-custom" />
-               <field id="cm:description" mandatory="true" />
-               <field id="rma:vitalRecordIndicator">
-                  <control template="/org/alfresco/rm/components/form/controls/vital-record-indicator.ftl" />
-               </field> 
-               <field id="rma:reviewPeriod">
-                  <constraint-handlers>
-                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.rmVitalRecordPeriodMandatory" />
-                  </constraint-handlers>
-               </field>
-            </appearance>
-         </form>
-      </forms>
-   </config>
-   
-   <config evaluator="model-type" condition="rma:recordFolder">
-      <forms>
-         <form>
-            <field-visibility>
-               <hide id="sys:node-uuid" />
-               <hide id="sys:store-protocol" />
-               <hide id="sys:store-identifier" />
-               <hide id="sys:node-dbid" />
-               <hide id="sys:locale" />
-               <hide id="cm:created" />
-               <hide id="cm:creator" />
-               <hide id="cm:modified" />
-               <hide id="cm:modifier" />
-               <hide id="cm:accessed" />
-               <hide id="cm:contains" />
-               <hide id="rma:identifier" />
-               <hide id="rma:dbUniquenessId" />
-               <hide id="rma:isClosed" />
-               <hide id="rma:rootNodeRef" />
-            </field-visibility>
-            <create-form template="/org/alfresco/rm/components/form/create-container.ftl" />
-            <appearance>
-               <set id="name" />
-               <set id="title" />
-               <set id="description" />
-               <set id="other" />
-               <set id="rm-custom" />
-            </appearance>
-         </form>
-      </forms>
-   </config>
-
-   <config evaluator="model-type" condition="rma:nonElectronicDocument">
-      <forms>
-         <form>
-            <field-visibility>
-               <show id="cm:name" />
-               <show id="cm:title" force="true" />
-               <show id="cm:description" force="true" />
-            </field-visibility>
-            <create-form template="/org/alfresco/rm/components/form/create-container.ftl" />
-            <appearance>
-               <set id="rm-custom" />
-               <field id="cm:title" mandatory="true">
-                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
-               </field>
-            </appearance>
-         </form>
-      </forms>
-   </config>
-
    <!-- Records Management Viewing and Editing Forms -->
    <config evaluator="node-type" condition="rma:dispositionSchedule">
       <forms>
@@ -163,44 +34,167 @@
       </forms>
    </config>
 
-   <config evaluator="node-type" condition="rma:recordCategory">
+   <config evaluator="model-type" condition="rma:nonElectronicDocument">
       <forms>
-         <form id="rm">
+         <form>
             <field-visibility>
-               <hide id="sys:node-uuid" />
-               <hide id="sys:store-protocol" />
-               <hide id="sys:store-identifier" />
-               <hide id="sys:node-dbid" />
-               <hide id="sys:locale" />
-               <hide id="cm:created" />
-               <hide id="cm:creator" />
-               <hide id="cm:modified" />
-               <hide id="cm:modifier" />
-               <hide id="cm:owner" />
-               <hide id="cm:original" />
-               <hide id="cm:accessed" />
-               <hide id="cm:contains" />
-               <hide id="rma:dispositionSchedule" />
-               <hide id="rma:dbUniquenessId" />
-               <hide id="rma:rootNodeRef" />
+               <show id="cm:name" />
+               <show id="cm:title" force="true" />
+               <show id="cm:description" force="true" />
+               <show id="rma:physicalSize" force="true" />
+               <show id="rma:numberOfCopies" force="true" />
+               <show id="rma:storageLocation" force="true" />
+               <show id="rma:shelf" force="true" />
+               <show id="rma:box" force="true" />
+               <show id="rma:file" force="true" />
             </field-visibility>
-            <appearance>
-               <set id="rm" />
-               <set id="rm-custom" />
-               <field id="cm:description" mandatory="true">
+            <create-form template="/org/alfresco/rm/components/form/create-container.ftl" />
+            <appearance>               
+               
+               <set id="rm-custom" label-id="label.set.customMetadata" appearance="panel" /> 
+               
+               <field id="cm:title" mandatory="true">
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+               </field>
+               <field id="cm:description">
                   <control>
                      <control-param name="activateLinks">true</control-param>
                   </control>
                </field>
-               <field id="rma:vitalRecordIndicator" set="rm">
-                  <control template="/org/alfresco/rm/components/form/controls/vital-record-indicator.ftl" />
+            </appearance>
+         </form>
+      </forms>
+   </config>
+   
+   <config evaluator="node-type" condition="rma:nonElectronicDocument">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="cm:name" />
+               <show id="cm:title" />
+               <show id="cm:description" />
+               <show id="rma:physicalSize" />
+               <show id="rma:numberOfCopies" />
+               <show id="rma:storageLocation" />
+               <show id="rma:shelf" />
+               <show id="rma:box" />
+               <show id="rma:file" />
+            </field-visibility>
+            <appearance>
+               <field id="cm:title" mandatory="true">
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
                </field>
-               <field id="rma:reviewPeriod" set="rm">
+               <field id="cm:description">
+                  <control>
+                     <control-param name="activateLinks">true</control-param>
+                  </control>
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>
+   
+   <config evaluator="model-type" condition="rma:recordCategory">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="cm:name" force="true"/>
+               <show id="cm:title" force="true" />
+               <show id="cm:description" force="true" />
+            </field-visibility>
+            <create-form template="/org/alfresco/rm/components/form/create-container.ftl" />
+            <appearance>
+               <field id="cm:title" mandatory="true">
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+               </field>
+               <field id="cm:description">
+                  <control>
+                     <control-param name="activateLinks">true</control-param>
+                  </control>
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>
+   
+   <config evaluator="node-type" condition="rma:recordCategory">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="cm:name" />
+               <show id="cm:title" />
+               <show id="cm:description" />
+            </field-visibility>
+            <appearance>
+               <field id="cm:title" mandatory="true">
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+               </field>
+               <field id="cm:description">
+                  <control>
+                     <control-param name="activateLinks">true</control-param>
+                  </control>
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>
+   
+   <config evaluator="rm-kind" condition="RECORD_CATEGORY">
+      <forms>
+         <form>             
+            <field-visibility>
+            
+               <!--  Record category fields -->
+               <show id="rma:identifier" for-mode="view"/>
+               
+               <!--  Vital Record fields -->
+               <show id="rma:vitalRecordIndicator" force="true" />
+               <show id="rma:reviewPeriod" force="true" />
+               
+            </field-visibility>
+            
+            <appearance>            
+            
+               <set id="rm-record-cat" /> 
+               <set id="rm-vital-record" label="Vital Record" appearance="panel"/>
+               <set id="rm-custom" label-id="label.set.customMetadata" appearance="panel" /> 
+               
+               <!--  Record folder fields --> 
+               <field id="rma:identifier" label-id="label.categoryIdentifier" read-only="true" set="rm-record-cat"/>               
+               
+               <!--  Vital record fields -->
+               <field id="rma:vitalRecordIndicator" set="rm-vital-record">
+                  <control template="/org/alfresco/rm/components/form/controls/vital-record-indicator.ftl" />
+               </field> 
+               <field id="rma:reviewPeriod" set="rm-vital-record">
                   <constraint-handlers>
                      <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.rmVitalRecordPeriodMandatory" />
                   </constraint-handlers>
                </field>
-               <field id="rma:identifier" set="rm" label-id="label.categoryIdentifier" read-only="true" />
+               
+            </appearance>
+         </form>
+      </forms>
+   </config>
+   
+   <config evaluator="model-type" condition="rma:recordFolder">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="cm:name" force="true"/>
+               <show id="cm:title" force="true" />
+               <show id="cm:description" force="true" />
+            </field-visibility>
+            <create-form template="/org/alfresco/rm/components/form/create-container.ftl" />
+            <appearance>
+               <field id="cm:title" mandatory="true">
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+               </field>
+               <field id="cm:description">
+                  <control>
+                     <control-param name="activateLinks">true</control-param>
+                  </control>
+               </field>
             </appearance>
          </form>
       </forms>
@@ -208,196 +202,149 @@
    
    <config evaluator="node-type" condition="rma:recordFolder">
       <forms>
-         <form id="rm">
+         <form>
             <field-visibility>
-               <hide id="sys:node-uuid" />
-               <hide id="sys:store-protocol" />
-               <hide id="sys:store-identifier" />
-               <hide id="sys:node-dbid" />
-               <hide id="sys:locale" />
-               <hide id="cm:created" />
-               <hide id="cm:creator" />
-               <hide id="cm:modified" />
-               <hide id="cm:modifier" />
-               <hide id="cm:owner" />
-               <hide id="cm:accessed" />
-               <hide id="cm:contains" />
-               <hide id="cm:original" />
-               <hide id="rma:isClosed" />
-               <hide id="rma:dbUniquenessId" />
-               <hide id="rma:nextDispositionAction" />
-               <hide id="rma:dispositionActionHistory" />
-               <hide id="rma:recordSearchDispositionActionName" />
-               <hide id="rma:recordSearchDispositionEventsEligible" />
-               <hide id="rma:recordSearchDispositionEvents" />
-               <hide id="rma:recordSearchHasDispositionSchedule" />
-               <hide id="rma:recordSearchDispositionPeriod" />
-               <hide id="rma:recordSearchDispositionPeriodExpression" />
-               <hide id="rma:recordSearchDispositionAuthority" />
-               <hide id="rma:recordSearchDispositionInstructions" />
-               <hide id="rma:recordSearchHoldReason" />
-               <hide id="rma:recordSearchVitalRecordReviewPeriod" />
-               <hide id="rma:recordSearchVitalRecordReviewPeriodExpression" />
-               <hide id="rma:recordSearchDispositionActionAsOf" for-mode="edit" />
-               <hide id="rma:cutOffDate" for-mode="edit" />
-               <hide id="rma:frozenBy" />
-               <hide id="rma:frozenAt" />
-               <hide id="rma:rootNodeRef" />
+               <show id="cm:name" />
+               <show id="cm:title" />
+               <show id="cm:description" />
             </field-visibility>
             <appearance>
-               <set id="rm" />
-               <set id="rm-custom" />
+               <field id="cm:title" mandatory="true">
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+               </field>
                <field id="cm:description">
                   <control>
                      <control-param name="activateLinks">true</control-param>
                   </control>
                </field>
-               <field id="rma:identifier" set="rm" label-id="label.folderIdentifier" read-only="true" />
-               <field id="rmc:supplementalMarkingList" set="rm" />
-               <field id="rma:vitalRecordIndicator" set="rm">
-                  <control template="/org/alfresco/rm/components/form/controls/vital-record-indicator.ftl" />
-               </field> 
-               <field id="rma:reviewPeriod" set="rm">
-                  <constraint-handlers>
-                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.rmVitalRecordPeriodMandatory" />
-                  </constraint-handlers>
-               </field>
-               <field id="rma:location" set="rm" />
-               <field id="rma:cutOffDate" set="rm" />
-               <field id="rma:recordSearchDispositionActionAsOf" set="rm" label-id="label.dispositionAsOfDate" />
             </appearance>
          </form>
       </forms>
    </config>
    
-   <config evaluator="node-type" condition="cm:content">
+   <config evaluator="rm-kind" condition="RECORD_FOLDER">
       <forms>
-         <form id="rm">
-            <view-form template="/org/alfresco/rm/components/form/record-metadata.ftl" />
-            <edit-form template="/org/alfresco/rm/components/form/record-metadata.ftl" />
-            
+         <form>             
             <field-visibility>
-               <!-- explicitly hide mandatory fields we don't want in edit mode -->
-               <hide id="cm:automaticUpdate" />
-               <hide id="sys:node-dbid" />
-               <hide id="size" for-mode="edit" />
-               <hide id="rma:dateFiled" for-mode="edit" />
-               <hide id="rma:cutOffDate" for-mode="edit" />
-               <hide id="rma:frozenBy" />
-               <hide id="rma:frozenAt" />
-               <hide id="rma:rootNodeRef" />
+            
+               <!--  Record folder fields -->
+               <show id="rma:identifier" for-mode="view"/>
+               <show id="rma:location" />
+               <show id="rmc:supplementalMarkingList" force="true" />
+               
+               <!--  Vital Record fields -->
+               <show id="rma:vitalRecordIndicator" force="true" />
+               <show id="rma:reviewPeriod" force="true" />
+
+               <!--  Disposition Details -->
+               <show id="rmCategoryIdentifier" for-mode="view"/>               
+               <show id="rmDispositionInstructions" for-mode="view"/>
+               <show id="rma:cutOffDate" for-mode="view"/>
+               <show id="rma:recordSearchDispositionActionAsOf" for-mode="view"/>
+               
             </field-visibility>
             
-            <appearance>
-               <set id="rm-custom" label-id="label.set.customMetadata" appearance="panel" />
+            <appearance>            
+            
+               <set id="rm-record-folder" /> 
+               <set id="rm-vital-record" label-id="label.set.vitalRecord" appearance="panel"/>
+               <set id="rm-disposition" label-id="label.set.disposition" appearance="panel"/>
+               <set id="rm-custom" label-id="label.set.customMetadata" appearance="panel" /> 
                
-               <field id="rma:identifier" label-id="label.recordIdentifier" read-only="true" />
-               <field id="rmCategoryIdentifier" label-id="label.categoryIdentifier" />
-               <field id="rmDeclared" label-id="label.declared" />
-               <field id="rmRecordType" label-id="label.recordType" />
-               <field id="rmDispositionInstructions" label-id="label.dispositionInstructions" />
-               <field id="rma:recordSearchDispositionActionAsOf" label-id="label.dispositionAsOfDate" />
-               <field id="cm:title" mandatory="true">
-                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+               <!--  Record folder fields --> 
+               <field id="rma:identifier" label-id="label.folderIdentifier" read-only="true" set="rm-record-folder"/>               
+               <field id="rma:location" set="rm-record-folder"/>
+               <field id="rmc:supplementalMarkingList" set="rm-record-folder"/>
+               
+               <!--  Vital record fields -->
+               <field id="rma:vitalRecordIndicator" set="rm-vital-record">
+                  <control template="/org/alfresco/rm/components/form/controls/vital-record-indicator.ftl" />
+               </field> 
+               <field id="rma:reviewPeriod" set="rm-vital-record">
+                  <constraint-handlers>
+                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.rmVitalRecordPeriodMandatory" />
+                  </constraint-handlers>
                </field>
-               <field id="cm:description">
-                  <control>
-                     <control-param name="activateLinks">true</control-param>
-                  </control>
-               </field>
-               <field id="mimetype">
-                  <control template="/org/alfresco/components/form/controls/mimetype.ftl" />
-               </field>
-               <field id="size">
-                  <control template="/org/alfresco/components/form/controls/size.ftl" />
-               </field>
-               <field id="dod:webSiteURL">
-                  <control>
-                     <control-param name="activateLinks">true</control-param>
-                  </control>
-               </field>
+            
+               <!--  Disposition Details -->
+               <field id="rmCategoryIdentifier" label-id="label.categoryIdentifier" set="rm-disposition" read-only="true" />
+               <field id="rmDispositionInstructions" label-id="label.dispositionInstructions" read-only="true" set="rm-disposition"/>               
+               <field id="rma:cutOffDate" read-only="true" set="rm-disposition"/>
+               <field id="rma:recordSearchDispositionActionAsOf" label-id="label.dispositionAsOfDate" read-only="true" set="rm-disposition" />
+               
             </appearance>
          </form>
       </forms>
    </config>
-
-   <config evaluator="node-type" condition="rma:nonElectronicDocument">
+      
+   
+   <config evaluator="rm-kind" condition="RECORD">
       <forms>
-         <form id="rm">
-            <view-form template="/org/alfresco/rm/components/form/record-metadata.ftl" />
-            <edit-form template="/org/alfresco/rm/components/form/record-metadata.ftl" />
-            
+         <form> 
             <field-visibility>
-               <!-- explicitly hide mandatory fields we don't want in edit mode -->
-               <hide id="cm:automaticUpdate" />
-               <hide id="sys:node-dbid" />
-               <hide id="size" for-mode="edit" />
-               <hide id="rma:dateFiled" for-mode="edit" />
-               <hide id="rma:cutOffDate" for-mode="edit" />
-               <hide id="rma:frozenBy" />
-               <hide id="rma:frozenAt" />
-               <hide id="rma:rootNodeRef" />
+               
+               <!--  Record fields -->
+               <show id="rma:identifier" for-mode="view"/>
+               <show id="rma:dateFiled" for-mode="view"/>
+               <show id="rma:publicationDate" />
+               <show id="rma:originator" />
+               <show id="rma:originatingOrganization" />
+               <show id="rma:mediaType" />
+               <show id="rma:format" />
+               <show id="rma:dateReceived" />
+               <show id="rma:address" />
+               <show id="rma:otherAddress" />
+               <show id="rma:location" />
+               <show id="rmc:supplementalMarkingList" />
+               
+               <!--  Vital Record fields -->
+               <show id="rma:reviewAsOf" for-mode="view"/>
+               
+               <!--  Disposition Details -->
+               <show id="rmCategoryIdentifier" for-mode="view"/>               
+               <show id="rmDispositionInstructions" for-mode="view"/>
+               <show id="rmDeclared" for-mode="view"/>
+               <show id="rma:cutOffDate" for-mode="view"/>
+               <show id="rma:recordSearchDispositionActionAsOf" for-mode="view"/>
+               
             </field-visibility>
             
             <appearance>
-               <set id="rm-custom" label-id="label.set.customMetadata" appearance="panel" />
                
-               <field id="rma:identifier" label-id="label.recordIdentifier" read-only="true" />
-               <field id="rmCategoryIdentifier" label-id="label.categoryIdentifier" />
-               <field id="rmDeclared" label-id="label.declared" />
-               <field id="rmRecordType" label-id="label.recordType" />
-               <field id="rmDispositionInstructions" label-id="label.dispositionInstructions" />
-               <field id="rma:recordSearchDispositionActionAsOf" label-id="label.dispositionAsOfDate" />
-               <field id="cm:title" mandatory="true">
-                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
-               </field>
-               <field id="cm:description">
-                  <control>
-                     <control-param name="activateLinks">true</control-param>
-                  </control>
-               </field>
-               <field id="mimetype">
-                  <control template="/org/alfresco/components/form/controls/mimetype.ftl" />
-               </field>
-               <field id="size">
-                  <control template="/org/alfresco/components/form/controls/size.ftl" />
-               </field>
-
-               <field id="rma:physicalSize" label-id="label.physicalSize" >
-                  <control template="/org/alfresco/components/form/controls/size.ftl" />
-               </field>
-               <field id="rma:numberOfCopies" label-id="label.numberOfCopies" >
-                  <control template="/org/alfresco/components/form/controls/number.ftl" />
-               </field>
-               <field id="rma:storageLocation" label-id="label.storageLocation" />
-               <field id="rma:shelf" label-id="label.shelf" />
-               <field id="rma:box" label-id="label.box" />
-               <field id="rma:file" label-id="label.file" />
+               <set id="rm-record" label-id="label.set.record" appearance="panel" /> 
+               <set id="rm-vital-record" label-id="label.set.vitalRecord" appearance="panel" />
+               <set id="rm-disposition" label-id="label.set.disposition" appearance="panel" />
+               <set id="rm-custom" label-id="label.set.customMetadata" appearance="panel" />       
+               
+               <!--  Record fields --> 
+               <field id="rma:identifier" label-id="label.recordIdentifier" read-only="true" set="rm-record"/>               
+               <field id="rma:dateFiled" set="rm-record" read-only="true"/>
+               <field id="rma:publicationDate" set="rm-record"/>
+               <field id="rma:originator" set="rm-record"/>
+               <field id="rma:originatingOrganization" set="rm-record"/>
+               <field id="rma:mediaType" set="rm-record"/>
+               <field id="rma:format" set="rm-record"/>
+               <field id="rma:dateReceived" set="rm-record"/>
+               <field id="rma:address" set="rm-record"/>
+               <field id="rma:otherAddress" set="rm-record"/>
+               <field id="rma:location" set="rm-record"/>               
+               <field id="rmc:supplementalMarkingList" set="rm-record"/>
+            
+               <!--  Vital Record fields -->
+               <field id="rma:reviewAsOf" set="rm-vital-record" read-only="true" />
+               
+               <!--  Disposition Details -->
+               <field id="rmCategoryIdentifier" label-id="label.categoryIdentifier" set="rm-disposition" read-only="true" />               
+               <field id="rmDispositionInstructions" label-id="label.dispositionInstructions" read-only="true" set="rm-disposition"/>
+               <field id="rmDeclared" label-id="label.declared" read-only="true" set="rm-disposition"/>
+               <field id="rma:cutOffDate" read-only="true" set="rm-disposition"/>
+               <field id="rma:recordSearchDispositionActionAsOf" label-id="label.dispositionAsOfDate" read-only="true" set="rm-disposition" />
+            
             </appearance>
+            
          </form>
       </forms>
    </config>
-
-   <config evaluator="node-type" condition="cm:folder">
-      <forms>
-         <form id="rm">
-            <field-visibility>
-               <show id="cm:name" />
-               <show id="cm:title" force="true" />
-               <show id="cm:description" force="true" />
-            </field-visibility>
-            <appearance>
-               <field id="cm:title">
-                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
-               </field>
-               <field id="cm:description">
-                  <control>
-                     <control-param name="activateLinks">true</control-param>
-                  </control>
-               </field>
-            </appearance>
-          </form>
-      </forms>
-   </config>
+   
    
 </alfresco-config>

@@ -18,8 +18,16 @@
          <list>
             <value>classpath:alfresco/rm-share-config.xml</value>
             <value>classpath:alfresco/rm-form-config.xml</value>
+            <value>classpath:alfresco/dod-form-config.xml</value>
          </list>
       </property>
+   </bean>
+   
+   <!--  Override form get to extend with RM form config -->
+   <bean id="webscript.org.alfresco.components.form.form.get" 
+         class="org.alfresco.module.org_alfresco_module_rm_share.forms.FormUIGet" 
+         parent="webscript">
+      <property name="configService" ref="web.config" />
    </bean>
 
    <!--                                           -->
@@ -113,12 +121,26 @@
    <!-- File Plan Action Evaluators -->
    <!--                             -->
    <bean id="evaluator.rm.common.actionEvaluator" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.ActionEvaluator" />   
+   
    <bean id="evaluator.rm.action.edit-details" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="editDetails" />
-   </bean>   
+   </bean>  
+    
    <bean id="evaluator.rm.action.delete" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="delete" />
    </bean>   
+    <bean id="evaluator.rm.action.copy" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="copy" />
+   </bean>  
+    <bean id="evaluator.rm.action.moveRecord" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="moveRecord" />
+   </bean>  
+    <bean id="evaluator.rm.action.moveRecordFolder" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="moveRecordFolder" />
+   </bean>  
+    <bean id="evaluator.rm.action.moveRecordCategory" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="moveRecordCategory" />
+   </bean>  
    <bean id="evaluator.rm.action.file-to" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="fileTo" />
    </bean>
@@ -191,6 +213,9 @@
    </bean>
    <bean id="evaluator.rm.action.transfer-complete" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="transferComplete" />
+   </bean>
+   <bean id="evaluator.rm.action.accession-complete" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="accessionComplete" />
    </bean>
    <bean id="evaluator.rm.action.relinquish" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="relinquish" />

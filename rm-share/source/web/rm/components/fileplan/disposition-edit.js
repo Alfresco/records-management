@@ -94,7 +94,9 @@
           * @type {object} with objects like { label: string}
           *       and the action name/type {string} as the key.
           */
-         actions: {}
+         actions: {},
+         
+         recordLevelDisposition: false
       },
 
       /**
@@ -170,6 +172,9 @@
                         actions = schedule.actions ? schedule.actions : [],
                         action,
                         actionEl;
+                     
+                     this.options.recordLevelDisposition = schedule.recordLevelDisposition;
+                     
                      if (actions.length == 0)
                      {
                         dummyEl.innerHTML = this.msg("message.noSteps");  
@@ -184,6 +189,75 @@
                            actionEl = this._createAction(action);
                            actionEl = this.widgets.actionListEl.appendChild(actionEl);
                            this._setupActionForm(action, actionEl);
+                        }
+                     }
+                  }
+                  this.widgets.createActionButton.set("disabled", false);
+               },
+               scope: this
+            },
+            failureCallback:
+            {
+               fn: function(response)
+               {                  
+                  Alfresco.util.PopupManager.displayPrompt(
+                  {
+                     text: this.msg("message.getActionFailure", this.name)
+                  });
+               },
+               scope: this
+            }
+         });
+      },
+      
+      /**
+       * Loads disposition properties from the server
+       *
+       * @method _loadDispositionProperties
+       * @private
+       */
+      _loadDispositionProperties: function DispositionEdit__loadDispostionProperties(action, actionEl)
+      {
+    	 var remoteUrl = Alfresco.constants.PROXY_URI_RELATIVE + "/api/rma/dispositionproperties?recordlevel=" + this.options.recordLevelDisposition + "&dispositionaction=" + action.name;  
+    	  
+    	 Alfresco.util.Ajax.jsonGet(
+         {
+            url: remoteUrl,
+            successCallback:
+            {
+               fn: function(response)
+               {
+                  if (response.json)
+                  {                	  
+                     var periodActionEl = Dom.getElementsByClassName("period-action", "select", actionEl)[0],
+                         data = response.json.data,
+                         properties = data.properties ? data.properties : [],
+                         property,
+                         option;
+                     
+                     if (properties.length !== 0)
+                     {
+                        for (var i = 0, ii = properties.length; i < ii; i++)
+                        {
+                           property = properties[i];
+                           
+                           option = document.createElement("option");
+                           option.text = property.label;
+                           option.value = property.value;
+                           if (action.periodProperty === property.value)
+                           {
+                              option.selected = true;
+                           }
+                           try
+                           {
+                              periodActionEl.add(option, null);
+                           }
+                           catch(ex)
+                           {
+                              // IE catch
+                              var index = (periodActionEl.selectedIndex != -1) ? periodActionEl.selectedIndex : periodActionEl.length;
+                              periodActionEl.add(option, index);
+                           }
                         }
                      }
                   }
@@ -274,14 +348,13 @@
             actionEl: actionEl
          }, this);
 
-         // Period Action
-         var periodAction = action.periodProperty,
-            periodActionEl = Dom.getElementsByClassName("period-action", "select", actionEl)[0];
-         Alfresco.util.setSelectedIndex(periodActionEl, periodAction);
+         // Load the disposition properties
+         this._loadDispositionProperties(action, actionEl);
 
          // Period Unit
          var periodUnit = (period && period.length > 0) ? period[0] : null,
-            periodUnitEl = Dom.getElementsByClassName("period-unit", "select", actionEl)[0];
+             periodActionEl = Dom.getElementsByClassName("period-action", "select", actionEl)[0],	 
+             periodUnitEl = Dom.getElementsByClassName("period-unit", "select", actionEl)[0];
          Event.addListener(periodUnitEl, "change", this.onPeriodUnitSelectChange,
          {
             actionEl: actionEl,
@@ -537,12 +610,22 @@
                   obj.cancelButton.set("disabled", false);
                   Dom.removeClass(obj.actionEl, "expanded");
                   Dom.addClass(obj.actionEl, "collapsed");
+                  
+                  // Get the created action id
+                  var newActionId = serverResponse.json.data.id;
 
                   // Save new info for future cancels and hide details div
-                  Dom.getElementsByClassName("id", "input", actionEl)[0].value = serverResponse.json.data.id;
+                  Dom.getElementsByClassName("id", "input", actionEl)[0].value = newActionId;
                   action = YAHOO.lang.merge(action, serverResponse.json.data);
                   var details = Dom.getElementsByClassName("details", "div", actionEl)[0];
                   Dom.setStyle(details, "display", "none");
+                  
+                  // Update form action
+                  if (newActionId && newActionId.length > 0)
+                  {
+                     actionForm.setAjaxSubmitMethod(Alfresco.util.Ajax.PUT);
+                     formEl.attributes.action.nodeValue = Alfresco.constants.PROXY_URI_RELATIVE + "api/node/" + this.options.nodeRef.replace(":/", "") + "/dispositionschedule/dispositionactiondefinitions/" + newActionId;
+                  }
 
                   // Refresh the title from the choices
                   this._refreshTitle(obj.actionEl);

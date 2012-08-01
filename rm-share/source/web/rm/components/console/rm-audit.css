@@ -254,6 +254,12 @@
    float: right;
 }
 
+.rm-audit-apply-filter
+{
+   height: 4em;
+   margin-top: 0.5em;
+}
+
 /* dialog */
 
 #auditEntry
@@ -291,4 +297,10 @@
 #auditEntry table#auditEntry-changedValues td
 {
    height: 1em;
+}
+
+.auditActions
+{
+   float: right;
+   margin-top: 10px;
 }

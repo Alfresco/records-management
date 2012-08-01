@@ -22,16 +22,18 @@
             <div class="file-upload"><button id="${el}-fileUpload-button">${msg("button.upload")}</button></div>
          </div>
          <div id="${el}-import-section" class="hideable toolbar-hidden DocListTree">
-            <div class="import"><button id="${el}-import-button" class="no-access-check">${msg("button.import")}</button></div>
+            <div class="import"><button id="${el}-import-button">${msg("button.import")}</button></div>
          </div>
          <div class="hideable toolbar-hidden DocListTree">
             <div class="export-all"><button id="${el}-exportAll-button">${msg("button.export-all")}</button></div>
          </div>
          
+         <#-- RM-318 - removing Report button temporarily
          <div class="hideable toolbar-hidden DocListTree">
             <div class="report"><button id="${el}-report-button">${msg("button.report")}</button></div>
          </div>
-
+         -->
+         
          <div class="selected-items">
             <button id="${el}-selectedItems-button" class="no-access-check">${msg("menu.selected-items")}</button>
             <div id="${el}-selectedItems-menu" class="yuimenu">

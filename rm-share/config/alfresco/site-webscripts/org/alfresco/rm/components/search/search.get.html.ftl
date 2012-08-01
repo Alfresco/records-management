@@ -5,12 +5,12 @@
       showSearchFields: true,
       showIdentiferField: true,
       updateButtonLabel: false,
-      customFields: YAHOO.lang.JSON.parse('[<#list meta as d>{"id": "${d.name}", "title": "${d.title?js_string}"}<#if d_has_next>,</#if></#list>]')
+      groups: YAHOO.lang.JSON.parse('${jsonUtils.toJSONString(groups)}')
    }).setMessages(${messages});
    new Alfresco.rm.component.Search("${el}").setOptions(
    {
       siteId: "${page.url.templateArgs.site!""}",
-      customFields: YAHOO.lang.JSON.parse('[<#list meta as d>{"id": "${d.name?substring(4)}", "title": "${d.title?js_string}", "datatype": "${d.dataType}"}<#if d_has_next>,</#if></#list>]')
+      groups: YAHOO.lang.JSON.parse('${jsonUtils.toJSONString(groups)}')
    }).setMessages(${messages});
 //]]></script>
 

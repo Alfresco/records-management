@@ -74,6 +74,22 @@
                   </sub-component>
                </sub-components>
             </component>
+            
+            <!--  Hide categories -->
+            <component>
+               <scope>template</scope>
+               <region-id>categories</region-id>
+               <source-id>documentlibrary</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
 
             <!--
                Replace with RM specific tree,

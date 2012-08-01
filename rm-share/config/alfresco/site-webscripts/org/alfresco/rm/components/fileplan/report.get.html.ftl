@@ -1,7 +1,7 @@
 <#macro recordSeriesHTML recordSeries>
    <#list recordSeries as recordSerie>
    <div class="report-title recordseries">
-      <div><img src="${url.context}/res/components/documentlibrary/images/record-series-48.png"/></div>
+      <div><img src="${url.context}/res/rm/components/documentlibrary/images/record-series-48.png"/></div>
       <div>${recordSerie.name?html}</div>
    </div>
    <div class="report-section recordseries">
@@ -25,7 +25,7 @@
 <#macro recordCategoriesHTML recordCategories>
    <#list recordCategories as recordCategory>
    <div class="report-title recordcategory">
-      <div><img src="${url.context}/res/components/documentlibrary/images/record-category-48.png"/></div>
+      <div><img src="${url.context}/res/rm/components/documentlibrary/images/record-category-48.png"/></div>
       <div>${recordCategory.name?html}</div>
    </div>
    <div class="report-section recordcategory">
@@ -81,7 +81,7 @@
 <#macro recordFoldersHTML recordFolders>
    <#list recordFolders as recordFolder>
    <div class="report-title recordfolder">
-      <div><img src="${url.context}/res/components/documentlibrary/images/record-folder-48.png"/></div>
+      <div><img src="${url.context}/res/rm/components/documentlibrary/images/record-folder-48.png"/></div>
       <div>${recordFolder.name?html}</div>
    </div>
    <div class="report-section recordfolder">

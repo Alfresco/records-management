@@ -102,27 +102,6 @@
          {
             this.checkRequiredFields();
          }, null, this);
-         
-         this.registerEventHandler('click',
-         [
-            {
-               rule: 'button.cancelCreate',
-               o:
-               {
-                  handler :this._navigateForward,
-                  scope: this
-               }
-            },                       
-            {
-               rule: 'button.submitCreate',
-               o:
-               {
-                  handler: this.onCreate,
-                  scope: this
-               }
-            }
-         ]);
-         
          return this;
       },
 
@@ -133,21 +112,10 @@
        */
       onReady: function RM_NewReference_onReady()
       {
+         this.widgets.createButton = Alfresco.util.createYUIButton(this, "create", this.onCreate);
+         this.widgets.cancelButton = Alfresco.util.createYUIButton(this, "cancel", this._navigateForward);
+
          this.initEvents();
-
-         // Create widget button while reassigning classname to src element (since YUI removes classes). 
-         // We need the classname so we can identify what action to take when it is interacted with (event delegation).
-         var buttons = Sel.query('#submitCreate,#cancelCreate',this.id),
-            button, id;
-
-         for (var i = 0, len = buttons.length; i < len; i++)
-         {
-            button = buttons[i];
-            id = button.id;
-            this.widgets[id] = new YAHOO.widget.Button(id);
-            this.widgets[id]._button.className = button.className;
-         }
-         
          this.widgets.documentPicker = new Alfresco.module.DocumentPicker(this.id + '-docPicker', Alfresco.rm.module.ObjectRenderer);
 
          parentNodeRef = Alfresco.util.getQueryStringParameter('parentNodeRef') 
@@ -171,6 +139,27 @@
             restrictParentNavigationToDocLib: true,     
             params:'filterType=rma:dispositionSchedule,rma:dispositionActionDefinition,rma:dispositionAction,rma:hold,rma:transfer,cm:thumbnail'
          });
+         
+         // Clear the previous selection...
+         this.widgets.documentPicker.selectedItems = [];
+         Alfresco.util.setVar('DocumentPickerSelection',[]);
+         
+         // RM-398 - Override default onCancel function which does not re-enable the select button
+         //          when the picker is cancelled. It was not possible to fix this in the core for 
+         //          2.0 because the targeted Alfresco release was already frozen.
+         this.widgets.documentPicker.onCancel = function(e, p_obj)
+         {
+            this.widgets.panel.hide();
+            this.widgets.showPicker.set("disabled", false);
+            this.resetSelection();
+            Event.preventDefault(e);
+         };
+         
+         this.widgets.documentPicker.resetSelection = function()
+         {
+            // No operation needed.
+         };
+         
          YAHOO.Bubbling.on('onDocumentsSelected', this.updateSelectionField, this);
       },
       
@@ -205,6 +194,8 @@
             Dom.removeClass(selectedEl,'active');
             this.options.currentValue = "";
          }
+         
+         this.widgets.documentPicker.widgets.showPicker.set("disabled", false);
          this.checkRequiredFields();
       },
       
@@ -217,11 +208,11 @@
       {
          if (this.options.currentValue != "" && Dom.get('new-ref-name').value != "")
          {
-            this.widgets['submitCreate'].set('disabled', false);
+            this.widgets.createButton.set('disabled', false);
          }
          else
          {
-            this.widgets['submitCreate'].set('disabled', true);
+            this.widgets.createButton.set('disabled', true);
          }
       },
       

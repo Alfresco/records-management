@@ -163,6 +163,26 @@
             <param name="function">onActionDelete</param>
             <evaluator>evaluator.rm.action.delete</evaluator>
          </action>
+         
+         <action id="rm-copy-to" type="javascript" label="actions.document.copy-to" icon="document-copy-to">
+            <param name="function">onActionCopyTo</param>
+            <evaluator>evaluator.rm.action.copy</evaluator>
+         </action>
+
+         <action id="rm-move-record-to" type="javascript" label="actions.document.move-to" icon="document-move-to">
+            <param name="function">onActionMoveTo</param>
+            <evaluator>evaluator.rm.action.moveRecord</evaluator>
+         </action>
+
+         <action id="rm-move-recordfolder-to" type="javascript" label="actions.document.move-to" icon="document-move-to">
+            <param name="function">onActionMoveTo</param>
+            <evaluator>evaluator.rm.action.moveRecordFolder</evaluator>
+         </action>
+
+         <action id="rm-move-recordcategory-to" type="javascript" label="actions.document.move-to" icon="document-move-to">
+            <param name="function">onActionMoveTo</param>
+            <evaluator>evaluator.rm.action.moveRecordCategory</evaluator>
+         </action>
                
          <!-- View record category details -->
          <action id="rm-record-category-view-details" type="pagelink" label="actions.view-details" icon="folder-view-details">
@@ -351,6 +371,13 @@
             <param name="message">message.transfer-complete</param>
             <evaluator>evaluator.rm.action.transfer-complete</evaluator>
          </action>
+         
+         <action id="rm-accession-complete" type="javascript" label="actions.transfer-complete" icon="../../../rm/components/documentlibrary/actions/rm-transfer-complete">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">accessionComplete</param>
+            <param name="message">message.transfer-complete</param>
+            <evaluator>evaluator.rm.action.accession-complete</evaluator>
+         </action>
 
          <!-- Relinquish -->
          <action id="rm-relinquish" type="javascript" label="actions.relinquish" icon="../../../rm/components/documentlibrary/actions/rm-relinquish">
@@ -380,16 +407,16 @@
             <action index="100" id="rm-record-category-view-details" />
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-manage-permissions" />
-            <action index="130" id="document-copy-to" />
-            <action index="140" id="document-move-to" />
+            <action index="130" id="rm-copy-to" />
+            <action index="140" id="rm-move-recordcategory-to" />
             <action index="150" id="rm-delete" label="actions.delete" />
             <action index="160" id="rm-view-audit-log" />
          </actionGroup>
          <actionGroup id="rm-record-category-details">
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-manage-permissions" />
-            <action index="130" id="document-copy-to" />
-            <action index="140" id="document-move-to" />
+            <action index="130" id="rm-copy-to" />
+            <action index="140" id="rm-move-recordcategory-to" />
             <action index="150" id="rm-delete" label="actions.delete" />
             <action index="160" id="rm-view-audit-log" />
          </actionGroup>
@@ -408,8 +435,8 @@
             <action index="200" id="rm-edit-disposition-as-of-date" />
             <action index="210" id="rm-freeze" icon="../../../rm/components/documentlibrary/actions/rm-freeze-folder" />
             <action index="220" id="rm-unfreeze" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-folder" />
-            <action index="230" id="document-copy-to" />
-            <action index="240" id="document-move-to" />
+            <action index="230" id="rm-copy-to" />
+            <action index="240" id="rm-move-recordfolder-to" />
             <action index="250" id="rm-file-to" />
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
@@ -428,8 +455,8 @@
             <action index="200" id="rm-edit-disposition-as-of-date" />
             <action index="210" id="rm-freeze" icon="../../../rm/components/documentlibrary/actions/rm-freeze-folder" />
             <action index="220" id="rm-unfreeze" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-folder" />
-            <action index="230" id="document-copy-to" />
-            <action index="240" id="document-move-to" />
+            <action index="230" id="rm-copy-to" />
+            <action index="240" id="rm-move-recordfolder-to" />
             <action index="250" id="rm-file-to" />
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
@@ -450,10 +477,9 @@
             <action index="200" id="rm-edit-disposition-as-of-date" />
             <action index="210" id="rm-freeze" />
             <action index="220" id="rm-unfreeze" />
-            <action index="230" id="document-copy-to" />
-            <action index="240" id="document-move-to" />
+            <action index="230" id="rm-copy-to" />
+            <action index="240" id="rm-move-record-to" />
             <action index="250" id="rm-file-to" />
-            <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
          </actionGroup>
@@ -470,10 +496,9 @@
             <action index="200" id="rm-edit-disposition-as-of-date" />
             <action index="210" id="rm-freeze" />
             <action index="220" id="rm-unfreeze" />
-            <action index="230" id="document-copy-to" />
-            <action index="240" id="document-move-to" />
+            <action index="230" id="rm-copy-to" />
+            <action index="240" id="rm-move-record-to" />
             <action index="250" id="rm-file-to" />
-            <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
          </actionGroup>
@@ -483,11 +508,12 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-declare" />
             <action index="130" id="rm-add-record-metadata" />
+            <action index="210" id="rm-freeze" />
+            <action index="220" id="rm-unfreeze" />
             <action index="140" id="rm-split-email" />
-            <action index="150" id="document-copy-to" />
-            <action index="160" id="document-move-to" />
+            <action index="150" id="rm-copy-to" />
+            <action index="160" id="rm-move-record-to" />
             <action index="170" id="rm-file-to" />
-            <action index="180" id="rm-manage-permissions" />
             <action index="190" id="rm-delete" label="actions.delete" />
             <action index="200" id="rm-view-audit-log" />
          </actionGroup>
@@ -495,11 +521,12 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-declare" />
             <action index="130" id="rm-add-record-metadata" />
+            <action index="210" id="rm-freeze" />
+            <action index="220" id="rm-unfreeze" />
             <action index="140" id="rm-split-email" />
-            <action index="150" id="document-copy-to" />
-            <action index="160" id="document-move-to" />
+            <action index="150" id="rm-copy-to" />
+            <action index="160" id="rm-move-record-to" />
             <action index="170" id="rm-file-to" />
-            <action index="180" id="rm-manage-permissions" />
             <action index="190" id="rm-delete" label="actions.delete" />
             <action index="200" id="rm-view-audit-log" />
          </actionGroup>
@@ -529,12 +556,14 @@
             <action index="100" id="rm-download-zip" />
             <action index="110" id="rm-file-report" />
             <action index="120" id="rm-transfer-complete" />
+            <action index="125" id="rm-accession-complete" />
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
          <actionGroup id="rm-transfer-container-details">
             <action index="100" id="rm-download-zip" />
             <action index="110" id="rm-file-report" />
             <action index="120" id="rm-transfer-complete" />
+            <action index="125" id="rm-accession-complete" />
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
 

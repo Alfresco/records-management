@@ -8,15 +8,20 @@
     }).setMessages(${messages});
 </script>
 <div id="${htmlid}-audit">
-   <#-- for a specified noderef -->
-   <#if (page.url.args.nodeName??)>
-      <h1>${msg("label.title-for", page.url.args.nodeName)?html}</h1>
-   <#else>
-      <h1>${msg("label.title")}</h1>
-   </#if>
-   <div class="auditActions">
-      <button id="${htmlid}-audit-export" name="audit-export" class="audit-export">${msg("label.button-export")}</button>
-      <button id="${htmlid}-audit-file-record" name="audit-file-record" class="audit-file-record">${msg("label.button-file-record")}</button>            
+   <div class="yui-gc">
+      <div class="yui-u first">
+         <#-- for a specified noderef -->
+         <#if (page.url.args.nodeName??)>
+            <h1>${msg("label.title-for", page.url.args.nodeName)?html}</h1>
+         <#else>
+            <h1>${msg("label.title")}</h1>
+         </#if>
+      </div>
+      <div class="auditActions">
+         <button id="${htmlid}-audit-export" name="${htmlid}-audit-export" class="audit-export">${msg("label.button-export")}</button>
+         <button id="${htmlid}-audit-file-record" name="${htmlid}-audit-file-record" class="audit-file-record">${msg("label.button-file-record")}</button>            
+      </div>
+      <div style="clear:both;"/>
    </div>
    <div class="audit-info">
    <#-- only for full log (not noderef) -->

@@ -172,7 +172,7 @@
          // Date Filed
          this.registerRenderer("RM_dateFiled", function(record, label)
          {
-            return '<span class="item">' + label + Alfresco.util.formatDate($jsonDate(record.jsNode.properties.rma_dateFiled)) + '</span>';
+            return '<span class="item">' + label + Alfresco.util.formatDate(record.jsNode.properties.rma_dateFiled.iso8601) + '</span>';
          });
 
          // Publication Date

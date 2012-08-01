@@ -1,4 +1,4 @@
-<#if !hasAccess>
+﻿<#if !hasAccess>
    <#include "./rm-console-access.ftl">
 <#else>
 <#if (action='new' || action='edit')>
@@ -27,7 +27,7 @@
       <h3>${msg('label.capabilities')}</h3>
       
       <div>
-         <button id="group01SelectAll" value="group01SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group01SelectAll" value="group01SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.records')}</legend>
             <ul id="group01Capabilities" class="capabilities">
@@ -39,7 +39,7 @@
       </div>
       
       <div>
-         <button id="group02SelectAll" value="group02SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group02SelectAll" value="group02SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.metadata-control')}</legend>
             <ul id="group02Capabilities" class="capabilities">
@@ -52,7 +52,7 @@
       </div>
       
       <div>
-         <button id="group03SelectAll" value="group03SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group03SelectAll" value="group03SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.folder-control')}</legend>
             <ul id="group03Capabilities" class="capabilities">
@@ -65,7 +65,7 @@
       </div>
       
       <div>
-         <button id="group04SelectAll" value="group04SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group04SelectAll" value="group04SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.vital-records')}</legend>
             <ul id="group04Capabilities" class="capabilities">
@@ -77,7 +77,7 @@
       </div>
       
       <div>
-         <button id="group05SelectAll" value="group05SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group05SelectAll" value="group05SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.references-links')}</legend>
             <ul id="group05Capabilities" class="capabilities">
@@ -88,7 +88,7 @@
       </div>
       
       <div>
-         <button id="group06SelectAll" value="group06SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group06SelectAll" value="group06SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.events')}</legend>
             <ul id="group06Capabilities" class="capabilities">
@@ -99,7 +99,7 @@
       </div>
       
       <div>
-         <button id="group07SelectAll" value="group07SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group07SelectAll" value="group07SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.cutoff')}</legend>
             <ul id="group07Capabilities" class="capabilities">
@@ -110,7 +110,7 @@
       </div>
       
       <div>
-         <button id="group08SelectAll" value="group08SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group08SelectAll" value="group08SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.disposition-transfers')}</legend>
             <ul id="group08Capabilities" class="capabilities">
@@ -127,7 +127,7 @@
       </div>
       
       <div>
-         <button id="group09SelectAll" value="group09SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group09SelectAll" value="group09SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.hold-controls')}</legend>
             <ul id="group09Capabilities" class="capabilities">
@@ -139,7 +139,7 @@
       </div>
       
       <div>
-         <button id="group10SelectAll" value="group10SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group10SelectAll" value="group10SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.audit')}</legend>
             <ul id="group10Capabilities" class="capabilities">
@@ -154,7 +154,7 @@
       </div>
       
       <div>
-         <button id="group11SelectAll" value="group11SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group11SelectAll" value="group11SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.roles-access-rights')}</legend>
             <ul id="group11Capabilities" class="capabilities">
@@ -169,7 +169,7 @@
       </div>
       
       <div>
-         <button id="group12SelectAll" value="group12SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group12SelectAll" value="group12SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.metadata-lists-email')}</legend>
             <ul id="group12Capabilities" class="capabilities">
@@ -187,7 +187,7 @@
       </div>
       
       <div>
-         <button id="group13SelectAll" value="group13SelectAll" class="selectAll action">${msg('label.select-all')}</button>
+         <button id="group13SelectAll" value="group13SelectAll" class="selectAll action" type="button">${msg('label.select-all')}</button>
          <fieldset>
             <legend>${msg('label.group.classified-records')}</legend>
             <ul id="group13Capabilities" class="capabilities">

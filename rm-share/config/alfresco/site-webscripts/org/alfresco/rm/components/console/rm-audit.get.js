@@ -7,7 +7,7 @@ function main()
    var conn = remote.connect("alfresco");
    
    // retrieve user capabilities - can they access Audit?
-   var hasAccess = hasCapability(conn, "AccessAudit");
+   var hasAccess = hasCapability(conn, "AuditAdmin");
    if (hasAccess)
    {
       // retrieve the RM custom properties - for display as meta-data fields etc.

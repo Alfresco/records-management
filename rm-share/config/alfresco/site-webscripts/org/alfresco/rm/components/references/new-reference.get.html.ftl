@@ -24,7 +24,7 @@
    <div class="caption"><span class="mandatory-indicator">*</span>${msg('label.required')}</div>
    <form action="action" method="post">
    <div class="form-fields" id="template_x002e_dod5015-edit-metadata_x002e_edit-metadata-form-fields">
-      <div class="form-field">   
+      <div class="form-field">
          <label for="new-ref-name">${msg("label.name")}:<span class="mandatory-indicator">*</span></label>
          <input id="new-ref-name" name="new-ref-name" value="" type="text">
       </div>
@@ -42,15 +42,23 @@
             <#if (ref.label?exists)>
                <option value="${ref.refId}">${ref.label?html}</option>
             <#else>
-               <option value="${ref.refId}">${ref.source?html} / ${ref.target?html}</option>                  
+               <option value="${ref.refId}">${ref.source?html} / ${ref.target?html}</option>
             </#if>
             </#list>
-         </select>   
+         </select>
       </div>
    </div>
    <div class="form-buttons">
-      <button name="submitCreate" value="${msg('label.create')}" id="submitCreate" class="submitCreate" disabled>${msg('label.create')}</button>
-      <button id="cancelCreate" value="${msg('label.cancel')}" class="cancelCreate">${msg('label.cancel')}</button>    
+      <span class="submitCreate">
+         <span class="yui-button yui-push-button" id="${htmlid}-create">
+            <span class="first-child"><button>${msg('label.create')}</button></span>
+         </span>
+      </span>
+      <span class="cancelCreate">
+         <span class="yui-button yui-push-button" id="${htmlid}-cancel">
+            <span class="first-child"><button>${msg('label.cancel')}</button></span>
+         </span>
+      </span>
    </div>
    <input type="hidden" name="${controlId}" value="" id="${controlId}" />
    </form>   

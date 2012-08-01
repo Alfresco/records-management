@@ -505,10 +505,13 @@
             var nodeType = this.options.nodeType;
             switch (this.options.nodeType)
             {
-               case "record":
-               case "undeclared-record":
-               case "record-nonelec":
-               case "undeclared-record-nonelec":
+               case "rma:recordCategory":
+            	   nodeType = "rm-record-category";
+            	   break;
+               case "rma:recordFolder":  
+            	   nodeType = "rm-record-folder";
+            	   break;             
+               default :
                   nodeType = "document";
                   break;
             }
