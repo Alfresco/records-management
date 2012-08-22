@@ -80,17 +80,38 @@
          this.initEvents();
          
          // Create "Export" and "File As Record" buttons...
-         this.widgets.exportButton = Alfresco.util.createYUIButton(this, "export", this.onExportLog);
-         this.widgets.fileRecordButton = Alfresco.util.createYUIButton(this, "file-record", this.onFileRecord);
+         this.widgets.exportButton = Alfresco.util.createYUIButton(this, "export", this.onExportLog,
+         {
+            disabled: !Alfresco.util.arrayContains(this.options.capabilities, 'ExportAudit')
+         });
+         this.widgets.fileRecordButton = Alfresco.util.createYUIButton(this, "file-record", this.onFileRecord,
+         {
+            disabled: !Alfresco.util.arrayContains(this.options.capabilities, 'DeclareAuditAsRecord')
+         });
          
          // Create the logging control buttons...
-         this.widgets.toggleLogleButton = Alfresco.util.createYUIButton(this, "toggle", this.onToggleLog);
-         this.widgets.viewLogButton = Alfresco.util.createYUIButton(this, "view", this.onViewLog);
-         this.widgets.clearLogButton = Alfresco.util.createYUIButton(this, "clear", this.onClearLog);
+         this.widgets.toggleLogleButton = Alfresco.util.createYUIButton(this, "toggle", this.onToggleLog,
+         {
+            disabled: !Alfresco.util.arrayContains(this.options.capabilities, 'EnableDisableAuditByTypes')
+         });
+         this.widgets.viewLogButton = Alfresco.util.createYUIButton(this, "view", this.onViewLog,
+         {
+            disabled: !Alfresco.util.arrayContains(this.options.capabilities, 'AccessAudit')
+         });
+         this.widgets.clearLogButton = Alfresco.util.createYUIButton(this, "clear", this.onClearLog,
+         {
+            disabled: !Alfresco.util.arrayContains(this.options.capabilities, 'DeleteAudit')
+         });
          
          // Create the filter buttons...
-         this.widgets.specifyfilterButton = Alfresco.util.createYUIButton(this, "specifyfilter", this.onSpecifyFilterLog);
-         this.widgets.applyFilterButton = Alfresco.util.createYUIButton(this, "apply", this.onApplyFilters);
+         this.widgets.applyFilterButton = Alfresco.util.createYUIButton(this, "apply", this.onApplyFilters,
+         {
+            disabled: !Alfresco.util.arrayContains(this.options.capabilities, 'SelectAuditMetadata')
+         });
+         this.widgets.specifyfilterButton = Alfresco.util.createYUIButton(this, "specifyfilter", this.onSpecifyFilterLog,
+         {
+            disabled: this.widgets.applyFilterButton ? this.widgets.applyFilterButton.get("disabled") : false
+         });
         
          // Initialize data URI
          // An audit log for node and not in console (all nodes)
@@ -104,6 +125,16 @@
          }
 
          this.initWidgets();
+         
+         // Check if the filter elements should be disabled
+         if (this.widgets.specifyfilterButton && this.widgets.specifyfilterButton.get("disabled"))
+         {
+            Dom.get(this.id + "-entries").disabled = true;
+            Dom.get(this.id + "-fromDate").disabled = true;
+            Dom.get(this.id + "-fromDate-icon").innerHTML = "";
+            Dom.get(this.id + "-toDate").disabled = true;
+            Dom.get(this.id + "-toDate-icon").innerHTML = "";
+         }
       },
       
       /**
@@ -363,7 +394,6 @@
          {   
             if (this.widgets['toggleLogleButton'])
             {
-               this.widgets['toggleLogleButton'].set('disabled',false);
                //if (YAHOO.lang.isUndefined(this.options.enabled) == false)
                //{
                   this.widgets['toggleLogleButton'].set('value',this.options.enabled);

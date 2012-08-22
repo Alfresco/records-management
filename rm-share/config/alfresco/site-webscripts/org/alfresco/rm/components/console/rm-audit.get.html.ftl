@@ -16,7 +16,8 @@
       containerId: "${template.properties.container!"documentLibrary"}",
       viewMode: Alfresco.rm.component.RMAudit.VIEW_MODE_DEFAULT,
       enabled : ${enabled?string},
-      auditEvents: ${eventsStr}
+      auditEvents: ${eventsStr},
+      capabilities: ${capabilities}
    }).setMessages(${messages});
 //]]</script>
   

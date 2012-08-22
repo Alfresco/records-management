@@ -1,3 +1,5 @@
+<import resource="classpath:alfresco/site-webscripts/org/alfresco/rm/components/console/rm-console.lib.js">
+
 /**
  * Converts an ISO8601-formatted date into a JavaScript native Date object
  *
@@ -118,3 +120,4 @@ function getAuditLogStatus()
 }
 
 model.auditStatus = getAuditLogStatus();
+model.capabilities = getCapabilities(remote.connect("alfresco")).toSource();

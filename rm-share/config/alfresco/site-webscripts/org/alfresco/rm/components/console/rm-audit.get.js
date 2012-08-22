@@ -20,6 +20,7 @@ function main()
       model.events = retrieveAuditEvents(conn);
       model.eventsStr = model.events.toSource();
       model.enabled = getAuditStatus(conn);
+      model.capabilities = getCapabilities(conn).toSource();
    }
    model.hasAccess = hasAccess;
 }
