@@ -7,7 +7,8 @@ function main()
    var conn = remote.connect("alfresco");
    
    // retrieve user capabilities - can they access Audit?
-   var hasAccess = hasCapability(conn, "AuditAdmin");
+   var capabilities = getCapabilities(conn);
+   var hasAccess = hasCapabilityImpl("AuditAdmin", capabilities);
    if (hasAccess)
    {
       // retrieve the RM custom properties - for display as meta-data fields etc.
@@ -20,7 +21,7 @@ function main()
       model.events = retrieveAuditEvents(conn);
       model.eventsStr = model.events.toSource();
       model.enabled = getAuditStatus(conn);
-      model.capabilities = getCapabilities(conn).toSource();
+      model.capabilities = capabilities.toSource();
    }
    model.hasAccess = hasAccess;
 }
