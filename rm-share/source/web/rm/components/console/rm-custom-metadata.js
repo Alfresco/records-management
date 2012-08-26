@@ -241,8 +241,7 @@
                   });
                   this.propEditButtons[index] = editBtn;
                   
-                  // TODO: Delete disabled until resolved in the repository
-                  /*var deleteBtn = new YAHOO.widget.Button(
+                  var deleteBtn = new YAHOO.widget.Button(
                   {
                      type: "button",
                      label: parent._msg("button.delete"),
@@ -255,7 +254,7 @@
                         scope: this
                      }
                   });
-                  this.propDeleteButtons[index] = deleteBtn;*/
+                  this.propDeleteButtons[index] = deleteBtn;
                }
             }
             else
@@ -298,6 +297,67 @@
          {
             // update the current property context
             parent.currentProperty = parent.currentProperties[obj];
+
+            Alfresco.util.PopupManager.displayPrompt(
+            {
+               title: parent._msg("message.delete.title"),
+               text: parent._msg("message.delete.text", parent.currentProperty.label),
+               buttons: [
+               {
+                  text: parent._msg("button.delete"),
+                  handler: function onClickDeleteProperty_delete()
+                  {
+                     this.destroy();
+                     Alfresco.util.Ajax.request(
+                     {
+                        url: Alfresco.constants.PROXY_URI + "api/rma/admin/custompropertydefinitions/" + encodeURIComponent(parent.currentProperty.propId),
+                        method: Alfresco.util.Ajax.DELETE,
+                        successCallback:
+                        {
+                           fn: function(response)
+                           {
+                              Alfresco.util.PopupManager.displayMessage(
+                              {
+                                 text: parent._msg("message.delete-success")
+                              });
+                              
+                              // refresh the view panel to display the new property
+                              parent.showPanel("view");
+                              parent.updateCurrentPanel();
+                           },
+                           scope: this
+                        },
+                        failureCallback:
+                        {
+                           fn: function(response)
+                           {
+                              var json = Alfresco.util.parseJSON(response.serverResponse.responseText),
+                                  failureMsg = response.serverResponse.responseText;
+                              if (json != null && json.message != null)
+                              {
+                                 failureMsg = json.message;
+                              }
+                              
+                              Alfresco.util.PopupManager.displayPrompt(
+                              {
+                                 title: parent._msg("message.failure"),
+                                 text: parent._msg("message.delete-failure", failureMsg)
+                              });
+                           },
+                           scope: this
+                        }
+                     });
+                  }
+               },
+               {
+                  text: parent._msg("button.cancel"),
+                  handler: function onClickDeleteProperty_cancel()
+                  {
+                     this.destroy();
+                  },
+                  isDefault: true
+               }]
+            });
          },
          
          /**
@@ -436,19 +496,10 @@
           */
          onClickCreateProperty: function onClickCreateProperty(e, obj)
          {
-            var label = Dom.get(parent.id + "-create-label").value;
+            var label = encodeURIComponent(Dom.get(parent.id + "-create-label").value);
             var dataType = Dom.get(parent.id + "-create-type").value;
             var mandatory = Dom.get(parent.id + "-create-mandatory").checked;
-            
-            // generate valid qname string
-            var propId = "";
-            var prop = label.replace(/\s/g, "_")
-            for (var i=0, j=prop.length, c; i<j; i++)
-            {
-               // encode non-alphanumeric
-               c = prop.charAt(i);
-               propId += (/\W/.test(c) ? escape(c).substring(1) : c);
-            }
+            var propId = label;
             
             var obj =
             {
@@ -652,12 +703,10 @@
           */
          onClickSaveProperty: function onClickSaveProperty(e, obj)
          {
-            var label = Dom.get(parent.id + "-edit-label").value;
-            
             // TODO: add mandatory field edit once supported in the repo
             var obj =
             {
-               label: label
+               label: encodeURIComponent(Dom.get(parent.id + "-edit-label").value)
             };
             
             if (parent.currentProperty.dataType === "d:text")
@@ -676,7 +725,7 @@
             
             Alfresco.util.Ajax.request(
             {
-               url: Alfresco.constants.PROXY_URI + "api/rma/admin/custompropertydefinitions/" + parent.currentProperty.propId,
+               url: Alfresco.constants.PROXY_URI + "api/rma/admin/custompropertydefinitions/" + encodeURIComponent(parent.currentProperty.propId),
                method: Alfresco.util.Ajax.PUT,
                dataObj: obj,
                requestContentType: Alfresco.util.Ajax.JSON,
