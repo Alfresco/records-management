@@ -338,6 +338,30 @@
         	 items.push(newMenuItem);
          } 
          
+         // Add custom fields
+         var customFieldsLength = this.options.customFields.length,
+            customFieldItemData = [];
+         
+         for (var i = 0; i < customFieldsLength; i++)
+         {
+            var obj = {};
+            obj.text = $html(this.options.customFields[i].title);
+            obj.value = this.options.customFields[i].id;
+            customFieldItemData.push(obj);
+         }
+         
+         if (customFieldsLength > 0)
+         {
+            items.push(
+            {
+               text: this.msg("label.menu.custom"),
+               submenu:
+               { 
+                  id: this.id + "_customFields",
+                  itemdata: customFieldItemData
+               }
+            });
+         }
          
          // menu button widget setup
          this.widgets.menubtn = new YAHOO.widget.Button(this.id,
