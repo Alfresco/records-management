@@ -241,7 +241,8 @@
                   });
                   this.propEditButtons[index] = editBtn;
                   
-                  var deleteBtn = new YAHOO.widget.Button(
+                  // TODO: Delete disabled until resolved in the repository
+                  /*var deleteBtn = new YAHOO.widget.Button(
                   {
                      type: "button",
                      label: parent._msg("button.delete"),
@@ -254,7 +255,7 @@
                         scope: this
                      }
                   });
-                  this.propDeleteButtons[index] = deleteBtn;
+                  this.propDeleteButtons[index] = deleteBtn;*/
                }
             }
             else
