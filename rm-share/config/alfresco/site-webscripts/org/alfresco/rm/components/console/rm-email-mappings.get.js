@@ -8,23 +8,13 @@ function main()
    var hasAccess = hasCapability(conn, "MapEmailMetadata");
    if (hasAccess)
    {
-      // get custom properties for Record type
-      var meta = [];
-      var res = conn.get("/api/rma/admin/custompropertydefinitions?element=record");
+      var groups = [];
+      var res = conn.get("/slingshot/rmsearchproperties");
       if (res.status == 200)
       {
-         var props = eval('(' + res + ')').data.customProperties;
-         for (var id in props)
-         {
-            var prop = props[id];
-            meta.push(
-            {
-               name: id,
-               title: prop.label
-            });
-         }
+   	   groups = eval('(' + res + ')').data.groups;
       }
-      model.meta = meta;
+      model.groups = groups;
    }
    model.hasAccess = hasAccess;
 }

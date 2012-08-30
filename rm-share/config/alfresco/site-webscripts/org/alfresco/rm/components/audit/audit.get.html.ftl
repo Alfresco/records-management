@@ -4,7 +4,8 @@
        <#if (nodeRef?exists)>nodeRef: '${nodeRef}',</#if>          
        siteId: "${page.url.templateArgs.site}",
        containerId: "${template.properties.container!"documentLibrary"}",
-       viewMode: Alfresco.rm.component.RMAudit.VIEW_MODE_COMPACT
+       viewMode: Alfresco.rm.component.RMAudit.VIEW_MODE_COMPACT,
+       capabilities: ${capabilities}
     }).setMessages(${messages});
 </script>
 <div id="${htmlid}-audit">

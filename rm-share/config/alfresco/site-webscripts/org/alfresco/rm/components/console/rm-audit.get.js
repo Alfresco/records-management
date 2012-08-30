@@ -7,39 +7,25 @@ function main()
    var conn = remote.connect("alfresco");
    
    // retrieve user capabilities - can they access Audit?
-   var hasAccess = hasCapability(conn, "AuditAdmin");
+   var capabilities = getCapabilities(conn);
+   var hasAccess = hasCapabilityImpl("AuditAdmin", capabilities);
    if (hasAccess)
    {
-      // retrieve the RM custom properties - for display as meta-data fields etc.
-      var elements = ["record", "recordFolder", "recordCategory", "recordSeries"];
-      for each (var el in elements)
-      {
-         retrieveMetadataForElement(conn, meta, el);
-      }
-      model.meta = meta;
       model.events = retrieveAuditEvents(conn);
       model.eventsStr = model.events.toSource();
       model.enabled = getAuditStatus(conn);
+      model.capabilities = capabilities.toSource();
+      
+      var groups = [];
+      var res = conn.get("/slingshot/rmsearchproperties");
+      if (res.status == 200)
+      {
+   	   groups = eval('(' + res + ')').data.groups;
+      }
+      model.groups = groups;
+      
    }
    model.hasAccess = hasAccess;
-}
-
-function retrieveMetadataForElement(conn, meta, el)
-{
-   var res = conn.get("/api/rma/admin/custompropertydefinitions?element=" + el);
-   if (res.status == 200)
-   {
-      var props = eval('(' + res + ')').data.customProperties;
-      for (var id in props)
-      {
-         var prop = props[id];
-         meta.push(
-         {
-            name: id,
-            title: prop.label
-         });
-      }
-   }
 }
 
 function retrieveAuditEvents(conn)

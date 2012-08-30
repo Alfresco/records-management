@@ -338,7 +338,6 @@
         	 items.push(newMenuItem);
          } 
          
-         
          // menu button widget setup
          this.widgets.menubtn = new YAHOO.widget.Button(this.id,
          {
