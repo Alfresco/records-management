@@ -7,7 +7,7 @@
    {
       showIdentiferField: true,
       showAllField: true,
-      customFields: YAHOO.lang.JSON.parse('[<#list meta as d>{"id": "${d.name}", "title": "${d.title?js_string}"}<#if d_has_next>,</#if></#list>]')
+      groups: YAHOO.lang.JSON.parse('${jsonUtils.toJSONString(groups)}')
    });
    -->
    new Alfresco.rm.component.RMAudit('${htmlid}-audit').setOptions(
