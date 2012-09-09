@@ -1,0 +1,6 @@
+<webscript>
+   <shortname>RM Data Set Import</shortname>
+   <description>A site dashlet to import a selected data set into a file plan</description>
+   <family>site-dashlet</family>
+   <url>/rm/components/dashlets/datasets</url>
+</webscript>

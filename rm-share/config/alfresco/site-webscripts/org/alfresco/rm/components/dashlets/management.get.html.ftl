@@ -14,11 +14,6 @@
       <div id="${args.htmlid}-create-site" class="detail-list-item" <#if foundsite>style="display:none"</#if>>
          <a id="${args.htmlid}-create-site-link" href="#">${msg("label.create-site")}</a>
       </div>
-      <#if user.isAdmin>
-	      <div id="${args.htmlid}-load-data" class="detail-list-item" <#if !foundsite>style="display:none"</#if>>
-	         <a id="${args.htmlid}-load-data-link" href="#">${msg("label.load-test-data")}</a>
-	      </div>
-      </#if>
       <div id="${args.htmlid}-rm-console" class="detail-list-item last-item" <#if !foundsite>style="display:none"</#if>>
          <a id="${args.htmlid}-role-report-link" href="${url.context}/page/console/rm-console/">${msg("label.rm-console")}</a>
       </div>

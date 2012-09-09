@@ -1,0 +1,11 @@
+.dataset-body
+{
+   padding: 10px;
+}
+
+.dataset-label
+{
+   float: left;
+   margin-top: 0.5em;
+   padding-left: 0.5em;
+}
