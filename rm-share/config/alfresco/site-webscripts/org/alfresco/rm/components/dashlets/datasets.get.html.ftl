@@ -14,7 +14,9 @@
       <select id="${el}-dataSets-menu">
          <#list data.datasets as dataset>
          {
-         <option value="${dataset.id}">${dataset.label}</option>
+         <#if !("${dataset.isLoaded}"?eval)>
+            <option value="${dataset.id}">${dataset.label}</option>
+         </#if>
          }<#if dataset_has_next>,</#if>
          </#list>
       </select>
@@ -23,5 +25,16 @@
             <button id="${el}-import-button" type="button" disabled="true">${msg("dataSet.importButton.text")}</button>
          </span>
       </span>
+      <#-- FIXME -->
+      <#--
+      <div>
+         Loaded data sets:
+         <#list data.datasets as dataset>
+         <#if "${dataset.isLoaded}"?eval>
+            ${dataset.label}
+         </#if>
+         </#list>
+      </div>
+      -->
    </div>
 </div>

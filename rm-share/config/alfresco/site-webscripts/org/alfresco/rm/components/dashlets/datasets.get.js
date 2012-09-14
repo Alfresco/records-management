@@ -2,7 +2,7 @@ function main()
 {
    // Call the repo for the data sets
    var conn = remote.connect("alfresco");
-   var res = conn.get("/api/rma/datasets");
+   var res = conn.get("/api/rma/datasets?site=" + url.templateArgs.site);
 
    var data = {};
 
