@@ -118,6 +118,14 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
                   {
                      text: this.msg("dataSet.message.import-ok")
                   });
+
+                  // FIXME
+                  /*
+                  // Add the data set to the loaded data sets  list
+                  var innerHTML = Dom.get(this.id + "-loaded-datasets").innerHTML;
+                  Dom.get(this.id + "-loaded-datasets").innerHTML = innerHTML + this.options.selectedItem.cfg.getProperty("text") + "<br>";
+                  */
+
                   // Enable the menu button
                   this.widgets.dataSets.set("disabled", false);
 
@@ -143,6 +151,7 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
                   {
                      text: this.msg("dataSet.message.import-fail")
                   });
+
                   // Enable the menu button
                   this.widgets.dataSets.set("disabled", false);
                },

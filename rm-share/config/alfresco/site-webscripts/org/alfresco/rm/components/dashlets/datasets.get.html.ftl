@@ -27,14 +27,18 @@
       </span>
       <#-- FIXME -->
       <#--
-      <div>
-         Loaded data sets:
-         <#list data.datasets as dataset>
-         <#if "${dataset.isLoaded}"?eval>
-            ${dataset.label}
-         </#if>
-         </#list>
-      </div>
+      <span>
+         ${msg("dataSet.loaded.list")}:
+         <br>
+         <br>
+         <span id="${el}-loaded-datasets">
+            <#list data.datasets as dataset>
+            <#if "${dataset.isLoaded}"?eval>
+               ${dataset.label}<br>
+            </#if>
+            </#list>
+         </span>
+      </span>
       -->
    </div>
 </div>
