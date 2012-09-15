@@ -73,6 +73,7 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
       onDataSetSelected: function DataSet_onDataSetSelected(type, args)
       {
          var menuItem = args[1];
+         this.options.selectedItem = menuItem;
          if (menuItem)
          {
             this.widgets.dataSets.set("label", menuItem.cfg.getProperty("text"));
@@ -92,6 +93,9 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
       {
          // Disable the import button
          this.widgets.importButton.set("disabled", true);
+
+         // Disable the menu button
+         this.widgets.dataSets.set("disabled", true);
 
          // Display a message while importing the test data
          var waitMessage = Alfresco.util.PopupManager.displayMessage(
@@ -114,6 +118,19 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
                   {
                      text: this.msg("dataSet.message.import-ok")
                   });
+                  // Enable the menu button
+                  this.widgets.dataSets.set("disabled", false);
+
+                  // Remove the loaded data set from the menu button
+                  var menu = this.widgets.dataSets.getMenu();
+                  menu.removeItem(this.options.selectedItem);
+                  this.widgets.dataSets.set("label", this.msg("dataSet.select.label"));
+                  delete this.widgets.dataSets.value;
+                  if (menu.getItems() == 0)
+                  {
+                     menu.body = null;
+                     menu.element.innerHTML = "";
+                  }
                },
                scope: this
             },
@@ -126,6 +143,8 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
                   {
                      text: this.msg("dataSet.message.import-fail")
                   });
+                  // Enable the menu button
+                  this.widgets.dataSets.set("disabled", false);
                },
                scope: this
             }
