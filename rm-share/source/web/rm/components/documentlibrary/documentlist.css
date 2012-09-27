@@ -35,3 +35,10 @@
    background-repeat: no-repeat;
    padding-left: 20px;
 }
+
+.fileplan-filter span.newRecords
+{
+   background-image: url(actions/rm-add-record-metadata-16.png);
+   background-repeat: no-repeat;
+   padding-left: 20px;
+}
