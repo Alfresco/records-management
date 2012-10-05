@@ -36,7 +36,7 @@
    padding-left: 20px;
 }
 
-.fileplan-filter span.newRecords
+.fileplan-filter span.unfiledRecords
 {
    background-image: url(actions/rm-add-record-metadata-16.png);
    background-repeat: no-repeat;
