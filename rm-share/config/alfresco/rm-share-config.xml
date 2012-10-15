@@ -395,6 +395,11 @@
       </actions>
 
       <!--
+         Action Group resolver - decides which action group id to use for a node
+      -->
+      <actionGroupResolver>resolver.rm.doclib.actionGroup</actionGroupResolver>
+
+      <!--
          Action Group definitions
       -->
       <actionGroups>
