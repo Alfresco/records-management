@@ -8,5 +8,5 @@
    </ul>
 </div>
 <script type="text/javascript">//<![CDATA[
-   new Alfresco.component.BaseFilter("Alfresco.DocListFilePlan", "${args.htmlid}").setFilterIds(["transfers", "holds"]);
+   new Alfresco.component.BaseFilter("Alfresco.DocListFilePlan", "${args.htmlid}").setFilterIds(["transfers", "holds", "unfiledRecords"]);
 //]]></script>

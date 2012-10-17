@@ -106,6 +106,12 @@
             disabled: true,
             value: "export"
          });
+         
+         this.widgets.manageRules = Alfresco.util.createYUIButton(this, "manageRules-button", this.onManageRules,
+         {
+            disabled: false //,
+            // value: "manageRules"
+         });
 
          // Selected Items menu button
          this.widgets.selectedItems = Alfresco.util.createYUIButton(this, "selectedItems-button", this.onSelectedItems,
@@ -194,7 +200,18 @@
          this.widgets.holdsFolderUp.set("disabled", !upFolderEnabled);
 
          upFolderEnabled = (this.currentFilter.filterId == "transfers" && this.currentFilter.filterData !== "");
-         this.widgets.transfersFolderUp.set("disabled", !upFolderEnabled);
+         this.widgets.transfersFolderUp.set("disabled", !upFolderEnabled);         
+      },
+      
+      /**
+       * 
+       */
+      onManageRules: function DLTB_onManageRules(type, args)
+      {
+         window.location.href = Alfresco.util.siteURL("folder-rules?nodeRef={nodeRef}",
+         {
+        	 nodeRef: this.modules.docList.doclistMetadata.parent.rmNode.unfiledRecordContainer.toString()
+         });
       },
 
       /**

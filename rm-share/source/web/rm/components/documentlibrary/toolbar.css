@@ -26,6 +26,12 @@
    padding-left: 32px;
 }
 
+.toolbar .manage-rules button
+{
+   background: transparent url(actions/rm-export-16.png) no-repeat 12px 4px;
+   padding-left: 32px;
+}
+
 .toolbar .selected-items
 {
    float: left;
