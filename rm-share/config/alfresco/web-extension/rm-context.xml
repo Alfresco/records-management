@@ -40,6 +40,8 @@
    <!--                                               -->
 
    <bean id="resolver.rm.doclib.actionGroup" class="org.alfresco.module.org_alfresco_module_rm_share.resolver.doclib.FilePlanDoclistActionGroupResolver" />
+   
+   <bean id="resolver.rm.doclib.actionGroupFix" class="org.alfresco.module.org_alfresco_module_rm_share.resolver.doclib.FilePlanDoclistActionGroupResolverFix" />
 
    <!--                             -->
    <!-- File Plan Common Evaluators -->
