@@ -227,7 +227,7 @@
                extn = name.substring(name.lastIndexOf(".")),
                docDetailsUrl;
 
-            if (scope.options.simpleView)
+            if (scope.options.viewRendererName === "simple")
             {
                /**
                 * Simple View
