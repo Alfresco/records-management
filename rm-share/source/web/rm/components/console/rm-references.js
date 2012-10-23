@@ -541,7 +541,7 @@
                      this.widgets.cancelButton.set("disabled", false);
                      Alfresco.util.PopupManager.displayPrompt(
                      {
-                        text: parent.msg("message.saveReferenceFailure")
+                        text: serverResponse.json.message
                      });
                   },
                   scope: this
