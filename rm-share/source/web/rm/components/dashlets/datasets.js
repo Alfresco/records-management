@@ -73,12 +73,20 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
       onDataSetSelected: function DataSet_onDataSetSelected(type, args)
       {
          var menuItem = args[1];
-         this.options.selectedItem = menuItem;
          if (menuItem)
          {
-            this.widgets.dataSets.set("label", menuItem.cfg.getProperty("text"));
-            this.widgets.dataSets.value = menuItem.value;
-            this.widgets.importButton.set("disabled", false);
+            if (menuItem.cfg.getProperty("disabled"))
+            {
+               this.widgets.dataSets.set("label", this.msg("dataSet.select.label"));
+               this.widgets.dataSets.value = undefined;
+               this.widgets.importButton.set("disabled", true);
+            }
+            else
+            {
+               this.widgets.dataSets.set("label", menuItem.cfg.getProperty("text"));
+               this.widgets.dataSets.value = menuItem.value;
+               this.widgets.importButton.set("disabled", false);
+            }
          }
       },
 
@@ -121,27 +129,13 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
                      {
                         text: this.msg("dataSet.message.import-ok")
                      });
-   
-                     // FIXME
-                     /*
-                     // Add the data set to the loaded data sets  list
-                     var innerHTML = Dom.get(this.id + "-loaded-datasets").innerHTML;
-                     Dom.get(this.id + "-loaded-datasets").innerHTML = innerHTML + this.options.selectedItem.cfg.getProperty("text") + "<br>";
-                     */
-   
+
+                     // Disable the menu item so it cannot be selected again
+                     this.widgets.dataSets.get("selectedMenuItem").cfg.setProperty("disabled", true);
+                     this.widgets.dataSets.set("label", this.msg("dataSet.select.label"));
+                     this.widgets.dataSets.value = undefined;
                      // Enable the menu button
                      this.widgets.dataSets.set("disabled", false);
-   
-                     // Remove the loaded data set from the menu button
-                     var menu = this.widgets.dataSets.getMenu();
-                     menu.removeItem(this.options.selectedItem);
-                     this.widgets.dataSets.set("label", this.msg("dataSet.select.label"));
-                     delete this.widgets.dataSets.value;
-                     if (menu.getItems() == 0)
-                     {
-                        menu.body = null;
-                        menu.element.innerHTML = "";
-                     }
                   }
                   else
                   {
