@@ -1,5 +1,23 @@
 <alfresco-config>
 
+   <!-- Document Library config section -->
+   <config evaluator="string-compare" condition="DocumentLibrary">
+   
+   	<types>
+         <type name="cm:content">
+         	<subtype name="demo:purchaseOrder" />
+         </type>
+
+         <type name="cm:folder">
+         </type>
+
+         <type name="trx:transferTarget">
+               <subtype name="trx:fileTransferTarget" />
+         </type>
+      </types>
+   
+   </config>	
+
    <config evaluator="string-compare" condition="GlobalFolder">
 
       <siteTree>
