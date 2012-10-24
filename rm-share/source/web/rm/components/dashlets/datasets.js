@@ -111,40 +111,54 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
             url: Alfresco.constants.PROXY_URI + "api/rma/datasets/" + this.widgets.dataSets.value + "?site=" + Alfresco.constants.SITE,
             successCallback:
             {
-               fn: function()
+               fn: function(response)
                {
                   waitMessage.destroy();
-                  Alfresco.util.PopupManager.displayMessage(
+
+                  if (response.json.success)
                   {
-                     text: this.msg("dataSet.message.import-ok")
-                  });
-
-                  // FIXME
-                  /*
-                  // Add the data set to the loaded data sets  list
-                  var innerHTML = Dom.get(this.id + "-loaded-datasets").innerHTML;
-                  Dom.get(this.id + "-loaded-datasets").innerHTML = innerHTML + this.options.selectedItem.cfg.getProperty("text") + "<br>";
-                  */
-
-                  // Enable the menu button
-                  this.widgets.dataSets.set("disabled", false);
-
-                  // Remove the loaded data set from the menu button
-                  var menu = this.widgets.dataSets.getMenu();
-                  menu.removeItem(this.options.selectedItem);
-                  this.widgets.dataSets.set("label", this.msg("dataSet.select.label"));
-                  delete this.widgets.dataSets.value;
-                  if (menu.getItems() == 0)
+                     Alfresco.util.PopupManager.displayMessage(
+                     {
+                        text: this.msg("dataSet.message.import-ok")
+                     });
+   
+                     // FIXME
+                     /*
+                     // Add the data set to the loaded data sets  list
+                     var innerHTML = Dom.get(this.id + "-loaded-datasets").innerHTML;
+                     Dom.get(this.id + "-loaded-datasets").innerHTML = innerHTML + this.options.selectedItem.cfg.getProperty("text") + "<br>";
+                     */
+   
+                     // Enable the menu button
+                     this.widgets.dataSets.set("disabled", false);
+   
+                     // Remove the loaded data set from the menu button
+                     var menu = this.widgets.dataSets.getMenu();
+                     menu.removeItem(this.options.selectedItem);
+                     this.widgets.dataSets.set("label", this.msg("dataSet.select.label"));
+                     delete this.widgets.dataSets.value;
+                     if (menu.getItems() == 0)
+                     {
+                        menu.body = null;
+                        menu.element.innerHTML = "";
+                     }
+                  }
+                  else
                   {
-                     menu.body = null;
-                     menu.element.innerHTML = "";
+                     Alfresco.util.PopupManager.displayMessage(
+                     {
+                        text: response.json.message
+                     });
+
+                     // Enable the menu button
+                     this.widgets.dataSets.set("disabled", false);
                   }
                },
                scope: this
             },
             failureCallback:
             {
-               fn: function()
+               fn: function(response)
                {
                   waitMessage.destroy();
                   Alfresco.util.PopupManager.displayMessage(
