@@ -1,0 +1,13 @@
+.management-description
+{
+   border-bottom: 1px solid #DDD6A0;
+   padding: 0.5em;
+}
+
+.management-not-rm-admin
+{
+   clear: both;
+   line-height: 1.4;
+   padding: 7px 9px;
+   color: red;
+}
