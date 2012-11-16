@@ -172,35 +172,43 @@
 
          this._rmAction("message.declare", assets, "declareRecord", null,
          {
-            failure:
+            success:
             {
-               message: null,
+               event:
+               {
+                  name: "metadataRefresh"
+               },
+               message: this.msg("message.declare.success", displayName),
                callback:
                {
-                  fn: function RDLA_oAD_failure(data)
+                  fn: function RDLA_oAD_success(data)
                   {
-                     Alfresco.util.PopupManager.displayPrompt(
+                     var results = data.json.results;
+                     if (results && results != null && results[data.config.dataObj.nodeRef] === "missingProperties")
                      {
-                        title: this.msg("message.declare.failure", displayName),
-                        text: this.msg("message.declare.failure.more"),
-                        buttons: [
+                        Alfresco.util.PopupManager.displayPrompt(
                         {
-                           text: this.msg("actions.edit-details"),
-                           handler: function RDLA_oAD_failure_editDetails()
+                           title: this.msg("message.declare.failure", displayName),
+                           text: this.msg("message.declare.failure.more"),
+                           buttons: [
                            {
-                              window.location = editMetadataUrl;
-                              this.destroy();
+                              text: this.msg("actions.edit-details"),
+                              handler: function RDLA_oAD_failure_editDetails()
+                              {
+                                 window.location = editMetadataUrl;
+                                 this.destroy();
+                              },
+                              isDefault: true
                            },
-                           isDefault: true
-                        },
-                        {
-                           text: this.msg("button.cancel"),
-                           handler: function RDLA_oAD_failure_cancel()
                            {
-                              this.destroy();
-                           }
-                        }]
-                     });
+                              text: this.msg("button.cancel"),
+                              handler: function RDLA_oAD_failure_cancel()
+                              {
+                                 this.destroy();
+                              }
+                           }]
+                        });
+                     }
                   },
                   scope: this
                }
