@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.springframework.extensions.surf.exception.ConnectorServiceException;
+import org.springframework.extensions.surf.util.URLEncoder;
 
 /**
  * File plan component kind forms evaluator.
@@ -87,7 +88,7 @@ public class KindEvaluator extends ServiceBasedEvaluator
                 {
                     try
                     {
-                        String jsonResponseString = callService("/api/rmmetadata?type=" + objAsString);
+                        String jsonResponseString = callService("/api/rmmetadata?type=" + URLEncoder.encodeUriComponent(objAsString));
                         
                         if (jsonResponseString != null)
                         {
