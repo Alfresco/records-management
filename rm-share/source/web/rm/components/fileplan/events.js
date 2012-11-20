@@ -160,14 +160,22 @@
                   fn: function(response)
                   {
                      var nextDispositionAction = response.json.data;
-                     if (nextDispositionAction && nextDispositionAction.events.length === 0 && nextDispositionAction.label)
+                     if (nextDispositionAction.notFound)
                      {
-                        this._displayMessage(this.msg("label.noEventsInDispositionSchedule", nextDispositionAction.label));
+                        // Could not find file plan for node (record) try parent's (folder's)
+                        this._getParentsDispositionSchedule();
                      }
                      else
                      {
-                        Dom.addClass(this.widgets.messageEl, "hidden");
-                        this._onEventsLoaded(nextDispositionAction);
+                        if (nextDispositionAction && nextDispositionAction.events.length === 0 && nextDispositionAction.label)
+                        {
+                           this._displayMessage(this.msg("label.noEventsInDispositionSchedule", nextDispositionAction.label));
+                        }
+                        else
+                        {
+                           Dom.addClass(this.widgets.messageEl, "hidden");
+                           this._onEventsLoaded(nextDispositionAction);
+                        }
                      }
                   },
                   scope: this
@@ -176,15 +184,7 @@
                {
                   fn: function(response)
                   {
-                     if (response.serverResponse.status == 404)
-                     {
-                        // Could not find file plan for node (record) try parent's (folder's)
-                        this._getParentsDispositionSchedule();
-                     }
-                     else
-                     {
-                        this._displayMessage(this.msg("label.loadFailure"));
-                     }
+                     this._displayMessage(this.msg("label.loadFailure"));
                   },
                   scope: this
                }
@@ -226,15 +226,20 @@
                            {
                               fn: function(response)
                               {
-                                 if (response.json.data)
+                                 var nextDispositionAction = response.json.data;
+                                 if (nextDispositionAction.notFound)
+                                 {
+                                    this._displayMessage(this.msg("label.noDispositionSchedule"));
+                                 }
+                                 else
                                  {
                                     // File plan found
                                     this._dispositionScheduleAppliedToParent = true;
-
+                                    
                                     // Retreive its as of date
                                     var asOf = Alfresco.util.fromISO8601(response.json.data.asOf);
                                     asOf = asOf ? Alfresco.util.formatDate(asOf) : this.msg("label.none");
-
+                                    
                                     // Display a link to the fileplan's events
                                     var msgHTML = "<div>" + this.msg("label.dispositionScheduleAppliedToFolder", asOf) + "</div><br />";
                                     msgHTML += "<a href='" + Alfresco.constants.URL_PAGECONTEXT + "site/" + this.options.siteId + "/rm-record-folder-details?nodeRef=" + parentNodeRef.nodeRef + "'>" + this.msg("label.linkToFoldersDispositionSchedule") + "</a>";
@@ -247,10 +252,7 @@
                            {
                               fn: function(response)
                               {
-                                 if (response.serverResponse.status == 404)
-                                 {
-                                    this._displayMessage(this.msg("label.noDispositionSchedule"));
-                                 }
+                                 this._displayMessage(this.msg("label.loadFailure"));
                               },
                               scope: this
                            }
