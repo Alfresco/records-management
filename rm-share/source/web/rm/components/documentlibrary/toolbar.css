@@ -20,6 +20,20 @@
    background-image: url(actions/rm-export-disabled-16.png);
 }
 
+.toolbar .manage-permissions button
+{
+   /* FIXME Change the background-image
+   background: transparent url(actions/rm-export-16.png) no-repeat 12px 4px;
+   padding-left: 32px;
+   */
+}
+.toolbar .manage-permissions .yui-button-disabled button
+{
+   /* FIXME Change the background-image
+   background-image: url(actions/rm-export-disabled-16.png);
+   */
+}
+
 .toolbar .report button
 {
    background: transparent url(actions/rm-file-report-16.png) no-repeat 12px 4px;
