@@ -111,7 +111,7 @@
          this.widgets.managePermissionsButton = Alfresco.util.createYUIButton(this, "managePermissions-button", this.onManagePermissions,
          {
             disabled: true,
-            value: "managePerms"
+            value: "managePermissions"
          });
 
          // Selected Items menu button
