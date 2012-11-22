@@ -22,16 +22,13 @@
 
 .toolbar .manage-permissions button
 {
-   /* FIXME Change the background-image
-   background: transparent url(actions/rm-export-16.png) no-repeat 12px 4px;
+   background: transparent url(../../../components/documentlibrary/actions/folder-manage-permissions-16.png) no-repeat 12px 4px;
    padding-left: 32px;
-   */
 }
 .toolbar .manage-permissions .yui-button-disabled button
 {
-   /* FIXME Change the background-image
-   background-image: url(actions/rm-export-disabled-16.png);
-   */
+   /* FIXME Change the background-image - use the disabled version when it is supplied */
+   background-image: url(../../../components/documentlibrary/actions/folder-manage-permissions-16.png);
 }
 
 .toolbar .report button
