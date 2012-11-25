@@ -8,35 +8,47 @@
  */
 function hasCapability(conn, cap)
 {
-	var capabilities = getCapabilities(conn);
-	return hasCapabilityImpl(cap, capabilities);
+   var capabilities = getCapabilities(conn);
+   return hasCapabilityImpl(cap, capabilities);
 }
 
 function hasCapabilityImpl(cap, capabilities)
 {
-	var result = false;
-	if (capabilities !== null)
-	{
-		for each (var c in capabilities)
-		{
-			if (c == cap)
-			{
-				result = true;
-				break;
-			}
-		}
-	}
-	return result;	
+   var result = false;
+   if (capabilities !== null)
+   {
+      for each (var c in capabilities)
+      {
+         if (c == cap)
+         {
+            result = true;
+            break;
+         }
+      }
+   }
+   return result;	
 }
 
 function getCapabilities(conn)
 {
-	var result = null;
-	var res = conn.get("/api/capabilities?includeAll=true");
-	if (res.status == 200)
-	{
-		var data = eval('(' + res + ')').data;
-		result = data.capabilities;
-	}
-	return result;
+   var result = null;
+   var res = conn.get("/api/capabilities?includeAll=true");
+   if (res.status == 200)
+   {
+      var data = eval('(' + res + ')').data;
+      result = data.capabilities;
+   }
+   return result;
+}
+
+function getGroupedCapabilities(conn)
+{
+   var result = null;
+   var res = conn.get("/api/capabilities?grouped=true");
+   if (res.status == 200)
+   {
+      var data = eval('(' + res + ')').data;
+      result = data.groupedCapabilities;
+   }
+   return result;
 }
