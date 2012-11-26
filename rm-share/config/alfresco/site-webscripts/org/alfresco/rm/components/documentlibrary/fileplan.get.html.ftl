@@ -4,7 +4,7 @@
    <ul class="filterLink">
       <li><span class="transfers"><a rel="" href="#">${msg("label.transfers")}</a></span></li>
       <li><span class="holds"><a rel="" href="#">${msg("label.holds")}</a></span></li>
-      <li><span class="unfiledRecords"><a rel="" href="#">Unfiled Records</a></span></li>
+      <li><span class="unfiledRecords"><a rel="" href="#">${msg("label.unfiledRecords")}</a></span></li>
    </ul>
 </div>
 <script type="text/javascript">//<![CDATA[
