@@ -27,8 +27,7 @@
 }
 .toolbar .manage-permissions .yui-button-disabled button
 {
-   /* FIXME Change the background-image - use the disabled version when it is supplied */
-   background-image: url(../../../components/documentlibrary/actions/folder-manage-permissions-16.png);
+   background-image: url(actions/folder-manage-permissions-disabled-16.png);
 }
 
 .toolbar .report button
