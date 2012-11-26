@@ -120,6 +120,13 @@
             value: "managePermissions"
          });
 
+         // Manage permissions button for unfiled records toolbar: user needs "file" permissions and the capability to modify permissions
+         this.widgets.unfiledManagePermissionsButton = Alfresco.util.createYUIButton(this, "unfiledManagePermissions-button", this.onUnfiledManagePermissions,
+         {
+            disabled: true,
+            value: "managePermissions"
+         });
+
          // Selected Items menu button
          this.widgets.selectedItems = Alfresco.util.createYUIButton(this, "selectedItems-button", this.onSelectedItems,
          {
@@ -646,9 +653,30 @@
        */
       onManagePermissions: function DLTB_onManagePermissions(e, p_obj)
       {
-         var nodeRef = this.modules.docList.doclistMetadata.parent.nodeRef,
-            itemName = encodeURIComponent(this.modules.docList.doclistMetadata.parent.properties["cm:name"]),
-            nodeType = this.modules.docList.doclistMetadata.parent.type, 
+         var parent = this.modules.docList.doclistMetadata.parent,
+            nodeRef = parent.nodeRef,
+            itemName = encodeURIComponent(parent.properties["cm:name"]),
+            nodeType = parent.type,
+            page = "rm-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType,
+            siteId = this.options.siteId,
+            siteObj = YAHOO.lang.isString(siteId) ? { site: siteId } : null;
+
+         window.location.href = Alfresco.util.siteURL(page, siteObj);
+      },
+
+      /**
+       * Manage permissions button click handler for unfiled records
+       *
+       * @method onUnfiledManagePermissions
+       * @param e {object} DomEvent
+       * @param p_obj {object} Object passed back from addListener method
+       */
+      onUnfiledManagePermissions: function DLTB_onUnfiledManagePermissions(e, p_obj)
+      {
+         var rmNode = this.modules.docList.doclistMetadata.parent.rmNode, 
+            nodeRef = rmNode.unfiledRecordContainer,
+            itemName = encodeURIComponent(rmNode.properties["cm:name"]),
+            nodeType = rmNode.type,
             page = "rm-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType,
             siteId = this.options.siteId,
             siteObj = YAHOO.lang.isString(siteId) ? { site: siteId } : null;
