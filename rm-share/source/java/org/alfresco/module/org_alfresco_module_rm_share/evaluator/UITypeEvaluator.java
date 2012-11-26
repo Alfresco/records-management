@@ -47,6 +47,11 @@ public class UITypeEvaluator extends BaseRMEvaluator
         {
             return false;
         }
+        
+        if (isDocLibRecord(jsonObject) == true)
+        {
+            return false;
+        }
 
         try
         {

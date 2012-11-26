@@ -25,7 +25,7 @@
             <div class="import"><button id="${el}-import-button">${msg("button.import")}</button></div>
          </div>
          <div class="hideable toolbar-hidden DocListTree">
-            <div class="export-all"><button id="${el}-exportAll-button">${msg("button.export-all")}</button></div>
+            <div class="export-all" ><button id="${el}-exportAll-button">${msg("button.export-all")}</button></div>
          </div>
          <div class="hideable toolbar-hidden DocListTree">
             <div class="manage-permissions"><button id="${el}-managePermissions-button">${msg("button.manage-permissions")}</button></div>
@@ -36,6 +36,10 @@
             <div class="report"><button id="${el}-report-button">${msg("button.report")}</button></div>
          </div>
          -->
+         
+         <div class="hideable toolbar-hidden DocListFilePlan_unfiledRecords">
+   		    <div class="manage-rules"><button id="${el}-manageRules-button">${msg("button.manage-rules")}</button></div>
+         </div>
          
          <div class="selected-items">
             <button id="${el}-selectedItems-button" class="no-access-check">${msg("menu.selected-items")}</button>

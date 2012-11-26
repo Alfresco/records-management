@@ -30,6 +30,23 @@ import org.json.simple.JSONObject;
  */
 public abstract class BaseRMEvaluator extends BaseEvaluator
 {
+    public final boolean isDocLibRecord(JSONObject jsonObject)
+    {
+        boolean result = false;
+        
+        String siteId = getSiteId(jsonObject);
+        JSONObject rmNode = getRMNode(jsonObject);
+        
+        // TODO .. need to check the type of the site (not assume the id of the site)
+        // TODO .. need to ensure this is a record (not something else)
+        
+        if (rmNode != null && siteId.equals("rm") == false)
+        {
+            result = true;
+        }
+        return result;
+    }
+    
     /**
      * Retrieve a JSONObject representing the RM extended properties
      *

@@ -40,16 +40,20 @@
          <configurations>
 
             <config evaluator="string-compare" condition="DocumentLibrary" replace="true">
+
                <!-- Document List -->
                <doclist>
                   <!-- Make sure the doclib's document list is using RM's file plan doclist webscript -->
                   <data-url-resolver>resolver.rm.doclib.doclistDataUrl</data-url-resolver>
                </doclist>
+               
             </config>
 
-            <config evaluator="string-compare" condition="DocLibActions" replace="true">
+	        <config evaluator="string-compare" condition="DocLibActions" replace="true">
+            
                <!-- Action Group Resolver -->
                <actionGroupResolver>resolver.rm.doclib.actionGroup</actionGroupResolver>
+            
             </config>
 
          </configurations>

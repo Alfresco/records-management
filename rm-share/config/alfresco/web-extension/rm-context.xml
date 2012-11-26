@@ -35,14 +35,17 @@
    <!--                                           -->
    <bean id="resolver.rm.doclib.doclistDataUrl" class="org.alfresco.module.org_alfresco_module_rm_share.resolver.doclib.FilePlanDoclistDataUrlResolver" />
 
-   <!--                                               -->
-   <!-- File Plan Document List Action Group Resolver -->
-   <!--                                               -->
-
-   <bean id="resolver.rm.doclib.actionGroup" class="org.alfresco.module.org_alfresco_module_rm_share.resolver.doclib.FilePlanDoclistActionGroupResolver" />
+   <!--                                                  -->
+   <!-- File Plan Document List Action Group Resolver(s) -->
+   <!--                                                  -->
+   <bean id="resolver.rm.doclib.actionGroup" 
+   		 class="org.alfresco.module.org_alfresco_module_rm_share.resolver.doclib.FilePlanDoclistActionGroupResolver"/>
    
-   <bean id="resolver.rm.doclib.actionGroupFix" class="org.alfresco.module.org_alfresco_module_rm_share.resolver.doclib.FilePlanDoclistActionGroupResolverFix" />
-
+   <bean id="resolver.doclib.actionGroup" 
+         class="org.alfresco.module.org_alfresco_module_rm_share.resolver.doclib.ExtendedDefaultDoclistActionGroupResolver">
+      <property name="filePlanDoclistActionGroupResolver" ref="resolver.rm.doclib.actionGroup"/>
+   </bean>
+   
    <!--                             -->
    <!-- File Plan Common Evaluators -->
    <!--                             -->
@@ -117,6 +120,7 @@
    <bean id="evaluator.rm.indicator.vitalRecord" parent="evaluator.rm.common.indicatorEvaluator">
       <property name="indicator" value="vitalRecord" />
    </bean>
+   <bean id="evaluator.rm.doclib.isRecord" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.DocLibRecordIndicatorEvaluator"/>
 
 
    <!--                             -->

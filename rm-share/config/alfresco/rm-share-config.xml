@@ -1,5 +1,23 @@
 <alfresco-config>
 
+   <!-- Document Library config section -->
+   <config evaluator="string-compare" condition="DocumentLibrary">
+   
+   	<types>
+         <type name="cm:content">
+         	<subtype name="demo:purchaseOrder" />
+         </type>
+
+         <type name="cm:folder">
+         </type>
+
+         <type name="trx:transferTarget">
+               <subtype name="trx:fileTransferTarget" />
+         </type>
+      </types>
+   
+   </config>	
+
    <config evaluator="string-compare" condition="GlobalFolder">
 
       <siteTree>
@@ -139,6 +157,15 @@
             <evaluator>evaluator.rm.common.isHoldContainer</evaluator>
             <title>{RM_holdContainer}</title>
             <line index="10" id="holdReason">{RM_holdReason details.hold-container.reason}</line>
+         </template>
+         
+         <!-- DocLib Record -->
+         <template id="rmDocLibRecord">
+            <evaluator>evaluator.rm.doclib.isRecord</evaluator>
+            <banner index="10" id="record">Record</banner>
+            <line index="10" id="identifier" view="detailed">{rma_identifier details.record.identifier}</line>
+            <line index="20" id="modifiedByModifiedOn">{RM_modifiedBy details.modified.by}{RM_modifiedOn details.modified.on}{size}</line>
+            <line index="30" id="description" view="detailed">{description label.description}</line>
          </template>
 
          <!-- Metadata Stub -->
@@ -395,11 +422,6 @@
       </actions>
 
       <!--
-         Action Group resolver - decides which action group id to use for a node
-      -->
-      <actionGroupResolver>resolver.rm.doclib.actionGroupFix</actionGroupResolver>
-
-      <!--
          Action Group definitions
       -->
       <actionGroups>
@@ -488,6 +510,12 @@
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
          </actionGroup>
+         
+         <actionGroup id="rm-doclib-record-browse">
+            <action index="100" id="rm-document-download" />
+            <action index="110" id="rm-edit-details" />           
+         </actionGroup>
+         
          <actionGroup id="rm-record-details">
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-reviewed" />
@@ -507,6 +535,10 @@
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
          </actionGroup>
+         
+         <actionGroup id="rm-doclib-record-details">
+            <action index="110" id="rm-edit-details" />
+         </actionGroup>
 
          <actionGroup id="rm-undeclared-record-browse">
             <action index="100" id="rm-document-download" />
@@ -522,6 +554,12 @@
             <action index="190" id="rm-delete" label="actions.delete" />
             <action index="200" id="rm-view-audit-log" />
          </actionGroup>
+         
+         <actionGroup id="rm-doclib-undeclared-record-browse">
+            <action index="100" id="rm-document-download" />
+            <action index="110" id="rm-edit-details" />
+         </actionGroup>         
+         
          <actionGroup id="rm-undeclared-record-details">
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-declare" />
@@ -534,6 +572,10 @@
             <action index="170" id="rm-file-to" />
             <action index="190" id="rm-delete" label="actions.delete" />
             <action index="200" id="rm-view-audit-log" />
+         </actionGroup>
+         
+         <actionGroup id="rm-doclib-undeclared-record-details">
+            <action index="110" id="rm-edit-details" />
          </actionGroup>
 
          <actionGroup id="rm-metadata-stub-folder-browse">
