@@ -26,10 +26,10 @@
       
       <h3>${msg('label.capabilities')}</h3>
 
-      <#list groupedCapabilities as groupedCaps>
+      <#list groupedCapabilities as groupedCapabilities>
          <#assign
-            groupedCapsKeys = groupedCaps?keys
-            index = groupedCaps_index + 1
+            groupedCapabilitiesKeys = groupedCapabilities?keys
+            index = groupedCapabilities_index + 1
          >
          <#if (index < 10)>
             <#assign index = "0" + index>
@@ -42,12 +42,12 @@
          <div>
             <button id="${buttonId}" value="${buttonId}" class="selectAll action" type="button">${msg('label.select-all')}</button>
             <fieldset>
-               <#list groupedCapsKeys as groupedCapsKey>
-                  <legend>${groupedCapsKey}</legend>
+               <#list groupedCapabilitiesKeys as groupedCapabilitiesKey>
+                  <legend>${groupedCapabilities[groupedCapabilitiesKey].groupTitle}</legend>
                   <ul id="${capabilitiesId}" class="capabilities">
-                     <#assign capsKeys = groupedCaps[groupedCapsKey]?keys>
-                     <#list capsKeys as capsKey>
-                        <li><input name=${capsKey} type="checkbox" id=${capsKey} /><label for=${capsKey}>${groupedCaps[groupedCapsKey][capsKey]}</label></li>
+                     <#assign capabilities = groupedCapabilities[groupedCapabilitiesKey].capabilities>
+                     <#list capabilities?keys as capabilitiesKey>
+                        <li><input name=${capabilitiesKey} type="checkbox" id=${capabilitiesKey} /><label for=${capabilitiesKey}>${capabilities[capabilitiesKey]}</label></li>
                      </#list>
                   </ul>
                </#list>
