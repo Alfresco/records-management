@@ -1,3 +1,3 @@
 dependencies {
-	testRuntime group: alfrescoGroupId, name: 'share', version: alfrescoBaseVersion, type: 'war'
+	alfrescoDeps group: alfrescoGroupId, name: 'share', version: alfrescoBaseVersion, type: 'war'
 }
