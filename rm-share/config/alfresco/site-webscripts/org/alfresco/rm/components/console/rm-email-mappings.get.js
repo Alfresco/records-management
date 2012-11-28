@@ -3,7 +3,7 @@
 function main()
 {
    var conn = remote.connect("alfresco");
-   
+
    // test user capabilities - can they access Email Mappings?
    var hasAccess = hasCapability(conn, "MapEmailMetadata");
    if (hasAccess)

@@ -17,7 +17,7 @@
          'messageSubject',
          'messageSent'
          ]
-  }).setMessages(${messages});
+   }).setMessages(${messages});
 //]]</script>
 
 <div id="${htmlid}" class="rm-email-mappings">
@@ -36,10 +36,6 @@
    <div id="emailMappings-list" class="rm-email-mappings-list">
       <ul>
       </ul>
-   </div>
-   <div id="emailMappings-actions" class="rm-email-mappings-actions">
-      <input type="submit" name="save-mappings" value="${msg('label.save')}" id="save-mappings" disabled/>
-      <button id="discard-mappings" name="discard-mappings" disabled>${msg('label.discard')}</button>
    </div>
 </div>
 </#if>
