@@ -30,20 +30,20 @@
          <div class="hideable toolbar-hidden DocListTree">
             <div class="manage-permissions"><button id="${el}-managePermissions-button">${msg("button.manage-permissions")}</button></div>
          </div>
-         
+
          <#-- RM-318 - removing Report button temporarily
          <div class="hideable toolbar-hidden DocListTree">
             <div class="report"><button id="${el}-report-button">${msg("button.report")}</button></div>
          </div>
          -->
-         
+
          <div class="hideable toolbar-hidden DocListFilePlan_unfiledRecords">
             <div class="manage-permissions"><button id="${el}-unfiledManagePermissions-button">${msg("button.manage-permissions")}</button></div>
          </div>
          <div class="hideable toolbar-hidden DocListFilePlan_unfiledRecords">
    		    <div class="manage-rules"><button id="${el}-manageRules-button">${msg("button.manage-rules")}</button></div>
          </div>
-         
+
          <div class="selected-items">
             <button id="${el}-selectedItems-button" class="no-access-check">${msg("menu.selected-items")}</button>
             <div id="${el}-selectedItems-menu" class="yuimenu">
@@ -67,14 +67,6 @@
    <div id="${el}-navBar" class="nav-bar flat-button theme-bg-4">
       <div class="hideable toolbar-hidden DocListTree">
          <div class="folder-up"><button id="${el}-folderUp-button" class="no-access-check"></button></div>
-         <div class="separator">&nbsp;</div>
-      </div>
-      <div class="hideable toolbar-hidden DocListFilePlan_transfers">
-         <div class="folder-up"><button id="${el}-transfersFolderUp-button" class="no-access-check"></button></div>
-         <div class="separator">&nbsp;</div>
-      </div>
-      <div class="hideable toolbar-hidden DocListFilePlan_holds">
-         <div class="folder-up"><button id="${el}-holdsFolderUp-button" class="no-access-check"></button></div>
          <div class="separator">&nbsp;</div>
       </div>
       <div id="${el}-breadcrumb" class="breadcrumb hideable toolbar-hidden DocListTree"></div>

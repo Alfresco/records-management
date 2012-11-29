@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * DocumentList Toolbar component.
- * 
+ *
  * @namespace Alfresco
  * @class Alfresco.rm.component.DocListToolbar
  */
@@ -33,7 +33,7 @@
 
    /**
     * RecordsDocListToolbar constructor.
-    * 
+    *
     * @param {String} htmlId The HTML id of the parent element
     * @return {Alfresco.rm.component.DocListToolbar} The new RecordsDocListToolbar instance
     * @constructor
@@ -106,7 +106,7 @@
             disabled: true,
             value: "export"
          });
-         
+
          this.widgets.manageRules = Alfresco.util.createYUIButton(this, "manageRules-button", this.onManageRules,
          {
             disabled: false //,
@@ -154,18 +154,6 @@
             disabled: true
          });
 
-         // Transfers Folder Up Navigation button
-         this.widgets.transfersFolderUp =  Alfresco.util.createYUIButton(this, "transfersFolderUp-button", this.onFilterFolderUp,
-         {
-            disabled: true
-         });
-
-         // Holds Folder Up Navigation button
-         this.widgets.holdsFolderUp =  Alfresco.util.createYUIButton(this, "holdsFolderUp-button", this.onFilterFolderUp,
-         {
-            disabled: true
-         });
-
          // DocLib Actions module
          this.modules.actions = new Alfresco.module.DoclibActions();
 
@@ -200,25 +188,7 @@
       },
 
       /**
-       * Filter Changed event handler
        *
-       * @method onFilterChanged
-       * @param layer {object} Event fired
-       * @param args {array} Event parameters (depends on event type)
-       */
-      onFilterChanged: function DLTB_onFilterChanged(layer, args)
-      {
-         Alfresco.rm.component.DocListToolbar.superclass.onFilterChanged.apply(this, arguments);
-
-         var upFolderEnabled = (this.currentFilter.filterId == "holds" && this.currentFilter.filterData !== "");
-         this.widgets.holdsFolderUp.set("disabled", !upFolderEnabled);
-
-         upFolderEnabled = (this.currentFilter.filterId == "transfers" && this.currentFilter.filterData !== "");
-         this.widgets.transfersFolderUp.set("disabled", !upFolderEnabled);         
-      },
-      
-      /**
-       * 
        */
       onManageRules: function DLTB_onManageRules(type, args)
       {
@@ -673,7 +643,7 @@
        */
       onUnfiledManagePermissions: function DLTB_onUnfiledManagePermissions(e, p_obj)
       {
-         var rmNode = this.modules.docList.doclistMetadata.parent.rmNode, 
+         var rmNode = this.modules.docList.doclistMetadata.parent.rmNode,
             nodeRef = rmNode.unfiledRecordContainer,
             itemName = encodeURIComponent(rmNode.properties["cm:name"]),
             nodeType = rmNode.type,
@@ -682,23 +652,6 @@
             siteObj = YAHOO.lang.isString(siteId) ? { site: siteId } : null;
 
          window.location.href = Alfresco.util.siteURL(page, siteObj);
-      },
-
-      /**
-       * Transfers/Holds Folder Up Navigate button click handler
-       *
-       * @method onFilterFolderUp
-       * @param e {object} DomEvent
-       * @param p_obj {object} Object passed back from addListener method
-       */
-      onFilterFolderUp: function DLTB_onFilterFolderUp(e, p_obj)
-      {
-         YAHOO.Bubbling.fire("changeFilter",
-         {
-            filterId: this.currentFilter.filterId,
-            filterData: ""
-         });
-         Event.preventDefault(e);
       }
    }, true);
 })();
