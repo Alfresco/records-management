@@ -9,14 +9,12 @@
    });
    new Alfresco.rm.component.RMEmailMappings('${htmlid}').setOptions(
    {
-      email:[
-         'Thread-Index',
-         'messageFrom',
-         'messageTo',
-         'messageCc',
-         'messageSubject',
-         'messageSent'
-         ]
+      email:
+      [
+      <#list emailmapkeys as emailmapkey>
+         '${emailmapkey}'<#if emailmapkey_has_next>,</#if>
+      </#list>
+      ]
    }).setMessages(${messages});
 //]]</script>
 

@@ -15,6 +15,14 @@ function main()
    	   groups = eval('(' + res + ')').data.groups;
       }
       model.groups = groups;
+
+      var emailmapkeys = [];
+      var result = conn.get("/api/rma/admin/emailmapkeys");
+      if (result.status == 200)
+      {
+         emailmapkeys = eval('(' + result + ')').data.emailmapkeys;
+      }
+      model.emailmapkeys = emailmapkeys;
    }
    model.hasAccess = hasAccess;
 }
