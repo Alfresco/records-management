@@ -23,12 +23,20 @@
       <h2>${msg('label.email-mappings')}</h2>
       <div>
          <span>${msg('label.map')}</span>
-         <input type="text" name="emailProperty-text" value="" id="emailProperty-text" />
-         <button id="emailProperty-but" name="emailProperty-but" class="thin-button"><img src="${page.url.context}/res/components/images/expanded.png" title="${msg('label.select-email')}"/></button>
+         <input type="text" name="emailProperty-text" value="" id="emailProperty-text" style="width:200px;"/>
+         <span id="${htmlid}-emailProperty-button" class="align-left yui-button yui-push-button">
+            <span class="first-child">
+               <button id="${htmlid}-emailProperty-button" type="button" class="thin-button"><img src="${page.url.context}/res/components/images/expanded.png" title="${msg('label.select-email')}"/></button>
+            </span>
+         </span>
          <div id="email-menu-container"></div>
          <span>${msg('label.to')}</span>
-         <button id="${htmlid}-rmproperty-button" name="rmproperty" class="thin-button">${msg("message.select")}</button>
-         <button id="add-mapping" name="email-add" class="thin-button" disabled>${msg('label.add')}</button>
+         <button id="${htmlid}-rmproperty-button">${msg("message.select")}</button>
+         <span id="${htmlid}-add-mapping-button" class="align-left yui-button yui-push-button">
+            <span class="first-child">
+               <button id="${htmlid}-add-mapping-button" type="button">${msg('label.add')}</button>
+            </span>
+         </span>
       </div>
    </div>
    <div id="emailMappings-list" class="rm-email-mappings-list">

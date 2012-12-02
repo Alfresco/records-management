@@ -19,7 +19,7 @@
 
 /**
  * RM Email Mappings component
- * 
+ *
  * @namespace Alfresco.rm.component
  * @class Alfresco.rm.component.RMEmailMappings
  */
@@ -39,7 +39,7 @@
 
    /**
     * RM EmailMappings componentconstructor.
-    * 
+    *
     * @param {String} htmlId The HTML id of the parent element
     * @return {Alfresco.dashlet.MyDocuments} The new component instance
     * @constructor
@@ -57,46 +57,6 @@
 
    YAHOO.extend(Alfresco.rm.component.RMEmailMappings, Alfresco.component.Base,
    {
-      /**
-       * Initialises event listening and custom events
-       *
-       * @method: initEvents
-       */
-      initEvents: function RM_EmailMappings_initEvents()
-      {
-         Event.on(this.id, 'click', this.onInteractionEvent, null, this);
-         this.registerEventHandler('click', [
-         {
-            rule: 'button.delete-mapping',
-            o:
-            {
-               handler :this.onDeleteMapping,
-               scope: this
-            }
-         },
-         {
-            rule: 'button#add-mapping-button',
-            o:
-            {
-               handler :this.onAddMapping,
-               scope: this
-            }
-         },
-         {
-            rule: 'button#emailProperty-but-button',
-            o:
-            {
-               handler: function showEmailProp(e)
-               {
-                  this.widgets['emailProperty-menu'].show();
-               },
-               scope: this
-            }
-         }]);
-
-         return this;
-      },
-
       /**
        * Handler for delete mapping button. Removes from datamap and DOM
        *
@@ -235,79 +195,114 @@
        */
       onReady: function RM_EmailMappings_onReady()
       {
-         this.initEvents();
-
-         var me = this;
-         var elements = Sel.query('button', this.id).concat(Sel.query('input[type="submit"]', this.id));
-
-         // Create widget button while reassigning classname to src element (since YUI removes classes).
-         // We need the classname so we can identify what action to take when it is interacted with (event delegation).
-         for (var i=0, len = elements.length; i<len; i++)
-         {
-            var el = elements[i];
-            if (el.id.indexOf('-button') === -1 && el.className.indexOf('button-menu') === -1)
-            {
-               var id = el.id.replace(this.id + '-', '');
-               this.widgets[id] = new YAHOO.widget.Button(el.id);
-               this.widgets[id]._button.className = el.className;
-            }
-         }
-
          this.widgets['list'] = Sel.query('#emailMappings-list ul')[0];
 
-         // textfields
+         // Map key text field
          this.widgets['emailProperty-text'] = Dom.get('emailProperty-text');
          this.widgets['emailProperty-text'].value = "";
 
-         // enable add button if textfields have entries
-         var toggleAddButton = function toggleAddButton()
+         // Email property button
+         this.widgets.emailPropertyButton = Alfresco.util.createYUIButton(this, "emailProperty-button", function emailProperty(e)
          {
-            var emProp = YAHOO.lang.trim(this.widgets['emailProperty-text'].value);
-
-            // update current value
-            this.currentValues['emailProperty'] =
+            if (!this.widgets['emailProperty-menu'])
             {
-               value: emProp,
-               label: emProp
-            };
+               // create menu
+               this.widgets['emailProperty-menu'] = new YAHOO.widget.Menu("emailMappings-emailProperty-menu",
+               {
+                  context: ['emailProperty-text', 'tl', 'bl'],
+                  width: '202px',
+                  clicktohide: false
+               });
 
-            this.widgets['add-mapping'].set('disabled', (emProp.length === 0));
-         };
-         Event.addListener(this.widgets['emailProperty-text'], "keyup", toggleAddButton, null, this);
+               // Email property menu setup and event handler
+               this.widgets['emailProperty-menu'].addItems(this.options.email);
+               this.widgets['emailProperty-menu'].render('email-menu-container');
+               this.widgets['emailProperty-menu'].subscribe('click', function (e, args)
+               {
+                  var menuItem = args[1];
+                  var menuItemText = menuItem.cfg.getConfig().text;
 
-         // create menu
-         this.widgets['emailProperty-menu'] = new YAHOO.widget.Menu("emailMappings-emailProperty-menu",
-         {
-            position:'dynamic',
-            context:['emailProperty-text', 'tl', 'bl']
+                  this.widgets['emailProperty-text'].value = menuItemText;
+                  this.currentValues['emailProperty'] =
+                  {
+                     value: menuItemText,
+                     label: menuItemText
+                  };
+                  var rmpropertyButton = YAHOO.widget.Button.getButton(this.id + "-rmproperty-button");
+                  if (rmpropertyButton._configs.selectedMenuItem.value && rmpropertyButton._configs.selectedMenuItem.value.value)
+                  {
+                     Alfresco.util.enableYUIButton(this.widgets.addMappingButton);
+                  }
+                  else
+                  {
+                     Alfresco.util.disableYUIButton(this.widgets.addMappingButton);
+                  }
+               }, this, true);
+            }
+            if (this.widgets['emailProperty-menu'].cfg.getConfig().visible)
+            {
+               this.widgets['emailProperty-menu'].hide();
+            }
+            else
+            {
+               this.widgets['emailProperty-menu'].show();
+            }
          });
 
-         // Email property menu setup and event handler
-         this.widgets['emailProperty-menu'].addItems(this.options.email);
-         this.widgets['emailProperty-menu'].render('email-menu-container');
-         this.widgets['emailProperty-menu'].subscribe('click', function (e, args)
+         // Email property button
+         this.widgets.addMappingButton = Alfresco.util.createYUIButton(this, "add-mapping-button", this.onAddMapping,
          {
-            var menuItem = args[1];
-            var menuItemText = menuItem.cfg.getConfig().text;
+            disabled: true
+         });
 
-            this.widgets['emailProperty-text'].value = menuItemText;
-            this.currentValues['emailProperty'] =
-            {
-               value: menuItemText,
-               label: menuItemText
-            };
-            this.widgets['add-mapping'].set('disabled', menuItem.cfg.getProperty('disabled'));
-         }, this, true);
+         this.addMappingButtonValidation();
 
          this.load();
+      },
+
+      addMappingButtonValidation: function RM_EmailMappings_addMappingButtonValidation()
+      {
+         var me = this;
+         var rmpropertyButton = YAHOO.widget.Button.getButton(this.id + "-rmproperty-button");
+         rmpropertyButton.subscribe('selectedMenuItemChange', function (e, args)
+         {
+            if (rmpropertyButton._configs.selectedMenuItem.value.value && me.widgets['emailProperty-text'] && me.widgets['emailProperty-text'].value)
+            {
+               Alfresco.util.enableYUIButton(me.widgets.addMappingButton);
+            }
+            else
+            {
+               Alfresco.util.disableYUIButton(me.widgets.addMappingButton);
+            }
+         });
+         Event.addListener(this.widgets['emailProperty-text'], "keyup", function()
+         {
+            if (rmpropertyButton._configs.selectedMenuItem.value && rmpropertyButton._configs.selectedMenuItem.value.value && me.widgets['emailProperty-text'].value != "")
+            {
+               var emProp = YAHOO.lang.trim(this.widgets['emailProperty-text'].value);
+
+               // update current value
+               this.currentValues['emailProperty'] =
+               {
+                  value: emProp,
+                  label: emProp
+               };
+
+               Alfresco.util.enableYUIButton(me.widgets.addMappingButton);
+            }
+            else
+            {
+               Alfresco.util.disableYUIButton(me.widgets.addMappingButton);
+            }
+         }, null, this);
       },
 
       /**
        * Loads mapping data via AJAX
        *
-       * @method load 
+       * @method load
        */
-      load: function RM_EmailMappings_onDataLoad()
+      load: function RM_EmailMappings_load()
       {
          Alfresco.util.Ajax.jsonRequest(
          {
@@ -346,7 +341,7 @@
 
       /**
        * Renders mapping to DOM.
-       * 
+       *
        * @method renderMapping
        * @param {Object} oMap - Value object of 'from' and 'to' string variables
        */
@@ -375,7 +370,7 @@
       /**
        * Event handler called when a value from the property selection menu has been selected
        * Updates currently stored values.
-       * 
+       *
        * @method onPropertyMenuSelected
        * @param e {object} Dom event
        * @param args {object} Event parameters
