@@ -168,10 +168,13 @@
          var elRoleName = Dom.get("roleName");
          elRoleName.value = role.displayLabel;
 
-         for (var i=0, j=role.capabilities.length; i<j; i++)
+         for (var cap in role.capabilities)
          {
             // checkbox representing each capabilities ID has that ID in the DOM
-            Dom.get(role.capabilities[i]).checked = true;
+            if (role.capabilities.hasOwnProperty(cap))
+            {
+               Dom.get(cap).checked = true;
+            }
          }
 
          this.roleForm.updateSubmitElements();
@@ -605,13 +608,12 @@
          if (roleId !== null)
          {
             var caps = this.roles[roleId].capabilities;
-            caps.sort();
             for (var c in caps)
             {
                if (caps.hasOwnProperty(c))
                {
                   var li = document.createElement("li");
-                  li.innerHTML = this.msg("label.role." + caps[c]);
+                  li.innerHTML = this.msg(caps[c]);
                   elList.appendChild(li);
                }
             }
