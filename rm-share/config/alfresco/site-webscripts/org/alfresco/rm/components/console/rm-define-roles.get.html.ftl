@@ -17,13 +17,13 @@
    <#else>
    <h2>${msg('label.edit-role')}</h2>
    </#if>
-   
+
    <form id="roleForm" action="">
       <div>
          <label for="roleName">${msg('label.name')}:</label>
          <input type="text" name="roleName" value="" id="roleName" maxlength="100" />
       </div>
-      
+
       <h3>${msg('label.capabilities')}</h3>
 
       <#list groupedCapabilities as groupedCapabilities>
@@ -42,11 +42,11 @@
          <div>
             <button id="${buttonId}" value="${buttonId}" class="selectAll action" type="button">${msg('label.select-all')}</button>
             <fieldset>
-               <#list groupedCapabilitiesKeys as groupedCapabilitiesKey>
+               <#list groupedCapabilitiesKeys?sort as groupedCapabilitiesKey>
                   <legend>${groupedCapabilities[groupedCapabilitiesKey].groupTitle}</legend>
                   <ul id="${capabilitiesId}" class="capabilities">
                      <#assign capabilities = groupedCapabilities[groupedCapabilitiesKey].capabilities>
-                     <#list capabilities?keys as capabilitiesKey>
+                     <#list capabilities?keys?sort as capabilitiesKey>
                         <li><input name=${capabilitiesKey} type="checkbox" id=${capabilitiesKey} /><label for=${capabilitiesKey}>${capabilities[capabilitiesKey]}</label></li>
                      </#list>
                   </ul>
@@ -88,7 +88,7 @@
             </ul>
          </div>
       </div>
-      
+
       <div id="roleContent" class="yui-u">
          <div class="list-header">
             <div class="editRoleButton">
