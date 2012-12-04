@@ -608,14 +608,21 @@
          if (roleId !== null)
          {
             var caps = this.roles[roleId].capabilities;
+            var capsArray = [];
             for (var c in caps)
             {
                if (caps.hasOwnProperty(c))
                {
-                  var li = document.createElement("li");
-                  li.innerHTML = this.msg(caps[c]);
-                  elList.appendChild(li);
+                  capsArray.push(this.msg(caps[c]));
                }
+            }
+            capsArray.sort(this._sortByCapabilityName);
+
+            for (var i = 0, length = capsArray.length; i < length; i++)
+            {
+               var li = document.createElement("li");
+               li.innerHTML = capsArray[i];
+               elList.appendChild(li);
             }
 
             // update button values to the current role ID
@@ -735,6 +742,19 @@
       _sortByDisplayLabel: function RMViewRoles__sortByDisplayLabel(s1, s2)
       {
          var ss1 = s1.displayLabel.toLowerCase(), ss2 = s2.displayLabel.toLowerCase();
+         return (ss1 > ss2) ? 1 : (ss1 < ss2) ? -1 : 0;
+      },
+
+      /**
+       * Helper to Array.sort() by the 'capability name' field of an object.
+       *
+       * @method _sortByCapabilityName
+       * @return {Number}
+       * @private
+       */
+      _sortByCapabilityName: function RMViewRoles__sortByCapabilityName(s1, s2)
+      {
+         var ss1 = s1.toLowerCase(), ss2 = s2.toLowerCase();
          return (ss1 > ss2) ? 1 : (ss1 < ss2) ? -1 : 0;
       }
    });
