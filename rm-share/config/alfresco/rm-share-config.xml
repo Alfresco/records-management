@@ -1,23 +1,5 @@
 <alfresco-config>
 
-   <!-- Document Library config section -->
-   <config evaluator="string-compare" condition="DocumentLibrary">
-   
-   	<types>
-         <type name="cm:content">
-         	<subtype name="demo:purchaseOrder" />
-         </type>
-
-         <type name="cm:folder">
-         </type>
-
-         <type name="trx:transferTarget">
-               <subtype name="trx:fileTransferTarget" />
-         </type>
-      </types>
-   
-   </config>	
-
    <config evaluator="string-compare" condition="GlobalFolder">
 
       <siteTree>
@@ -172,7 +154,7 @@
       </metadata-templates>
 
    </config>
-
+   
    <!-- Document Library Actions config section -->
    <config evaluator="string-compare" condition="DocLibActions">
 
@@ -419,6 +401,21 @@
             <param name="function">onActionEditHoldDetails</param>
             <evaluator>evaluator.rm.action.edit-reason</evaluator>
          </action>
+         
+         <!--  DM Actions -->
+         
+         <!--  Create Record -->
+         <action id="rm-create-record" type="javascript" label="actions.create-record">
+         	<param name="function">onActionSimpleRepoAction</param>
+            <param name="action">create-record</param>
+            <param name="successMessage">message.create-record.success</param>
+            <param name="failureMessage">message.create-record.failure</param>            
+            <!--  Can only create the record if editable by current user, is not locked and isn't a working copy -->
+            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
+         </action>         
+         
       </actions>
 
       <!--
@@ -626,6 +623,15 @@
             <action index="120" id="rm-edit-reason" />
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
+         
+         <!--  Extensions to the standard DM UI actions -->
+	     <actionGroup id="document-browse">
+	     	<action index="400" id="rm-create-record" />
+	     </actionGroup>
+	     <actionGroup id="document-details">
+	     	<action index="400" id="rm-create-record" />
+	     </actionGroup>
+	     
       </actionGroups>
    </config>
 </alfresco-config>
