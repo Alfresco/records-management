@@ -3,7 +3,7 @@
 .toolbar .import button
 {
    background: transparent url(actions/rm-import-16.png) no-repeat 12px 4px;
-   padding-left: 32px; 
+   padding-left: 32px;
 }
 .toolbar .import .yui-button-disabled button
 {
@@ -13,7 +13,7 @@
 .toolbar .export-all button
 {
    background: transparent url(actions/rm-export-16.png) no-repeat 12px 4px;
-   padding-left: 32px; 
+   padding-left: 32px;
 }
 .toolbar .export-all .yui-button-disabled button
 {
@@ -38,7 +38,7 @@
 
 .toolbar .manage-rules button
 {
-   background: transparent url(actions/rm-export-16.png) no-repeat 12px 4px;
+   background: transparent url(actions/folder-manage-rules-16.png) no-repeat 12px 4px;
    padding-left: 32px;
 }
 
