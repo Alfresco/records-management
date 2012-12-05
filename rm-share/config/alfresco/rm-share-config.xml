@@ -106,8 +106,8 @@
             <evaluator>evaluator.rm.common.isUndeclaredRecord</evaluator>
             <banner index="10" id="undeclaredRecord">{i18nLabel details.undeclared-record.info}</banner>
             <line index="10" id="identifier" view="detailed">{rma_identifier details.record.identifier}</line>
-            <line index="20" id="modifiedByModifiedOn">{RM_modifiedBy details.modified.by}{RM_modifiedOn details.modified.on}{size}</line>
-            <line index="30" id="description" view="detailed">{description label.description}</line>
+            <line index="20" id="modifiedByModifiedOn">{cm:modifier details.modified.by}{cm:modified details.modified.on}{size}</line>
+            <line index="30" id="description" view="detailed">{description label.description}</line>  
          </template>
 
          <!-- Metadata Stub -->
@@ -146,8 +146,10 @@
             <evaluator>evaluator.rm.doclib.isRecord</evaluator>
             <banner index="10" id="record">Record</banner>
             <line index="10" id="identifier" view="detailed">{rma_identifier details.record.identifier}</line>
-            <line index="20" id="modifiedByModifiedOn">{RM_modifiedBy details.modified.by}{RM_modifiedOn details.modified.on}{size}</line>
-            <line index="30" id="description" view="detailed">{description label.description}</line>
+            <line index="20" id="date">{cm_creator details.created.by}{size}</line>
+            <line index="30" id="description" view="detailed">{description}</line>
+            <line index="40" id="tags" view="detailed">{tags}</line>
+            <line index="50" id="categories" view="detailed" evaluator="evaluator.doclib.metadata.hasCategories">{categories}</line>
          </template>
 
          <!-- Metadata Stub -->
@@ -405,7 +407,7 @@
          <!--  DM Actions -->
          
          <!--  Create Record -->
-         <action id="rm-create-record" type="javascript" label="actions.create-record">
+         <action id="rm-create-record" type="javascript" label="actions.create-record" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
          	<param name="function">onActionSimpleRepoAction</param>
             <param name="action">create-record</param>
             <param name="successMessage">message.create-record.success</param>
