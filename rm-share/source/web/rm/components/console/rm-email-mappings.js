@@ -277,17 +277,17 @@
          });
          Event.addListener(this.widgets['emailProperty-text'], "keyup", function()
          {
+            var emProp = YAHOO.lang.trim(this.widgets['emailProperty-text'].value);
+
+            // update current value
+            this.currentValues['emailProperty'] =
+            {
+               value: emProp,
+               label: emProp
+            };
+
             if (rmpropertyButton._configs.selectedMenuItem.value && rmpropertyButton._configs.selectedMenuItem.value.value && me.widgets['emailProperty-text'].value != "")
             {
-               var emProp = YAHOO.lang.trim(this.widgets['emailProperty-text'].value);
-
-               // update current value
-               this.currentValues['emailProperty'] =
-               {
-                  value: emProp,
-                  label: emProp
-               };
-
                Alfresco.util.enableYUIButton(me.widgets.addMappingButton);
             }
             else
