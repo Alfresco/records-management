@@ -168,13 +168,48 @@
          var elRoleName = Dom.get("roleName");
          elRoleName.value = role.displayLabel;
 
+         var parent = {};
          for (var i=0, j=role.capabilities.length; i<j; i++)
          {
             // checkbox representing each capabilities ID has that ID in the DOM
-            Dom.get(role.capabilities[i]).checked = true;
+            var checkBox = Dom.get(role.capabilities[i]);
+            checkBox.checked = true;
+            var checkBoxParent = checkBox.parentElement.parentElement;
+            parent[checkBoxParent.id] = checkBoxParent;
          }
 
+         this.updateCapabilitiesButtonLabel(parent);
+
          this.roleForm.updateSubmitElements();
+      },
+
+      /**
+       * Updates the button label for a capabilities group if all the checkboxes in the fieldset are checked
+       *
+       * @method updateCapabilitiesButtonLabel
+       * @param parent {object} parent of a checkbox group
+       */
+      updateCapabilitiesButtonLabel: function RMRoles_updateCapabilitiesButtonLabel(parent)
+      {
+         for (var i in parent)
+         {
+            if (parent.hasOwnProperty(i))
+            {
+               for (var j = 0, childrenLength = parent[i].children.length; j < childrenLength; j++)
+               {
+                  if (!parent[i].children[j].firstChild.checked)
+                  {
+                     break;
+                  }
+                  if (j == childrenLength - 1)
+                  {
+                     var button = Sel.query('button', parent[i].parentElement.parentElement)[0];
+                     Dom.addClass(button, 'selected');
+                     button.innerHTML = this.msg('label.deselect-all');
+                  }
+               }
+            }
+         }
       },
 
       /**
