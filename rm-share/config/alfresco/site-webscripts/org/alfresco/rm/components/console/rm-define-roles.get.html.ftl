@@ -212,10 +212,7 @@
 <#else>
 
 <script type="text/javascript">//<![CDATA[
-   new Alfresco.admin.RMViewRoles("viewRoles").setOptions(
-   {
-      selectedRoleId: "${(roleId!"")?js_string}"
-   }).setMessages(${messages});
+   new Alfresco.admin.RMViewRoles("viewRoles").setOptions({}).setMessages(${messages});
 //]]></script>
 
 <div id="viewRoles">
