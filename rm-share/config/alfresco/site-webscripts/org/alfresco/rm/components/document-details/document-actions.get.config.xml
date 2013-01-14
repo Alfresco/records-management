@@ -18,7 +18,7 @@
          <action type="action-link" id="onActionUnfreeze" permission="unfreeze" label="actions.unfreeze" />
          <action type="action-link" id="onActionCopyTo" permission="" label="actions.copy-to" />
          <action type="action-link" id="onActionMoveTo" permission="Delete" label="actions.move-to" />
-         <action type="action-link" id="onActionFileTo" permission="" label="actions.file-to" />
+         <action type="action-link" id="onActionLinkTo" permission="" label="actions.link-to" />
          <action type="simple-link" id="onActionManagePermissions" permission="ManageAccessRights" href="{managePermissionsUrl}" label="actions.manage-permissions" />
          <action type="action-link" id="onActionDelete" permission="Delete" label="actions.delete" />
          <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />
@@ -33,10 +33,10 @@
          <action type="action-link" id="onActionSplitEmail" permission="split-email" label="actions.split-email" />
          <action type="action-link" id="onActionCopyTo" permission="" label="actions.copy-to" />
          <action type="action-link" id="onActionMoveTo" permission="Delete" label="actions.move-to" />
-         <action type="action-link" id="onActionFileTo" permission="" label="actions.file-to" />
+         <action type="action-link" id="onActionLinkTo" permission="" label="actions.link-to" />
          <action type="simple-link" id="onActionManagePermissions" permission="ManageAccessRights" href="{managePermissionsUrl}" label="actions.manage-permissions" />
          <action type="action-link" id="onActionDelete" permission="Delete" label="actions.delete" />
-         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />         
+         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />
       </actionSet>
 
       <actionSet id="metadataStubFolder">

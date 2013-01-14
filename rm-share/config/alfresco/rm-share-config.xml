@@ -107,7 +107,7 @@
             <banner index="10" id="undeclaredRecord">{i18nLabel details.undeclared-record.info}</banner>
             <line index="10" id="identifier" view="detailed">{rma_identifier details.record.identifier}</line>
             <line index="20" id="modifiedByModifiedOn">{cm:modifier details.modified.by}{cm:modified details.modified.on}{size}</line>
-            <line index="30" id="description" view="detailed">{description label.description}</line>  
+            <line index="30" id="description" view="detailed">{description label.description}</line>
          </template>
 
          <!-- Metadata Stub -->
@@ -140,7 +140,7 @@
             <title>{RM_holdContainer}</title>
             <line index="10" id="holdReason">{RM_holdReason details.hold-container.reason}</line>
          </template>
-         
+
          <!-- DocLib Record -->
          <template id="rmDocLibRecord">
             <evaluator>evaluator.rm.doclib.isRecord</evaluator>
@@ -156,7 +156,7 @@
       </metadata-templates>
 
    </config>
-   
+
    <!-- Document Library Actions config section -->
    <config evaluator="string-compare" condition="DocLibActions">
 
@@ -164,17 +164,17 @@
          Action definitions
       -->
       <actions>
-      
+
          <action id="rm-document-download" type="link" label="actions.document.download" icon="document-download">
             <param name="href">{downloadUrl}</param>
             <evaluator>evaluator.rm.common.isElectronicRecord</evaluator>
          </action>
-         
+
          <action id="rm-delete" type="javascript" label="actions.document.delete" icon="folder-delete">
             <param name="function">onActionDelete</param>
             <evaluator>evaluator.rm.action.delete</evaluator>
          </action>
-         
+
          <action id="rm-copy-to" type="javascript" label="actions.document.copy-to" icon="folder-copy-to">
             <param name="function">onActionCopyTo</param>
             <evaluator>evaluator.rm.action.copy</evaluator>
@@ -194,7 +194,7 @@
             <param name="function">onActionMoveTo</param>
             <evaluator>evaluator.rm.action.moveRecordCategory</evaluator>
          </action>
-               
+
          <!-- View record category details -->
          <action id="rm-record-category-view-details" type="pagelink" label="actions.view-details" icon="folder-view-details">
             <param name="page">rm-record-category-details?nodeRef={node.nodeRef}</param>
@@ -212,9 +212,9 @@
          </action>
 
          <!-- File to -->
-         <action id="rm-file-to" type="javascript" label="actions.file-to" icon="../../../rm/components/documentlibrary/actions/rm-file-to">
-            <param name="function">onActionFileTo</param>
-            <evaluator>evaluator.rm.action.file-to</evaluator>
+         <action id="rm-link-to" type="javascript" label="actions.link-to" icon="../../../rm/components/documentlibrary/actions/rm-link-to">
+            <param name="function">onActionLinkTo</param>
+            <evaluator>evaluator.rm.action.link-to</evaluator>
          </action>
 
          <!-- Manage permissions -->
@@ -382,7 +382,7 @@
             <param name="message">message.transfer-complete</param>
             <evaluator>evaluator.rm.action.transfer-complete</evaluator>
          </action>
-         
+
          <action id="rm-accession-complete" type="javascript" label="actions.transfer-complete" icon="../../../rm/components/documentlibrary/actions/rm-transfer-complete">
             <param name="function">onActionRecordsManagementRepoAction</param>
             <param name="action">accessionComplete</param>
@@ -403,21 +403,21 @@
             <param name="function">onActionEditHoldDetails</param>
             <evaluator>evaluator.rm.action.edit-reason</evaluator>
          </action>
-         
+
          <!--  DM Actions -->
-         
+
          <!--  Create Record -->
          <action id="rm-create-record" type="javascript" label="actions.create-record" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
          	<param name="function">onActionSimpleRepoAction</param>
             <param name="action">create-record</param>
             <param name="successMessage">message.create-record.success</param>
-            <param name="failureMessage">message.create-record.failure</param>            
+            <param name="failureMessage">message.create-record.failure</param>
             <!--  Can only create the record if editable by current user, is not locked and isn't a working copy -->
             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
-         </action>         
-         
+         </action>
+
       </actions>
 
       <!--
@@ -463,7 +463,7 @@
             <action index="220" id="rm-unfreeze" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-folder" />
             <action index="230" id="rm-copy-to" />
             <action index="240" id="rm-move-recordfolder-to" />
-            <action index="250" id="rm-file-to" />
+            <action index="250" id="rm-link-to" />
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
@@ -483,7 +483,7 @@
             <action index="220" id="rm-unfreeze" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-folder" />
             <action index="230" id="rm-copy-to" />
             <action index="240" id="rm-move-recordfolder-to" />
-            <action index="250" id="rm-file-to" />
+            <action index="250" id="rm-link-to" />
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
@@ -505,16 +505,16 @@
             <action index="220" id="rm-unfreeze" />
             <action index="230" id="rm-copy-to" />
             <action index="240" id="rm-move-record-to" />
-            <action index="250" id="rm-file-to" />
+            <action index="250" id="rm-link-to" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
          </actionGroup>
-         
+
          <actionGroup id="rm-doclib-record-browse">
             <action index="100" id="rm-document-download" />
-            <action index="110" id="rm-edit-details" />           
+            <action index="110" id="rm-edit-details" />
          </actionGroup>
-         
+
          <actionGroup id="rm-record-details">
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-reviewed" />
@@ -530,11 +530,11 @@
             <action index="220" id="rm-unfreeze" />
             <action index="230" id="rm-copy-to" />
             <action index="240" id="rm-move-record-to" />
-            <action index="250" id="rm-file-to" />
+            <action index="250" id="rm-link-to" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
          </actionGroup>
-         
+
          <actionGroup id="rm-doclib-record-details">
             <action index="110" id="rm-edit-details" />
          </actionGroup>
@@ -549,16 +549,16 @@
             <action index="140" id="rm-split-email" />
             <action index="150" id="rm-copy-to" />
             <action index="160" id="rm-move-record-to" />
-            <action index="170" id="rm-file-to" />
+            <action index="170" id="rm-link-to" />
             <action index="190" id="rm-delete" label="actions.delete" />
             <action index="200" id="rm-view-audit-log" />
          </actionGroup>
-         
+
          <actionGroup id="rm-doclib-undeclared-record-browse">
             <action index="100" id="rm-document-download" />
             <action index="110" id="rm-edit-details" />
-         </actionGroup>         
-         
+         </actionGroup>
+
          <actionGroup id="rm-undeclared-record-details">
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-declare" />
@@ -568,11 +568,11 @@
             <action index="140" id="rm-split-email" />
             <action index="150" id="rm-copy-to" />
             <action index="160" id="rm-move-record-to" />
-            <action index="170" id="rm-file-to" />
+            <action index="170" id="rm-link-to" />
             <action index="190" id="rm-delete" label="actions.delete" />
             <action index="200" id="rm-view-audit-log" />
          </actionGroup>
-         
+
          <actionGroup id="rm-doclib-undeclared-record-details">
             <action index="110" id="rm-edit-details" />
          </actionGroup>
@@ -625,7 +625,7 @@
             <action index="120" id="rm-edit-reason" />
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
-         
+
          <!--  Extensions to the standard DM UI actions -->
 	     <actionGroup id="document-browse">
 	     	<action index="400" id="rm-create-record" />
@@ -633,7 +633,7 @@
 	     <actionGroup id="document-details">
 	     	<action index="400" id="rm-create-record" />
 	     </actionGroup>
-	     
+
       </actionGroups>
    </config>
 </alfresco-config>

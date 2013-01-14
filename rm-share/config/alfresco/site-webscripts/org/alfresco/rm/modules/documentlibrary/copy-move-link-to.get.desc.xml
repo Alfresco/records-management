@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>copy-move-link-to</shortname>
+  <description>Copy- Move- and Link-To module for Records Management Document Library</description>
+  <url>/rm/modules/documentlibrary/copy-move-link-to</url>
+</webscript>

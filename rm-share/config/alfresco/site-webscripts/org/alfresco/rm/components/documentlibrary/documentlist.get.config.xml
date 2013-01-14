@@ -8,7 +8,7 @@
          <action type="simple-link" id="onActionManagePermissions" permission="ManageAccessRights" href="{managePermissionsUrl}" label="actions.manage-permissions" />
          <action type="action-link" id="onActionCopyTo" permission="" label="actions.copy-to" />
          <action type="action-link" id="onActionDelete" permission="Delete" label="actions.delete" />
-         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />         
+         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />
       </actionSet>
 
       <actionSet id="recordCategory">
@@ -18,7 +18,7 @@
          <action type="action-link" id="onActionCopyTo" permission="" label="actions.copy-to" />
          <action type="action-link" id="onActionMoveTo" permission="Delete" label="actions.move-to" />
          <action type="action-link" id="onActionDelete" permission="Delete" label="actions.delete" />
-         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />         
+         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />
       </actionSet>
 
       <actionSet id="recordFolder">
@@ -37,10 +37,10 @@
          <action type="action-link" id="onActionUnfreeze" permission="unfreeze" label="actions.unfreeze" />
          <action type="action-link" id="onActionCopyTo" permission="" label="actions.copy-to" />
          <action type="action-link" id="onActionMoveTo" permission="Delete" label="actions.move-to" />
-         <action type="action-link" id="onActionFileTo" permission="" label="actions.file-to" />
+         <action type="action-link" id="onActionLinkTo" permission="" label="actions.link-to" />
          <action type="simple-link" id="onActionManagePermissions" permission="ManageAccessRights" href="{managePermissionsUrl}" label="actions.manage-permissions" />
          <action type="action-link" id="onActionDelete" permission="Delete" label="actions.delete" />
-         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />         
+         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />
       </actionSet>
 
       <actionSet id="record">
@@ -59,7 +59,7 @@
          <action type="action-link" id="onActionUnfreeze" permission="unfreeze" label="actions.unfreeze" />
          <action type="action-link" id="onActionCopyTo" permission="" label="actions.copy-to" />
          <action type="action-link" id="onActionMoveTo" permission="Delete" label="actions.move-to" />
-         <action type="action-link" id="onActionFileTo" permission="" label="actions.file-to" />
+         <action type="action-link" id="onActionLinkTo" permission="" label="actions.link-to" />
          <action type="simple-link" id="onActionManagePermissions" permission="ManageAccessRights" href="{managePermissionsUrl}" label="actions.manage-permissions" />
          <action type="action-link" id="onActionDelete" permission="Delete" label="actions.delete" />
          <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />
@@ -73,10 +73,10 @@
          <action type="action-link" id="onActionSplitEmail" permission="split-email" label="actions.split-email" />
          <action type="action-link" id="onActionCopyTo" permission="" label="actions.copy-to" />
          <action type="action-link" id="onActionMoveTo" permission="Delete" label="actions.move-to" />
-         <action type="action-link" id="onActionFileTo" permission="" label="actions.file-to" />
+         <action type="action-link" id="onActionLinkTo" permission="" label="actions.link-to" />
          <action type="simple-link" id="onActionManagePermissions" permission="ManageAccessRights" href="{managePermissionsUrl}" label="actions.manage-permissions" />
          <action type="action-link" id="onActionDelete" permission="Delete" label="actions.delete" />
-         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />         
+         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />
       </actionSet>
 
       <actionSet id="metadataStubFolder">
@@ -95,14 +95,14 @@
          <action type="simple-link" id="onActionDownloadZip" permission="AuthorizeAllTransfers" href="{transfersZipUrl}" label="actions.download-zip" />
          <action type="action-link" id="onActionFileTransferReport" permission="AuthorizeAllTransfers" label="actions.file-report" />
          <action type="action-link" id="onActionTransferComplete" permission="AuthorizeAllTransfers" label="actions.transfer-complete" />
-         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />         
+         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />
       </actionSet>
 
       <actionSet id="holdContainer">
          <action type="action-link" id="onActionRelinquish" permission="Unfreeze" label="actions.relinquish" />
          <action type="action-link" id="onActionUnfreezeAll" permission="HIDDEN" label="actions.unfreeze-all" />
          <action type="action-link" id="onActionEditHoldDetails" permission="ViewUpdateReasonsForFreeze" label="actions.edit-reason" />
-         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />         
+         <action type="action-link" id="onActionViewAuditLog" permission="AccessAudit" label="actions.view-audit-log" />
       </actionSet>
 
       <actionSet id="link">

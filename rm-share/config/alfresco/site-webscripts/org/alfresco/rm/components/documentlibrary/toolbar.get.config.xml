@@ -10,7 +10,7 @@
       <action id="onActionUnfreeze" permission="unfreeze" label="menu.selected-items.unfreeze" />
       <action id="onActionCopyTo" permission="" label="menu.selected-items.copy-to" />
       <action id="onActionMoveTo" permission="Delete" label="menu.selected-items.move-to" />
-      <action id="onActionFileTo" permission="" label="menu.selected-items.file-to" />
+      <action id="onActionLinkTo" permission="" label="menu.selected-items.link-to" />
       <action id="onActionExport" permission="" label="menu.selected-items.export" />
       <action id="onActionDelete" permission="Delete" label="menu.selected-items.delete" />
    </actions>

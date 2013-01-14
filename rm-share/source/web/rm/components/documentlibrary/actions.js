@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * RM Document Library Actions module
- * 
+ *
  * @namespace Alfresco.doclib
  * @class Alfresco.rm.doclib.Actions
  */
@@ -88,7 +88,7 @@
        *
        * NOTE: Actions are defined in alphabetical order by convention.
        */
-      
+
       /**
        * Accession action.
        *
@@ -133,18 +133,18 @@
        */
       onActionCopyTo: function RDLA_onActionCopyTo(assets)
       {
-         this._copyMoveFileTo("copy", assets);
+         this._copyMoveLinkTo("copy", assets);
       },
 
       /**
        * File single document or folder.
        *
-       * @method onActionFileTo
+       * @method onActionLinkTo
        * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
        */
-      onActionFileTo: function RDLA_onActionFileTo(assets)
+      onActionLinkTo: function RDLA_onActionLinkTo(assets)
       {
-         this._copyMoveFileTo("file", assets);
+         this._copyMoveLinkTo("link", assets);
       },
 
       /**
@@ -155,9 +155,9 @@
        */
       onActionMoveTo: function RDLA_onActionMoveTo(assets)
       {
-         this._copyMoveFileTo("move", assets);
+         this._copyMoveLinkTo("move", assets);
       },
-      
+
       /**
        * Declare Record action.
        * Special case handling due to the ability to jump to the Edit Metadata page if the action failed.
@@ -228,14 +228,14 @@
          var me = this,
             noOfAssets = YAHOO.lang.isArray(assets) ? assets.length : 1,
             text;
-         
+
          if (noOfAssets == 1)
          {
             text = this.msg("message.confirm.destroy", $html((YAHOO.lang.isArray(assets) ? assets[0].displayName : assets.displayName)));
          }
          else
          {
-            text = this.msg("message.confirm.destroyMultiple", noOfAssets);             
+            text = this.msg("message.confirm.destroyMultiple", noOfAssets);
          }
 
          // Show the first confirmation dialog
@@ -294,7 +294,7 @@
          });
 
       },
-      
+
       _getRmUserInput: function RDLA_getRmUserInput(config)
       {
          if (Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[0].text === null)
@@ -309,7 +309,7 @@
          {
         	 Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[1].text = Alfresco.util.message("button.cancel", this.name);
          }
-         
+
          // Merge users config and the default config and check manadatory properties
          var c = YAHOO.lang.merge(Alfresco.util.PopupManager.defaultGetUserInputConfig, config);
 
@@ -367,7 +367,7 @@
                // Override OK button label
                c.buttons[0].text = c.okButtonText;
             }
-            
+
             // Default handler if no custom button passed-in
             if (typeof config.buttons == "undefined" || typeof config.buttons[0] == "undefined")
             {
@@ -419,7 +419,7 @@
          {
             prompt.show();
          }
-         
+
          // If a default value was given, set the selectionStart and selectionEnd properties
          if (c.html === null && c.value !== "")
          {
@@ -441,12 +441,12 @@
             correctScope: true
          });
          escapeListener.enable();
-         
+
          if (YUIDom.get(id))
          {
             YUIDom.get(id).focus();
          }
-         
+
          return prompt;
       },
 
@@ -462,9 +462,9 @@
             properties = assets.jsNode.properties,
             panel,
             calendar;
-         
+
          var asOfDate = Alfresco.util.fromISO8601(properties.rma_recordSearchDispositionActionAsOf.iso8601),
-         
+
          panel = this._getRmUserInput(
          {
             title: this.msg("message.edit-disposition-as-of-date.title"),
@@ -488,7 +488,7 @@
          });
 
          var page = (asOfDate.getMonth() + 1) + "/" + asOfDate.getFullYear(),
-            selected = (asOfDate.getMonth() + 1) + "/" + asOfDate.getDate() + "/" + asOfDate.getFullYear();   
+            selected = (asOfDate.getMonth() + 1) + "/" + asOfDate.getDate() + "/" + asOfDate.getFullYear();
          calendar = new YAHOO.widget.Calendar(calendarId,
          {
             iframe: false
@@ -502,7 +502,7 @@
          // Only now can we set the panel button's callback reference to the calendar, as it was undefined on panel creation
          panel.cfg.getProperty("buttons")[0].handler.obj.callback.obj = calendar;
          panel.center();
-         panel.show();      	 	 
+         panel.show();
       },
 
       /**
@@ -546,7 +546,7 @@
          var properties = assets.jsNode.properties,
             asOfDate = new Date();
 
-         if (properties == null) 
+         if (properties == null)
          {
             nodeId = Alfresco.util.NodeRef(assets.nodeRef);
 
@@ -555,12 +555,12 @@
                + '?site=rm&query=(ASPECT:"rma:record" AND ASPECT:"rma:declaredRecord") AND (rma:identifier:'
                + nodeId.id + ') AND NOT ASPECT:"rma:versionedRecord"';
 
-            YAHOO.util.Connect.asyncRequest("GET", url, 
+            YAHOO.util.Connect.asyncRequest("GET", url,
             {
-               success: function(resp) 
+               success: function(resp)
                {
                   item = YAHOO.lang.JSON.parse(resp.responseText);
-                  if (null != item.items[0].properties.rma_reviewAsOf) 
+                  if (null != item.items[0].properties.rma_reviewAsOf)
                   {
                      asOfDate = new Date(item.items[0].properties.rma_reviewAsOf);
                      var page = (asOfDate.getMonth() + 1) + "/" + asOfDate.getFullYear(),
@@ -572,7 +572,7 @@
                }
             }, null);
          }
-         else 
+         else
          {
             asOfDate = Alfresco.util.fromISO8601(properties.rma_reviewAsOf.iso8601);
          }
@@ -580,7 +580,7 @@
          var calendarId = Alfresco.util.generateDomId(),
             panel,
             calendar;
-         
+
          panel = this._getRmUserInput(
          {
             title: this.msg("message.edit-review-as-of-date.title"),
@@ -604,7 +604,7 @@
          });
 
          var page = (asOfDate.getMonth() + 1) + "/" + asOfDate.getFullYear(),
-            selected = (asOfDate.getMonth() + 1) + "/" + asOfDate.getDate() + "/" + asOfDate.getFullYear();   
+            selected = (asOfDate.getMonth() + 1) + "/" + asOfDate.getDate() + "/" + asOfDate.getFullYear();
 
          calendar = new YAHOO.widget.Calendar(calendarId,
          {
@@ -843,32 +843,32 @@
        */
 
       /**
-       * Copy/Move/File To implementation.
+       * Copy/Move/Link To implementation.
        *
-       * @method _copyMoveFileTo
-       * @param mode {String} Operation mode: copy|file|move
+       * @method _copyMoveLinkTo
+       * @param mode {String} Operation mode: copy|link|move
        * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
        * @private
        */
-      _copyMoveFileTo: function RDLA__copyMoveFileTo(mode, assets)
+      _copyMoveLinkTo: function RDLA__copyMoveLinkTo(mode, assets)
       {
          // Check mode is an allowed one
          if (!mode in
             {
                copy: true,
-               file: true,
+               link: true,
                move: true
             })
          {
-            throw new Error("'" + mode + "' is not a valid Copy/Move/File to mode.");
+            throw new Error("'" + mode + "' is not a valid Copy/Move/Link to mode.");
          }
 
-         if (!this.modules.copyMoveFileTo)
+         if (!this.modules.copyMoveLinkTo)
          {
-            this.modules.copyMoveFileTo = new Alfresco.rm.module.CopyMoveFileTo(this.id + "-copyMoveFileTo");
+            this.modules.copyMoveLinkTo = new Alfresco.rm.module.CopyMoveLinkTo(this.id + "-copyMoveLinkTo");
          }
 
-         this.modules.copyMoveFileTo.setOptions(
+         this.modules.copyMoveLinkTo.setOptions(
          {
             mode: mode,
             siteId: this.options.siteId,
@@ -892,7 +892,7 @@
       _transferAccessionComplete: function RDLA__transferAccession(data, obj)
       {
          var displayName = obj.displayName;
-         
+
          /**
           * Transfer / Accession container query success callback.
           *
@@ -948,7 +948,7 @@
                else
                {
                   YAHOO.Bubbling.fire("metadataRefresh");
-                  
+
                   if (pdfIndicator)
                   {
                      Alfresco.util.PopupManager.displayPrompt(
@@ -968,7 +968,7 @@
                }
             }
          };
-         
+
          /**
           * Transfer / Accession container query failure callback.
           *
@@ -993,7 +993,7 @@
             var dataObj = data.config.dataObj,
                nodeRef = YAHOO.lang.isArray(dataObj.nodeRefs) ? dataObj.nodeRefs[0] : dataObj.nodeRef,
                transfer = new Alfresco.util.NodeRef(data.json.results[nodeRef]);
-            
+
             // Now query the transfer nodeRef, looking for the rma:transferPDFIndicator flag
             Alfresco.util.Ajax.jsonGet(
             {
@@ -1039,7 +1039,7 @@
          {
             config.success =
             {
-               callback:    
+               callback:
                {
                   fn: this[params.success],
                   obj: record,
@@ -1104,7 +1104,7 @@
          {
             dataObj.params = actionParams;
          }
-         
+
          var config =
          {
             success:
@@ -1131,7 +1131,7 @@
                dataObj: dataObj
             }
          };
-         
+
          if (YAHOO.lang.isObject(configOverride))
          {
             config = YAHOO.lang.merge(config, configOverride);

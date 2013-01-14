@@ -16,21 +16,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
- * Document Library "Copy-, Move- and File-To" module for Records Management.
- * 
+ * Document Library "Copy-, Move- and Link-To" module for Records Management.
+ *
  * @namespace Alfresco.module
- * @class Alfresco.rm.module.CopyMoveFileTo
+ * @class Alfresco.rm.module.CopyMoveLinkTo
  */
 (function()
 {
-   Alfresco.rm.module.CopyMoveFileTo = function(htmlId)
+   Alfresco.rm.module.CopyMoveLinkTo = function(htmlId)
    {
       Alfresco.module.DoclibSiteFolder.superclass.constructor.call(this, htmlId);
-      
+
       // Re-register with our own name
-      this.name = "Alfresco.rm.module.CopyMoveFileTo";
+      this.name = "Alfresco.rm.module.CopyMoveLinkTo";
       Alfresco.util.ComponentManager.reregister(this);
 
       // Initialise prototype properties
@@ -39,8 +39,8 @@
 
       return this;
    };
-   
-   YAHOO.extend(Alfresco.rm.module.CopyMoveFileTo, Alfresco.module.DoclibSiteFolder,
+
+   YAHOO.extend(Alfresco.rm.module.CopyMoveLinkTo, Alfresco.module.DoclibSiteFolder,
    {
       /**
        * Set multiple initialization options at once.
@@ -48,13 +48,13 @@
        * @method setOptions
        * @override
        * @param obj {object} Object literal specifying a set of options
-       * @return {Alfresco.rm.module.CopyMoveFileTo} returns 'this' for method chaining
+       * @return {Alfresco.rm.module.CopyMoveLinkTo} returns 'this' for method chaining
        */
       setOptions: function RMCMFT_setOptions(obj)
       {
          var myOptions =
          {
-            templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/copy-move-file-to"
+            templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/copy-move-link-to"
          };
 
          if (typeof obj.mode !== "undefined")
@@ -63,17 +63,17 @@
             {
                copy: "copy-to",
                move: "move-to",
-               file: "add-child"
+               link: "add-child"
             };
 
             if (typeof dataWebScripts[obj.mode] == "undefined")
             {
-               throw new Error("Alfresco.rm.module.CopyMoveFileTo: Invalid mode '" + obj.mode + "'");
+               throw new Error("Alfresco.rm.module.CopyMoveLinkTo: Invalid mode '" + obj.mode + "'");
             }
             myOptions.dataWebScript = dataWebScripts[obj.mode];
          }
-         
-         return Alfresco.rm.module.CopyMoveFileTo.superclass.setOptions.call(this, YAHOO.lang.merge(myOptions, obj));
+
+         return Alfresco.rm.module.CopyMoveLinkTo.superclass.setOptions.call(this, YAHOO.lang.merge(myOptions, obj));
       },
 
       /**
@@ -120,14 +120,14 @@
          {
             multipleFiles.push(files[i].nodeRef);
          }
-         
+
          // Success callback function
          var fnSuccess = function RMCMFT__onOK_success(p_data)
          {
             var result,
                successCount = p_data.json.successCount,
                failureCount = p_data.json.failureCount;
-            
+
             this.widgets.dialog.hide();
 
             // Did the operation succeed?
@@ -139,18 +139,18 @@
                });
                return;
             }
-            
+
             YAHOO.Bubbling.fire("filesMoved",
             {
                destination: this.currentPath,
                successCount: successCount,
                failureCount: failureCount
             });
-            
+
             for (var i = 0, j = p_data.json.totalResults; i < j; i++)
             {
                result = p_data.json.results[i];
-               
+
                if (result.success)
                {
                   YAHOO.Bubbling.fire(result.type == "folder" ? "folderMoved" : "fileMoved",
@@ -161,13 +161,13 @@
                   });
                }
             }
-            
+
             Alfresco.util.PopupManager.displayMessage(
             {
                text: this.msg("message.success", successCount)
             });
          };
-         
+
          // Failure callback function
          var fnFailure = function RMCMFT__onOK_failure(p_data)
          {
@@ -244,7 +244,7 @@
       _showDialog: function RMCMFT__showDialog()
       {
          this.widgets.okButton.set("label", this.msg("button"));
-         return Alfresco.rm.module.CopyMoveFileTo.superclass._showDialog.apply(this, arguments);
+         return Alfresco.rm.module.CopyMoveLinkTo.superclass._showDialog.apply(this, arguments);
       },
 
       /**
@@ -271,5 +271,5 @@
    });
 
    /* Dummy instance to load optional YUI components early */
-   var dummyInstance = new Alfresco.rm.module.CopyMoveFileTo("null");
+   var dummyInstance = new Alfresco.rm.module.CopyMoveLinkTo("null");
 })();

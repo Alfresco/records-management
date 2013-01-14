@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * Document Library Selector. Allows selection of document library (and folder) of a specified site
- * 
+ *
  * @namespace Alfresco.module
  * @class Alfresco.rm.module.SelectAuditRecordLocation
  */
@@ -28,14 +28,14 @@
    Alfresco.rm.module.SelectAuditRecordLocation = function(htmlId)
    {
       Alfresco.rm.module.SelectAuditRecordLocation.superclass.constructor.call(this, htmlId);
-      
+
       // Re-register with our own name
       this.name = "Alfresco.rm.module.SelectAuditRecordLocation";
       Alfresco.util.ComponentManager.reregister(this);
 
       return this;
    };
-   
+
    YAHOO.extend(Alfresco.rm.module.SelectAuditRecordLocation, Alfresco.module.DoclibSiteFolder,
    {
       /**
@@ -50,7 +50,7 @@
       {
          return Alfresco.rm.module.SelectAuditRecordLocation.superclass.setOptions.call(this, YAHOO.lang.merge(
          {
-            templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/copy-move-file-to"
+            templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/copy-move-link-to"
          }, obj));
       },
 
