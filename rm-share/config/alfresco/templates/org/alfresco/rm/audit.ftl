@@ -1,8 +1,5 @@
 <#include "/org/alfresco/include/alfresco-template.ftl" />
-<@templateHeader >
-   <@script type="text/javascript" src="${url.context}/res/rm/js/alfresco-rm.js"></@script>
-   <@script type="text/javascript" src="${url.context}/res/rm/js/event-delegator.js"></@script>
-</@templateHeader>
+<@templateHeader />
 
 <@templateBody>
    <div id="bd">
