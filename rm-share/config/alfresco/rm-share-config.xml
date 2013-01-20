@@ -18,51 +18,51 @@
          Status Indicators
       -->
       <indicators>
-			<!-- Awaiting Completion in Accession {0} -->
+         <!-- Awaiting Completion in Accession {0} -->
          <indicator id="rm-accession" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-accession-16.png">
             <evaluator>evaluator.rm.indicator.accession</evaluator>
          </indicator>
-			<!-- Accessioned to NARA -->
+         <!-- Accessioned to NARA -->
          <indicator id="rm-accessioned" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-accessioned-16.png">
             <evaluator>evaluator.rm.indicator.accessioned</evaluator>
          </indicator>
-			<!-- Record Folder is Closed -->
+         <!-- Record Folder is Closed -->
          <indicator id="rm-closed" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-closed-16.png">
             <evaluator>evaluator.rm.indicator.closed</evaluator>
          </indicator>
-			<!-- Cut Off -->
+         <!-- Cut Off -->
          <indicator id="rm-cutoff" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-cutoff-16.png">
             <evaluator>evaluator.rm.indicator.cutoff</evaluator>
          </indicator>
-			<!-- Cut Off (implies Record Folder is Closed) -->
+         <!-- Cut Off (implies Record Folder is Closed) -->
          <indicator id="rm-cutoff-folder" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-cutoff-folder-16.png">
             <evaluator>evaluator.rm.indicator.cutoffFolder</evaluator>
          </indicator>
-			<!-- Destroyed -->
+         <!-- Destroyed -->
          <indicator id="rm-destroyed" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-destroyed-16.png">
             <evaluator>evaluator.rm.indicator.destroyed</evaluator>
          </indicator>
-			<!-- Record is Frozen -->
+         <!-- Record is Frozen -->
          <indicator id="rm-frozen" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-frozen-16.png">
             <evaluator>evaluator.rm.indicator.frozen</evaluator>
          </indicator>
-			<!-- Record has been Filed in {0} Record Folders -->
+         <!-- Record has been Filed in {0} Record Folders -->
          <indicator id="rm-multi-parent" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-multi-parent-16.png">
             <evaluator>evaluator.rm.indicator.multiParent</evaluator>
          </indicator>
-			<!-- Record Folder is Open -->
+         <!-- Record Folder is Open -->
          <indicator id="rm-open" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-open-16.png">
             <evaluator>evaluator.rm.indicator.open</evaluator>
          </indicator>
-			<!-- Awaiting Completion in Transfer {0} -->
+         <!-- Awaiting Completion in Transfer {0} -->
          <indicator id="rm-transfer" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-transfer-16.png">
             <evaluator>evaluator.rm.indicator.transfer</evaluator>
          </indicator>
-			<!-- Transferred to: {0} -->
+         <!-- Transferred to: {0} -->
          <indicator id="rm-transferred" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-transferred-16.png">
             <evaluator>evaluator.rm.indicator.transferred</evaluator>
          </indicator>
-			<!-- Vital Record Indicator -->
+         <!-- Vital Record Indicator -->
          <indicator id="rm-vital-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-vital-record-16.png">
             <evaluator>evaluator.rm.indicator.vitalRecord</evaluator>
          </indicator>
@@ -408,11 +408,27 @@
 
          <!--  Create Record -->
          <action id="rm-create-record" type="javascript" label="actions.create-record" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
-         	<param name="function">onActionSimpleRepoAction</param>
+            <param name="function">onActionSimpleRepoAction</param>
             <param name="action">create-record</param>
             <param name="successMessage">message.create-record.success</param>
             <param name="failureMessage">message.create-record.failure</param>
             <!--  Can only create the record if editable by current user, is not locked and isn't a working copy -->
+            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
+         </action>
+
+         <!--  Hide Record -->
+         <action id="rm-hide-record" type="javascript" label="actions.hide-record" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
+            <param name="function">onActionSimpleRepoAction</param>
+            <param name="action">hide-record</param>
+            <param name="successMessage">message.hide-record.success</param>
+            <param name="failureMessage">message.hide-record.failure</param>
+            <permissions>
+               <permission allow="true">Write</permission>
+            </permissions>
+            <!--  Can only hide the record if editable by current user, is not locked, is not a working copy -->
+            <evaluator>evaluator.rm.doclib.isRecord</evaluator>
             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
@@ -557,6 +573,7 @@
          <actionGroup id="rm-doclib-undeclared-record-browse">
             <action index="100" id="rm-document-download" />
             <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-hide-record" />
          </actionGroup>
 
          <actionGroup id="rm-undeclared-record-details">
@@ -575,6 +592,7 @@
 
          <actionGroup id="rm-doclib-undeclared-record-details">
             <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-hide-record" />
          </actionGroup>
 
          <actionGroup id="rm-metadata-stub-folder-browse">
@@ -627,12 +645,12 @@
          </actionGroup>
 
          <!--  Extensions to the standard DM UI actions -->
-	     <actionGroup id="document-browse">
-	     	<action index="400" id="rm-create-record" />
-	     </actionGroup>
-	     <actionGroup id="document-details">
-	     	<action index="400" id="rm-create-record" />
-	     </actionGroup>
+         <actionGroup id="document-browse">
+            <action index="400" id="rm-create-record" />
+         </actionGroup>
+         <actionGroup id="document-details">
+            <action index="400" id="rm-create-record" />
+         </actionGroup>
 
       </actionGroups>
    </config>
