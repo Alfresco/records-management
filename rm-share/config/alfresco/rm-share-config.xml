@@ -412,6 +412,9 @@
             <param name="action">create-record</param>
             <param name="successMessage">message.create-record.success</param>
             <param name="failureMessage">message.create-record.failure</param>
+            <permissions>
+               <permission allow="true">Write</permission>
+            </permissions>
             <!--  Can only create the record if editable by current user, is not locked and isn't a working copy -->
             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
