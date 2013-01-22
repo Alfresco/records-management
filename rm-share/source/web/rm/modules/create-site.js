@@ -31,7 +31,8 @@
     * YUI Library aliases
     */
    var Dom = YAHOO.util.Dom,
-       Event = YAHOO.util.Event;
+       Event = YAHOO.util.Event,
+       KeyListener = YAHOO.util.KeyListener;
 
    /**
     * RM CreateSite module constructor.
@@ -84,7 +85,7 @@
          this.widgets.isPublic = Dom.get(this.id + "-isPublic");
          this.widgets.isModerated = Dom.get(this.id + "-isModerated");
          this.widgets.isPrivate = Dom.get(this.id + "-isPrivate");
-         
+
          // add site type
          this.widgets.siteType = Dom.get(this.id + "-type");
 
@@ -226,7 +227,7 @@
                {
                   siteVisibility = "PRIVATE";
                }
-               this.widgets.siteVisibility.value = siteVisibility;               
+               this.widgets.siteVisibility.value = siteVisibility;
 
                this.widgets.panel.hide();
 
@@ -293,9 +294,9 @@
             Dom.get(this.id + "-description").value = this.msg("description.recordsManagementSite");
             Dom.get(this.id + "-title").disabled = true;
             Dom.get(this.id + "-shortName").disabled = true;
-            
+
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite";
-            
+
             this.widgets.okButton.set("disabled", false);
          }
          else
@@ -306,9 +307,9 @@
             Dom.get(this.id + "-description").value = "";
             Dom.get(this.id + "-title").disabled = false;
             Dom.get(this.id + "-shortName").disabled = false;
-            
+
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/site/1.0}site";
-            
+
             this.widgets.okButton.set("disabled", true);
          }
       },
@@ -323,18 +324,21 @@
        */
       onCancelButtonClick: function RM_CreateSite_onCancelButtonClick(type, args)
       {
-         Alfresco.rm.module.CreateSite.superclass.onCancelButtonClick.call(this, type, args);
-         // Reset the form fields
-         try
+         YAHOO.lang.later(100, this, function()
          {
-            Dom.get(this.id + "-sitePreset").selectedIndex = 0;
-            this.widgets.okButton.set("disabled", true);
-            Dom.get(this.id + "-title").disabled = false;
-            Dom.get(this.id + "-shortName").disabled = false;
-         }
-         catch(e)
-         {
-         }
+            Alfresco.rm.module.CreateSite.superclass.onCancelButtonClick.call(this, type, args);
+            // Reset the form fields
+            try
+            {
+               Dom.get(this.id + "-sitePreset").selectedIndex = 0;
+               this.widgets.okButton.set("disabled", true);
+               Dom.get(this.id + "-title").disabled = false;
+               Dom.get(this.id + "-shortName").disabled = false;
+            }
+            catch(e)
+            {
+            }
+         });
       },
 
       /**
@@ -351,6 +355,43 @@
             Dom.get(this.id + "-title").disabled = true;
             Dom.get(this.id + "-shortName").disabled = true;
          }
+      },
+
+      /**
+       * Called in "onTemplateLoaded" method to show the panel.
+       * This method must be overriden here because the "onCancelButtonClick"
+       * method will be called several times.
+       *
+       * @method _showPanel
+       */
+      _showPanel: function RM_CreateSite__showPanel()
+      {
+         // Show the upload panel
+         this.widgets.panel.show();
+
+         // Firefox insertion caret fix
+         Alfresco.util.caretFix(this.id + "-form");
+
+         // Register the ESC key to close the dialog
+         if (!this.widgets.escapeListener)
+         {
+            this.widgets.escapeListener = new KeyListener(document,
+            {
+               keys: KeyListener.KEY.ESCAPE
+            },
+            {
+               fn: function(id, keyEvent)
+               {
+                  this.onCancelButtonClick();
+               },
+               scope: this,
+               correctScope: true
+            });
+            this.widgets.escapeListener.enable();
+         }
+
+         // Set the focus on the first field
+         Dom.get(this.id + "-title").focus();
       }
    });
 })();
