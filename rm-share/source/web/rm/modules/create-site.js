@@ -84,6 +84,9 @@
          this.widgets.isPublic = Dom.get(this.id + "-isPublic");
          this.widgets.isModerated = Dom.get(this.id + "-isModerated");
          this.widgets.isPrivate = Dom.get(this.id + "-isPrivate");
+         
+         // add site type
+         this.widgets.siteType = Dom.get(this.id + "-type");
 
          // Make sure we disable moderated if public isn't selected
          Event.addListener(this.widgets.isPublic, "focus", this.onVisibilityChange, this.widgets.isPublic, this);
@@ -223,7 +226,7 @@
                {
                   siteVisibility = "PRIVATE";
                }
-               this.widgets.siteVisibility.value = siteVisibility;
+               this.widgets.siteVisibility.value = siteVisibility;               
 
                this.widgets.panel.hide();
 
@@ -290,6 +293,9 @@
             Dom.get(this.id + "-description").value = this.msg("description.recordsManagementSite");
             Dom.get(this.id + "-title").disabled = true;
             Dom.get(this.id + "-shortName").disabled = true;
+            
+            Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite";
+            
             this.widgets.okButton.set("disabled", false);
          }
          else
@@ -300,6 +306,9 @@
             Dom.get(this.id + "-description").value = "";
             Dom.get(this.id + "-title").disabled = false;
             Dom.get(this.id + "-shortName").disabled = false;
+            
+            Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/site/1.0}site";
+            
             this.widgets.okButton.set("disabled", true);
          }
       },
