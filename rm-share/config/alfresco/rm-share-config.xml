@@ -407,7 +407,7 @@
          <!--  DM Actions -->
 
          <!--  Create Record -->
-         <action id="rm-create-record" type="javascript" label="actions.create-record" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
+         <action id="rm-create-record" type="javascript" label="actions.create-record" icon="../../../rm/components/documentlibrary/actions/rm-create-record">
             <param name="function">onActionSimpleRepoAction</param>
             <param name="action">create-record</param>
             <param name="successMessage">message.create-record.success</param>
@@ -422,7 +422,7 @@
          </action>
 
          <!--  Hide Record -->
-         <action id="rm-hide-record" type="javascript" label="actions.hide-record" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
+         <action id="rm-hide-record" type="javascript" label="actions.hide-record" icon="../../../rm/components/documentlibrary/actions/rm-hide-record">
             <param name="function">onHideRecordAction</param>
             <param name="action">hide-record</param>
             <param name="successMessage">message.hide-record.success</param>
