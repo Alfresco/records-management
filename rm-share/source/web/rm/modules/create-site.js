@@ -86,9 +86,6 @@
          this.widgets.isModerated = Dom.get(this.id + "-isModerated");
          this.widgets.isPrivate = Dom.get(this.id + "-isPrivate");
 
-         // add site type
-         this.widgets.siteType = Dom.get(this.id + "-type");
-
          // Make sure we disable moderated if public isn't selected
          Event.addListener(this.widgets.isPublic, "focus", this.onVisibilityChange, this.widgets.isPublic, this);
          Event.addListener(this.widgets.isPrivate, "focus", this.onVisibilityChange, this.widgets.isPrivate, this);
@@ -283,7 +280,6 @@
             input.setAttribute("type", "hidden");
             input.setAttribute("name", "type");
             input.setAttribute("id", this.id + "-type");
-            input.setAttribute("value", "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite");
             Dom.get(this.id + "-form").appendChild(input);
          }
 
@@ -294,20 +290,17 @@
             Dom.get(this.id + "-description").value = this.msg("description.recordsManagementSite");
             Dom.get(this.id + "-title").disabled = true;
             Dom.get(this.id + "-shortName").disabled = true;
-
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite";
-
+            
             this.widgets.okButton.set("disabled", false);
          }
          else
          {
-            input.setAttribute("disabled", true);
             Dom.get(this.id + "-shortName").value = "";
             Dom.get(this.id + "-title").value = "";
             Dom.get(this.id + "-description").value = "";
             Dom.get(this.id + "-title").disabled = false;
             Dom.get(this.id + "-shortName").disabled = false;
-
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/site/1.0}site";
 
             this.widgets.okButton.set("disabled", true);
