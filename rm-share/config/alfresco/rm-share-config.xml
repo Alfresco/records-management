@@ -211,10 +211,17 @@
             <evaluator>evaluator.rm.action.edit-details</evaluator>
          </action>
 
-         <!-- File to -->
+         <!-- Link to -->
          <action id="rm-link-to" type="javascript" label="actions.link-to" icon="../../../rm/components/documentlibrary/actions/rm-link-to">
             <param name="function">onActionLinkTo</param>
             <evaluator>evaluator.rm.action.link-to</evaluator>
+         </action>
+
+         <!-- File to -->
+         <!-- FIXME change icon -->
+         <action id="rm-file-to" type="javascript" label="actions.file-to" icon="../../../rm/components/documentlibrary/actions/rm-link-to">
+            <param name="function">onActionFileTo</param>
+            <evaluator>evaluator.rm.action.file-to</evaluator>
          </action>
 
          <!-- Manage permissions -->
@@ -569,6 +576,7 @@
             <action index="150" id="rm-copy-to" />
             <action index="160" id="rm-move-record-to" />
             <action index="170" id="rm-link-to" />
+            <action index="180" id="rm-file-to" />
             <action index="190" id="rm-delete" label="actions.delete" />
             <action index="200" id="rm-view-audit-log" />
          </actionGroup>
@@ -589,6 +597,7 @@
             <action index="150" id="rm-copy-to" />
             <action index="160" id="rm-move-record-to" />
             <action index="170" id="rm-link-to" />
+            <action index="180" id="rm-file-to" />
             <action index="190" id="rm-delete" label="actions.delete" />
             <action index="200" id="rm-view-audit-log" />
          </actionGroup>

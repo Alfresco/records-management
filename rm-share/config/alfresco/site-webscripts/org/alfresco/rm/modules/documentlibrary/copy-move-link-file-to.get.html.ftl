@@ -17,7 +17,7 @@
    <#assign maximumFolderCountSite = treeConfig.getChildValue("maximum-folder-count")!"-1">
 </#if>
 <script type="text/javascript">//<![CDATA[
-   Alfresco.util.addMessages(${messages}, "Alfresco.rm.module.CopyMoveLinkTo");
+   Alfresco.util.addMessages(${messages}, "Alfresco.rm.module.CopyMoveLinkFileTo");
    Alfresco.util.ComponentManager.get("${args.htmlid}").setOptions(
    {
       evaluateChildFolders: ${evaluateChildFolders!"true"},

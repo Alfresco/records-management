@@ -133,18 +133,18 @@
        */
       onActionCopyTo: function RDLA_onActionCopyTo(assets)
       {
-         this._copyMoveLinkTo("copy", assets);
+         this._copyMoveLinkFileTo("copy", assets);
       },
 
       /**
-       * File single document or folder.
+       * Link single document or folder.
        *
        * @method onActionLinkTo
        * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
        */
       onActionLinkTo: function RDLA_onActionLinkTo(assets)
       {
-         this._copyMoveLinkTo("link", assets);
+         this._copyMoveLinkFileTo("link", assets);
       },
 
       /**
@@ -155,7 +155,18 @@
        */
       onActionMoveTo: function RDLA_onActionMoveTo(assets)
       {
-         this._copyMoveLinkTo("move", assets);
+         this._copyMoveLinkFileTo("move", assets);
+      },
+
+      /**
+       * File single document.
+       *
+       * @method onActionFileTo
+       * @param assets {object} Object literal representing one or more file(s) to be actioned
+       */
+      onActionFileTo: function RDLA_onActionFileTo(assets)
+      {
+         this._copyMoveLinkFileTo("file", assets);
       },
 
       /**
@@ -843,32 +854,33 @@
        */
 
       /**
-       * Copy/Move/Link To implementation.
+       * Copy/Move/Link/File To implementation.
        *
-       * @method _copyMoveLinkTo
-       * @param mode {String} Operation mode: copy|link|move
+       * @method _copyMoveLinkFileTo
+       * @param mode {String} Operation mode: copy|move|link|file
        * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
        * @private
        */
-      _copyMoveLinkTo: function RDLA__copyMoveLinkTo(mode, assets)
+      _copyMoveLinkFileTo: function RDLA__copyMoveLinkFileTo(mode, assets)
       {
          // Check mode is an allowed one
          if (!mode in
             {
                copy: true,
+               move: true,
                link: true,
-               move: true
+               file: true
             })
          {
-            throw new Error("'" + mode + "' is not a valid Copy/Move/Link to mode.");
+            throw new Error("'" + mode + "' is not a valid Copy/Move/Link/File to mode.");
          }
 
-         if (!this.modules.copyMoveLinkTo)
+         if (!this.modules.copyMoveLinkFileTo)
          {
-            this.modules.copyMoveLinkTo = new Alfresco.rm.module.CopyMoveLinkTo(this.id + "-copyMoveLinkTo");
+            this.modules.copyMoveLinkFileTo = new Alfresco.rm.module.CopyMoveLinkFileTo(this.id + "-copyMoveLinkFileTo");
          }
 
-         this.modules.copyMoveLinkTo.setOptions(
+         this.modules.copyMoveLinkFileTo.setOptions(
          {
             mode: mode,
             siteId: this.options.siteId,

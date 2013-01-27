@@ -50,7 +50,7 @@
       {
          return Alfresco.rm.module.SelectAuditRecordLocation.superclass.setOptions.call(this, YAHOO.lang.merge(
          {
-            templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/copy-move-link-to"
+            templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/copy-move-link-file-to"
          }, obj));
       },
 

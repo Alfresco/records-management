@@ -18,19 +18,19 @@
  */
 
 /**
- * Document Library "Copy-, Move- and Link-To" module for Records Management.
+ * Document Library "Copy-, Move-, Link- and File-To" module for Records Management.
  *
  * @namespace Alfresco.module
- * @class Alfresco.rm.module.CopyMoveLinkTo
+ * @class Alfresco.rm.module.CopyMoveLinkFileTo
  */
 (function()
 {
-   Alfresco.rm.module.CopyMoveLinkTo = function(htmlId)
+   Alfresco.rm.module.CopyMoveLinkFileTo = function(htmlId)
    {
       Alfresco.module.DoclibSiteFolder.superclass.constructor.call(this, htmlId);
 
       // Re-register with our own name
-      this.name = "Alfresco.rm.module.CopyMoveLinkTo";
+      this.name = "Alfresco.rm.module.CopyMoveLinkFileTo";
       Alfresco.util.ComponentManager.reregister(this);
 
       // Initialise prototype properties
@@ -40,7 +40,7 @@
       return this;
    };
 
-   YAHOO.extend(Alfresco.rm.module.CopyMoveLinkTo, Alfresco.module.DoclibSiteFolder,
+   YAHOO.extend(Alfresco.rm.module.CopyMoveLinkFileTo, Alfresco.module.DoclibSiteFolder,
    {
       /**
        * Set multiple initialization options at once.
@@ -48,13 +48,13 @@
        * @method setOptions
        * @override
        * @param obj {object} Object literal specifying a set of options
-       * @return {Alfresco.rm.module.CopyMoveLinkTo} returns 'this' for method chaining
+       * @return {Alfresco.rm.module.CopyMoveLinkFileTo} returns 'this' for method chaining
        */
       setOptions: function RMCMFT_setOptions(obj)
       {
          var myOptions =
          {
-            templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/copy-move-link-to"
+            templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/copy-move-link-file-to"
          };
 
          if (typeof obj.mode !== "undefined")
@@ -63,17 +63,18 @@
             {
                copy: "copy-to",
                move: "move-to",
-               link: "add-child"
+               link: "add-child",
+               file: "move-to"
             };
 
             if (typeof dataWebScripts[obj.mode] == "undefined")
             {
-               throw new Error("Alfresco.rm.module.CopyMoveLinkTo: Invalid mode '" + obj.mode + "'");
+               throw new Error("Alfresco.rm.module.CopyMoveLinkFileTo: Invalid mode '" + obj.mode + "'");
             }
             myOptions.dataWebScript = dataWebScripts[obj.mode];
          }
 
-         return Alfresco.rm.module.CopyMoveLinkTo.superclass.setOptions.call(this, YAHOO.lang.merge(myOptions, obj));
+         return Alfresco.rm.module.CopyMoveLinkFileTo.superclass.setOptions.call(this, YAHOO.lang.merge(myOptions, obj));
       },
 
       /**
@@ -244,7 +245,7 @@
       _showDialog: function RMCMFT__showDialog()
       {
          this.widgets.okButton.set("label", this.msg("button"));
-         return Alfresco.rm.module.CopyMoveLinkTo.superclass._showDialog.apply(this, arguments);
+         return Alfresco.rm.module.CopyMoveLinkFileTo.superclass._showDialog.apply(this, arguments);
       },
 
       /**
@@ -271,5 +272,5 @@
    });
 
    /* Dummy instance to load optional YUI components early */
-   var dummyInstance = new Alfresco.rm.module.CopyMoveLinkTo("null");
+   var dummyInstance = new Alfresco.rm.module.CopyMoveLinkFileTo("null");
 })();

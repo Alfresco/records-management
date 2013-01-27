@@ -9,6 +9,6 @@
 <!-- DoD 5015.2 Copy-To, Move-To, Link-To -->
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/modules/documentlibrary/site-folder.css" />
 <@script type="text/javascript" src="${url.context}/res/modules/documentlibrary/site-folder.js"></@script>
-<@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/copy-move-link-to.js"></@script>
+<@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/copy-move-link-file-to.js"></@script>
 <!-- DoD 5015.2 File Transfer Report -->
 <@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/file-transfer-report.js"></@script>

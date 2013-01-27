@@ -150,6 +150,9 @@
    <bean id="evaluator.rm.action.link-to" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="linkTo" />
    </bean>
+   <bean id="evaluator.rm.action.file-to" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="fileTo" />
+   </bean>
    <bean id="evaluator.rm.action.manage-permissions" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="managePermissions" />
    </bean>
