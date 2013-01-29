@@ -235,5 +235,7 @@
    <bean id="evaluator.rm.action.download-record" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="downloadRecord" />
    </bean>
-
+   <bean id="evaluator.rm.action.reject" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="reject" />
+   </bean>
 </beans>

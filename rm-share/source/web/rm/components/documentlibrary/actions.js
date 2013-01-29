@@ -1213,7 +1213,33 @@
       onActionCreateDisposition: function DLTB_onActionCreateDisposition(assets)
       {
          this._rmAction("message.create-disposition-schedule", assets, "createDispositionSchedule");
-      }
+      },
 
+      /**
+       * Reject action for an unfiled record
+       *
+       * @method onActionReject
+       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+       */
+      onActionReject: function DLTB_onActionReject(assets)
+      {
+         Alfresco.util.PopupManager.getUserInput(
+         {
+            title: this.msg("message.reject.title"),
+            text: this.msg("message.reject.reason"),
+            okButtonText: this.msg("button.reject.record"),
+            callback:
+            {
+               fn: function RDLA_onActionReject_callback(value)
+               {
+                  this._rmAction("message.reject", assets, "reject",
+                  {
+                     "reason": value
+                  });
+               },
+               scope: this
+            }
+         });
+      }
    };
 })();

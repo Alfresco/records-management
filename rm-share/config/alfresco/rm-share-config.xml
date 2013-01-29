@@ -411,6 +411,13 @@
             <evaluator>evaluator.rm.action.edit-reason</evaluator>
          </action>
 
+         <!-- Reject record -->
+         <!-- FIXME change icon -->
+         <action id="rm-reject" type="javascript" label="actions.reject" icon="../../../rm/components/documentlibrary/actions/rm-undeclare">
+            <param name="function">onActionReject</param>
+            <evaluator>evaluator.rm.action.reject</evaluator>
+         </action>
+
          <!--  DM Actions -->
 
          <!--  Create Record -->
@@ -579,6 +586,7 @@
             <action index="180" id="rm-file-to" />
             <action index="190" id="rm-delete" label="actions.delete" />
             <action index="200" id="rm-view-audit-log" />
+            <action index="210" id="rm-reject" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-browse">
@@ -600,6 +608,7 @@
             <action index="180" id="rm-file-to" />
             <action index="190" id="rm-delete" label="actions.delete" />
             <action index="200" id="rm-view-audit-log" />
+            <action index="210" id="rm-reject" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-details">
