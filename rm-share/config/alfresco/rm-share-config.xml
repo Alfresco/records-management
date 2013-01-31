@@ -580,11 +580,11 @@
             <action index="210" id="rm-freeze" />
             <action index="220" id="rm-unfreeze" />
             <action index="140" id="rm-split-email" />
-            <action index="150" id="rm-copy-to" />
-            <action index="160" id="rm-move-record-to" />
+            <action index="150" id="rm-copy-to" icon="../../../rm/components/documentlibrary/actions/rm-copy-record-to" />
+            <action index="160" id="rm-move-record-to" icon="../../../rm/components/documentlibrary/images/move-record-to" />
             <action index="170" id="rm-link-to" />
             <action index="180" id="rm-file-to" />
-            <action index="190" id="rm-delete" label="actions.delete" />
+            <action index="190" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="200" id="rm-view-audit-log" />
             <action index="210" id="rm-reject" />
          </actionGroup>
@@ -602,11 +602,11 @@
             <action index="210" id="rm-freeze" />
             <action index="220" id="rm-unfreeze" />
             <action index="140" id="rm-split-email" />
-            <action index="150" id="rm-copy-to" />
-            <action index="160" id="rm-move-record-to" />
+            <action index="150" id="rm-copy-to" icon="../../../rm/components/documentlibrary/actions/rm-copy-record-to" />
+            <action index="160" id="rm-move-record-to" icon="../../../rm/components/documentlibrary/images/move-record-to" />
             <action index="170" id="rm-link-to" />
             <action index="180" id="rm-file-to" />
-            <action index="190" id="rm-delete" label="actions.delete" />
+            <action index="190" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="200" id="rm-view-audit-log" />
             <action index="210" id="rm-reject" />
          </actionGroup>
