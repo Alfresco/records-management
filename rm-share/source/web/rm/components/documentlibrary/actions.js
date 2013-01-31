@@ -189,7 +189,6 @@
                {
                   name: "metadataRefresh"
                },
-               message: this.msg("message.declare.success", displayName),
                callback:
                {
                   fn: function RDLA_oAD_success(data)
@@ -218,6 +217,13 @@
                                  this.destroy();
                               }
                            }]
+                        });
+                     }
+                     else
+                     {
+                        Alfresco.util.PopupManager.displayMessage(
+                        {
+                           text: this.msg("message.declare.success", displayName)
                         });
                      }
                   },
