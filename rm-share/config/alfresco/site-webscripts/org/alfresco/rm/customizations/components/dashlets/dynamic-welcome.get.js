@@ -16,7 +16,7 @@ function main()
          userIsSiteManager = obj.role == "SiteManager";
          userIsSiteConsumer = obj.role == "SiteConsumer";
 
-         if (userIsSiteManager || (userIsMember && !userIsSiteConsumer))
+         if ((userIsSiteManager || (userIsMember && !userIsSiteConsumer)) && model.columns[2] && model.columns[2].actionHref)
          {
             model.columns[2].actionHref = "documentlibrary";
          }
