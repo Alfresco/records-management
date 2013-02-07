@@ -440,15 +440,8 @@
             <param name="function">onHideRecordAction</param>
             <param name="action">hide-record</param>
             <param name="successMessage">message.hide-record.success</param>
-            <param name="failureMessage">message.hide-record.failure</param>
-            <permissions>
-               <permission allow="true">Write</permission>
-            </permissions>
-            <!--  Can only hide the record if editable by current user, is not locked, is not a working copy -->
-            <evaluator>evaluator.rm.doclib.isRecord</evaluator>
-            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
-            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
-            <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
+            <param name="failureMessage">message.hide-record.failure</param>      
+            <evaluator>evaluator.rm.action.hide</evaluator>
          </action>
 
       </actions>

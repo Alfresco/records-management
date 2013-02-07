@@ -237,5 +237,8 @@
    </bean>
    <bean id="evaluator.rm.action.reject" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="reject" />
+   </bean> 
+   <bean id="evaluator.rm.action.hide" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="hide" />
    </bean>
 </beans>
