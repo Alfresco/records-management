@@ -177,7 +177,38 @@
             }
          }
 
+         this.updateCapabilitiesButtonLabel(parent);
+
          this.roleForm.updateSubmitElements();
+      },
+
+      /**
+       * Updates the button label for a capabilities group if all the checkboxes in the fieldset are checked
+       *
+       * @method updateCapabilitiesButtonLabel
+       * @param parent {object} parent of a checkbox group
+       */
+      updateCapabilitiesButtonLabel: function RMRoles_updateCapabilitiesButtonLabel(parent)
+      {
+         for (var i in parent)
+         {
+            if (parent.hasOwnProperty(i))
+            {
+               for (var j = 0, childrenLength = parent[i].children.length; j < childrenLength; j++)
+               {
+                  if (!parent[i].children[j].firstChild.checked)
+                  {
+                     break;
+                  }
+                  if (j == childrenLength - 1)
+                  {
+                     var button = Sel.query('button', parent[i].parentElement.parentElement)[0];
+                     Dom.addClass(button, 'selected');
+                     button.innerHTML = this.msg('label.deselect-all');
+                  }
+               }
+            }
+         }
       },
 
       /**
@@ -275,7 +306,7 @@
                      });
 
                      // refresh the UI
-                     window.location.href = window.location.pathname + '?roleId=' + encodeURI(roleId);
+                     window.location.href = window.location.pathname + '#roleId=' + encodeURI(roleId);
                   },
                   scope: this
                },
@@ -313,7 +344,7 @@
                      });
 
                      // refresh the UI
-                     window.location.href = window.location.pathname + '?roleId=' + encodeURI(roleId);
+                     window.location.href = window.location.pathname + '#roleId=' + encodeURI(roleId);
                   },
                   scope: this
                },
@@ -341,7 +372,8 @@
        */
       onCancel: function RMRoles_onCancel(e, args)
       {
-         window.location.href = window.location.pathname + '?roleId=' + encodeURI(this.options.roleId || "");
+         // refresh the UI
+         window.location.href = window.location.pathname + '#roleId=' + encodeURI(this.options.roleId || "");
          Event.preventDefault(e);
       }
    });
@@ -450,10 +482,36 @@
          this.widgets.editRole.set("disabled", true);
          this.widgets.deleteRole.set("disabled", true);
 
+         // get the selected role id
+         this.options.selectedRoleId = this.getRoleId();
+
          // query the list of roles and capabilities to populate the roles list
          this.updateRolesList();
       },
 
+      /**
+       * Gets the role id from the url
+       *
+       * @method getRoleId
+       */
+      getRoleId: function RMViewRoles_getRoleId()
+      {
+         var token, 
+            result = null,
+            hash = window.location.hash,
+            params = hash.replace('#', '').split("&");
+         for (var i = 0; i < params.length; i++)
+         {
+            token = params[i].split("=");
+            if (token[0] === "roleId")
+            {
+               result = token[1];
+               break;
+            }
+         }
+         return result;
+      },
+       
       /**
        * Query the list of roles and capabilities to populate the roles list.
        *
@@ -519,31 +577,28 @@
          elRolesList.innerHTML = "";
 
          var firstRoleId = null;
-         for (var i in sortedRoles)
+         for (var i = 0, length = sortedRoles.length; i < length; i++)
          {
-            if (sortedRoles.hasOwnProperty(i))
+            var role = sortedRoles[i];
+
+            if (firstRoleId === null)
             {
-               var role = sortedRoles[i];
-
-               if (firstRoleId === null)
-               {
-                  firstRoleId = role.name;
-               }
-
-               // create each list item
-               var li = document.createElement("li");
-
-               // and each inner link html
-               li.innerHTML = '<a href="#" id="role-' + $html(role.name) + '" class="role">' + $html(role.displayLabel) + '</a>';
-
-               // add and to the DOM
-               elRolesList.appendChild(li);
+               firstRoleId = role.name;
             }
+
+            // create each list item
+            var li = document.createElement("li");
+
+            // and each inner link html
+            li.innerHTML = '<a href="#" id="role-' + $html(role.name) + '" class="role">' + $html(role.displayLabel) + '</a>';
+
+            // add and to the DOM
+            elRolesList.appendChild(li);
          }
 
          // update the selected role item - may have been set in the options, else show first in the list
          var roleId = null;
-         if (this.options.selectedRoleId && this.options.selectedRoleId.length !== 0)
+         if (this.options.selectedRoleId)
          {
             roleId = this.options.selectedRoleId;
          }
@@ -565,6 +620,8 @@
 
          // get the ID of the element - in the format "role-roleId" and extract the roleId value
          var roleId = el.id.substring(5);
+         // update roleId value
+         window.location.hash = '#roleId=' + encodeURI(roleId);
          this.updateSelectedRoleUI(roleId);
          Event.stopEvent(e);
       },
@@ -605,7 +662,7 @@
          elList.innerHTML = "";
 
          // display the query capabilities for the selected user role if any
-         if (roleId !== null)
+         if (roleId)
          {
             var caps = this.roles[roleId].capabilities;
             var capsArray = [];
@@ -719,6 +776,10 @@
             {
                fn: function(res)
                {
+                  // delete the selected role id
+                  this.options.selectedRoleId = null;
+                  // delete the hash value
+                  window.location.hash = '#roleId=';
                   // update the UI on successful delete
                   this.updateRolesList();
                },
