@@ -433,6 +433,7 @@
             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
+            <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
          </action>
 
          <!--  Hide Record -->
@@ -440,7 +441,7 @@
             <param name="function">onHideRecordAction</param>
             <param name="action">hide-record</param>
             <param name="successMessage">message.hide-record.success</param>
-            <param name="failureMessage">message.hide-record.failure</param>      
+            <param name="failureMessage">message.hide-record.failure</param>
             <evaluator>evaluator.rm.action.hide</evaluator>
          </action>
 
