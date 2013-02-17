@@ -157,6 +157,14 @@
 
    </config>
 
+   <!-- Document Library Custom Code config section -->
+   <config evaluator="string-compare" condition="DocLibCustom">
+      <dependencies>
+         <js src="components/documentlibrary/dm-actions.js" />
+      </dependencies>
+      <dependencies />
+   </config>
+
    <!-- Document Library Actions config section -->
    <config evaluator="string-compare" condition="DocLibActions">
 

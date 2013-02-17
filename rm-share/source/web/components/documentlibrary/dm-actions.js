@@ -25,10 +25,10 @@
  */
 (function()
 {
-   YAHOO.lang.augmentObject(Alfresco.doclib.Actions.prototype,
+   YAHOO.Bubbling.fire("registerAction",
    {
-      onHideRecordAction: function DLTB_onHideRecordAction(record, owner)
-      {
+      actionName: "onHideRecordAction",
+      fn: function DLTB_onHideRecordAction(record, owner) {
          var me = this;
          Alfresco.util.PopupManager.displayPrompt(
          {
@@ -53,5 +53,5 @@
             }]
          });
       }
-   }, true);
+   });
 })();
