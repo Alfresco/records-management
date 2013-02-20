@@ -32,6 +32,13 @@
       Event = YAHOO.util.Event;
 
    /**
+    * Alfresco Slingshot aliases
+    */
+   var $siteURL = Alfresco.util.siteURL,
+      $createYUIButton = Alfresco.util.createYUIButton,
+      $popupManager = Alfresco.util.PopupManager;
+
+   /**
     * RecordsDocListToolbar constructor.
     *
     * @param {String} htmlId The HTML id of the parent element
@@ -67,68 +74,69 @@
       onReady: function DLTB_onReady()
       {
          // New Record Category button: user needs "newCategory" access
-         this.widgets.newCategory = Alfresco.util.createYUIButton(this, "newCategory-button", this.onNewCategory,
+         this.widgets.newCategory = $createYUIButton(this, "newCategory-button", this.onNewCategory,
          {
             disabled: true,
             value: "newCategory"
          });
 
          // New Record Folder button: user needs "newFolder" access
-         this.widgets.newFolder = Alfresco.util.createYUIButton(this, "newFolder-button", this.onNewFolder,
+         this.widgets.newFolder = $createYUIButton(this, "newFolder-button", this.onNewFolder,
          {
             disabled: true,
             value: "newFolder"
          });
 
          // File Upload button: user needs "file" access
-         this.widgets.fileUpload = Alfresco.util.createYUIButton(this, "fileUpload-button", this.onFileUpload,
+         this.widgets.fileUpload = $createYUIButton(this, "fileUpload-button", this.onFileUpload,
          {
             disabled: true,
             value: "file"
          });
 
          // Import button: user needs "import" access
-         this.widgets.importButton = Alfresco.util.createYUIButton(this, "import-button", this.onImport,
+         this.widgets.importButton = $createYUIButton(this, "import-button", this.onImport,
          {
             disabled: true,
             value: "import"
          });
 
          // RM-318 - removing Report button temporarily
-         /*this.widgets.reportButton = Alfresco.util.createYUIButton(this, "report-button", this.onPrintReport,
+         /*this.widgets.reportButton = $createYUIButton(this, "report-button", this.onPrintReport,
          {
             disabled: true
          });*/
 
          // Export All button: user needs "export" access
-         this.widgets.exportAllButton = Alfresco.util.createYUIButton(this, "exportAll-button", this.onExportAll,
+         this.widgets.exportAllButton = $createYUIButton(this, "exportAll-button", this.onExportAll,
          {
             disabled: true,
             value: "export"
          });
 
-         this.widgets.manageRules = Alfresco.util.createYUIButton(this, "manageRules-button", this.onManageRules,
+         // Manage Rules button:
+         this.widgets.manageRules = $createYUIButton(this, "manageRules-button", this.onManageRules,
          {
             disabled: false //,
             // value: "manageRules"
          });
 
          // Manage permissions button: user needs "file" permissions and the capability to modify permissions
-         this.widgets.managePermissionsButton = Alfresco.util.createYUIButton(this, "managePermissions-button", this.onManagePermissions,
+         this.widgets.managePermissionsButton = $createYUIButton(this, "managePermissions-button", this.onManagePermissions,
          {
             disabled: true,
             value: "managePermissions"
          });
 
          // Manage permissions button for unfiled records toolbar: user needs "file" permissions and the capability to modify permissions
-         this.widgets.unfiledManagePermissionsButton = Alfresco.util.createYUIButton(this, "unfiledManagePermissions-button", this.onUnfiledManagePermissions,
+         this.widgets.unfiledManagePermissionsButton = $createYUIButton(this, "unfiledManagePermissions-button", this.onUnfiledManagePermissions,
          {
             disabled: true,
             value: "managePermissions"
          });
 
          // Selected Items menu button
-         this.widgets.selectedItems = Alfresco.util.createYUIButton(this, "selectedItems-button", this.onSelectedItems,
+         this.widgets.selectedItems = $createYUIButton(this, "selectedItems-button", this.onSelectedItems,
          {
             type: "menu",
             menu: "selectedItems-menu",
@@ -137,7 +145,7 @@
          });
 
          // Hide/Show NavBar button
-         this.widgets.hideNavBar = Alfresco.util.createYUIButton(this, "hideNavBar-button", this.onHideNavBar,
+         this.widgets.hideNavBar = $createYUIButton(this, "hideNavBar-button", this.onHideNavBar,
          {
             type: "checkbox",
             checked: this.options.hideNavBar
@@ -184,17 +192,6 @@
                },
                scope: this
             }
-         });
-      },
-
-      /**
-       *
-       */
-      onManageRules: function DLTB_onManageRules(type, args)
-      {
-         window.location.href = Alfresco.util.siteURL("folder-rules?nodeRef={nodeRef}",
-         {
-        	 nodeRef: this.modules.docList.doclistMetadata.parent.rmNode.unfiledRecordContainer.toString()
          });
       },
 
@@ -361,7 +358,7 @@
                      name: folderName,
                      parentNodeRef: destination
                   });
-                  Alfresco.util.PopupManager.displayMessage(
+                  $popupManager.displayMessage(
                   {
                      text: this.msg("message.new-folder.success", folderName)
                   });
@@ -373,7 +370,7 @@
                fn: function DLTB__newContainer_failure(response)
                {
                   var msgKey = (folderType == "rma:recordCategory") ? "message.new-category.failure": "message.new-folder.failure";
-                  Alfresco.util.PopupManager.displayMessage(
+                  $popupManager.displayMessage(
                   {
                      text: this.msg(msgKey)
                   });
@@ -394,7 +391,7 @@
       {
          var me = this;
 
-         Alfresco.util.PopupManager.displayPrompt(
+         $popupManager.displayPrompt(
          {
             title: this.msg("message.file.type.title"),
             text: this.msg("message.file.type"),
@@ -506,7 +503,7 @@
                   {
                      highlightFile: fileName
                   });
-                  Alfresco.util.PopupManager.displayMessage(
+                  $popupManager.displayMessage(
                   {
                      text: this.msg("message.new-record.success", fileName)
                   });
@@ -518,7 +515,7 @@
                fn: function DLTB_onNonElectronicDocument_failure(response)
                {
                   var fileName = response.config.dataObj["prop_cm_name"];
-                  Alfresco.util.PopupManager.displayMessage(
+                  $popupManager.displayMessage(
                   {
                      text: this.msg("message.new-record.failure", fileName)
                   });
@@ -602,7 +599,7 @@
                   }
                   else
                   {
-                     Alfresco.util.PopupManager.displayMessage(
+                     $popupManager.displayMessage(
                      {
                         text: this.msg("message.nothing-to-export")
                      });
@@ -612,6 +609,21 @@
             },
             failureMessage: this.msg("message.load-top-level-assets.failure")
          });
+      },
+
+      /**
+       * Manage rules button click handler
+       *
+       * @method onManageRules
+       * @param e {object} DomEvent
+       * @param p_obj {object} Object passed back from addListener method
+       */
+      onManageRules: function DLTB_onManageRules(e, p_obj)
+      {
+         var nodeRef = this.modules.docList.doclistMetadata.parent.rmNode.unfiledRecordContainer,
+            page = "folder-rules?nodeRef=" + nodeRef;
+
+         window.location.href = $siteURL(page);
       },
 
       /**
@@ -627,11 +639,9 @@
             nodeRef = parent.nodeRef,
             itemName = encodeURIComponent(parent.properties["cm:name"]),
             nodeType = parent.type,
-            page = "rm-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType,
-            siteId = this.options.siteId,
-            siteObj = YAHOO.lang.isString(siteId) ? { site: siteId } : null;
+            page = "rm-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType;
 
-         window.location.href = Alfresco.util.siteURL(page, siteObj);
+         window.location.href = $siteURL(page);
       },
 
       /**
@@ -647,11 +657,9 @@
             nodeRef = rmNode.unfiledRecordContainer,
             itemName = encodeURIComponent(rmNode.properties["cm:name"]),
             nodeType = rmNode.type,
-            page = "rm-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType,
-            siteId = this.options.siteId,
-            siteObj = YAHOO.lang.isString(siteId) ? { site: siteId } : null;
+            page = "rm-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType;
 
-         window.location.href = Alfresco.util.siteURL(page, siteObj);
+         window.location.href = $siteURL(page);
       }
    }, true);
 })();
