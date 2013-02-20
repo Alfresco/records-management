@@ -2,7 +2,7 @@
 
    <component>Alfresco.RuleConfigActionCustom</component>
 
-   <config-definitions webscript="/api/actiondefinitions">
+   <config-definitions webscript="/api/rm/dm-actiondefinitions">
       <!--
          Public Action Definitions that we don't want displayed in the menu
       -->
