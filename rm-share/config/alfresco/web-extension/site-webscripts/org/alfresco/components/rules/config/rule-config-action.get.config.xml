@@ -83,7 +83,6 @@
       <action name="transform">Transform</action>
       <action name="transform-image">Transform</action>
       <action name="import">Import</action>
-      <action name="file-record">FileRecord</action>
    </customise>
 
 </rule-config>
