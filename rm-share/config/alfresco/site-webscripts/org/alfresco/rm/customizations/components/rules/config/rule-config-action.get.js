@@ -1,6 +1,3 @@
-<import resource="classpath:alfresco/site-webscripts/org/alfresco/components/rules/config/rule-config.lib.js">
-<import resource="classpath:alfresco/site-webscripts/org/alfresco/config.lib.js">
-
 function loadRmRuleConfigDefinitions()
 {
    var connector = remote.connect("alfresco"),
@@ -15,9 +12,30 @@ function loadRmRuleConfigDefinitions()
    return ruleConfigDefinitions;
 }
 
+/*
+function loadRmRuleConstraints()
+{
+   return {};
+}
+
+function loadRmRuleConstraintsFilter()
+{
+   return {};
+}
+*/
+
 function main()
 {
+   // Load rule config definitions, or in this case "ActionDefinition:s"
    model.ruleConfigDefinitions = jsonUtils.toJSONString(loadRmRuleConfigDefinitions());
+
+   /*
+   // Load constraints for rule types
+   model.constraints = jsonUtils.toJSONString(loadRmRuleConstraints());
+
+   // Load aspects and types that shall be visible
+   model.constraintsFilter = jsonUtils.toJSONString(loadRmRuleConstraintsFilter());
+   */
 }
 
 main();
