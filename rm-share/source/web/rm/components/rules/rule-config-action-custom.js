@@ -25,6 +25,54 @@
    {
       customisations:
       {
+         Reject:
+         {
+            edit: function(configDef, ruleConfig, configEl)
+            {
+               this._hideParameters(configDef.parameterDefinitions);
+               configDef.parameterDefinitions.push({
+                  type: "arca:reject-dialog-button",
+                  _buttonLabel: this.msg("button.reject")
+               });
+               return configDef;
+            }
+         }
+      },
+      renderers:
+      {
+         "arca:reject-dialog-button":
+         {
+            manual: { edit: true },
+            currentCtx: {},
+            edit: function (containerEl, configDef, paramDef, ruleConfig, value)
+            {
+               this._createButton(containerEl, configDef, paramDef, ruleConfig, function RCAC_rejectFormButton_onClick(type, obj)
+               {
+                  this.renderers["arca:reject-dialog-button"].currentCtx =
+                  {
+                     configDef: obj.configDef,
+                     ruleConfig: obj.ruleConfig
+                  };
+                  Alfresco.util.PopupManager.getUserInput(
+                  {
+                     title: this.msg("message.reject.title"),
+                     text: this.msg("message.reject.reason"),
+                     okButtonText: this.msg("button.ok"),
+                     value: this._getParameters(obj.configDef).reason || "",
+                     callback:
+                     {
+                        fn: function RCAC_rejectOKButton_callback(value)
+                        {
+                           var ctx = this.renderers["arca:reject-dialog-button"].currentCtx;
+                           this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "reason", value);
+                           this._updateSubmitElements(ctx.configDef);
+                        },
+                        scope: this
+                     }
+                  });
+               });
+            }
+         }
       }
    });
  })();
