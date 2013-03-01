@@ -117,8 +117,8 @@
          // Manage Rules button:
          this.widgets.manageRules = $createYUIButton(this, "manageRules-button", this.onManageRules,
          {
-            disabled: false //,
-            // value: "manageRules"
+            disabled: false,
+            value: "manageRules"
          });
 
          // Manage permissions button: user needs "file" permissions and the capability to modify permissions
