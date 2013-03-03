@@ -23,6 +23,6 @@ var tabs = cmp.options.tabs,
 
 treeNodes[allIndex].listItems.url = "{url.proxy}api/rm/properties?siteId=" + Alfresco.constants.SITE;
 treeNodes[aspectsIndex].treeNodes.url = "{url.proxy}api/rm/classes?cf=aspect&siteId=" + Alfresco.constants.SITE;
-treeNodes[typesIndex].treeNodes.url = "{url.proxy}api/rm/classes?cf=aspect&siteId=" + Alfresco.constants.SITE;
+treeNodes[typesIndex].treeNodes.url = "{url.proxy}api/rm/classes?cf=type&siteId=" + Alfresco.constants.SITE;
 
 //]]></script>
