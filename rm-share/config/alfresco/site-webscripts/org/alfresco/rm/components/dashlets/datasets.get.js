@@ -2,34 +2,21 @@
 
 function main()
 {
-   var data = {};
+   var site = url.templateArgs.site;
+
+   model.data = {};
+   model.isRmAdmin = false;
 
    // Check if the user is an RM Admin
    var conn = remote.connect("alfresco");
    if (isRmAdmin(conn))
    {
+      model.data = getDataSets(conn, site);
       model.isRmAdmin = true;
-
-      // Call the repo for the data sets
-      var res = conn.get("/api/rma/datasets?site=" + url.templateArgs.site);
-
-      // Check the response
-      if (res.status == 200)
-      {
-         // Create javascript objects from the server response
-         var obj = eval('(' + res + ')');
-         if (obj)
-         {
-            data = obj.data;
-         }
-      }
-   }
-   else
-   {
-      model.isRmAdmin = false;
    }
 
-   model.data = data;
+   // Check if the site is an RM site
+   model.isRmSite = isRmSite(conn, site);
 }
 
 main();
