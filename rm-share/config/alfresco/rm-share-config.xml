@@ -183,12 +183,22 @@
             <evaluator>evaluator.rm.action.delete</evaluator>
          </action>
 
-         <action id="rm-copy-to" type="javascript" label="actions.document.copy-to" icon="folder-copy-to">
+         <action id="rm-copy-record-to" type="javascript" label="actions.document.copy-to" icon="../../../rm/components/documentlibrary/actions/rm-copy-record-to">
             <param name="function">onActionCopyTo</param>
-            <evaluator>evaluator.rm.action.copy</evaluator>
+            <evaluator>evaluator.rm.action.copyRecord</evaluator>
          </action>
 
-         <action id="rm-move-record-to" type="javascript" label="actions.document.move-to" icon="folder-move-to">
+         <action id="rm-copy-recordfolder-to" type="javascript" label="actions.document.copy-to" icon="folder-copy-to">
+            <param name="function">onActionCopyTo</param>
+            <evaluator>evaluator.rm.action.copyRecordFolder</evaluator>
+         </action>
+
+         <action id="rm-copy-recordcategory-to" type="javascript" label="actions.document.copy-to" icon="folder-copy-to">
+            <param name="function">onActionCopyTo</param>
+            <evaluator>evaluator.rm.action.copyRecordCategory</evaluator>
+         </action>
+
+         <action id="rm-move-record-to" type="javascript" label="actions.document.move-to" icon="../../../rm/components/documentlibrary/images/move-record-to">
             <param name="function">onActionMoveTo</param>
             <evaluator>evaluator.rm.action.moveRecord</evaluator>
          </action>
@@ -468,7 +478,7 @@
             <action index="100" id="rm-record-category-view-details" />
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-manage-permissions" />
-            <action index="130" id="rm-copy-to" />
+            <action index="130" id="rm-copy-recordcategory-to" />
             <action index="140" id="rm-move-recordcategory-to" />
             <action index="150" id="rm-delete" label="actions.delete" />
             <action index="160" id="rm-view-audit-log" />
@@ -476,7 +486,7 @@
          <actionGroup id="rm-record-category-details">
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-manage-permissions" />
-            <action index="130" id="rm-copy-to" />
+            <action index="130" id="rm-copy-recordcategory-to" />
             <action index="140" id="rm-move-recordcategory-to" />
             <action index="150" id="rm-delete" label="actions.delete" />
             <action index="160" id="rm-view-audit-log" />
@@ -496,7 +506,7 @@
             <action index="200" id="rm-edit-disposition-as-of-date" />
             <action index="210" id="rm-freeze" icon="../../../rm/components/documentlibrary/actions/rm-freeze-folder" />
             <action index="220" id="rm-unfreeze" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-folder" />
-            <action index="230" id="rm-copy-to" />
+            <action index="230" id="rm-copy-recordfolder-to" />
             <action index="240" id="rm-move-recordfolder-to" />
             <action index="250" id="rm-link-to" />
             <action index="260" id="rm-manage-permissions" />
@@ -516,7 +526,7 @@
             <action index="200" id="rm-edit-disposition-as-of-date" />
             <action index="210" id="rm-freeze" icon="../../../rm/components/documentlibrary/actions/rm-freeze-folder" />
             <action index="220" id="rm-unfreeze" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-folder" />
-            <action index="230" id="rm-copy-to" />
+            <action index="230" id="rm-copy-recordfolder-to" />
             <action index="240" id="rm-move-recordfolder-to" />
             <action index="250" id="rm-link-to" />
             <action index="260" id="rm-manage-permissions" />
@@ -538,7 +548,7 @@
             <action index="200" id="rm-edit-disposition-as-of-date" />
             <action index="210" id="rm-freeze" />
             <action index="220" id="rm-unfreeze" />
-            <action index="230" id="rm-copy-to" />
+            <action index="230" id="rm-copy-record-to" />
             <action index="240" id="rm-move-record-to" />
             <action index="250" id="rm-link-to" />
             <action index="270" id="rm-delete" label="actions.delete" />
@@ -563,7 +573,7 @@
             <action index="200" id="rm-edit-disposition-as-of-date" />
             <action index="210" id="rm-freeze" />
             <action index="220" id="rm-unfreeze" />
-            <action index="230" id="rm-copy-to" />
+            <action index="230" id="rm-copy-record-to" />
             <action index="240" id="rm-move-record-to" />
             <action index="250" id="rm-link-to" />
             <action index="270" id="rm-delete" label="actions.delete" />
@@ -582,8 +592,8 @@
             <action index="210" id="rm-freeze" />
             <action index="220" id="rm-unfreeze" />
             <action index="140" id="rm-split-email" />
-            <action index="150" id="rm-copy-to" icon="../../../rm/components/documentlibrary/actions/rm-copy-record-to" />
-            <action index="160" id="rm-move-record-to" icon="../../../rm/components/documentlibrary/images/move-record-to" />
+            <action index="150" id="rm-copy-record-to" />
+            <action index="160" id="rm-move-record-to" />
             <action index="170" id="rm-link-to" />
             <action index="180" id="rm-file-to" />
             <action index="190" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
@@ -604,8 +614,8 @@
             <action index="210" id="rm-freeze" />
             <action index="220" id="rm-unfreeze" />
             <action index="140" id="rm-split-email" />
-            <action index="150" id="rm-copy-to" icon="../../../rm/components/documentlibrary/actions/rm-copy-record-to" />
-            <action index="160" id="rm-move-record-to" icon="../../../rm/components/documentlibrary/images/move-record-to" />
+            <action index="150" id="rm-copy-record-to" />
+            <action index="160" id="rm-move-record-to" />
             <action index="170" id="rm-link-to" />
             <action index="180" id="rm-file-to" />
             <action index="190" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
