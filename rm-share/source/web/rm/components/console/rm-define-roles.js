@@ -168,12 +168,17 @@
          var elRoleName = Dom.get("roleName");
          elRoleName.value = role.displayLabel;
 
-         for (var cap in role.capabilities)
+         var parent = {},
+            capabilities = role.capabilities;
+         for (var i in capabilities)
          {
-            // checkbox representing each capabilities ID has that ID in the DOM
-            if (role.capabilities.hasOwnProperty(cap))
+            if (capabilities.hasOwnProperty(i))
             {
-               Dom.get(cap).checked = true;
+               // checkbox representing each capabilities ID has that ID in the DOM
+               var checkBox = Dom.get(i);
+               checkBox.checked = true;
+               var checkBoxParent = checkBox.parentElement.parentElement;
+               parent[checkBoxParent.id] = checkBoxParent;
             }
          }
 
@@ -496,7 +501,7 @@
        */
       getRoleId: function RMViewRoles_getRoleId()
       {
-         var token, 
+         var token,
             result = null,
             hash = window.location.hash,
             params = hash.replace('#', '').split("&");
@@ -511,7 +516,7 @@
          }
          return result;
       },
-       
+
       /**
        * Query the list of roles and capabilities to populate the roles list.
        *
