@@ -244,4 +244,11 @@
    <bean id="evaluator.rm.action.hide" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="hide" />
    </bean>
+
+   <!--                          -->
+   <!-- DocLib Common Evaluators -->
+   <!--                          -->
+   <bean id="evaluator.rm.doclib.rmSiteExists" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.DocLibRmSiteExistsEvaluator">
+      <property name="serviceRegistry" ref="webframework.service.registry" />
+   </bean>
 </beans>
