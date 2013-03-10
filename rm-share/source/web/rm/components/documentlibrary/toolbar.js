@@ -173,26 +173,6 @@
 
          // Finally show the component body here to prevent UI artifacts on YUI button decoration
          Dom.setStyle(this.id + "-body", "visibility", "visible");
-
-         Alfresco.util.Ajax.jsonGet(
-         {
-            url: Alfresco.constants.PROXY_URI + "api/rma/admin/rmroles?user=" + encodeURIComponent(Alfresco.constants.USERNAME),
-            successCallback:
-            {
-               fn: function(response)
-               {
-                  if (response.json && response.json.data)
-                  {
-                     // Fire event to inform any listening components that the users rmroles are available
-                     YAHOO.Bubbling.fire("userRMRoles",
-                     {
-                        roles: response.json.data
-                     });
-                  }
-               },
-               scope: this
-            }
-         });
       },
 
       /**
