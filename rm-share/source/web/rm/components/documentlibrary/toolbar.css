@@ -74,6 +74,11 @@
    background-image: url(actions/rm-link-to-16.png);
 }
 
+.toolbar .onActionFileTo
+{
+   background-image: url(actions/rm-link-to-16.png);
+}
+
 .toolbar .onActionFreeze
 {
    background-image: url(actions/rm-freeze-16.png);
@@ -104,6 +109,35 @@
    background-image: url(actions/rm-unfreeze-16.png);
 }
 
+.toolbar .onActionCopyRecordTo
+{
+   background-image: url(actions/rm-copy-record-to-16.png);
+}
+
+.toolbar .onActionCopyRecordFolderTo
+{
+   background-image: url(actions/rm-copy-folder-to-16.png);
+}
+
+.toolbar .onActionCopyRecordCategoryTo
+{
+   background-image: url(actions/rm-copy-folder-to-16.png);
+}
+
+.toolbar .onActionMoveRecordTo
+{
+   background-image: url(images/move-record-to-16.png);
+}
+
+.toolbar .onActionMoveRecordFolderTo
+{
+   background-image: url(images/move-folder-to-16.png);
+}
+
+.toolbar .onActionMoveCategoryTo
+{
+   background-image: url(images/move-folder-to-16.png);
+}
 
 /* Messages (e.g. Delete confirmation) */
 .toolbar-file-list span.record-category,

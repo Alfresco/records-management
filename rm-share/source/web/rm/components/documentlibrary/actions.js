@@ -137,6 +137,39 @@
       },
 
       /**
+       * Copy record.
+       *
+       * @method onActionCopyRecordTo
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       */
+      onActionCopyRecordTo: function RDLA_onActionCopyTo(assets)
+      {
+         this.onActionCopyTo(assets);
+      },
+
+      /**
+       * Copy record folder.
+       *
+       * @method onActionCopyRecordFolderTo
+       * @param assets {object} Object literal representing one or more record folder(s) to be actioned
+       */
+      onActionCopyRecordFolderTo: function RDLA_onActionCopyTo(assets)
+      {
+         this.onActionCopyTo(assets);
+      },
+
+      /**
+       * Copy record category.
+       *
+       * @method onActionCopyRecordCategoryTo
+       * @param assets {object} Object literal representing one or more record category (categories) to be actioned
+       */
+      onActionCopyRecordCategoryTo: function RDLA_onActionCopyTo(assets)
+      {
+         this.onActionCopyTo(assets);
+      },
+
+      /**
        * Link single document or folder.
        *
        * @method onActionLinkTo
@@ -156,6 +189,39 @@
       onActionMoveTo: function RDLA_onActionMoveTo(assets)
       {
          this._copyMoveLinkFileTo("move", assets);
+      },
+
+      /**
+       * Move record
+       *
+       * @method onActionMoveRecordTo
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       */
+      onActionMoveRecordTo: function RDLA_onActionMoveTo(assets)
+      {
+         this.onActionMoveTo(assets);
+      },
+
+      /**
+       * Move record folder
+       *
+       * @method onActionMoveRecordFolderTo
+       * @param assets {object} Object literal representing one or more record folder(s) to be actioned
+       */
+      onActionMoveRecordFolderTo: function RDLA_onActionMoveTo(assets)
+      {
+         this.onActionMoveTo(assets);
+      },
+
+      /**
+       * Move record category
+       *
+       * @method onActionMoveRecordCategoryTo
+       * @param assets {object} Object literal representing one or more record category (categories) to be actioned
+       */
+      onActionMoveRecordCategoryTo: function RDLA_onActionMoveTo(assets)
+      {
+         this.onActionMoveTo(assets);
       },
 
       /**

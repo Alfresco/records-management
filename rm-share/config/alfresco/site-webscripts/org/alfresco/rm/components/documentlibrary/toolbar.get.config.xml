@@ -8,9 +8,14 @@
       <action id="onActionUndoCutoff" permission="undoCutoff" label="menu.selected-items.undo-cutoff" />
       <action id="onActionFreeze" permission="freeze" label="menu.selected-items.freeze" />
       <action id="onActionUnfreeze" permission="unfreeze" label="menu.selected-items.unfreeze" />
-      <action id="onActionCopyTo" permission="" label="menu.selected-items.copy-to" />
-      <action id="onActionMoveTo" permission="Delete" label="menu.selected-items.move-to" />
-      <action id="onActionLinkTo" permission="" label="menu.selected-items.link-to" />
+      <action id="onActionCopyRecordTo" permission="copyRecord" asset="record" label="menu.selected-items.copy-to" />
+      <action id="onActionCopyRecordFolderTo" permission="copyRecordFolder" asset="record-folder" label="menu.selected-items.copy-to" />
+      <action id="onActionCopyRecordCategoryTo" permission="copyRecordCategory" asset="record-category" label="menu.selected-items.copy-to" />
+      <action id="onActionMoveRecordTo" permission="Delete,moveRecord" asset="record" label="menu.selected-items.move-to" />
+      <action id="onActionMoveRecordFolderTo" permission="Delete,moveRecordFolder" asset="record-folder" label="menu.selected-items.move-to" />
+      <action id="onActionMoveCategoryTo" permission="Delete,moveRecordCategory" asset="record-category" label="menu.selected-items.move-to" />
+      <action id="onActionLinkTo" permission="linkTo" asset="record" label="menu.selected-items.link-to" />
+      <action id="onActionFileTo" permission="fileTo" asset="undeclared-record" label="menu.selected-items.file-to" />
       <action id="onActionExport" permission="" label="menu.selected-items.export" />
       <action id="onActionDelete" permission="Delete" label="menu.selected-items.delete" />
    </actions>

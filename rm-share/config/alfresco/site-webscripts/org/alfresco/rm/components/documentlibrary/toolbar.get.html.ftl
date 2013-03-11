@@ -50,7 +50,7 @@
                <div class="bd">
                   <ul>
                   <#list actionSet as action>
-                     <li><a rel="${action.permission!""}" href="#"><span class="${action.id}">${msg(action.label)}</span></a></li>
+                     <li><a type="${action.asset!""}" rel="${action.permission!""}" href="#" data-has-aspects="${action.hasAspect}" data-not-aspects="${action.notAspect}"><span class="${action.id}">${msg(action.label)}</span></a></li>
                   </#list>
                      <li><hr /></li>
                      <li><a rel="" href="#"><span class="onActionDeselectAll">${msg("menu.selected-items.deselect-all")}</span></a></li>

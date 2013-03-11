@@ -253,7 +253,164 @@
             }
          }
 
-         Alfresco.rm.component.DocListToolbar.superclass.onSelectedFilesChanged.apply(this, arguments);
+         if (this.modules.docList)
+         {
+            var files = this.modules.docList.getSelectedFiles(), fileTypes = [], file,
+               fileType, userAccess = {}, fileAccess, index,
+               menuItems = this.widgets.selectedItems.getMenu().getItems(), menuItem,
+               actionPermissions, typeGroups, typesSupported, disabled,
+               commonAspects = [], allAspects = [],
+               i, ii, j, jj;
+            
+            var fnFileType = function fnFileType(file)
+            {
+               return file.node.rmNode.uiType;
+            };
+
+            // Check each file for user permissions
+            for (i = 0, ii = files.length; i < ii; i++)
+            {
+               file = files[i];
+               
+               // Required user access level - logical AND of each file's permissions
+               fileAccess = file.node.permissions.user;
+               for (index in fileAccess)
+               {
+                  if (fileAccess.hasOwnProperty(index))
+                  {
+                     userAccess[index] = (userAccess[index] === undefined ? fileAccess[index] : userAccess[index] && fileAccess[index]);
+                  }
+               }
+               
+               // Make a note of all selected file types Using a hybrid array/object so we can use both array.length and "x in object"
+               fileType = fnFileType(file);
+               if (!(fileType in fileTypes))
+               {
+                  fileTypes[fileType] = true;
+                  fileTypes.push(fileType);
+               }
+
+               // Build a list of common aspects
+
+
+               if (i === 0)
+               {
+                  // first time around fill with aspects from first node -
+                  // NOTE copy so we don't remove aspects from file node.
+                  commonAspects = Alfresco.util.deepCopy(file.node.aspects);
+               } else
+               {
+                  // every time after that remove aspect if it isn't present on the current node.
+                  for (j = 0, jj = commonAspects.length; j < jj; j++)
+                  {
+                     if (!Alfresco.util.arrayContains(file.node.aspects, commonAspects[j]))
+                     {
+                        Alfresco.util.arrayRemove(commonAspects, commonAspects[j])
+                     }
+                  }
+               }
+
+               // Build a list of all aspects
+               for (j = 0, jj = file.node.aspects.length; j < jj; j++)
+               {
+                  if (!Alfresco.util.arrayContains(allAspects, file.node.aspects[j]))
+                  {
+                     allAspects.push(file.node.aspects[j])
+                  }
+               }
+
+            }
+
+            // Now go through the menu items, setting the disabled flag appropriately
+            for (index in menuItems)
+            {
+               if (menuItems.hasOwnProperty(index))
+               {
+                  // Defaulting to enabled
+                  menuItem = menuItems[index];
+                  disabled = false;
+
+                  if (menuItem.element.firstChild)
+                  {
+                     // Check permissions required - stored in "rel" attribute in the DOM
+                     if (menuItem.element.firstChild.rel && menuItem.element.firstChild.rel !== "")
+                     {
+                        // Comma-separated indicates and "AND" match
+                        actionPermissions = menuItem.element.firstChild.rel.split(",");
+                        for (i = 0, ii = actionPermissions.length; i < ii; i++)
+                        {
+                           // Disable if the user doesn't have ALL the permissions
+                           if (!userAccess[actionPermissions[i]])
+                           {
+                              disabled = true;
+                              break;
+                           }
+                        }
+                     }
+
+                     // Check required aspects.
+                     // Disable if any node DOES NOT have ALL required aspects
+                     var hasAspects = Dom.getAttribute(menuItem.element.firstChild, "data-has-aspects");
+                     if (hasAspects && hasAspects !== "")
+                     {
+                        hasAspects = hasAspects.split(",");
+                        for (i = 0, ii = hasAspects.length; i < ii; i++)
+                        {
+                           if (!Alfresco.util.arrayContains(commonAspects, hasAspects[i]))
+                           {
+                              disabled = true;
+                              break;
+                           }
+                        }
+                     }
+
+                     // Check forbidden aspects.
+                     // Disable if any node DOES have ANY forbidden aspect
+                     var notAspects = Dom.getAttribute(menuItem.element.firstChild, "data-not-aspects");
+                     if (notAspects && notAspects !=="")
+                     {
+                        notAspects = notAspects.split(",");
+                        for (i = 0, ii = notAspects.length; i < ii; i++)
+                        {
+                           if(Alfresco.util.arrayContains(allAspects, notAspects[i]))
+                           {
+                              disabled = true;
+                              break;
+                           }
+                        }
+                     }
+
+                     if (!disabled)
+                     {
+                        // Check filetypes supported
+                        if (menuItem.element.firstChild.type && menuItem.element.firstChild.type !== "")
+                        {
+                           // Pipe-separation indicates grouping of allowed file types
+                           typeGroups = menuItem.element.firstChild.type.split("|");
+                           
+                           for (i = 0; i < typeGroups.length; i++) // Do not optimize - bounds updated within loop
+                           {
+                              typesSupported = Alfresco.util.arrayToObject(typeGroups[i].split(","));
+
+                              for (j = 0, jj = fileTypes.length; j < jj; j++)
+                              {
+                                 if (!(fileTypes[j] in typesSupported))
+                                 {
+                                    typeGroups.splice(i, 1);
+                                    --i;
+                                    break;
+                                 }
+                              }
+                           }
+                           disabled = (typeGroups.length === 0);
+                        }
+                     }
+                     menuItem.cfg.setProperty("disabled", disabled);
+                  }
+               }
+            }
+            this.widgets.selectedItems.set("disabled", (files.length === 0));
+         }
       },
 
       /**

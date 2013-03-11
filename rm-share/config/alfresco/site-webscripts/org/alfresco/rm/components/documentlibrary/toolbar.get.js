@@ -8,7 +8,7 @@ const PREFERENCES_ROOT = "org.alfresco.share.documentList";
 function main()
 {
    var result, preferences = {};
-   
+
    // Request the current user's preferences
    var result = remote.call("/api/people/" + encodeURIComponent(user.name) + "/preferences");
    if (result.status == 200 && result != "{}")
@@ -34,17 +34,22 @@ function main()
    var myConfig = new XML(config.script),
       xmlActions = myConfig.actions,
       actionSet = [];
-   
+
    for each (xmlAction in xmlActions.action)
    {
       actionSet.push(
       {
          id: xmlAction.@id.toString(),
          permission: xmlAction.@permission.toString(),
-         label: xmlAction.@label.toString()
+         label: xmlAction.@label.toString(),
+         type: xmlAction.@type.toString(),
+         asset: xmlAction.@asset.toString(),
+         href: xmlAction.@href.toString(),
+         hasAspect: xmlAction.@hasAspect.toString(),
+         notAspect: xmlAction.@notAspect.toString()
       });
    }
-   
+
    model.actionSet = actionSet;
 }
 
