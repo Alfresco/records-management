@@ -236,6 +236,12 @@
             file, rmNode, i, j, l, m,
             userPerms;
 
+         if (files.length == 0)
+         {
+            this.widgets.selectedItems.set("disabled", true);
+            return;
+         }
+
          for (i = 0, j = files.length; i < j; i++)
          {
             file = files[i];
@@ -259,9 +265,9 @@
                fileType, userAccess = {}, fileAccess, index,
                menuItems = this.widgets.selectedItems.getMenu().getItems(), menuItem,
                actionPermissions, typeGroups, typesSupported, disabled,
-               commonAspects = [], allAspects = [],
+               commonAspects = [], allAspects = [], commonProperties = [], allProperties = [],
                i, ii, j, jj;
-            
+
             var fnFileType = function fnFileType(file)
             {
                return file.node.rmNode.uiType;
@@ -271,7 +277,7 @@
             for (i = 0, ii = files.length; i < ii; i++)
             {
                file = files[i];
-               
+
                // Required user access level - logical AND of each file's permissions
                fileAccess = file.node.permissions.user;
                for (index in fileAccess)
@@ -281,7 +287,7 @@
                      userAccess[index] = (userAccess[index] === undefined ? fileAccess[index] : userAccess[index] && fileAccess[index]);
                   }
                }
-               
+
                // Make a note of all selected file types Using a hybrid array/object so we can use both array.length and "x in object"
                fileType = fnFileType(file);
                if (!(fileType in fileTypes))
@@ -295,9 +301,10 @@
 
                if (i === 0)
                {
-                  // first time around fill with aspects from first node -
-                  // NOTE copy so we don't remove aspects from file node.
+                  // first time around fill with aspects/properties from first node -
+                  // NOTE copy so we don't remove aspects/properties from file node.
                   commonAspects = Alfresco.util.deepCopy(file.node.aspects);
+                  commonProperties = Alfresco.util.deepCopy(file.node.properties);
                } else
                {
                   // every time after that remove aspect if it isn't present on the current node.
@@ -319,6 +326,15 @@
                   }
                }
 
+               // Build a list of all properties
+               var properties = file.node.properties;
+               for (var pIndex in properties)
+               {
+                  if (properties.hasOwnProperty(pIndex))
+                  {
+                     allProperties.push(pIndex);
+                  }
+               }
             }
 
             // Now go through the menu items, setting the disabled flag appropriately
@@ -380,6 +396,38 @@
                         }
                      }
 
+                     // Check required properties.
+                     // Disable if any node DOES NOT have ALL required properties
+                     var hasProperties = Dom.getAttribute(menuItem.element.firstChild, "data-has-properties");
+                     if (hasProperties && hasProperties !== "")
+                     {
+                        hasProperties = hasProperties.split(",");
+                        for (i = 0, ii = hasProperties.length; i < ii; i++)
+                        {
+                           if (!Alfresco.util.arrayContains(commonProperties, hasProperties[i]))
+                           {
+                              disabled = true;
+                              break;
+                           }
+                        }
+                     }
+
+                     // Check forbidden properties.
+                     // Disable if any node DOES have ANY forbidden properties
+                     var notProperties = Dom.getAttribute(menuItem.element.firstChild, "data-not-properties");
+                     if (notProperties && notProperties !=="")
+                     {
+                        notProperties = notProperties.split(",");
+                        for (i = 0, ii = notProperties.length; i < ii; i++)
+                        {
+                           if(Alfresco.util.arrayContains(allProperties, notProperties[i]))
+                           {
+                              disabled = true;
+                              break;
+                           }
+                        }
+                     }
+
                      if (!disabled)
                      {
                         // Check filetypes supported
@@ -387,7 +435,7 @@
                         {
                            // Pipe-separation indicates grouping of allowed file types
                            typeGroups = menuItem.element.firstChild.type.split("|");
-                           
+
                            for (i = 0; i < typeGroups.length; i++) // Do not optimize - bounds updated within loop
                            {
                               typesSupported = Alfresco.util.arrayToObject(typeGroups[i].split(","));

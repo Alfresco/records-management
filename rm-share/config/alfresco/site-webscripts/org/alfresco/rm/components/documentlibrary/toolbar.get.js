@@ -46,7 +46,9 @@ function main()
          asset: xmlAction.@asset.toString(),
          href: xmlAction.@href.toString(),
          hasAspect: xmlAction.@hasAspect.toString(),
-         notAspect: xmlAction.@notAspect.toString()
+         notAspect: xmlAction.@notAspect.toString(),
+         hasProperty: xmlAction.@hasProperty.toString(),
+         notProperty: xmlAction.@notProperty.toString()
       });
    }
 
