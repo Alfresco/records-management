@@ -155,6 +155,17 @@
          <!-- Metadata Stub -->
       </metadata-templates>
 
+      <multi-select>
+         <action type="action-link" id="onActionDownload" label="menu.selected-items.download" />
+         <action type="action-link" id="onActionCopyTo" label="menu.selected-items.copy" notAspect="rma:record" />
+         <action type="action-link" id="onActionMoveTo" permission="Delete" label="menu.selected-items.move" notAspect="rma:record" />
+         <action type="action-link" id="onActionAssignWorkflow" asset="document" label="menu.selected-items.assign-workflow" notAspect="rma:record" />
+         <action type="action-link" id="onActionManagePermissions" permission="ChangePermissions" label="menu.selected-items.manage-permissions" notAspect="rma:record" />
+         <action type="action-link" id="onActionDelete" permission="Delete" label="menu.selected-items.delete" notAspect="rma:record" />
+         <action type="action-link" id="onActionCloudSync" asset="document"  permission="CreateChildren" label="menu.selected-items.cloudSync" notAspect="sync:syncSetMemberNode,rma:record" syncMode="ON_PREMISE" />
+         <action type="action-link" id="onActionCloudSyncRequest" label="menu.selected-items.cloudRequestSync" hasAspect="sync:syncSetMemberNode" syncMode="ON_PREMISE" notAspect="rma:record" />
+      </multi-select>
+
    </config>
 
    <!-- Document Library Custom Code config section -->
