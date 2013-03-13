@@ -1,8 +1,21 @@
 <toolbar>
    <actions>
       <action
-         id="onActionCutoff"
+         id="onActionCutoffRecord"
          permission="cutoff"
+         asset="record"
+         label="menu.selected-items.cutoff"
+      />
+      <action
+         id="onActionCutoffRecordFolder"
+         permission="cutoff"
+         asset="record-folder"
+         label="menu.selected-items.cutoff"
+      />
+      <action
+         id="onActionCutoffRecordCategory"
+         permission="cutoff"
+         asset="record-category"
          label="menu.selected-items.cutoff"
       />
       <action
@@ -31,8 +44,21 @@
          label="menu.selected-items.undo-cutoff"
       />
       <action
-         id="onActionFreeze"
+         id="onActionFreezeRecord"
          permission="freeze"
+         asset="record,undeclared-record"
+         label="menu.selected-items.freeze"
+      />
+      <action
+         id="onActionFreezeRecordFolder"
+         permission="freeze"
+         asset="record-folder"
+         label="menu.selected-items.freeze"
+      />
+      <action
+         id="onActionFreezeRecordCategory"
+         permission="freeze"
+         asset="record-category"
          label="menu.selected-items.freeze"
       />
       <action
@@ -71,7 +97,7 @@
          label="menu.selected-items.move-to"
       />
       <action
-         id="onActionMoveCategoryTo"
+         id="onActionMoveRecordCategoryTo"
          permission="Delete,moveRecordCategory"
          asset="record-category"
          label="menu.selected-items.move-to"
@@ -89,15 +115,34 @@
          label="menu.selected-items.file-to"
       />
       <action
-         id="onActionExport"
-         permission=""
-         label="menu.selected-items.export"
-      />
-      <action
-         id="onActionDelete"
+         id="onActionDeleteRecord"
          permission="Delete"
          label="menu.selected-items.delete"
+         asset="record,undeclared-record"
+         notAspect="rma:frozen"
          notProperty="rma:isClosed,rma:holdReason"
+      />
+      <action
+         id="onActionDeleteRecordFolder"
+         permission="Delete"
+         label="menu.selected-items.delete"
+         asset="record-folder"
+         notAspect="rma:frozen"
+         notProperty="rma:isClosed,rma:holdReason"
+      />
+      <action
+         id="onActionDeleteRecordCategory"
+         permission="Delete"
+         label="menu.selected-items.delete"
+         asset="record-category"
+         notAspect="rma:frozen"
+         notProperty="rma:isClosed,rma:holdReason"
+      />
+      <action
+         id="onActionExport"
+         permission=""
+         notAspect="rma:cutOff"
+         label="menu.selected-items.export"
       />
    </actions>
 </toolbar>

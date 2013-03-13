@@ -54,9 +54,19 @@
    background-image: url(actions/rm-accession-16.png);
 }
 
-.toolbar .onActionCutoff
+.toolbar .onActionCutoffRecord
 {
    background-image: url(actions/rm-cutoff-16.png);
+}
+
+.toolbar .onActionCutoffRecordFolder
+{
+   background-image: url(actions/rm-cutoff-folder-16.png);
+}
+
+.toolbar .onActionCutoffRecordCategory
+{
+   background-image: url(actions/rm-cutoff-folder-16.png);
 }
 
 .toolbar .onActionDestroy
@@ -79,9 +89,19 @@
    background-image: url(actions/rm-link-to-16.png);
 }
 
-.toolbar .onActionFreeze
+.toolbar .onActionFreezeRecord
 {
    background-image: url(actions/rm-freeze-16.png);
+}
+
+.toolbar .onActionFreezeRecordFolder
+{
+   background-image: url(actions/rm-freeze-folder-16.png);
+}
+
+.toolbar .onActionFreezeRecordCategory
+{
+   background-image: url(actions/rm-freeze-folder-16.png);
 }
 
 .toolbar .onActionSplitEmail
@@ -134,9 +154,24 @@
    background-image: url(images/move-folder-to-16.png);
 }
 
-.toolbar .onActionMoveCategoryTo
+.toolbar .onActionMoveRecordCategoryTo
 {
    background-image: url(images/move-folder-to-16.png);
+}
+
+.toolbar .onActionDeleteRecord
+{
+   background-image: url(images/delete-record-16.png);
+}
+
+.toolbar .onActionDeleteRecordFolder
+{
+   background-image: url(../../../components/documentlibrary/actions/folder-delete-16.png);
+}
+
+.toolbar .onActionDeleteRecordCategory
+{
+   background-image: url(../../../components/documentlibrary/actions/folder-delete-16.png);
 }
 
 /* Messages (e.g. Delete confirmation) */

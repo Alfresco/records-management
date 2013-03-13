@@ -225,6 +225,39 @@
       },
 
       /**
+       * Delete record
+       *
+       * @method onActionDeleteRecord
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       */
+      onActionDeleteRecord: function RDLA_onActionDeleteRecord(assets)
+      {
+        this.onActionDelete(assets);
+      },
+
+      /**
+       * Delete record folder
+       *
+       * @method onActionDeleteRecordFolder
+       * @param assets {object} Object literal representing one or more record folder(s) to be actioned
+       */
+      onActionDeleteRecordFolder: function RDLA_onActionDeleteRecordFolder(assets)
+      {
+         this.onActionDelete(assets);
+      },
+
+      /**
+       * Delete record category
+       *
+       * @method onActionDeleteRecordCategory
+       * @param assets {object} Object literal representing one or more record category (categories) to be actioned
+       */
+      onActionDeleteRecordCategory: function RDLA_onActionDeleteRecordCategory(assets)
+      {
+         this.onActionDelete(assets);
+      },
+
+      /**
        * File single document.
        *
        * @method onActionFileTo
@@ -835,6 +868,39 @@
       },
 
       /**
+       * Freeze record.
+       *
+       * @method onActionFreezeRecord
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       */
+      onActionFreezeRecord: function RDLA_onActionFreezeRecord(assets)
+      {
+         this.onActionFreeze(assets);
+      },
+
+      /**
+       * Freeze record folder.
+       *
+       * @method onActionFreezeRecordFolder
+       * @param assets {object} Object literal representing one or more record folder(s) to be actioned
+       */
+      onActionFreezeRecordFolder: function RDLA_onActionFreezeRecordFolder(assets)
+      {
+         this.onActionFreeze(assets);
+      },
+
+      /**
+       * Freeze record category.
+       *
+       * @method onActionFreezeRecordCategory
+       * @param assets {object} Object literal representing one or more record category (categories) to be actioned
+       */
+      onActionFreezeRecordCategory: function RDLA_onActionFreezeRecordCategory(assets)
+      {
+         this.onActionFreeze(assets);
+      },
+
+      /**
        * Set Record Type
        *
        * @method onActionAddRecordMetadata
@@ -1241,6 +1307,39 @@
       onActionCutoff: function DLTB_onActionCutoff(assets)
       {
          this._rmAction("message.cutoff", assets, "cutoff");
+      },
+
+      /**
+       * Cut Off record
+       *
+       * @method onActionCutoffRecord
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       */
+      onActionCutoffRecord: function DLTB_onActionCutoffRecord(assets)
+      {
+         this.onActionCutoff(assets);
+      },
+
+      /**
+       * Cut Off record folder
+       *
+       * @method onActionCutoffRecordFolder
+       * @param assets {object} Object literal representing one or more record folder(s) to be actioned
+       */
+      onActionCutoffRecordFolder: function DLTB_onActionCutoffRecordFolder(assets)
+      {
+         this.onActionCutoff(assets);
+      },
+
+      /**
+       * Cut Off record category
+       *
+       * @method onActionCutoffRecordCategory
+       * @param assets {object} Object literal representing one or more record category (categories) to be actioned
+       */
+      onActionCutoffRecordCategory: function DLTB_onActionCutoffRecordCategory(assets)
+      {
+         this.onActionCutoff(assets);
       },
 
       /**

@@ -563,7 +563,7 @@
             <action index="230" id="rm-copy-record-to" />
             <action index="240" id="rm-move-record-to" />
             <action index="250" id="rm-link-to" />
-            <action index="270" id="rm-delete" label="actions.delete" />
+            <action index="270" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="280" id="rm-view-audit-log" />
          </actionGroup>
 
