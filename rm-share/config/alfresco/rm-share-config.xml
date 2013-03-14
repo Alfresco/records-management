@@ -65,6 +65,10 @@
          <!-- Vital Record Indicator -->
          <indicator id="rm-vital-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-vital-record-16.png">
             <evaluator>evaluator.rm.indicator.vitalRecord</evaluator>
+         </indicator>         
+         <!--  Rejected Record Indicator -->
+         <indicator id="rm-rejected-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-vital-record-16.png">
+            <evaluator>evaluator.rm.doclib.isRejectedRecord</evaluator>
          </indicator>
 
       </indicators>
@@ -463,6 +467,7 @@
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
             <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
+            <evaluator negate="true">evaluator.rm.doclib.isRejectedRecord</evaluator>
             <evaluator>evaluator.rm.doclib.rmSiteExists</evaluator>
          </action>
 

@@ -119,7 +119,17 @@
    <bean id="evaluator.rm.indicator.vitalRecord" parent="evaluator.rm.common.indicatorEvaluator">
       <property name="indicator" value="vitalRecord" />
    </bean>
+   
+   <!--  Extended DocLib Evaluators -->
+   
    <bean id="evaluator.rm.doclib.isRecord" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.DocLibRecordIndicatorEvaluator"/>
+   <bean id="evaluator.rm.doclib.isRejectedRecord" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+      <property name="aspects">
+         <list>
+            <value>rma:recordRejectionDetails</value>
+         </list>
+      </property>
+   </bean>
 
    <!--                             -->
    <!-- File Plan Action Evaluators -->
