@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * RM Document Library Actions module
- * 
+ *
  * @namespace Alfresco.doclib
  * @class Alfresco.rm.doclib.Actions
  */
@@ -88,7 +88,7 @@
        *
        * NOTE: Actions are defined in alphabetical order by convention.
        */
-      
+
       /**
        * Accession action.
        *
@@ -157,7 +157,7 @@
       {
          this._copyMoveFileTo("move", assets);
       },
-      
+
       /**
        * Declare Record action.
        * Special case handling due to the ability to jump to the Edit Metadata page if the action failed.
@@ -168,53 +168,59 @@
       onActionDeclare: function RDLA_onActionDeclare(assets)
       {
          var displayName = $html(assets.displayName),
-            editMetadataUrl = Alfresco.constants.URL_PAGECONTEXT + "site/" + this.options.siteId + "/edit-metadata?nodeRef=" + assets.nodeRef;
+         editMetadataUrl = Alfresco.constants.URL_PAGECONTEXT + "site/" + this.options.siteId + "/edit-metadata?nodeRef=" + assets.nodeRef;
 
-         this._rmAction("message.declare", assets, "declareRecord", null,
+      this._rmAction("message.declare", assets, "declareRecord", null,
+      {
+         success:
          {
-            success:
+            event:
             {
-               event:
+               name: "metadataRefresh"
+            },
+            callback:
+            {
+               fn: function RDLA_oAD_success(data)
                {
-                  name: "metadataRefresh"
-               },
-               message: this.msg("message.declare.success", displayName),
-               callback:
-               {
-                  fn: function RDLA_oAD_success(data)
+                  var results = data.json.results;
+                  if (results && results != null && results[data.config.dataObj.nodeRef] === "missingProperties")
                   {
-                     var results = data.json.results;
-                     if (results && results != null && results[data.config.dataObj.nodeRef] === "missingProperties")
+                     Alfresco.util.PopupManager.displayPrompt(
                      {
-                        Alfresco.util.PopupManager.displayPrompt(
+                        title: this.msg("message.declare.failure", displayName),
+                        text: this.msg("message.declare.failure.more"),
+                        buttons: [
                         {
-                           title: this.msg("message.declare.failure", displayName),
-                           text: this.msg("message.declare.failure.more"),
-                           buttons: [
+                           text: this.msg("actions.edit-details"),
+                           handler: function RDLA_oAD_failure_editDetails()
                            {
-                              text: this.msg("actions.edit-details"),
-                              handler: function RDLA_oAD_failure_editDetails()
-                              {
-                                 window.location = editMetadataUrl;
-                                 this.destroy();
-                              },
-                              isDefault: true
+                              window.location = editMetadataUrl;
+                              this.destroy();
                            },
+                           isDefault: true
+                        },
+                        {
+                           text: this.msg("button.cancel"),
+                           handler: function RDLA_oAD_failure_cancel()
                            {
-                              text: this.msg("button.cancel"),
-                              handler: function RDLA_oAD_failure_cancel()
-                              {
-                                 this.destroy();
-                              }
-                           }]
-                        });
-                     }
-                  },
-                  scope: this
-               }
+                              this.destroy();
+                           }
+                        }]
+                     });
+                  }
+                  else
+                  {
+                     Alfresco.util.PopupManager.displayMessage(
+                     {
+                        text: this.msg("message.declare.success", displayName)
+                     });
+                  }
+               },
+               scope: this
             }
-         });
-      },
+         }
+      });
+   },
 
       /**
        * Destroy action.
@@ -228,14 +234,14 @@
          var me = this,
             noOfAssets = YAHOO.lang.isArray(assets) ? assets.length : 1,
             text;
-         
+
          if (noOfAssets == 1)
          {
             text = this.msg("message.confirm.destroy", $html((YAHOO.lang.isArray(assets) ? assets[0].displayName : assets.displayName)));
          }
          else
          {
-            text = this.msg("message.confirm.destroyMultiple", noOfAssets);             
+            text = this.msg("message.confirm.destroyMultiple", noOfAssets);
          }
 
          // Show the first confirmation dialog
@@ -294,7 +300,7 @@
          });
 
       },
-      
+
       _getRmUserInput: function RDLA_getRmUserInput(config)
       {
          if (Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[0].text === null)
@@ -309,7 +315,7 @@
          {
         	 Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[1].text = Alfresco.util.message("button.cancel", this.name);
          }
-         
+
          // Merge users config and the default config and check manadatory properties
          var c = YAHOO.lang.merge(Alfresco.util.PopupManager.defaultGetUserInputConfig, config);
 
@@ -367,7 +373,7 @@
                // Override OK button label
                c.buttons[0].text = c.okButtonText;
             }
-            
+
             // Default handler if no custom button passed-in
             if (typeof config.buttons == "undefined" || typeof config.buttons[0] == "undefined")
             {
@@ -419,7 +425,7 @@
          {
             prompt.show();
          }
-         
+
          // If a default value was given, set the selectionStart and selectionEnd properties
          if (c.html === null && c.value !== "")
          {
@@ -441,12 +447,12 @@
             correctScope: true
          });
          escapeListener.enable();
-         
+
          if (YUIDom.get(id))
          {
             YUIDom.get(id).focus();
          }
-         
+
          return prompt;
       },
 
@@ -462,9 +468,9 @@
             properties = assets.jsNode.properties,
             panel,
             calendar;
-         
+
          var asOfDate = Alfresco.util.fromISO8601(properties.rma_recordSearchDispositionActionAsOf.iso8601),
-         
+
          panel = this._getRmUserInput(
          {
             title: this.msg("message.edit-disposition-as-of-date.title"),
@@ -488,7 +494,7 @@
          });
 
          var page = (asOfDate.getMonth() + 1) + "/" + asOfDate.getFullYear(),
-            selected = (asOfDate.getMonth() + 1) + "/" + asOfDate.getDate() + "/" + asOfDate.getFullYear();   
+            selected = (asOfDate.getMonth() + 1) + "/" + asOfDate.getDate() + "/" + asOfDate.getFullYear();
          calendar = new YAHOO.widget.Calendar(calendarId,
          {
             iframe: false
@@ -502,7 +508,7 @@
          // Only now can we set the panel button's callback reference to the calendar, as it was undefined on panel creation
          panel.cfg.getProperty("buttons")[0].handler.obj.callback.obj = calendar;
          panel.center();
-         panel.show();      	 	 
+         panel.show();
       },
 
       /**
@@ -546,7 +552,7 @@
          var properties = assets.jsNode.properties,
             asOfDate = new Date();
 
-         if (properties == null) 
+         if (properties == null)
          {
             nodeId = Alfresco.util.NodeRef(assets.nodeRef);
 
@@ -555,12 +561,12 @@
                + '?site=rm&query=(ASPECT:"rma:record" AND ASPECT:"rma:declaredRecord") AND (rma:identifier:'
                + nodeId.id + ') AND NOT ASPECT:"rma:versionedRecord"';
 
-            YAHOO.util.Connect.asyncRequest("GET", url, 
+            YAHOO.util.Connect.asyncRequest("GET", url,
             {
-               success: function(resp) 
+               success: function(resp)
                {
                   item = YAHOO.lang.JSON.parse(resp.responseText);
-                  if (null != item.items[0].properties.rma_reviewAsOf) 
+                  if (null != item.items[0].properties.rma_reviewAsOf)
                   {
                      asOfDate = new Date(item.items[0].properties.rma_reviewAsOf);
                      var page = (asOfDate.getMonth() + 1) + "/" + asOfDate.getFullYear(),
@@ -572,7 +578,7 @@
                }
             }, null);
          }
-         else 
+         else
          {
             asOfDate = Alfresco.util.fromISO8601(properties.rma_reviewAsOf.iso8601);
          }
@@ -580,7 +586,7 @@
          var calendarId = Alfresco.util.generateDomId(),
             panel,
             calendar;
-         
+
          panel = this._getRmUserInput(
          {
             title: this.msg("message.edit-review-as-of-date.title"),
@@ -604,7 +610,7 @@
          });
 
          var page = (asOfDate.getMonth() + 1) + "/" + asOfDate.getFullYear(),
-            selected = (asOfDate.getMonth() + 1) + "/" + asOfDate.getDate() + "/" + asOfDate.getFullYear();   
+            selected = (asOfDate.getMonth() + 1) + "/" + asOfDate.getDate() + "/" + asOfDate.getFullYear();
 
          calendar = new YAHOO.widget.Calendar(calendarId,
          {
@@ -892,7 +898,7 @@
       _transferAccessionComplete: function RDLA__transferAccession(data, obj)
       {
          var displayName = obj.displayName;
-         
+
          /**
           * Transfer / Accession container query success callback.
           *
@@ -948,7 +954,7 @@
                else
                {
                   YAHOO.Bubbling.fire("metadataRefresh");
-                  
+
                   if (pdfIndicator)
                   {
                      Alfresco.util.PopupManager.displayPrompt(
@@ -968,7 +974,7 @@
                }
             }
          };
-         
+
          /**
           * Transfer / Accession container query failure callback.
           *
@@ -993,7 +999,7 @@
             var dataObj = data.config.dataObj,
                nodeRef = YAHOO.lang.isArray(dataObj.nodeRefs) ? dataObj.nodeRefs[0] : dataObj.nodeRef,
                transfer = new Alfresco.util.NodeRef(data.json.results[nodeRef]);
-            
+
             // Now query the transfer nodeRef, looking for the rma:transferPDFIndicator flag
             Alfresco.util.Ajax.jsonGet(
             {
@@ -1039,7 +1045,7 @@
          {
             config.success =
             {
-               callback:    
+               callback:
                {
                   fn: this[params.success],
                   obj: record,
@@ -1104,7 +1110,7 @@
          {
             dataObj.params = actionParams;
          }
-         
+
          var config =
          {
             success:
@@ -1131,7 +1137,7 @@
                dataObj: dataObj
             }
          };
-         
+
          if (YAHOO.lang.isObject(configOverride))
          {
             config = YAHOO.lang.merge(config, configOverride);
