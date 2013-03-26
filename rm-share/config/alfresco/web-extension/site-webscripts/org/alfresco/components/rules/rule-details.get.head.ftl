@@ -15,3 +15,4 @@
 
 <!-- Add RM custom action UI -->
 <@script type="text/javascript" src="${url.context}/res/rm/components/rules/rule-config-action-custom.js"></@script>
+<@script type="text/javascript" src="${url.context}/res/rm/components/rules/rule-config-condition-custom.js"></@script>
