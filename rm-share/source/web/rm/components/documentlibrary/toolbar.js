@@ -127,6 +127,13 @@
             disabled: true,
             value: "managePermissions"
          });
+         
+         // Manage Rules button:
+         this.widgets.unfiledManageRules = $createYUIButton(this, "unfiledManageRules-button", this.onUnfiledManageRules,
+         {
+            disabled: false,
+            value: "manageRules"
+         });
 
          // Manage permissions button for unfiled records toolbar: user needs "file" permissions and the capability to modify permissions
          this.widgets.unfiledManagePermissionsButton = $createYUIButton(this, "unfiledManagePermissions-button", this.onUnfiledManagePermissions,
@@ -803,10 +810,25 @@
        * @param e {object} DomEvent
        * @param p_obj {object} Object passed back from addListener method
        */
-      onManageRules: function DLTB_onManageRules(e, p_obj)
+      onUnfiledManageRules: function DLTB_onUnfiledManageRules(e, p_obj)
       {
          var nodeRef = this.modules.docList.doclistMetadata.parent.rmNode.unfiledRecordContainer,
             page = "folder-rules?nodeRef=" + nodeRef;
+
+         window.location.href = $siteURL(page);
+      },
+      
+      /**
+       * Manage rules button click handler
+       *
+       * @method onManageRules
+       * @param e {object} DomEvent
+       * @param p_obj {object} Object passed back from addListener method
+       */
+      onManageRules: function DLTB_onManageRules(e, p_obj)
+      {
+         var nodeRef = this.modules.docList.doclistMetadata.parent.nodeRef,
+             page = "folder-rules?nodeRef=" + nodeRef;
 
          window.location.href = $siteURL(page);
       },

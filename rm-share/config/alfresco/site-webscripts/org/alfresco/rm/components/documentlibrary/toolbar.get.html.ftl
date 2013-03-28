@@ -29,6 +29,9 @@
          </div>
          <div class="hideable toolbar-hidden DocListTree">
             <div class="manage-permissions"><button id="${el}-managePermissions-button">${msg("button.manage-permissions")}</button></div>
+         </div>         
+         <div class="hideable toolbar-hidden DocListTree">
+   		    <div class="manage-rules"><button id="${el}-manageRules-button">${msg("button.manage-rules")}</button></div>
          </div>
 
          <#-- RM-318 - removing Report button temporarily
@@ -41,7 +44,7 @@
             <div class="manage-permissions"><button id="${el}-unfiledManagePermissions-button">${msg("button.manage-permissions")}</button></div>
          </div>
          <div class="hideable toolbar-hidden DocListFilePlan_unfiledRecords">
-   		    <div class="manage-rules"><button id="${el}-manageRules-button">${msg("button.manage-rules")}</button></div>
+   		    <div class="manage-rules"><button id="${el}-unfiledManageRules-button">${msg("button.manage-rules")}</button></div>
          </div>
 
          <div class="selected-items">
