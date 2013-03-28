@@ -1,0 +1,31 @@
+<rule-config type="action">
+
+   <component>Alfresco.RuleConfigActionCustom</component>
+
+   <config-definitions webscript="/api/rm/rm-actiondefinitions"/>
+
+   <constraints webscript="/api/actionConstraints"/>
+
+   <menu>
+      <group>
+	     <item id="select"/>
+	  </group>
+	  <group>
+	  	 <action name="fileTo"/>
+	  	 <action name="reject"/>
+	  </group>
+	  <group>
+	     <action name="declareRecord"/>
+	  </group>
+	  <group>
+	     <action name="*"/>
+	  </group>	
+		
+   </menu>
+
+   <customise>
+      <item id="select">Select</item>
+      <action name="reject">Reject</action>
+   </customise>
+
+</rule-config>

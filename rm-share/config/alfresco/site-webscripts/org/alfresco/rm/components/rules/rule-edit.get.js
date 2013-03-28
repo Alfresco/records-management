@@ -1,0 +1,1 @@
+<import resource="classpath:alfresco/site-webscripts/org/alfresco/components/rules/rule-edit.get.js">

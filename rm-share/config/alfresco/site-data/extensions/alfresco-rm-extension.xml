@@ -642,6 +642,37 @@
                   </sub-component>
                </sub-components>
             </component>
+            
+            <!--  Customise rule edit UI -->
+            <component>
+               <scope>template</scope>
+               <region-id>rule-edit</region-id>
+               <source-id>rule-edit</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-rule-edit">                           
+        					<url>/rm/components/rules/rule-edit</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+            
+            <component>
+               <scope>template</scope>
+               <region-id>rule-details</region-id>
+               <source-id>folder-rules</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-rule-edit">                           
+        					<url>/rm/components/rules/rule-details</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
 
          </components>
 

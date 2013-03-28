@@ -4,9 +4,9 @@
       The Javascript class that will handle the config.
       Override this class if i.e. new customisations needs to be added
    -->
-   <component>Alfresco.RuleConfigConditionCustom</component>
+   <component>Alfresco.RuleConfigCondition</component>
 
-   <config-definitions webscript="/api/rm/dm-actionconditiondefinitions">
+   <config-definitions webscript="/api/rm/rm-actionconditiondefinitions">
       <!--
          Action Condition Definitions that we don't want displayed in the menu
       -->
@@ -40,11 +40,7 @@
          <property dataType="d:date" name="*"/>
          <property dataType="d:datetime" name="*"/>
       </group>
-      <group>
-         <property dataType="d:text" name="cm:creator"/>
-         <property dataType="d:text" name="cm:modifier"/>
-         <property dataType="d:text" name="cm:author"/>
-      </group>
+
       <group>
          <property name="*"/>
       </group>
