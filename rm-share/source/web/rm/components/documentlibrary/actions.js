@@ -1411,6 +1411,71 @@
                scope: this
             }
          });
+      },
+
+      /**
+       * Request info action start a worklfow for an unfiled record
+       *
+       * @method onActionRequestInfo
+       * @param assets {object} Object literal representing a record to be actioned
+       */
+      onActionRequestInfo: function DLTB_onActionRequestInfo(assets)
+      {
+         // Intercept before dialog show and change the button label
+         var doBeforeDialogShow = function DLTB_requestInfo_doBeforeDialogShow(p_form, p_dialog)
+         {
+            p_dialog.widgets.okButton.set("label", this.msg("button.request-info"));
+         };
+
+         var templateUrl = YAHOO.lang.substitute(Alfresco.constants.URL_SERVICECONTEXT + "components/form?itemKind={itemKind}&itemId={itemId}&mode={mode}&submitType={submitType}&formId={formId}&showCancelButton=true",
+         {
+            htmlid: this.id + "-startWorkflowForm-" + Alfresco.util.generateDomId(),
+            itemKind: "workflow",
+            itemId: "activiti$activitiRequestForInformation",
+            mode: "create",
+            submitType: "json",
+            showCaption: true,
+            formUI: true,
+            showCancelButton: true
+         });
+
+         // Using Forms Service, so always create new instance
+         var requestInfo = new Alfresco.module.SimpleDialog(this.id + "-request-info");
+
+         requestInfo.setOptions(
+         {
+            width: "40em",
+            templateUrl: templateUrl,
+            actionUrl: null,
+            destroyOnHide: true,
+            doBeforeDialogShow:
+            {
+               fn: doBeforeDialogShow,
+               scope: this
+            },
+            onSuccess:
+            {
+               fn: function DLTB__newContainer_success(response)
+               {
+                  Alfresco.util.PopupManager.displayMessage(
+                  {
+                     text: this.msg("message.request-info-success")
+                  });
+               },
+               scope: this
+            },
+            onFailure:
+            {
+               fn: function DLTB__newContainer_failure(response)
+               {
+                  Alfresco.util.PopupManager.displayMessage(
+                  {
+                     text: this.msg("message.request-info-failure")
+                  });
+               },
+               scope: this
+            }
+         }).show();
       }
    };
 })();

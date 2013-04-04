@@ -451,6 +451,13 @@
             <evaluator>evaluator.rm.action.reject</evaluator>
          </action>
 
+         <!-- Request Info -->
+         <!-- FIXME change icon -->
+         <action id="rm-request-info" type="javascript" label="actions.request-info" icon="../../../rm/components/documentlibrary/actions/rm-add-record-metadata">
+            <param name="function">onActionRequestInfo</param>
+            <evaluator>evaluator.rm.action.request-info</evaluator>
+         </action>
+
          <!--  DM Actions -->
 
          <!--  Create Record -->
@@ -616,6 +623,7 @@
             <action index="190" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="200" id="rm-view-audit-log" />
             <action index="210" id="rm-reject" />
+            <action index="220" id="rm-request-info" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-browse">
@@ -638,6 +646,7 @@
             <action index="190" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="200" id="rm-view-audit-log" />
             <action index="210" id="rm-reject" />
+            <action index="220" id="rm-request-info" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-details">
@@ -759,5 +768,14 @@
             <js src="/rm/modules/create-site.js" />
          </dependencies>
       </header>
+   </config>
+
+   <!-- Workflow config section -->
+   <config evaluator="string-compare" condition="Workflow">
+      <!-- A list of workflow definitions that are NOT displayed in Share -->
+      <hidden-workflows>
+         <!-- Hide request info workflow -->
+         <workflow name="activiti$activitiRequestForInformation"/>
+      </hidden-workflows>
    </config>
 </alfresco-config>

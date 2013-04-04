@@ -19,6 +19,7 @@
             <value>classpath:alfresco/rm-share-config.xml</value>
             <value>classpath:alfresco/rm-form-config.xml</value>
             <value>classpath:alfresco/dod-form-config.xml</value>
+            <value>classpath:alfresco/rm-share-workflow-form-config.xml</value>
          </list>
       </property>
    </bean>
@@ -119,9 +120,9 @@
    <bean id="evaluator.rm.indicator.vitalRecord" parent="evaluator.rm.common.indicatorEvaluator">
       <property name="indicator" value="vitalRecord" />
    </bean>
-   
+
    <!--  Extended DocLib Evaluators -->
-   
+
    <bean id="evaluator.rm.doclib.isRecord" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.DocLibRecordIndicatorEvaluator"/>
    <bean id="evaluator.rm.doclib.isRejectedRecord" class="org.alfresco.web.evaluator.HasAspectEvaluator">
       <property name="aspects">
@@ -253,6 +254,9 @@
    </bean>
    <bean id="evaluator.rm.action.hide" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="hide" />
+   </bean>
+   <bean id="evaluator.rm.action.request-info" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="requestInfo" />
    </bean>
 
    <!--                          -->

@@ -1,0 +1,112 @@
+<alfresco-config>
+
+   <config evaluator="string-compare" condition="activiti$activitiRequestForInformation">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="rmwf:informationRequestedForRecord" />
+               <show id="rmwf:mixedAssignees" />
+               <show id="rmwf:requestedInformation" />
+               <!--
+               <show id="packageItems" />
+               -->
+            </field-visibility>
+            <appearance>
+               <!-- FIXME: Label -->
+               <!-- <set id="informationRequestedForRecord" appearance="fieldset" label="Information Requested For Record" /> -->
+               <set id="informationRequestedForRecord" appearance="title" label="Information Requested For Record" />
+               <!-- FIXME: Label -->
+               <set id="mixedAssignees" appearance="fieldset" label="Request Information From" />
+               <!-- FIXME: Label -->
+               <set id="requestedInformation" appearance="fieldset" label="Requested Information" />
+
+               <!-- FIXME: Label -->
+               <field id="rmwf:informationRequestedForRecord" set="informationRequestedForRecord" read-only="true" />
+               <!-- FIXME: Label -->
+               <field id="rmwf:mixedAssignees" label="Selected users and groups" set="mixedAssignees" />
+               <!-- FIXME: Label -->
+               <field id="rmwf:requestedInformation" label="Give details" set="requestedInformation">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="style">width: 95%</control-param>
+                  </control>
+               </field>
+               <!--
+               <field id="packageItems" set="informationRequestedForRecord" >
+                  <control>
+                     <control-param name="style">width: 95%</control-param>
+                  </control>
+               </field>
+               -->
+            </appearance>
+         </form>
+      </forms>
+   </config>
+
+   <config evaluator="task-type" condition="rmwf:requestInfoTask">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="rmwf:informationRequestedForRecord" />
+               <show id="rmwf:requestedInformation" />
+               <show id="rmwf:message" />
+               <show id="transitions" />
+            </field-visibility>
+            <appearance>
+               <!-- FIXME: Label -->
+               <set id="informationRequestedForRecord" appearance="fieldset" label="Information Requested For Record" />
+               <!-- FIXME: Label -->
+               <set id="requestedInformation" appearance="fieldset" label="Requested Information" />
+               <!-- FIXME: Label -->
+               <set id="message" appearance="fieldset" label="Message" />
+               <set id="transitions" appearance="" />
+
+               <!-- FIXME: Label -->
+               <field id="rmwf:informationRequestedForRecord" set="informationRequestedForRecord" read-only="true" />
+               <!-- FIXME: Label -->
+               <field id="rmwf:requestedInformation" label="Info" set="requestedInformation" read-only="true">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="style">width: 95%</control-param>
+                  </control>
+               </field>
+               <!-- FIXME: Label -->
+               <field id="rmwf:message" label="Give details" set="message" >
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="style">width: 95%</control-param>
+                  </control>
+               </field>
+               <field id="transitions" set="transitions" />
+            </appearance>
+         </form>
+      </forms>
+   </config>
+
+   <config evaluator="task-type" condition="rmwf:reviewRequestInfoTask">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="rmwf:informationRequestedForRecord" />
+               <show id="rmwf:message" />
+               <show id="transitions" />
+            </field-visibility>
+            <appearance>
+               <!-- FIXME: Label -->
+               <set id="informationRequestedForRecord" appearance="fieldset" label="Information Requested For Record" />
+               <!-- FIXME: Label -->
+               <set id="message" appearance="fieldset" label="Message" />
+               <set id="transitions" appearance="" />
+
+               <!-- FIXME: Label -->
+               <field id="rmwf:informationRequestedForRecord" set="informationRequestedForRecord" read-only="true" />
+               <!-- FIXME: Label -->
+               <field id="rmwf:message" label="Give details" set="message" read-only="true" >
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="style">width: 95%</control-param>
+                  </control>
+               </field>
+               <field id="transitions" set="transitions" />
+            </appearance>
+         </form>
+      </forms>
+   </config>
+
+</alfresco-config>
