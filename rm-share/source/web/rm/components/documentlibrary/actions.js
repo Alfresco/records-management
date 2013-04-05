@@ -419,11 +419,11 @@
              * This default value could not be set at instantion time since the
              * localized messages weren't present at that time
              */
-        	 Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[0].text = Alfresco.util.message("button.ok", this.name);
+          Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[0].text = Alfresco.util.message("button.ok", this.name);
          }
          if (Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[1].text === null)
          {
-        	 Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[1].text = Alfresco.util.message("button.cancel", this.name);
+          Alfresco.util.PopupManager.defaultGetUserInputConfig.buttons[1].text = Alfresco.util.message("button.cancel", this.name);
          }
 
          // Merge users config and the default config and check manadatory properties
@@ -1427,6 +1427,15 @@
             p_dialog.widgets.okButton.set("label", this.msg("button.request-info"));
          };
 
+         YAHOO.Bubbling.on("objectFinderReady", function DLTB_onActionRequestInfo_onObjectFinderReady(layer, args)
+         {
+            var objectFinder = args[1].eventGroup;
+            if (objectFinder.options.field == "assoc_packageItems" && objectFinder.eventGroup.indexOf(this.id) == 0)
+            {
+               objectFinder.selectItems(assets.node.nodeRef);
+            }
+         }, this);
+
          var templateUrl = YAHOO.lang.substitute(Alfresco.constants.URL_SERVICECONTEXT + "components/form?itemKind={itemKind}&itemId={itemId}&mode={mode}&submitType={submitType}&formId={formId}&showCancelButton=true",
          {
             htmlid: this.id + "-startWorkflowForm-" + Alfresco.util.generateDomId(),
@@ -1444,7 +1453,7 @@
 
          requestInfo.setOptions(
          {
-            width: "40em",
+            width: "45em",
             templateUrl: templateUrl,
             actionUrl: null,
             destroyOnHide: true,
@@ -1457,6 +1466,7 @@
             {
                fn: function DLTB__newContainer_success(response)
                {
+                  YAHOO.Bubbling.fire("metadataRefresh");
                   Alfresco.util.PopupManager.displayMessage(
                   {
                      text: this.msg("message.request-info-success")

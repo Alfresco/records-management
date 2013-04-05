@@ -131,6 +131,7 @@
          </list>
       </property>
    </bean>
+   <bean id="evaluator.rm.doclib.infoRequested" class="org.alfresco.web.evaluator.doclib.indicator.ActiveWorkflowsEvaluator"/>
 
    <!--                             -->
    <!-- File Plan Action Evaluators -->

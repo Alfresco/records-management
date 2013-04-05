@@ -4,39 +4,32 @@
       <forms>
          <form>
             <field-visibility>
-               <show id="rmwf:informationRequestedForRecord" />
+               <show id="packageItems" />
                <show id="rmwf:mixedAssignees" />
                <show id="rmwf:requestedInformation" />
-               <!--
-               <show id="packageItems" />
-               -->
             </field-visibility>
             <appearance>
-               <!-- FIXME: Label -->
-               <!-- <set id="informationRequestedForRecord" appearance="fieldset" label="Information Requested For Record" /> -->
-               <set id="informationRequestedForRecord" appearance="title" label="Information Requested For Record" />
-               <!-- FIXME: Label -->
+               <!-- FIXME: use label-id instead of label -->
+               <set id="informationRequestedForRecord" appearance="fieldset" label="Information Requested For Record" />
+               <!-- FIXME: use label-id instead of label -->
                <set id="mixedAssignees" appearance="fieldset" label="Request Information From" />
-               <!-- FIXME: Label -->
+               <!-- FIXME: use label-id instead of label -->
                <set id="requestedInformation" appearance="fieldset" label="Requested Information" />
 
-               <!-- FIXME: Label -->
-               <field id="rmwf:informationRequestedForRecord" set="informationRequestedForRecord" read-only="true" />
-               <!-- FIXME: Label -->
+               <!-- FIXME: use label-id instead of label -->
+               <field id="packageItems" label="Record" set="informationRequestedForRecord" >
+                  <control>
+                     <control-param name="style">width: 96%</control-param>
+                  </control>
+               </field>
+               <!-- FIXME: use label-id instead of label -->
                <field id="rmwf:mixedAssignees" label="Selected users and groups" set="mixedAssignees" />
-               <!-- FIXME: Label -->
+               <!-- FIXME: use label-id instead of label -->
                <field id="rmwf:requestedInformation" label="Give details" set="requestedInformation">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl">
-                     <control-param name="style">width: 95%</control-param>
+                     <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
                </field>
-               <!--
-               <field id="packageItems" set="informationRequestedForRecord" >
-                  <control>
-                     <control-param name="style">width: 95%</control-param>
-                  </control>
-               </field>
-               -->
             </appearance>
          </form>
       </forms>
@@ -46,32 +39,37 @@
       <forms>
          <form>
             <field-visibility>
-               <show id="rmwf:informationRequestedForRecord" />
+               <show id="packageItems" />
                <show id="rmwf:requestedInformation" />
                <show id="rmwf:message" />
                <show id="transitions" />
             </field-visibility>
             <appearance>
-               <!-- FIXME: Label -->
+               <!-- FIXME: use label-id instead of label -->
                <set id="informationRequestedForRecord" appearance="fieldset" label="Information Requested For Record" />
-               <!-- FIXME: Label -->
+               <!-- FIXME: use label-id instead of label -->
                <set id="requestedInformation" appearance="fieldset" label="Requested Information" />
-               <!-- FIXME: Label -->
+               <!-- FIXME: use label-id instead of label -->
                <set id="message" appearance="fieldset" label="Message" />
                <set id="transitions" appearance="" />
 
-               <!-- FIXME: Label -->
-               <field id="rmwf:informationRequestedForRecord" set="informationRequestedForRecord" read-only="true" />
-               <!-- FIXME: Label -->
-               <field id="rmwf:requestedInformation" label="Info" set="requestedInformation" read-only="true">
-                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
-                     <control-param name="style">width: 95%</control-param>
+               <!-- FIXME: use label-id instead of label -->
+               <field id="packageItems" label="Record" set="informationRequestedForRecord" >
+                  <control>
+                     <control-param name="style">width: 96%</control-param>
                   </control>
                </field>
-               <!-- FIXME: Label -->
+               <!-- FIXME: use label-id instead of label -->
+               <field id="rmwf:requestedInformation" label="Details" set="requestedInformation">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="style">width: 95%;height: 10em;color: #808080;background-color: #D4D0C8</control-param>
+                     <control-param name="readOnly">true</control-param>
+                  </control>
+               </field>
+               <!-- FIXME: use label-id instead of label -->
                <field id="rmwf:message" label="Give details" set="message" >
                   <control template="/org/alfresco/components/form/controls/textarea.ftl">
-                     <control-param name="style">width: 95%</control-param>
+                     <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
                </field>
                <field id="transitions" set="transitions" />
@@ -84,23 +82,38 @@
       <forms>
          <form>
             <field-visibility>
-               <show id="rmwf:informationRequestedForRecord" />
+               <show id="packageItems" />
+               <show id="rmwf:requestedInformation" />
                <show id="rmwf:message" />
                <show id="transitions" />
             </field-visibility>
             <appearance>
-               <!-- FIXME: Label -->
+               <!-- FIXME: use label-id instead of label -->
                <set id="informationRequestedForRecord" appearance="fieldset" label="Information Requested For Record" />
-               <!-- FIXME: Label -->
+               <!-- FIXME: use label-id instead of label -->
+               <set id="requestedInformation" appearance="fieldset" label="Requested Information" />
+               <!-- FIXME: use label-id instead of label -->
                <set id="message" appearance="fieldset" label="Message" />
                <set id="transitions" appearance="" />
 
-               <!-- FIXME: Label -->
-               <field id="rmwf:informationRequestedForRecord" set="informationRequestedForRecord" read-only="true" />
-               <!-- FIXME: Label -->
-               <field id="rmwf:message" label="Give details" set="message" read-only="true" >
+               <!-- FIXME: use label-id instead of label -->
+               <field id="packageItems" label="Record" set="informationRequestedForRecord" >
+                  <control>
+                     <control-param name="style">width: 96%</control-param>
+                  </control>
+               </field>
+               <!-- FIXME: use label-id instead of label -->
+               <field id="rmwf:requestedInformation" label="Details" set="requestedInformation">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl">
-                     <control-param name="style">width: 95%</control-param>
+                     <control-param name="style">width: 95%;height: 10em;color: #808080;background-color: #D4D0C8</control-param>
+                     <control-param name="readOnly">true</control-param>
+                  </control>
+               </field>
+               <!-- FIXME: use label-id instead of label -->
+               <field id="rmwf:message" label="Details" set="message">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="style">width: 95%;height: 10em;color: #808080;background-color: #D4D0C8</control-param>
+                     <control-param name="readOnly">true</control-param>
                   </control>
                </field>
                <field id="transitions" set="transitions" />
