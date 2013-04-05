@@ -1,5 +1,4 @@
 <alfresco-config>
-
    <config evaluator="string-compare" condition="activiti$activitiRequestForInformation">
       <forms>
          <form>
@@ -9,23 +8,16 @@
                <show id="rmwf:requestedInformation" />
             </field-visibility>
             <appearance>
-               <!-- FIXME: use label-id instead of label -->
-               <set id="informationRequestedForRecord" appearance="fieldset" label="Information Requested For Record" />
-               <!-- FIXME: use label-id instead of label -->
-               <set id="mixedAssignees" appearance="fieldset" label="Request Information From" />
-               <!-- FIXME: use label-id instead of label -->
-               <set id="requestedInformation" appearance="fieldset" label="Requested Information" />
-
-               <!-- FIXME: use label-id instead of label -->
-               <field id="packageItems" label="Record" set="informationRequestedForRecord" >
+               <set id="informationRequestedForRecord" appearance="fieldset" label-id="rm.wf.information-requested-for-record" />
+               <set id="mixedAssignees" appearance="fieldset" label-id="rm.wf.request-information-from" />
+               <set id="requestedInformation" appearance="fieldset" label-id="rm.wf.requested-information" />
+               <field id="packageItems" label-id="rm.wf.record" set="informationRequestedForRecord" >
                   <control>
                      <control-param name="style">width: 96%</control-param>
                   </control>
                </field>
-               <!-- FIXME: use label-id instead of label -->
-               <field id="rmwf:mixedAssignees" label="Selected users and groups" set="mixedAssignees" />
-               <!-- FIXME: use label-id instead of label -->
-               <field id="rmwf:requestedInformation" label="Give details" set="requestedInformation">
+               <field id="rmwf:mixedAssignees" label-id="rm.wf.selected-users-and-groups" set="mixedAssignees" />
+               <field id="rmwf:requestedInformation" label-id="rm.wf.give-details" set="requestedInformation">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl">
                      <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
@@ -34,7 +26,6 @@
          </form>
       </forms>
    </config>
-
    <config evaluator="task-type" condition="rmwf:requestInfoTask">
       <forms>
          <form>
@@ -45,29 +36,22 @@
                <show id="transitions" />
             </field-visibility>
             <appearance>
-               <!-- FIXME: use label-id instead of label -->
-               <set id="informationRequestedForRecord" appearance="fieldset" label="Information Requested For Record" />
-               <!-- FIXME: use label-id instead of label -->
-               <set id="requestedInformation" appearance="fieldset" label="Requested Information" />
-               <!-- FIXME: use label-id instead of label -->
-               <set id="message" appearance="fieldset" label="Message" />
+               <set id="informationRequestedForRecord" appearance="fieldset" label-id="rm.wf.information-requested-for-record" />
+               <set id="requestedInformation" appearance="fieldset" label-id="rm.wf.requested-information" />
+               <set id="message" appearance="fieldset" label-id="rm.wf.message" />
                <set id="transitions" appearance="" />
-
-               <!-- FIXME: use label-id instead of label -->
-               <field id="packageItems" label="Record" set="informationRequestedForRecord" >
+               <field id="packageItems" label-id="rm.wf.record" set="informationRequestedForRecord" >
                   <control>
                      <control-param name="style">width: 96%</control-param>
                   </control>
                </field>
-               <!-- FIXME: use label-id instead of label -->
-               <field id="rmwf:requestedInformation" label="Details" set="requestedInformation">
+               <field id="rmwf:requestedInformation" label-id="rm.wf.details" set="requestedInformation">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl">
                      <control-param name="style">width: 95%;height: 10em;color: #808080;background-color: #D4D0C8</control-param>
                      <control-param name="readOnly">true</control-param>
                   </control>
                </field>
-               <!-- FIXME: use label-id instead of label -->
-               <field id="rmwf:message" label="Give details" set="message" >
+               <field id="rmwf:message" label-id="rm.wf.give-details" set="message" >
                   <control template="/org/alfresco/components/form/controls/textarea.ftl">
                      <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
@@ -77,7 +61,6 @@
          </form>
       </forms>
    </config>
-
    <config evaluator="task-type" condition="rmwf:reviewRequestInfoTask">
       <forms>
          <form>
@@ -88,29 +71,22 @@
                <show id="transitions" />
             </field-visibility>
             <appearance>
-               <!-- FIXME: use label-id instead of label -->
-               <set id="informationRequestedForRecord" appearance="fieldset" label="Information Requested For Record" />
-               <!-- FIXME: use label-id instead of label -->
-               <set id="requestedInformation" appearance="fieldset" label="Requested Information" />
-               <!-- FIXME: use label-id instead of label -->
-               <set id="message" appearance="fieldset" label="Message" />
+               <set id="informationRequestedForRecord" appearance="fieldset" label-id="rm.wf.information-requested-for-record" />
+               <set id="requestedInformation" appearance="fieldset" label-id="rm.wf.requested-information" />
+               <set id="message" appearance="fieldset" label-id="rm.wf.message" />
                <set id="transitions" appearance="" />
-
-               <!-- FIXME: use label-id instead of label -->
-               <field id="packageItems" label="Record" set="informationRequestedForRecord" >
+               <field id="packageItems" label-id="rm.wf.record" set="informationRequestedForRecord" >
                   <control>
                      <control-param name="style">width: 96%</control-param>
                   </control>
                </field>
-               <!-- FIXME: use label-id instead of label -->
-               <field id="rmwf:requestedInformation" label="Details" set="requestedInformation">
+               <field id="rmwf:requestedInformation" label-id="rm.wf.details" set="requestedInformation">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl">
                      <control-param name="style">width: 95%;height: 10em;color: #808080;background-color: #D4D0C8</control-param>
                      <control-param name="readOnly">true</control-param>
                   </control>
                </field>
-               <!-- FIXME: use label-id instead of label -->
-               <field id="rmwf:message" label="Details" set="message">
+               <field id="rmwf:message" label-id="rm.wf.details" set="message">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl">
                      <control-param name="style">width: 95%;height: 10em;color: #808080;background-color: #D4D0C8</control-param>
                      <control-param name="readOnly">true</control-param>
@@ -121,5 +97,4 @@
          </form>
       </forms>
    </config>
-
 </alfresco-config>

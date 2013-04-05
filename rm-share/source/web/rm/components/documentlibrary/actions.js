@@ -1453,7 +1453,7 @@
 
          requestInfo.setOptions(
          {
-            width: "45em",
+            width: "auto",
             templateUrl: templateUrl,
             actionUrl: null,
             destroyOnHide: true,
