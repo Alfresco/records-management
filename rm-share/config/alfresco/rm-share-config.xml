@@ -735,6 +735,10 @@
                   <item type="link" id="my-sites">/user/user-sites</item>
                   <item type="link" id="my-profile">{userprofilepage}</item>
                </container-group>
+               <!-- RM Customization -->
+               <container-group id="rm-console">
+                  <item type="link" id="rm-management">/console/rm-console/</item>
+               </container-group>
                <container-group id="tools" permission="admin">
                   <item type="link" id="application">/console/admin-console/application</item>
                   <item type="link" id="groups">/console/admin-console/groups</item>
@@ -743,10 +747,6 @@
                   <item type="link" id="trashcan">/console/admin-console/trashcan</item>
                   <item type="link" id="users">/console/admin-console/users</item>
                   <item type="link" id="more">/console/admin-console/</item>
-               </container-group>
-               <!-- RM Customization -->
-               <container-group id="rm-console">
-                  <item type="link" id="rm-management">/console/rm-console/</item>
                </container-group>
             </item>
          </app-items>
