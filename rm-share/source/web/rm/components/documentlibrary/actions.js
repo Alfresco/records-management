@@ -1427,16 +1427,18 @@
             p_dialog.widgets.okButton.set("label", this.msg("button.request-info"));
          };
 
+         var executed = false;
          YAHOO.Bubbling.on("objectFinderReady", function DLTB_onActionRequestInfo_onObjectFinderReady(layer, args)
          {
             var objectFinder = args[1].eventGroup;
-            if (objectFinder.options.field == "assoc_packageItems" && objectFinder.eventGroup.indexOf(this.id) == 0)
+            if (objectFinder.options.field == "assoc_packageItems" && objectFinder.eventGroup.indexOf(this.id) == 0 && executed == false)
             {
+               executed = true;
                objectFinder.selectItems(assets.node.nodeRef);
             }
          }, this);
 
-         var templateUrl = YAHOO.lang.substitute(Alfresco.constants.URL_SERVICECONTEXT + "components/form?itemKind={itemKind}&itemId={itemId}&mode={mode}&submitType={submitType}&formId={formId}&showCancelButton=true",
+         var templateUrl = YAHOO.lang.substitute(Alfresco.constants.URL_SERVICECONTEXT + "components/form?itemKind={itemKind}&itemId={itemId}&mode={mode}&submitType={submitType}&showCancelButton=true",
          {
             htmlid: this.id + "-startWorkflowForm-" + Alfresco.util.generateDomId(),
             itemKind: "workflow",

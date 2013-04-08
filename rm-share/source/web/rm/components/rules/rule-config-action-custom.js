@@ -36,6 +36,18 @@
                });
                return configDef;
             }
+         },
+         RequestInfo:
+         {
+            edit: function(configDef, ruleConfig, configEl)
+            {
+               this._hideParameters(configDef.parameterDefinitions);
+               configDef.parameterDefinitions.push({
+                  type: "arca:requestInfo-dialog-button",
+                  _buttonLabel: this.msg("button.requestInfo")
+               });
+               return configDef;
+            }
          }
       },
       renderers:
@@ -72,7 +84,25 @@
                   });
                });
             }
+         },
+         "arca:requestInfo-dialog-button":
+         {
+            manual: { edit: true },
+            currentCtx: {},
+            edit: function (containerEl, configDef, paramDef, ruleConfig, value)
+            {
+               this._createButton(containerEl, configDef, paramDef, ruleConfig, function RCAC_requestInfoFormButton_onClick(type, obj)
+               {
+                  this.renderers["arca:requestInfo-dialog-button"].currentCtx =
+                  {
+                     configDef: obj.configDef,
+                     ruleConfig: obj.ruleConfig
+                  };
+                  this.widgets.requestInfoDialog = new Alfresco.module.RequestInfoAction(this.id + "-requestInfoDialog");
+                  this.widgets.requestInfoDialog.showDialog();
+               });
+            }
          }
       }
    });
- })();
+})();
