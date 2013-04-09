@@ -13,6 +13,8 @@
    <@link href="${url.context}/res/modules/property-picker.css" group="rules"/>
    <@link href="${url.context}/res/modules/rules/rules-property-picker.css" group="rules"/>
    <@link href="${url.context}/res/components/object-finder/object-finder.css" group="rules"/>
+   <#-- Modified for RM -->
+   <@link href="${url.context}/res/components/form/form.css" group="rules"/>
 </@>
 
 <@markup id="js">
@@ -43,10 +45,8 @@
 
    <#-- Modified for RM -->
    <@script src="${url.context}/res/rm/components/rules/rule-config-action-custom.js" group="rules"/>
-   <#-- FIXME -->
    <@script src="${url.context}/res/modules/simple-dialog.js" group="rules"/>
    <@script src="${url.context}/res/components/form/form.js" group="rules"/>
-   <@script src="${url.context}/res/rm/modules/rules/actions/requestInfo.js" group="rules"/>
 </@>
 
 <@markup id="widgets">
