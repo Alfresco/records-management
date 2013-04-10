@@ -99,11 +99,31 @@
                      ruleConfig: obj.ruleConfig
                   };
 
-                  // Intercept before dialog show and change the button label
+                  // Intercept before dialog show and change the button type and the onClick functionality
+                  // And also hide the div for showing the record information
                   var doBeforeDialogShow = function DLTB_requestInfo_doBeforeDialogShow(p_form, p_dialog)
                   {
-                     var div = p_dialog.dialog.form.children[0].children[0];
-                     div.style.display = "none";
+                     var recordInfo_div = p_dialog.dialog.form.children[0].children[0],
+                        assignees = Dom.get(p_dialog.id + "_assoc_rmwf_mixedAssignees"),
+                        requestedInfo = Dom.get(p_dialog.id + "_prop_rmwf_requestedInformation");
+
+                     recordInfo_div.style.display = "none";
+                     assignees.value = this._getParameters(obj.configDef).assignees || "";
+                     requestedInfo.value = this._getParameters(obj.configDef).requestedInfo || "";
+
+                     // Change the button type and functionality
+                     var okButton = p_dialog.widgets.okButton;
+                     okButton._configs.type.value = "push";
+                     okButton.on('click', function(type, args)
+                     {
+                        var ctx = this.renderers["arca:requestInfo-dialog-button"].currentCtx;
+                        this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "assignees", assignees.value);
+                        this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "requestedInfo", requestedInfo.value);
+                        this._updateSubmitElements(ctx.configDef);
+
+                        // Hide dialog
+                        args.hide();
+                     }, requestInfo, this);
                   };
 
                   var templateUrl = YAHOO.lang.substitute(Alfresco.constants.URL_SERVICECONTEXT + "components/form?itemKind={itemKind}&itemId={itemId}&mode={mode}&submitType={submitType}&showCancelButton=true",
@@ -130,29 +150,6 @@
                      doBeforeDialogShow:
                      {
                         fn: doBeforeDialogShow,
-                        scope: this
-                     },
-                     onSuccess:
-                     {
-                        fn: function DLTB__newContainer_success(response)
-                        {
-                           YAHOO.Bubbling.fire("metadataRefresh");
-                           Alfresco.util.PopupManager.displayMessage(
-                           {
-                              text: this.msg("message.request-info-success")
-                           });
-                        },
-                        scope: this
-                     },
-                     onFailure:
-                     {
-                        fn: function DLTB__newContainer_failure(response)
-                        {
-                           Alfresco.util.PopupManager.displayMessage(
-                           {
-                              text: this.msg("message.request-info-failure")
-                           });
-                        },
                         scope: this
                      }
                   }).show();
