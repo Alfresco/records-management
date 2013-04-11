@@ -119,6 +119,7 @@
                         var ctx = this.renderers["arca:requestInfo-dialog-button"].currentCtx;
                         this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "assignees", assignees.value);
                         this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "requestedInfo", requestedInfo.value);
+                        this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "ruleCreator", Alfresco.constants.USERNAME);
                         this._updateSubmitElements(ctx.configDef);
 
                         // Hide dialog
