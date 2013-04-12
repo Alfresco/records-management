@@ -1,9 +1,8 @@
 <#--
 FIXME:
-
 Added the possibility to add a style (e.g. for specifying a width).
-This is a workaround a will be fixed properly.
-
+These changes will be merged to HEAD (currently 4.2.d). Once the dependency
+has been upgraded this template can be deleted.
 -->
 
 <#include "common/picker.inc.ftl" />
@@ -41,7 +40,7 @@ This is a workaround a will be fixed properly.
 
 <div class="form-field">
    <#if form.mode == "view">
-      <div id="${controlId}" class="viewmode-field">
+      <div id="${controlId}" class="viewmode-field" <#if field.control.params.style??>style="${field.control.params.style}"</#if>>
          <#if (field.endpointMandatory!false || field.mandatory!false) && field.value == "">
             <span class="incomplete-warning"><img src="${url.context}/res/components/form/images/warning-16.png" title="${msg("form.field.incomplete")}" /><span>
          </#if>
@@ -51,9 +50,9 @@ This is a workaround a will be fixed properly.
    <#else>
       <label for="${controlId}">${field.label?html}:<#if field.endpointMandatory!false || field.mandatory!false><span class="mandatory-indicator">${msg("form.required.fields.marker")}</span></#if></label>
 
-      <div id="${controlId}" class="object-finder">
+      <div id="${controlId}" class="object-finder" <#if field.control.params.style??>style="${field.control.params.style}"</#if>>
 
-         <div id="${controlId}-currentValueDisplay" class="current-values" <#if field.control.params.style??>style="${field.control.params.style}"</#if>></div>
+         <div id="${controlId}-currentValueDisplay" class="current-values"></div>
 
          <#if field.disabled == false>
             <input type="hidden" id="${fieldHtmlId}" name="-" value="${field.value?html}" />

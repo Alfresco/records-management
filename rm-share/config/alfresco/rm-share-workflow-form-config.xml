@@ -46,9 +46,8 @@
                   </control>
                </field>
                <field id="rmwf:requestedInformation" label-id="rm.wf.details" set="requestedInformation">
-                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
-                     <control-param name="style">width: 95%;height: 10em;color: #808080;background-color: #D4D0C8</control-param>
-                     <control-param name="readOnly">true</control-param>
+                  <control template="/org/alfresco/components/form/controls/readOnlyTextarea.ftl">
+                     <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
                </field>
                <field id="rmwf:message" label-id="rm.wf.give-details" set="message" >
@@ -81,15 +80,13 @@
                   </control>
                </field>
                <field id="rmwf:requestedInformation" label-id="rm.wf.details" set="requestedInformation">
-                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
-                     <control-param name="style">width: 95%;height: 10em;color: #808080;background-color: #D4D0C8</control-param>
-                     <control-param name="readOnly">true</control-param>
+                  <control template="/org/alfresco/components/form/controls/readOnlyTextarea.ftl">
+                     <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
                </field>
                <field id="rmwf:message" label-id="rm.wf.details" set="message">
-                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
-                     <control-param name="style">width: 95%;height: 10em;color: #808080;background-color: #D4D0C8</control-param>
-                     <control-param name="readOnly">true</control-param>
+                  <control template="/org/alfresco/components/form/controls/readOnlyTextarea.ftl">
+                     <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
                </field>
                <field id="transitions" set="transitions" />

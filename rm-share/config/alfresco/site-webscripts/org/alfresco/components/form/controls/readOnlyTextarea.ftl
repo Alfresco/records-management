@@ -1,13 +1,10 @@
 <#--
-FIXME:
-
-Added the readOnly param. If you set the read-only param in rm-share-workflow-form-config.xml
-for a field the control template becomes disabled which means the user will not be able to
-copy any text form the textarea. This is a workaround a will be fixed properly.
-
+Added the readonly attribute and the colors for the style. If you set the read-only parameter
+in rm-share-workflow-form-config.xml for a field the control template becomes disabled which
+means the user will not be able to copy any text form the textarea.
 -->
 
-<#if field.control.params.rows??><#assign rows=field.control.params.rows><#else><#assign rows=2></#if>
+<#if field.control.params.rows??><#assign rows=field.control.params.rows><#else><#assign rows=3></#if>
 <#if field.control.params.columns??><#assign columns=field.control.params.columns><#else><#assign columns=60></#if>
 
 <div class="form-field">
@@ -26,11 +23,15 @@ copy any text form the textarea. This is a workaround a will be fixed properly.
       </div>
    <#else>
       <label for="${fieldHtmlId}">${field.label?html}:<#if field.mandatory><span class="mandatory-indicator">${msg("form.required.fields.marker")}</span></#if></label>
-      <textarea id="${fieldHtmlId}" name="${field.name}" rows="${rows}" cols="${columns}" tabindex="0"
+      <textarea id="${fieldHtmlId}" name="${field.name}" rows="${rows}" cols="${columns}" tabindex="0" readonly="true"
                 <#if field.description??>title="${field.description}"</#if>
                 <#if field.control.params.styleClass??>class="${field.control.params.styleClass}"</#if>
-                <#if field.control.params.style??>style="${field.control.params.style}"</#if>
-                <#if field.control.params.readOnly??>readOnly="${field.control.params.readOnly}"</#if>
+                <#assign readOnlyColorStyle="color: #808080;background-color: #D4D0C8">
+                <#if field.control.params.style??>
+                   style="${readOnlyColorStyle};${field.control.params.style}"
+                <#else>
+                   style="${readOnlyColorStyle}"
+               </#if>
             <#if field.disabled && !(field.control.params.forceEditable?? && field.control.params.forceEditable == "true")>disabled="true"</#if>>${field.value?html}</textarea>
       <@formLib.renderFieldHelp field=field />
    </#if>
