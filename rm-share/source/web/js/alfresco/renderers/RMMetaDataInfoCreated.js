@@ -17,31 +17,31 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 define(["dojo/_base/declare",
-        "alfresco/renderers/Property"],
-        function(declare, Property) {
+        "alfresco/renderers/Property",
+        "alfresco/core/UrlUtils"],
+        function(declare, Property, UrlUtils) {
 
-   return declare([Property], {
+   return declare([Property, UrlUtils], {
 
       /**
        * An array of the i18n files to use with this widget.
        *
        * @property i18nRequirements {Array}
        */
-      i18nRequirements: [{i18nFile: "./i18n/RMCategoryIdentifier.properties"}],
+      i18nRequirements: [{i18nFile: "./i18n/RMMetaDataInfoCreated.properties"}],
 
       /**
        * Set up the attributes to be used when rendering the template.
        *
        * @method postMixInProperties
        */
-      postMixInProperties: function alfresco_renderers_RMCategoryIdentifier__postMixInProperties() {
-         var rmNode = this.currentItem.node.rmNode,
-            uiType = rmNode.uiType;
+      postMixInProperties: function alfresco_renderers_RMMetaDataInfoCreated__postMixInProperties() {
+         var uiType = this.currentItem.node.rmNode.uiType;
          if (uiType === "record-category")
          {
-            var i18n = this.message("details.category.identifier"),
-               property = rmNode.properties["rma:identifier"];
-            this.renderedValue = i18n + ": " + property;
+            var i18n = this.message("details.created.by"),
+               userLink = this.generateUserLink(this.currentItem.jsNode.properties.creator);
+            this.renderedValue = i18n + ": " + userLink;
          }
       }
    });
