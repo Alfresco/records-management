@@ -107,19 +107,6 @@ define(["dojo/_base/declare",
                                              }
                                           ]
                                        }
-                                    },
-                                    {
-                                       name: "alfresco/documentlibrary/views/layouts/Cell",
-                                       config: {
-                                          widgets: [
-                                             {
-                                                name: "alfresco/renderers/RMMetaDataInfoCreated"
-                                             },
-                                             {
-                                                name: "alfresco/renderers/RMMetaDataInfoModified"
-                                             }
-                                          ]
-                                       }
                                     }
                                  ]
                               }

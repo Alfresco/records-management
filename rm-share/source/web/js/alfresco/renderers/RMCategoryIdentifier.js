@@ -35,13 +35,12 @@ define(["dojo/_base/declare",
        * @method postMixInProperties
        */
       postMixInProperties: function alfresco_renderers_RMCategoryIdentifier__postMixInProperties() {
-         var rmNode = this.currentItem.node.rmNode,
-            uiType = rmNode.uiType;
-         if (uiType === "record-category")
+         var rmNode = this.currentItem.node.rmNode;
+         if (rmNode.uiType === "record-category")
          {
-            var i18n = this.message("details.category.identifier"),
-               property = rmNode.properties["rma:identifier"];
-            this.renderedValue = i18n + ": " + property;
+            this.renderedValue = this.message("details.category.identifier", {
+               0: rmNode.properties["rma:identifier"]
+            });
          }
       }
    });

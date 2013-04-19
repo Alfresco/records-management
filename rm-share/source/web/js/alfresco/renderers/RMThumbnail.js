@@ -27,7 +27,7 @@ define(["dojo/_base/declare",
        *
        * @method getFolderImage
        */
-      getFolderImage: function alfresco_renderers_RMThumbnail__getDefaultFolderImage() {
+      getFolderImage: function alfresco_renderers_Thumbnail__getDefaultFolderImage() {
          return Alfresco.constants.URL_RESCONTEXT + "rm/components/documentlibrary/images/" + this.currentItem.node.rmNode.uiType + "-48.png";
       }
    });

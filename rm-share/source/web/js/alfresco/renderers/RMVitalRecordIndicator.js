@@ -35,15 +35,15 @@ define(["dojo/_base/declare",
        * @method postMixInProperties
        */
       postMixInProperties: function alfresco_renderers_RMVitalRecordIndicator__postMixInProperties() {
-         var uiType = this.currentItem.node.rmNode.uiType;
-         if (uiType === "record-category")
+         var currentItem = this.currentItem;
+         if (currentItem.node.rmNode.uiType === "record-category")
          {
-            var vitalRecord = this.currentItem.jsNode.properties["rma:vitalRecordIndicator"];
+            var vitalRecord = currentItem.jsNode.properties["rma:vitalRecordIndicator"];
             if (vitalRecord !== undefined)
             {
-               var i18n = this.message("details.category.vital-record-indicator"),
-                  isVitalRecord = (vitalRecord == "true") ? this.message("label.yes") : this.message("label.no");
-               this.renderedValue = i18n + ": " + isVitalRecord;
+               this.renderedValue = this.message("details.category.vital-record-indicator", {
+                  0: vitalRecord == "true" ? this.message("label.yes") : this.message("label.no")
+               });
             }
          }
       }
