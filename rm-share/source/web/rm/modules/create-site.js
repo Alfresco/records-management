@@ -139,6 +139,8 @@
             Dom.get(this.id + "-title").disabled = true;
             Dom.get(this.id + "-shortName").disabled = true;
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite";
+
+            this.widgets.okButton.set("disabled", false);
          }
          else
          {
@@ -148,6 +150,8 @@
             Dom.get(this.id + "-title").disabled = false;
             Dom.get(this.id + "-shortName").disabled = false;
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/site/1.0}site";
+
+            this.widgets.okButton.set("disabled", true);
          }
       }
    });
