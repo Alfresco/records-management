@@ -1,0 +1,135 @@
+.view-role-list
+{
+   clear: both;
+   border: 1px solid #444444;
+}
+
+#roleSelection .list-header
+{
+   margin-right: -7%;
+   border-bottom: 1px solid #999;
+}
+
+#usersAndGroups
+{
+   text-align: left;
+   padding: 1em;
+}
+
+#usersAndGroups h2
+{
+   font-size: 123.1%;
+   margin: 0.5em 0 0.5em 0;
+   color: #515D6B;
+   float: left;
+   font-weight: bold;
+}
+
+#usersAndGroups h3
+{
+   font-size: 118%;
+   margin: 0.5em 0;
+   color: #515D6B;
+   font-weight: bold;
+   padding: 0 0 0 0.5em;
+}
+
+#usersAndGroups div.groups-header
+{
+   font-size: 118%;
+   color: #515D6B;
+   font-weight: bold;
+   padding: 0.5em 0 0.5em 0.5em;
+}
+
+#usersAndGroups div.users-header
+{
+   font-size: 118%;
+   color: #515D6B;
+   font-weight: bold;
+   padding: 0.5em 0 0.5em 0.5em;
+}
+
+#usersAndGroups span.yui-button
+{
+   float: right;
+}
+
+#addGroup,
+#addUser
+{
+   margin-top: 0.25em;
+}
+
+#deleteGroup,
+#deleteUser
+{
+   margin-top: 0.25em;
+   margin-right: 8px;
+}
+
+#roles
+{
+   width: 100%;
+}
+
+#roles a
+{
+   display: block;
+   padding: 0.333em;
+   text-decoration: none;
+}
+
+#roles ul
+{
+   margin: 0.5em;
+}
+
+#roles,
+.roleGroups
+{
+   overflow: auto;
+   height: 24em;
+}
+
+#roles,
+.roleUsers
+{
+   overflow: auto;
+   height: 24em;
+}
+
+#roleContentGroups
+{
+   text-align: right;
+   border-left: 1px solid #444444;
+}
+
+#roleContentGroups *
+{
+   text-align: left;
+}
+
+#roleContentGroups .list-header
+{
+	margin-right: -7%;
+   border-bottom: 1px solid #999999;
+}
+
+#roleContentUsers
+{
+   text-align: right;
+   border-left: 1px solid #444444;
+   width: 31%;
+}
+
+#roleContentUsers *
+{
+   text-align: left;
+}
+
+#roleContentUsers .list-header
+{
+	margin-right: -3%;
+   border-bottom: 1px solid #999999;
+}
