@@ -101,7 +101,7 @@
          this.widgets.addUser.set("disabled", true);
          this.widgets.deleteUser.set("disabled", true);
 
-         // query the list of roles and capabilities to populate the roles list
+         // query the list of roles, groups and users to populate the roles list
          this.updateRolesList();
       },
 
@@ -178,12 +178,12 @@
       },
 
       /**
-       * Helper to update the capabilities list UI based on selected Role ID.
+       * Helper to update the users and groups list UI based on selected Role ID.
        *
        * @method updateSelectedRoleUI
        * @param {roleId} Role ID to update for, null to empty the list
        */
-      updateSelectedRoleUI: function RMViewRoles_updateSelectedRoleUI(roleId)
+      updateSelectedRoleUI: function RM_UsersAndGroups_updateSelectedRoleUI(roleId)
       {
          // update selected item background
          var roleLinks = Dom.getElementsByClassName("role", "a");
@@ -207,6 +207,51 @@
                }
             }
          }
+
+         // clear the groups list
+         var elListGroups = Dom.get("groups-list");
+         elListGroups.innerHTML = "";
+
+         // clear the users list
+         var elListUsers = Dom.get("users-list");
+         elListUsers.innerHTML = "";
+
+         // display the query groups/users for the selected user role if any
+         if (roleId)
+         {
+            var groups = this.roles[roleId].assignedGroups;
+            groups.sort(this._sortByName);
+
+            for (var i = 0, length = groups.length; i < length; i++)
+            {
+               var li = document.createElement("li");
+               li.innerHTML = groups[i].displayLabel;
+               elListGroups.appendChild(li);
+            }
+
+            var users = this.roles[roleId].assignedUsers;
+            users.sort(this._sortByName);
+
+            for (var i = 0, length = users.length; i < length; i++)
+            {
+               var li = document.createElement("li");
+               li.innerHTML = users[i].displayLabel;
+               elListUsers.appendChild(li);
+            }
+         }
+      },
+
+      /**
+       * Helper to Array.sort() by the 'name' field of an object.
+       *
+       * @method _sortByName
+       * @return {Number}
+       * @private
+       */
+      _sortByName: function RM_UsersAndGroups__sortByName(s1, s2)
+      {
+         var ss1 = s1.displayLabel.toLowerCase(), ss2 = s2.displayLabel.toLowerCase();
+         return (ss1 > ss2) ? 1 : (ss1 < ss2) ? -1 : 0;
       }
   });
 })();

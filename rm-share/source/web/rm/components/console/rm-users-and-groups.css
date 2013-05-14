@@ -112,7 +112,7 @@
 
 #roleContentGroups .list-header
 {
-	margin-right: -7%;
+   margin-right: -7%;
    border-bottom: 1px solid #999999;
 }
 
@@ -130,6 +130,18 @@
 
 #roleContentUsers .list-header
 {
-	margin-right: -3%;
+   margin-right: -3%;
    border-bottom: 1px solid #999999;
+}
+
+#roleContentGroups ul.groups-list li
+{
+   clear: both;
+   padding: 0.4em;
+}
+
+#roleContentUsers ul.users-list li
+{
+   clear: both;
+   padding: 0.4em;
 }
