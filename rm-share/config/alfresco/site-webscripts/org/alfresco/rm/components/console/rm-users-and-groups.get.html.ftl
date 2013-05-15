@@ -26,7 +26,7 @@
                </div>
                <div class="groups-header">${msg('label.groups')}</div>
             </div>
-            <div class="roleGroups">
+            <div id="roleGroups" class="roleGroups">
                <ul class="groups-list" id="groups-list">
                </ul>
             </div>
@@ -41,7 +41,7 @@
                </div>
                <div class="users-header">${msg('label.users')}</div>
             </div>
-            <div class="roleUsers">
+            <div id="roleUsers" class="roleUsers">
                <ul class="users-list" id="users-list">
                </ul>
             </div>

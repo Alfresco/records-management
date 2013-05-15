@@ -27,6 +27,10 @@
     */
    Alfresco.rm.component.RMUsersAndGroups = function RM_UsersAndGroups_constructor(htmlId)
    {
+      YAHOO.Bubbling.on("rmRoleSelected", this.onHandleAllButtons, this);
+      YAHOO.Bubbling.on("rmGroupSelected", this.onHandleDeleteGroupButton, this);
+      YAHOO.Bubbling.on("rmUserSelected", this.onHandleDeleteUserButton, this);
+
       return Alfresco.rm.component.RMUsersAndGroups.superclass.constructor.call(this, htmlId);
    };
 
@@ -40,35 +44,47 @@
       {
          Event.on(this.id, 'click', this.onInteractionEvent, null, this);
 
-         this.registerEventHandler('click','button#addGroup-button',
+         this.registerEventHandler('click', 'button#addGroup-button',
          {
             handler: this.onAddGroup,
             scope: this
          });
 
-         this.registerEventHandler('click','button#deleteGroup-button',
+         this.registerEventHandler('click', 'button#deleteGroup-button',
          {
             handler: this.onDeleteGroup,
             scope: this
          });
 
-         this.registerEventHandler('click','button#addUser-button',
+         this.registerEventHandler('click', 'button#addUser-button',
          {
             handler: this.onAddUser,
             scope: this
          });
 
-         this.registerEventHandler('click','button#deleteUser-button',
+         this.registerEventHandler('click', 'button#deleteUser-button',
          {
             handler: this.onDeleteUser,
             scope: this
          });
 
-         this.registerEventHandler('click','.role',
+         this.registerEventHandler('click', '.role',
          {
             handler: this.onRoleSelect,
             scope: this
          });
+
+         this.registerEventHandler('click', '.group',
+         {
+            handler: this.onGroupSelect,
+            scope: this
+         });
+
+         this.registerEventHandler('click', '.user',
+         {
+            handler: this.onUserSelect,
+            scope: this
+         })
 
          return this;
       },
@@ -101,8 +117,53 @@
          this.widgets.addUser.set("disabled", true);
          this.widgets.deleteUser.set("disabled", true);
 
+         // get the selected role id
+         this.options.selectedRoleId = this.getRoleId();
+
          // query the list of roles, groups and users to populate the roles list
          this.updateRolesList();
+      },
+
+      /**
+       * This event is fired when a role is selected.
+       * The add buttons will be enable and the delete buttons will be disabled.
+       *
+       * @method onHandleAddButtons
+       * @param e DomEvent
+       * @param args Event parameters (depends on event type)
+       */
+      onHandleAllButtons: function RM_UsersAndGroups_onHandleAllButtons(e, args)
+      {
+         this.widgets.addGroup.set("disabled", false);
+         this.widgets.addUser.set("disabled", false);
+         this.widgets.deleteGroup.set("disabled", true);
+         this.widgets.deleteUser.set("disabled", true);
+      },
+
+      /**
+       * This event is fired when a group is selected.
+       * The delete button for the groups column will be enabled.
+       *
+       * @method onHandleDeleteGroupButton
+       * @param e DomEvent
+       * @param args Event parameters (depends on event type)
+       */
+      onHandleDeleteGroupButton: function RM_UsersAndGroups_onEnableDeleteGroupButton(e, args)
+      {
+         this.widgets.deleteGroup.set("disabled", false);
+      },
+
+      /**
+       * This event is fired when a user is selected.
+       * The delete button for the user column will be enabled.
+       *
+       * @method onHandleDeleteUserButton
+       * @param e DomEvent
+       * @param args Event parameters (depends on event type)
+       */
+      onHandleDeleteUserButton: function RM_UsersAndGroups_onEnableDeleteUserButton(e, args)
+      {
+         this.widgets.deleteUser.set("disabled", false);
       },
 
       /**
@@ -113,6 +174,7 @@
       onAddGroup: function RM_UsersAndGroups_onAddGroup(e)
       {
          // FIXME: See RM-690
+         var roleId = this.options.selectedRoleId;
       },
 
       /**
@@ -123,6 +185,8 @@
       onDeleteGroup: function RM_UsersAndGroups_onDeleteGroup(e)
       {
          // FIXME: See RM-691
+         var roleId = this.options.selectedRoleId,
+            groupId = this.options.selectedGroupId;
       },
 
       /**
@@ -133,6 +197,7 @@
       onAddUser: function RM_UsersAndGroups_onAddUser(e)
       {
          // FIXME: See RM-690
+         var roleId = this.options.selectedRoleId;
       },
 
       /**
@@ -143,6 +208,44 @@
       onDeleteUser: function RM_UsersAndGroups_onDeleteUser(e)
       {
          // FIXME: See RM-691
+         var roleId = this.options.selectedRoleId,
+            userId = this.options.selectedUserId;
+      },
+
+      /**
+       * Event handler for group selection
+       * @method onGroupSelect
+       * @param {e} Event object
+       */
+      onGroupSelect: function RM_UsersAndGroups_onGroupSelect(e)
+      {
+         var el = Event.getTarget(e);
+
+         // get the ID of the element - in the format "group-groupId" and extract the groupId value
+         var groupId = el.id.substring(6);
+
+         // update groupId value
+         this.updateSelectedGroupUI(groupId);
+
+         Event.stopEvent(e);
+      },
+
+      /**
+       * Event handler for user selection
+       * @method onUserSelect
+       * @param {e} Event object
+       */
+      onUserSelect: function RM_UsersAndGroups_onUserSelect(e)
+      {
+         var el = Event.getTarget(e);
+
+         // get the ID of the element - in the format "user-userId" and extract the userId value
+         var userId = el.id.substring(5);
+
+         // update userId value
+         this.updateSelectedUserUI(userId);
+
+         Event.stopEvent(e);
       },
 
       /**
@@ -199,6 +302,8 @@
                {
                   // found item to selected
                   Dom.addClass(liParent, "selected");
+                  this.options.selectedRoleId = roleId;
+                  YAHOO.Bubbling.fire("rmRoleSelected");
                }
                else
                {
@@ -209,12 +314,14 @@
          }
 
          // clear the groups list
-         var elListGroups = Dom.get("groups-list");
-         elListGroups.innerHTML = "";
+         var elGroupsDiv = Dom.get("roleGroups"),
+            elGroupsList = Dom.getFirstChild(elGroupsDiv);
+         elGroupsList.innerHTML = "";
 
          // clear the users list
-         var elListUsers = Dom.get("users-list");
-         elListUsers.innerHTML = "";
+         var elUsersDiv = Dom.get("roleUsers");
+            elUsersList = Dom.getFirstChild(elUsersDiv);
+         elUsersList.innerHTML = "";
 
          // display the query groups/users for the selected user role if any
          if (roleId)
@@ -225,8 +332,8 @@
             for (var i = 0, length = groups.length; i < length; i++)
             {
                var li = document.createElement("li");
-               li.innerHTML = groups[i].displayLabel;
-               elListGroups.appendChild(li);
+               li.innerHTML = '<a href="#" id="group-' + $html(groups[i].name) + '" class="group">' + $html(groups[i].displayLabel) + '</a>';
+               elGroupsList.appendChild(li);
             }
 
             var users = this.roles[roleId].assignedUsers;
@@ -235,8 +342,76 @@
             for (var i = 0, length = users.length; i < length; i++)
             {
                var li = document.createElement("li");
-               li.innerHTML = users[i].displayLabel;
-               elListUsers.appendChild(li);
+               li.innerHTML = '<a href="#" id="user-' + $html(users[i].name) + '" class="user">' + $html(users[i].displayLabel) + '</a>';
+               elUsersList.appendChild(li);
+            }
+         }
+      },
+
+      /**
+       * Helper to update the group selection.
+       *
+       * @method updateSelectedGroupUI
+       * @param {groupId} Group ID to update for, null to empty the list
+       */
+      updateSelectedGroupUI: function RM_UsersAndGroups_updateSelectedGroupUI(groupId)
+      {
+         // update selected item background
+         var groupLinks = Dom.getElementsByClassName("group", "a");
+         for (var i in groupLinks)
+         {
+            if (groupLinks.hasOwnProperty(i))
+            {
+               // group link ID is in the format "group-groupId"
+               var groupLinkId = groupLinks[i].id,
+                  liParent = Dom.get(groupLinkId).parentNode;
+
+               if (groupLinkId.substring(6) === groupId)
+               {
+                  // found item to selected
+                  Dom.addClass(liParent, "selected");
+                  this.options.selectedGroupId = groupId;
+                  YAHOO.Bubbling.fire("rmGroupSelected");
+               }
+               else
+               {
+                  // deselect previously selected item
+                  Dom.removeClass(liParent, "selected");
+               }
+            }
+         }
+      },
+
+      /**
+       * Helper to update the user selection.
+       *
+       * @method updateSelectedUserUI
+       * @param {userId} User ID to update for, null to empty the list
+       */
+      updateSelectedUserUI: function RM_UsersAndGroups_updateSelectedUserUI(userId)
+      {
+         // update selected item background
+         var userLinks = Dom.getElementsByClassName("user", "a");
+         for (var i in userLinks)
+         {
+            if (userLinks.hasOwnProperty(i))
+            {
+               // user link ID is in the format "role-roleId"
+               var userLinkId = userLinks[i].id,
+               liParent = Dom.get(userLinkId).parentNode;
+
+               if (userLinkId.substring(5) === userId)
+               {
+                  // found item to selected
+                  Dom.addClass(liParent, "selected");
+                  this.options.selectedUserId = userId;
+                  YAHOO.Bubbling.fire("rmUserSelected");
+               }
+               else
+               {
+                  // deselect previously selected item
+                  Dom.removeClass(liParent, "selected");
+               }
             }
          }
       },

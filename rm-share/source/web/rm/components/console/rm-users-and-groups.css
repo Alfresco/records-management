@@ -61,11 +61,16 @@
    margin-top: 0.25em;
 }
 
-#deleteGroup,
+#deleteGroup
+{
+   margin-top: 0.25em;
+   margin-right: 9px;
+}
+
 #deleteUser
 {
    margin-top: 0.25em;
-   margin-right: 8px;
+   margin-right: 5px;
 }
 
 #roles
