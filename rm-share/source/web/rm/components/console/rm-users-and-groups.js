@@ -117,8 +117,10 @@
          this.widgets.addUser.set("disabled", true);
          this.widgets.deleteUser.set("disabled", true);
 
-         // get the selected role id
-         this.options.selectedRoleId = this.getRoleId();
+         // get the selected role ID, group ID and user ID
+         this.options.selectedRoleId = this.getValueFromUrl("roleId");
+         this.options.selectedGroupId = this.getValueFromUrl("groupId");
+         this.options.selectedUserId = this.getValueFromUrl("userId");
 
          // query the list of roles, groups and users to populate the roles list
          this.updateRolesList();
@@ -224,6 +226,9 @@
          // get the ID of the element - in the format "group-groupId" and extract the groupId value
          var groupId = el.id.substring(6);
 
+         // update roleId value
+         window.location.hash += '&groupId=' + encodeURI(groupId);
+
          // update groupId value
          this.updateSelectedGroupUI(groupId);
 
@@ -241,6 +246,9 @@
 
          // get the ID of the element - in the format "user-userId" and extract the userId value
          var userId = el.id.substring(5);
+
+         // update roleId value
+         window.location.hash += '&userId=' + encodeURI(userId);
 
          // update userId value
          this.updateSelectedUserUI(userId);
@@ -278,6 +286,27 @@
                scope: this
             }
          });
+      },
+
+      /**
+       * Extends the onRolesLoaded function from the base class
+       *
+       * @method onRolesLoaded
+       * @param res {object} Response
+       */
+      onRolesLoaded: function RM_UsersAndGroups_onRolesLoaded(res)
+      {
+         Alfresco.rm.component.RMUsersAndGroups.superclass.onRolesLoaded.call(this, res);
+
+         if (this.options.selectedGroupId)
+         {
+            this.updateSelectedGroupUI(this.options.selectedGroupId);
+         }
+
+         if (this.options.selectedUserId)
+         {
+            this.updateSelectedUserUI(this.options.selectedUserId);
+         }
       },
 
       /**

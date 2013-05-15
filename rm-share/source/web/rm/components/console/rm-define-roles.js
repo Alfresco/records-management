@@ -488,18 +488,18 @@
          this.widgets.deleteRole.set("disabled", true);
 
          // get the selected role id
-         this.options.selectedRoleId = this.getRoleId();
+         this.options.selectedRoleId = this.getValueFromUrl("roleId");
 
          // query the list of roles and capabilities to populate the roles list
          this.updateRolesList();
       },
 
       /**
-       * Gets the role id from the url
+       * Gets the value for the specified parameter from the URL
        *
-       * @method getRoleId
+       * @method getValueFromUrl
        */
-      getRoleId: function RMViewRoles_getRoleId()
+      getValueFromUrl: function RMViewRoles_getValueFromUrl(param)
       {
          var token,
             result = null,
@@ -508,7 +508,7 @@
          for (var i = 0; i < params.length; i++)
          {
             token = params[i].split("=");
-            if (token[0] === "roleId")
+            if (token[0] === param)
             {
                result = token[1];
                break;
