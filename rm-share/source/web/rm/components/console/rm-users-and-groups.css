@@ -90,6 +90,16 @@
    margin: 0.5em;
 }
 
+#roleGroups ul
+{
+   margin: 0.5em;
+}
+
+#roleUsers ul
+{
+   margin: 0.5em;
+}
+
 #roles,
 .roleGroups
 {
@@ -104,10 +114,15 @@
    height: 24em;
 }
 
+#roleSelection
+{
+   width: 31%;
+}
+
 #roleContentGroups
 {
-   text-align: right;
    border-left: 1px solid #444444;
+   width: 31%;
 }
 
 #roleContentGroups *
@@ -123,9 +138,8 @@
 
 #roleContentUsers
 {
-   text-align: right;
    border-left: 1px solid #444444;
-   width: 31%;
+   width: 32%;
 }
 
 #roleContentUsers *
@@ -135,7 +149,7 @@
 
 #roleContentUsers .list-header
 {
-   margin-right: -3%;
+   margin-right: -6%;
    border-bottom: 1px solid #999999;
 }
 
