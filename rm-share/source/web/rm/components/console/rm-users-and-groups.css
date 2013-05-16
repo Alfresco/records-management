@@ -85,6 +85,16 @@
    text-decoration: none;
 }
 
+#roleGroups a
+{
+   text-decoration: none;
+}
+
+#roleUsers a
+{
+   text-decoration: none;
+}
+
 #roles ul
 {
    margin: 0.5em;
