@@ -28,8 +28,8 @@
    Alfresco.rm.component.RMUsersAndGroups = function RM_UsersAndGroups_constructor(htmlId)
    {
       YAHOO.Bubbling.on("rmRoleSelected", this.onHandleAllButtons, this);
-      YAHOO.Bubbling.on("rmGroupSelected", this.onHandleDeleteGroupButton, this);
-      YAHOO.Bubbling.on("rmUserSelected", this.onHandleDeleteUserButton, this);
+      YAHOO.Bubbling.on("rmGroupSelected", this.onHandleRemoveGroupButton, this);
+      YAHOO.Bubbling.on("rmUserSelected", this.onHandleRemoveUserButton, this);
 
       return Alfresco.rm.component.RMUsersAndGroups.superclass.constructor.call(this, htmlId);
    };
@@ -51,9 +51,9 @@
             scope: this
          });
 
-         this.registerEventHandler('click', 'button#deleteGroup-button',
+         this.registerEventHandler('click', 'button#removeGroup-button',
          {
-            handler: this.onDeleteGroup,
+            handler: this.onRemoveGroup,
             scope: this
          });
 
@@ -63,9 +63,9 @@
             scope: this
          });
 
-         this.registerEventHandler('click', 'button#deleteUser-button',
+         this.registerEventHandler('click', 'button#removeUser-button',
          {
-            handler: this.onDeleteUser,
+            handler: this.onRemoveUser,
             scope: this
          });
 
@@ -114,9 +114,9 @@
 
          // well known buttons - set the initial state
          this.widgets.addGroup.set("disabled", true);
-         this.widgets.deleteGroup.set("disabled", true);
+         this.widgets.removeGroup.set("disabled", true);
          this.widgets.addUser.set("disabled", true);
-         this.widgets.deleteUser.set("disabled", true);
+         this.widgets.removeUser.set("disabled", true);
 
          // get the selected role ID, group ID and user ID
          this.options.selectedRoleId = this.getValueFromUrl("roleId");
@@ -129,7 +129,7 @@
 
       /**
        * This event is fired when a role is selected.
-       * The add buttons will be enable and the delete buttons will be disabled.
+       * The add buttons will be enable and the remove buttons will be disabled.
        *
        * @method onHandleAddButtons
        * @param e DomEvent
@@ -139,34 +139,34 @@
       {
          this.widgets.addGroup.set("disabled", false);
          this.widgets.addUser.set("disabled", false);
-         this.widgets.deleteGroup.set("disabled", true);
-         this.widgets.deleteUser.set("disabled", true);
+         this.widgets.removeGroup.set("disabled", true);
+         this.widgets.removeUser.set("disabled", true);
       },
 
       /**
        * This event is fired when a group is selected.
-       * The delete button for the groups column will be enabled.
+       * The remove button for the groups column will be enabled.
        *
-       * @method onHandleDeleteGroupButton
+       * @method onHandleRemoveGroupButton
        * @param e DomEvent
        * @param args Event parameters (depends on event type)
        */
-      onHandleDeleteGroupButton: function RM_UsersAndGroups_onEnableDeleteGroupButton(e, args)
+      onHandleRemoveGroupButton: function RM_UsersAndGroups_onEnableRemoveGroupButton(e, args)
       {
-         this.widgets.deleteGroup.set("disabled", false);
+         this.widgets.removeGroup.set("disabled", false);
       },
 
       /**
        * This event is fired when a user is selected.
-       * The delete button for the user column will be enabled.
+       * The remove button for the user column will be enabled.
        *
-       * @method onHandleDeleteUserButton
+       * @method onHandleRemoveUserButton
        * @param e DomEvent
        * @param args Event parameters (depends on event type)
        */
-      onHandleDeleteUserButton: function RM_UsersAndGroups_onEnableDeleteUserButton(e, args)
+      onHandleRemoveUserButton: function RM_UsersAndGroups_onEnableRemoveUserButton(e, args)
       {
-         this.widgets.deleteUser.set("disabled", false);
+         this.widgets.removeUser.set("disabled", false);
       },
 
       /**
@@ -182,12 +182,12 @@
       },
 
       /**
-       * Event handler for delete group button
+       * Event handler for remove group button
        *
-       * @method onDeleteGroup
+       * @method onRemoveGroup
        * @param {e} Event object
        */
-      onDeleteGroup: function RM_UsersAndGroups_onDeleteGroup(e)
+      onRemoveGroup: function RM_UsersAndGroups_onRemoveGroup(e)
       {
          // FIXME: See RM-691
          var roleId = this.options.selectedRoleId,
@@ -207,12 +207,12 @@
       },
 
       /**
-       * Event handler for delete user button
+       * Event handler for remove user button
        *
-       * @method onDeleteUser
+       * @method onRemoveUser
        * @param {e} Event object
        */
-      onDeleteUser: function RM_UsersAndGroups_onDeleteUser(e)
+      onRemoveUser: function RM_UsersAndGroups_onRemoveUser(e)
       {
          // FIXME: See RM-691
          var roleId = this.options.selectedRoleId,

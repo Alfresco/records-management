@@ -18,8 +18,8 @@
          </div>
          <div id="roleContentGroups" class="yui-u">
             <div class="list-header">
-               <div class="deleteGroupButton">
-                  <button id="deleteGroup" class="action">${msg('label.delete-group')}</button>
+               <div class="removeGroupButton">
+                  <button id="removeGroup" class="action">${msg('label.remove-group')}</button>
                </div>
                <div class="addGroupButton">
                   <button id="addGroup" class="action">${msg('label.add-group')}</button>
@@ -33,8 +33,8 @@
          </div>
          <div id="roleContentUsers" class="yui-u">
             <div class="list-header">
-               <div class="deleteUserButton">
-                  <button id="deleteUser" class="action">${msg('label.delete-user')}</button>
+               <div class="removeUserButton">
+                  <button id="removeUser" class="action">${msg('label.remove-user')}</button>
                </div>
                <div class="addUserButton">
                   <button id="addUser" class="action">${msg('label.add-user')}</button>
