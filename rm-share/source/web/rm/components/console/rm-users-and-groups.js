@@ -13,9 +13,9 @@
        Event = YAHOO.util.Event,
        Sel = YAHOO.util.Selector;
 
-    /**
-     * Alfresco Slingshot aliases
-     */
+   /**
+    * Alfresco Slingshot aliases
+    */
    var $html = Alfresco.util.encodeHTML;
 
    /**
@@ -38,6 +38,7 @@
    {
       /**
        * Initialises event listening and custom events
+       *
        * @method: initEvents
        */
       initEvents: function RM_UsersAndGroups_initEvents()
@@ -170,6 +171,7 @@
 
       /**
        * Event handler for add group button
+       *
        * @method onAddGroup
        * @param {e} Event object
        */
@@ -181,6 +183,7 @@
 
       /**
        * Event handler for delete group button
+       *
        * @method onDeleteGroup
        * @param {e} Event object
        */
@@ -193,6 +196,7 @@
 
       /**
        * Event handler for add user button
+       *
        * @method onAddUser
        * @param {e} Event object
        */
@@ -204,6 +208,7 @@
 
       /**
        * Event handler for delete user button
+       *
        * @method onDeleteUser
        * @param {e} Event object
        */
@@ -215,63 +220,70 @@
       },
 
       /**
+       * Helper function for 'onGroupSelect' and 'onUserSelect' to avoid code duplication.
+       *
+       * @method onGroupSelect
+       * @param {e} Event object
+       * @param {param} parameter used in the url (might be 'group' or 'user')
+       */
+      _onSelect: function RM_UsersAndGroups__onSelect(e, param)
+      {
+         Event.stopEvent(e);
+
+         var el = Event.getTarget(e),
+            urlParam = "&" + param + "Id=";
+
+         // get the id of the element
+         var id = el.id.substring(param.length + 1);
+
+         // add/update id value
+         var hash = window.location.hash;
+         if (hash.indexOf(urlParam) !== -1)
+         {
+            hash = hash.replace(new RegExp('(' + urlParam + ')[^\&]+'), '$1' + encodeURI(id));
+         }
+         else
+         {
+            hash += urlParam + encodeURI(id);
+         }
+         window.location.hash = hash;
+
+         if (param === "group")
+         {
+            this.updateSelectedGroupUI(id);
+         }
+         else if (param === "user")
+         {
+            this.updateSelectedUserUI(id);
+         }
+         else
+         {
+            throw "The paramter '" + param + "' is neither 'group' nor 'user'!";
+         }
+      },
+
+      /**
        * Event handler for group selection
+       *
        * @method onGroupSelect
        * @param {e} Event object
        */
       onGroupSelect: function RM_UsersAndGroups_onGroupSelect(e)
       {
-         var el = Event.getTarget(e);
-
-         // get the ID of the element - in the format "group-groupId" and extract the groupId value
-         var groupId = el.id.substring(6);
-
-         // add/update groupId value
-         var hash = window.location.hash;
-         if (hash.indexOf("&groupId=") !== -1)
-         {
-            hash = hash.replace(/(&groupId=)[^\&]+/, '$1' + encodeURI(groupId));
-         }
-         else
-         {
-            hash += '&groupId=' + encodeURI(groupId);
-         }
-         window.location.hash = hash;
-
          // update groupId value
-         this.updateSelectedGroupUI(groupId);
-
-         Event.stopEvent(e);
+         this._onSelect(e, "group");
       },
 
       /**
        * Event handler for user selection
+       *
        * @method onUserSelect
        * @param {e} Event object
        */
       onUserSelect: function RM_UsersAndGroups_onUserSelect(e)
       {
-         var el = Event.getTarget(e);
-
-         // get the ID of the element - in the format "user-userId" and extract the userId value
-         var userId = el.id.substring(5);
-
-         // add/update userId value
-         var hash = window.location.hash;
-         if (hash.indexOf("&userId=") !== -1)
-         {
-            hash = hash.replace(/(&userId=)[^\&]+/, '$1' + encodeURI(userId));
-         }
-         else
-         {
-            hash += '&userId=' + encodeURI(userId);
-         }
-         window.location.hash = hash;
-
          // update userId value
-         this.updateSelectedUserUI(userId);
-
-         Event.stopEvent(e);
+         this._onSelect(e, "user");
       },
 
       /**
@@ -396,29 +408,42 @@
       },
 
       /**
-       * Helper to update the group selection.
+       * Helper function for 'updateSelectedGroupUI' and 'updateSelectedUserUI' to avoid code duplication.
        *
-       * @method updateSelectedGroupUI
-       * @param {groupId} Group ID to update for, null to empty the list
+       * @method _updateSelectedUI
+       * @param {id} ID to update for (might be 'groupId' or 'userId')
+       * @param {param} parameter used in the template file (might be 'group' or 'user')
        */
-      updateSelectedGroupUI: function RM_UsersAndGroups_updateSelectedGroupUI(groupId)
+      _updateSelectedUI: function RM_UsersAndGroups__updateSelectedUI(id, param)
       {
          // update selected item background
-         var groupLinks = Dom.getElementsByClassName("group", "a");
-         for (var i in groupLinks)
+         var links = Dom.getElementsByClassName(param, "a");
+         for (var i in links)
          {
-            if (groupLinks.hasOwnProperty(i))
+            if (links.hasOwnProperty(i))
             {
-               // group link ID is in the format "group-groupId"
-               var groupLinkId = groupLinks[i].id,
-                  liParent = Dom.get(groupLinkId).parentNode;
+               // link id is in the format "group-groupId"/"user-userId"
+               var linkId = links[i].id,
+                  liParent = Dom.get(linkId).parentNode;
 
-               if (groupLinkId.substring(6) === groupId)
+               if (linkId.substring(param.length + 1) === id)
                {
                   // found item to selected
                   Dom.addClass(liParent, "selected");
-                  this.options.selectedGroupId = groupId;
-                  YAHOO.Bubbling.fire("rmGroupSelected");
+                  if (param === "group")
+                  {
+                     this.options.selectedGroupId = id;
+                     YAHOO.Bubbling.fire("rmGroupSelected");
+                  }
+                  else if (param === "user")
+                  {
+                     this.options.selectedUserId = id;
+                     YAHOO.Bubbling.fire("rmUserSelected");
+                  }
+                  else
+                  {
+                     throw "The paramter '" + param + "' is neither 'group' nor 'user'!";
+                  }
                }
                else
                {
@@ -430,6 +455,17 @@
       },
 
       /**
+       * Helper to update the group selection.
+       *
+       * @method updateSelectedGroupUI
+       * @param {groupId} Group ID to update for, null to empty the list
+       */
+      updateSelectedGroupUI: function RM_UsersAndGroups_updateSelectedGroupUI(groupId)
+      {
+         this._updateSelectedUI(groupId, "group");
+      },
+
+      /**
        * Helper to update the user selection.
        *
        * @method updateSelectedUserUI
@@ -437,30 +473,7 @@
        */
       updateSelectedUserUI: function RM_UsersAndGroups_updateSelectedUserUI(userId)
       {
-         // update selected item background
-         var userLinks = Dom.getElementsByClassName("user", "a");
-         for (var i in userLinks)
-         {
-            if (userLinks.hasOwnProperty(i))
-            {
-               // user link ID is in the format "role-roleId"
-               var userLinkId = userLinks[i].id,
-               liParent = Dom.get(userLinkId).parentNode;
-
-               if (userLinkId.substring(5) === userId)
-               {
-                  // found item to selected
-                  Dom.addClass(liParent, "selected");
-                  this.options.selectedUserId = userId;
-                  YAHOO.Bubbling.fire("rmUserSelected");
-               }
-               else
-               {
-                  // deselect previously selected item
-                  Dom.removeClass(liParent, "selected");
-               }
-            }
-         }
+         this._updateSelectedUI(userId, "user");
       },
 
       /**
