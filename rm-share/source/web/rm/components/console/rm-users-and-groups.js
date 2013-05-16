@@ -226,8 +226,17 @@
          // get the ID of the element - in the format "group-groupId" and extract the groupId value
          var groupId = el.id.substring(6);
 
-         // update roleId value
-         window.location.hash += '&groupId=' + encodeURI(groupId);
+         // add/update groupId value
+         var hash = window.location.hash;
+         if (hash.indexOf("&groupId=") !== -1)
+         {
+            hash = hash.replace(/(&groupId=)[^\&]+/, '$1' + encodeURI(groupId));
+         }
+         else
+         {
+            hash += '&groupId=' + encodeURI(groupId);
+         }
+         window.location.hash = hash;
 
          // update groupId value
          this.updateSelectedGroupUI(groupId);
@@ -247,8 +256,17 @@
          // get the ID of the element - in the format "user-userId" and extract the userId value
          var userId = el.id.substring(5);
 
-         // update roleId value
-         window.location.hash += '&userId=' + encodeURI(userId);
+         // add/update userId value
+         var hash = window.location.hash;
+         if (hash.indexOf("&userId=") !== -1)
+         {
+            hash = hash.replace(/(&userId=)[^\&]+/, '$1' + encodeURI(userId));
+         }
+         else
+         {
+            hash += '&userId=' + encodeURI(userId);
+         }
+         window.location.hash = hash;
 
          // update userId value
          this.updateSelectedUserUI(userId);
