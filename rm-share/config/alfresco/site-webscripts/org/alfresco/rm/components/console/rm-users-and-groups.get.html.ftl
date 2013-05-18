@@ -5,6 +5,22 @@
       new Alfresco.rm.component.RMUsersAndGroups("usersAndGroups").setOptions({}).setMessages(${messages});
    //]]></script>
 
+   <div id="rm-peoplepicker" class="groups people-picker" style="visibility: hidden;">
+      <div class="hd"><span id="rm-peoplepicker-title">${msg("panel.adduser.header")}</span></div>
+      <div class="bd rm-search-body">
+         <div style="margin: auto 10px;">
+            <div id="rm-search-peoplefinder"></div>
+         </div>
+      </div>
+   </div>
+   <div id="rm-grouppicker" class="groups group-picker" style="visibility: hidden;">
+      <div class="hd"><span id="rm-grouppicker-title">${msg("panel.addgroup.header")}</span></div>
+      <div class="bd rm-search-body">
+         <div style="margin: auto 10px;">
+            <div id="rm-search-groupfinder"></div>
+         </div>
+      </div>
+   </div>
    <div id="usersAndGroups">
       <div class="yui-gb view-role-list">
          <div id="roleSelection" class="yui-u first">

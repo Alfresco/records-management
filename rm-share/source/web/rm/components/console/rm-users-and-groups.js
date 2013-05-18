@@ -177,8 +177,30 @@
        */
       onAddGroup: function RM_UsersAndGroups_onAddGroup(e)
       {
-         // FIXME: See RM-690
-         var roleId = this.options.selectedRoleId;
+         if (this.widgets.addGroupPanel)
+         {
+            this.modules.searchGroupFinder.clearResults();
+            this.widgets.addGroupPanel.show();
+         }
+         else
+         {
+            // Load in the Group Finder component from the server
+            Alfresco.util.Ajax.request(
+            {
+               url: Alfresco.constants.URL_SERVICECONTEXT + "components/people-finder/group-finder",
+               dataObj:
+               {
+                  htmlid: "rm-search-groupfinder"
+               },
+               successCallback:
+               {
+                  fn: this.onGroupFinderLoaded,
+                  scope: this
+               },
+               failureMessage: this.msg("message.load-groupFinder-failure"),
+               execScripts: true
+            });
+         }
       },
 
       /**
@@ -195,6 +217,146 @@
       },
 
       /**
+       * Called when the group finder template has been loaded.
+       * Creates a dialog and inserts the group finder for choosing groups to add.
+       *
+       * @method onGroupFinderLoaded
+       * @param response The server response
+       */
+      onGroupFinderLoaded: function RM_UsersAndGroups__onGroupFinderLoaded(response)
+      {
+         // Inject the component from the XHR request into it's placeholder DIV element
+         var finderDiv = Dom.get("rm-search-groupfinder");
+         finderDiv.innerHTML = response.serverResponse.responseText;
+
+         // Create the Add Group dialog
+         this.widgets.addGroupPanel = Alfresco.util.createYUIPanel("rm-grouppicker")
+
+         // Find the Group Finder by container ID
+         this.modules.searchGroupFinder = Alfresco.util.ComponentManager.get("rm-search-groupfinder");
+
+         // Set the correct options for our use
+         this.modules.searchGroupFinder.setOptions(
+         {
+            viewMode: Alfresco.GroupFinder.VIEW_MODE_COMPACT,
+            singleSelectMode: true
+         });
+
+         // Make sure we listen for events when the user selects a group
+         YAHOO.Bubbling.on("itemSelected", this.onGroupSelected, this);
+
+         // Show the panel
+         this.widgets.addGroupPanel.show();
+      },
+
+      /**
+       * Called when the people finder template has been loaded.
+       * Creates a dialog and inserts the people finder for choosing users to add.
+       *
+       * @method onPeopleFinderLoaded
+       * @param response The server response
+       */
+      onPeopleFinderLoaded: function RM_UsersAndGroups_onPeopleFinderLoaded(response)
+      {
+         // Inject the component from the XHR request into it's placeholder DIV element
+         var finderDiv = Dom.get("rm-search-peoplefinder");
+         finderDiv.innerHTML = response.serverResponse.responseText;
+
+         // Create the Add User dialog
+         this.widgets.addUserPanel = Alfresco.util.createYUIPanel("rm-peoplepicker");
+
+         // Find the People Finder by container ID
+         this.modules.searchPeopleFinder = Alfresco.util.ComponentManager.get("rm-search-peoplefinder");
+
+         // Set the correct options for our use
+         this.modules.searchPeopleFinder.setOptions(
+         {
+            viewMode: Alfresco.PeopleFinder.VIEW_MODE_COMPACT,
+            singleSelectMode: true
+         });
+
+         // Make sure we listen for events when the user selects a person
+         YAHOO.Bubbling.on("personSelected", this.onPersonSelected, this);
+
+         // Show the panel
+         this.widgets.addUserPanel.show();
+      },
+
+      /**
+       * Adds a user or group to a parent group.
+       *
+       * @param objectId The id to a user (userName) or a group (fullName)
+       * @param groupShortName The shortName of the group that the object shall be added under
+       * @param successMessage Message to display if the request is successful
+       * @param failureMessage Message to display if the request fails
+       */
+      _addToGroup: function RM_UsersAndGroups__addToGroup(objectId, groupShortName, successMessage, failureMessage)
+      {
+         Alfresco.util.Ajax.jsonPost(
+         {
+            url: Alfresco.constants.PROXY_URI + "api/groups/" + encodeURIComponent(groupShortName) + "/children/" + encodeURIComponent(objectId),
+            successCallback:
+            {
+               fn: function(o)
+               {
+                  // Display success message
+                  Alfresco.util.PopupManager.displayMessage(
+                  {
+                     text: successMessage
+                  });
+
+                  // Update list
+                  this.updateRolesList();
+               },
+               scope: this
+            },
+            failureMessage: failureMessage
+         });
+      },
+
+      /**
+       * Group selected event handler.
+       * This event is fired from Group picker - so we much ensure
+       * the event is for the current panel by checking panel visibility.
+       *
+       * @method onGroupSelected
+       * @param e DomEvent
+       * @param args Event parameters (depends on event type)
+       */
+      onGroupSelected: function RM_UsersAndGroups_onGroupSelected(e, args)
+      {
+         var displayName = args[1].displayName,
+            groupName = args[1].itemName,
+            groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
+            successMessage = this.msg("message.addgroup-success", displayName),
+            failureMessage = this.msg("message.addgroup-failure", displayName);
+
+         this._addToGroup(groupName, groupShortName, successMessage, failureMessage);
+
+         this.widgets.addGroupPanel.hide();
+      },
+
+      /**
+       * Called when the user has selected a person from the add user dialog.
+       *
+       * @method onPersonSelected
+       * @param e DomEvent
+       * @param args Event parameters (depends on event type)
+       */
+      onPersonSelected: function RM_UsersAndGroups_onPersonSelected(e, args)
+      {
+         var name = args[1].firstName + " " + args[1].lastName,
+            userName = args[1].userName,
+            groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
+            successMessage = this.msg("message.adduser-success", name),
+            failureMessage = this.msg("message.adduser-failure", name);
+
+         this._addToGroup(userName, groupShortName, successMessage, failureMessage);
+
+         this.widgets.addUserPanel.hide();
+      },
+
+      /**
        * Event handler for add user button
        *
        * @method onAddUser
@@ -202,8 +364,30 @@
        */
       onAddUser: function RM_UsersAndGroups_onAddUser(e)
       {
-         // FIXME: See RM-690
-         var roleId = this.options.selectedRoleId;
+         if (this.widgets.addUserPanel)
+         {
+            this.modules.searchPeopleFinder.clearResults();
+            this.widgets.addUserPanel.show();
+         }
+         else
+         {
+            // Load in the People Finder component from the server
+            Alfresco.util.Ajax.request(
+            {
+               url: Alfresco.constants.URL_SERVICECONTEXT + "components/people-finder/people-finder",
+               dataObj:
+               {
+                  htmlid: "rm-search-peoplefinder"
+               },
+               successCallback:
+               {
+                  fn: this.onPeopleFinderLoaded,
+                  scope: this
+               },
+               failureMessage: this.msg("message.load-peopleFinder-failure"),
+               execScripts: true
+            });
+         }
       },
 
       /**
@@ -296,6 +480,7 @@
          Alfresco.util.Ajax.request(
          {
             method: Alfresco.util.Ajax.GET,
+            // FIXME: Use "/api/rma/admin/{store_type}/{store_id}/{id}/rmroles?user={user?}&auths={auths?}"
             url: Alfresco.constants.PROXY_URI + "api/rma/admin/rmroles?user=" + Alfresco.constants.USERNAME + "&auths=true",
             successCallback:
             {

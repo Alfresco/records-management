@@ -174,3 +174,8 @@
    clear: both;
    padding: 0.4em;
 }
+
+.bd.rm-search-body
+{
+   padding: 1px !important;
+}
