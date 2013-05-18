@@ -283,14 +283,14 @@
       },
 
       /**
-       * Adds a user or group to a parent group.
+       * Adds a user or group to a role.
        *
        * @param objectId The id to a user (userName) or a group (fullName)
        * @param groupShortName The shortName of the group that the object shall be added under
        * @param successMessage Message to display if the request is successful
        * @param failureMessage Message to display if the request fails
        */
-      _addToGroup: function RM_UsersAndGroups__addToGroup(objectId, groupShortName, successMessage, failureMessage)
+      _addToRole: function RM_UsersAndGroups__addToRole(objectId, groupShortName, successMessage, failureMessage)
       {
          Alfresco.util.Ajax.jsonPost(
          {
@@ -331,7 +331,7 @@
             successMessage = this.msg("message.addgroup-success", displayName),
             failureMessage = this.msg("message.addgroup-failure", displayName);
 
-         this._addToGroup(groupName, groupShortName, successMessage, failureMessage);
+         this._addToRole(groupName, groupShortName, successMessage, failureMessage);
 
          this.widgets.addGroupPanel.hide();
       },
@@ -345,13 +345,12 @@
        */
       onPersonSelected: function RM_UsersAndGroups_onPersonSelected(e, args)
       {
-         var name = args[1].firstName + " " + args[1].lastName,
-            userName = args[1].userName,
+         var userName = args[1].userName,
             groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
-            successMessage = this.msg("message.adduser-success", name),
-            failureMessage = this.msg("message.adduser-failure", name);
+            successMessage = this.msg("message.adduser-success", userName),
+            failureMessage = this.msg("message.adduser-failure", userName);
 
-         this._addToGroup(userName, groupShortName, successMessage, failureMessage);
+         this._addToRole(userName, groupShortName, successMessage, failureMessage);
 
          this.widgets.addUserPanel.hide();
       },
@@ -398,9 +397,53 @@
        */
       onRemoveUser: function RM_UsersAndGroups_onRemoveUser(e)
       {
-         // FIXME: See RM-691
-         var roleId = this.options.selectedRoleId,
+         var me = this,
+            groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
             userId = this.options.selectedUserId;
+
+         Alfresco.util.PopupManager.displayPrompt(
+         {
+            title: this.msg("message.confirm.removeuser.title"),
+            text: this.msg("message.confirm.removeuser", userId),
+            buttons: [
+            {
+               text: this.msg("button.yes"),
+               handler: function RM_UsersAndGroups_removeUser_confirmYes()
+               {
+                  this.destroy();
+
+                  Alfresco.util.Ajax.request(
+                  {
+                     method: Alfresco.util.Ajax.DELETE,
+                     url: Alfresco.constants.PROXY_URI + "api/groups/" + encodeURIComponent(groupShortName) + "/children/" + encodeURIComponent(userId),
+                     successCallback:
+                     {
+                        fn: function(o)
+                        {
+                           // Display success message
+                           Alfresco.util.PopupManager.displayMessage(
+                           {
+                              text: me.msg("message.removeuser-success", userId)
+                           });
+
+                           // Update list
+                           me.updateRolesList();
+                        },
+                        scope: this
+                     },
+                     failureMessage: me.msg("message.removeuser-failure", userId)
+                  });
+               }
+            },
+            {
+               text: this.msg("button.no"),
+               handler: function RM_UsersAndGroups_removeUser_confirmNo()
+               {
+                  this.destroy();
+               },
+               isDefault: true
+            }]
+         });
       },
 
       /**
