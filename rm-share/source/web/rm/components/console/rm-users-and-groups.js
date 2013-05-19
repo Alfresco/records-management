@@ -211,9 +211,55 @@
        */
       onRemoveGroup: function RM_UsersAndGroups_onRemoveGroup(e)
       {
-         // FIXME: See RM-691
-         var roleId = this.options.selectedRoleId,
-            groupId = this.options.selectedGroupId;
+         var me = this,
+            groupId = this.options.selectedGroupId,
+            role = this.roles[this.options.selectedRoleId],
+            groupName = Alfresco.util.findInArray(role.assignedGroups, groupId, "name")["displayLabel"],
+            groupShortName = role.groupShortName;
+
+         Alfresco.util.PopupManager.displayPrompt(
+         {
+            title: this.msg("message.confirm.removegroup.title"),
+            text: this.msg("message.confirm.removegroup", groupName),
+            buttons: [
+            {
+               text: this.msg("button.yes"),
+               handler: function RM_UsersAndGroups_removeGroup_confirmYes()
+               {
+                  this.destroy();
+
+                  Alfresco.util.Ajax.request(
+                  {
+                     method: Alfresco.util.Ajax.DELETE,
+                     url: Alfresco.constants.PROXY_URI + "api/groups/" + encodeURIComponent(groupShortName) + "/children/" + encodeURIComponent(groupId),
+                     successCallback:
+                     {
+                        fn: function(o)
+                        {
+                           // Display success message
+                           Alfresco.util.PopupManager.displayMessage(
+                           {
+                              text: me.msg("message.removegroup-success", groupName)
+                           });
+
+                           // Update list
+                           me.updateRolesList();
+                        },
+                        scope: this
+                     },
+                     failureMessage: me.msg("message.removegroup-failure", groupName)
+                  });
+               }
+            },
+            {
+               text: this.msg("button.no"),
+               handler: function RM_UsersAndGroups_removeGroup_confirmNo()
+               {
+                  this.destroy();
+               },
+               isDefault: true
+            }]
+         });
       },
 
       /**
