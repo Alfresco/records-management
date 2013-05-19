@@ -91,481 +91,6 @@
       },
 
       /**
-       * Fired by YUI when parent element is available for scripting
-       *
-       * @method onReady
-       */
-      onReady: function RM_UsersAndGroups_onReady()
-      {
-         this.initEvents();
-
-         var buttons = Sel.query('button', this.id),
-            button, id;
-
-         // Create widget button while reassigning classname to src element (since YUI removes classes).
-         // We need the classname so we can identify what action to take when it is interacted with (event delegation).
-         for (var i = 0, length = buttons.length; i < length; i++)
-         {
-            button = buttons[i];
-            id = button.id.replace(this.id + '-', '');
-            this.widgets[id] = new YAHOO.widget.Button(button.id);
-            this.widgets[id]._button.className = button.className;
-         }
-
-         // well known buttons - set the initial state
-         this.widgets.addGroup.set("disabled", true);
-         this.widgets.removeGroup.set("disabled", true);
-         this.widgets.addUser.set("disabled", true);
-         this.widgets.removeUser.set("disabled", true);
-
-         // get the selected role ID, group ID and user ID
-         this.options.selectedRoleId = this.getValueFromUrl("roleId");
-         this.options.selectedGroupId = this.getValueFromUrl("groupId");
-         this.options.selectedUserId = this.getValueFromUrl("userId");
-
-         // query the list of roles, groups and users to populate the roles list
-         this.updateRolesList();
-      },
-
-      /**
-       * This event is fired when a role is selected.
-       * The add buttons will be enable and the remove buttons will be disabled.
-       *
-       * @method onHandleAddButtons
-       * @param e DomEvent
-       * @param args Event parameters (depends on event type)
-       */
-      onHandleAllButtons: function RM_UsersAndGroups_onHandleAllButtons(e, args)
-      {
-         this.widgets.addGroup.set("disabled", false);
-         this.widgets.addUser.set("disabled", false);
-         this.widgets.removeGroup.set("disabled", true);
-         this.widgets.removeUser.set("disabled", true);
-      },
-
-      /**
-       * This event is fired when a group is selected.
-       * The remove button for the groups column will be enabled.
-       *
-       * @method onHandleRemoveGroupButton
-       * @param e DomEvent
-       * @param args Event parameters (depends on event type)
-       */
-      onHandleRemoveGroupButton: function RM_UsersAndGroups_onEnableRemoveGroupButton(e, args)
-      {
-         this.widgets.removeGroup.set("disabled", false);
-      },
-
-      /**
-       * This event is fired when a user is selected.
-       * The remove button for the user column will be enabled.
-       *
-       * @method onHandleRemoveUserButton
-       * @param e DomEvent
-       * @param args Event parameters (depends on event type)
-       */
-      onHandleRemoveUserButton: function RM_UsersAndGroups_onEnableRemoveUserButton(e, args)
-      {
-         this.widgets.removeUser.set("disabled", false);
-      },
-
-      /**
-       * Event handler for add group button
-       *
-       * @method onAddGroup
-       * @param {e} Event object
-       */
-      onAddGroup: function RM_UsersAndGroups_onAddGroup(e)
-      {
-         if (this.widgets.addGroupPanel)
-         {
-            this.modules.searchGroupFinder.clearResults();
-            this.widgets.addGroupPanel.show();
-         }
-         else
-         {
-            // Load in the Group Finder component from the server
-            Alfresco.util.Ajax.request(
-            {
-               url: Alfresco.constants.URL_SERVICECONTEXT + "components/people-finder/group-finder",
-               dataObj:
-               {
-                  htmlid: "rm-search-groupfinder"
-               },
-               successCallback:
-               {
-                  fn: this.onGroupFinderLoaded,
-                  scope: this
-               },
-               failureMessage: this.msg("message.load-groupFinder-failure"),
-               execScripts: true
-            });
-         }
-      },
-
-      /**
-       * Event handler for remove group button
-       *
-       * @method onRemoveGroup
-       * @param {e} Event object
-       */
-      onRemoveGroup: function RM_UsersAndGroups_onRemoveGroup(e)
-      {
-         var me = this,
-            groupId = this.options.selectedGroupId,
-            role = this.roles[this.options.selectedRoleId],
-            groupName = Alfresco.util.findInArray(role.assignedGroups, groupId, "name")["displayLabel"],
-            groupShortName = role.groupShortName;
-
-         Alfresco.util.PopupManager.displayPrompt(
-         {
-            title: this.msg("message.confirm.removegroup.title"),
-            text: this.msg("message.confirm.removegroup", groupName),
-            buttons: [
-            {
-               text: this.msg("button.yes"),
-               handler: function RM_UsersAndGroups_removeGroup_confirmYes()
-               {
-                  this.destroy();
-
-                  Alfresco.util.Ajax.request(
-                  {
-                     method: Alfresco.util.Ajax.DELETE,
-                     url: Alfresco.constants.PROXY_URI + "api/groups/" + encodeURIComponent(groupShortName) + "/children/" + encodeURIComponent(groupId),
-                     successCallback:
-                     {
-                        fn: function(o)
-                        {
-                           // Display success message
-                           Alfresco.util.PopupManager.displayMessage(
-                           {
-                              text: me.msg("message.removegroup-success", groupName)
-                           });
-
-                           // Update list
-                           me.updateRolesList();
-                        },
-                        scope: this
-                     },
-                     failureMessage: me.msg("message.removegroup-failure", groupName)
-                  });
-               }
-            },
-            {
-               text: this.msg("button.no"),
-               handler: function RM_UsersAndGroups_removeGroup_confirmNo()
-               {
-                  this.destroy();
-               },
-               isDefault: true
-            }]
-         });
-      },
-
-      /**
-       * Called when the group finder template has been loaded.
-       * Creates a dialog and inserts the group finder for choosing groups to add.
-       *
-       * @method onGroupFinderLoaded
-       * @param response The server response
-       */
-      onGroupFinderLoaded: function RM_UsersAndGroups__onGroupFinderLoaded(response)
-      {
-         // Inject the component from the XHR request into it's placeholder DIV element
-         var finderDiv = Dom.get("rm-search-groupfinder");
-         finderDiv.innerHTML = response.serverResponse.responseText;
-
-         // Create the Add Group dialog
-         this.widgets.addGroupPanel = Alfresco.util.createYUIPanel("rm-grouppicker")
-
-         // Find the Group Finder by container ID
-         this.modules.searchGroupFinder = Alfresco.util.ComponentManager.get("rm-search-groupfinder");
-
-         // Set the correct options for our use
-         this.modules.searchGroupFinder.setOptions(
-         {
-            viewMode: Alfresco.GroupFinder.VIEW_MODE_COMPACT,
-            singleSelectMode: true
-         });
-
-         // Make sure we listen for events when the user selects a group
-         YAHOO.Bubbling.on("itemSelected", this.onGroupSelected, this);
-
-         YAHOO.lang.later(100, this, function()
-         {
-            // Show the panel
-            this.widgets.addGroupPanel.show();
-         });
-      },
-
-      /**
-       * Called when the people finder template has been loaded.
-       * Creates a dialog and inserts the people finder for choosing users to add.
-       *
-       * @method onPeopleFinderLoaded
-       * @param response The server response
-       */
-      onPeopleFinderLoaded: function RM_UsersAndGroups_onPeopleFinderLoaded(response)
-      {
-         // Inject the component from the XHR request into it's placeholder DIV element
-         var finderDiv = Dom.get("rm-search-peoplefinder");
-         finderDiv.innerHTML = response.serverResponse.responseText;
-
-         // Create the Add User dialog
-         this.widgets.addUserPanel = Alfresco.util.createYUIPanel("rm-peoplepicker");
-
-         // Find the People Finder by container ID
-         this.modules.searchPeopleFinder = Alfresco.util.ComponentManager.get("rm-search-peoplefinder");
-
-         // Set the correct options for our use
-         this.modules.searchPeopleFinder.setOptions(
-         {
-            viewMode: Alfresco.PeopleFinder.VIEW_MODE_COMPACT,
-            singleSelectMode: true
-         });
-
-         // Make sure we listen for events when the user selects a person
-         YAHOO.Bubbling.on("personSelected", this.onPersonSelected, this);
-
-         YAHOO.lang.later(100, this, function()
-         {
-            // Show the panel
-            this.widgets.addUserPanel.show();
-         });
-      },
-
-      /**
-       * Adds a user or group to a role.
-       *
-       * @param objectId The id to a user (userName) or a group (fullName)
-       * @param groupShortName The shortName of the group that the object shall be added under
-       * @param successMessage Message to display if the request is successful
-       * @param failureMessage Message to display if the request fails
-       */
-      _addToRole: function RM_UsersAndGroups__addToRole(objectId, groupShortName, successMessage, failureMessage)
-      {
-         Alfresco.util.Ajax.jsonPost(
-         {
-            url: Alfresco.constants.PROXY_URI + "api/groups/" + encodeURIComponent(groupShortName) + "/children/" + encodeURIComponent(objectId),
-            successCallback:
-            {
-               fn: function(o)
-               {
-                  // Display success message
-                  Alfresco.util.PopupManager.displayMessage(
-                  {
-                     text: successMessage
-                  });
-
-                  // Update list
-                  this.updateRolesList();
-               },
-               scope: this
-            },
-            failureMessage: failureMessage
-         });
-      },
-
-      /**
-       * Group selected event handler.
-       * This event is fired from Group picker - so we much ensure
-       * the event is for the current panel by checking panel visibility.
-       *
-       * @method onGroupSelected
-       * @param e DomEvent
-       * @param args Event parameters (depends on event type)
-       */
-      onGroupSelected: function RM_UsersAndGroups_onGroupSelected(e, args)
-      {
-         var displayName = args[1].displayName,
-            groupName = args[1].itemName,
-            groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
-            successMessage = this.msg("message.addgroup-success", displayName),
-            failureMessage = this.msg("message.addgroup-failure", displayName);
-
-         this._addToRole(groupName, groupShortName, successMessage, failureMessage);
-
-         this.widgets.addGroupPanel.hide();
-      },
-
-      /**
-       * Called when the user has selected a person from the add user dialog.
-       *
-       * @method onPersonSelected
-       * @param e DomEvent
-       * @param args Event parameters (depends on event type)
-       */
-      onPersonSelected: function RM_UsersAndGroups_onPersonSelected(e, args)
-      {
-         var userName = args[1].userName,
-            groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
-            successMessage = this.msg("message.adduser-success", userName),
-            failureMessage = this.msg("message.adduser-failure", userName);
-
-         this._addToRole(userName, groupShortName, successMessage, failureMessage);
-
-         this.widgets.addUserPanel.hide();
-      },
-
-      /**
-       * Event handler for add user button
-       *
-       * @method onAddUser
-       * @param {e} Event object
-       */
-      onAddUser: function RM_UsersAndGroups_onAddUser(e)
-      {
-         if (this.widgets.addUserPanel)
-         {
-            this.modules.searchPeopleFinder.clearResults();
-            this.widgets.addUserPanel.show();
-         }
-         else
-         {
-            // Load in the People Finder component from the server
-            Alfresco.util.Ajax.request(
-            {
-               url: Alfresco.constants.URL_SERVICECONTEXT + "components/people-finder/people-finder",
-               dataObj:
-               {
-                  htmlid: "rm-search-peoplefinder"
-               },
-               successCallback:
-               {
-                  fn: this.onPeopleFinderLoaded,
-                  scope: this
-               },
-               failureMessage: this.msg("message.load-peopleFinder-failure"),
-               execScripts: true
-            });
-         }
-      },
-
-      /**
-       * Event handler for remove user button
-       *
-       * @method onRemoveUser
-       * @param {e} Event object
-       */
-      onRemoveUser: function RM_UsersAndGroups_onRemoveUser(e)
-      {
-         var me = this,
-            groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
-            userId = this.options.selectedUserId;
-
-         Alfresco.util.PopupManager.displayPrompt(
-         {
-            title: this.msg("message.confirm.removeuser.title"),
-            text: this.msg("message.confirm.removeuser", userId),
-            buttons: [
-            {
-               text: this.msg("button.yes"),
-               handler: function RM_UsersAndGroups_removeUser_confirmYes()
-               {
-                  this.destroy();
-
-                  Alfresco.util.Ajax.request(
-                  {
-                     method: Alfresco.util.Ajax.DELETE,
-                     url: Alfresco.constants.PROXY_URI + "api/groups/" + encodeURIComponent(groupShortName) + "/children/" + encodeURIComponent(userId),
-                     successCallback:
-                     {
-                        fn: function(o)
-                        {
-                           // Display success message
-                           Alfresco.util.PopupManager.displayMessage(
-                           {
-                              text: me.msg("message.removeuser-success", userId)
-                           });
-
-                           // Update list
-                           me.updateRolesList();
-                        },
-                        scope: this
-                     },
-                     failureMessage: me.msg("message.removeuser-failure", userId)
-                  });
-               }
-            },
-            {
-               text: this.msg("button.no"),
-               handler: function RM_UsersAndGroups_removeUser_confirmNo()
-               {
-                  this.destroy();
-               },
-               isDefault: true
-            }]
-         });
-      },
-
-      /**
-       * Helper function for 'onGroupSelect' and 'onUserSelect' to avoid code duplication.
-       *
-       * @method onGroupSelect
-       * @param {e} Event object
-       * @param {param} parameter used in the url (might be 'group' or 'user')
-       */
-      _onSelect: function RM_UsersAndGroups__onSelect(e, param)
-      {
-         Event.stopEvent(e);
-
-         var el = Event.getTarget(e),
-            urlParam = "&" + param + "Id=";
-
-         // get the id of the element
-         var id = el.id.substring(param.length + 1);
-
-         // add/update id value
-         var hash = window.location.hash;
-         if (hash.indexOf(urlParam) !== -1)
-         {
-            hash = hash.replace(new RegExp('(' + urlParam + ')[^\&]+'), '$1' + encodeURI(id));
-         }
-         else
-         {
-            hash += urlParam + encodeURI(id);
-         }
-         window.location.hash = hash;
-
-         if (param === "group")
-         {
-            this.updateSelectedGroupUI(id);
-         }
-         else if (param === "user")
-         {
-            this.updateSelectedUserUI(id);
-         }
-         else
-         {
-            throw "The paramter '" + param + "' is neither 'group' nor 'user'!";
-         }
-      },
-
-      /**
-       * Event handler for group selection
-       *
-       * @method onGroupSelect
-       * @param {e} Event object
-       */
-      onGroupSelect: function RM_UsersAndGroups_onGroupSelect(e)
-      {
-         // update groupId value
-         this._onSelect(e, "group");
-      },
-
-      /**
-       * Event handler for user selection
-       *
-       * @method onUserSelect
-       * @param {e} Event object
-       */
-      onUserSelect: function RM_UsersAndGroups_onUserSelect(e)
-      {
-         // update userId value
-         this._onSelect(e, "user");
-      },
-
-      /**
        * Query the list of roles to populate the roles list.
        *
        * @method updateRolesList
@@ -575,8 +100,8 @@
          Alfresco.util.Ajax.request(
          {
             method: Alfresco.util.Ajax.GET,
-            // FIXME: Use "/api/rma/admin/{store_type}/{store_id}/{id}/rmroles?user={user?}&auths={auths?}"
-            url: Alfresco.constants.PROXY_URI + "api/rma/admin/rmroles?user=" + Alfresco.constants.USERNAME + "&auths=true",
+            // FIXME: Use "/api/rma/admin/{store_type}/{store_id}/{id}/rmroles?auths={auths?}"
+            url: Alfresco.constants.PROXY_URI + "api/rma/admin/rmroles?auths=true",
             successCallback:
             {
                fn: this.onRolesLoaded,
@@ -754,6 +279,462 @@
       updateSelectedUserUI: function RM_UsersAndGroups_updateSelectedUserUI(userId)
       {
          this._updateSelectedUI(userId, "user");
+      },
+
+      /**
+       * Fired by YUI when parent element is available for scripting
+       *
+       * @method onReady
+       */
+      onReady: function RM_UsersAndGroups_onReady()
+      {
+         this.initEvents();
+
+         var buttons = Sel.query('button', this.id),
+            button, id;
+
+         // Create widget button while reassigning classname to src element (since YUI removes classes).
+         // We need the classname so we can identify what action to take when it is interacted with (event delegation).
+         for (var i = 0, length = buttons.length; i < length; i++)
+         {
+            button = buttons[i];
+            id = button.id.replace(this.id + '-', '');
+            this.widgets[id] = new YAHOO.widget.Button(button.id);
+            this.widgets[id]._button.className = button.className;
+         }
+
+         // well known buttons - set the initial state
+         this.widgets.addGroup.set("disabled", true);
+         this.widgets.removeGroup.set("disabled", true);
+         this.widgets.addUser.set("disabled", true);
+         this.widgets.removeUser.set("disabled", true);
+
+         // get the selected role ID, group ID and user ID
+         this.options.selectedRoleId = this.getValueFromUrl("roleId");
+         this.options.selectedGroupId = this.getValueFromUrl("groupId");
+         this.options.selectedUserId = this.getValueFromUrl("userId");
+
+         // query the list of roles, groups and users to populate the roles list
+         this.updateRolesList();
+      },
+
+      /**
+       * This event is fired when a role is selected.
+       * The add buttons will be enable and the remove buttons will be disabled.
+       *
+       * @method onHandleAddButtons
+       * @param e DomEvent
+       * @param args Event parameters (depends on event type)
+       */
+      onHandleAllButtons: function RM_UsersAndGroups_onHandleAllButtons(e, args)
+      {
+         this.widgets.addGroup.set("disabled", false);
+         this.widgets.addUser.set("disabled", false);
+         this.widgets.removeGroup.set("disabled", true);
+         this.widgets.removeUser.set("disabled", true);
+      },
+
+      /**
+       * This event is fired when a group is selected.
+       * The remove button for the groups column will be enabled.
+       *
+       * @method onHandleRemoveGroupButton
+       * @param e DomEvent
+       * @param args Event parameters (depends on event type)
+       */
+      onHandleRemoveGroupButton: function RM_UsersAndGroups_onEnableRemoveGroupButton(e, args)
+      {
+         this.widgets.removeGroup.set("disabled", false);
+      },
+
+      /**
+       * This event is fired when a user is selected.
+       * The remove button for the user column will be enabled.
+       *
+       * @method onHandleRemoveUserButton
+       * @param e DomEvent
+       * @param args Event parameters (depends on event type)
+       */
+      onHandleRemoveUserButton: function RM_UsersAndGroups_onEnableRemoveUserButton(e, args)
+      {
+         this.widgets.removeUser.set("disabled", false);
+      },
+
+      /**
+       * Adds a user or group to a role.
+       *
+       * @param objectId The id to a user (userName) or a group (fullName)
+       * @param groupShortName The shortName of the group that the object shall be added under
+       * @param successMessage Message to display if the request is successful
+       * @param failureMessage Message to display if the request fails
+       */
+      _addToRole: function RM_UsersAndGroups__addToRole(objectId, groupShortName, successMessage, failureMessage)
+      {
+         Alfresco.util.Ajax.jsonPost(
+         {
+            url: Alfresco.constants.PROXY_URI + "api/groups/" + encodeURIComponent(groupShortName) + "/children/" + encodeURIComponent(objectId),
+            successCallback:
+            {
+               fn: function(o)
+               {
+                  // Display success message
+                  Alfresco.util.PopupManager.displayMessage(
+                  {
+                     text: successMessage
+                  });
+
+                  // Update list
+                  this.updateRolesList();
+               },
+               scope: this
+            },
+            failureMessage: failureMessage
+         });
+      },
+
+      /**
+       * Group selected event handler.
+       * This event is fired from Group picker - so we much ensure
+       * the event is for the current panel by checking panel visibility.
+       *
+       * @method onGroupSelected
+       * @param e DomEvent
+       * @param args Event parameters (depends on event type)
+       */
+      onGroupSelected: function RM_UsersAndGroups_onGroupSelected(e, args)
+      {
+         var displayName = args[1].displayName,
+            groupName = args[1].itemName,
+            groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
+            successMessage = this.msg("message.addgroup-success", displayName),
+            failureMessage = this.msg("message.addgroup-failure", displayName);
+
+         this._addToRole(groupName, groupShortName, successMessage, failureMessage);
+
+         this.widgets.addGroupPanel.hide();
+      },
+
+      /**
+       * Called when the group finder template has been loaded.
+       * Creates a dialog and inserts the group finder for choosing groups to add.
+       *
+       * @method onGroupFinderLoaded
+       * @param response The server response
+       */
+      onGroupFinderLoaded: function RM_UsersAndGroups__onGroupFinderLoaded(response)
+      {
+         // Inject the component from the XHR request into it's placeholder DIV element
+         var finderDiv = Dom.get("rm-search-groupfinder");
+         finderDiv.innerHTML = response.serverResponse.responseText;
+
+         // Create the Add Group dialog
+         this.widgets.addGroupPanel = Alfresco.util.createYUIPanel("rm-grouppicker")
+
+         // Find the Group Finder by container ID
+         this.modules.searchGroupFinder = Alfresco.util.ComponentManager.get("rm-search-groupfinder");
+
+         // Set the correct options for our use
+         this.modules.searchGroupFinder.setOptions(
+         {
+            viewMode: Alfresco.GroupFinder.VIEW_MODE_COMPACT,
+            singleSelectMode: true
+         });
+
+         // Make sure we listen for events when the user selects a group
+         YAHOO.Bubbling.on("itemSelected", this.onGroupSelected, this);
+
+         YAHOO.lang.later(100, this, function()
+         {
+            // Show the panel
+            this.widgets.addGroupPanel.show();
+         });
+      },
+
+      /**
+       * Called when the user has selected a person from the add user dialog.
+       *
+       * @method onPersonSelected
+       * @param e DomEvent
+       * @param args Event parameters (depends on event type)
+       */
+      onPersonSelected: function RM_UsersAndGroups_onPersonSelected(e, args)
+      {
+         var userName = args[1].userName,
+            groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
+            successMessage = this.msg("message.adduser-success", userName),
+            failureMessage = this.msg("message.adduser-failure", userName);
+
+         this._addToRole(userName, groupShortName, successMessage, failureMessage);
+
+         this.widgets.addUserPanel.hide();
+      },
+
+      /**
+       * Called when the people finder template has been loaded.
+       * Creates a dialog and inserts the people finder for choosing users to add.
+       *
+       * @method onPeopleFinderLoaded
+       * @param response The server response
+       */
+      onPeopleFinderLoaded: function RM_UsersAndGroups_onPeopleFinderLoaded(response)
+      {
+         // Inject the component from the XHR request into it's placeholder DIV element
+         var finderDiv = Dom.get("rm-search-peoplefinder");
+         finderDiv.innerHTML = response.serverResponse.responseText;
+
+         // Create the Add User dialog
+         this.widgets.addUserPanel = Alfresco.util.createYUIPanel("rm-peoplepicker");
+
+         // Find the People Finder by container ID
+         this.modules.searchPeopleFinder = Alfresco.util.ComponentManager.get("rm-search-peoplefinder");
+
+         // Set the correct options for our use
+         this.modules.searchPeopleFinder.setOptions(
+         {
+            viewMode: Alfresco.PeopleFinder.VIEW_MODE_COMPACT,
+            singleSelectMode: true
+         });
+
+         // Make sure we listen for events when the user selects a person
+         YAHOO.Bubbling.on("personSelected", this.onPersonSelected, this);
+
+         YAHOO.lang.later(100, this, function()
+         {
+            // Show the panel
+            this.widgets.addUserPanel.show();
+         });
+      },
+
+      /**
+       * Event handler for add group button
+       *
+       * @method onAddGroup
+       * @param {e} Event object
+       */
+      onAddGroup: function RM_UsersAndGroups_onAddGroup(e)
+      {
+         if (this.widgets.addGroupPanel)
+         {
+            this.modules.searchGroupFinder.clearResults();
+            this.widgets.addGroupPanel.show();
+         }
+         else
+         {
+            // Load in the Group Finder component from the server
+            Alfresco.util.Ajax.request(
+            {
+               url: Alfresco.constants.URL_SERVICECONTEXT + "components/people-finder/group-finder",
+               dataObj:
+               {
+                  htmlid: "rm-search-groupfinder"
+               },
+               successCallback:
+               {
+                  fn: this.onGroupFinderLoaded,
+                  scope: this
+               },
+               failureMessage: this.msg("message.load-groupFinder-failure"),
+               execScripts: true
+            });
+         }
+      },
+
+      /**
+       * Removes a user or group from a role.
+       *
+       * @param objectId The id to a user (userName) or a group (fullName)
+       * @param groupShortName The shortName of the group that the object shall be added under
+       * @param successMessage Message to display if the request is successful
+       * @param failureMessage Message to display if the request fails
+       * @param displayPromptTitle Title for the display prompt
+       * @param displayPromptText Text for the display prompt
+       */
+      _removeFromRole: function RM_UsersAndGroups__removeFromRole(objectId, groupShortName, successMessage, failureMessage, displayPromptTitle, displayPromptText)
+      {
+         var me = this;
+
+         Alfresco.util.PopupManager.displayPrompt(
+         {
+            title: displayPromptTitle,
+            text: displayPromptText,
+            buttons: [
+            {
+               text: this.msg("button.yes"),
+               handler: function RM_UsersAndGroups_remove_confirmYes()
+               {
+                  this.destroy();
+
+                  Alfresco.util.Ajax.request(
+                  {
+                     method: Alfresco.util.Ajax.DELETE,
+                     url: Alfresco.constants.PROXY_URI + "api/groups/" + encodeURIComponent(groupShortName) + "/children/" + encodeURIComponent(objectId),
+                     successCallback:
+                     {
+                        fn: function(o)
+                        {
+                           // Display success message
+                           Alfresco.util.PopupManager.displayMessage(
+                           {
+                              text: successMessage
+                           });
+
+                           // Update list
+                           me.updateRolesList();
+                        },
+                        scope: this
+                     },
+                     failureMessage: failureMessage
+                  });
+               }
+            },
+            {
+               text: this.msg("button.no"),
+               handler: function RM_UsersAndGroups_remove_confirmNo()
+               {
+                  this.destroy();
+               },
+               isDefault: true
+            }]
+         });
+      },
+
+      /**
+       * Event handler for remove group button
+       *
+       * @method onRemoveGroup
+       * @param {e} Event object
+       */
+      onRemoveGroup: function RM_UsersAndGroups_onRemoveGroup(e)
+      {
+         var groupId = this.options.selectedGroupId,
+            role = this.roles[this.options.selectedRoleId],
+            groupName = Alfresco.util.findInArray(role.assignedGroups, groupId, "name")["displayLabel"],
+            groupShortName = role.groupShortName,
+            successMessage = this.msg("message.removegroup-success", groupName),
+            failureMessage = this.msg("message.removegroup-failure", groupName),
+            displayPromptTitle = this.msg("message.confirm.removegroup.title"),
+            displayPromptText = this.msg("message.confirm.removegroup", groupName);
+
+         this._removeFromRole(groupId, groupShortName, successMessage, failureMessage, displayPromptTitle, displayPromptText);
+      },
+
+      /**
+       * Event handler for add user button
+       *
+       * @method onAddUser
+       * @param {e} Event object
+       */
+      onAddUser: function RM_UsersAndGroups_onAddUser(e)
+      {
+         if (this.widgets.addUserPanel)
+         {
+            this.modules.searchPeopleFinder.clearResults();
+            this.widgets.addUserPanel.show();
+         }
+         else
+         {
+            // Load in the People Finder component from the server
+            Alfresco.util.Ajax.request(
+            {
+               url: Alfresco.constants.URL_SERVICECONTEXT + "components/people-finder/people-finder",
+               dataObj:
+               {
+                  htmlid: "rm-search-peoplefinder"
+               },
+               successCallback:
+               {
+                  fn: this.onPeopleFinderLoaded,
+                  scope: this
+               },
+               failureMessage: this.msg("message.load-peopleFinder-failure"),
+               execScripts: true
+            });
+         }
+      },
+
+      /**
+       * Event handler for remove user button
+       *
+       * @method onRemoveUser
+       * @param {e} Event object
+       */
+      onRemoveUser: function RM_UsersAndGroups_onRemoveUser(e)
+      {
+         var userId = this.options.selectedUserId,
+            groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
+            successMessage = this.msg("message.removeuser-success", userId),
+            failureMessage = this.msg("message.removeuser-failure", userId),
+            displayPromptTitle = this.msg("message.confirm.removeuser.title"),
+            displayPromptText = this.msg("message.confirm.removeuser", userId);
+
+         this._removeFromRole(userId, groupShortName, successMessage, failureMessage, displayPromptTitle, displayPromptText);
+      },
+
+      /**
+       * Helper function for 'onGroupSelect' and 'onUserSelect' to avoid code duplication.
+       *
+       * @method onGroupSelect
+       * @param {e} Event object
+       * @param {param} parameter used in the url (might be 'group' or 'user')
+       */
+      _onSelect: function RM_UsersAndGroups__onSelect(e, param)
+      {
+         Event.stopEvent(e);
+
+         var el = Event.getTarget(e),
+            urlParam = "&" + param + "Id=";
+
+         // get the id of the element
+         var id = el.id.substring(param.length + 1);
+
+         // add/update id value
+         var hash = window.location.hash;
+         if (hash.indexOf(urlParam) !== -1)
+         {
+            hash = hash.replace(new RegExp('(' + urlParam + ')[^\&]+'), '$1' + encodeURI(id));
+         }
+         else
+         {
+            hash += urlParam + encodeURI(id);
+         }
+         window.location.hash = hash;
+
+         if (param === "group")
+         {
+            this.updateSelectedGroupUI(id);
+         }
+         else if (param === "user")
+         {
+            this.updateSelectedUserUI(id);
+         }
+         else
+         {
+            throw "The paramter '" + param + "' is neither 'group' nor 'user'!";
+         }
+      },
+
+      /**
+       * Event handler for group selection
+       *
+       * @method onGroupSelect
+       * @param {e} Event object
+       */
+      onGroupSelect: function RM_UsersAndGroups_onGroupSelect(e)
+      {
+         // update groupId value
+         this._onSelect(e, "group");
+      },
+
+      /**
+       * Event handler for user selection
+       *
+       * @method onUserSelect
+       * @param {e} Event object
+       */
+      onUserSelect: function RM_UsersAndGroups_onUserSelect(e)
+      {
+         // update userId value
+         this._onSelect(e, "user");
       },
 
       /**
