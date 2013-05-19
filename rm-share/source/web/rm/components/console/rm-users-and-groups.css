@@ -4,10 +4,17 @@
    border: 1px solid #444444;
 }
 
-#roleSelection .list-header
+#roleSelection .list-header,
+#roleContentGroups .list-header
 {
    margin-right: -7%;
-   border-bottom: 1px solid #999;
+   border-bottom: 1px solid #999999;
+}
+
+#roleContentUsers .list-header
+{
+   margin-right: -6%;
+   border-bottom: 1px solid #999999;
 }
 
 #usersAndGroups
@@ -34,14 +41,7 @@
    padding: 0 0 0 0.5em;
 }
 
-#usersAndGroups div.groups-header
-{
-   font-size: 118%;
-   color: #515D6B;
-   font-weight: bold;
-   padding: 0.5em 0 0.5em 0.5em;
-}
-
+#usersAndGroups div.groups-header,
 #usersAndGroups div.users-header
 {
    font-size: 118%;
@@ -70,7 +70,7 @@
 #removeUser
 {
    margin-top: 0.25em;
-   margin-right: 5px;
+   margin-right: 8px;
 }
 
 #roles
@@ -85,26 +85,14 @@
    text-decoration: none;
 }
 
-#roleGroups a
-{
-   text-decoration: none;
-}
-
+#roleGroups a,
 #roleUsers a
 {
    text-decoration: none;
 }
 
-#roles ul
-{
-   margin: 0.5em;
-}
-
-#roleGroups ul
-{
-   margin: 0.5em;
-}
-
+#roles ul,
+#roleGroups ul,
 #roleUsers ul
 {
    margin: 0.5em;
@@ -135,15 +123,10 @@
    width: 31%;
 }
 
-#roleContentGroups *
+#roleContentGroups *,
+#roleContentUsers *
 {
    text-align: left;
-}
-
-#roleContentGroups .list-header
-{
-   margin-right: -7%;
-   border-bottom: 1px solid #999999;
 }
 
 #roleContentUsers
@@ -152,23 +135,7 @@
    width: 32%;
 }
 
-#roleContentUsers *
-{
-   text-align: left;
-}
-
-#roleContentUsers .list-header
-{
-   margin-right: -6%;
-   border-bottom: 1px solid #999999;
-}
-
-#roleContentGroups ul.groups-list li
-{
-   clear: both;
-   padding: 0.4em;
-}
-
+#roleContentGroups ul.groups-list li,
 #roleContentUsers ul.users-list li
 {
    clear: both;
@@ -178,4 +145,22 @@
 .bd.rm-search-body
 {
    padding: 1px !important;
+}
+
+.groups.group-picker,
+.people-picker
+{
+   width: 51em;
+}
+
+.group-finder.compact .results,
+.people-finder.compact .results
+{
+   height: 300px !important;
+}
+
+.group-finder .search-text input,
+.people-finder .search-text input
+{
+   width: 20em !important;
 }

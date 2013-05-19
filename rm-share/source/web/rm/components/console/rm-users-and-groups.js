@@ -291,8 +291,11 @@
          // Make sure we listen for events when the user selects a group
          YAHOO.Bubbling.on("itemSelected", this.onGroupSelected, this);
 
-         // Show the panel
-         this.widgets.addGroupPanel.show();
+         YAHOO.lang.later(100, this, function()
+         {
+            // Show the panel
+            this.widgets.addGroupPanel.show();
+         });
       },
 
       /**
@@ -324,8 +327,11 @@
          // Make sure we listen for events when the user selects a person
          YAHOO.Bubbling.on("personSelected", this.onPersonSelected, this);
 
-         // Show the panel
-         this.widgets.addUserPanel.show();
+         YAHOO.lang.later(100, this, function()
+         {
+            // Show the panel
+            this.widgets.addUserPanel.show();
+         });
       },
 
       /**
