@@ -364,15 +364,16 @@
        * Adds a user or group to a role.
        *
        * @param objectId The id to a user (userName) or a group (fullName)
-       * @param groupShortName The shortName of the group that the object shall be added under
+       * @param roleId The id of the role that the object shall be added under
        * @param successMessage Message to display if the request is successful
        * @param failureMessage Message to display if the request fails
        */
-      _addToRole: function RM_UsersAndGroups__addToRole(objectId, groupShortName, successMessage, failureMessage)
+      _addToRole: function RM_UsersAndGroups__addToRole(objectId, roleId, successMessage, failureMessage)
       {
          Alfresco.util.Ajax.jsonPost(
          {
-            url: Alfresco.constants.PROXY_URI + "api/groups/" + encodeURIComponent(groupShortName) + "/children/" + encodeURIComponent(objectId),
+            // FIXME: Use "/api/rm/{store_type}/{store_id}/{id}/role/{roleId}/children/{authorityName}"
+            url: Alfresco.constants.PROXY_URI + "api/rm/role/" + encodeURIComponent(roleId) + "/children/" + encodeURIComponent(objectId),
             successCallback:
             {
                fn: function(o)
@@ -405,11 +406,11 @@
       {
          var displayName = args[1].displayName,
             groupName = args[1].itemName,
-            groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
+            roleId = this.options.selectedRoleId,
             successMessage = this.msg("message.addgroup-success", displayName),
             failureMessage = this.msg("message.addgroup-failure", displayName);
 
-         this._addToRole(groupName, groupShortName, successMessage, failureMessage);
+         this._addToRole(groupName, roleId, successMessage, failureMessage);
 
          this.widgets.addGroupPanel.hide();
       },
@@ -460,11 +461,11 @@
       onPersonSelected: function RM_UsersAndGroups_onPersonSelected(e, args)
       {
          var userName = args[1].userName,
-            groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
+            roleId = this.options.selectedRoleId,
             successMessage = this.msg("message.adduser-success", userName),
             failureMessage = this.msg("message.adduser-failure", userName);
 
-         this._addToRole(userName, groupShortName, successMessage, failureMessage);
+         this._addToRole(userName, roleId, successMessage, failureMessage);
 
          this.widgets.addUserPanel.hide();
       },
@@ -543,13 +544,13 @@
        * Removes a user or group from a role.
        *
        * @param objectId The id to a user (userName) or a group (fullName)
-       * @param groupShortName The shortName of the group that the object shall be added under
+       * @param roleId The id of the role that the object shall be removed from
        * @param successMessage Message to display if the request is successful
        * @param failureMessage Message to display if the request fails
        * @param displayPromptTitle Title for the display prompt
        * @param displayPromptText Text for the display prompt
        */
-      _removeFromRole: function RM_UsersAndGroups__removeFromRole(objectId, groupShortName, successMessage, failureMessage, displayPromptTitle, displayPromptText)
+      _removeFromRole: function RM_UsersAndGroups__removeFromRole(objectId, roleId, successMessage, failureMessage, displayPromptTitle, displayPromptText)
       {
          var me = this;
 
@@ -567,7 +568,8 @@
                   Alfresco.util.Ajax.request(
                   {
                      method: Alfresco.util.Ajax.DELETE,
-                     url: Alfresco.constants.PROXY_URI + "api/groups/" + encodeURIComponent(groupShortName) + "/children/" + encodeURIComponent(objectId),
+                     // FIXME: Use "/api/rm/{store_type}/{store_id}/{id}/role/{roleId}/children/{authorityName}"
+                     url: Alfresco.constants.PROXY_URI + "api/rm/role/" + encodeURIComponent(roleId) + "/children/" + encodeURIComponent(objectId),
                      successCallback:
                      {
                         fn: function(o)
@@ -607,15 +609,15 @@
       onRemoveGroup: function RM_UsersAndGroups_onRemoveGroup(e)
       {
          var groupId = this.options.selectedGroupId,
-            role = this.roles[this.options.selectedRoleId],
+            roleId = this.options.selectedRoleId,
+            role = this.roles[roleId],
             groupName = Alfresco.util.findInArray(role.assignedGroups, groupId, "name")["displayLabel"],
-            groupShortName = role.groupShortName,
             successMessage = this.msg("message.removegroup-success", groupName),
             failureMessage = this.msg("message.removegroup-failure", groupName),
             displayPromptTitle = this.msg("message.confirm.removegroup.title"),
             displayPromptText = this.msg("message.confirm.removegroup", groupName);
 
-         this._removeFromRole(groupId, groupShortName, successMessage, failureMessage, displayPromptTitle, displayPromptText);
+         this._removeFromRole(groupId, roleId, successMessage, failureMessage, displayPromptTitle, displayPromptText);
       },
 
       /**
@@ -661,13 +663,13 @@
       onRemoveUser: function RM_UsersAndGroups_onRemoveUser(e)
       {
          var userId = this.options.selectedUserId,
-            groupShortName = this.roles[this.options.selectedRoleId].groupShortName,
+            roleId = this.options.selectedRoleId,
             successMessage = this.msg("message.removeuser-success", userId),
             failureMessage = this.msg("message.removeuser-failure", userId),
             displayPromptTitle = this.msg("message.confirm.removeuser.title"),
             displayPromptText = this.msg("message.confirm.removeuser", userId);
 
-         this._removeFromRole(userId, groupShortName, successMessage, failureMessage, displayPromptTitle, displayPromptText);
+         this._removeFromRole(userId, roleId, successMessage, failureMessage, displayPromptTitle, displayPromptText);
       },
 
       /**
