@@ -65,7 +65,9 @@
             {
                return Alfresco.util.siteURL(page, siteObj);
             }, this),
-            filePlan = (new Alfresco.util.NodeRef(jsNode.properties.rma_rootNodeRef)).uri;
+            filePlan = new Alfresco.util.NodeRef(jsNode.properties.rma_rootNodeRef),
+            filePlanUri = filePlan.uri,
+            filePlanId = filePlan.id;
 
          return (
          {
@@ -78,8 +80,8 @@
             recordSeriesDetailsUrl: fnPageURL("rm-record-series-details?nodeRef=" + nodeRef),
             recordCategoryDetailsUrl: fnPageURL("rm-record-category-details?nodeRef=" + nodeRef),
             recordFolderDetailsUrl: fnPageURL("rm-record-folder-details?nodeRef=" + nodeRef),
-            transfersZipUrl: $combine(Alfresco.constants.PROXY_URI, "api/node", filePlan, "transfers", nodeRef.id),
-            managePermissionsUrl: fnPageURL("rm-permissions?nodeRef=" + nodeRef + "&itemName=" + encodeURIComponent(record.displayName) + "&nodeType=" + jsNode.type)
+            transfersZipUrl: $combine(Alfresco.constants.PROXY_URI, "api/node", filePlanUri, "transfers", nodeRef.id),
+            managePermissionsUrl: fnPageURL("rm-permissions?nodeRef=" + nodeRef + "&itemName=" + encodeURIComponent(record.displayName) + "&nodeType=" + jsNode.type + "&filePlanId=" + filePlanId)
          });
       },
 
