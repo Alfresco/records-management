@@ -372,8 +372,8 @@
       {
          Alfresco.util.Ajax.jsonPost(
          {
-            // FIXME: Use "/api/rm/{store_type}/{store_id}/{id}/role/{roleId}/children/{authorityName}"
-            url: Alfresco.constants.PROXY_URI + "api/rm/role/" + encodeURIComponent(roleId) + "/children/" + encodeURIComponent(objectId),
+            // FIXME: Use "/api/rm/{store_type}/{store_id}/{id}/roles/{roleId}/authorities/{authorityName}"
+            url: Alfresco.constants.PROXY_URI + "api/rm/roles/" + encodeURIComponent(roleId) + "/authorities/" + encodeURIComponent(objectId),
             successCallback:
             {
                fn: function(o)
@@ -568,8 +568,8 @@
                   Alfresco.util.Ajax.request(
                   {
                      method: Alfresco.util.Ajax.DELETE,
-                     // FIXME: Use "/api/rm/{store_type}/{store_id}/{id}/role/{roleId}/children/{authorityName}"
-                     url: Alfresco.constants.PROXY_URI + "api/rm/role/" + encodeURIComponent(roleId) + "/children/" + encodeURIComponent(objectId),
+                     // FIXME: Use "/api/rm/{store_type}/{store_id}/{id}/roles/{roleId}/authorities/{authorityName}"
+                     url: Alfresco.constants.PROXY_URI + "api/rm/roles/" + encodeURIComponent(roleId) + "/authorities/" + encodeURIComponent(objectId),
                      successCallback:
                      {
                         fn: function(o)
