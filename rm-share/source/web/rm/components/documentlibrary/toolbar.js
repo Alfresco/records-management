@@ -42,7 +42,7 @@
    {
       return Alfresco.rm.component.DocListToolbar.superclass.constructor.call(this, htmlId);
    };
-   
+
    /**
     * Extend Alfresco.DocListToolbar
     */
@@ -52,7 +52,7 @@
     * Augment prototype with RecordsActions module, ensuring overwrite is enabled
     */
    YAHOO.lang.augmentProto(Alfresco.rm.component.DocListToolbar, Alfresco.rm.doclib.Actions, true);
-   
+
    /**
     * Augment prototype with main class implementation, ensuring overwrite is enabled
     */
@@ -72,6 +72,7 @@
             disabled: true,
             value: "newCategory"
          });
+
          // New Record Folder button: user needs "newFolder" access
          this.widgets.newFolder = Alfresco.util.createYUIButton(this, "newFolder-button", this.onNewFolder,
          {
@@ -93,13 +94,12 @@
             value: "import"
          });
 
-         
          // RM-318 - removing Report button temporarily
          /*this.widgets.reportButton = Alfresco.util.createYUIButton(this, "report-button", this.onPrintReport,
          {
             disabled: true
          });*/
-       
+
          // Export All button: user needs "export" access
          this.widgets.exportAllButton = Alfresco.util.createYUIButton(this, "exportAll-button", this.onExportAll,
          {
@@ -107,10 +107,17 @@
             value: "export"
          });
 
+         // Manage permissions button: user needs "file" permissions and the capability to modify permissions
+         this.widgets.managePermissionsButton = Alfresco.util.createYUIButton(this, "managePermissions-button", this.onManagePermissions,
+         {
+            disabled: true,
+            value: "managePermissions"
+         });
+
          // Selected Items menu button
          this.widgets.selectedItems = Alfresco.util.createYUIButton(this, "selectedItems-button", this.onSelectedItems,
          {
-            type: "menu", 
+            type: "menu",
             menu: "selectedItems-menu",
             lazyloadmenu: false,
             disabled: true
@@ -148,7 +155,7 @@
 
          // DocLib Actions module
          this.modules.actions = new Alfresco.module.DoclibActions();
-         
+
          // Reference to Document List component
          this.modules.docList = Alfresco.util.ComponentManager.findFirst("Alfresco.DocumentList");
 
@@ -166,13 +173,13 @@
                fn: function(response)
                {
                   if (response.json && response.json.data)
-                  {                     
+                  {
                      // Fire event to inform any listening components that the users rmroles are available
                      YAHOO.Bubbling.fire("userRMRoles",
                      {
                         roles: response.json.data
                      });
-                  }                  
+                  }
                },
                scope: this
             }
@@ -189,7 +196,7 @@
       onFilterChanged: function DLTB_onFilterChanged(layer, args)
       {
          Alfresco.rm.component.DocListToolbar.superclass.onFilterChanged.apply(this, arguments);
-         
+
          var upFolderEnabled = (this.currentFilter.filterId == "holds" && this.currentFilter.filterData !== "");
          this.widgets.holdsFolderUp.set("disabled", !upFolderEnabled);
 
@@ -325,7 +332,7 @@
             Dom.get(p_dialog.id + "-dialogTitle").innerHTML = this.msg(label + ".title");
             Dom.get(p_dialog.id + "-dialogHeader").innerHTML = this.msg(label + ".header");
          };
-         
+
          var templateUrl = YAHOO.lang.substitute(Alfresco.constants.URL_SERVICECONTEXT + "components/form?itemKind={itemKind}&itemId={itemId}&destination={destination}&mode={mode}&submitType={submitType}&formId={formId}&showCancelButton=true",
          {
             itemKind: "type",
@@ -392,7 +399,7 @@
       onFileUpload: function DLTB_onFileUpload(e, p_obj)
       {
          var me = this;
-         
+
          Alfresco.util.PopupManager.displayPrompt(
          {
             title: this.msg("message.file.type.title"),
@@ -424,7 +431,7 @@
             }]
          });
       },
-      
+
       /**
        * Electronic Record button click handler
        *
@@ -436,7 +443,7 @@
          {
             this.fileUpload = Alfresco.getRecordsFileUploadInstance();
          }
-         
+
          // Show uploader for multiple files
          this.fileUpload.show(
          {
@@ -472,7 +479,7 @@
             Dom.get(p_dialog.id + "-dialogTitle").innerHTML = msgTitle;
             Dom.get(p_dialog.id + "-dialogHeader").innerHTML = msgHeader;
          };
-         
+
          var templateUrl = YAHOO.lang.substitute(Alfresco.constants.URL_SERVICECONTEXT + "components/form?itemKind={itemKind}&itemId={itemId}&destination={destination}&mode={mode}&submitType={submitType}&showCancelButton=true",
          {
             itemKind: "type",
@@ -611,6 +618,25 @@
             },
             failureMessage: this.msg("message.load-top-level-assets.failure")
          });
+      },
+
+      /**
+       * Manage permissions button click handler
+       *
+       * @method onManagePermissions
+       * @param e {object} DomEvent
+       * @param p_obj {object} Object passed back from addListener method
+       */
+      onManagePermissions: function DLTB_onManagePermissions(e, p_obj)
+      {
+         var nodeRef = this.modules.docList.doclistMetadata.parent.nodeRef,
+            itemName = encodeURIComponent(this.modules.docList.doclistMetadata.parent.properties["cm:name"]),
+            nodeType = this.modules.docList.doclistMetadata.parent.type, 
+            page = "rm-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType,
+            siteId = this.options.siteId,
+            siteObj = YAHOO.lang.isString(siteId) ? { site: siteId } : null;
+
+         window.location.href = Alfresco.util.siteURL(page, siteObj);
       },
 
       /**

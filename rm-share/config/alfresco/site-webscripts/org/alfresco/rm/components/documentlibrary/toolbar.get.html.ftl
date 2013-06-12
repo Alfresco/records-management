@@ -27,6 +27,9 @@
          <div class="hideable toolbar-hidden DocListTree">
             <div class="export-all"><button id="${el}-exportAll-button">${msg("button.export-all")}</button></div>
          </div>
+         <div class="hideable toolbar-hidden DocListTree">
+            <div class="manage-permissions"><button id="${el}-managePermissions-button">${msg("button.manage-permissions")}</button></div>
+         </div>
          
          <#-- RM-318 - removing Report button temporarily
          <div class="hideable toolbar-hidden DocListTree">

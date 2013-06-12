@@ -159,27 +159,27 @@
             <evaluator>evaluator.rm.common.isElectronicRecord</evaluator>
          </action>
          
-         <action id="rm-delete" type="javascript" label="actions.document.delete" icon="document-delete">
+         <action id="rm-delete" type="javascript" label="actions.document.delete" icon="folder-delete">
             <param name="function">onActionDelete</param>
             <evaluator>evaluator.rm.action.delete</evaluator>
          </action>
          
-         <action id="rm-copy-to" type="javascript" label="actions.document.copy-to" icon="document-copy-to">
+         <action id="rm-copy-to" type="javascript" label="actions.document.copy-to" icon="folder-copy-to">
             <param name="function">onActionCopyTo</param>
             <evaluator>evaluator.rm.action.copy</evaluator>
          </action>
 
-         <action id="rm-move-record-to" type="javascript" label="actions.document.move-to" icon="document-move-to">
+         <action id="rm-move-record-to" type="javascript" label="actions.document.move-to" icon="folder-move-to">
             <param name="function">onActionMoveTo</param>
             <evaluator>evaluator.rm.action.moveRecord</evaluator>
          </action>
 
-         <action id="rm-move-recordfolder-to" type="javascript" label="actions.document.move-to" icon="document-move-to">
+         <action id="rm-move-recordfolder-to" type="javascript" label="actions.document.move-to" icon="folder-move-to">
             <param name="function">onActionMoveTo</param>
             <evaluator>evaluator.rm.action.moveRecordFolder</evaluator>
          </action>
 
-         <action id="rm-move-recordcategory-to" type="javascript" label="actions.document.move-to" icon="document-move-to">
+         <action id="rm-move-recordcategory-to" type="javascript" label="actions.document.move-to" icon="folder-move-to">
             <param name="function">onActionMoveTo</param>
             <evaluator>evaluator.rm.action.moveRecordCategory</evaluator>
          </action>
@@ -195,7 +195,7 @@
          </action>
 
          <!-- Edit properties page -->
-         <action id="rm-edit-details" type="pagelink" label="actions.edit-details" icon="document-edit-metadata">
+         <action id="rm-edit-details" type="pagelink" label="actions.edit-details" icon="folder-edit-metadata">
             <param name="page">edit-metadata?nodeRef={node.nodeRef}</param>
             <evaluator>evaluator.rm.action.edit-details</evaluator>
          </action>
@@ -207,7 +207,7 @@
          </action>
 
          <!-- Manage permissions -->
-         <action id="rm-manage-permissions" type="pagelink" label="actions.document.manage-permissions" icon="document-manage-permissions">
+         <action id="rm-manage-permissions" type="pagelink" label="actions.document.manage-permissions" icon="folder-manage-permissions">
             <param name="page">{managePermissionsUrl}</param>
             <evaluator>evaluator.rm.action.manage-permissions</evaluator>
          </action>
