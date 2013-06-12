@@ -98,7 +98,8 @@
       <forms>
          <form>
             <field-visibility>
-               <show id="cm:name" force="true"/>
+               <show id="cm:name" force="true"/>               
+               <show id="rma:identifier"/>
                <show id="cm:title" force="true" />
                <show id="cm:description" force="true" />
             </field-visibility>
@@ -160,7 +161,7 @@
                <set id="rm-custom" label-id="label.set.customMetadata" appearance="panel" /> 
                
                <!--  Record folder fields --> 
-               <field id="rma:identifier" label-id="label.categoryIdentifier" read-only="true" set="rm-record-cat"/>               
+               <field id="rma:identifier" label-id="label.categoryIdentifier" set="rm-record-cat"/>               
                
                <!--  Vital record fields -->
                <field id="rma:vitalRecordIndicator" set="rm-vital-record">
@@ -181,7 +182,8 @@
       <forms>
          <form>
             <field-visibility>
-               <show id="cm:name" force="true"/>
+               <show id="cm:name" force="true"/>           
+               <show id="rma:identifier"/>
                <show id="cm:title" force="true" />
                <show id="cm:description" force="true" />
             </field-visibility>
@@ -252,7 +254,7 @@
                <set id="rm-custom" label-id="label.set.customMetadata" appearance="panel" /> 
                
                <!--  Record folder fields --> 
-               <field id="rma:identifier" label-id="label.folderIdentifier" read-only="true" set="rm-record-folder"/>               
+               <field id="rma:identifier" label-id="label.folderIdentifier" set="rm-record-folder"/>               
                <field id="rma:location" set="rm-record-folder"/>
                <field id="rmc:supplementalMarkingList" set="rm-record-folder"/>
                
