@@ -84,7 +84,7 @@
            * @type boolean
           */
          initialDataLoaded: false,
-         
+
          /**
           * onLoad ConsolePanel event handler
           *
@@ -207,10 +207,10 @@
             var columnDefinitions =
                   [
                      {
-                        key: "list", label: "List", sortable: false, formatter: renderCellList
+                        key: "list", label: parent.msg("table.header.list"), sortable: false, formatter: renderCellList
                      },
                      {
-                        key: "actions", label: "Actions", formatter: renderCellActions
+                        key: "actions", label: parent.msg("table.header.actions"), formatter: renderCellActions
                      }
                   ];
 
@@ -464,7 +464,7 @@
             if (!this.initialDataLoaded || parent.refresh)
             {
                this._loadListOfValues();
-            }            
+            }
          },
 
          /**
@@ -531,7 +531,7 @@
                         {
                              failureMsg = json.message;
                         }
-                          
+
                         Alfresco.util.PopupManager.displayPrompt(
                         {
                            title: parent.msg("message.addlist.failure.title"),
@@ -643,7 +643,7 @@
             // empty access table
             this.widgets.accessDataTable.deleteRows(0, this.widgets.accessDataTable.getRecordSet().getLength());
             this.widgets.accessDataTable.set("MSG_EMPTY", "");
-            
+
          },
 
          /**
@@ -877,7 +877,7 @@
                }
                else
                {
-                  this.widgets.accessDataTable.set("MSG_EMPTY", "");                                 
+                  this.widgets.accessDataTable.set("MSG_EMPTY", "");
                   this.widgets.addAccessButton.set("disabled", true);
                }
             };
@@ -1190,8 +1190,8 @@
              */
             renderCellAccessIcon = function ViewPanelHandler__setupListDataTable_renderCellAccessIcon(elCell, oRecord, oColumn, oData)
             {
-               Dom.addClass(elCell, oRecord.getData("authorityName").indexOf("GROUP_") == 0 ? "authority-group":"authority-user");               
-               elCell.innerHTML = "&nbsp;";
+               var authority = oRecord.getData("authorityName").indexOf("GROUP_") == 0 ? "group" : "user";
+               elCell.innerHTML = '<img src="' + Alfresco.constants.URL_RESCONTEXT + 'components/images/' + authority + '-16.png">';
             };
 
             /**
@@ -1230,9 +1230,9 @@
             // AccessDataTable column defintions
             var columnDefinitions =
             [
-               { key: "accessicon", label: "Icon", sortable: false, formatter: renderCellAccessIcon },                        
-               { key: "access", label: "List", sortable: false, formatter: renderCellDescription },
-               { key: "actions", label: "Actions", formatter: renderCellActions }
+               { key: "accessicon", label: parent.msg("table.header.icon"), sortable: false, formatter: renderCellAccessIcon },
+               { key: "access", label: parent.msg("table.header.name"), sortable: false, formatter: renderCellDescription },
+               { key: "actions", label: parent.msg("table.header.actions"), formatter: renderCellActions }
             ];
 
             // AccessDataTable definition
@@ -1326,7 +1326,7 @@
             }
             else
             {
-               this.widgets.accessDataTable.set("MSG_EMPTY", "");               
+               this.widgets.accessDataTable.set("MSG_EMPTY", "");
             }
          },
 
@@ -1437,7 +1437,7 @@
          onAddAccessClick: function ViewPanelHandler_onAddAccessClick(e, obj)
          {
             this.modules.searchAuthorityFinder.clearResults();
-            this.widgets.addAccessPanel.show();            
+            this.widgets.addAccessPanel.show();
          }
 
       });
