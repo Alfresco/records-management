@@ -16,6 +16,15 @@
       </group>
       <group>
          <action name="declareRecord"/>
+         <action name="undeclareRecord"/>
+      </group>
+      <group>
+         <action name="openRecordFolder"/>
+         <action name="closeRecordFolder"/>
+      </group>
+      <group>
+         <action name="freeze"/>
+         <action name="unfreeze"/>
       </group>
       <group>
          <action name="requestInfo"/>
@@ -27,6 +36,7 @@
 
    <customise>
       <item id="select">Select</item>
+      <action name="freeze">Freeze</action>
       <action name="reject">Reject</action>
       <action name="requestInfo">RequestInfo</action>
    </customise>
