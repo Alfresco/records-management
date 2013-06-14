@@ -74,6 +74,7 @@
       <property>cm:content:MIME_TYPE</property>
       <property>cm:content:SIZE</property>
       <property>cm:content:ENCODING</property>
+      <property>demo:customerId</property>
    </defaults>
 
    <property-evaluators>
