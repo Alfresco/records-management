@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * RM Audit component
- * 
+ *
  * @namespace Alfresco.rm.component
  * @class Alfresco.rm.component.RMAudit
  */
@@ -41,7 +41,7 @@
 
    /**
     * RM Audit componentconstructor.
-    * 
+    *
     * @param {String} htmlId The HTML id of the parent element
     * @return {Alfresco.rm.component.RMAudit} The new component instance
     * @constructor
@@ -49,17 +49,17 @@
    Alfresco.rm.component.RMAudit = function RM_Audit_constructor(htmlId)
    {
       Alfresco.rm.component.RMAudit.superclass.constructor.call(this, "Alfresco.rm.component.RMAudit", htmlId,["button", "container", "datasource", "datatable", "paginator", "json", "calendar"]);
-      
-      //YAHOO.Bubbling.on("PropertyMenuSelected", this.onPropertyMenuSelected, this);
-      
+
+      YAHOO.Bubbling.on("PropertyMenuSelected", this.onPropertyMenuSelected, this);
+
       this.showingFilter = false;
-      
+
       //search filter person
       this.activePerson = "";
-      
+
       //query parameters for datasource
       this.queryParams = {};
-      
+
       return this;
    };
 
@@ -68,7 +68,7 @@
       VIEW_MODE_DEFAULT: "",
       VIEW_MODE_COMPACT: "COMPACT"
    });
-      
+
    YAHOO.extend(Alfresco.rm.component.RMAudit, Alfresco.component.Base,
    {
       /**
@@ -78,7 +78,7 @@
       onReady: function RM_Audit_onReady()
       {
          this.initEvents();
-         
+
          // Create "Export" and "File As Record" buttons...
          this.widgets.exportButton = Alfresco.util.createYUIButton(this, "export", this.onExportLog,
          {
@@ -88,7 +88,7 @@
          {
             disabled: !Alfresco.util.arrayContains(this.options.capabilities, 'DeclareAuditAsRecord')
          });
-         
+
          // Create the logging control buttons...
          this.widgets.toggleLogleButton = Alfresco.util.createYUIButton(this, "toggle", this.onToggleLog,
          {
@@ -102,7 +102,7 @@
          {
             disabled: !Alfresco.util.arrayContains(this.options.capabilities, 'DeleteAudit')
          });
-         
+
          // Create the filter buttons...
          this.widgets.applyFilterButton = Alfresco.util.createYUIButton(this, "apply", this.onApplyFilters,
          {
@@ -112,7 +112,7 @@
          {
             disabled: this.widgets.applyFilterButton ? this.widgets.applyFilterButton.get("disabled") : false
          });
-        
+
          // Initialize data URI
          // An audit log for node and not in console (all nodes)
          if (this.options.nodeRef)
@@ -125,7 +125,7 @@
          }
 
          this.initWidgets();
-         
+
          // Check if the filter elements should be disabled
          if (this.widgets.specifyfilterButton && this.widgets.specifyfilterButton.get("disabled"))
          {
@@ -136,14 +136,14 @@
             Dom.get(this.id + "-toDate-icon").innerHTML = "";
          }
       },
-      
+
       /**
        * Initialises event listening and custom events
        */
       initEvents : function RM_Audit_initEvents()
       {
          Event.on(this.id, 'click', this.onInteractionEvent, null, this);
-         
+
          // Register events
          if (this.options.viewMode === Alfresco.rm.component.RMAudit.VIEW_MODE_DEFAULT)
          {
@@ -157,7 +157,7 @@
                }
             ]);
          }
-         
+
          this.registerEventHandler('click',
          [
             {
@@ -168,19 +168,19 @@
                }
             }
          ]);
-         
+
          // Decoupled event listeners
          YAHOO.Bubbling.on("personSelected", this.onPersonSelected, this);
          YAHOO.Bubbling.on('PersonFilterActivated',this.onPersonFilterActivated, this);
          YAHOO.Bubbling.on('PersonFilterDeactivated',this.onPersonFilterDeactivated,this);
          YAHOO.Bubbling.on('AuditRecordLocationSelected', this.onAuditRecordLocationSelected, this);
-         
+
          return this;
       },
-      
+
       initWidgets: function RM_Audit_initWidgets()
       {
-         var me = this; 
+         var me = this;
 
          if (this.options.viewMode==Alfresco.rm.component.RMAudit.VIEW_MODE_DEFAULT)
          {
@@ -193,26 +193,26 @@
 //               if (this.options.viewMode==Alfresco.rm.component.RMAudit.VIEW_MODE_COMPACT)
 //               {
 //                  Dom.get(this.id+'-from-date').innerHTML += ' ' + formatDate(fromISO8601(this.options.startDate),   Alfresco.thirdparty.dateFormat.masks.fullDatetime);
-//                  Dom.get(this.id+'-to-date').innerHTML += ' ' + formatDate(fromISO8601(this.options.stopDate),   Alfresco.thirdparty.dateFormat.masks.fullDatetime);  
+//                  Dom.get(this.id+'-to-date').innerHTML += ' ' + formatDate(fromISO8601(this.options.stopDate),   Alfresco.thirdparty.dateFormat.masks.fullDatetime);
 //               }
 //            }
-            
+
             // Initialise menus
-            /*
+
             //events menu
             this.widgets['eventMenu'] = new YAHOO.widget.Button(this.id + "-events",
             {
                type: "menu",
                menu: this.id + "-events-menu"
             });
-            
+
             this.widgets['eventMenu'].on("selectedMenuItemChange", function selectedEventMenuItemChange(event)
             {
                var oMenuItem = event.newValue;
                if (oMenuItem)
                {
                   this.set('label', oMenuItem.cfg.getProperty('text'));
-               }            
+               }
                if (oMenuItem.value !== "ALL")
                {
                   me.queryParams.event=oMenuItem.value;
@@ -222,8 +222,7 @@
                   delete me.queryParams.event;
                }
             });
-            */
-            
+
             // Initialise calendar pickers
             // fromDate calendar
             var theDate = new Date();
@@ -235,25 +234,25 @@
             this.widgets.fromCalendar.selectEvent.subscribe(this.onDatePickerSelection,  {cal:this.widgets.fromCalendar,el:Dom.get(this.id+'-fromDate'),scope:this},true);
 
             Event.addListener(this.id + "-fromDate-icon", "click", function () { this.widgets.toCalendar.hide();this.widgets.fromCalendar.show(); }, this, true);
-            
+
             YAHOO.util.Event.on(this.id + "-fromDate", "click", function() {
                me.widgets.toCalendar.hide();
                me.widgets.fromCalendar.show();
             });
-            
+
             //toDate calendar
             this.widgets.toCalendar = new YAHOO.widget.Calendar(null, this.id + "-toDate-cal", { title: this.msg("message.select-to-date"), close: true });
             this.widgets.toCalendar.cfg.setProperty("pagedate", page);
             this.widgets.toCalendar.cfg.setProperty("selected", selected);
-            this.widgets.toCalendar.selectEvent.subscribe(this.onDatePickerSelection, {cal:this.widgets.toCalendar,el:Dom.get(this.id+'-toDate'),scope:this}, true );  
+            this.widgets.toCalendar.selectEvent.subscribe(this.onDatePickerSelection, {cal:this.widgets.toCalendar,el:Dom.get(this.id+'-toDate'),scope:this}, true );
 
-            Event.addListener(this.id + "-toDate-icon", "click", function () { this.widgets.fromCalendar.hide();this.widgets.toCalendar.show(); }, this, true);         
-            
+            Event.addListener(this.id + "-toDate-icon", "click", function () { this.widgets.fromCalendar.hide();this.widgets.toCalendar.show(); }, this, true);
+
             YAHOO.util.Event.on(this.id + "-toDate", "click", function() {
                me.widgets.fromCalendar.hide();
                me.widgets.toCalendar.show();
             });
-            
+
             // render the calendar control
             this.widgets.fromCalendar.render();
             this.widgets.toCalendar.render();
@@ -262,9 +261,9 @@
                var field = Dom.get(this.id);
                me.widgets.applyFilterButton.set("disabled", isNaN(field.value));
             });
-            
+
             this.toggleUI();
-            
+
             //Sets up datatable and datasource.
             var DS = this.widgets['auditDataSource'] = new YAHOO.util.DataSource(this.dataUri,
             {
@@ -280,11 +279,11 @@
                   }
                }
             });
-         
+
             DS.doBeforeCallback = function ( oRequest , oFullResponse , oParsedResponse , oCallback )
             {
                me.options.results = oFullResponse.data.entries;
-               
+
                // Enable/disable export and file record buttons
                if (me.options.results.length===0)
                {
@@ -298,7 +297,7 @@
                }
                return oParsedResponse;
             };
-            
+
             //date cell formatter
             var renderCellDate = function RecordsResults_renderCellDate(elCell, oRecord, oColumn, oData)
             {
@@ -307,7 +306,7 @@
                   elCell.innerHTML = Alfresco.util.formatDate(Alfresco.util.fromISO8601(oData));
                }
             };
-        
+
             // Add the custom formatter to the shortcuts
             YAHOO.widget.DataTable.Formatter.eventCellFormatter = function eventCellFormatter(elLiner, oRecord, oColumn, oData)
             {
@@ -327,7 +326,7 @@
                {
                   elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + oRecordData.path.replace('/documentLibrary','') + '&nbsp;&nbsp;&nbsp;';
                }
-               
+
                //add details button
                var but = new YAHOO.widget.Button(
                {
@@ -341,32 +340,32 @@
                //and this for event handling1
                but._button.className = 'audit-details';
             };
-            
+
             this.widgets['auditDataTable'] = new YAHOO.widget.DataTable(this.id+"-auditDT",
                 [
                   {key:"timestamp", label:this.msg('label.timestamp'), formatter: renderCellDate, sortable:true, resizeable:true},
                   {key:"fullName", label:this.msg('label.user'),  sortable:true, resizeable:true},
                   {key:"userRole", label:this.msg('label.role'),  sortable:true, resizeable:true},
                   {key:"event", label:this.msg('label.event'),  formatter:"eventCellFormatter", sortable:true, resizeable:true}
-               ], 
-               DS, 
+               ],
+               DS,
                {
                   caption:this.msg('label.pagination','0'),
                   initialLoad : false
                }
             );
-         
-            //we use our own internal counter as oRecord._nCount (from within eventcellformatter) 
-            //accumulates for all requests, not just the current request which is what we need. 
+
+            //we use our own internal counter as oRecord._nCount (from within eventcellformatter)
+            //accumulates for all requests, not just the current request which is what we need.
             this.widgets['auditDataTable'].doBeforeLoadData = function doBeforeLoadData(sRequest , oResponse , oPayload)
             {
                // reset
-               me.recCount = 0; 
+               me.recCount = 0;
                return true;
             };
             //subscribe to event so we can update UI
             this.widgets['auditDataSource'].subscribe('responseParseEvent', this.updateUI, this, true);
-         
+
             // Load the People Finder component from the server
             Alfresco.util.Ajax.request(
             {
@@ -383,9 +382,9 @@
                failureMessage: "Could not load People Finder component",
                execScripts: true
             });
-         }   
+         }
       },
-      
+
       /**
        * Updates the UI to show status of UI and start/stop buttons
        */
@@ -394,11 +393,11 @@
          //get started/stopped (status) time
          //var statusDate = (this.options.enabled) ? this.options.startDate : this.options.stopDate;
          //var statusMessage = (this.options.enabled) ? 'label.started-at' : 'label.stopped-at';
-         //this.widgets['status-date'].innerHTML = this.msg(statusMessage,formatDate(fromISO8601(statusDate),   Alfresco.thirdparty.dateFormat.masks.fullDatetime));         
-         
+         //this.widgets['status-date'].innerHTML = this.msg(statusMessage,formatDate(fromISO8601(statusDate),   Alfresco.thirdparty.dateFormat.masks.fullDatetime));
+
          //update start/stop button
          if (this.options.viewMode==Alfresco.rm.component.RMAudit.VIEW_MODE_DEFAULT)
-         {   
+         {
             if (this.widgets['toggleLogleButton'])
             {
                //if (YAHOO.lang.isUndefined(this.options.enabled) == false)
@@ -409,10 +408,10 @@
             }
          }
       },
-      
+
       /**
        * Handler for start/stop log button
-       */      
+       */
       onToggleLog: function onToggleLog()
       {
          var me = this;
@@ -422,7 +421,7 @@
             text: (this.options.enabled) ? this.msg('label.stop-log-confirmation') : this.msg('label.start-log-confirmation'),
             buttons: [
             {
-               text: this.msg('label.yes'), 
+               text: this.msg('label.yes'),
                handler: function()
                {
                   me._toggleLog();
@@ -431,7 +430,7 @@
                isDefault: false
             },
             {
-               text: this.msg('label.no'), 
+               text: this.msg('label.no'),
                handler: function()
                {
                   this.destroy();
@@ -441,7 +440,7 @@
             ]
          });
       },
-      
+
       /**
        * Handler for clear log button.
        */
@@ -473,10 +472,10 @@
             ]
          });
       },
-      
+
       /**
        * Handler for view log button. Displays log in new window
-       */      
+       */
       onViewLog: function RM_Audit_onViewLog()
       {
          var openAuditLogWindow = function openAuditLogWindow()
@@ -503,10 +502,10 @@
             }
          }
       },
-      
+
       /**
        * Handler for export log button. Exports log
-       */      
+       */
       onExportLog: function RM_Audit_onExportLog()
       {
          var exportUri = this.dataUri + this._buildQuery();
@@ -520,7 +519,7 @@
        * Handler for file as record log button. Files log as record
        */
       onFileRecord: function RM_Audit_onFileRecord()
-      {  
+      {
          //show location dialog
          if (!this.modules.selectAuditRecordLocation)
          {
@@ -535,8 +534,8 @@
             path: '',
             files: {}
          }).showDialog();
-      }, 
-      
+      },
+
       onAuditRecordLocationSelected : function RM_Audit_AuditRecordLocationSelected(e, args)
       {
          var me = this;
@@ -554,7 +553,7 @@
          {
             dataObj.user = this.activePerson.userName;
          }
-         
+
          var theUrl = this.dataUri + this._buildQuery();
 
          Alfresco.util.Ajax.jsonPost(
@@ -622,7 +621,7 @@
                         text: o.serverResponse.statusText,
                         buttons: [
                         {
-                           text: me.msg('button.ok'), 
+                           text: me.msg('button.ok'),
                            handler: function()
                            {
                               this.destroy();
@@ -636,10 +635,10 @@
             }
          });
       },
-      
+
       /**
        * Handles the date being changed in the date picker YUI control.
-       * 
+       *
        * @method onDatePickerSelection
        * @param type
        * @param args
@@ -660,12 +659,12 @@
          });
          obj.el.value  = date;
       },
-      
+
       /**
        * Handler for specify button. Shows the fields in order for user to
        * filter results. Needs to be replaced by people picker
-       *  
-       */      
+       *
+       */
       onSpecifyFilterLog: function RM_Audit_onSpecifyFilterLog()
       {
          if (!this.showingFilter)
@@ -682,7 +681,7 @@
             this.showingFilter = false;
          }
       },
-            
+
       /**
        * Handler for when a person is selected
        */
@@ -694,12 +693,12 @@
          this.widgets.specifyfilterButton.set('label',this.msg('label.button-specify'));
          Dom.removeClass(this.widgets['people-finder'],'active');
          this.showingFilter = false;
-         YAHOO.Bubbling.fire('PersonFilterActivated',{person:person}); 
+         YAHOO.Bubbling.fire('PersonFilterActivated',{person:person});
       },
-      
+
       /**
        * Changes the text displayed to show how the audit log is being filtered
-       * 
+       *
        * @param {text} String object Text to update UI with. If empty string, UI is updated with default label
        */
       _changeFilterText: function(text)
@@ -707,12 +706,12 @@
          var el = Sel.query('.personFilter span',this.id)[0];
          el.innerHTML = (text !== "") ? text : this.msg('label.default-filter');
       },
-      
+
       /**
-       * Handler for when people finder has finished loading 
-       * 
+       * Handler for when people finder has finished loading
+       *
        * @param {text} String object HTML template response from people-finder call
-       */ 
+       */
       onPeopleFinderLoaded: function RM_Audit_onPeopleFinderLoaded(response)
       {
          // Inject the component from the XHR request into it's placeholder DIV element
@@ -728,13 +727,13 @@
             singleSelectMode: true
          });
       },
-      
+
       /**
        * Remove filter handler
-       * 
+       *
        * Removes filtered user's name from UI
-       * 
-       * @param {e} Event 
+       *
+       * @param {e} Event
        * @param {args} Object Event arguments
        */
       onRemoveFilter: function RM_Audit_RemoveFilter(e, args)
@@ -743,11 +742,11 @@
          this._changeFilterText('');
          YAHOO.Bubbling.fire('PersonFilterDeactivated',{person:null});
       },
-      
+
       /**
        * Clears logs via ajax call and gives user feedback
-       *  
-       */      
+       *
+       */
       _clearLog: function RM_Audit_clearLog()
       {
          var me = this;
@@ -783,9 +782,9 @@
                scope: this
             },
             failureMessage: me.msg("message.clear-log-fail")
-         });   
+         });
       },
-      
+
       /**
        * toggles logs via ajax call and gives user feedback
        */
@@ -830,7 +829,7 @@
             },
             failureMessage: me.msg((this.options.enabled) ? "message.stop-log-fail" : "message.start-log-fail")
          });
-         
+
       },
 
       onPersonFilterActivated: function RM_Audit_personFilterActivated(e,args)
@@ -842,16 +841,16 @@
       onPersonFilterDeactivated: function RM_Audit_personFilterDeactivated(e,args)
       {
          this.activePerson = "";
-         delete this.queryParams.user;  
+         delete this.queryParams.user;
       },
-      
+
       /**
        * Bubbling event handler called when a value from the property selection menu has been picked
        */
       onPropertyMenuSelected: function RM_Audit_onPropertyMenuSelected(e, args)
       {
          var item = args[1];
-         
+
          if (item.value !== "ALL")
          {
             this.queryParams.property = item.value;
@@ -861,7 +860,7 @@
             delete this.queryParams.property;
          }
       },
-      
+
       /**
        * Displays dialog with more info about log entry
        */
@@ -900,11 +899,11 @@
             '<tr>'+
                '<th>' + this.msg('label.role') + ':</th>'+
                '<td>' + data.userRole + '</td>'+
-            '</tr>'+            
+            '</tr>'+
          '</table>';
-         
+
          body+='<div class="details">';
-         
+
          if (data.path)
          {
             body+='<table id="auditEntry-nodeDetails">'+
@@ -922,7 +921,7 @@
                '</tr>'+
             '</table>';
          }
-         
+
          if (data.changedValues.length>0)
          {
             var changedValuesHTML = '';
@@ -941,7 +940,7 @@
                   return $html(p_value);
                });
             }
-   
+
             body+='<table id="auditEntry-changedValues">'+
                '<thead>'+
                   '<tr>'+
@@ -953,7 +952,7 @@
                '<tbody>'+
                      changedValuesHTML+
                '</tbody>'+
-            '</table>';            
+            '</table>';
          }
 
          body +='</div>';
@@ -965,9 +964,9 @@
          {
             Dom.get(Sel.query('#auditEntry .bd')[0]).style.height='25em';
          }
-         this.widgets.auditDialog.show();         
+         this.widgets.auditDialog.show();
       },
-      
+
       _buildQuery : function RM_Audit__buildQuery()
       {
          //default to 20 if none given
@@ -983,7 +982,7 @@
          qs = '?'+qs.join('&');
          return qs;
       },
-      
+
       onApplyFilters : function RM_Audit__applyFilters()
       {
          var entriesValue = Dom.get(this.id+'-entries').value;
@@ -1003,9 +1002,9 @@
                delete this.queryParams[mapping.queryId];
             }
          }
-         this._query();  
+         this._query();
       },
-      
+
       _query : function RM_Audit__reQuery()
       {
          var q = this._buildQuery();
@@ -1019,7 +1018,7 @@
       },
       /**
        * Updates UI and options metadata
-       *  
+       *
        */
       updateUI : function RM_Audit_updateUI(o)
       {
@@ -1029,7 +1028,7 @@
          //this.options.stopDate = response.meta.stopDate;
          this.toggleUI();
          //update caption
-         this.widgets['auditDataTable']._elCaption.innerHTML = this.msg('label.pagination', response.results.length); 
+         this.widgets['auditDataTable']._elCaption.innerHTML = this.msg('label.pagination', response.results.length);
       }
    });
 })();
