@@ -209,7 +209,7 @@
                   Dom.addClass(div, "property-item");
                   var html = '<div class="property-actions"><span id="' + editBtnContainerId + '"></span><span id="' + deleteBtnContainerId + '"></span>';
                   html += '</div><div><p class="property-title">' + $html(prop.label) + '</p><p>';
-                  html += '<b>' + parent._msg('label.label') + ':</b> ' + $html(prop.propId) + '</br>';
+                  html += '<b>' + parent._msg('label.label') + ':</b> ' + decodeURIComponent($html(prop.propId)) + '</br>';
                   html += '<b>' + parent._msg('label.type') + ':</b> ' + $html(parent._dataTypeLabel(prop.dataType));
                   // display any selection list constraint applied and if mandatory value
                   if (prop.constraintRefs.length !== 0)
@@ -634,13 +634,14 @@
           */
          onBeforeShow: function onBeforeShow()
          {
-            var prop = parent.currentProperty;
+            var prop = parent.currentProperty,
+               propId = decodeURIComponent($html(prop.propId));
 
             // title label
-            Dom.get(parent.id + "-edit-metadata-item").innerHTML = prop.propId;
+            Dom.get(parent.id + "-edit-metadata-item").innerHTML = propId;
 
             // apply property values to form
-            Dom.get(parent.id + "-edit-label").value = prop.propId;
+            Dom.get(parent.id + "-edit-label").value = propId;
             Dom.get(parent.id + "-edit-type").innerHTML = parent._dataTypeLabel(prop.dataType);
 
             // apply LOV constraints if present
