@@ -44,6 +44,7 @@
       <group>
          <property name="*"/>
       </group>
+           
       <group>
          <condition name="has-tag"/>
          <condition name="in-category"/>
@@ -54,6 +55,18 @@
       <group>
          <condition name="has-aspect"/>
       </group>
+
+      <group>
+         <condition name="isClassified"/>
+         <condition name="isCutoff"/>
+         <condition name="isDeclared"/>
+         <condition name="isFrozen"/>
+         <condition name="isKind"/>
+         <condition name="isRecordFiled"/>
+         <condition name="isRecordFolderClosed"/>
+         <condition name="isVital"/>
+      </group>
+      
       <group>
          <condition name="*"/>
       </group>
@@ -65,16 +78,11 @@
    <defaults>
       <property>cm:name</property>
       <property>cm:title</property>
-      <property>cm:description</property>
-      <property>cm:created</property>
-      <property>cm:creator</property>
-      <property>cm:modified</property>
-      <property>cm:modifier</property>
-      <property>cm:author</property>
-      <property>cm:content:MIME_TYPE</property>
-      <property>cm:content:SIZE</property>
-      <property>cm:content:ENCODING</property>
-      <property>demo:customerId</property>
+      <property>rma:originator</property>
+      <property>rma:originatingOrganization</property>
+      <property>rma:publicationDate</property>
+      <property>rma:recordSearchDispositionAuthority</property>
+      <property>rma:recordSearchDispositionInstructions</property>      
    </defaults>
 
    <property-evaluators>
