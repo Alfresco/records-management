@@ -68,7 +68,7 @@
       this.defaultShowConfig.importUrl = null;
 
       Alfresco.util.ComponentManager.reregister(this);
-      
+
       return this;
    };
 
@@ -93,7 +93,7 @@
       onReady: function RecordsFlashUpload_onReady()
       {
          Alfresco.rm.component.FlashUpload.superclass.onReady.call(this);
-         
+
          var recordTypesContainer = Dom.get(this.id + "-recordTypes-select-container");
          this.widgets.recordTypes = [];
          if (recordTypesContainer)
@@ -187,8 +187,14 @@
 
          // Flash does not correctly bind to the session cookies during POST
          // so we manually patch the jsessionid directly onto the URL instead
-         url += ";jsessionid=" + YAHOO.util.Cookie.get("JSESSIONID");
-         
+         url += ";jsessionid=" + YAHOO.util.Cookie.get("JSESSIONID") + "?lang=" + Alfresco.constants.JS_LOCALE;
+
+         // Pass the CSRF token if the CSRF token filter is enabled
+         if (Alfresco.util.CSRFPolicy.isFilterEnabled())
+         {
+            url += "&" + Alfresco.util.CSRFPolicy.getParameter() + "=" + encodeURIComponent(Alfresco.util.CSRFPolicy.getToken());
+         }
+
          // Find files to upload
          var startedUploads = 0,
             length = this.widgets.dataTable.getRecordSet().getLength(),
@@ -204,7 +210,7 @@
                aspects.push(recordType.get("value"))
             }
          }
-         
+
          for (var i = 0; i < length && startedUploads < noOfUploadsToStart; i++)
          {
             record = this.widgets.dataTable.getRecordSet().getRecord(i);

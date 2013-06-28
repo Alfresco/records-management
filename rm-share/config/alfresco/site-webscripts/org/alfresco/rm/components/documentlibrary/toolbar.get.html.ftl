@@ -29,7 +29,7 @@
          </div>
          <div class="hideable toolbar-hidden DocListTree">
             <div class="manage-permissions"><button id="${el}-managePermissions-button">${msg("button.manage-permissions")}</button></div>
-         </div>         
+         </div>
          <div class="hideable toolbar-hidden DocListTree">
    		    <div class="manage-rules"><button id="${el}-manageRules-button">${msg("button.manage-rules")}</button></div>
          </div>
@@ -67,7 +67,7 @@
       </div>
    </div>
 
-   <div id="${el}-navBar" class="nav-bar flat-button theme-bg-4">
+   <div id="${el}-navBar" class="nav-bar flat-button theme-bg-2">
       <div class="hideable toolbar-hidden DocListTree">
          <div class="folder-up"><button id="${el}-folderUp-button" class="no-access-check"></button></div>
          <div class="separator">&nbsp;</div>

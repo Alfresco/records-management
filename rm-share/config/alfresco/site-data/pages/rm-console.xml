@@ -7,9 +7,18 @@
    <template-instance>console</template-instance>
    <authentication>user</authentication>
    <components>
+
+      <!-- Title -->
       <component>
          <region-id>title</region-id>
          <url>/rm/components/title/console</url>
       </component>
+
+      <!-- Tools -->
+      <component>
+         <region-id>tools</region-id>
+         <url>/components/console/tools</url>
+      </component>
+
    </components>
 </page>

@@ -1,6 +1,6 @@
 <extension>
    <modules>
-   
+
      <module>
          <id>Alfresco :: Records Management Global (1)</id>
          <auto-deploy>true</auto-deploy>
@@ -46,14 +46,14 @@
                   <!-- Make sure the doclib's document list is using RM's file plan doclist webscript -->
                   <data-url-resolver>resolver.rm.doclib.doclistDataUrl</data-url-resolver>
                </doclist>
-               
+
             </config>
 
 	        <config evaluator="string-compare" condition="DocLibActions" replace="true">
-            
+
                <!-- Action Group Resolver -->
                <actionGroupResolver>resolver.rm.doclib.actionGroup</actionGroupResolver>
-            
+
             </config>
 
          </configurations>
@@ -78,7 +78,7 @@
                   </sub-component>
                </sub-components>
             </component>
-            
+
             <!--  Hide categories -->
             <component>
                <scope>template</scope>
@@ -642,7 +642,7 @@
                   </sub-component>
                </sub-components>
             </component>
-            
+
             <!--  Customise rule edit UI -->
             <component>
                <scope>template</scope>
@@ -651,14 +651,14 @@
                <sub-components>
                   <sub-component id="default">
                      <evaluations>
-                        <evaluation id="rm-rule-edit">                           
+                        <evaluation id="rm-rule-edit">
         					<url>/rm/components/rules/rule-edit</url>
                         </evaluation>
                      </evaluations>
                   </sub-component>
                </sub-components>
             </component>
-            
+
             <component>
                <scope>template</scope>
                <region-id>rule-details</region-id>
@@ -666,7 +666,7 @@
                <sub-components>
                   <sub-component id="default">
                      <evaluations>
-                        <evaluation id="rm-rule-edit">                           
+                        <evaluation id="rm-rule-edit">
         					<url>/rm/components/rules/rule-details</url>
                         </evaluation>
                      </evaluations>
@@ -676,6 +676,17 @@
 
          </components>
 
+      </module>
+
+      <module>
+         <id>Alfresco :: Records Management Config (3)</id>
+         <auto-deploy>true</auto-deploy>
+         <customizations>
+            <customization>
+               <targetPackageRoot>org.alfresco</targetPackageRoot>
+               <sourcePackageRoot>org.alfresco.config</sourcePackageRoot>
+            </customization>
+         </customizations>
       </module>
 
    </modules>

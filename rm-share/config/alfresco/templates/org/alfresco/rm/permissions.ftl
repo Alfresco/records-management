@@ -3,9 +3,7 @@
 
 <@templateBody>
    <div id="alf-hd">
-      <@region id="header" scope="global" protected=true />
-      <@region id="title" scope="template" protected=true />
-      <@region id="navigation" scope="template" protected=true />
+      <@region scope="global" id="share-header" chromeless="true"/>
    </div>
    <div id="bd">
       <@region id="permissions" scope="template" protected=true />
