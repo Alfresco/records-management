@@ -18,7 +18,7 @@
          ${msg("label.heading")}
          <#if allowEditReferences>
          <span class="alfresco-twister-actions">
-            <a href="${siteURL(("rm-references?nodeRef="+nodeRef+"&parentNodeRef="+parentNodeRef+"&docName="+docName)?js_string)}" class="edit" title="${msg("label.manage-references")}">&nbsp;</a>
+            <a href="${siteURL("rm-references?nodeRef="+nodeRef+"&parentNodeRef="+parentNodeRef+"&docName="+docName)}" class="edit" title="${msg("label.manage-references")}">&nbsp;</a>
          </span>
          </#if>
       </h2>

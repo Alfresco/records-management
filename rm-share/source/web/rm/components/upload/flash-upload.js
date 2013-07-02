@@ -195,6 +195,12 @@
             url += "&" + Alfresco.util.CSRFPolicy.getParameter() + "=" + encodeURIComponent(Alfresco.util.CSRFPolicy.getToken());
          }
 
+         // Pass the CSRF token if the CSRF token filter is enabled
+         if (Alfresco.util.CSRFPolicy.isFilterEnabled())
+         {
+            url += "?" + Alfresco.util.CSRFPolicy.getParameter() + "=" + encodeURIComponent(Alfresco.util.CSRFPolicy.getToken());
+         }
+         
          // Find files to upload
          var startedUploads = 0,
             length = this.widgets.dataTable.getRecordSet().getLength(),
