@@ -27,7 +27,7 @@ function alfresco_rm_main()
 
          case "rma:dispositionSchedule":
             nodeType = "record-category";
-            nodeRef = metadata.parent.nodeRef;
+            nodeRef = metadata.nodeRef;
             break;
       }
    }

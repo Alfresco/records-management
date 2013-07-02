@@ -81,9 +81,9 @@
 
 .rm-list-of-values .list-header .yui-gf
 {
-   background-color: #DEE8ED;   
+   background-color: #DEE8ED;
    border-bottom: none;
-   height: 2.8em;                            
+   height: 2.8em;
    line-height: 2.8em;
 }
 
@@ -98,7 +98,7 @@
    display: none;
 }
 
-.rm-list-of-values .yui-dt-body 
+.rm-list-of-values .yui-dt-body
 {
    cursor:pointer;
 }
@@ -147,7 +147,7 @@
 .rm-list-of-values .yui-dt table td
 {
    border: medium none;
-   border-bottom: 1px dashed #D7D7D7;   
+   border-bottom: 1px dashed #D7D7D7;
 }
 
 .rm-list-of-values .yui-dt table td.yui-dt-empty
@@ -167,7 +167,7 @@
 
 .rm-list-of-values.yui-panel
 {
-   margin: 0;   
+   margin: 0;
 }
 
 .rm-list-of-values hr
@@ -198,4 +198,9 @@
 .rm-list-of-values.authority-picker .bd
 {
    padding: 1em;
+}
+
+.bd.rm-search-body
+{
+   padding: 1px !important;
 }

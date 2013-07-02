@@ -89,7 +89,7 @@
       <!-- Auhtority/Access Dialog -->
       <div id="${el}-authoritypicker" class=".rm-list-of-values authority-picker">
          <div class="hd"><span id="${el}-authoritypicker-title">${msg("panel.addaccess.header")}</span></div>
-         <div class="bd">
+         <div class="bd rm-search-body">
             <div>
                <div id="${el}-search-authorityfinder"></div>
             </div>

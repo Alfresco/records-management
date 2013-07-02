@@ -198,7 +198,7 @@
 //            }
 
             // Initialise menus
-            /*
+
             //events menu
             this.widgets['eventMenu'] = new YAHOO.widget.Button(this.id + "-events",
             {
@@ -222,7 +222,6 @@
                   delete me.queryParams.event;
                }
             });
-            */
 
             // Initialise calendar pickers
             // fromDate calendar
@@ -314,11 +313,18 @@
                var oRecordData = oRecord._oData;
                if (oData!='Delete Object')
                {
-                  elLiner.innerHTML = oRecordData.event + ' [<a href="' + Alfresco.constants.URL_PAGECONTEXT + 'site/' + me.options.siteId + '/document-details?nodeRef=' + oRecordData.nodeRef + '">' + oRecordData.nodeName + '</a>]';
+            	   if (oRecordData.nodeName != "")
+            	   {
+                      elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a href="' + Alfresco.constants.URL_PAGECONTEXT + 'site/' + me.options.siteId + '/document-details?nodeRef=' + oRecordData.nodeRef + '">' + oRecordData.nodeName + '</a>&nbsp;&nbsp;&nbsp;';
+            	   }
+            	   else
+            	   {
+            		   elLiner.innerHTML = oRecordData.event + '&nbsp;&nbsp;&nbsp;';   
+            	   }
                }
                else
                {
-                  elLiner.innerHTML = oRecordData.event + ' [' + oRecordData.path.replace('/documentLibrary','') + ']';
+                  elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + oRecordData.path.replace('/documentLibrary','') + '&nbsp;&nbsp;&nbsp;';
                }
 
                //add details button
