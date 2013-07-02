@@ -57,6 +57,7 @@
       </group>
 
       <group>
+         <condition name="hasDispositionAction"/>      
          <condition name="isClassified"/>
          <condition name="isCutoff"/>
          <condition name="isDeclared"/>
@@ -64,6 +65,7 @@
          <condition name="isKind"/>
          <condition name="isRecordFiled"/>
          <condition name="isRecordFolderClosed"/>
+         <condition name="isRecordType"/>
          <condition name="isVital"/>
       </group>
       
