@@ -11,10 +11,6 @@
          <item id="select"/>
       </group>
       <group>
-         <action name="fileTo"/>
-         <action name="reject"/>
-      </group>
-      <group>
          <action name="declareRecord"/>
          <action name="undeclareRecord"/>
       </group>
@@ -27,6 +23,10 @@
          <action name="unfreeze"/>
       </group>
       <group>
+         <action name="completeEvent"/>
+         <action name="executeScript"/>
+         <action name="fileTo"/>
+         <action name="reject"/>
          <action name="requestInfo"/>
       </group>
       <group>
