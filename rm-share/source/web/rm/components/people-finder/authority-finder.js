@@ -266,7 +266,7 @@
       {
          var searchParams = Alfresco.rm.AuthorityFinder.superclass._buildSearchParams.call(this, searchTerm),
             filePlanId = YAHOO.util.History.getQueryStringParameter("filePlanId");
-         return searchParams + "&filePlanId=" + filePlanId;
+         return searchParams + "&filePlanId=" + filePlanId + "&zone=" + "APP.RM";
       }
    });
 })();

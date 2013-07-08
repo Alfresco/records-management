@@ -127,7 +127,7 @@
             disabled: true,
             value: "managePermissions"
          });
-         
+
          // Manage Rules button:
          this.widgets.unfiledManageRules = $createYUIButton(this, "unfiledManageRules-button", this.onUnfiledManageRules,
          {
@@ -817,7 +817,7 @@
 
          window.location.href = $siteURL(page);
       },
-      
+
       /**
        * Manage rules button click handler
        *
@@ -846,7 +846,8 @@
             nodeRef = parent.nodeRef,
             itemName = encodeURIComponent(parent.properties["cm:name"]),
             nodeType = parent.type,
-            page = "rm-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType;
+            filePlanId = new Alfresco.util.NodeRef(parent.rmNode.filePlan).id,
+            page = "rm-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType + "&filePlanId=" + filePlanId;
 
          window.location.href = $siteURL(page);
       },

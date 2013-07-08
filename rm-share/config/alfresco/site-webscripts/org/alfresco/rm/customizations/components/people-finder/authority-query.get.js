@@ -37,6 +37,9 @@ function rm_main()
       authorities = [],
       mapping, result, data, i, ii, j, jj;
 
+   // Remove "GROUP_EVERYONE" from the mapping
+   mappings.pop();
+
    for (i = 0, ii = mappings.length; i < ii; i++)
    {
       mapping = mappings[i];
