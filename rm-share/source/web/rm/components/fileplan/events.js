@@ -628,9 +628,6 @@
 
          // Hide panel
          this.widgets.completeEventPanel.hide();
-         
-         // Refresh the page...
-         window.location.reload(true);
       },
 
       /**
