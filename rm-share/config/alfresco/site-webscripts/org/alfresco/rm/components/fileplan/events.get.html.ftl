@@ -91,7 +91,8 @@
                <div class="section yui-g">
                   <div class="yui-u first">
                      <span id="${el}-completedAtContainer">
-                        <input id="${el}-completedAtDate" type="text" name="completedAt" readonly="readonly" value="" disabled/>
+                        <input id="${el}-completedAtDate" type="text" name="completedAt" readonly="readonly" value="" />
+                        <input id="${el}-completedAtDateISO8601" type="hidden" name="completedAtISO8601" readonly="readonly" value="" />
                         <a id="${el}-completedAtPicker" class="completedAtPicker">&nbsp;</a>
                      </span>
                   </div>
