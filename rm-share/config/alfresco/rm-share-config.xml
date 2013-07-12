@@ -164,14 +164,30 @@
       </metadata-templates>
 
       <multi-select>
-         <action type="action-link" id="onActionDownload" label="menu.selected-items.download" />
-         <action type="action-link" id="onActionCopyTo" label="menu.selected-items.copy" notAspect="rma:record" />
-         <action type="action-link" id="onActionMoveTo" permission="Delete" label="menu.selected-items.move" notAspect="rma:record" />
-         <action type="action-link" id="onActionAssignWorkflow" asset="document" label="menu.selected-items.assign-workflow" notAspect="rma:record" />
-         <action type="action-link" id="onActionManagePermissions" permission="ChangePermissions" label="menu.selected-items.manage-permissions" notAspect="rma:record" />
-         <action type="action-link" id="onActionDelete" permission="Delete" label="menu.selected-items.delete" notAspect="rma:record" />
-         <action type="action-link" id="onActionCloudSync" asset="document"  permission="CreateChildren" label="menu.selected-items.cloudSync" notAspect="sync:syncSetMemberNode,rma:record" syncMode="ON_PREMISE" />
-         <action type="action-link" id="onActionCloudSyncRequest" label="menu.selected-items.cloudRequestSync" hasAspect="sync:syncSetMemberNode" syncMode="ON_PREMISE" notAspect="rma:record" />
+         <action type="action-link" id="onActionCutoffRecord" permission="cutoff" asset="record" label="menu.selected-items.cutoff" rmaction="true" />
+         <action type="action-link" id="onActionCutoffRecordFolder" permission="cutoff" asset="record-folder" label="menu.selected-items.cutoff" rmaction="true" />
+         <action type="action-link" id="onActionCutoffRecordCategory" permission="cutoff" asset="record-category" label="menu.selected-items.cutoff" rmaction="true" />
+         <action type="action-link" id="onActionDestroy" permission="destroy" label="menu.selected-items.destroy" rmaction="true" />
+         <action type="action-link" id="onActionTransfer" permission="transfer" label="menu.selected-items.transfer" rmaction="true" />
+         <action type="action-link" id="onActionTransferComplete" permission="transferComplete" label="menu.selected-items.transfer-complete" rmaction="true" />
+         <action type="action-link" id="onActionAccession" permission="accession" label="menu.selected-items.accession" rmaction="true" />
+         <action type="action-link" id="onActionUndoCutoff" permission="undoCutoff" label="menu.selected-items.undo-cutoff" rmaction="true" />
+         <action type="action-link" id="onActionFreezeRecord" permission="freeze" asset="record,undeclared-record" label="menu.selected-items.freeze" rmaction="true" />
+         <action type="action-link" id="onActionFreezeRecordFolder" permission="freeze" asset="record-folder" label="menu.selected-items.freeze" rmaction="true" />
+         <action type="action-link" id="onActionFreezeRecordCategory" permission="freeze" asset="record-category" label="menu.selected-items.freeze" rmaction="true" />
+         <action type="action-link" id="onActionUnfreeze" permission="unfreeze" label="menu.selected-items.unfreeze" rmaction="true" />
+         <action type="action-link" id="onActionCopyRecordTo" permission="copyRecord" asset="record" label="menu.selected-items.copy-to" rmaction="true" />
+         <action type="action-link" id="onActionCopyRecordFolderTo" permission="copyRecordFolder" asset="record-folder" label="menu.selected-items.copy-to" rmaction="true" />
+         <action type="action-link" id="onActionCopyRecordCategoryTo" permission="copyRecordCategory" asset="record-category" label="menu.selected-items.copy-to" rmaction="true" />
+         <action type="action-link" id="onActionMoveRecordTo" permission="Delete,moveRecord" asset="record" label="menu.selected-items.move-to" rmaction="true" />
+         <action type="action-link" id="onActionMoveRecordFolderTo" permission="Delete,moveRecordFolder" asset="record-folder" label="menu.selected-items.move-to" rmaction="true" />
+         <action type="action-link" id="onActionMoveRecordCategoryTo" permission="Delete,moveRecordCategory" asset="record-category" label="menu.selected-items.move-to" rmaction="true" />
+         <action type="action-link" id="onActionLinkTo" permission="linkTo" asset="record" label="menu.selected-items.link-to" rmaction="true" />
+         <action type="action-link" id="onActionFileTo" permission="fileTo" asset="undeclared-record" label="menu.selected-items.file-to" rmaction="true" />
+         <action type="action-link" id="onActionDeleteRecord" permission="Delete" label="menu.selected-items.delete" asset="record,undeclared-record" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
+         <action type="action-link" id="onActionDeleteRecordFolder" permission="Delete" label="menu.selected-items.delete" asset="record-folder" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
+         <action type="action-link" id="onActionDeleteRecordCategory" permission="Delete" label="menu.selected-items.delete" asset="record-category" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
+         <action type="action-link" id="onActionExport" permission="" notAspect="rma:cutOff" label="menu.selected-items.export" asset="record,undeclared-record,record-folder,record-category" rmaction="true" />
       </multi-select>
 
    </config>

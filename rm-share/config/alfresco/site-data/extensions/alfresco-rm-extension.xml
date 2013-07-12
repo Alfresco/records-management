@@ -45,8 +45,37 @@
                <doclist>
                   <!-- Make sure the doclib's document list is using RM's file plan doclist webscript -->
                   <data-url-resolver>resolver.rm.doclib.doclistDataUrl</data-url-resolver>
-               </doclist>
 
+                  <!-- The view renderers that will be available as options in DocumentLibrary, My Files, Shared Files and
+                      Repository pages. This list can be added to or removed to control the views displayed. Use the a module
+                      that provides evaluated configuration to have the options change based on criteria (e.g. site name,
+                      site preset, user group, etc)
+
+                      Remember to include all dependencies, even those duplicated by another view - Surf will ensure only
+                      one version of each is loaded - but if a view is removed that depends on a dependency defined in another
+                      view then it will cause an error.
+                      -->
+                 <view-renderers>
+                    <view-renderer id="simple" label="button.view.simple" index="10">
+                       <dependencies>
+                          <js src="components/documentlibrary/documentlist-view-detailed.js" />
+                          <js src="components/documentlibrary/documentlist-view-simple.js" />
+                       </dependencies>
+                    </view-renderer>
+                    <view-renderer id="detailed" label="button.view.detailed" index="20">
+                       <dependencies>
+                          <js src="components/documentlibrary/documentlist-view-detailed.js" />
+                       </dependencies>
+                    </view-renderer>
+                    <view-renderer id="gallery" label="button.view.gallery" index="30">
+                       <dependencies>
+                          <js src="components/documentlibrary/documentlist-view-detailed.js" />
+                          <js src="components/documentlibrary/documentlist-view-gallery.js" />
+                          <js src="yui/slider/slider.js"/>
+                       </dependencies>
+                    </view-renderer>
+                 </view-renderers>
+               </doclist>
             </config>
 
 	        <config evaluator="string-compare" condition="DocLibActions" replace="true">
@@ -148,22 +177,6 @@
                </sub-components>
             </component>
 
-            <!-- Replace with RM specific Toolbar -->
-            <component>
-               <scope>template</scope>
-               <region-id>toolbar</region-id>
-               <source-id>documentlibrary</source-id>
-               <sub-components>
-                  <sub-component id="default">
-                     <evaluations>
-                        <evaluation id="rm-toolbar">
-                           <url>/rm/components/documentlibrary/toolbar</url>
-                        </evaluation>
-                     </evaluations>
-                  </sub-component>
-               </sub-components>
-            </component>
-
             <!-- Replace with RM specific Actions -->
             <component>
                <scope>template</scope>
@@ -186,13 +199,13 @@
             <!-- Replace with RM specific Document List -->
             <component>
                <scope>template</scope>
-               <region-id>documentlist</region-id>
+               <region-id>documentlist_v2</region-id>
                <source-id>documentlibrary</source-id>
                <sub-components>
                   <sub-component id="default">
                      <evaluations>
-                        <evaluation id="rm-documentlist">
-                           <url>/rm/components/documentlibrary/documentlist</url>
+                        <evaluation id="rm-documentlist_v2">
+                           <url>/rm/components/documentlibrary/documentlist_v2</url>
                            <properties>
                               <pagination>true</pagination>
                            </properties>
