@@ -259,6 +259,9 @@
    <bean id="evaluator.rm.action.request-info" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="requestInfo" />
    </bean>
+   <bean id="evaluator.rm.action.fileDestructionReport" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="fileDestructionReport" />
+   </bean>
 
    <!--                          -->
    <!-- DocLib Common Evaluators -->
