@@ -492,7 +492,7 @@
          </action>
          
          <!--  File destruction report -->
-         <action id="rm-file-destruction-report" type="javascript" label="actions.file-destruction-report" icon="../../../rm/components/documentlibrary/actions/rm-relinquish">
+         <action id="rm-file-destruction-report" type="javascript" label="actions.file-destruction-report" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
             <param name="function">onActionRecordsManagementRepoAction</param>
             <param name="action">fileDestructionReport</param>
             <param name="message">message.file-destruction-report</param>
