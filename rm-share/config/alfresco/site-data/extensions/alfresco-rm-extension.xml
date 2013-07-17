@@ -29,11 +29,11 @@
 
          <!-- Base evaluator that decides if any of the component bindings should be used at all -->
          <evaluator type="site.module.evaluator">
-	         <params>
-	            <sites>.*</sites>
-	            <sitePresets>rm-site-dashboard</sitePresets>
+            <params>
+               <sites>.*</sites>
+               <sitePresets>rm-site-dashboard</sitePresets>
                <applyForNonSites>false</applyForNonSites>
-	         </params>
+            </params>
          </evaluator>
 
          <!-- Apply the following configurations when the base evaluator above passes -->
@@ -501,7 +501,7 @@
                </doclist>
             </config>
 
-	        <config evaluator="string-compare" condition="DocLibActions" replace="true">
+           <config evaluator="string-compare" condition="DocLibActions" replace="true">
 
                <!-- Action Group Resolver -->
                <actionGroupResolver>resolver.rm.doclib.actionGroup</actionGroupResolver>
@@ -1088,7 +1088,7 @@
                   <sub-component id="default">
                      <evaluations>
                         <evaluation id="rm-rule-edit">
-        					<url>/rm/components/rules/rule-edit</url>
+                     <url>/rm/components/rules/rule-edit</url>
                         </evaluation>
                      </evaluations>
                   </sub-component>
@@ -1103,7 +1103,23 @@
                   <sub-component id="default">
                      <evaluations>
                         <evaluation id="rm-rule-edit">
-        					<url>/rm/components/rules/rule-details</url>
+                     <url>/rm/components/rules/rule-details</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
+            <!--  Hide document sync -->
+            <component>
+               <scope>template</scope>
+               <region-id>document-sync</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-hide">
+                           <render>false</render>
                         </evaluation>
                      </evaluations>
                   </sub-component>

@@ -1,6 +1,7 @@
 <#include "/org/alfresco/include/alfresco-template.ftl" />
 <@templateHeader>
    <@script type="text/javascript" src="${url.context}/res/modules/documentlibrary/doclib-actions.js"></@script>
+   <@script type="text/javascript" src="${url.context}/res/components/object-finder/object-finder.js"></@script>
    <@link rel="stylesheet" type="text/css" href="${url.context}/res/components/folder-details/folder-details-panel.css" />
 </@>
 
