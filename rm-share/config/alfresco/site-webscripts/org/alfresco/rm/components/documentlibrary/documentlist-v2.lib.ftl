@@ -95,13 +95,17 @@
                         <#else>
                            <li><a href="#"><span class="hidePath">${msg("button.navbar.hide")}</span></a></li>
                         </#if>
+                        <li><a href="#"><span class="fullWindow">${msg("button.fullwindow.enter")}</span></a></li>
+                        <li><a href="#"><span class="fullScreen">${msg("button.fullscreen.enter")}</span></a></li>
                         <@markup id="documentListViewRendererSelect">
                           <#if viewRenderers??>
                              <#list viewRenderers as viewRenderer>
-                                <li><a href="#"><span class="view ${viewRenderer.id}">${msg(viewRenderer.label)}</span></a></li>
+                                <li class="${viewRenderer.iconClass}"><a href="#"><span class="view ${viewRenderer.id}">${msg(viewRenderer.label)}</span></a></li>
                              </#list>
                           </#if>
                         </@>
+                        <li><a href="#"><span class="removeDefaultView">${msg("button.removeDefaultView")}</span></a></li>
+                        <li><a href="#"><span class="setDefaultView">${msg("button.setDefaultView")}</span></a></li>
                      </ul>
                   </div>
                </div>
@@ -242,6 +246,13 @@
 
       <#-- Top Bar: Select, Pagination, Sorting & View controls -->
       <div id="${id}-doclistBar" class="yui-gc doclist-bar flat-button no-check-bg"></div>
+      <div class="alf-fullscreen-exit-button" class="hidden">
+        <span class="yui-button">
+            <span class="first-child">
+                <button type="button" title="${msg("button.fullscreen.exit")}" id="${args.htmlid}-fullscreen-exit-button"></button>
+            </span>
+         </span>
+      </div>
 
       <#-- Main Panel: Document List -->
       <@markup id="documentListContainer">
@@ -250,6 +261,29 @@
       <div id="${id}-gallery-empty" class="hidden">
          <div class="yui-dt-liner"></div>
       </div>
+      <div id="${args.htmlid}-filmstrip" class="alf-filmstrip alf-gallery documents">
+            <div id="${args.htmlid}-filmstrip-main-content" class="alf-filmstrip-main-content">
+                <div id="${args.htmlid}-filmstrip-carousel"></div>
+                <div id="${args.htmlid}-filmstrip-nav-main-previous" class="alf-filmstrip-nav-button alf-filmstrip-main-nav-button alf-filmstrip-nav-prev">
+                    <img src="${page.url.context}/components/documentlibrary/images/filmstrip-main-nav-prev.png" />
+                </div>
+                <div id="${args.htmlid}-filmstrip-nav-main-next" class="alf-filmstrip-nav-button alf-filmstrip-main-nav-button alf-filmstrip-nav-next">
+                    <img src="${page.url.context}/components/documentlibrary/images/filmstrip-main-nav-next.png" />
+                </div>
+            </div>
+            <div id="${args.htmlid}-filmstrip-nav" class="alf-filmstrip-nav">
+                <div id="${args.htmlid}-filmstrip-nav-handle" class="alf-filmstrip-nav-handle"></div>
+                <div id="${args.htmlid}-filmstrip-nav-carousel"></div>
+                <div id="${args.htmlid}-filmstrip-nav-buttons" class="alf-filmstrip-nav-buttons">
+                    <div id="${args.htmlid}-filmstrip-nav-previous" class="alf-filmstrip-nav-button alf-filmstrip-nav-prev">
+                        <img src="${page.url.context}/components/documentlibrary/images/filmstrip-content-nav-prev.png" />
+                    </div>
+                    <div id="${args.htmlid}-filmstrip-nav-next" class="alf-filmstrip-nav-button alf-filmstrip-nav-next">
+                        <img src="${page.url.context}/components/documentlibrary/images/filmstrip-content-nav-next.png" />
+                    </div>
+                </div>
+            </div>
+       </div>
       </@>
 
       <#-- Bottom Bar: Paginator -->
@@ -283,6 +317,30 @@
             <div class="alf-detail" style="display: none;">
                <div class="bd">
                   <div class="alf-detail-thumbnail"></div>
+                  <div class="alf-status"></div>
+                  <div class="alf-actions"></div>
+                  <div style="clear: both;"></div>
+                  <div class="alf-description"></div>
+               </div>
+            </div>
+         </div>
+
+         <#-- Document List Filmstrip View Templates -->
+         <div id="${args.htmlid}-filmstrip-nav-item-template" class="alf-filmstrip-nav-item hidden">
+            <div class="alf-filmstrip-nav-item-thumbnail">
+               <div class="alf-label"></div>
+            </div>
+         </div>
+         <div id="${args.htmlid}-filmstrip-item-template" class="alf-gallery-item hidden">
+            <div class="alf-gallery-item-thumbnail">
+               <div class="alf-header">
+                  <div class="alf-select"></div>
+                  <a href="javascript:void(0)" class="alf-show-detail">&nbsp;</a>
+                  <div class="alf-label"></div>
+               </div>
+            </div>
+            <div class="alf-detail">
+               <div class="bd">
                   <div class="alf-status"></div>
                   <div class="alf-actions"></div>
                   <div style="clear: both;"></div>

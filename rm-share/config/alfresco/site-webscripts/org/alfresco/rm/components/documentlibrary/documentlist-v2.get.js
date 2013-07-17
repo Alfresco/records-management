@@ -36,6 +36,7 @@ function widgets()
          sortField : model.preferences.sortField != null ? model.preferences.sortField : "cm:name",
          showFolders : (model.preferences.showFolders != null ? model.preferences.showFolders : true),
          simpleView : model.preferences.simpleView != null ? model.preferences.simpleView : "null",
+         viewRenderers: model.viewRenderers,
          highlightFile : page.url.args["file"] != null ? page.url.args["file"] : "",
          replicationUrlMapping : model.replicationUrlMapping != null ? model.replicationUrlMapping : "{}",
          repositoryBrowsing : model.rootNode != null,

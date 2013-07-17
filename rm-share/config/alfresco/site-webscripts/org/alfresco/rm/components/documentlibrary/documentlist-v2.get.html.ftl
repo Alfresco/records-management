@@ -5,6 +5,7 @@
    <#-- CSS Dependencies -->
    <@link rel="stylesheet" type="text/css" href="${url.context}/res/components/documentlibrary/toolbar.css" group="documentlibrary"/>
    <@link rel="stylesheet" type="text/css" href="${url.context}/res/rm/components/documentlibrary/toolbar.css" group="documentlibrary"/>
+   <@link rel="stylesheet" type="text/css" href="${url.context}/res/rm/components/documentlibrary/documentlist.css" group="documentlibrary"/>
    <@link rel="stylesheet" type="text/css" href="${url.context}/res/components/documentlibrary/documentlist_v2.css" group="documentlibrary"/>
    <@viewRenderererCssDeps/>
 </@>
