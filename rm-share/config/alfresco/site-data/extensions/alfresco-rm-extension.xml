@@ -1126,6 +1126,22 @@
                </sub-components>
             </component>
 
+            <!-- Replace with RM Rules Header -->
+            <component>
+               <scope>template</scope>
+               <region-id>rules-header</region-id>
+               <source-id>folder-rules</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-rule-header">
+                           <url>/rm/components/rules/rules-header</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
          </components>
 
       </module>
