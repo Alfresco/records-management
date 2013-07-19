@@ -45,9 +45,9 @@
     * @return {Alfresco.rm.component.DocListToolbar} The new RecordsDocListToolbar instance
     * @constructor
     */
-   Alfresco.rm.component.DocListToolbar = function(htmlId)
+   Alfresco.rm.component.DocListToolbar = function(htmlId, registerListeners)
    {
-      return Alfresco.rm.component.DocListToolbar.superclass.constructor.call(this, htmlId);
+      return Alfresco.rm.component.DocListToolbar.superclass.constructor.call(this, htmlId, registerListeners);
    };
 
    /**
