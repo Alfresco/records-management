@@ -618,7 +618,8 @@
                url: Alfresco.constants.URL_SERVICECONTEXT + "components/people-finder/authority-finder",
                dataObj:
                {
-                  htmlid: parent.id + "-search-authorityfinder"
+                  htmlid: parent.id + "-search-authorityfinder",
+                  module: "rm"
                },
                successCallback:
                {

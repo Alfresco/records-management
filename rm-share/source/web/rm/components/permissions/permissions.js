@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * Records Search component.
- * 
+ *
  * @namespace Alfresco
  * @class Alfresco.rm.component.RecordsPermissions
  */
@@ -35,10 +35,10 @@
     * Alfresco Slingshot aliases
     */
    var $html = Alfresco.util.encodeHTML;
-   
+
    /**
     * Search constructor.
-    * 
+    *
     * @param {String} htmlId The HTML id of the parent element
     * @return {Alfresco.rm.component.RecordsPermissions} The new RecordsPermissions instance
     * @constructor
@@ -49,28 +49,28 @@
       Alfresco.rm.component.RecordsPermissions.superclass.constructor.call(
          this, "Alfresco.rm.component.RecordsPermissions", htmlId,
          ["button", "container", "datasource", "datatable", "json", "menu"]);
-      
+
       return this;
    };
-   
+
    YAHOO.extend(Alfresco.rm.component.RecordsPermissions, Alfresco.component.Base,
    {
       /**
        * Object container for storing YUI menu instances, indexed by property name.
-       * 
+       *
        * @property modifyMenus
        * @type object
        */
       modifyMenus: null,
-      
+
       /**
        * Object container for storing YUI button instances, indexed by property name.
-       * 
+       *
        * @property removeButtons
        * @type object
        */
       removeButtons: null,
-      
+
       /**
        * Array of objects representing the permissions list as displayed.
        * Of the form:
@@ -81,12 +81,12 @@
        *    "modified": BOOLEAN,
        *    "el": DOMELEMENT
        * }
-       * 
+       *
        * @property permissions
        * @type Array
        */
       permissions: null,
-      
+
       /**
        * Fired by YUI when parent element is available for scripting.
        * Component initialisation, including instantiation of YUI widgets and event listener binding.
@@ -96,18 +96,19 @@
       onReady: function RecordsPermissions_onReady()
       {
          var me = this;
-         
+
          // Buttons
          this.widgets.addButton = Alfresco.util.createYUIButton(this, "addusergroup-button", this.onAddClick);
          this.widgets.finishButton = Alfresco.util.createYUIButton(this, "finish-button", this.onFinishClick);
-         
+
          // Load in the Authority Finder component from the server
          Alfresco.util.Ajax.request(
          {
             url: Alfresco.constants.URL_SERVICECONTEXT + "components/people-finder/authority-finder",
             dataObj:
             {
-               htmlid: this.id + "-authoritypicker"
+               htmlid: this.id + "-authoritypicker",
+               module: "rm"
             },
             successCallback:
             {
@@ -117,11 +118,11 @@
             failureMessage: this.msg("message.authoritypickerfail"),
             execScripts: true
          });
-         
+
          // initial update of the UI
          this.refreshPermissionsList();
       },
-      
+
       /**
        * Called when the authority finder template has been loaded.
        * Creates a dialog and inserts the authority finder for choosing groups and users to add.
@@ -134,12 +135,12 @@
          // Inject the component from the XHR request into it's placeholder DIV element
          var finderDiv = Dom.get(this.id + "-authoritypicker");
          finderDiv.innerHTML = response.serverResponse.responseText;
-         
+
          this.widgets.authorityFinder = finderDiv;
-         
+
          // Find the Authority Finder by container ID
          this.modules.authorityFinder = Alfresco.util.ComponentManager.get(this.id + "-authoritypicker");
-         
+
          // Set the correct options for our use
          this.modules.authorityFinder.setOptions(
          {
@@ -147,14 +148,14 @@
             singleSelectMode: true,
             minSearchTermLength: 3
          });
-         
+
          // Make sure we listen for events when the user selects an authority
          YAHOO.Bubbling.on("itemSelected", this.onAuthoritySelected, this);
       },
-      
+
       /**
        * Authority selected event handler. This event is fired from Authority picker.
-       * 
+       *
        * @method onAuthoritySelected
        * @param e DomEvent
        * @param args Event parameters (depends on event type)
@@ -172,15 +173,15 @@
             }
          };
          this.addPermissionRow(permission, true);
-         
+
          // remove authority selector popup
          Dom.removeClass(this.widgets.authorityFinder, "active");
          this.showingFilter = false;
       },
-      
+
       /**
        * Refresh the permissions list.
-       * 
+       *
        * @method refreshPermissionsList
        */
       refreshPermissionsList: function RecordsPermissions_refreshPermissionsList()
@@ -188,11 +189,11 @@
          // clear the list of meta-data items
          var elPermList = Dom.get(this.id + "-list");
          elPermList.innerHTML = "";
-         
+
          // reset widget references
          this.modifyMenus = {};
          this.removeButtons = {};
-         
+
          // perform ajax call to get the current permissions for the node
          Alfresco.util.Ajax.request(
          {
@@ -216,7 +217,7 @@
             }
          });
       },
-      
+
       /**
        * Permissions list - ajax handler callback
        *
@@ -227,22 +228,22 @@
       {
          // clear the list of local permissions
          this.permissions = [];
-         
+
          var json = Alfresco.util.parseJSON(res.serverResponse.responseText);
          var perms = json.data.permissions;
-         
+
          // sort the array from the json response - alphabetically
          perms.sort(function(a, b)
          {
             return (a.authority.label > b.authority.label) ? -1 : (a.authority.label < b.authority.label) ? 1 : 0;
          });
-         
+
          for (var i in perms)
          {
             this.addPermissionRow(perms[i], false);
          }
       },
-      
+
       /**
        * Add a row to the list of permissions. Also updates the internal local
        * permission object list.
@@ -256,7 +257,7 @@
        *    }
        * }
        * Generally provided via JSON call or created for a new permission.
-       * 
+       *
        * @method addPermissionRow
        * @param permission {object} See above
        * @param created {boolean} If true then this is a newly created permission.
@@ -264,7 +265,7 @@
       addPermissionRow: function RecordsPermissions_addPermissionRow(permission, created)
       {
          var me = this;
-         
+
          // quick exit from the function if the added authority already exists as a local permission
          if (created)
          {
@@ -277,12 +278,12 @@
                }
             }
          }
-         
+
          var elPermList = Dom.get(this.id + "-list");
-         
+
          // build row item for the permission and controls
          var div = document.createElement("div");
-         
+
          // construct local permission reference from current data
          var i = this.permissions.length;
          var p =
@@ -295,25 +296,25 @@
             "el": div
          };
          this.permissions.push(p);
-         
+
          // dynamically generated button ids
          var modifyMenuContainerId = this.id + '-edit-' + i;
          var removeBtnContainerId  = this.id + '-remove-' + i;
-         
+
          // messages
          var msgReadOnly = this.msg("label.readonly");
          var msgReadFile = this.msg("label.readandfile");
-         
+
          // construct row data
          var html = '<div class="list-item"><div class="actions">';
          html += '<span id="' + removeBtnContainerId + '"></span></div><div class="controls"><span id="' + modifyMenuContainerId + '"></span>';
          html += '</div><div><span class="label">' + $html(permission.authority.label) + '</span></div></div>';
-         
+
          div.innerHTML = html;
-         
+
          // insert into the DOM for display
          elPermList.appendChild(div);
-         
+
          // generate menu and buttons (NOTE: must occur after DOM insertion)
          this.modifyMenus[i] = new YAHOO.widget.Button(
          {
@@ -334,13 +335,13 @@
             {
                // update menu button text to selected item label
                me.modifyMenus[index].set("label", menuItem.cfg.getProperty("text"));
-               
+
                // update modified permissions value and set as modified
                me.permissions[i].id = menuItem.value;
                me.permissions[i].modified = true;
             }
          }, i);
-         
+
          this.removeButtons[i] = new YAHOO.widget.Button(
          {
             type: "button",
@@ -355,7 +356,7 @@
             }
          });
       },
-      
+
       /**
        * Remove Permission button click handler
        *
@@ -371,10 +372,10 @@
          permission.el.parentNode.removeChild(permission.el);
          permission.el = null;
       },
-      
+
       /**
        * Fired when the Add User/Group button is clicked.
-       * 
+       *
        * @method onAddClick
        * @param e {object} DomEvent
        * @param args {array} Event parameters (depends on event type)
@@ -387,7 +388,7 @@
             Dom.addClass(this.widgets.authorityFinder, "active");
             var el = Dom.get(this.id + "-authoritypicker-search-text");
             el.focus();
-            this.showingFilter = true;            
+            this.showingFilter = true;
          }
          else
          {
@@ -395,10 +396,10 @@
             this.showingFilter = false;
          }
       },
-      
+
       /**
        * Fired when the Finish button is clicked.
-       * 
+       *
        * @method onFinishClick
        * @param e {object} DomEvent
        * @param args {array} Event parameters (depends on event type)
@@ -406,12 +407,12 @@
       onFinishClick: function RecordsPermissions_onFinishClick(e, args)
       {
          this.widgets.finishButton.set("disabled", true);
-         
+
          var obj =
          {
             "permissions": []
          };
-         
+
          for (var i in this.permissions)
          {
             var p = this.permissions[i];
@@ -424,7 +425,7 @@
                if (p.created === false && p.modified)
                {
                   // first remove existing permission
-                  var permission = 
+                  var permission =
                   {
                      "id": (p.id === "Filing" ? "ReadRecords": "Filing"),
                      "authority": p.authority,
@@ -432,7 +433,7 @@
                   };
                   obj.permissions.push(permission);
                }
-               var permission = 
+               var permission =
                {
                   "id": p.id,
                   "authority": p.authority,
@@ -441,7 +442,7 @@
                obj.permissions.push(permission);
             }
          }
-         
+
          if (obj.permissions.length !== 0)
          {
             Alfresco.util.Ajax.request(
@@ -458,7 +459,7 @@
                      {
                         text: this.msg("message.finish-success")
                      });
-                     
+
                      // return to appropriate location
                      this._navigateForward();
                   },
@@ -486,10 +487,10 @@
             this._navigateForward();
          }
       },
-      
+
       /**
        * Displays the corresponding return page for the current node.
-       * 
+       *
        * @method _navigateForward
        * @private
        */
@@ -508,9 +509,9 @@
                case "rma:recordCategory":
             	   nodeType = "rm-record-category";
             	   break;
-               case "rma:recordFolder":  
+               case "rma:recordFolder":
             	   nodeType = "rm-record-folder";
-            	   break;             
+            	   break;
                default :
                   nodeType = "document";
                   break;
