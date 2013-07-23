@@ -4,7 +4,7 @@ function isCorrectFilePlanRole(callResult)
 {
    var result = true;
    var filePlanId = args.filePlanId;
-   if (filePlanId)
+   if (filePlanId != "null")
    {
       result = new RegExp(filePlanId + "$").test(callResult.shortName);
    }
