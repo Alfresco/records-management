@@ -219,10 +219,6 @@
                                    "label": "table.dublincore.label.contributor"
                                 },
                                 {
-                                   "property": "cm:type",
-                                   "label": "table.dublincore.label.type"
-                                },
-                                {
                                    "property": "cm:mimetype",
                                    "label": "table.dublincore.label.mimetype"
                                 },
@@ -259,72 +255,7 @@
                              },
                              "indicators": {
                                 "show": "true"
-                                       <view-renderer id="audio" iconClass="table" label="button.view.audio" index="60" widget="Alfresco.DocumentListTableViewRenderer">
-                       <dependencies>
-                          <js src="components/documentlibrary/documentlist-view-detailed.js" />
-                          <js src="components/documentlibrary/documentlist-view-table.js" />
-                          <css src="components/documentlibrary/documentlist-view-table.css" />
-                       </dependencies>
-                       <json-config>
-                          {
-                             "actions": {
-                                "show": "true"
                              },
-                             "indicators": {
-                                "show": "true"
-                             },
-                             "selector": {
-                                "show": "true"
-                             },
-                             "thumbnail": {
-                                "show": "true"
-                             },
-                             "propertyColumns": [
-                                {
-                                   "property": "name",
-                                   "label": "table.audio.label.name",
-                                   "width": "300"
-                                },
-                                {
-                                   "property": "cm:title",
-                                   "label": "table.audio.label.title",
-                                   "width": "200"
-                                },
-                                {
-                                   "property": "audio:album",
-                                   "label": "table.audio.label.album",
-                                   "width": "200",
-                                   "link": "true"
-                                },
-                                {
-                                   "property": "audio:artist",
-                                   "label": "table.audio.label.artist",
-                                   "width": "200"
-                                },
-                                {
-                                   "property": "audio:genre",
-                                   "label": "table.audio.label.genre",
-                                   "width": "100"
-                                },
-                                {
-                                   "property": "audio:trackNumber",
-                                   "label": "table.audio.label.trackNumber",
-                                   "width": "100"
-                                },
-                                {
-                                   "property": "audio:sampleRate",
-                                   "label": "table.audio.label.sampleRate",
-                                   "width": "100"
-                                },
-                                {
-                                   "property": "audio:compressor",
-                                   "label": "table.audio.label.compressor",
-                                   "width": "100"
-                                }
-                             ]
-                          }
-                       </json-config>
-                    </view-renderer>  },
                              "selector": {
                                 "show": "true"
                              },
@@ -371,6 +302,60 @@
                        </json-config>
                     </view-renderer>
                     -->
+                    <view-renderer id="table" iconClass="table" label="button.view.table" index="50" widget="Alfresco.DocumentListTableViewRenderer">
+                       <dependencies>
+                          <js src="components/documentlibrary/documentlist-view-detailed.js" />
+                          <js src="components/documentlibrary/documentlist-view-table.js" />
+                          <css src="components/documentlibrary/documentlist-view-table.css" />
+                       </dependencies>
+                       <json-config>
+                          {
+                             "actions": {
+                                "show": "true"
+                             },
+                             "indicators": {
+                                "show": "true"
+                             },
+                             "selector": {
+                                "show": "true"
+                             },
+                             "thumbnail": {
+                                "show": "true"
+                             },
+                             "propertyColumns": [
+                                {
+                                   "property": "name",
+                                   "label": "label.name",
+                                   "width": "300"
+                                },
+                                {
+                                   "property": "cm:title",
+                                   "label": "label.title"
+                                },
+                                {
+                                   "property": "cm:description",
+                                   "label": "label.description"
+                                },
+                                {
+                                   "property": "cm:creator",
+                                   "label": "label.creator"
+                                },
+                                {
+                                   "property": "cm:created",
+                                   "label": "label.created"
+                                },
+                                {
+                                   "property": "cm:modifier",
+                                   "label": "label.modifier"
+                                },
+                                {
+                                   "property": "modified",
+                                   "label": "label.modified"
+                                }
+                             ]
+                          }
+                       </json-config>
+                    </view-renderer>
                     <view-renderer id="audio" iconClass="table" label="button.view.audio" index="60" widget="Alfresco.DocumentListTableViewRenderer">
                        <dependencies>
                           <js src="components/documentlibrary/documentlist-view-detailed.js" />
