@@ -419,7 +419,7 @@
     	 Dom.get(this.id + "-eventName").value = obj.event.name;
          Dom.get(this.id + "-completedAtTime").value = Alfresco.util.formatDate(currentDate, TIME_24H);
          Dom.get(this.id + "-completedAtDate").value = Alfresco.util.formatDate(currentDate, DATE_LONG);
-         Dom.get(this.id + "-completedAtDateISO8601").value = Alfresco.util.toISO8601(currentDate);
+         Dom.get(this.id + "-completedAtDateShort").value = Alfresco.util.formatDate(currentDate, DATE_SHORT);
 
          this.widgets.completeEventPanel.show();
       },
@@ -592,10 +592,10 @@
                var date = args[0][0],
                   selectedDate = new Date(date[0], (date[1]-1), date[2]),
                   elem = Dom.get(me.id + "-completedAtDate");
-                  elemISO8601Hidden = Dom.get(me.id + "-completedAtDateISO8601");
+                  elemShort = Dom.get(me.id + "-completedAtDateShort");
                
                elem.value = Alfresco.util.formatDate(selectedDate, DATE_LONG);
-               elemISO8601Hidden.value = Alfresco.util.toISO8601(selectedDate);
+               elemShort.value = Alfresco.util.formatDate(selectedDate, DATE_SHORT);
             }
             oCalendarMenu.hide();
          }, this);
@@ -612,7 +612,7 @@
       onCompleteEventOkClick: function AddEvent_onCompleteEventOkClick(e, obj)
       {
          // Get completed at value and time and convert to iso format
-    	 var completedAt = Alfresco.util.formatDate(Dom.get(this.id + "-completedAtDateISO8601").value, DATE_SHORT);
+    	 var completedAt = Dom.get(this.id + "-completedAtDateShort").value;
          completedAt = new Date(completedAt + " " + Dom.get(this.id + "-completedAtTime").value);
          var completedAtIso = Alfresco.util.toISO8601(completedAt);
 
