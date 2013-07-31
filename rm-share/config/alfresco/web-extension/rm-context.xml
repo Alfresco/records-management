@@ -120,6 +120,9 @@
    <bean id="evaluator.rm.indicator.vitalRecord" parent="evaluator.rm.common.indicatorEvaluator">
       <property name="indicator" value="vitalRecord" />
    </bean>
+   <bean id="evaluator.rm.indicator.dispositionSchedule" parent="evaluator.rm.common.indicatorEvaluator">
+      <property name="indicator" value="dispositionSchedule" />
+   </bean>
 
    <!--  Extended DocLib Evaluators -->
 

@@ -75,6 +75,11 @@
             <evaluator>evaluator.rm.doclib.infoRequested</evaluator>
             <override>active-workflows</override>
          </indicator>
+         <!--  Disposition Schedule Indicator -->
+         <!-- FIXME Icon -->
+         <indicator id="rm-disposition-schedule" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-info-requested-16.png">
+            <evaluator>evaluator.rm.indicator.dispositionSchedule</evaluator>
+         </indicator>
       </indicators>
 
       <!--
@@ -506,7 +511,7 @@
             <param name="failureMessage">message.hide-record.failure</param>
             <evaluator>evaluator.rm.action.hide</evaluator>
          </action>
-         
+
          <!--  File destruction report -->
          <action id="rm-file-destruction-report" type="javascript" label="actions.file-destruction-report" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
             <param name="function">onActionRecordsManagementRepoAction</param>
@@ -514,7 +519,7 @@
             <param name="message">message.file-destruction-report</param>
             <evaluator>evaluator.rm.action.fileDestructionReport</evaluator>
          </action>
-         
+
       </actions>
 
       <!--
@@ -704,7 +709,7 @@
 
          <actionGroup id="rm-metadata-stub-browse">
          	<action index="50" id="rm-file-destruction-report" />
-            <action index="100" id="rm-delete" label="actions.delete" />            
+            <action index="100" id="rm-delete" label="actions.delete" />
             <action index="110" id="rm-view-audit-log" />
          </actionGroup>
          <actionGroup id="rm-metadata-stub-details">
