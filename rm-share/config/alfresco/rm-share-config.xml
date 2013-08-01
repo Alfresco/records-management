@@ -76,7 +76,6 @@
             <override>active-workflows</override>
          </indicator>
          <!--  Disposition Schedule Indicator -->
-         <!-- FIXME Icon -->
          <indicator id="rm-disposition-schedule" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-info-requested-16.png">
             <evaluator>evaluator.rm.indicator.dispositionSchedule</evaluator>
          </indicator>
@@ -276,8 +275,7 @@
          </action>
 
          <!-- File to -->
-         <!-- FIXME change icon -->
-         <action id="rm-file-to" type="javascript" label="actions.file-to" icon="../../../rm/components/documentlibrary/actions/rm-link-to">
+         <action id="rm-file-to" type="javascript" label="actions.file-to" icon="../../../rm/components/documentlibrary/actions/rm-file-to">
             <param name="function">onActionFileTo</param>
             <evaluator>evaluator.rm.action.file-to</evaluator>
          </action>
@@ -470,8 +468,7 @@
          </action>
 
          <!-- Reject record -->
-         <!-- FIXME change icon -->
-         <action id="rm-reject" type="javascript" label="actions.reject" icon="../../../rm/components/documentlibrary/actions/rm-undeclare">
+         <action id="rm-reject" type="javascript" label="actions.reject" icon="../../../rm/components/documentlibrary/actions/rm-reject">
             <param name="function">onActionReject</param>
             <evaluator>evaluator.rm.action.reject</evaluator>
          </action>
@@ -513,7 +510,7 @@
          </action>
 
          <!--  File destruction report -->
-         <action id="rm-file-destruction-report" type="javascript" label="actions.file-destruction-report" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
+         <action id="rm-file-destruction-report" type="javascript" label="actions.file-destruction-report" icon="../../../rm/components/documentlibrary/actions/rm-destruction-report">
             <param name="function">onActionRecordsManagementRepoAction</param>
             <param name="action">fileDestructionReport</param>
             <param name="message">message.file-destruction-report</param>
