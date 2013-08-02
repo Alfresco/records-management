@@ -373,7 +373,6 @@
          Dom.get(this.id + "-vital").checked = false;
          Dom.get(this.id + "-folders").checked = true;
          Dom.get(this.id + "-categories").checked = false;
-         Dom.get(this.id + "-series").checked = false;
          Dom.get(this.id + "-frozen").checked = false;
          Dom.get(this.id + "-cutoff").checked = false;
          Dom.get(this.id + "-terms").value = "";
