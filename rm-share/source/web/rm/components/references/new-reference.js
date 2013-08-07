@@ -20,7 +20,7 @@
 
 /**
  * RM References component
- * 
+ *
  * @namespace Alfresco
  * @class Alfresco.rm.component.NewReference
  */
@@ -41,7 +41,7 @@
 
    /**
     * RM References component constructor.
-    * 
+    *
     * @param {String} htmlId The HTML id of the parent element
     * @return {Alfresco.dashlet.MyDocuments} The new component instance
     * @constructor
@@ -49,11 +49,11 @@
    Alfresco.rm.component.NewReference = function RM_NewReference_constructor(htmlId)
    {
       Alfresco.rm.component.NewReference.superclass.constructor.call(this, "Alfresco.rm.component.NewReference", htmlId, ["button", "menu", "container", "resize", "datatable", "datasource"]);
-     
+
       // this.eventHandlers = {};
       return this;
    };
-    
+
    YAHOO.extend(Alfresco.rm.component.NewReference, Alfresco.component.Base,
    {
       /**
@@ -71,7 +71,7 @@
           * @type String
           */
          controlId: "",
-         
+
          /**
           * String Id used for document picker picker
           *
@@ -79,20 +79,20 @@
           * @type String
           */
          pickerId: "",
-         
+
          /**
-          * Comma separated value of selected documents (nodeRefs). 
+          * Comma separated value of selected documents (nodeRefs).
           *
           * @property pickerId
           * @type String
           */
          currentValue: ""
-         
+
       },
-      
+
       /**
        * Initialises event listening and custom events
-       * 
+       *
        * @method initEvents
        */
       initEvents : function RM_NewReference_initEvents()
@@ -107,7 +107,7 @@
 
       /**
        * Fired by YUI when parent element is available for scripting
-       * 
+       *
        * @method onReady
        */
       onReady: function RM_NewReference_onReady()
@@ -118,7 +118,7 @@
          this.initEvents();
          this.widgets.documentPicker = new Alfresco.module.DocumentPicker(this.id + '-docPicker', Alfresco.rm.module.ObjectRenderer);
 
-         parentNodeRef = Alfresco.util.getQueryStringParameter('parentNodeRef') 
+         parentNodeRef = Alfresco.util.getQueryStringParameter('parentNodeRef')
          this.widgets.documentPicker.setOptions(
          {
             controlId: this.options.controlId,
@@ -136,16 +136,16 @@
             maintainAddedRemovedItems:false,
             mandatory:true,
             docLibNameAlias:this.msg('label.fileplan'),
-            restrictParentNavigationToDocLib: true,     
+            restrictParentNavigationToDocLib: true,
             params:'filterType=rma:dispositionSchedule,rma:dispositionActionDefinition,rma:dispositionAction,rma:hold,rma:transfer,cm:thumbnail'
          });
-         
+
          // Clear the previous selection...
          this.widgets.documentPicker.selectedItems = [];
          Alfresco.util.setVar('DocumentPickerSelection',[]);
-         
+
          // RM-398 - Override default onCancel function which does not re-enable the select button
-         //          when the picker is cancelled. It was not possible to fix this in the core for 
+         //          when the picker is cancelled. It was not possible to fix this in the core for
          //          2.0 because the targeted Alfresco release was already frozen.
          this.widgets.documentPicker.onCancel = function(e, p_obj)
          {
@@ -154,21 +154,21 @@
             this.resetSelection();
             Event.preventDefault(e);
          };
-         
+
          this.widgets.documentPicker.resetSelection = function()
          {
-            // No operation needed.
+            this.singleSelectedItem = null;
          };
-         
+
          YAHOO.Bubbling.on('onDocumentsSelected', this.updateSelectionField, this);
       },
-      
+
       /**
        * Updates UI with details about the selected documents
-       * 
+       *
        * Also updates the internal value as nodeRefs, so the document picker can
        * reload the selection if user selects the picker again.
-       * 
+       *
        * @method updateSelectionField
        * @param e {object} Event
        * @param args {object} Event arguments
@@ -194,14 +194,14 @@
             Dom.removeClass(selectedEl,'active');
             this.options.currentValue = "";
          }
-         
+
          this.widgets.documentPicker.widgets.showPicker.set("disabled", false);
          this.checkRequiredFields();
       },
-      
+
       /**
        * Updates state of submit button based on required valued
-       * 
+       *
        * @method checkRequiredFields
        */
       checkRequiredFields: function()
@@ -215,7 +215,7 @@
             this.widgets.createButton.set('disabled', true);
          }
       },
-      
+
       /**
        * Displays the corresponding details page for the current node
        *
@@ -236,7 +236,7 @@
 
          window.location.href = pageUrl;
       },
-      
+
       /**
        * Create button event handler
        *
@@ -247,7 +247,7 @@
       {
          var refTypeEl = document.getElementById('record-rel'),
             referenceType = refTypeEl.options[refTypeEl.selectedIndex].value;
-         
+
          Alfresco.util.Ajax.jsonRequest(
          {
             method: Alfresco.util.Ajax.POST,
