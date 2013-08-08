@@ -196,6 +196,7 @@
          //doclistMetadata.parent.permissions.user.CreateChildren
          if (obj && obj.metadata && obj.metadata.parent)
          {
+            this.doclistMetadata = Alfresco.util.deepCopy(obj.metadata);
             var p = obj.metadata.parent,
                userPerms;
 
