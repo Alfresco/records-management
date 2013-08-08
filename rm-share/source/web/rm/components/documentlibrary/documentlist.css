@@ -1,21 +1,31 @@
 /* DocList bar Select menu */
 
-.doclist .file-select .selectRecords
+.toolbar .file-select .selectRecords
 {
    background-image: url(images/select-records-16.png);
 }
 
-.doclist .file-select .selectUndeclaredRecords
+.toolbar .file-select .selectUndeclaredRecords
 {
    background-image: url(images/select-undeclared-16.png);
 }
 
-.doclist .file-select .selectAll
+.toolbar .file-select .selectRecordFolders
+{
+   background-image: url(images/record-folder-16.png);
+}
+
+.toolbar .file-select .selectRecordCategories
+{
+   background-image: url(images/record-category-16.png);
+}
+
+.toolbar .file-select .selectAll
 {
    background-image: url(images/select-all-rm-16.png);
 }
 
-.doclist .file-select .selectNone
+.toolbar .file-select .selectNone
 {
    background-image: url(images/select-none-rm-16.png);
 }

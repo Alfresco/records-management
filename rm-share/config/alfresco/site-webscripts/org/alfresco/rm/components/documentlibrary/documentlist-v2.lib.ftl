@@ -22,8 +22,10 @@
                   <div id="${id}-fileSelect-menu" class="yuimenu">
                      <div class="bd">
                         <ul>
-                           <li><a href="#"><span class="selectDocuments">${msg("menu.select.documents")}</span></a></li>
-                           <li><a href="#"><span class="selectFolders">${msg("menu.select.folders")}</span></a></li>
+                           <li><a href="#"><span class="selectRecords">${msg("menu.select.records")}</span></a></li>
+                           <li><a href="#"><span class="selectUndeclaredRecords">${msg("menu.select.undeclaredRecords")}</span></a></li>
+                           <li><a href="#"><span class="selectRecordFolders">${msg("menu.select.recordFolders")}</span></a></li>
+                           <li><a href="#"><span class="selectRecordCategories">${msg("menu.select.recordCategories")}</span></a></li>
                            <li><a href="#"><span class="selectAll">${msg("menu.select.all")}</span></a></li>
                            <li><a href="#"><span class="selectInvert">${msg("menu.select.invert")}</span></a></li>
                            <li><a href="#"><span class="selectNone">${msg("menu.select.none")}</span></a></li>
