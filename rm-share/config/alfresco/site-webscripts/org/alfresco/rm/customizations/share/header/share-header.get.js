@@ -4,6 +4,9 @@
 var siteNavigationWidgets = getSiteNavigationWidgets();
 if (siteNavigationWidgets.length > 0)
 {
+   // Highlight "Site Dashboard"
+   siteNavigationWidgets[0].config.selected = (page.titleId == "page.rmSiteDashboard.title");
+
    lastNavigationWidget = siteNavigationWidgets.pop();
    lastNavigationWidget.config.widgets[0].config.widgets.push({
       name: "alfresco/menus/AlfMenuBarItem",
