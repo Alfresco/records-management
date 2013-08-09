@@ -76,7 +76,7 @@
             <override>active-workflows</override>
          </indicator>
          <!--  Disposition Schedule Indicator -->
-         <indicator id="rm-disposition-schedule" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-info-requested-16.png">
+         <indicator id="rm-disposition-schedule" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-disposition-schedule-16.png">
             <evaluator>evaluator.rm.indicator.dispositionSchedule</evaluator>
          </indicator>
       </indicators>
@@ -474,8 +474,7 @@
          </action>
 
          <!-- Request Info -->
-         <!-- FIXME change icon -->
-         <action id="rm-request-info" type="javascript" label="actions.request-info" icon="../../../rm/components/documentlibrary/actions/rm-add-record-metadata">
+         <action id="rm-request-info" type="javascript" label="actions.request-info" icon="../../../rm/components/documentlibrary/actions/rm-request-info">
             <param name="function">onActionRequestInfo</param>
             <evaluator>evaluator.rm.action.request-info</evaluator>
          </action>
