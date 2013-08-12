@@ -162,7 +162,7 @@
             <appearance>
 
                <set id="rm-record-cat" />
-               <set id="rm-vital-record" label="Vital Record" appearance="panel"/>
+               <set id="rm-vital-record" label-id="label.set.vitalRecord" appearance="panel"/>
                <set id="rm-custom" label-id="label.set.customMetadata" appearance="panel" />
 
                <!--  Record folder fields -->
