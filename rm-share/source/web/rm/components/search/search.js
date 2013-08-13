@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * Records Search component.
- * 
+ *
  * @namespace Alfresco
  * @class Alfresco.rm.component.Search
  */
@@ -35,10 +35,10 @@
     * Alfresco Slingshot aliases
     */
    var $html = Alfresco.util.encodeHTML;
-   
+
    /**
     * Search constructor.
-    * 
+    *
     * @param {String} htmlId The HTML id of the parent element
     * @return {Alfresco.rm.component.Search} The new RecordsSearch instance
     * @constructor
@@ -60,10 +60,10 @@
       YAHOO.Bubbling.on("savedSearchAdded", this.onSavedSearchAdded, this);
       YAHOO.Bubbling.on("searchComplete", this.onSearchComplete, this);
       YAHOO.Bubbling.on("PropertyMenuSelected", this.onPropertyMenuSelected, this);
-      
+
       return this;
    };
-   
+
    YAHOO.extend(Alfresco.rm.component.Search, Alfresco.rm.component.Results,
    {
       /**
@@ -76,7 +76,7 @@
       {
          Event.onContentReady(this.id, this.onReady, this, true);
       },
-      
+
       /**
        * Fired by YUI when parent element is available for scripting.
        * Component initialisation, including instantiation of YUI widgets and event listener binding.
@@ -86,10 +86,10 @@
       onReady: function RecordsSearch_onReady()
       {
          var me = this;
-         
+
          // Wire up tab component
          this.widgets.tabs = new YAHOO.widget.TabView(this.id + "-tabs");
-         
+
          // Buttons
          this.widgets.searchButton = Alfresco.util.createYUIButton(this, "search-button", this.onSearchClick);
          this.widgets.saveButton = Alfresco.util.createYUIButton(this, "savesearch-button", this.onSaveSearch);
@@ -102,7 +102,7 @@
          this.widgets.printButton.set("disabled", true);
          this.widgets.exportButton = Alfresco.util.createYUIButton(this, "export-button", this.onExport);
          this.widgets.exportButton.set("disabled", true);
-         
+
          // retrieve the public saved searches
          // TODO: user specific searches?
          Alfresco.util.Ajax.request(
@@ -115,37 +115,37 @@
             },
             failureMessage: me._msg("message.errorloadsearches")
          });
-         
+
          // construct the date picker calendar
          var theDate = new Date();
          var page = (theDate.getMonth() + 1) + "/" + theDate.getFullYear();
-         var selected = (theDate.getMonth() + 1) + "/" + theDate.getDate() + "/" + theDate.getFullYear();   
+         var selected = (theDate.getMonth() + 1) + "/" + theDate.getDate() + "/" + theDate.getFullYear();
          this.widgets.calendar = new YAHOO.widget.Calendar(null, this.id + "-date", { title: this._msg("message.selectdate"), close: true });
          this.widgets.calendar.cfg.setProperty("pagedate", page);
          this.widgets.calendar.cfg.setProperty("selected", selected);
-         
+
          // setup date picker events
          this.widgets.calendar.selectEvent.subscribe(this.onDatePickerSelection, this, true);
          Event.addListener(this.id + "-date-icon", "click", function () { this.widgets.calendar.show(); }, this, true);
-         
+
          // render the calendar control
          this.widgets.calendar.render();
-         
+
          // wire up misc events
          Event.on(me.id + "-records", "change", this.onRecordsCheckChanged, this, true);
-         
+
          // Call super class onReady() method
          Alfresco.rm.component.Search.superclass.onReady.call(this);
       },
-      
+
       /**
        * BUBBLING LIBRARY EVENT HANDLERS FOR PAGE EVENTS
        * Disconnected event handlers for inter-component event notification
        */
-       
+
       /**
        * Handles the date being changed in the date picker YUI control.
-       * 
+       *
        * @method onDatePickerSelection
        * @param type
        * @param args
@@ -157,7 +157,7 @@
          // update the date field - contains an array of [year, month, day]
          var selected = args[0][0];
          this.widgets.calendar.hide();
-         
+
          // convert to query date format and insert
          var date = YAHOO.lang.substitute('"{year}-{month}-{day}"',
          {
@@ -167,21 +167,21 @@
          });
          Alfresco.util.insertAtCursor(Dom.get(this.id + "-terms"), date);
       },
-      
+
       /**
        * Saved Searches AJAX success callback
-       * 
+       *
        * @method onSavedSearchesLoaded
        * @param res {object} Server response
        */
       onSavedSearchesLoaded: function RecordsSearch_onSavedSearchesLoaded(res)
       {
          var me = this;
-         
+
          var searches = this.options.savedSearches,
              items = YAHOO.lang.JSON.parse(res.serverResponse.responseText).items,
              index;
-         
+
          for (index in items)
          {
             if (items.hasOwnProperty(index))
@@ -198,13 +198,13 @@
                });
             }
          }
-         
+
          this._initSavedSearchMenu();
       },
-      
+
       /**
        * Records checkbox change event handler
-       * 
+       *
        * @method onRecordsCheckChanged
        * @param e {object} DomEvent
        */
@@ -214,10 +214,10 @@
          Dom.get(this.id + "-undeclared").disabled = disable;
          Dom.get(this.id + "-vital").disabled = disable;
       },
-      
+
       /**
        * Search button click event handler
-       * 
+       *
        * @method onSearchClick
        * @param e {object} DomEvent
        * @param args {array} Event parameters (depends on event type)
@@ -227,7 +227,7 @@
          // switch to results tab
          this._clearSearchResults();
          this.widgets.tabs.selectTab(1);
-         
+
          // execute the search and populate the results
          var query = this._getSearchQuery();
          if (query != null)
@@ -236,10 +236,10 @@
             this._performSearch(query, filters);
          }
       },
-      
+
       /**
        * Save Search button click event handler
-       * 
+       *
        * @method onSaveSearch
        * @param e {object} DomEvent
        * @param args {array} Event parameters (depends on event type)
@@ -263,9 +263,9 @@
             params += "&categories=" + (Dom.get(this.id + "-categories").checked);
             params += "&frozen=" + (Dom.get(this.id + "-frozen").checked);
             params += "&cutoff=" + (Dom.get(this.id + "-cutoff").checked);
-            
+
             // TODO: prepopulate dialog with current saved search name if any selected
-            
+
             // display the SaveSearch module dialog
             var module = Alfresco.module.getSaveSearchInstance();
             module.setOptions(
@@ -376,7 +376,7 @@
          Dom.get(this.id + "-frozen").checked = false;
          Dom.get(this.id + "-cutoff").checked = false;
          Dom.get(this.id + "-terms").value = "";
-         
+
          // reset sorting options
          for (var i=0, j=this.widgets.sortMenus.length; i<j; i++)
          {
@@ -384,17 +384,17 @@
                 menuItems = menu.getMenu().getItems();
             menu.set("label", menuItems[0].cfg.getProperty("text"));
             this.sortby[i].field = menuItems[0].value;
-            
+
             var orderMenu = this.widgets.sortOrderMenus[i],
                 orderMenuItems = orderMenu.getMenu().getItems();
             orderMenu.set("label", orderMenuItems[0].cfg.getProperty("text"));
             this.sortby[i].order = orderMenuItems[0].value;
          }
-         
+
          // switch to query builder tab
          this.widgets.tabs.selectTab(0);
       },
-      
+
       /**
        * Saved Search has been added
        *
@@ -424,10 +424,10 @@
             {
                this.options.savedSearches.push(searchObj);
             }
-            
+
             // rebuild the menu component
             this._initSavedSearchMenu();
-            
+
             // refresh Saved Searches menu button label to the selected item
             this.widgets.savedSearchMenu.set("label", searchObj.label);
 
@@ -435,7 +435,7 @@
             this.widgets.deleteButton.set("disabled", false);
          }
       },
-      
+
       /**
        * Search has been complete
        *
@@ -450,10 +450,10 @@
          this.widgets.printButton.set("disabled", disable);
          this.widgets.exportButton.set("disabled", disable);
       },
-      
+
       /**
        * Print button click event handler
-       * 
+       *
        * @method onPrint
        * @param e {object} DomEvent
        * @param args {array} Event parameters (depends on event type)
@@ -479,10 +479,10 @@
             Dom.setStyle(this.id + "-header", "display", "");
          }
       },
-      
+
       /**
        * Export button click event handler
-       * 
+       *
        * @method onExport
        * @param e {object} DomEvent
        * @param args {array} Event parameters (depends on event type)
@@ -501,7 +501,12 @@
          form.enctype = "multipart/form-data";
          form.encoding = "multipart/form-data";
          form.action = Alfresco.constants.PROXY_URI + "api/rma/admin/export";
-         
+         // Pass the CSRF token if the CSRF token filter is enabled
+         if (Alfresco.util.CSRFPolicy.isFilterEnabled())
+         {
+            form.action += "?" + Alfresco.util.CSRFPolicy.getParameter() + "=" + encodeURIComponent(Alfresco.util.CSRFPolicy.getToken());
+         }
+
          var input = document.createElement("input");
          input.type = "hidden";
          form.appendChild(input);
@@ -509,23 +514,23 @@
          input.value = this.resultNodeRefs.join(",");
          form.submit();
       },
-      
+
       /**
        * Bubbling event handler called when a value from the field insert selection menu has been picked
        */
       onPropertyMenuSelected: function RecordsSearch_onPropertyMenuSelected(e, args)
       {
          var item = args[1];
-         
+
          // get the namespaced attribute name (e.g. rma:location) and insert
          var attribute = ' ' + item.value + ':';
          Alfresco.util.insertAtCursor(Dom.get(this.id + "-terms"), attribute);
       },
-      
+
       _getSearchFilters: function RecordsSearch__getSearchFilters()
       {
     	  var filters = "";
-    	  
+
     	  filters += "records/";
     	  if (Dom.get(this.id + "-records").checked)
     	  {
@@ -535,7 +540,7 @@
     	  {
     		  filters += "false";
     	  }
-    	  
+
     	  filters += ",undeclared/";
     	  if (Dom.get(this.id + "-undeclared").checked)
     	  {
@@ -555,7 +560,7 @@
 		  {
 			  filters += "false";
 		  }
-    	  
+
     	  filters += ",folders/";
     	  if (Dom.get(this.id + "-folders").checked)
     	  {
@@ -565,7 +570,7 @@
     	  {
     		  filters += "false";
     	  }
-    	  
+
     	  filters += ",categories/";
     	  if (Dom.get(this.id + "-categories").checked)
     	  {
@@ -574,7 +579,7 @@
     	  else
     	  {
     		  filters += "false";
-    	  }    	  
+    	  }
     	  filters += ",frozen/";
     	  if (Dom.get(this.id + "-frozen").checked)
     	  {
@@ -584,7 +589,7 @@
     	  {
     		  filters += "false";
     	  }
-    	  
+
     	  filters += ",cutoff/";
     	  if ( Dom.get(this.id + "-cutoff").checked)
     	  {
@@ -594,10 +599,10 @@
     	  {
     		  filters += "false";
     	  }
-    	  
+
     	  return filters;
-      },      
-      
+      },
+
       /**
        * Gets the search query entered by the user.
        */
@@ -607,7 +612,7 @@
          var userQuery = YAHOO.lang.trim(queryElem.value);
          return userQuery;
       },
-      
+
       /**
        * Inits the Saved Searches menu component and handlers.
        *
@@ -617,14 +622,14 @@
       _initSavedSearchMenu: function RecordsSearch__initSavedSearchMenu()
       {
          var me = this;
-         
+
          // Saved Searches menu
          this.widgets.savedSearchMenu = new YAHOO.widget.Button(this.id + "-savedsearches-button",
          {
             type: "menu",
             menu: this._buildSavedSearchesMenu()
          });
-         
+
          // Click handler for Saved Search menu items
          this.widgets.savedSearchMenu.getMenu().subscribe("click", function(p_sType, p_aArgs)
          {
@@ -633,10 +638,10 @@
             {
                // Update the menu button label to be the selected Saved Search
                me.widgets.savedSearchMenu.set("label", menuItem.cfg.getProperty("text"));
-               
+
                // Rebuild search UI based on saved search object
                var searchObj = me.options.savedSearches[menuItem.value];
-               
+
                // Sort options are packed into a single string comma separated
                // in "property/dir" packed format i.e. "cm:name/asc,cm:title/desc"
                var sorts = (searchObj.sort ? searchObj.sort.split(",") : []);
@@ -652,21 +657,21 @@
                      {
                         // apply selected sort field to menu
                         menu.set("label", menuItems[m].cfg.getProperty("text"));
-                        
+
                         // also keep track of the current sort field
                         me.sortby[i].field = pair[0];
-                        
+
                         // apply selected sort direction to menu
                         var sortDirIndex = (pair[1] === "asc" ? 0 : 1);
                         var sortDirMenuItem = me.widgets.sortOrderMenus[i].getMenu().getItems()[sortDirIndex];
                         me.widgets.sortOrderMenus[i].set("label", sortDirMenuItem.cfg.getProperty("text"));
                         me.sortby[i].order = pair[1];
-                        
+
                         break;
                      }
                   }
                }
-               
+
                // Params are packed into a single string URL encoded
                var params = (searchObj.params ? searchObj.params.split("&") : []);
                for (var i in params)
@@ -679,42 +684,42 @@
                         Dom.get(me.id + "-records").checked = (pair[1] === "true");
                         break;
                      }
-                     
+
                      case "undeclared":
                      {
                         Dom.get(me.id + "-undeclared").checked = (pair[1] === "true");
                         break;
                      }
-                     
+
                      case "vital":
                      {
                         Dom.get(me.id + "-vital").checked = (pair[1] === "true");
                         break;
                      }
-                     
+
                      case "folders":
                      {
                         Dom.get(me.id + "-folders").checked = (pair[1] === "true");
                         break;
                      }
-                     
+
                      case "categories":
                      {
                         Dom.get(me.id + "-categories").checked = (pair[1] === "true");
                         break;
-                     }                     
+                     }
                      case "frozen":
                      {
                         Dom.get(me.id + "-frozen").checked = (pair[1] === "true");
                         break;
                      }
-                     
+
                      case "cutoff":
                      {
                         Dom.get(me.id + "-cutoff").checked = (pair[1] === "true");
                         break;
                      }
-                     
+
                      case "terms":
                      {
                         Dom.get(me.id + "-terms").value = decodeURIComponent(pair[1]);
@@ -722,7 +727,7 @@
                      }
                   }
                }
-               
+
                // switch to query builder tab
                me.widgets.tabs.selectTab(0);
 
@@ -732,7 +737,7 @@
             }
          });
       },
-      
+
       /**
        * Builds the menuitems for the Saved Searches menu based on the list of saved searches.
        *
@@ -755,7 +760,7 @@
          }
          return searches;
       },
-      
+
       /**
        * Helper to Array.sort() by the 'label' field of an object..
        *
@@ -768,7 +773,7 @@
          var ss1 = s1.label.toLowerCase(), ss2 = s2.label.toLowerCase();
          return (ss1 > ss2) ? 1 : (ss1 < ss2) ? -1 : 0;
       },
-      
+
       /**
        * Gets a custom message
        *
