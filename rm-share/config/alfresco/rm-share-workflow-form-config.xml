@@ -1,4 +1,11 @@
 <alfresco-config>
+   <config>
+      <forms>
+         <dependencies>
+            <js src="/rm/js/text-length-check-min.js" />
+         </dependencies>
+      </forms>
+   </config>
    <config evaluator="string-compare" condition="activiti$activitiRequestForInformation">
       <forms>
          <form>
@@ -21,6 +28,9 @@
                   <control template="/org/alfresco/components/form/controls/textarea.ftl">
                      <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
+                  <constraint-handlers>
+                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.maxTextLength" />
+                  </constraint-handlers>
                </field>
             </appearance>
          </form>
@@ -49,11 +59,17 @@
                   <control template="/org/alfresco/components/form/controls/readOnlyTextarea.ftl">
                      <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
+                  <constraint-handlers>
+                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.maxTextLength" />
+                  </constraint-handlers>
                </field>
                <field id="rmwf:message" label-id="rm.wf.give-details" set="message" >
                   <control template="/org/alfresco/components/form/controls/textarea.ftl">
                      <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
+                  <constraint-handlers>
+                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.maxTextLength" />
+                  </constraint-handlers>
                </field>
                <field id="transitions" set="transitions" />
             </appearance>
@@ -83,11 +99,17 @@
                   <control template="/org/alfresco/components/form/controls/readOnlyTextarea.ftl">
                      <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
+                  <constraint-handlers>
+                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.maxTextLength" />
+                  </constraint-handlers>
                </field>
                <field id="rmwf:message" label-id="rm.wf.details" set="message">
                   <control template="/org/alfresco/components/form/controls/readOnlyTextarea.ftl">
                      <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
+                  <constraint-handlers>
+                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.maxTextLength" />
+                  </constraint-handlers>
                </field>
                <field id="transitions" set="transitions" />
             </appearance>
