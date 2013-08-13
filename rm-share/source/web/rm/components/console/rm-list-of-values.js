@@ -369,9 +369,28 @@
                   firstFocus: parent.id + "-renameList-constraintTitle",
                   onSuccess:
                   {
-                     fn: function ViewPanelHandler_onNewListOfValueClick_SimpleDialog_callback(response)
+                     fn: function ViewPanelHandler_onNewListOfValueClick_SimpleDialog_success_callback(response)
                      {
                         this._loadListOfValues();
+                     },
+                     scope: this
+                  },
+                  onFailure:
+                  {
+                     fn: function ViewPanelHandler_onNewListOfValueClick_SimpleDialog_failure_callback(response)
+                     {
+                        var json = Alfresco.util.parseJSON(response.serverResponse.responseText),
+                        failureMsg = response.serverResponse.responseText;
+                        if (json != null && json.message != null)
+                        {
+                             failureMsg = json.message;
+                        }
+
+                        Alfresco.util.PopupManager.displayPrompt(
+                        {
+                           title: parent.msg("message.renamelist.failure.title"),
+                           text: parent.msg("message.renamelist.failure.text", failureMsg)
+                        });
                      },
                      scope: this
                   }
