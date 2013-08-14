@@ -50,7 +50,7 @@
    {
       Alfresco.rm.component.RMAudit.superclass.constructor.call(this, "Alfresco.rm.component.RMAudit", htmlId,["button", "container", "datasource", "datatable", "paginator", "json", "calendar"]);
 
-      //YAHOO.Bubbling.on("PropertyMenuSelected", this.onPropertyMenuSelected, this);
+      YAHOO.Bubbling.on("PropertyMenuSelected", this.onPropertyMenuSelected, this);
 
       this.showingFilter = false;
 
@@ -319,7 +319,7 @@
             	   }
             	   else
             	   {
-            		   elLiner.innerHTML = oRecordData.event + '&nbsp;&nbsp;&nbsp;';   
+            		   elLiner.innerHTML = oRecordData.event + '&nbsp;&nbsp;&nbsp;';
             	   }
                }
                else
