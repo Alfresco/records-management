@@ -30,7 +30,7 @@
    var Dom = YAHOO.util.Dom,
       Event = YAHOO.util.Event,
       KeyListener = YAHOO.util.KeyListener;
-   
+
    /**
     * SaveSearch constructor.
     *
@@ -45,12 +45,12 @@
       {
          throw new Error("An instance of Alfresco.rm.module.SaveSearch already exists.");
       }
-      
+
       Alfresco.rm.module.SaveSearch.superclass.constructor.call(this, "Alfresco.rm.module.SaveSearch", containerId, ["button", "container", "connection", "selector", "json"]);
-      
+
       return this;
    };
-   
+
    YAHOO.extend(Alfresco.rm.module.SaveSearch, Alfresco.component.Base,
    {
       /**
@@ -60,39 +60,39 @@
       {
          /**
           * Current siteId.
-          * 
+          *
           * @property siteId
           * @type string
           */
          siteId: "",
-         
+
          /**
           * Search query.
-          * 
+          *
           * @property query
           * @type string
           */
          query: "",
-         
+
          /**
           * Search parameters in URI encoded name/value pair format.
-          * 
+          *
           * @property params
           * @type string
           */
          params: "",
-         
+
          /**
           * Search sort in comma separated "property/dir" packed format i.e. "cm:name/asc,cm:title/desc"
-          * 
+          *
           * @property sort
           * @type string
           */
          sort: ""
       },
-      
+
       _form: null,
-      
+
       /**
        * Shows the SaveSearch dialog to the user.
        *
@@ -130,19 +130,19 @@
        * Creates the YUI gui objects such as buttons and a panel and shows it.
        *
        * @method onTemplateLoaded
-       * @param response {object} a Alfresco.util.Ajax.request response object 
+       * @param response {object} a Alfresco.util.Ajax.request response object
        */
       onTemplateLoaded: function SS_onTemplateLoaded(response)
       {
          // Inject the template from the XHR request into a new DIV element
          var containerDiv = document.createElement("div");
          containerDiv.innerHTML = response.serverResponse.responseText;
-         
+
          // The panel is created from the HTML returned in the XHR request, not the container
          var panelDiv = Dom.getFirstChild(containerDiv);
-         
+
          this.widgets.panel = Alfresco.util.createYUIPanel(panelDiv);
-         
+
          // Create the cancel button
          this.widgets.cancelButton = Alfresco.util.createYUIButton(this, "cancel-button",
             function()
@@ -150,16 +150,16 @@
                this.widgets.panel.hide();
             }
          );
-         
+
          // Create the Save button, the forms runtime will handle when its clicked
          this.widgets.saveButton = Alfresco.util.createYUIButton(this, "save-button", null,
          {
             type: "submit"
          });
-         
+
          // Configure the forms runtime
          var form = new Alfresco.forms.Form(this.id + "-form");
-         
+
          // Name is a node, mandatory and has a maximum length
          form.addValidation(this.id + "-name", Alfresco.forms.validation.nodeName, null, "keyup");
          form.addValidation(this.id + "-name", Alfresco.forms.validation.mandatory, null, "keyup");
@@ -168,14 +168,14 @@
             max: 1024,
             crop: true
          }, "keyup");
-         
+
          // Description has a maximum length
          form.addValidation(this.id + "-description", Alfresco.forms.validation.length,
          {
             max: 1024,
             crop: true
          }, "keyup");
-         
+
          // The Save button is the submit button, and it should be enabled when the form is ready
          form.setShowSubmitStateDynamically(true, false);
          form.setSubmitElements(this.widgets.saveButton);
@@ -185,12 +185,11 @@
             {
                var formEl = Dom.get(this.id + "-form");
                formEl.attributes.action.nodeValue = Alfresco.constants.PROXY_URI + "slingshot/rmsavedsearches/site/" + this.options.siteId;
-               
+
                this.widgets.saveButton.set("disabled", true);
-               this.widgets.cancelButton.set("disabled", true);
-               
+
                this.widgets.panel.hide();
-               
+
                // apply hidden field values for query via module options
                Dom.get(this.id + "-query").value = this.options.query;
                Dom.get(this.id + "-params").value = this.options.params;
@@ -199,7 +198,7 @@
             obj: null,
             scope: this
          };
-         
+
          // Submit as an ajax submit (not leave the page), in json format
          form.setAJAXSubmit(true,
          {
@@ -218,7 +217,7 @@
          form.applyTabFix();
          form.init();
          this._form = form;
-         
+
          // Show the panel
          this._showPanel();
       },
@@ -309,12 +308,12 @@
       {
          // The panel gui has been showed before and its gui has already been loaded and created
          this.widgets.panel.show();
-         
+
          this._form.updateSubmitElements();
-         
+
          // Firefox insertion caret fix
          Alfresco.util.caretFix(this.id + "-form");
-         
+
          // Register the ESC key to close the dialog
          var escapeListener = new KeyListener(document,
          {
@@ -329,7 +328,7 @@
             correctScope: true
          });
          escapeListener.enable();
-         
+
          // Set the focus on the first field
          Dom.get(this.id + "-name").focus();
       }
