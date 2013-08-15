@@ -335,6 +335,7 @@
             {
                // Validation
                p_form.addValidation(parent.id + "-renameList-constraintTitle", Alfresco.forms.validation.mandatory, null, "keyup");
+               p_form.addValidation(parent.id + "-renameList-constraintTitle", Alfresco.forms.validation.nodeName, null, "keyup");
                p_form.setShowSubmitStateDynamically(true, false);
             };
             var renameListUrl = Alfresco.constants.PROXY_URI + "api/rma/admin/rmconstraints/" + oRecord.getData("constraintName");
