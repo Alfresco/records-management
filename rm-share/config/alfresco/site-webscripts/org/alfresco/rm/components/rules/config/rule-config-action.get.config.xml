@@ -28,6 +28,7 @@
          <action name="fileTo"/>
          <action name="reject"/>
          <action name="requestInfo"/>
+         <action name="sendEmail"/>
       </group>
       <group>
          <action name="*"/>
@@ -39,6 +40,7 @@
       <action name="freeze">Freeze</action>
       <action name="reject">Reject</action>
       <action name="requestInfo">RequestInfo</action>
+      <action name="sendEmail">SendEmail</action>
    </customise>
 
 </rule-config>
