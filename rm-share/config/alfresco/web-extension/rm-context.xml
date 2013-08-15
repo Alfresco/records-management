@@ -123,6 +123,34 @@
    <bean id="evaluator.rm.indicator.dispositionSchedule" parent="evaluator.rm.common.indicatorEvaluator">
       <property name="indicator" value="dispositionSchedule" />
    </bean>
+   <bean id="evaluator.rm.indicator.digitalPhotographRecord" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+      <property name="aspects">
+         <list>
+            <value>dod:digitalPhotographRecord</value>
+         </list>
+      </property>
+   </bean>
+   <bean id="evaluator.rm.indicator.pdfRecord" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+      <property name="aspects">
+         <list>
+            <value>dod:pdfRecord</value>
+         </list>
+      </property>
+   </bean>
+   <bean id="evaluator.rm.indicator.scannedRecord" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+      <property name="aspects">
+         <list>
+            <value>dod:scannedRecord</value>
+         </list>
+      </property>
+   </bean>
+   <bean id="evaluator.rm.indicator.webRecord" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+      <property name="aspects">
+         <list>
+            <value>dod:webRecord</value>
+         </list>
+      </property>
+   </bean>
 
    <!--  Extended DocLib Evaluators -->
 
