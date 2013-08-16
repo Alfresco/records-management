@@ -16,7 +16,7 @@
    <div id="${id}-body" class="toolbar no-check-bg">
       <div id="${id}-headerBar" class="header-bar flat-button theme-bg-2">
          <div class="left">
-            <div class="hideable toolbar-hidden DocListTree">
+            <div class="hideable toolbar-hidden DocListTree DocListFilePlan_transfers DocListFilePlan_holds DocListFilePlan_unfiledRecords DocListSavedSearch_savedsearch">
                <div class="file-select">
                   <button id="${id}-fileSelect-button" name="doclist-fileSelect-button">${msg("menu.select")}</button>
                   <div id="${id}-fileSelect-menu" class="yuimenu">
