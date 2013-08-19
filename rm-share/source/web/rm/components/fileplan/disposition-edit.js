@@ -95,7 +95,7 @@
           *       and the action name/type {string} as the key.
           */
          actions: {},
-         
+
          recordLevelDisposition: false
       },
 
@@ -172,12 +172,12 @@
                         actions = schedule.actions ? schedule.actions : [],
                         action,
                         actionEl;
-                     
+
                      this.options.recordLevelDisposition = schedule.recordLevelDisposition;
-                     
+
                      if (actions.length == 0)
                      {
-                        dummyEl.innerHTML = this.msg("message.noSteps");  
+                        dummyEl.innerHTML = this.msg("message.noSteps");
                      }
                      else
                      {
@@ -199,7 +199,7 @@
             failureCallback:
             {
                fn: function(response)
-               {                  
+               {
                   Alfresco.util.PopupManager.displayPrompt(
                   {
                      text: this.msg("message.getActionFailure", this.name)
@@ -209,7 +209,7 @@
             }
          });
       },
-      
+
       /**
        * Loads disposition properties from the server
        *
@@ -218,8 +218,8 @@
        */
       _loadDispositionProperties: function DispositionEdit__loadDispostionProperties(action, actionEl)
       {
-    	 var remoteUrl = Alfresco.constants.PROXY_URI_RELATIVE + "/api/rma/dispositionproperties?recordlevel=" + this.options.recordLevelDisposition + "&dispositionaction=" + action.name;  
-    	  
+    	 var remoteUrl = Alfresco.constants.PROXY_URI_RELATIVE + "/api/rma/dispositionproperties?recordlevel=" + this.options.recordLevelDisposition + "&dispositionaction=" + action.name;
+
     	 Alfresco.util.Ajax.jsonGet(
          {
             url: remoteUrl,
@@ -228,19 +228,19 @@
                fn: function(response)
                {
                   if (response.json)
-                  {                	  
+                  {
                      var periodActionEl = Dom.getElementsByClassName("period-action", "select", actionEl)[0],
                          data = response.json.data,
                          properties = data.properties ? data.properties : [],
                          property,
                          option;
-                     
+
                      if (properties.length !== 0)
                      {
                         for (var i = 0, ii = properties.length; i < ii; i++)
                         {
                            property = properties[i];
-                           
+
                            option = document.createElement("option");
                            option.text = property.label;
                            option.value = property.value;
@@ -268,7 +268,7 @@
             failureCallback:
             {
                fn: function(response)
-               {                  
+               {
                   Alfresco.util.PopupManager.displayPrompt(
                   {
                      text: this.msg("message.getActionFailure", this.name)
@@ -289,7 +289,7 @@
       _createAction: function DispositionEdit__createAction(action)
       {
          var me = this;
-         
+
          // Clone template
          var actionEl = this.widgets.actionTemplateEl.cloneNode(true),
             elId = Alfresco.util.generateDomId(actionEl);
@@ -353,7 +353,7 @@
 
          // Period Unit
          var periodUnit = (period && period.length > 0) ? period[0] : null,
-             periodActionEl = Dom.getElementsByClassName("period-action", "select", actionEl)[0],	 
+             periodActionEl = Dom.getElementsByClassName("period-action", "select", actionEl)[0],
              periodUnitEl = Dom.getElementsByClassName("period-unit", "select", actionEl)[0];
          Event.addListener(periodUnitEl, "change", this.onPeriodUnitSelectChange,
          {
@@ -369,7 +369,7 @@
          var addEventButton = Alfresco.util.createYUIButton(this, "addevent-button", null,
          {
             type: "menu",
-            lazyloadmenu: false, 
+            lazyloadmenu: false,
             menu: addEventMenuEl
          }, addEventButtonEl);
 
@@ -487,7 +487,7 @@
          // Setup form
          var formEl = Dom.getElementsByClassName("action-form", "form", actionEl)[0],
             formId = elId + "-action-form";
-         
+
          if (YAHOO.env.ua.ie > 0 && YAHOO.env.ua.ie < 8)
          {
             // MSIE 6 & 7 mix up name and id attributes on form children. Which is always useful.
@@ -520,7 +520,7 @@
             }, saveActionEl),
             cancelEl = Dom.getElementsByClassName("cancel", "span", actionEl)[0],
             cancelActionButton = Alfresco.util.createYUIButton(this, "cancel-button", null, {}, cancelEl);
-         
+
          cancelActionButton.on("click", this.onCancelActionButtonClick,
          {
             action: action,
@@ -561,7 +561,7 @@
                   pu = puEl.options[puEl.selectedIndex].value;
                }
                var periodEl = Dom.getElementsByClassName("period", "input", formEl)[0];
-               periodEl.value = pu + "|" + pa;               
+               periodEl.value = pu + "|" + pa;
 
                // Disable buttons during submit
                obj.saveButton.set("disabled", true);
@@ -596,7 +596,7 @@
             },
             scope: this
          };
-         
+
 
          // Submit as an ajax submit (not leave the page), in json format
          actionForm.setAJAXSubmit(true,
@@ -610,7 +610,7 @@
                   obj.cancelButton.set("disabled", false);
                   Dom.removeClass(obj.actionEl, "expanded");
                   Dom.addClass(obj.actionEl, "collapsed");
-                  
+
                   // Get the created action id
                   var newActionId = serverResponse.json.data.id;
 
@@ -619,7 +619,7 @@
                   action = YAHOO.lang.merge(action, serverResponse.json.data);
                   var details = Dom.getElementsByClassName("details", "div", actionEl)[0];
                   Dom.setStyle(details, "display", "none");
-                  
+
                   // Update form action
                   if (newActionId && newActionId.length > 0)
                   {
@@ -756,7 +756,7 @@
                   );
          }
 
-         Dom.getElementsByClassName("title", "div", actionEl)[0].innerHTML = title;         
+         Dom.getElementsByClassName("title", "div", actionEl)[0].innerHTML = title;
       },
 
       /**
@@ -798,7 +798,7 @@
          // Add listener to delete event
          var deleteEventEl = Dom.getElementsByClassName("delete", "span", eventEl)[0];
          Event.addListener(deleteEventEl, "click", function(e, obj)
-         {            
+         {
             this._deleteClickedEvent(eventEl);
          }, null, this);
 
@@ -821,7 +821,7 @@
          for (var i = 0; i < actionNos.length; i++)
          {
             actionNos[i].innerHTML = i + 1;
-         }         
+         }
       },
 
       /**
@@ -928,7 +928,7 @@
                usedActionNames[actionNames[i].value] = true;
             }
          }
-         
+
          // Clear event menu and disable/enable events in the menu
          var items = this.widgets.createActionButton.getMenu().getItems(),
             item,
@@ -1083,12 +1083,39 @@
                fn: function(response)
                {
                   feedbackMessage.destroy();
-                  Alfresco.util.PopupManager.displayMessage(
+                  deleteMessage = Alfresco.util.PopupManager.displayMessage(
                   {
                      text: this.msg("message.deleteActionSuccess")
                   });
-                  actionEl.parentNode.removeChild(actionEl);
-                  this._refreshActionList();
+
+                  if (response.json)
+                  {
+                     var actionList = Dom.get(this.id + "-actionList"),
+                        schedule = response.json.data,
+                        actions = schedule.actions ? schedule.actions : [],
+                        action,
+                        actionEl;
+
+                     this.options.recordLevelDisposition = schedule.recordLevelDisposition;
+
+                     if (actions.length == 0)
+                     {
+                        actionList.innerHTML = this.msg("message.noSteps");
+                     }
+                     else
+                     {
+                        actionList.innerHTML = "";
+                        for (var i = 0, ii = actions.length; i < ii; i++)
+                        {
+                           action = actions[i];
+                           action.deleteable = schedule.canStepsBeRemoved;
+                           actionEl = this._createAction(action);
+                           actionEl = this.widgets.actionListEl.appendChild(actionEl);
+                           this._setupActionForm(action, actionEl);
+                        }
+                     }
+                  }
+                  deleteMessage.destroy();
                },
                scope: this
             },
