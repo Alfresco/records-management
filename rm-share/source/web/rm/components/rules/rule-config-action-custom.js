@@ -60,18 +60,6 @@
                });
                return configDef;
             }
-         },
-         SendEmail:
-         {
-            edit: function(configDef, ruleConfig, configEl)
-            {
-               this._hideParameters(configDef.parameterDefinitions);
-               configDef.parameterDefinitions.push({
-                  type: "arca:email-dialog-button",
-                  _buttonLabel: this.msg("button.sendEmail")
-               });
-               return configDef;
-            }
          }
       },
       renderers:
@@ -211,50 +199,6 @@
                         scope: this
                      }
                   }).show();
-               });
-            }
-         },
-         "arca:email-dialog-button":
-         {
-            manual: { edit: true },
-            currentCtx: {},
-            edit: function (containerEl, configDef, paramDef, ruleConfig, value)
-            {
-               this._createButton(containerEl, configDef, paramDef, ruleConfig, function RCA_emailFormButton_onClick(type, obj)
-               {
-                  this.renderers["arca:email-dialog-button"].currentCtx =
-                  {
-                     configDef: obj.configDef,
-                     ruleConfig: obj.ruleConfig
-                  };
-                  if (!this.widgets.emailForm)
-                  {
-                     this.widgets.emailForm = new Alfresco.module.EmailForm(this.id + "-emailForm");
-                     YAHOO.Bubbling.on("emailFormCompleted", function (layer, args)
-                     {
-                        if ($hasEventInterest(this.widgets.emailForm, args))
-                        {
-                           var values = args[1].options;
-                           if (values !== null)
-                           {
-                              var ctx = this.renderers["arca:email-dialog-button"].currentCtx;
-                              this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "to_many", values.recipients);
-                              this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "subject", values.subject);
-                              this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "text", values.message ? values.message : "");
-                              this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "template", values.template ? values.template : "");
-                              this._updateSubmitElements(ctx.configDef);
-                           }
-                        }
-                     }, this);
-                  }
-                  var params = this._getParameters(obj.configDef);
-                  this.widgets.emailForm.showDialog(
-                  {
-                     recipients: params.to_many,
-                     subject: params.subject,
-                     message: params.text,
-                     template: params.template
-                  });
                });
             }
          }

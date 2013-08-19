@@ -40,7 +40,7 @@
       <action name="freeze">Freeze</action>
       <action name="reject">Reject</action>
       <action name="requestInfo">RequestInfo</action>
-      <action name="sendEmail">SendEmail</action>
+      <action name="sendEmail">Mail</action>
    </customise>
 
 </rule-config>
