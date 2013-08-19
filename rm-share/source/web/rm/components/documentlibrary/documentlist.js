@@ -319,6 +319,19 @@
          };
       },
 
+      /**
+       * Setup Records Management data table
+       *
+       * @method _setupDataTable
+       */
+      _setupDataTable: function RDL__setupDataTable()
+      {
+         Alfresco.rm.component.DocumentList.superclass._setupDataTable.apply(this);
+
+         this.widgets.dataTable.showTableMessage(this.msg("rm.message.loading"), YAHOO.widget.DataTable.CLASS_LOADING);
+         this.widgets.dataTable.showTableMessage(this.msg("rm.message.error"), YAHOO.widget.DataTable.CLASS_ERROR);
+         this.widgets.dataTable.showTableMessage(this.msg("rm.message.loading"), YAHOO.widget.DataTable.CLASS_EMPTY);
+      },
 
       /**
        * Public functions
