@@ -29,6 +29,7 @@
          <action name="reject"/>
          <action name="requestInfo"/>
          <action name="sendEmail"/>
+         <action name="setPropertyValue"/>
       </group>
       <group>
          <action name="*"/>
@@ -41,6 +42,7 @@
       <action name="reject">Reject</action>
       <action name="requestInfo">RequestInfo</action>
       <action name="sendEmail">Mail</action>
+      <action name="setPropertyValue">SetPropertyValue</action>
    </customise>
 
 </rule-config>
