@@ -1,44 +1,44 @@
 <import resource="/org/alfresco/components/people-finder/authority-query.get.js">
 
-function isCorrectFilePlanRole(callResult)
-{
-   var result = true;
-   var filePlanId = args.filePlanId;
-   if (filePlanId != "null")
-   {
-      result = new RegExp(filePlanId + "$").test(callResult.shortName);
-   }
-   return result;
-}
-
-function isSpecialRole(callResult)
-{
-   return new RegExp("ExtendedReaders").test(callResult.shortName) || new RegExp("ExtendedWriters").test(callResult.shortName);
-}
-
 function shouldFilter(callResult)
 {
-   var result = true,
-      correctFilePlanRole = isCorrectFilePlanRole(callResult),
-      specialRole = isSpecialRole(callResult);
+   var result = false;
 
-   if (correctFilePlanRole && !specialRole)
+   if (new RegExp("ExtendedReaders").test(callResult.shortName) || new RegExp("ExtendedWriters").test(callResult.shortName))
    {
-      result = false;
+      result = true;
    }
 
    return result;
 }
+
+var getRmMappings = function()
+{
+   // Remove "GROUP_EVERYONE" from the mapping
+   var mappings = getMappings();
+   mappings.pop();
+
+   var additionalMappings = [];
+   if (args.showGroups != null && args.showGroups == "true")
+   {
+      additionalMappings.push(
+      {
+         type: MAPPING_TYPE.API,
+         url: "/api/groups?shortNameFilter=" + encodeURIComponent(args.filter) + "&zone=" + encodeURIComponent("APP.DEFAULT"),
+         rootObject: "data",
+         fn: mapGroup
+      });
+   }
+
+   return mappings.concat(additionalMappings);
+};
 
 function rm_main()
 {
-   var mappings = getMappings(),
+   var mappings = getRmMappings(),
       connector = remote.connect("alfresco"),
       authorities = [],
       mapping, result, data, i, ii, j, jj;
-
-   // Remove "GROUP_EVERYONE" from the mapping
-   mappings.pop();
 
    for (i = 0, ii = mappings.length; i < ii; i++)
    {
