@@ -355,6 +355,12 @@
                scope: this
             }
          });
+
+         if (permission.authority.id.toLowerCase().indexOf("GROUP_Administrator".toLowerCase()) !== -1)
+         {
+            Alfresco.util.disableYUIButton(this.removeButtons[i]);
+            Alfresco.util.disableYUIButton(this.modifyMenus[i]);
+         }
       },
 
       /**
