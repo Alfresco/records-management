@@ -39,6 +39,7 @@
    <customise>
       <item id="select">Select</item>
       <action name="freeze">Freeze</action>
+      <action name="fileTo">FileTo</action>
       <action name="reject">Reject</action>
       <action name="requestInfo">RequestInfo</action>
       <action name="sendEmail">Mail</action>

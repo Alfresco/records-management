@@ -6,6 +6,11 @@
  */
 (function()
 {
+  /**
+   * Alfresco Slingshot aliases
+   */
+   var $hasEventInterest = Alfresco.util.hasEventInterest;
+
    Alfresco.RuleConfigActionCustom = function(htmlId)
    {
       Alfresco.RuleConfigActionCustom.superclass.constructor.call(this, htmlId);
@@ -36,7 +41,7 @@
                });
                return configDef;
             }
-         },    	  
+         },
          Reject:
          {
             edit: function(configDef, ruleConfig, configEl)
@@ -60,11 +65,37 @@
                });
                return configDef;
             }
+         },
+         FileTo:
+         {
+            edit: function(configDef, ruleConfig, configEl)
+            {
+               this._hideParameters(configDef.parameterDefinitions);
+
+               configDef.parameterDefinitions.splice(0, 0,
+               {
+                  type: "arca:rm-destination-dialog-button",
+                  _buttonLabel: this.msg("button.select-folder"),
+                  _destinationParam: "destination-folder"
+               });
+
+               var path = this._getParamDef(configDef, "path");
+               path._type = "hidden";
+               path._displayLabelToRight = false;
+               path._hideColon = true;
+
+               var createRecordFolder = this._getParamDef(configDef, "createRecordFolder");
+               createRecordFolder._type = null;
+               createRecordFolder._displayLabelToRight = false;
+               createRecordFolder._hideColon = true;
+
+               return configDef;
+            }
          }
       },
       renderers:
       {
-    	 "arca:freeze-dialog-button":
+       "arca:freeze-dialog-button":
          {
             manual: { edit: true },
             currentCtx: {},
@@ -200,6 +231,78 @@
                      }
                   }).show();
                });
+            }
+         },
+         "arca:rm-destination-dialog-button":
+         {
+            manual: { edit: true },
+            currentCtx: {},
+            edit: function (containerEl, configDef, paramDef, ruleConfig, value)
+            {
+               this._createButton(containerEl, configDef, paramDef, ruleConfig, function RCA_destinationDialogButton_onClick(type, obj)
+               {
+                  this.renderers["arca:destination-dialog-button"].currentCtx =
+                  {
+                     configDef: obj.configDef,
+                     ruleConfig: obj.ruleConfig,
+                     paramDef: obj.paramDef
+                  };
+                  if (!this.widgets.destinationDialog)
+                  {
+                     this.widgets.destinationDialog = new Alfresco.module.DoclibGlobalFolder(this.id + "-destinationDialog");
+                     this.widgets.destinationDialog.setOptions(
+                     {
+                        title: this.msg("dialog.destination.title")
+                     });
+
+                     YAHOO.Bubbling.on("folderSelected", function (layer, args)
+                     {
+                        if ($hasEventInterest(this.widgets.destinationDialog, args))
+                        {
+                           var selectedFolder = args[1].selectedFolder;
+                           if (selectedFolder !== null)
+                           {
+                              var ctx = this.renderers["arca:destination-dialog-button"].currentCtx;
+                              this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "path", selectedFolder.path);
+                              Dom.get(this.id + "-recordFolderPath").value = selectedFolder.path;
+                              this._updateSubmitElements(ctx.configDef);
+                           }
+                        }
+                     }, this);
+                  }
+                  var pathNodeRef = this._getParameters(obj.configDef)["destination-folder"],
+                     allowedViewModes =
+                     [
+                        Alfresco.module.DoclibGlobalFolder.VIEW_MODE_SITE
+                     ];
+
+                  if (this.options.repositoryBrowsing === true)
+                  {
+                     allowedViewModes.push(Alfresco.module.DoclibGlobalFolder.VIEW_MODE_REPOSITORY, Alfresco.module.DoclibGlobalFolder.VIEW_MODE_USERHOME);
+                  }
+                  this.widgets.destinationDialog.setOptions(
+                  {
+                     allowedViewModes: allowedViewModes,
+                     nodeRef: this.options.rootNode,
+                     pathNodeRef: pathNodeRef ? new Alfresco.util.NodeRef(pathNodeRef) : null
+                  });
+                  this.widgets.destinationDialog.showDialog();
+               });
+
+               this._createLabel(this._getParamDef(configDef, "path").displayLabel, containerEl);
+               var value = ruleConfig.parameterValues && ruleConfig.parameterValues.path;
+               var el = document.createElement("input");
+               el.setAttribute("type", "text");
+               el.setAttribute("name", "-");
+               el.setAttribute("title", paramDef.displayLabel ? paramDef.displayLabel : paramDef.name);
+               el.setAttribute("param", paramDef.name);
+               el.setAttribute("value", (value != undefined && value != null) ? value : "");
+               el.setAttribute("id", this.id + "-recordFolderPath");
+               el.addEventListener("blur", function()
+               {
+                  Selector.query("[param=" + "path" + "]")[0].value = this.value;
+               }, false);
+               containerEl.appendChild(el);
             }
          }
       }
