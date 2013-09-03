@@ -143,14 +143,14 @@
                   id: this.id + "_content",
                   itemdata:
                   [
-                     { text: this.msg("label.name"), value: "cm:name" },
-                     { text: this.msg("label.title"), value: "cm:title" },
-                     { text: this.msg("label.description"), value: "cm:description" },
-                     { text: this.msg("label.creator"), value: "cm:creator" },
-                     { text: this.msg("label.created"), value: "cm:created" },
-                     { text: this.msg("label.modifier"), value: "cm:modifier" },
-                     { text: this.msg("label.modified"), value: "cm:modified" },
-                     { text: this.msg("label.author"), value: "cm:author" }
+                     { text: this.msg("label.name"), value: "name" },
+                     { text: this.msg("label.title"), value: "title" },
+                     { text: this.msg("label.description"), value: "description" },
+                     { text: this.msg("label.creator"), value: "creator" },
+                     { text: this.msg("label.created"), value: "created" },
+                     { text: this.msg("label.modifier"), value: "modifier" },
+                     { text: this.msg("label.modified"), value: "modified" },
+                     { text: this.msg("label.author"), value: "author" }
                   ]
                }
             });
@@ -175,7 +175,7 @@
                      { text: this.msg("label.location"), value: "rma:location" },
                      { text: this.msg("label.address"), value: "rma:address" },
                      { text: this.msg("label.otherAddress"), value: "rma:otherAddress" },
-                     { text: this.msg("label.supplementalMarkingList"), value: "rmc:supplementalMarkingList" }
+                     { text: this.msg("label.supplementalMarkingList"), value: "markings" }
                   ]
                }
             });
@@ -191,14 +191,14 @@
                   id: this.id + "_content",
                   itemdata:
                   [
-                     { text: this.msg("label.name"), value: "cm:name" },
-                     { text: this.msg("label.title"), value: "cm:title" },
-                     { text: this.msg("label.description"), value: "cm:description" },
-                     { text: this.msg("label.creator"), value: "cm:creator" },
-                     { text: this.msg("label.created"), value: "cm:created" },
-                     { text: this.msg("label.modifier"), value: "cm:modifier" },
-                     { text: this.msg("label.modified"), value: "cm:modified" },
-                     { text: this.msg("label.author"), value: "cm:author" }
+                     { text: this.msg("label.name"), value: "name" },
+                     { text: this.msg("label.title"), value: "title" },
+                     { text: this.msg("label.description"), value: "description" },
+                     { text: this.msg("label.creator"), value: "creator" },
+                     { text: this.msg("label.created"), value: "created" },
+                     { text: this.msg("label.modifier"), value: "modifier" },
+                     { text: this.msg("label.modified"), value: "modified" },
+                     { text: this.msg("label.author"), value: "author" }
                   ]
                }
             });
@@ -223,7 +223,7 @@
                      { text: this.msg("label.location"), value: "rma:location" },
                      { text: this.msg("label.address"), value: "rma:address" },
                      { text: this.msg("label.otherAddress"), value: "rma:otherAddress" },
-                     { text: this.msg("label.supplementalMarkingList"), value: "rmc:supplementalMarkingList" }
+                     { text: this.msg("label.supplementalMarkingList"), value: "markings" }
                   ]
                }
             });
@@ -266,16 +266,16 @@
                   id: this.id + "_disposition",
                   itemdata:
                   [
-                     { text: this.msg("label.dispositionEvents"), value: "rma:recordSearchDispositionEvents" },
-                     { text: this.msg("label.dispositionActionName"), value: "rma:recordSearchDispositionActionName" },
-                     { text: this.msg("label.dispositionActionAsOf"), value: "rma:recordSearchDispositionActionAsOf" },
-                     { text: this.msg("label.dispositionEventsEligible"), value: "rma:recordSearchDispositionEventsEligible" },
-                     { text: this.msg("label.dispositionPeriod"), value: "rma:recordSearchDispositionPeriod" },
-                     { text: this.msg("label.hasDispositionSchedule"), value: "rma:recordSearchHasDispositionSchedule" },
-                     { text: this.msg("label.dispositionInstructions"), value: "rma:recordSearchDispositionInstructions" },
-                     { text: this.msg("label.dispositionAuthority"), value: "rma:recordSearchDispositionAuthority" },
-                     { text: this.msg("label.holdReason"), value: "rma:recordSearchHoldReason" },
-                     { text: this.msg("label.vitalRecordReviewPeriod"), value: "rma:recordSearchVitalRecordReviewPeriod" }
+                     { text: this.msg("label.dispositionEvents"), value: "dispositionEvents" },
+                     { text: this.msg("label.dispositionActionName"), value: "dispositionActionName" },
+                     { text: this.msg("label.dispositionActionAsOf"), value: "dispositionActionAsOf" },
+                     { text: this.msg("label.dispositionEventsEligible"), value: "dispositionEventsEligible" },
+                     { text: this.msg("label.dispositionPeriod"), value: "dispositionPeriod" },
+                     { text: this.msg("label.hasDispositionSchedule"), value: "hasDispositionSchedule" },
+                     { text: this.msg("label.dispositionInstructions"), value: "dispositionInstructions" },
+                     { text: this.msg("label.dispositionAuthority"), value: "dispositionAuthority" },
+                     { text: this.msg("label.holdReason"), value: "holdReason" },
+                     { text: this.msg("label.vitalRecordReviewPeriod"), value: "vitalRecordReviewPeriod" }
                   ]
                }
             });
