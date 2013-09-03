@@ -46,7 +46,9 @@
          </div>
       </div>
     </div>
+    
     <div class="yui-gb filters">
+       
        <div class="yui-u first">
           <div id="${htmlid}-entriesFilter" class="filter">
              <div class="hd">
@@ -57,6 +59,7 @@
              </div>
           </div>
        </div>
+       
        <div class="yui-u">
           <div id="${htmlid}-dateFilter" class="filter">
              <div class="hd">
@@ -74,43 +77,15 @@
                 </a>
                 <div id="${htmlid}-audit-toDate-cal" class="datepicker"></div>
              </div>
-          </div>
+          </div>      
       </div>
-      <div class="yui-g">
-         <div class="yui-u first">
-            <div id="${htmlid}-eventsFilter" class="filter">
-               <div class="hd">
-                  <label for="${htmlid}-events-menu">${msg('label.header-event')}:</label>
-               </div>
-               <div class="bd">
-                  <input id="${htmlid}-audit-events" type="button" name="${htmlid}-audit-events" value="${msg("label.all")}" />
-                  <select name="${htmlid}-audit-events-menu" id="${htmlid}-audit-events-menu" onchange="" size="1">
-                     <option value="ALL">${msg("label.all")}</option>
-                     <#list events as e>
-                        <option value="${e.value}">${e.label}</option>
-                     </#list>
-                  </select>
-               </div>
-            </div>
-         </div>
-         <div class="yui-u">
-            <div id="${htmlid}-propertyFilter" class="filter">
-               <div class="hd">
-                  <label for="property_menu">${msg('label.header-property')}:</label>
-               </div>
-               <div class="bd">
-                  <input id="${htmlid}-audit-property" type="button" name="${htmlid}-audit-property" value="${msg("label.all")}" />
-               </div>
-            </div>
-         </div>
-      </div>
+      
       <div class="yui-u">
          <div id="${htmlid}-userFilter" class="filter">
             <div class="hd">
                <label for="specify">${msg('label.header-users')}:</label>
             </div>
             <div class="bd">
-               <label for="audit-specifyfilter">${msg("label.show-log-for")}</label>
                <div id="${htmlid}-audit-personFilter" class="personFilter"><span>${msg("label.all-users")}</span><a id="${htmlid}-personFilterRemove" class="personFilterRemove"><img src="${page.url.context}/res/components/images/remove-icon-16.png"  alt="${msg('label.remove-filter')}"/></a></div>
                <span class="audit-specifyfilter">
                   <span class="yui-button yui-push-button" id="${htmlid}-audit-specifyfilter">
@@ -120,8 +95,28 @@
                <div id="${htmlid}-audit-peoplefinder" class="rm-audit-peoplefinder"></div>
             </div>
          </div>
-      </div>
+     </div>
+      
+     <div class="yui-u">
+        <div id="${htmlid}-eventsFilter" class="filter">
+           <div class="hd">
+              <label for="${htmlid}-events-menu">${msg('label.header-event')}:</label>
+           </div>
+           <div class="bd">
+              <input id="${htmlid}-audit-events" name="${htmlid}-audit-events" value="${msg("label.all")}" />
+              <select name="${htmlid}-audit-events-menu" id="${htmlid}-audit-events-menu" onchange="" size="1">
+                 <option value="ALL">${msg("label.all")}</option>
+                 <#list events as e>
+                    <option value="${e.value}">${e.label}</option>
+                 </#list>
+              </select>
+           </div>
+        </div>
+     </div>
+      
    </div>
+   
+   
    <div class="yui-g">
       <div class="yui-u first">&nbsp;</div>
       <div class="rm-audit-details-button">

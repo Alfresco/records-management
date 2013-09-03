@@ -10,7 +10,6 @@
 
 .rm-audit-log .yui-u
 {
-   width: 100%;
    margin: 0;
    float: none;
 }
@@ -99,6 +98,7 @@
 .rm-audit .yui-gb .yui-u
 {
    text-align: left;
+   width: 22%
 }
 
 .rm-audit .yuimenubaritemlabel, 
@@ -109,7 +109,7 @@
 
 .filters
 {
-   background-color: #DDD;
+   border: 1px solid #444444;
    height: 10em;
    margin-top: 1em;
    z-index: 1;
@@ -143,6 +143,7 @@
 {
    position: relative;
    height: 10em;
+   align: left;
 }
 
 .rm-auditDT
