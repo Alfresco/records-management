@@ -738,6 +738,9 @@
          {
             mode: this.fileUpload.MODE_SINGLE_IMPORT,
             importDestination: this.modules.docList.doclistMetadata.parent.nodeRef,
+            destination: this.modules.docList.doclistMetadata.parent.nodeRef,
+            flashUploadURL: "api/rma/admin/import",
+            htmlUploadURL: "api/rma/admin/import.html",
             filter: [
             {
                description: this.msg("label.filter-description.acp"),

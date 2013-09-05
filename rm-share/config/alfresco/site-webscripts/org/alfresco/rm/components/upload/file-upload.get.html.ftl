@@ -8,6 +8,7 @@ new Alfresco.getRecordsFileUploadInstance().setOptions(
 {
    adobeFlashEnabled: ${((adobeFlashEnabled!"true") == "true")?string},
    flashUploader: "Alfresco.rm.component.FlashUpload",
-   htmlUploader: "Alfresco.rm.component.HtmlUpload"
+   htmlUploader: "Alfresco.rm.component.HtmlUpload",
+   dndUploader: "Alfresco.rm.component.DNDUpload"
 });
 //]]></script>
