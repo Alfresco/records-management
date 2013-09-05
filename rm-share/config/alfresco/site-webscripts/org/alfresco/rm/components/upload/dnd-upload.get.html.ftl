@@ -1,0 +1,1 @@
+<#include "/org/alfresco/components/upload/dnd-upload.get.html.ftl" />

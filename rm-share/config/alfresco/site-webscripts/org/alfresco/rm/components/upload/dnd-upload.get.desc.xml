@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>RM Drag and drop upload</shortname>
+  <description>RM Drag and drop upload component that shows the progress of uploading multiple files</description>
+  <url>/rm/components/upload/dnd-upload</url>
+</webscript>
