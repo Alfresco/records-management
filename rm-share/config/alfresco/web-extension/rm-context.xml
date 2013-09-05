@@ -293,6 +293,9 @@
    <bean id="evaluator.rm.action.fileDestructionReport" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="fileDestructionReport" />
    </bean>
+   <bean id="evaluator.rm.action.endRetention" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="endRetention" />
+   </bean>
 
    <!--                          -->
    <!-- DocLib Common Evaluators -->

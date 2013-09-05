@@ -531,7 +531,14 @@
             <param name="message">message.file-destruction-report</param>
             <evaluator>evaluator.rm.action.fileDestructionReport</evaluator>
          </action>
-
+         
+         <action id="rm-end-retention" type="javascript" label="actions.end-retention" icon="../../../rm/components/documentlibrary/actions/rm-hide-record">
+            <param name="function">onActionRecordsManagementRepoAction</param>
+            <param name="action">retain</param>
+            <param name="message">message.end-retention</param>
+            <evaluator>evaluator.rm.action.endRetention</evaluator>
+         </action>
+         
       </actions>
 
       <!--
@@ -568,6 +575,7 @@
             <action index="130" id="rm-open-folder" />
             <action index="140" id="rm-review-all" />
             <action index="150" id="rm-cutoff" icon="../../../rm/components/documentlibrary/actions/rm-cutoff-folder" />
+            <action index="155" id="rm-end-retention" />
             <action index="160" id="rm-destroy" />
             <action index="165" id="rm-file-destruction-report" />
             <action index="170" id="rm-transfer" />
@@ -589,6 +597,7 @@
             <action index="130" id="rm-open-folder" />
             <action index="140" id="rm-review-all" />
             <action index="150" id="rm-cutoff" icon="../../../rm/components/documentlibrary/actions/rm-cutoff-folder" />
+            <action index="155" id="rm-end-retention" />
             <action index="160" id="rm-destroy" />
             <action index="165" id="rm-file-destruction-report" />
             <action index="170" id="rm-transfer" />
@@ -612,6 +621,7 @@
             <action index="130" id="rm-edit-review-as-of-date" />
             <action index="140" id="rm-undeclare" />
             <action index="150" id="rm-cutoff" />
+            <action index="155" id="rm-end-retention" />
             <action index="160" id="rm-destroy" />
             <action index="165" id="rm-file-destruction-report" />
             <action index="170" id="rm-transfer" />
@@ -639,6 +649,7 @@
             <action index="130" id="rm-edit-review-as-of-date" />
             <action index="140" id="rm-undeclare" />
             <action index="150" id="rm-cutoff" />
+            <action index="155" id="rm-end-retention" />
             <action index="160" id="rm-destroy" />
             <action index="165" id="rm-file-destruction-report" />
             <action index="170" id="rm-transfer" />
