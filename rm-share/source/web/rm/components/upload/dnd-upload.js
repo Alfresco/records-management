@@ -72,7 +72,7 @@
        */
       _applyConfig: function RMDnDUpload__applyConfig()
       {
-         // Call super class that does that applies the main part of the config attributes
+         // Call super class that does the main part of the config attributes
          Alfresco.rm.component.DNDUpload.superclass._applyConfig.call(this);
 
          // Change the panel header text and the button label
