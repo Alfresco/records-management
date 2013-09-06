@@ -91,11 +91,23 @@
 
                return configDef;
             }
+         },
+         AddRecordTypes:
+         {
+            edit: function(configDef, ruleConfig, configEl)
+            {
+               this._hideParameters(configDef.parameterDefinitions);
+               configDef.parameterDefinitions.push({
+                  type: "arca:rm-add-record-types-dialog-button",
+                  _buttonLabel: this.msg("button.addRecordTypes")
+               });
+               return configDef;
+            }
          }
       },
       renderers:
       {
-       "arca:freeze-dialog-button":
+         "arca:freeze-dialog-button":
          {
             manual: { edit: true },
             currentCtx: {},
@@ -241,7 +253,7 @@
             {
                this._createButton(containerEl, configDef, paramDef, ruleConfig, function RCA_destinationDialogButton_onClick(type, obj)
                {
-                  this.renderers["arca:destination-dialog-button"].currentCtx =
+                  this.renderers["arca:rm-destination-dialog-button"].currentCtx =
                   {
                      configDef: obj.configDef,
                      ruleConfig: obj.ruleConfig,
@@ -303,6 +315,82 @@
                   Selector.query("[param=" + "path" + "]")[0].value = this.value;
                }, false);
                containerEl.appendChild(el);
+            }
+         },
+         "arca:rm-add-record-types-dialog-button":
+         {
+            manual: { edit: true },
+            currentCtx: {},
+            edit: function (containerEl, configDef, paramDef, ruleConfig, value)
+            {
+               this._createButton(containerEl, configDef, paramDef, ruleConfig, function RCAC_addRecordTypesFormButton_onClick(type, obj)
+               {
+                  this.renderers["arca:rm-add-record-types-dialog-button"].currentCtx =
+                  {
+                     configDef: obj.configDef,
+                     ruleConfig: obj.ruleConfig
+                  };
+
+                  var me = this;
+
+                  // Intercept before dialog show and change the button type and the onClick functionality
+                  var doBeforeDialogShow = function DLTB_requestInfo_doBeforeDialogShow(p_form, p_dialog)
+                  {
+                     var selectedTypes = me._getParameters(obj.configDef).recordTypes;
+                     if (selectedTypes)
+                     {
+                        selectedTypes = selectedTypes.split(',');
+                        var types = Dom.get(this.id + "-addRecordMetadataDialog-recordType");
+
+                        for (var i = 0; i < types.length; i++)
+                        {
+                           if (Alfresco.util.arrayContains(selectedTypes, types[i].value))
+                           {
+                              types[i].selected = true;
+                           }
+                        }
+                     }
+
+                     // Change the button type and functionality
+                     var okButton = p_dialog.widgets.okButton;
+                     okButton._configs.type.value = "push";
+                     okButton.on('click', function(type, args)
+                     {
+                        var ctx = this.renderers["arca:rm-add-record-types-dialog-button"].currentCtx,
+                           selectedRecordTypes = [],
+                           recordTypes = Dom.get(this.id + "-addRecordMetadataDialog-recordType");
+
+                        for (var i = 0; i < recordTypes.length; i++)
+                        {
+                           if (recordTypes[i].selected)
+                           {
+                              selectedRecordTypes.push(recordTypes[i].value);
+                           }
+                        }
+
+                        this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "recordTypes", selectedRecordTypes.join(','));
+                        this._updateSubmitElements(ctx.configDef);
+
+                        // Hide dialog
+                        args.hide();
+                     }, addRecordMetadataDialog, this);
+                  };
+
+                  // Open the set record type dialog
+                  var addRecordMetadataDialog = new Alfresco.module.SimpleDialog(this.id + "-addRecordMetadataDialog").setOptions(
+                  {
+                     width: "30em",
+                     templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/add-record-metadata",
+                     actionUrl: null,
+                     destroyOnHide: true,
+                     doBeforeDialogShow:
+                     {
+                        fn: doBeforeDialogShow,
+                        scope: this
+                     }
+                  });
+                  addRecordMetadataDialog.show();
+               });
             }
          }
       }

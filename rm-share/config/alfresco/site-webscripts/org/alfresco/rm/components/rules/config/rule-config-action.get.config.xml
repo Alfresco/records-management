@@ -30,6 +30,7 @@
          <action name="requestInfo"/>
          <action name="sendEmail"/>
          <action name="setPropertyValue"/>
+         <action name="addRecordTypes"/>
       </group>
       <group>
          <action name="*"/>
@@ -44,6 +45,7 @@
       <action name="requestInfo">RequestInfo</action>
       <action name="sendEmail">Mail</action>
       <action name="setPropertyValue">SetPropertyValue</action>
+      <action name="addRecordTypes">AddRecordTypes</action>
    </customise>
 
 </rule-config>

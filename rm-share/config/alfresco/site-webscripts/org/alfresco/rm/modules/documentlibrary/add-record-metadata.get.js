@@ -21,20 +21,31 @@ function main()
    if (result.status == 200)
    {
       var rmAspects = eval('(' + result + ')').data.recordMetaDataAspects;
-      result = remote.call("/api/rmmetadata?extended=true&noderef=" + args.nodeRef);
-      var nodeAspects = eval('(' + result + ')').aspects;
-
       var recordTypes = [];
-      for (var i = 0; i < rmAspects.length; i++)
+
+      if (args.nodeRef != null)
       {
-         for (var j = 0; j < nodeAspects.length; j++)
+         result = remote.call("/api/rmmetadata?extended=true&noderef=" + args.nodeRef);
+         var nodeAspects = eval('(' + result + ')').aspects;
+
+         for (var i = 0; i < rmAspects.length; i++)
          {
-            if (rmAspects[i].id == nodeAspects[j].prefixedName)
+            for (var j = 0; j < nodeAspects.length; j++)
             {
-               break;
+               if (rmAspects[i].id == nodeAspects[j].prefixedName)
+               {
+                  break;
+               }
+            }
+            if (j == nodeAspects.length)
+            {
+               recordTypes.push(rmAspects[i]);
             }
          }
-         if (j == nodeAspects.length)
+      }
+      else
+      {
+         for (var i = 0; i < rmAspects.length; i++)
          {
             recordTypes.push(rmAspects[i]);
          }
