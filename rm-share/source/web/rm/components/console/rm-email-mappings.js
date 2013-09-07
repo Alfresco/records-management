@@ -286,7 +286,7 @@
                label: emProp
             };
 
-            if (rmpropertyButton._configs.selectedMenuItem.value && rmpropertyButton._configs.selectedMenuItem.value.value && me.widgets['emailProperty-text'].value != "")
+            if (rmpropertyButton._configs.selectedMenuItem.value && rmpropertyButton._configs.selectedMenuItem.value.value && emProp != "")
             {
                Alfresco.util.enableYUIButton(me.widgets.addMappingButton);
             }
