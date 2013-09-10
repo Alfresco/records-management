@@ -79,6 +79,11 @@
                   _destinationParam: "destination-folder"
                });
 
+               configDef.parameterDefinitions.splice(1, 0,
+               {
+                  type: "arca:record-path-help-icon"
+               });
+
                var path = this._getParamDef(configDef, "path");
                path._type = "hidden";
                path._displayLabelToRight = false;
@@ -391,6 +396,31 @@
                   });
                   addRecordMetadataDialog.show();
                });
+            }
+         },
+         "arca:record-path-help-icon":
+         {
+            manual: { edit: true },
+            currentCtx: {},
+            edit: function (containerEl, configDef, paramDef, ruleConfig, value)
+            {
+               var me = this,
+                  image = document.createElement("img");
+               image.src = Alfresco.constants.URL_CONTEXT + "res/components/form/images/help.png";
+               image.title = this.msg("record.folder.path.title");
+               image.onclick = function()
+               {
+                  var balloon = Alfresco.util.createInfoBalloon(this, {
+                     html: me.msg("record.folder.path.help"),
+                     width: "25em"
+                  });
+                  balloon.show();
+               };
+
+               var helpIcon = document.createElement("span");
+               helpIcon.setAttribute('class', 'help-icon');
+               helpIcon.appendChild(image);
+               containerEl.appendChild(helpIcon);
             }
          }
       }
