@@ -24,7 +24,7 @@ widgetUtils.findObject(model.jsonModel, "id", "HEADER_NAVIGATION_MENU_BAR").conf
 // Add "Customize Dashboard" Link
 if (page.titleId == "page.rmSiteDashboard.title")
 {
-   widgetUtils.findObject(model.jsonModel, "id", "SiteConfigurationPopup").config.widgets.unshift({
+   widgetUtils.findObject(model.jsonModel, "id", "HEADER_SITE_CONFIGURATION_DROPDOWN").config.widgets.unshift({
       name: "alfresco/menus/AlfMenuItem",
       config: {
          id: "HEADER_CUSTOMIZE_SITE_DASHBOARD",
