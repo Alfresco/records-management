@@ -61,9 +61,34 @@
       onTemplateLoaded: function RM_CreateSite_onTemplateLoaded(response)
       {
          Alfresco.rm.module.CreateSite.superclass.onTemplateLoaded.call(this, response);
-
          Event.removeListener(this.widgets.panel.close, "click");
          Event.addListener(this.widgets.panel.close, "click", this.onCancelButtonClick, this, true);
+      },
+
+      /**
+       * Helper method to disable certain form elements like Name, URL Name and Visibility
+       *
+       * @method disableFormElements
+       */
+      disableFormElements: function RM_CreateSite_disableFormElements()
+      {
+         Dom.get(this.id + "-title").disabled = false;
+         Dom.get(this.id + "-shortName").disabled = false;
+         Dom.get(this.id + "-isPrivate").disabled = false;
+         Dom.get(this.id + "-isModerated").disabled = false;
+      },
+
+      /**
+       * Helper method to enable certain form elements like Name, URL Name and Visibility
+       *
+       * @method enableFormElements
+       */
+      enableFormElements: function RM_CreateSite_enableFormElements()
+      {
+         Dom.get(this.id + "-title").disabled = true;
+         Dom.get(this.id + "-shortName").disabled = true;
+         Dom.get(this.id + "-isPrivate").disabled = true;
+         Dom.get(this.id + "-isModerated").disabled = true;
       },
 
       /**
@@ -76,9 +101,7 @@
       doBeforeFormSubmit: function RM_CreateSite_doBeforeFormSubmit(form, obj)
       {
          Alfresco.rm.module.CreateSite.superclass.doBeforeFormSubmit.call(this, form, obj);
-
-         Dom.get(this.id + "-title").disabled = false;
-         Dom.get(this.id + "-shortName").disabled = false;
+         this.disableFormElements();
       },
 
       /**
@@ -91,9 +114,7 @@
       onCancelButtonClick: function RM_CreateSite_onCancelButtonClick(type, args)
       {
          Alfresco.rm.module.CreateSite.superclass.onCancelButtonClick.call(this, type, args);
-
-         Dom.get(this.id + "-title").disabled = false;
-         Dom.get(this.id + "-shortName").disabled = false;
+         this.disableFormElements();
       },
 
       /**
@@ -105,12 +126,7 @@
       onCreateSiteFailure: function RM_CreateSite_onCreateSiteFailure(response)
       {
          Alfresco.rm.module.CreateSite.superclass.onCreateSiteFailure.call(this, response);
-
-         if (response.config.dataObj.sitePreset === "rm-site-dashboard")
-         {
-            Dom.get(this.id + "-title").disabled = true;
-            Dom.get(this.id + "-shortName").disabled = true;
-         }
+         this.enableFormElements();
       },
 
       /**
@@ -136,18 +152,16 @@
             Dom.get(this.id + "-shortName").value = "rm";
             Dom.get(this.id + "-title").value = this.msg("title.recordsManagementSite");
             Dom.get(this.id + "-description").value = this.msg("description.recordsManagementSite");
-            Dom.get(this.id + "-title").disabled = true;
-            Dom.get(this.id + "-shortName").disabled = true;
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite";
+            this.enableFormElements();
          }
          else
          {
             Dom.get(this.id + "-shortName").value = "";
             Dom.get(this.id + "-title").value = "";
             Dom.get(this.id + "-description").value = "";
-            Dom.get(this.id + "-title").disabled = false;
-            Dom.get(this.id + "-shortName").disabled = false;
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/site/1.0}site";
+            this.disableFormElements();
          }
       }
    });
