@@ -152,34 +152,22 @@
                {
                   fn: function add_mapping(args)
                   {
-                     var json = args.json;
-                     if (json.success)
+                     // Clear the existing list and load the result from the request
+                     me.widgets['list'].innerHTML = "";
+                     YAHOO.Bubbling.fire('EmailMappingsLoaded',
                      {
-                        // Clear the existing list and load the result from the request
-                        me.widgets['list'].innerHTML = "";
-                        YAHOO.Bubbling.fire('EmailMappingsLoaded',
-                        {
-                           mappings: json.data
-                        });
+                        mappings: args.json.data
+                     });
 
-                        // Show a display message
-                        Alfresco.util.PopupManager.displayMessage(
-                        {
-                           text: Alfresco.util.message('message.saveSuccess', "Alfresco.rm.component.RMEmailMappings"),
-                           spanClass: 'message',
-                           modal: true,
-                           noEscape: true,
-                           displayTime: 1
-                        });
-                     }
-                     else
+                     // Show a display message
+                     Alfresco.util.PopupManager.displayMessage(
                      {
-                        Alfresco.util.PopupManager.displayPrompt(
-                        {
-                           title: Alfresco.util.message("message.saveFailure", "Alfresco.rm.component.RMEmailMappings"),
-                           text: json.message
-                        });
-                     }
+                        text: Alfresco.util.message('message.saveSuccess', "Alfresco.rm.component.RMEmailMappings"),
+                        spanClass: 'message',
+                        modal: true,
+                        noEscape: true,
+                        displayTime: 1
+                     });
                   },
                   scope: this
                },
