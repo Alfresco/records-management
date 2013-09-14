@@ -24,7 +24,11 @@ widgetUtils.findObject(model.jsonModel, "id", "HEADER_NAVIGATION_MENU_BAR").conf
 // Add "Customize Dashboard" Link
 if (page.titleId == "page.rmSiteDashboard.title")
 {
-   widgetUtils.findObject(model.jsonModel, "id", "HEADER_SITE_CONFIGURATION_DROPDOWN").config.widgets.unshift({
+   // FIXME: Id changes in share-header breaks RM backwards Compatibility to 4.2.d
+   // Change this implementation after releasing 4.2.e
+   var titleBarModel = getTitleBarModel();
+   var widgets = titleBarModel[1].config.widgets;
+   widgets.unshift({
       name: "alfresco/menus/AlfMenuItem",
       config: {
          id: "HEADER_CUSTOMIZE_SITE_DASHBOARD",
@@ -33,4 +37,5 @@ if (page.titleId == "page.rmSiteDashboard.title")
          targetUrl: "site/" + page.url.templateArgs.site + "/customise-site-dashboard"
       }
    });
+   widgetUtils.findObject(model.jsonModel, "id", "HEADER_TITLE_MENU").config.widgets = titleBarModel;
 }
