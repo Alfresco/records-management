@@ -351,6 +351,7 @@
                DS,
                {
                   caption:this.msg('label.pagination','0'),
+                  MSG_EMPTY: this.msg('message.empty'),
                   initialLoad : false
                }
             );
@@ -379,7 +380,7 @@
                   fn: this.onPeopleFinderLoaded,
                   scope: this
                },
-               failureMessage: "Could not load People Finder component",
+               failureMessage: this.msg('message.load-peopleFinder-failure'),
                execScripts: true
             });
          }
