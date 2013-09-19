@@ -331,20 +331,12 @@
                <!--  Record fields -->
                <field id="rma:identifier" label-id="label.recordIdentifier" read-only="true" set="rm-record"/>
                <field id="rma:dateFiled" set="rm-record" read-only="true"/>
-               <field id="rma:publicationDate" set="rm-record">
-                  <control template="/org/alfresco/components/form/controls/date.ftl">
-                     <control-param name="showTime">true</control-param>
-                  </control>
-               </field>
+               <field id="rma:publicationDate" set="rm-record"/>
                <field id="rma:originator" set="rm-record"/>
                <field id="rma:originatingOrganization" set="rm-record"/>
                <field id="rma:mediaType" set="rm-record"/>
                <field id="rma:format" set="rm-record"/>
-               <field id="rma:dateReceived" set="rm-record">
-                  <control template="/org/alfresco/components/form/controls/date.ftl">
-                     <control-param name="showTime">true</control-param>
-                  </control>
-               </field>
+               <field id="rma:dateReceived" set="rm-record"/>
                <field id="rma:address" set="rm-record"/>
                <field id="rma:otherAddress" set="rm-record"/>
                <field id="rma:location" set="rm-record"/>
