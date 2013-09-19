@@ -15,6 +15,7 @@
    <@link href="${url.context}/res/components/object-finder/object-finder.css" group="rules"/>
    <#-- Modified for RM -->
    <@link href="${url.context}/res/components/form/form.css" group="rules"/>
+   <@link href="${url.context}/res/modules/documentlibrary/site-folder.css" group="rules"/>
 </@>
 
 <@markup id="js">
@@ -47,6 +48,9 @@
    <@script src="${url.context}/res/rm/components/rules/rule-config-action-custom.js" group="rules"/>
    <@script src="${url.context}/res/modules/simple-dialog.js" group="rules"/>
    <@script src="${url.context}/res/components/form/form.js" group="rules"/>
+   <@script src="${url.context}/res/modules/documentlibrary/site-folder.js" group="rules"/>
+   <@script src="${url.context}/res/modules/documentlibrary/doclib-actions.js" group="rules"/>
+   <@script src="${url.context}/res/rm/modules/documentlibrary/copy-move-link-file-to.js" group="rules"/>
 </@>
 
 <@markup id="widgets">

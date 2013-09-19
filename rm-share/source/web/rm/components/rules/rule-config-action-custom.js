@@ -256,6 +256,7 @@
             currentCtx: {},
             edit: function (containerEl, configDef, paramDef, ruleConfig, value)
             {
+               var selectedPath = ruleConfig.parameterValues && ruleConfig.parameterValues.path;
                this._createButton(containerEl, configDef, paramDef, ruleConfig, function RCA_destinationDialogButton_onClick(type, obj)
                {
                   this.renderers["arca:rm-destination-dialog-button"].currentCtx =
@@ -266,10 +267,14 @@
                   };
                   if (!this.widgets.destinationDialog)
                   {
-                     this.widgets.destinationDialog = new Alfresco.module.DoclibGlobalFolder(this.id + "-destinationDialog");
+                     this.widgets.destinationDialog = new Alfresco.rm.module.CopyMoveLinkFileTo(this.id + "-destinationDialog");
                      this.widgets.destinationDialog.setOptions(
                      {
-                        title: this.msg("dialog.destination.title")
+                        title: this.msg("dialog.destination.title"),
+                        mode: "file",
+                        files: "",
+                        siteId: this.options.siteId,
+                        path: selectedPath
                      });
 
                      YAHOO.Bubbling.on("folderSelected", function (layer, args)
@@ -279,10 +284,13 @@
                            var selectedFolder = args[1].selectedFolder;
                            if (selectedFolder !== null)
                            {
-                              var ctx = this.renderers["arca:destination-dialog-button"].currentCtx;
+                              var ctx = this.renderers["arca:rm-destination-dialog-button"].currentCtx;
                               this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "path", selectedFolder.path);
                               Dom.get(this.id + "-recordFolderPath").value = selectedFolder.path;
                               this._updateSubmitElements(ctx.configDef);
+                              this.widgets.destinationDialog.setOptions({
+                                 path: selectedFolder.path
+                              });
                            }
                         }
                      }, this);
@@ -303,17 +311,34 @@
                      nodeRef: this.options.rootNode,
                      pathNodeRef: pathNodeRef ? new Alfresco.util.NodeRef(pathNodeRef) : null
                   });
+
+                  this.widgets.destinationDialog.onOK = function()
+                  {
+                     YAHOO.Bubbling.fire("folderSelected",
+                     {
+                        selectedFolder: this.selectedNode ? this.selectedNode.data : null,
+                        eventGroup: this
+                     });
+                     this.widgets.dialog.hide();
+                  }
+
+                  var me = this;
+                  this.widgets.destinationDialog._showDialog = function()
+                  {
+                     this.widgets.okButton.set("label", me.msg("button.ok"));
+                     return Alfresco.rm.module.CopyMoveLinkFileTo.superclass._showDialog.apply(this, arguments);
+                  }
+
                   this.widgets.destinationDialog.showDialog();
                });
 
                this._createLabel(this._getParamDef(configDef, "path").displayLabel, containerEl);
-               var value = ruleConfig.parameterValues && ruleConfig.parameterValues.path;
                var el = document.createElement("input");
                el.setAttribute("type", "text");
                el.setAttribute("name", "-");
                el.setAttribute("title", paramDef.displayLabel ? paramDef.displayLabel : paramDef.name);
                el.setAttribute("param", paramDef.name);
-               el.setAttribute("value", (value != undefined && value != null) ? value : "");
+               el.setAttribute("value", (selectedPath != undefined && selectedPath != null) ? selectedPath : "");
                el.setAttribute("id", this.id + "-recordFolderPath");
                el.addEventListener("blur", function()
                {
