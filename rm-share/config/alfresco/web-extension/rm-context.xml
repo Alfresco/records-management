@@ -202,6 +202,9 @@
    <bean id="evaluator.rm.action.manage-permissions" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="managePermissions" />
    </bean>
+   <bean id="evaluator.rm.action.manage-rules" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="manageRules" />
+   </bean>
    <bean id="evaluator.rm.action.view-audit-log" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="viewAuditLog" />
    </bean>

@@ -302,6 +302,12 @@
             <evaluator>evaluator.rm.action.manage-permissions</evaluator>
          </action>
 
+         <!-- Manage rules -->
+         <action id="rm-manage-rules" type="pagelink" label="actions.folder.rules" icon="../../../rm/components/documentlibrary/actions/folder-manage-rules">
+            <param name="page">folder-rules?nodeRef={node.nodeRef}</param>
+            <evaluator>evaluator.rm.action.manage-rules</evaluator>
+         </action>
+
          <!-- View Audit Log -->
          <action id="rm-view-audit-log" type="javascript" label="actions.view-audit-log" icon="../../../rm/components/documentlibrary/actions/rm-view-audit-log">
             <param name="function">onActionViewAuditLog</param>
@@ -558,6 +564,7 @@
             <action index="140" id="rm-move-recordcategory-to" />
             <action index="150" id="rm-delete" label="actions.delete" />
             <action index="160" id="rm-view-audit-log" />
+            <action index="170" id="rm-manage-rules" />
          </actionGroup>
          <actionGroup id="rm-record-category-details">
             <action index="110" id="rm-edit-details" />
@@ -566,6 +573,7 @@
             <action index="140" id="rm-move-recordcategory-to" />
             <action index="150" id="rm-delete" label="actions.delete" />
             <action index="160" id="rm-view-audit-log" />
+            <action index="170" id="rm-manage-rules" />
          </actionGroup>
 
          <actionGroup id="rm-record-folder-browse">
@@ -590,6 +598,7 @@
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
+            <action index="290" id="rm-manage-rules" />
          </actionGroup>
          <actionGroup id="rm-record-folder-details">
             <action index="110" id="rm-edit-details" />
@@ -612,6 +621,7 @@
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
+            <action index="290" id="rm-manage-rules" />
          </actionGroup>
 
          <actionGroup id="rm-record-browse">
