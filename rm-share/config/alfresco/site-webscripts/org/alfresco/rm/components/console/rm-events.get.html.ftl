@@ -9,7 +9,7 @@
 <script type="text/javascript">//<![CDATA[
    new Alfresco.rm.component.RMEvents("${args.htmlid}").setOptions(
    {
-      eventTypes: { <#list eventTypes as eventType>"${eventType.eventTypeName}" : "${msg(eventType.eventTypeDisplayLabel)}"<#if eventType_has_next>, </#if></#list> }
+      eventTypes: { <#list eventTypes as eventType>"${eventType.eventTypeName}" : "${eventType.eventTypeDisplayLabel}"<#if eventType_has_next>, </#if></#list> }
    }).setMessages(${messages});
 //]]></script>
 
