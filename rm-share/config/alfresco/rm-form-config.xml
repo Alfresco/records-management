@@ -266,7 +266,7 @@
                <!--  Record folder fields -->
                <field id="rma:identifier" label-id="label.folderIdentifier" set="rm-record-folder"/>
                <field id="rma:location" set="rm-record-folder"/>
-               <field id="rmc:supplementalMarkingList" set="rm-record-folder"/>
+               <field id="rmc:supplementalMarkingList" label-id="label.supplementalMarkingList" set="rm-record-folder"/>
 
                <!--  Vital record fields -->
                <field id="rma:vitalRecordIndicator" set="rm-vital-record">
