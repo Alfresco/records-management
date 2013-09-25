@@ -527,7 +527,7 @@
          Alfresco.util.Ajax.request(
          {
             method: Alfresco.util.Ajax.GET,
-            url: Alfresco.constants.PROXY_URI + "api/rma/admin/rmroles",
+            url: Alfresco.constants.PROXY_URI + "api/rma/admin/rmroles?is=true",
             successCallback:
             {
                fn: this.onRolesLoaded,
