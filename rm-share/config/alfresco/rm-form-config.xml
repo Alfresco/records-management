@@ -29,6 +29,11 @@
                      <control-param name="options">true|{label.record},false|{label.folder}</control-param>
                   </control>
                </field>
+               <field id="rma:dispositionInstructions" label-id="label.dispositionInstructions">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="style">width: 95%;height: 5em</control-param>
+                  </control>
+               </field>
             </appearance>
          </form>
       </forms>
@@ -280,7 +285,11 @@
 
                <!--  Disposition Details -->
                <field id="rmCategoryIdentifier" label-id="label.categoryIdentifier" set="rm-disposition" read-only="true" />
-               <field id="rmDispositionInstructions" label-id="label.dispositionInstructions" read-only="true" set="rm-disposition"/>
+               <field id="rmDispositionInstructions" label-id="label.dispositionInstructions" set="rm-disposition">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="activateLinks">true</control-param>
+                  </control>
+               </field>
                <field id="rma:cutOffDate" read-only="true" set="rm-disposition"/>
                <field id="rma:recordSearchDispositionActionAsOf" label-id="label.dispositionAsOfDate" read-only="true" set="rm-disposition" />
 
@@ -347,7 +356,11 @@
 
                <!--  Disposition Details -->
                <field id="rmCategoryIdentifier" label-id="label.categoryIdentifier" set="rm-disposition" read-only="true" />
-               <field id="rmDispositionInstructions" label-id="label.dispositionInstructions" read-only="true" set="rm-disposition"/>
+               <field id="rmDispositionInstructions" label-id="label.dispositionInstructions" set="rm-disposition">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="activateLinks">true</control-param>
+                  </control>
+               </field>
                <field id="rmDeclared" label-id="label.declared" read-only="true" set="rm-disposition"/>
                <field id="rma:cutOffDate" read-only="true" set="rm-disposition"/>
                <field id="rma:recordSearchDispositionActionAsOf" label-id="label.dispositionAsOfDate" read-only="true" set="rm-disposition" />
