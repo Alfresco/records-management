@@ -50,6 +50,7 @@
 
 .disposition .field .value
 {
+   display:inline-table;
    color:#333333;
 }
 

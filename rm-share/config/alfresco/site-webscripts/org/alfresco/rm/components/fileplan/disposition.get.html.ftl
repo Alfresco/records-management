@@ -38,7 +38,8 @@
          </div>
          <div class="field">
             <span class="label">${msg("label.dispositionInstructions")}:</span>
-            <span class="value">${(instructions!"")?html}</span>
+            <#assign instructionsValue=instructions?html?replace("(\n)", "<br/>",'r')?replace("((http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?\\^=%&:\\/~\\+#]*[\\w\\-\\@?\\^=%&\\/~\\+#])?)", "<a href=\"$1\" target=\"_blank\">$1</a>", "r")>
+            <span class="value">${(instructionsValue!"")}</span>
          </div>
          <div class="field">
             <span class="label">${msg("label.appliedTo")}:</span>
