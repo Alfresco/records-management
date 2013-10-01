@@ -153,6 +153,8 @@
             Dom.get(this.id + "-title").value = this.msg("title.recordsManagementSite");
             Dom.get(this.id + "-description").value = this.msg("description.recordsManagementSite");
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite";
+            Dom.get(this.id + "-isPublic").checked = true;
+            Dom.get(this.id + "-isModerated").checked = false;
             this.enableFormElements();
          }
          else
