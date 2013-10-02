@@ -62,7 +62,7 @@
             <span>${msg("label.label")}:</span>
          </div>
          <div class="field-row">
-            <input id="${el}-create-label" type="text" maxlength="255" />&nbsp;*
+            <input id="${el}-create-label" type="text" maxlength="50" />&nbsp;*
          </div>
          <div class="label-row">
             <span>${msg("label.type")}:</span>
