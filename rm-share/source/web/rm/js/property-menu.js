@@ -191,14 +191,14 @@
                   id: this.id + "_content",
                   itemdata:
                   [
-                     { text: this.msg("label.name"), value: "name" },
-                     { text: this.msg("label.title"), value: "title" },
-                     { text: this.msg("label.description"), value: "description" },
-                     { text: this.msg("label.creator"), value: "creator" },
-                     { text: this.msg("label.created"), value: "created" },
-                     { text: this.msg("label.modifier"), value: "modifier" },
-                     { text: this.msg("label.modified"), value: "modified" },
-                     { text: this.msg("label.author"), value: "author" }
+                     { text: this.msg("label.name"), value: "cm:name" },
+                     { text: this.msg("label.title"), value: "cm:title" },
+                     { text: this.msg("label.description"), value: "cm:description" },
+                     { text: this.msg("label.creator"), value: "cm:creator" },
+                     { text: this.msg("label.created"), value: "cm:created" },
+                     { text: this.msg("label.modifier"), value: "cm:modifier" },
+                     { text: this.msg("label.modified"), value: "cm:modified" },
+                     { text: this.msg("label.author"), value: "cm:author" }
                   ]
                }
             });
@@ -223,7 +223,7 @@
                      { text: this.msg("label.location"), value: "rma:location" },
                      { text: this.msg("label.address"), value: "rma:address" },
                      { text: this.msg("label.otherAddress"), value: "rma:otherAddress" },
-                     { text: this.msg("label.supplementalMarkingList"), value: "markings" }
+                     { text: this.msg("label.supplementalMarkingList"), value: "rmc:supplementalMarkingList" }
                   ]
                }
             });
