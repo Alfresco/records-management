@@ -500,7 +500,10 @@
          var actionForm = new Alfresco.forms.Form(formId);
 
          // Add validation
-         actionForm.addValidation(elId + "-periodAmount", Alfresco.forms.validation.number, null, "keyup");
+
+         // Temporary fix for RM-1044
+         //actionForm.addValidation(elId + "-periodAmount", Alfresco.forms.validation.number, null, "keyup");
+
          actionForm.addValidation(elId + "-description", Alfresco.forms.validation.mandatory, null, "keyup");
          var periodEnabledCheckBox = Dom.getElementsByClassName("period-enabled", "input", actionEl)[0];
          Event.addListener(periodEnabledCheckBox, "click", function(e, obj)
