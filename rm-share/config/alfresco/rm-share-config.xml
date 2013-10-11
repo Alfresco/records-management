@@ -659,6 +659,7 @@
          <actionGroup id="rm-doclib-record-browse">
             <action index="100" id="rm-document-download" />
             <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-hide-record" />
          </actionGroup>
 
          <actionGroup id="rm-record-details">
@@ -686,6 +687,7 @@
 
          <actionGroup id="rm-doclib-record-details">
             <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-hide-record" />
          </actionGroup>
 
          <actionGroup id="rm-undeclared-record-browse">
