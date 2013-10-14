@@ -1,11 +1,12 @@
 <import resource="classpath:/alfresco/site-webscripts/org/alfresco/share/imports/share-header.lib.js">
 
 // Add "Management Console" Link
-var siteNavigationWidgets = getSiteNavigationWidgets();
-if (siteNavigationWidgets.length > 0)
+var siteNavigationWidgets = getSiteNavigationWidgets(),
+   isRmPageTitle = page.titleId == "page.rmSiteDashboard.title";
+if (siteNavigationWidgets.length > 0 && isRmPageTitle)
 {
    // Highlight "Site Dashboard"
-   siteNavigationWidgets[0].config.selected = (page.titleId == "page.rmSiteDashboard.title");
+   siteNavigationWidgets[0].config.selected = isRmPageTitle;
 
    lastNavigationWidget = siteNavigationWidgets.pop();
    lastNavigationWidget.config.widgets[0].config.widgets.push({
@@ -18,11 +19,11 @@ if (siteNavigationWidgets.length > 0)
       }
    });
    siteNavigationWidgets.push(lastNavigationWidget);
+   widgetUtils.findObject(model.jsonModel, "id", "HEADER_NAVIGATION_MENU_BAR").config.widgets = siteNavigationWidgets;
 }
-widgetUtils.findObject(model.jsonModel, "id", "HEADER_NAVIGATION_MENU_BAR").config.widgets = siteNavigationWidgets;
 
 // Add "Customize Dashboard" Link
-if (page.titleId == "page.rmSiteDashboard.title")
+if (isRmPageTitle)
 {
    // FIXME: Id changes in share-header breaks RM backwards Compatibility to 4.2.d
    // Change this implementation after releasing 4.2.e
