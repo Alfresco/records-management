@@ -3,7 +3,7 @@
 // Add "Management Console" Link
 var siteNavigationWidgets = getSiteNavigationWidgets(),
    isRmPageTitle = page.titleId == "page.rmSiteDashboard.title";
-if (siteNavigationWidgets.length > 0 && isRmPageTitle)
+if (siteNavigationWidgets.length > 0)
 {
    // Highlight "Site Dashboard"
    siteNavigationWidgets[0].config.selected = isRmPageTitle;
