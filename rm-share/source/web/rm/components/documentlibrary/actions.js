@@ -824,13 +824,20 @@
        *
        * @method onActionFileTransferReport
        * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+       * @param owner {HTMLElement} The action html element
        */
-      onActionFileTransferReport: function RDLA_onActionFileTransferReport(assets)
+      onActionFileTransferReport: function RDLA_onActionFileTransferReport(assets, owner)
       {
          if (!this.modules.fileTransferReport)
          {
             this.modules.fileTransferReport = new Alfresco.rm.module.FileTransferReport(this.id + "-fileTransferReport");
          }
+
+         var me = this;
+         this.modules.fileTransferReport.onOK = function RDLA_onActionFileTransferReport_onOK()
+         {
+            me.onActionRecordsManagementRepoAction(assets, owner);
+         };
 
          this.modules.fileTransferReport.setOptions(
          {
@@ -840,6 +847,22 @@
             fileplanNodeRef: this.doclistMetadata.container,
             transfer: assets
          }).showDialog();
+      },
+
+      /**
+       * FIXME!!!
+       */
+      fileTransferReportSuccess: function RDLA_fileTransferReportSuccess()
+      {
+         alert("Success");
+      },
+
+      /**
+       * FIXME!!!
+       */
+      fileTransferReportFailure: function RDLA_fileTransferReportFailure()
+      {
+         alert("Failure");
       },
 
       /**

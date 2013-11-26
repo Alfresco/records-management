@@ -69,7 +69,7 @@
          <!--  Is Record Indicator -->
          <indicator id="rm-is-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-record-16.png">
             <evaluator>evaluator.rm.doclib.isRecord</evaluator>
-         </indicator>        
+         </indicator>
          <!--  Info Requested Indicator -->
          <indicator id="rm-info-requested" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-info-requested-16.png">
             <evaluator>evaluator.rm.doclib.infoRequested</evaluator>
@@ -465,6 +465,10 @@
          <!-- File Transfer Report -->
          <action id="rm-file-report" type="javascript" label="actions.file-report" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
             <param name="function">onActionFileTransferReport</param>
+            <param name="action">fileTransferReport</param>
+            <param name="success">fileTransferReportSuccess</param>
+            <param name="failure">fileTransferReportFailure</param>
+            <!-- <param name="message">message.file-transfer-report</param> -->
             <evaluator>evaluator.rm.action.file-report</evaluator>
          </action>
 
@@ -545,14 +549,14 @@
             <param name="message">message.file-destruction-report</param>
             <evaluator>evaluator.rm.action.fileDestructionReport</evaluator>
          </action>
-         
+
          <action id="rm-end-retention" type="javascript" label="actions.end-retention" icon="../../../rm/components/documentlibrary/actions/rm-hide-record">
             <param name="function">onActionRecordsManagementRepoAction</param>
             <param name="action">retain</param>
             <param name="message">message.end-retention</param>
             <evaluator>evaluator.rm.action.endRetention</evaluator>
          </action>
-         
+
       </actions>
 
       <!--
