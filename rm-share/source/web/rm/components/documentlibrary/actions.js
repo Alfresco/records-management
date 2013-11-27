@@ -836,7 +836,8 @@
          var me = this;
          this.modules.fileTransferReport.onOK = function RDLA_onActionFileTransferReport_onOK()
          {
-            me.onActionRecordsManagementRepoAction(assets, owner);
+            // FIXME: Need to pass the parameters to the server
+            me.onActionRecordsManagementRepoAction(assets, owner/*, {"key": "value"}*/);
          };
 
          this.modules.fileTransferReport.setOptions(
@@ -1246,8 +1247,9 @@
        * @method onActionRecordsManagementRepoAction
        * @param record {object} Object literal representing the file or folder to be actioned
        * @param owner {HTMLElement} The action html element
+       * @param actionParams {object} Optional object literal to pass parameters to the action
        */
-      onActionRecordsManagementRepoAction: function RDLA_onActionRecordsManagementRepoAction(record, owner)
+      onActionRecordsManagementRepoAction: function RDLA_onActionRecordsManagementRepoAction(record, owner, actionParams)
       {
          // Get action params
          var params = this.getAction(record, owner).params;
@@ -1284,7 +1286,7 @@
          }
 
          // Execute the repo action
-         this._rmAction(params.message, record, params.action, null, config);
+         this._rmAction(params.message, record, params.action, actionParams, config);
       },
 
       /**
