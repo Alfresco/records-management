@@ -850,19 +850,65 @@
       },
 
       /**
-       * FIXME!!!
+       * Success callback for file transfer report.
+       *
+       * @method fileTransferReportSuccess
+       * @param data {object} Object literal containing ajax request and response
+       * @param obj {object} Caller-supplied object
+       *    <pre>
+       *       obj.displayName {string} Filename or number of files submitted to the action.
+       *    </pre>
        */
-      fileTransferReportSuccess: function RDLA_fileTransferReportSuccess()
+      fileTransferReportSuccess: function RDLA_fileTransferReportSuccess(data, obj)
       {
-         alert("Success");
+         // Hide the dialog
+         this.modules.fileTransferReport.widgets.dialog.hide();
+
+         // Get reports record name
+         var reportName = "Record Name"; // FIXME: response.json.recordName
+
+         // Display success message
+         Alfresco.util.PopupManager.displayMessage(
+         {
+            text: this.msg("message.file-transfer-success", reportName)
+         });
+
+         // Make sure other components display the new file if present
+         YAHOO.Bubbling.fire("changeFilter",
+         {
+            filterId: "path",
+            filterData: this.modules.fileTransferReport.currentPath,
+            highlightFile: reportName
+         });
       },
 
       /**
-       * FIXME!!!
+       * Failure callback for file transfer report.
+       *
+       * @method fileTransferReportFailure
+       * @param data {object} Object literal containing ajax request and response
+       * @param obj {object} Caller-supplied object
+       *    <pre>
+       *       obj.displayName {string} Filename or number of files submitted to the action.
+       *    </pre>
        */
-      fileTransferReportFailure: function RDLA_fileTransferReportFailure()
+      fileTransferReportFailure: function RDLA_fileTransferReportFailure(data, obj)
       {
-         alert("Failure");
+         // Display error
+         var text = this.msg("message.file-transfer-failure");
+         if(data.json && data.json.message)
+         {
+            text = data.json.message;
+         }
+         Alfresco.util.PopupManager.displayPrompt(
+         {
+            title: Alfresco.util.message("message.failure"),
+            text: text
+         });
+
+         // Enable dialog buttons again
+         this.modules.fileTransferReport.widgets.okButton.set("disabled", false);
+         this.modules.fileTransferReport.widgets.cancelButton.set("disabled", false);
       },
 
       /**

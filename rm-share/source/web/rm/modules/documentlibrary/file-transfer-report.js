@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * Document Library "File Transfer Report" module for Records Management.
- * 
+ *
  * @namespace Alfresco.module
  * @class Alfresco.rm.module.FileTransferReport
  */
@@ -41,7 +41,7 @@
    Alfresco.rm.module.FileTransferReport = function(htmlId)
    {
       Alfresco.module.DoclibSiteFolder.superclass.constructor.call(this, htmlId);
-      
+
       // Re-register with our own name
       this.name = "Alfresco.rm.module.FileTransferReport";
       Alfresco.util.ComponentManager.reregister(this);
@@ -51,7 +51,7 @@
 
       return this;
    };
-   
+
    YAHOO.extend(Alfresco.rm.module.FileTransferReport, Alfresco.module.DoclibSiteFolder,
    {
       /**
@@ -74,7 +74,7 @@
           * @type object
           */
          transfer: null,
-         
+
          /**
           * Evaluate child folders flag - for tree control
           *
@@ -83,6 +83,50 @@
           * @default true
           */
          evaluateChildFolders: true
+      },
+
+      /**
+       * Event callback when dialog template has been loaded
+       *
+       * @method onTemplateLoaded
+       * @override
+       * @param response {object} Server response from load template XHR request
+       */
+      onTemplateLoaded: function DLSF_onTemplateLoaded(response)
+      {
+         Alfresco.rm.module.FileTransferReport.superclass.onTemplateLoaded.call(this, response);
+
+         this.widgets.unfiledRecordsCheckbox = Dom.get(this.id + "-unfiled-records");
+         Event.addListener(this.widgets.unfiledRecordsCheckbox, "click", function(p_event, p_obj)
+         {
+            var treeView = Dom.get(this.id + "-treeview")
+            if (this.widgets.unfiledRecordsCheckbox.checked)
+            {
+               Dom.removeClass(treeView, "file-transfer-report-treeview-enabled");
+               Dom.addClass(treeView, "file-transfer-report-treeview-disabled");
+            }
+            else
+            {
+               Dom.removeClass(treeView, "file-transfer-report-treeview-disabled");
+               Dom.addClass(treeView, "file-transfer-report-treeview-enabled");
+            }
+         }, this, true);
+
+         this.widgets.treeview.subscribe("expand", function(node)
+         {
+            if (this.widgets.unfiledRecordsCheckbox.checked)
+            {
+               return false;
+            }
+         }, this, true);
+
+         this.widgets.treeview.subscribe("collapse", function(node)
+         {
+            if (this.widgets.unfiledRecordsCheckbox.checked)
+            {
+               return false;
+            }
+         }, this, true);
       },
 
       /**
@@ -145,7 +189,7 @@
                      filterId: "path",
                      filterData: this.selectedNode.data.path,
                      highlightFile: reportName
-                  });                  
+                  });
                },
                scope: this
             },

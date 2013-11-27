@@ -1,10 +1,15 @@
 <div id="${args.htmlid}-dialog" class="site-folder">
    <div id="${args.htmlid}-title" class="hd"></div>
    <div class="bd">
+      <div class="file-transfer-report-unfiled-records">
+         <input type="checkbox" id="${args.htmlid}-unfiled-records" checked="true" />
+         <label for="${args.htmlid}-unfiled-records">${msg("label.unfiled-records")}</label>
+         <hr>
+      </div>
       <div class="yui-g">
          <h2 id="${args.htmlid}-header">${msg("header")}</h2>
       </div>
-      <div id="${args.htmlid}-treeview" class="treeview"></div>
+      <div id="${args.htmlid}-treeview" class="treeview file-transfer-report-treeview-disabled"></div>
       <div class="bdft">
          <input type="button" id="${args.htmlid}-ok" value="${msg("button.ok")}" />
          <input type="button" id="${args.htmlid}-cancel" value="${msg("button.cancel")}" />
