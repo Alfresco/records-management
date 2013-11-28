@@ -464,7 +464,7 @@
 
          <!-- File Report -->
          <action id="rm-file-report" type="javascript" label="actions.file-report" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
-            <param name="function">onActionFileReport</param>
+            <param name="function">onActionFileTransferReport</param>
             <param name="action">fileReport</param>
             <param name="success">fileReportSuccess</param>
             <param name="failure">fileReportFailure</param>
@@ -543,9 +543,10 @@
 
          <!--  File destruction report -->
          <action id="rm-file-destruction-report" type="javascript" label="actions.file-destruction-report" icon="../../../rm/components/documentlibrary/actions/rm-destruction-report">
-            <param name="function">onActionRecordsManagementRepoAction</param>
-            <param name="action">fileDestructionReport</param>
-            <param name="message">message.file-destruction-report</param>
+            <param name="function">onActionFileDestructionReport</param>
+            <param name="action">fileReport</param>
+            <param name="success">fileReportSuccess</param>
+            <param name="failure">fileReportFailure</param>
             <evaluator>evaluator.rm.action.fileDestructionReport</evaluator>
          </action>
 

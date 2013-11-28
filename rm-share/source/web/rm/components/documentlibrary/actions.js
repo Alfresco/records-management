@@ -820,13 +820,14 @@
       },
 
       /**
-       * File Report action.
+       * File report action.
        *
        * @method onActionFileReport
        * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
        * @param owner {HTMLElement} The action html element
+       * @param type {string} The report type
        */
-      onActionFileReport: function RDLA_onActionFileReport(assets, owner)
+      onActionFileReport: function RDLA_onActionFileReport(assets, owner, type)
       {
          if (!this.modules.fileReport)
          {
@@ -852,10 +853,34 @@
 
             me.onActionRecordsManagementRepoAction(assets, owner,
             {
-               "reportType": "rmr:transferReport",
+               "reportType": type,
                "destination": destination
             });
          };
+      },
+
+      /**
+       * File transport report action.
+       *
+       * @method onActionFileTransferReport
+       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+       * @param owner {HTMLElement} The action html element
+       */
+      onActionFileTransferReport: function RDLA_onActionFileTransferReport(assets, owner)
+      {
+         this.onActionFileReport(assets, owner, "rmr:transferReport");
+      },
+
+      /**
+       * File destruction report action.
+       *
+       * @method onActionFileDestructionReport
+       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+       * @param owner {HTMLElement} The action html element
+       */
+      onActionFileDestructionReport: function RDLA_onActionFileDestructionReport(assets, owner)
+      {
+         this.onActionFileReport(assets, owner, "rmr:destructionReport");
       },
 
       /**
