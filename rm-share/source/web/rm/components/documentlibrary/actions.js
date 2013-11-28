@@ -833,13 +833,6 @@
             this.modules.fileTransferReport = new Alfresco.rm.module.FileTransferReport(this.id + "-fileTransferReport");
          }
 
-         var me = this;
-         this.modules.fileTransferReport.onOK = function RDLA_onActionFileTransferReport_onOK()
-         {
-            // FIXME: Need to pass the parameters to the server
-            me.onActionRecordsManagementRepoAction(assets, owner/*, {"key": "value"}*/);
-         };
-
          this.modules.fileTransferReport.setOptions(
          {
             siteId: this.options.siteId,
@@ -848,6 +841,22 @@
             fileplanNodeRef: this.doclistMetadata.container,
             transfer: assets
          }).showDialog();
+
+         var me = this;
+         this.modules.fileTransferReport.onOK = function RDLA_onActionFileTransferReport_onOK()
+         {
+            var destination = me.doclistMetadata.container;
+            if (Dom.get(this.id + "-unfiled-records").checked == false)
+            {
+               destination = this.selectedNode.data.nodeRef;
+            }
+
+            me.onActionRecordsManagementRepoAction(assets, owner,
+            {
+               "reportType": "rmr:transferReport",
+               "destination": destination
+            });
+         };
       },
 
       /**
