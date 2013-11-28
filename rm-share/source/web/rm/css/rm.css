@@ -9,14 +9,14 @@
    margin-left: 1.5em;
 }
 
-.file-transfer-report-unfiled-records
+.file-report-unfiled-records
 {
    font-size: 123.1%;
    font-weight: normal;
    padding: 10px 0 0 5px;
 }
 
-.file-transfer-report-unfiled-records hr
+.file-report-unfiled-records hr
 {
    background-color: #EEEEEE;
    height: 1px !important;
@@ -24,12 +24,12 @@
    width: 80%;
 }
 
-.file-transfer-report-treeview-disabled
+.file-report-treeview-disabled
 {
    opacity: 0.5;
 }
 
-.file-transfer-report-treeview-enabled
+.file-report-treeview-enabled
 {
    opacity: 1;
 }

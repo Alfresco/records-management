@@ -6,9 +6,10 @@
 <@script type="text/javascript" src="${url.context}/res/modules/documentlibrary/site-folder.js" group="documentlibrary"/>
 <!-- DoD 5015.2 Copy-To, Move-To, Link-To -->
 <@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/copy-move-link-file-to.js" group="documentlibrary"/>
-<!-- DoD 5015.2 File Transfer Report -->
-<@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/file-transfer-report.js" group="documentlibrary"/>
+<!-- DoD 5015.2 File Report -->
+<@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/file-report.js" group="documentlibrary"/>
 
 <#-- Common actions styles -->
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/components/documentlibrary/actions.css" group="documentlibrary"/>
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/modules/documentlibrary/site-folder.css" group="documentlibrary"/>
+<#-- FIXME: Add the file transfer specific CSS here -->

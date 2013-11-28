@@ -820,30 +820,29 @@
       },
 
       /**
-       * File Transfer Report action.
+       * File Report action.
        *
-       * @method onActionFileTransferReport
+       * @method onActionFileReport
        * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
        * @param owner {HTMLElement} The action html element
        */
-      onActionFileTransferReport: function RDLA_onActionFileTransferReport(assets, owner)
+      onActionFileReport: function RDLA_onActionFileReport(assets, owner)
       {
-         if (!this.modules.fileTransferReport)
+         if (!this.modules.fileReport)
          {
-            this.modules.fileTransferReport = new Alfresco.rm.module.FileTransferReport(this.id + "-fileTransferReport");
+            this.modules.fileReport = new Alfresco.rm.module.FileReport(this.id + "-fileReport");
          }
 
-         this.modules.fileTransferReport.setOptions(
+         this.modules.fileReport.setOptions(
          {
             siteId: this.options.siteId,
             containerId: this.options.containerId,
             path: this.currentPath,
-            fileplanNodeRef: this.doclistMetadata.container,
-            transfer: assets
+            assets: assets
          }).showDialog();
 
          var me = this;
-         this.modules.fileTransferReport.onOK = function RDLA_onActionFileTransferReport_onOK()
+         this.modules.fileReport.onOK = function RDLA_onActionFileReport_onOK()
          {
             var destination = me.doclistMetadata.container;
             if (Dom.get(this.id + "-unfiled-records").checked == false)
@@ -860,19 +859,19 @@
       },
 
       /**
-       * Success callback for file transfer report.
+       * Success callback for file report.
        *
-       * @method fileTransferReportSuccess
+       * @method fileReportSuccess
        * @param data {object} Object literal containing ajax request and response
        * @param obj {object} Caller-supplied object
        *    <pre>
        *       obj.displayName {string} Filename or number of files submitted to the action.
        *    </pre>
        */
-      fileTransferReportSuccess: function RDLA_fileTransferReportSuccess(data, obj)
+      fileReportSuccess: function RDLA_fileReportSuccess(data, obj)
       {
          // Hide the dialog
-         this.modules.fileTransferReport.widgets.dialog.hide();
+         this.modules.fileReport.widgets.dialog.hide();
 
          // Get reports record name
          var reportName = "Record Name"; // FIXME: response.json.recordName
@@ -880,32 +879,32 @@
          // Display success message
          Alfresco.util.PopupManager.displayMessage(
          {
-            text: this.msg("message.file-transfer-success", reportName)
+            text: this.msg("message.file-success", reportName)
          });
 
          // Make sure other components display the new file if present
          YAHOO.Bubbling.fire("changeFilter",
          {
             filterId: "path",
-            filterData: this.modules.fileTransferReport.currentPath,
+            filterData: this.modules.fileReport.currentPath,
             highlightFile: reportName
          });
       },
 
       /**
-       * Failure callback for file transfer report.
+       * Failure callback for file report.
        *
-       * @method fileTransferReportFailure
+       * @method fileReportFailure
        * @param data {object} Object literal containing ajax request and response
        * @param obj {object} Caller-supplied object
        *    <pre>
        *       obj.displayName {string} Filename or number of files submitted to the action.
        *    </pre>
        */
-      fileTransferReportFailure: function RDLA_fileTransferReportFailure(data, obj)
+      fileReportFailure: function RDLA_fileReportFailure(data, obj)
       {
          // Display error
-         var text = this.msg("message.file-transfer-failure");
+         var text = this.msg("message.file-failure");
          if(data.json && data.json.message)
          {
             text = data.json.message;
@@ -917,8 +916,8 @@
          });
 
          // Enable dialog buttons again
-         this.modules.fileTransferReport.widgets.okButton.set("disabled", false);
-         this.modules.fileTransferReport.widgets.cancelButton.set("disabled", false);
+         this.modules.fileReport.widgets.okButton.set("disabled", false);
+         this.modules.fileReport.widgets.cancelButton.set("disabled", false);
       },
 
       /**

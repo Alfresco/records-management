@@ -18,10 +18,10 @@
  */
 
 /**
- * Document Library "File Transfer Report" module for Records Management.
+ * "File Report" module for Records Management.
  *
  * @namespace Alfresco.module
- * @class Alfresco.rm.module.FileTransferReport
+ * @class Alfresco.rm.module.FileReport
  */
 (function()
 {
@@ -38,12 +38,12 @@
     var $html = Alfresco.util.encodeHTML,
        $combine = Alfresco.util.combinePaths;
 
-   Alfresco.rm.module.FileTransferReport = function(htmlId)
+   Alfresco.rm.module.FileReport = function(htmlId)
    {
       Alfresco.module.DoclibSiteFolder.superclass.constructor.call(this, htmlId);
 
       // Re-register with our own name
-      this.name = "Alfresco.rm.module.FileTransferReport";
+      this.name = "Alfresco.rm.module.FileReport";
       Alfresco.util.ComponentManager.reregister(this);
 
       // Initialise prototype properties
@@ -52,29 +52,13 @@
       return this;
    };
 
-   YAHOO.extend(Alfresco.rm.module.FileTransferReport, Alfresco.module.DoclibSiteFolder,
+   YAHOO.extend(Alfresco.rm.module.FileReport, Alfresco.module.DoclibSiteFolder,
    {
       /**
        * Object container for initialization options
        */
       options:
       {
-         /**
-          * Current fileplan's nodeRef.
-          *
-          * @property fileplanNodeRef The fileplan's nodeRef
-          * @type string
-          */
-         fileplanNodeRef: null,
-
-         /**
-          * Object representing the transfer object with nodeRef and displayName
-          *
-          * @property transfer The nodeRef to the transfer that shall be filed
-          * @type object
-          */
-         transfer: null,
-
          /**
           * Evaluate child folders flag - for tree control
           *
@@ -94,7 +78,7 @@
        */
       onTemplateLoaded: function DLSF_onTemplateLoaded(response)
       {
-         Alfresco.rm.module.FileTransferReport.superclass.onTemplateLoaded.call(this, response);
+         Alfresco.rm.module.FileReport.superclass.onTemplateLoaded.call(this, response);
 
          this.widgets.unfiledRecordsCheckbox = Dom.get(this.id + "-unfiled-records");
          Event.addListener(this.widgets.unfiledRecordsCheckbox, "click", function(p_event, p_obj)
@@ -102,13 +86,13 @@
             var treeView = Dom.get(this.id + "-treeview")
             if (this.widgets.unfiledRecordsCheckbox.checked)
             {
-               Dom.removeClass(treeView, "file-transfer-report-treeview-enabled");
-               Dom.addClass(treeView, "file-transfer-report-treeview-disabled");
+               Dom.removeClass(treeView, "file-report-treeview-enabled");
+               Dom.addClass(treeView, "file-report-treeview-disabled");
             }
             else
             {
-               Dom.removeClass(treeView, "file-transfer-report-treeview-disabled");
-               Dom.addClass(treeView, "file-transfer-report-treeview-enabled");
+               Dom.removeClass(treeView, "file-report-treeview-disabled");
+               Dom.addClass(treeView, "file-report-treeview-enabled");
             }
          }, this, true);
 
@@ -135,14 +119,14 @@
        * @method setOptions
        * @override
        * @param obj {object} Object literal specifying a set of options
-       * @return {Alfresco.rm.module.FileTransferReport} returns 'this' for method chaining
+       * @return {Alfresco.rm.module.FileReport} returns 'this' for method chaining
        */
       setOptions: function RMCMFT_setOptions(obj)
       {
-         return Alfresco.rm.module.FileTransferReport.superclass.setOptions.call(this, YAHOO.lang.merge(
+         return Alfresco.rm.module.FileReport.superclass.setOptions.call(this, YAHOO.lang.merge(
          {
-            templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/file-transfer-report",
-            files: obj.transfer // To make the DoclibSiteFolder component happy
+            templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/file-report",
+            files: obj.assets // To make the DoclibSiteFolder component happy
          }, obj));
       },
 
@@ -154,72 +138,8 @@
        */
       onOK: function RMCMFT_onOK()
       {
-         // create the webscript url
-         var transferNodeRefParts = this.options.transfer.nodeRef.split("/"),
-            transferId = transferNodeRefParts[transferNodeRefParts.length - 1],
-            url = Alfresco.constants.PROXY_URI + "api/node/" + this.options.fileplanNodeRef.replace(":/", "") + "/transfers/" + transferId + "/report";
-
-         // Post file transfer report request to server
-         Alfresco.util.Ajax.jsonPost(
-         {
-            url: url,
-            dataObj:
-            {
-               destination: this.selectedNode.data.nodeRef
-            },
-            successCallback:
-            {
-               fn: function (response)
-               {
-                  // Hide the dialog
-                  this.widgets.dialog.hide();
-
-                  // Get reports record name
-                  var reportName = response.json.recordName;
-
-                  // Display success message
-                  Alfresco.util.PopupManager.displayMessage(
-                  {
-                     text: this.msg("message.success", reportName)
-                  });
-
-                  // Make sure other components display the new file if present
-                  YAHOO.Bubbling.fire("changeFilter",
-                  {
-                     filterId: "path",
-                     filterData: this.selectedNode.data.path,
-                     highlightFile: reportName
-                  });
-               },
-               scope: this
-            },
-            failureCallback:
-            {
-               fn:function (response)
-               {
-                  // Display error
-                  var text = this.msg("message.failure");
-                  if(response.json && response.json.message)
-                  {
-                     text = response.json.message;
-                  }
-                  Alfresco.util.PopupManager.displayPrompt(
-                  {
-                     title: Alfresco.util.message("message.failure"),
-                     text: text
-                  });
-
-                  // Enable dialog buttons again
-                  this.widgets.okButton.set("disabled", false);
-                  this.widgets.cancelButton.set("disabled", false);
-               },
-               scope: this
-            }
-         });
-
-         // Disable dialog buttons
-         this.widgets.okButton.set("disabled", true);
-         this.widgets.cancelButton.set("disabled", true);
+         Alfresco.rm.module.FileReport.superclass.onOK.call(this);
+         throw new Error("FIXME");
       },
 
       /**
@@ -234,7 +154,7 @@
       _showDialog: function RMCMFT__showDialog()
       {
          this.widgets.okButton.set("label", this.msg("button.file"));
-         return Alfresco.rm.module.FileTransferReport.superclass._showDialog.apply(this, arguments);
+         return Alfresco.rm.module.FileReport.superclass._showDialog.apply(this, arguments);
       },
 
       /**
@@ -260,5 +180,5 @@
    });
 
    /* Dummy instance to load optional YUI components early */
-   var dummyInstance = new Alfresco.rm.module.FileTransferReport("null");
+   var dummyInstance = new Alfresco.rm.module.FileReport("null");
 })();

@@ -462,13 +462,12 @@
             <evaluator>evaluator.rm.action.download-zip</evaluator>
          </action>
 
-         <!-- File Transfer Report -->
+         <!-- File Report -->
          <action id="rm-file-report" type="javascript" label="actions.file-report" icon="../../../rm/components/documentlibrary/actions/rm-file-report">
-            <param name="function">onActionFileTransferReport</param>
-            <param name="action">fileTransferReport</param>
-            <param name="success">fileTransferReportSuccess</param>
-            <param name="failure">fileTransferReportFailure</param>
-            <!-- <param name="message">message.file-transfer-report</param> -->
+            <param name="function">onActionFileReport</param>
+            <param name="action">fileReport</param>
+            <param name="success">fileReportSuccess</param>
+            <param name="failure">fileReportFailure</param>
             <evaluator>evaluator.rm.action.file-report</evaluator>
          </action>
 
