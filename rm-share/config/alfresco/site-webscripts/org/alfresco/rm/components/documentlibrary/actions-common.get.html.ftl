@@ -12,4 +12,4 @@
 <#-- Common actions styles -->
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/components/documentlibrary/actions.css" group="documentlibrary"/>
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/modules/documentlibrary/site-folder.css" group="documentlibrary"/>
-<#-- FIXME: Add the file transfer specific CSS here -->
+<@link rel="stylesheet" type="text/css" href="${url.context}/res/rm/modules/documentlibrary/file-report.css" group="documentlibrary"/>
