@@ -96,6 +96,7 @@
             }
          }, this, true);
 
+         // FIXME
          this.widgets.treeview.subscribe("expand", function(node)
          {
             if (this.widgets.unfiledRecordsCheckbox.checked)
@@ -128,18 +129,6 @@
             templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/file-report",
             files: obj.assets // To make the DoclibSiteFolder component happy
          }, obj));
-      },
-
-      /**
-       * OK button clicked on destination select dialog
-       *
-       * @method onOK
-       * @override
-       */
-      onOK: function RMCMFT_onOK()
-      {
-         Alfresco.rm.module.FileReport.superclass.onOK.call(this);
-         throw new Error("FIXME");
       },
 
       /**

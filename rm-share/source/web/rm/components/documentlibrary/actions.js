@@ -860,30 +860,6 @@
       },
 
       /**
-       * File transport report action.
-       *
-       * @method onActionFileTransferReport
-       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
-       * @param owner {HTMLElement} The action html element
-       */
-      onActionFileTransferReport: function RDLA_onActionFileTransferReport(assets, owner)
-      {
-         this.onActionFileReport(assets, owner, "rmr:transferReport");
-      },
-
-      /**
-       * File destruction report action.
-       *
-       * @method onActionFileDestructionReport
-       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
-       * @param owner {HTMLElement} The action html element
-       */
-      onActionFileDestructionReport: function RDLA_onActionFileDestructionReport(assets, owner)
-      {
-         this.onActionFileReport(assets, owner, "rmr:destructionReport");
-      },
-
-      /**
        * Success callback for file report.
        *
        * @method fileReportSuccess
@@ -898,21 +874,11 @@
          // Hide the dialog
          this.modules.fileReport.widgets.dialog.hide();
 
-         // Get reports record name
-         var reportName = "Record Name"; // FIXME: response.json.recordName
-
          // Display success message
          Alfresco.util.PopupManager.displayMessage(
          {
-            text: this.msg("message.file-success", reportName)
-         });
-
-         // Make sure other components display the new file if present
-         YAHOO.Bubbling.fire("changeFilter",
-         {
-            filterId: "path",
-            filterData: this.modules.fileReport.currentPath,
-            highlightFile: reportName
+            // FIXME: Name?
+            text: this.msg("message.file-success")
          });
       },
 
@@ -943,6 +909,30 @@
          // Enable dialog buttons again
          this.modules.fileReport.widgets.okButton.set("disabled", false);
          this.modules.fileReport.widgets.cancelButton.set("disabled", false);
+      },
+
+      /**
+       * File transport report action.
+       *
+       * @method onActionFileTransferReport
+       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+       * @param owner {HTMLElement} The action html element
+       */
+      onActionFileTransferReport: function RDLA_onActionFileTransferReport(assets, owner)
+      {
+         this.onActionFileReport(assets, owner, "rmr:transferReport");
+      },
+
+      /**
+       * File destruction report action.
+       *
+       * @method onActionFileDestructionReport
+       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+       * @param owner {HTMLElement} The action html element
+       */
+      onActionFileDestructionReport: function RDLA_onActionFileDestructionReport(assets, owner)
+      {
+         this.onActionFileReport(assets, owner, "rmr:destructionReport");
       },
 
       /**
