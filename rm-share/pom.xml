@@ -1,0 +1,36 @@
+<!-- ****************************************************** -->
+<!-- ** Experimental Maven build - use at your own risk! ** -->
+<!-- ****************************************************** -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.alfresco</groupId>
+    <artifactId>alfresco-rm-parent</artifactId>
+    <version>2.2-SNAPSHOT</version>
+  </parent>
+  <artifactId>alfresco-rm-share</artifactId>
+  <name>Alfresco RM Share</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.alfresco</groupId>
+      <artifactId>alfresco-web-framework-commons</artifactId>
+      <version>${alfresco.base.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.alfresco</groupId>
+      <artifactId>share</artifactId>
+      <classifier>classes</classifier>
+      <version>${alfresco.base.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.alfresco</groupId>
+          <artifactId>alfresco-web-framework-commons</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+
+</project>
