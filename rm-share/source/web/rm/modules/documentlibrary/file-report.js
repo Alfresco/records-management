@@ -81,37 +81,9 @@
          Alfresco.rm.module.FileReport.superclass.onTemplateLoaded.call(this, response);
 
          this.widgets.unfiledRecordsCheckbox = Dom.get(this.id + "-unfiled-records");
-         Event.addListener(this.widgets.unfiledRecordsCheckbox, "click", function(p_event, p_obj)
-         {
-            var treeView = Dom.get(this.id + "-treeview")
-            if (this.widgets.unfiledRecordsCheckbox.checked)
-            {
-               Dom.removeClass(treeView, "file-report-treeview-enabled");
-               Dom.addClass(treeView, "file-report-treeview-disabled");
-            }
-            else
-            {
-               Dom.removeClass(treeView, "file-report-treeview-disabled");
-               Dom.addClass(treeView, "file-report-treeview-enabled");
-            }
-         }, this, true);
 
-         // FIXME
-         this.widgets.treeview.subscribe("expand", function(node)
-         {
-            if (this.widgets.unfiledRecordsCheckbox.checked)
-            {
-               return false;
-            }
-         }, this, true);
-
-         this.widgets.treeview.subscribe("collapse", function(node)
-         {
-            if (this.widgets.unfiledRecordsCheckbox.checked)
-            {
-               return false;
-            }
-         }, this, true);
+         Event.addListener(this.widgets.unfiledRecordsCheckbox, "click", this.onCheckChange, this, true);
+         Event.addListener(this.widgets.dialog.close, "click", this.onCancel, this, true);
       },
 
       /**
@@ -132,6 +104,45 @@
       },
 
       /**
+       * Check box change event handler
+       *
+       * @method onCheckChange
+       * @param e {object} DomEvent
+       * @param p_obj {object} Object passed back from addListener method
+       */
+      onCheckChange: function RMCMFT_onCheckChange(e, p_obj)
+      {
+         var treeView = Dom.get(this.id + "-treeview")
+         if (this.widgets.unfiledRecordsCheckbox.checked)
+         {
+            Dom.removeClass(treeView, "file-report-treeview-enabled");
+            Dom.addClass(treeView, "file-report-treeview-disabled");
+         }
+         else
+         {
+            Dom.removeClass(treeView, "file-report-treeview-disabled");
+            Dom.addClass(treeView, "file-report-treeview-enabled");
+         }
+      },
+
+      /**
+       * Dialog Cancel button event handler
+       *
+       * @method onCancel
+       * @param e {object} DomEvent
+       * @param p_obj {object} Object passed back from addListener method
+       */
+      onCancel: function RMCMFT_onCancel(e, p_obj)
+      {
+         this.widgets.unfiledRecordsCheckbox.checked = true;
+         var treeView = Dom.get(this.id + "-treeview")
+         Dom.removeClass(treeView, "file-report-treeview-enabled");
+         Dom.addClass(treeView, "file-report-treeview-disabled");
+
+         Alfresco.rm.module.FileReport.superclass.onCancel.call(this, e, p_obj);
+      },
+
+      /**
        * PRIVATE FUNCTIONS
        */
 
@@ -143,7 +154,26 @@
       _showDialog: function RMCMFT__showDialog()
       {
          this.widgets.okButton.set("label", this.msg("button.file"));
-         return Alfresco.rm.module.FileReport.superclass._showDialog.apply(this, arguments);
+
+         var dialog = Alfresco.rm.module.FileReport.superclass._showDialog.apply(this, arguments);
+
+         this.widgets.treeview.subscribe("expand", function(node)
+         {
+            if (this.widgets.unfiledRecordsCheckbox.checked)
+            {
+               return false;
+            }
+         }, this, true);
+
+         this.widgets.treeview.subscribe("collapse", function(node)
+         {
+            if (this.widgets.unfiledRecordsCheckbox.checked)
+            {
+               return false;
+            }
+         }, this, true);
+
+         return dialog;
       },
 
       /**

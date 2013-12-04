@@ -839,7 +839,9 @@
             siteId: this.options.siteId,
             containerId: this.options.containerId,
             path: this.currentPath,
-            assets: assets
+            assets: assets,
+            owner: owner,
+            type: type
          }).showDialog();
 
          var me = this;
@@ -851,9 +853,9 @@
                destination = this.selectedNode.data.nodeRef;
             }
 
-            me.onActionRecordsManagementRepoAction(assets, owner,
+            me.onActionRecordsManagementRepoAction(this.options.assets, this.options.owner,
             {
-               "reportType": type,
+               "reportType": this.options.type,
                "destination": destination
             });
          };
@@ -874,11 +876,13 @@
          // Hide the dialog
          this.modules.fileReport.widgets.dialog.hide();
 
+         // Record name
+         var recordName = data.json.results[data.config.dataObj.nodeRef];
+
          // Display success message
          Alfresco.util.PopupManager.displayMessage(
          {
-            // FIXME: Name?
-            text: this.msg("message.file-success")
+            text: this.msg("message.file-success", recordName)
          });
       },
 
