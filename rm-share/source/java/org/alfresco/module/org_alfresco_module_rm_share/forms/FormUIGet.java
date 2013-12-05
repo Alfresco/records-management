@@ -53,5 +53,18 @@ public class FormUIGet extends org.alfresco.web.scripts.forms.FormUIGet
         
         return result;
     }
+    
+    // TODO .. we will need to override this so that we can add new set's automatically!
+    //      .. atm we have to hard code the set into the form definition
+    
+//    @Override
+//    protected void processServerFields(ModelContext context)
+//    {
+//        super.processServerFields(context);
+//        
+//        // try adding your custom set's here
+//        Set mySet = new Set("mysetid", "My Set");
+//        context.getStructure().addSet(mySet);
+//    }
 
 }
