@@ -834,11 +834,17 @@
             this.modules.fileReport = new Alfresco.rm.module.FileReport(this.id + "-fileReport");
          }
 
+         var selectedNodePath = "";
+         if (this.modules.fileReport.selectedNode)
+         {
+            selectedNodePath = this.modules.fileReport.selectedNode.data.path;
+         }
+
          this.modules.fileReport.setOptions(
          {
             siteId: this.options.siteId,
             containerId: this.options.containerId,
-            path: this.currentPath,
+            path: selectedNodePath,
             assets: assets,
             owner: owner,
             type: type
