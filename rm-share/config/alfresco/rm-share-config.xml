@@ -468,7 +468,7 @@
             <param name="action">transferReport</param>
             <param name="success">fileReportSuccess</param>
             <param name="failure">fileReportFailure</param>
-            <evaluator>evaluator.rm.action.file-report</evaluator>
+            <evaluator>evaluator.rm.action.fileTransferReport</evaluator>
          </action>
 
          <!-- Transfer Complete -->

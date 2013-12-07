@@ -266,9 +266,6 @@
    <bean id="evaluator.rm.action.download-zip" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="downloadZip" />
    </bean>
-   <bean id="evaluator.rm.action.file-report" parent="evaluator.rm.common.actionEvaluator">
-      <property name="action" value="fileReport" />
-   </bean>
    <bean id="evaluator.rm.action.transfer-complete" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="transferComplete" />
    </bean>
@@ -298,6 +295,9 @@
    </bean>
    <bean id="evaluator.rm.action.endRetention" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="endRetention" />
+   </bean>
+   <bean id="evaluator.rm.action.fileTransferReport" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="fileTransferReport" />
    </bean>
 
    <!--                          -->
