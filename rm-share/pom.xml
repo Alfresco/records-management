@@ -1,36 +1,74 @@
-<!-- ****************************************************** -->
-<!-- ** Experimental Maven build - use at your own risk! ** -->
-<!-- ****************************************************** -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.alfresco</groupId>
-    <artifactId>alfresco-rm-parent</artifactId>
-    <version>2.2-SNAPSHOT</version>
-  </parent>
-  <artifactId>alfresco-rm-share</artifactId>
-  <name>Alfresco RM Share</name>
-
-  <dependencies>
-    <dependency>
+<?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <artifactId>alfresco-rm-parent</artifactId>
       <groupId>org.alfresco</groupId>
-      <artifactId>alfresco-web-framework-commons</artifactId>
-      <version>${alfresco.base.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.alfresco</groupId>
-      <artifactId>share</artifactId>
-      <classifier>classes</classifier>
-      <version>${alfresco.base.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.alfresco</groupId>
-          <artifactId>alfresco-web-framework-commons</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-  </dependencies>
-
+      <version>2.2-SNAPSHOT</version>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <artifactId>alfresco-rm-share</artifactId>
+   <name>Alfresco RM Share</name>
+   <properties>
+      <app.filtering.enabled>true</app.filtering.enabled>
+      <maven.alfresco.version>1.1.1</maven.alfresco.version>
+   </properties>
+   <build>
+      <resources>
+         <resource>
+            <directory>source/web</directory>
+            <targetPath>../${project.build.finalName}/web</targetPath>
+            <filtering>${app.filtering.enabled}</filtering>
+         </resource>
+         <resource>
+            <directory>config</directory>
+            <targetPath>../${project.build.finalName}/config</targetPath>
+            <filtering>${app.filtering.enabled}</filtering>
+         </resource>
+         <resource>
+            <directory>config/alfresco/module/org_alfresco_module_rm_share</directory>
+            <targetPath>../${project.build.finalName}</targetPath>
+            <filtering>${app.filtering.enabled}</filtering>
+         </resource>
+      </resources>
+      <plugins>
+         <plugin>
+            <groupId>org.alfresco.maven.plugin</groupId>
+            <artifactId>alfresco-maven-plugin</artifactId>
+            <version>${maven.alfresco.version}</version>
+            <extensions>true</extensions>
+         </plugin>
+      </plugins>
+   </build>
+   <dependencies>
+      <dependency>
+         <groupId>org.alfresco</groupId>
+         <artifactId>alfresco-web-framework-commons</artifactId>
+         <version>${alfresco.base.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.alfresco</groupId>
+         <artifactId>share</artifactId>
+         <version>${alfresco.base.version}</version>
+         <classifier>classes</classifier>
+         <exclusions>
+            <exclusion>
+               <artifactId>alfresco-web-framework-commons</artifactId>
+               <groupId>org.alfresco</groupId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>org.alfresco</groupId>
+         <artifactId>webdrone</artifactId>
+         <version>2.0</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.alfresco</groupId>
+         <artifactId>share-po</artifactId>
+         <version>2.0</version>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
 </project>
