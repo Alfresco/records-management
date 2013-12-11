@@ -10,6 +10,13 @@
    <artifactId>alfresco-rm-share</artifactId>
    <name>Alfresco RM Share</name>
    <build>
+      <sourceDirectory>source/java</sourceDirectory>
+      <testSourceDirectory>test/java</testSourceDirectory>
+      <testResources>
+         <testResource>
+            <directory>test/resources</directory>
+         </testResource>
+      </testResources>
       <resources>
          <resource>
             <directory>source/web</directory>
@@ -92,7 +99,7 @@
       <dependency>
          <groupId>org.alfresco</groupId>
          <artifactId>share-po</artifactId>
-         <version>2.0</version>
+         <version>2.1-SNAPSHOT</version>
          <scope>test</scope>
       </dependency>
    </dependencies>
