@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>RM Folder Details Actions</shortname>
+  <description>Folder Details Actions Component</description>
+  <url>/rm/components/folder-details/folder-actions</url>
+</webscript>

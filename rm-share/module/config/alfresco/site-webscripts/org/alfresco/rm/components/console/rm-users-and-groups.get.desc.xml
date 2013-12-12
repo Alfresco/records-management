@@ -1,0 +1,6 @@
+<webscript>
+  <shortname>Admin Console Record Management Users and Groups</shortname>
+  <description>Administration Console - Record Management Tool Users and Groups</description>
+  <url>/rm/components/console/rm-users-and-groups</url>
+  <family>rm-console</family>
+</webscript>

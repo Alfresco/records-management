@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Add Record Metadata dialog</shortname>
+  <description>Add Record Metadata module for Records Management Document Library</description>
+  <url>/rm/modules/documentlibrary/add-record-metadata</url>
+</webscript>

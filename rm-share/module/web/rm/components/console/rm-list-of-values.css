@@ -1,0 +1,206 @@
+.rm-list-of-values
+{
+   color:#000000;
+   margin:16px 10px 10px;
+}
+
+.rm-list-of-values .rm-list-of-values-list
+{
+   border: 1px solid #D7D7D7;
+}
+
+.rm-list-of-values .buttons,
+.rm-list-of-values .title
+{
+   margin-top: 0.5em;
+   line-height: 2em;
+}
+
+.rm-list-of-values .title
+{
+   color:#515D6B;
+   font-size:123.1%;
+   font-weight:bold;
+   padding-bottom:0.5em;
+}
+
+.rm-list-of-values .buttons
+{
+   text-align: right;
+}
+
+.rm-list-of-values .values-list,
+.rm-list-of-values .access-list
+{
+   height: 30em;
+   overflow-y: auto;
+   overflow-x: hidden;
+   clear: both;
+}
+
+.rm-list-of-values .list-header-title
+{
+   padding-left: 1em;
+   font-weight: bold;
+}
+
+.rm-list-of-values .list-header-input
+{
+   float: right;
+}
+
+.rm-list-of-values .list-header-button
+{
+   float: right;
+   height: 1em;
+   line-height: 1em;
+   padding-top: 0.4em;
+   padding-left: 0.5em;
+   padding-right: 0.8em;
+}
+
+.rm-list-of-values .list-header .yui-u.first
+{
+   text-align: left;
+   font-weight: bold;
+   line-height: 2.8em;
+}
+
+.rm-list-of-values .list-header .yui-gf,
+.rm-list-of-values .list-body .yui-u
+{
+   border: 1px solid #D7D7D7;
+   float: left;
+}
+
+.rm-list-of-values .list-header .yui-gf.first,
+.rm-list-of-values .list-body .yui-u.first
+{
+   border-right: none;
+}
+
+.rm-list-of-values .list-header .yui-gf
+{
+   background-color: #DEE8ED;
+   border-bottom: none;
+   height: 2.8em;
+   line-height: 2.8em;
+}
+
+.rm-list-of-values .yui-dt table
+{
+   border: medium none;
+   width: 100%;
+}
+
+.rm-list-of-values .yui-dt table thead
+{
+   display: none;
+}
+
+.rm-list-of-values .yui-dt-body
+{
+   cursor:pointer;
+}
+
+.rm-list-of-values tr.yui-dt-odd
+{
+   background-color:#FFFFFF;
+}
+
+.rm-list-of-values tr.yui-dt-selected td
+{
+   background-color:#dceaf4;
+   color: #000000;
+}
+
+.rm-list-of-values .yui-dt-col-accessicon
+{
+   width: 3em;
+}
+
+.rm-list-of-values .yui-dt table .yui-dt-col-accessicon div
+{
+   background-position: center center;
+   background-repeat: no-repeat;
+   margin-bottom: 0.25em;
+   margin-top: 0.25em;
+   margin-left: 1em;
+}
+
+.rm-list-of-values .yui-dt table .yui-dt-col-accessicon div.authority-user
+{
+   background-image: url(../../../components/images/user-16.png);
+}
+
+.rm-list-of-values .yui-dt table .yui-dt-col-accessicon div.authority-group
+{
+   background-image: url(../../../components/images/group-16.png);
+}
+
+.rm-list-of-values .yui-dt table .yui-dt-col-actions
+{
+   width: 20em;
+   text-align: right;
+}
+
+.rm-list-of-values .yui-dt table td
+{
+   border: medium none;
+   border-bottom: 1px dashed #D7D7D7;
+}
+
+.rm-list-of-values .yui-dt table td.yui-dt-empty
+{
+   border: none;
+}
+
+.rm-list-of-values .rm-list-of-values-list.yui-dt table .yui-dt-last td
+{
+   border-bottom: medium none;
+}
+
+.rm-list-of-values .main-buttons
+{
+   text-align: center;
+}
+
+.rm-list-of-values.yui-panel
+{
+   margin: 0;
+}
+
+.rm-list-of-values hr
+{
+   width:98.5%;
+}
+
+/* Group picker */
+
+.rm-list-of-values.authority-picker
+{
+   width: 41em;
+}
+
+.rm-list-of-values.authority-picker .authority-finder.list
+{
+   margin-bottom: 0;
+   margin-top: 0;
+   padding-bottom: 1em;
+   padding-top: 0.3em;
+}
+
+.rm-list-of-values.authority-picker .authority-finder .title
+{
+   display: none;
+}
+
+.rm-list-of-values.authority-picker .bd
+{
+   padding: 1em;
+}
+
+.bd.rm-search-body
+{
+   padding: 1px !important;
+}

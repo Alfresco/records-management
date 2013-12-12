@@ -1,0 +1,24 @@
+.file-report-unfiled-records
+{
+   font-size: 123.1%;
+   font-weight: normal;
+   padding: 10px 0 0 5px;
+}
+
+.file-report-unfiled-records hr
+{
+   background-color: #EEEEEE;
+   height: 1px !important;
+   margin: 15px 0 10px 50px;
+   width: 80%;
+}
+
+.file-report-treeview-disabled
+{
+   opacity: 0.2;
+}
+
+.file-report-treeview-enabled
+{
+   opacity: 1;
+}

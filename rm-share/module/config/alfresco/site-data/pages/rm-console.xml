@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<page>
+   <title>Records Management Console</title>
+   <title-id>page.rmConsole.title</title-id>
+   <description>Records Management Administration Console</description>
+   <description-id>page.rmConsole.description</description-id>
+   <template-instance>console</template-instance>
+   <authentication>user</authentication>
+   <components>
+
+      <!-- Title -->
+      <component>
+         <region-id>title</region-id>
+         <url>/rm/components/title/console</url>
+      </component>
+
+      <!-- Tools -->
+      <component>
+         <region-id>tools</region-id>
+         <url>/components/console/tools</url>
+      </component>
+
+   </components>
+</page>

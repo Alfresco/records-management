@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Export dialog</shortname>
+  <description>Export module for Records Management Document Library</description>
+  <url>/rm/modules/documentlibrary/export</url>
+</webscript>

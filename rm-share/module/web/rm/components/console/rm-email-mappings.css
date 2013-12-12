@@ -1,0 +1,67 @@
+.rm-email-mappings
+{
+   margin:1em;
+}
+
+.rm-email-mappings h2
+{
+   margin:1em 0;
+}
+
+.rm-email-mappings .rm-email-mappings-list 
+{
+   background-color:#fff;
+   border:1px solid #D7D7D7;
+   margin-top:1em;
+}
+
+.rm-email-mappings .rm-email-mappings-list li
+{
+   padding:0.5em 1em 1em;
+   display:block;
+   text-align:right;
+   clear:both;
+   border-bottom:1px dashed #D7D7D7;
+}
+
+.rm-email-mappings .rm-email-mappings-list li p
+{
+   float:left;
+   display:inline;
+}
+
+.rm-email-mappings .yuimenubaritemlabel, 
+.rm-email-mappings .yuimenuitemlabel
+{
+   font-size: 100%;
+   color: #000 !important;
+}
+
+.rm-email-mappings .yuimenuitemlabel-selected
+{
+   background-color: #6CA5CE
+}
+
+.rm-email-mappings .emailProperty-menu
+{
+   visibility:hidden;
+}
+
+.rm-email-mappings .thin-button
+{
+   height: 1.7em !important;
+   min-height: 1.7em !important;
+}
+
+#email-menu-container,
+#rm-menu-container
+{
+   position:relative;
+   display:inline;
+}
+
+#emailProperty-text,
+#rmProperty-text
+{
+   vertical-align:bottom;
+}

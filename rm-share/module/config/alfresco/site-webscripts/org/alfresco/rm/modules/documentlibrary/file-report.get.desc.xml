@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>file-report</shortname>
+  <description>File Report Module for Records Management</description>
+  <url>/rm/modules/documentlibrary/file-report</url>
+</webscript>

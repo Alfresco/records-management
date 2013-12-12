@@ -1,0 +1,318 @@
+.rm-audit
+{
+   padding: 1em;
+}
+
+.rm-audit h2
+{
+   font-size: 120%;
+}
+
+.rm-audit-log .yui-u
+{
+   margin: 0;
+   float: none;
+}
+
+.rm-audit-log
+{
+   margin-top: 1em;
+   position: relative;
+}
+
+.rm-audit-log .yui-dt table
+{
+   width: 100%;
+}
+
+.rm-audit-log .yui-dt caption
+{
+   text-align: left;
+   font: 100% normal Arial,sans-serif;
+}
+
+.rm-audit-log .first
+{
+   text-align: right;
+}
+
+.rm-audit-info p
+{
+   margin-top: 0.5em;
+   padding: 0;
+}
+
+.rm-auditDT table
+{
+   width: 100%;
+}
+
+.rm-audit-peoplefinder
+{
+   display: none;
+   position: absolute;
+   right: 0;
+   top: 5em;
+   width: 30em;
+   z-index: 100;
+}
+
+.rm-audit-peoplefinder.active
+{
+   display: block;
+}
+
+.rm-audit-peoplefinder .people-finder,
+.rm-audit-peoplefinder .finder-wrapper
+{
+   margin-top: 0;
+}
+
+.rm-audit-peoplefinder input
+{
+   width: auto;
+}
+
+.personFilter
+{
+   display: inline;
+}
+
+.personFilterRemove
+{
+   vertical-align: middle;
+   margin: 0 5px;
+   display: none;
+}
+
+.personFilter.active .personFilterRemove
+{
+   display: inline;
+}
+
+.personFilterRemove img
+{
+   vertical-align: middle;
+}
+
+.rm-audit .yui-gb .yui-u
+{
+   text-align: left;
+   width: 22%
+}
+
+.rm-audit .yuimenubaritemlabel, 
+.rm-audit .yuimenuitemlabel
+{
+   color: #000 !important;
+}
+
+.filters
+{
+   border: 1px solid #444444;
+   height: 10em;
+   margin-top: 1em;
+   z-index: 1;
+   position: relative;
+}
+
+.filters .yui-u.first
+{
+   margin-right: 0;
+}
+
+.filters select,
+.filters input
+{
+   width: 77%;
+}
+
+.filters .hd,
+.filters .bd
+{
+   margin: 0.5em;
+}
+
+.filter label
+{
+   display: block;
+   font-weight: bold;
+}
+
+.filter
+{
+   position: relative;
+   height: 10em;
+   align: left;
+}
+
+.rm-auditDT
+{
+   position: relative;
+   left: 0;
+   width: 100%;
+}
+
+/* audit log popup page */
+
+.rm-audit-popup-log .rm-audit-info
+{
+   margin: 1em 0;
+   clear: both;
+}
+
+#audit-popup-log h1
+{
+   margin: 0.5em 0;
+   float: left;
+}
+
+#audit-popup-log .label
+{
+   margin-right: 5px;
+   font-weight: bold;
+}
+
+#audit-popup-log .value
+{
+   margin-right: 40px;
+}
+
+#audit-popup-log .rm-audit-info
+{
+   background-color: #efefef;
+   padding: 10px;
+   margin-bottom: 4px;
+}
+
+#audit-popup-log .rm-audit-entry
+{
+   border: 1px solid #bbb;
+   margin-top: 15px;
+}
+
+#audit-popup-log .rm-audit-entry-header
+{
+   background-color: #bbb;
+   padding: 8px;
+}
+
+#audit-popup-log .rm-audit-entry-node
+{
+   padding: 10px;
+}
+
+#audit-popup-log .changed-values-table
+{
+   margin-left: 6px;
+   margin-bottom: 2px;
+   width: 99%;
+}
+
+#audit-popup-log .changed-values-table th
+{
+   text-align: left;
+   background-color: #eee;
+   padding: 4px;
+}
+
+#audit-popup-log .changed-values-table td
+{
+   width: 33%;
+   padding: 4px;
+   border-top: 1px solid #eee;
+}
+
+.rm-audit-popup-log .rm-auditActions
+{
+   float: right;
+   margin-top: 1em;
+}
+
+.datepicker
+{
+   display: none;
+   position: absolute;
+   z-index: 1000;
+   left: 0;
+}
+
+.datepicker-icon
+{
+   vertical-align: top;
+   cursor: pointer;
+   margin-bottom: 1em;
+}
+
+.filters .yuimenu .hd,
+.filters .yuimenu .bd
+{
+   margin: 0;
+}
+
+.rm-audit-details-button
+{
+   float: right;
+}
+
+.rm-audit-apply-filter
+{
+   height: 4em;
+   margin-top: 0.5em;
+}
+
+/* dialog */
+
+#auditEntry
+{
+   width: 40em;
+}
+
+#auditEntry div.details
+{
+}
+
+#auditEntry .bd
+{
+   max-height: 25em;
+   overflow-y: auto;
+}
+
+#auditEntry .bd table
+{
+   margin: 0.5em 1em;
+   width: 93%;
+}
+
+#auditEntry .bd table th
+{
+   width: 6em;
+   font-weight: bold;
+}
+
+#auditEntry tr.odd
+{
+   background-color: #EDF5FF;
+}
+
+#auditEntry table#auditEntry-changedValues td
+{
+   height: 1em;
+}
+
+.auditActions
+{
+   float: right;
+   margin-top: 10px;
+}
+
+body { font-family: arial,verdana; font-size: 81%; color: #333; }
+.label { margin-right: 5px; font-weight: bold; }
+.value { margin-right: 40px; }
+.audit-info { background-color: #efefef; padding: 10px; margin-bottom: 4px; }
+.audit-entry { border: 1px solid #bbb; margin-top: 15px; }
+.audit-entry-header { background-color: #bbb; padding: 8px; }
+.audit-entry-node { padding: 10px; }
+.changed-values-table { margin-left: 6px; margin-bottom: 2px;width: 99%; }
+.changed-values-table th { text-align: left; background-color: #eee; padding: 4px; }
+.changed-values-table td { width: 33%; padding: 4px; border-top: 1px solid #eee; }

@@ -1,0 +1,56 @@
+<rule-config type="action">
+
+   <component>Alfresco.RuleConfigActionCustom</component>
+
+   <config-definitions webscript="/api/rm/rm-actiondefinitions"/>
+
+   <constraints webscript="/api/actionConstraints"/>
+
+   <menu>
+      <group>
+         <item id="select"/>
+      </group>
+      <group>
+         <action name="declareRecord"/>
+         <action name="undeclareRecord"/>
+      </group>
+      <group>
+         <action name="openRecordFolder"/>
+         <action name="closeRecordFolder"/>
+      </group>
+      <group>
+         <action name="freeze"/>
+         <action name="unfreeze"/>
+      </group>
+      <group>      	 
+         <action name="fileTo"/>
+         <action name="reject"/>
+         <action name="requestInfo"/>
+      </group>
+      <group>      	 
+         <action name="completeEvent"/>
+         <action name="addRecordTypes"/>
+      </group>
+      <group>
+         
+         <action name="executeScript"/>
+         <action name="sendEmail"/>
+         <action name="setPropertyValue"/>
+      </group>
+      <group>
+         <action name="*"/>
+      </group>
+   </menu>
+
+   <customise>
+      <item id="select">Select</item>
+      <action name="freeze">Freeze</action>
+      <action name="fileTo">FileTo</action>
+      <action name="reject">Reject</action>
+      <action name="requestInfo">RequestInfo</action>
+      <action name="sendEmail">Mail</action>
+      <action name="setPropertyValue">SetPropertyValue</action>
+      <action name="addRecordTypes">AddRecordTypes</action>
+   </customise>
+
+</rule-config>
