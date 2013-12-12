@@ -19,19 +19,8 @@
       </testResources>
       <resources>
          <resource>
-            <directory>source/web</directory>
-            <targetPath>../${project.build.finalName}/web</targetPath>
-            <filtering>${app.filtering.enabled}</filtering>
-         </resource>
-         <resource>
-            <directory>config</directory>
-            <targetPath>../${project.build.finalName}/config</targetPath>
-            <filtering>${app.filtering.enabled}</filtering>
-         </resource>
-         <resource>
-            <directory>config/alfresco/module/org_alfresco_module_rm_share</directory>
+            <directory>module</directory>
             <targetPath>../${project.build.finalName}</targetPath>
-            <filtering>${app.filtering.enabled}</filtering>
          </resource>
       </resources>
       <plugins>

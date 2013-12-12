@@ -1,1 +1,0 @@
-<#include "/org/alfresco/components/rules/config/rule-config-condition.get.html.ftl" />
