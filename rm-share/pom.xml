@@ -9,6 +9,9 @@
    <modelVersion>4.0.0</modelVersion>
    <artifactId>alfresco-rm-share</artifactId>
    <name>Alfresco RM Share</name>
+   <properties>
+      <spring.version>3.1.1.RELEASE</spring.version>
+   </properties>
    <build>
       <sourceDirectory>source/java</sourceDirectory>
       <testSourceDirectory>test/java</testSourceDirectory>
@@ -104,11 +107,6 @@
          <type>war</type>
       </dependency>
       <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-beans</artifactId>
-         <version>3.1.1.RELEASE</version>
-      </dependency>
-      <dependency>
          <groupId>org.alfresco</groupId>
          <artifactId>share-po</artifactId>
          <version>2.1-SNAPSHOT</version>
@@ -120,6 +118,51 @@
          <version>2.1-SNAPSHOT</version>
          <type>test-jar</type>
          <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-beans</artifactId>
+         <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-aop</artifactId>
+         <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-expression</artifactId>
+         <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-context-support</artifactId>
+         <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-web</artifactId>
+         <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-webmvc</artifactId>
+         <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-orm</artifactId>
+         <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-jdbc</artifactId>
+         <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-tx</artifactId>
+         <version>${spring.version}</version>
       </dependency>
    </dependencies>
 </project>
