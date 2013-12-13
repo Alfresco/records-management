@@ -53,6 +53,30 @@
                </overlays>
             </configuration>
          </plugin>
+         <plugin>
+            <groupId>net.alchim31.maven</groupId>
+            <artifactId>yuicompressor-maven-plugin</artifactId>
+            <version>1.3.2</version>
+            <executions>
+               <execution>
+                  <id>minimize-slingshot-javascript</id>
+                  <goals>
+                     <goal>compress</goal>
+                  </goals>
+                  <phase>prepare-package</phase>
+               </execution>
+            </executions>
+            <configuration>
+               <jswarn>false</jswarn>
+               <encoding>UTF-8</encoding>
+               <includes>
+                  <include>**/*.js</include>
+               </includes>
+               <sourceDirectory>${project.build.directory}/${project.build.finalName}/web</sourceDirectory>
+               <outputDirectory>${project.build.directory}/${project.build.finalName}/web</outputDirectory>
+               <excludeResources>true</excludeResources>
+            </configuration>
+         </plugin>
       </plugins>
    </build>
    <dependencies>
