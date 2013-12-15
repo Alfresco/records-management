@@ -22,11 +22,46 @@
       </testResources>
       <resources>
          <resource>
-            <directory>module</directory>
-            <targetPath>../${project.build.finalName}</targetPath>
+            <directory>config</directory>
+         </resource>
+         <resource>
+            <directory>source/web</directory>
          </resource>
       </resources>
       <plugins>
+         <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+               <execution>
+                  <phase>test</phase>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+                  <configuration>
+                     <tasks>
+                        <copy todir="${project.build.directory}/${project.build.finalName}/config">
+                           <fileset dir="${basedir}/config"/>
+                        </copy>
+                        <copy todir="${project.build.directory}/${project.build.finalName}/web">
+                           <fileset dir="${basedir}/source/web"/>
+                        </copy>
+                        <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/file-mapping.properties"
+                              todir="${project.build.directory}/${project.build.finalName}"/>
+                        <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/module.properties"
+                              todir="${project.build.directory}/${project.build.finalName}"/>
+                     </tasks>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <includes>
+                  <include>**/AllTestSuite.class</include>
+               </includes>
+            </configuration>
+         </plugin>
          <plugin>
             <groupId>org.alfresco.maven.plugin</groupId>
             <artifactId>alfresco-maven-plugin</artifactId>
@@ -163,6 +198,11 @@
          <groupId>org.springframework</groupId>
          <artifactId>spring-tx</artifactId>
          <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>xml-apis</groupId>
+         <artifactId>xml-apis</artifactId>
+         <version>1.4.01</version>
       </dependency>
    </dependencies>
 </project>
