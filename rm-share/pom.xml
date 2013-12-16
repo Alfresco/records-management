@@ -1,4 +1,5 @@
-<?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0"
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <parent>
@@ -70,8 +71,7 @@
             <configuration>
                <backup>true</backup>
                <ampLocation>${project.build.directory}/${project.build.finalName}.amp</ampLocation>
-               <!-- FIXME -->
-               <warLocation>${project.build.directory}/../../../software/tomcat-app/webapps/share.war</warLocation>
+               <warLocation>${project.build.directory}/share.war</warLocation>
             </configuration>
          </plugin>
          <plugin>
