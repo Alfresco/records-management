@@ -3,4 +3,6 @@
    <property name="artifactId" value="share"/>
    <property name="tomcat" value="tomcat-app" />
    <import file="../build.xml"/>
+
+   <target name="prepareEnv" depends="updateClassPath" description="" />
 </project>
