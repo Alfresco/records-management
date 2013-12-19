@@ -24,9 +24,11 @@
       <resources>
          <resource>
             <directory>config</directory>
+            <targetPath>../${project.build.finalName}/config</targetPath>
          </resource>
          <resource>
             <directory>source/web</directory>
+            <targetPath>../${project.build.finalName}/web</targetPath>
          </resource>
       </resources>
       <plugins>
@@ -40,12 +42,6 @@
                   </goals>
                   <configuration>
                      <tasks>
-                        <copy todir="${project.build.directory}/${project.build.finalName}/config">
-                           <fileset dir="${basedir}/config"/>
-                        </copy>
-                        <copy todir="${project.build.directory}/${project.build.finalName}/web">
-                           <fileset dir="${basedir}/source/web"/>
-                        </copy>
                         <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/file-mapping.properties"
                               todir="${project.build.directory}/${project.build.finalName}"/>
                         <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/module.properties"
@@ -68,6 +64,13 @@
             <artifactId>alfresco-maven-plugin</artifactId>
             <version>${maven.alfresco.version}</version>
             <extensions>true</extensions>
+            <executions>
+               <execution>
+                  <goals>
+                     <goal>amp</goal>
+                  </goals>
+               </execution>
+            </executions>
             <configuration>
                <backup>true</backup>
                <ampLocation>${project.build.directory}/${project.build.finalName}.amp</ampLocation>
