@@ -10,8 +10,11 @@
    <modelVersion>4.0.0</modelVersion>
    <artifactId>alfresco-rm-share-test</artifactId>
    <name>Alfresco RM Share</name>
+   <packaging>amp</packaging>
    <properties>
       <spring.version>3.1.1.RELEASE</spring.version>
+      <app.id>share</app.id>
+      <artifact.id>alfresco-rm-share</artifact.id>
    </properties>
    <build>
       <sourceDirectory>source/java</sourceDirectory>
@@ -57,50 +60,6 @@
                   </configuration>
                </execution>
             </executions>
-         </plugin>
-         <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-               <includes>
-                  <include>**/AllTestSuite.class</include>
-               </includes>
-            </configuration>
-         </plugin>
-         <plugin>
-            <groupId>org.alfresco.maven.plugin</groupId>
-            <artifactId>alfresco-maven-plugin</artifactId>
-            <version>${maven.alfresco.version}</version>
-            <extensions>true</extensions>
-            <executions>
-               <execution>
-                  <goals>
-                     <goal>amp</goal>
-                  </goals>
-               </execution>
-            </executions>
-            <configuration>
-               <backup>true</backup>
-               <ampLocation>${project.build.directory}/${project.build.finalName}.amp</ampLocation>
-               <warLocation>${project.build.directory}/share.war</warLocation>
-               <classifier>amp</classifier>
-            </configuration>
-         </plugin>
-         <plugin>
-            <artifactId>maven-war-plugin</artifactId>
-            <configuration>
-               <overlays>
-                  <overlay>
-                     <groupId>org.alfresco</groupId>
-                     <artifactId>share</artifactId>
-                     <type>war</type>
-                  </overlay>
-                  <overlay>
-                     <groupId>org.alfresco</groupId>
-                     <artifactId>alfresco-rm-share</artifactId>
-                     <type>amp</type>
-                  </overlay>
-               </overlays>
-            </configuration>
          </plugin>
          <plugin>
             <groupId>net.alchim31.maven</groupId>
