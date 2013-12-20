@@ -12,18 +12,11 @@
    <name>Alfresco RM Share</name>
    <packaging>amp</packaging>
    <properties>
-      <spring.version>3.1.1.RELEASE</spring.version>
-      <app.id>share</app.id>
-      <artifact.id>alfresco-rm-share</artifact.id>
+      <dependency.spring.version>3.1.1.RELEASE</dependency.spring.version>
+      <dependency.share.po.version>2.1-SNAPSHOT</dependency.share.po.version>
+      <webapp.id>share</webapp.id>
    </properties>
    <build>
-      <sourceDirectory>source/java</sourceDirectory>
-      <testSourceDirectory>test/java</testSourceDirectory>
-      <testResources>
-         <testResource>
-            <directory>test/resources</directory>
-         </testResource>
-      </testResources>
       <resources>
          <resource>
             <directory>config</directory>
@@ -114,60 +107,60 @@
       <dependency>
          <groupId>org.alfresco</groupId>
          <artifactId>share-po</artifactId>
-         <version>2.1-SNAPSHOT</version>
+         <version>${dependency.share.po.version}</version>
          <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.alfresco</groupId>
          <artifactId>share-po</artifactId>
-         <version>2.1-SNAPSHOT</version>
+         <version>${dependency.share.po.version}</version>
          <type>test-jar</type>
          <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-beans</artifactId>
-         <version>${spring.version}</version>
+         <version>${dependency.spring.version}</version>
       </dependency>
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-aop</artifactId>
-         <version>${spring.version}</version>
+         <version>${dependency.spring.version}</version>
       </dependency>
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-expression</artifactId>
-         <version>${spring.version}</version>
+         <version>${dependency.spring.version}</version>
       </dependency>
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-context-support</artifactId>
-         <version>${spring.version}</version>
+         <version>${dependency.spring.version}</version>
       </dependency>
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-web</artifactId>
-         <version>${spring.version}</version>
+         <version>${dependency.spring.version}</version>
       </dependency>
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-webmvc</artifactId>
-         <version>${spring.version}</version>
+         <version>${dependency.spring.version}</version>
       </dependency>
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-orm</artifactId>
-         <version>${spring.version}</version>
+         <version>${dependency.spring.version}</version>
       </dependency>
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-jdbc</artifactId>
-         <version>${spring.version}</version>
+         <version>${dependency.spring.version}</version>
       </dependency>
       <dependency>
          <groupId>org.springframework</groupId>
          <artifactId>spring-tx</artifactId>
-         <version>${spring.version}</version>
+         <version>${dependency.spring.version}</version>
       </dependency>
       <dependency>
          <groupId>xml-apis</groupId>
