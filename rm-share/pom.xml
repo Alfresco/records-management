@@ -31,28 +31,6 @@
       </resources>
       <plugins>
          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-               <execution>
-                  <id>attach-distribution</id>
-                  <phase>package</phase>
-                  <goals>
-                     <goal>attach-artifact</goal>
-                  </goals>
-                  <configuration>
-                     <artifacts>
-                        <artifact>
-                           <file>${project.build.directory}/${project.build.finalName}.amp</file>
-                           <type>amp</type>
-                           <classifier>amp</classifier>
-                        </artifact>
-                     </artifacts>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
-         <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
                <execution>
@@ -104,6 +82,7 @@
                <backup>true</backup>
                <ampLocation>${project.build.directory}/${project.build.finalName}.amp</ampLocation>
                <warLocation>${project.build.directory}/share.war</warLocation>
+               <classifier>amp</classifier>
             </configuration>
          </plugin>
          <plugin>
