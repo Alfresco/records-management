@@ -45,6 +45,7 @@
                         <artifact>
                            <file>${project.build.directory}/${project.build.finalName}.amp</file>
                            <type>amp</type>
+                           <classifier>amp</classifier>
                         </artifact>
                      </artifacts>
                   </configuration>
