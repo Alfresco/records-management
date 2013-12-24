@@ -17,14 +17,6 @@
       <webapp.id>share</webapp.id>
    </properties>
    <build>
-      <resources>
-         <resource>
-            <directory>config</directory>
-         </resource>
-         <resource>
-            <directory>source/web</directory>
-         </resource>
-      </resources>
       <plugins>
          <plugin>
             <groupId>org.alfresco.maven.plugin</groupId>
@@ -50,11 +42,8 @@
                         <move todir="${project.build.directory}/${project.build.finalName}/config/alfresco">
                            <fileset dir="${project.build.outputDirectory}/alfresco"/>
                         </move>
-                        <move todir="${project.build.directory}/${project.build.finalName}/web/components">
-                           <fileset dir="${project.build.outputDirectory}/components"/>
-                        </move>
-                        <move todir="${project.build.directory}/${project.build.finalName}/web/rm">
-                           <fileset dir="${project.build.outputDirectory}/rm"/>
+                        <move todir="${project.build.directory}/${project.build.finalName}/web">
+                           <fileset dir="${project.build.outputDirectory}/web"/>
                         </move>
                         <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/file-mapping.properties"
                               todir="${project.build.directory}/${project.build.finalName}"/>
