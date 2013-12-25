@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <project name="rm-share" basedir=".">
-   <property name="artifactId" value="share"/>
-   <property name="tomcat" value="tomcat-app" />
    <import file="../build.xml"/>
 
-   <target name="prepareEnv" depends="updateClassPath" description="" />
+   <property file="../build.local.properties" />
+   <property file="../build.properties" />
+   <property file="build.local.properties" />
+   <property file="build.properties" />
 </project>
