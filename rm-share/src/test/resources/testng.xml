@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="TestNG AllTestSuite" verbose="1" >
+   <test name="AllTests">
+      <classes>
+         <!-- <class name="org.alfresco.module.org_alfresco_module_rm.test.RecordsManagmentTest"/> -->
+      </classes>
+   </test>
+</suite>
