@@ -4,13 +4,7 @@
       <forms>
          <form>             
             <appearance>
-               
-               <!--  DOD extended meta-data -->
-               <set id="rm-metadata-dod-scannedRecord" label="Scanned Record" appearance="panel" />
-               <set id="rm-metadata-dod-pdfRecord" label="PDF Record" appearance="panel" />
-               <set id="rm-metadata-dod-digitalPhotographRecord" label="Digital Photograph Record" appearance="panel" />
-               <set id="rm-metadata-dod-webRecord" label="Web Record" appearance="panel" /> 
-              
+            
                <!--  Field appearance -->               
                <field id="dod:webSiteURL">
                   <control>

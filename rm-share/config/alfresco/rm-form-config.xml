@@ -307,15 +307,6 @@
                <!--  Record fields -->
                <show id="rma:identifier" for-mode="view"/>
                <show id="rma:dateFiled" for-mode="view"/>
-               <show id="rma:publicationDate" />
-               <show id="rma:originator" />
-               <show id="rma:originatingOrganization" />
-               <show id="rma:mediaType" />
-               <show id="rma:format" />
-               <show id="rma:dateReceived" />
-               <show id="rma:address" />
-               <show id="rma:otherAddress" />
-               <show id="rma:location" />
                <show id="rmc:supplementalMarkingList" />
 
                <!--  Vital Record fields -->
@@ -340,14 +331,6 @@
                <!--  Record fields -->
                <field id="rma:identifier" label-id="label.recordIdentifier" read-only="true" set="rm-record"/>
                <field id="rma:dateFiled" set="rm-record" read-only="true"/>
-               <field id="rma:publicationDate" set="rm-record"/>
-               <field id="rma:originator" set="rm-record"/>
-               <field id="rma:originatingOrganization" set="rm-record"/>
-               <field id="rma:mediaType" set="rm-record"/>
-               <field id="rma:format" set="rm-record"/>
-               <field id="rma:dateReceived" set="rm-record"/>
-               <field id="rma:address" set="rm-record"/>
-               <field id="rma:otherAddress" set="rm-record"/>
                <field id="rma:location" set="rm-record"/>
                <field id="rmc:supplementalMarkingList" set="rm-record"/>
 

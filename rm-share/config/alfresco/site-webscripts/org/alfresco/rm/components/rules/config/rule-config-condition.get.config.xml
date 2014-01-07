@@ -86,9 +86,9 @@
    <defaults>
       <property>cm:name</property>
       <property>cm:title</property>
-      <property>rma:originator</property>
-      <property>rma:originatingOrganization</property>
-      <property>rma:publicationDate</property>
+      <property>dod:originator</property>
+      <property>dod:originatingOrganization</property>
+      <property>dod:publicationDate</property>
       <property>rma:recordSearchDispositionAuthority</property>
       <property>rma:recordSearchDispositionInstructions</property>      
    </defaults>

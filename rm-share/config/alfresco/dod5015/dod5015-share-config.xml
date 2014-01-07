@@ -1,0 +1,30 @@
+<alfresco-config>
+
+   <!-- Document Library config section -->
+   <config evaluator="string-compare" condition="DocumentLibrary">
+
+      <!--
+         Status Indicators
+      -->
+      <indicators>
+         <!--  Digital Photograph Record Indicator -->
+         <indicator id="dod5015-digital-photograph-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-digital-photograph-record-16.png">
+            <evaluator>evaluator.dod5015.indicator.digitalPhotographRecord</evaluator>
+         </indicator>
+         <!--  Pdf Record Indicator -->
+         <indicator id="dod5015-pdf-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-pdf-record-16.png">
+            <evaluator>evaluator.dod5015.indicator.pdfRecord</evaluator>
+         </indicator>
+         <!--  Scanned Record Indicator -->
+         <indicator id="dod5015-scanned-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-scanned-record-16.png">
+            <evaluator>evaluator.dod5015.indicator.scannedRecord</evaluator>
+         </indicator>
+         <!--  Web Record Indicator -->
+         <indicator id="dod5015-web-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-web-record-16.png">
+            <evaluator>evaluator.dod5015.indicator.webRecord</evaluator>
+         </indicator>
+      </indicators>
+
+   </config>
+
+</alfresco-config>
