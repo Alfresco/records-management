@@ -1,0 +1,43 @@
+<alfresco-config>
+   
+   <config evaluator="rm-kind" condition="RECORD">
+      <forms>
+         <form>             
+            <appearance>
+            
+               <!--  Field appearance -->               
+               <field id="dod:webSiteURL">
+                  <control>
+                     <control-param name="activateLinks">true</control-param>
+                  </control>
+               </field>
+            
+            </appearance>
+         </form>
+      </forms>
+   </config>
+   
+    <!--  Included for backwards compatibility with RM 1.0 -->
+   <config evaluator="node-type" condition="dod:recordSeries">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="cm:name" />
+               <show id="cm:title" />
+               <show id="cm:description" />
+            </field-visibility>
+            <appearance>
+               <field id="cm:title" mandatory="true">
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+               </field>
+               <field id="cm:description">
+                  <control>
+                     <control-param name="activateLinks">true</control-param>
+                  </control>
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>
+   
+</alfresco-config>
