@@ -16,14 +16,13 @@
       <webapp.id>share</webapp.id>
    </properties>
    <build>
-   
       <sourceDirectory>source/java</sourceDirectory>
       <testSourceDirectory>test/java</testSourceDirectory>
       <resources>
          <resource>
             <directory>config</directory>
          </resource>
-       <resource>
+         <resource>
             <directory>source/web</directory>
          </resource>
       </resources>
@@ -32,7 +31,6 @@
             <directory>test/resources</directory>
          </testResource>
       </testResources>
-      
       <plugins>
          <plugin>
             <groupId>org.alfresco.maven.plugin</groupId>
@@ -60,7 +58,7 @@
                         </move>
                         <move todir="${project.build.directory}/${project.build.finalName}/web/components">
                            <fileset dir="${project.build.outputDirectory}/components"/>
-                        </move>                        
+                        </move>
                         <move todir="${project.build.directory}/${project.build.finalName}/web/rm">
                            <fileset dir="${project.build.outputDirectory}/rm"/>
                         </move>
