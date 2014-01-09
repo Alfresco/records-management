@@ -11,13 +11,10 @@
    <artifactId>alfresco-rm-share</artifactId>
    <name>Alfresco RM Share</name>
    <properties>
-      <dependency.spring.version>3.1.1.RELEASE</dependency.spring.version>
-      <dependency.share.po.version>2.1-SNAPSHOT</dependency.share.po.version>
       <webapp.id>share</webapp.id>
    </properties>
    <build>
       <sourceDirectory>source/java</sourceDirectory>
-      <testSourceDirectory>test/java</testSourceDirectory>
       <resources>
          <resource>
             <directory>config</directory>
@@ -26,11 +23,6 @@
             <directory>source/web</directory>
          </resource>
       </resources>
-      <testResources>
-         <testResource>
-            <directory>test/resources</directory>
-         </testResource>
-      </testResources>
       <plugins>
          <plugin>
             <groupId>org.alfresco.maven.plugin</groupId>
@@ -120,87 +112,6 @@
          <artifactId>share</artifactId>
          <version>${alfresco.base.version}</version>
          <type>war</type>
-      </dependency>
-      <dependency>
-         <groupId>org.alfresco</groupId>
-         <artifactId>share-po</artifactId>
-         <version>${dependency.share.po.version}</version>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.alfresco</groupId>
-         <artifactId>share-po</artifactId>
-         <version>${dependency.share.po.version}</version>
-         <type>test-jar</type>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-beans</artifactId>
-         <version>${dependency.spring.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-aop</artifactId>
-         <version>${dependency.spring.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-expression</artifactId>
-         <version>${dependency.spring.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-context-support</artifactId>
-         <version>${dependency.spring.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-web</artifactId>
-         <version>${dependency.spring.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-webmvc</artifactId>
-         <version>${dependency.spring.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-orm</artifactId>
-         <version>${dependency.spring.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-jdbc</artifactId>
-         <version>${dependency.spring.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring-tx</artifactId>
-         <version>${dependency.spring.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>xml-apis</groupId>
-         <artifactId>xml-apis</artifactId>
-         <version>1.4.01</version>
-      </dependency>
-      <dependency>
-         <groupId>org.uncommons</groupId>
-         <artifactId>reportng</artifactId>
-         <version>1.1.4</version>
-         <scope>test</scope>
-         <exclusions>
-            <exclusion>
-               <groupId>org.testng</groupId>
-               <artifactId>testng</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>com.google.inject</groupId>
-         <artifactId>guice</artifactId>
-         <version>3.0</version>
-         <scope>test</scope>
       </dependency>
    </dependencies>
 </project>
