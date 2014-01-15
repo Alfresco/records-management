@@ -488,33 +488,10 @@
          this.widgets.deleteRole.set("disabled", true);
 
          // get the selected role id
-         this.options.selectedRoleId = this.getValueFromUrl("roleId");
+         this.options.selectedRoleId = Alfresco.rm.getParamValueFromUrl("roleId");
 
          // query the list of roles and capabilities to populate the roles list
          this.updateRolesList();
-      },
-
-      /**
-       * Gets the value for the specified parameter from the URL
-       *
-       * @method getValueFromUrl
-       */
-      getValueFromUrl: function RMViewRoles_getValueFromUrl(param)
-      {
-         var token,
-            result = null,
-            hash = window.location.hash,
-            params = hash.replace('#', '').split("&");
-         for (var i = 0; i < params.length; i++)
-         {
-            token = params[i].split("=");
-            if (token[0] === param)
-            {
-               result = token[1];
-               break;
-            }
-         }
-         return result;
       },
 
       /**

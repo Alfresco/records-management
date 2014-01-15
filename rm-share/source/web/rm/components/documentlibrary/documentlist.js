@@ -129,6 +129,20 @@
 
             return '<h3 class="filename"><a class="filter-change" href="#" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '">' + $html(holdTitle) + '</a></h3>';
          });
+
+         // Unfiled Record Container Child title
+         this.registerRenderer("RM_unfiledRecordsContainerChild", function rma_unfiledRecordsContainerChild(record, label)
+         {
+            var displayName = $html(record.jsNode.properties.cm_name);
+            filterObj =
+            {
+               filterId: "unfiledRecords",
+               filterData: record.nodeRef,
+               filterDisplay: displayName
+            };
+
+            return '<h3 class="filename"><a class="filter-change" href="#" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '">' + displayName + '</a></h3>';
+         });
       },
 
       /**

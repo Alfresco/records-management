@@ -507,7 +507,7 @@
        */
       _newContainer: function DLTB__newContainer(folderType)
       {
-         var destination = this.modules.docList.doclistMetadata.parent.nodeRef;
+         var destination = this._getFolderDestination();
 
          // Intercept before dialog show
          var doBeforeDialogShow = function DLTB__newContainer_doBeforeDialogShow(p_form, p_dialog)
@@ -574,6 +574,26 @@
       },
 
       /**
+       * Helper method to find the destination for record folder creation.
+       *
+       * @method _getFolderDestination
+       */
+      _getFolderDestination: function DLTB__getFolderDestination()
+      {
+         var uploadDirectory = this.modules.docList.doclistMetadata.parent.nodeRef;
+         var filterParam = Alfresco.rm.getParamValueFromUrl("filter");
+         if (filterParam)
+         {
+            var filter = filterParam.split("|");
+            if (filter[0] !== 'path' && filter[1])
+            {
+               uploadDirectory = decodeURIComponent(filter[1]);
+            }
+         }
+         return uploadDirectory;
+      },
+
+      /**
        * File Upload button click handler
        *
        * @method onFileUpload
@@ -631,9 +651,8 @@
          // Show uploader for multiple files
          this.fileUpload.show(
          {
-            siteId: this.options.siteId,
             containerId: this.options.containerId,
-            uploadDirectory: this.currentPath,
+            destination: this._getFolderDestination(),
             filter: [],
             mode: this.fileUpload.MODE_MULTI_UPLOAD,
             thumbnails: "doclib",

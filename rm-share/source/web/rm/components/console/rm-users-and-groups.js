@@ -310,9 +310,9 @@
          this.widgets.removeUser.set("disabled", true);
 
          // get the selected role ID, group ID and user ID
-         this.options.selectedRoleId = this.getValueFromUrl("roleId");
-         this.options.selectedGroupId = this.getValueFromUrl("groupId");
-         this.options.selectedUserId = this.getValueFromUrl("userId");
+         this.options.selectedRoleId = Alfresco.rm.getParamValueFromUrl("roleId");
+         this.options.selectedGroupId = Alfresco.rm.getParamValueFromUrl("groupId");
+         this.options.selectedUserId = Alfresco.rm.getParamValueFromUrl("userId");
 
          // query the list of roles, groups and users to populate the roles list
          this.updateRolesList();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2013 Alfresco Software Limited.
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of Alfresco
  *
@@ -26,6 +26,7 @@ import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.share.DashBoardPage;
 import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.rm.CreateNewCategoryForm;
+import org.alfresco.po.share.rm.CreateNewFolderForm;
 import org.alfresco.po.share.rm.FilePlanNavigation;
 import org.alfresco.po.share.rm.FilePlanPage;
 import org.alfresco.po.share.rm.RMConsolePage;
@@ -33,17 +34,19 @@ import org.alfresco.po.share.rm.RMDashBoardPage;
 import org.alfresco.po.share.rm.RMSiteMembersPage;
 import org.alfresco.po.share.rm.RMSiteNavigation;
 import org.alfresco.po.share.rm.RMSitePage;
+import org.alfresco.po.share.rm.RMUploadFilePage;
 import org.alfresco.po.share.rm.RecordSearchPage;
 import org.alfresco.po.share.site.CreateSitePage;
 import org.alfresco.po.share.site.ManageRulesPage;
 import org.alfresco.po.share.site.SiteDashboardPage;
 import org.alfresco.po.share.site.SiteType;
 import org.alfresco.po.share.site.UploadFilePage;
-import org.alfresco.po.share.site.document.DocumentDetailsPage;
 import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.SiteUtil;
 import org.alfresco.po.util.FailedTestListener;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -51,146 +54,202 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 /**
- * Tests record management module.
+ * Tests for the record management module.
+ *
  * @author Michael Suzuki
+ * @author Tuna Aksoy
  * @version 1.7.1
  */
 @Listeners(FailedTestListener.class)
 public class RecordsManagmentTest extends AbstractTest
 {
-    private final String rmSiteName = "Records Management";
-    private final String siteDescription = "Records Management Site";
-    private final String siteUrl = "rm";
-    private DashBoardPage dashBoard;
-    private String siteName;
+    private static final String RM_SITE_NAME = "Records Management";
+    private static final String RM_SITE_DESCRIPTION = "Records Management Site";
+    private static final String RM_SITE_URL = "rm";
+    private static final String RM_FILE_PLAN_URL_SUFFIX = "/page/site/rm/documentlibrary";
+    private static final String RM_DASHBOARD_URL_SUFFIX = "/page/site/rm/dashboard";
+    private static final String RM_UNFILED_RECORDS = "Unfiled Records";
+    private static final String RM_CATEGORY_NAME = "Test category name";
+    private static final String RM_CATEGORY_TITLE = "Test category title";
+    private static final String RM_CATEGORY_DESC = "Test category description";
+    private static final String RM_FOLDER_NAME = "Test folder name";
+    private static final String RM_FOLDER_TITLE = "Test folder title";
+    private static final String RM_FOLDER_DESC = "Test folder desc";
+    private static final String RM_TEST_FILE_NAME = "rmtest";
+    private static final String COLLAB_SITE_NAME = "ddSiteTest" + System.currentTimeMillis();
+    private static final String COLLAB_SITE_DESC = "description";
+    private static final String COLLAB_SITE_VISIBILITY = "Public";
+    private static final By PROMPT_PANEL_ID = By.id("prompt");
+    private static final By BUTTON_TAG_NAME = By.tagName("button");
+    private DashBoardPage dashBoardPage;
+    private FilePlanPage filePlanPage;
     private File file, file2;
+    private String rmFilePlanUrl, rmDashbordUrl;
 
     @SuppressWarnings("unused")
-    @BeforeClass(groups={"RM","nonCloud"})
+    @BeforeClass(groups={"RM", "nonCloud"})
     private void prepare() throws Exception
     {
-        siteName = "ddSiteTest" + System.currentTimeMillis();
-        dashBoard = ShareUtil.loginAs(drone, shareUrl, username, password).render();
-        SiteUtil.createSite(drone, siteName, "description", "Public");
+        dashBoardPage = ShareUtil.loginAs(drone, shareUrl, username, password).render();
+        SiteUtil.createSite(drone, COLLAB_SITE_NAME, COLLAB_SITE_DESC, COLLAB_SITE_VISIBILITY);
+
         file = SiteUtil.prepareFile();
-        file2 = SiteUtil.prepareFile("rmtest");
-        SiteDashboardPage page = drone.getCurrentPage().render();
-        DocumentLibraryPage documentLibPage = page.getSiteNav().selectSiteDocumentLibrary().render();
-        UploadFilePage uploadForm = documentLibPage.getNavigation().selectFileUpload().render();
-        documentLibPage = uploadForm.uploadFile(file.getCanonicalPath()).render();
-        uploadForm = documentLibPage.getNavigation().selectFileUpload().render();
-        documentLibPage = uploadForm.uploadFile(file2.getCanonicalPath()).render();
+        file2 = SiteUtil.prepareFile(RM_TEST_FILE_NAME);
+        rmFilePlanUrl = shareUrl + RM_FILE_PLAN_URL_SUFFIX;
+        rmDashbordUrl = shareUrl + RM_DASHBOARD_URL_SUFFIX;
+
+        SiteDashboardPage siteDashboardPage = drone.getCurrentPage().render();
+        DocumentLibraryPage documentLibraryPage = siteDashboardPage.getSiteNav().selectSiteDocumentLibrary().render();
+
+        UploadFilePage uploadFilePage = documentLibraryPage.getNavigation().selectFileUpload().render();
+        documentLibraryPage = uploadFilePage.uploadFile(file.getCanonicalPath()).render();
+
+        uploadFilePage = documentLibraryPage.getNavigation().selectFileUpload().render();
+        documentLibraryPage = uploadFilePage.uploadFile(file2.getCanonicalPath()).render();
     }
 
-    @AfterClass(groups={"RM","nonCloud"})
+    @AfterClass(groups={"RM", "nonCloud"})
     public void teardown()
     {
-        SiteUtil.deleteSite(drone, siteName);
-        SiteUtil.deleteSite(drone, rmSiteName);
+        SiteUtil.deleteSite(drone, COLLAB_SITE_NAME);
+        SiteUtil.deleteSite(drone, RM_SITE_NAME);
     }
+
     @Test()
     public void manageRules()
     {
-        drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
-        FilePlanPage filePlanPage = drone.getCurrentPage().render();
+        drone.navigateTo(rmFilePlanUrl);
+        filePlanPage = drone.getCurrentPage().render();
+        // FIXME
+        drone.waitFor(2000);
         Assert.assertTrue(filePlanPage.isManageRulesDisplayed());
-        ManageRulesPage rulesPage = filePlanPage.selectManageRules().render();
-        Assert.assertNotNull(rulesPage);
+        ManageRulesPage manageRulesPage = filePlanPage.selectManageRules().render();
+        Assert.assertNotNull(manageRulesPage);
     }
-    /**
-     * Test Site creation.
-     *
-     * @throws Exception if error
-     */
-    @Test(groups={"RM","nonCloud"})
+
+    @Test(groups={"RM", "nonCloud"})
     public void createRMSite()
     {
-        CreateSitePage createSite = dashBoard.getNav().selectCreateSite().render();
-        Assert.assertTrue(createSite.isCreateSiteDialogDisplayed());
-        createSite.selectSiteType(SiteType.RecordsManagement);
-        Assert.assertEquals(createSite.getSiteName(), rmSiteName);
-        Assert.assertEquals(createSite.getDescription(), siteDescription);
-        Assert.assertEquals(createSite.getSiteUrl(), siteUrl);
+        CreateSitePage createSitePage = dashBoardPage.getNav().selectCreateSite().render();
+        Assert.assertTrue(createSitePage.isCreateSiteDialogDisplayed());
+        createSitePage.selectSiteType(SiteType.RecordsManagement);
+        Assert.assertEquals(createSitePage.getSiteName(), RM_SITE_NAME);
+        Assert.assertEquals(createSitePage.getDescription(), RM_SITE_DESCRIPTION);
+        Assert.assertEquals(createSitePage.getSiteUrl(), RM_SITE_URL);
 
-        createSite.selectSiteType(SiteType.Collaboration);
-        Assert.assertEquals(createSite.getSiteName(), "");
-        Assert.assertEquals(createSite.getDescription(), "");
-        Assert.assertEquals(createSite.getSiteUrl(), "");
+        createSitePage.selectSiteType(SiteType.Collaboration);
+        Assert.assertEquals(createSitePage.getSiteName(), "");
+        Assert.assertEquals(createSitePage.getDescription(), "");
+        Assert.assertEquals(createSitePage.getSiteUrl(), "");
 
-        RMDashBoardPage site = createSite.createRMSite().render();
-        Assert.assertNotNull(site);
-        Assert.assertTrue(rmSiteName.equalsIgnoreCase(site.getPageTitle()));
-        Assert.assertTrue(site.getSiteNav().isDashboardActive());
-        Assert.assertFalse(site.getSiteNav().isFilePlanActive());
+        RMDashBoardPage rmDashBoardPage = createSitePage.createRMSite().render();
+        Assert.assertNotNull(rmDashBoardPage);
+        Assert.assertTrue(RM_SITE_NAME.equalsIgnoreCase(rmDashBoardPage.getPageTitle()));
+        Assert.assertTrue(rmDashBoardPage.getSiteNav().isDashboardActive());
+        Assert.assertFalse(rmDashBoardPage.getSiteNav().isFilePlanActive());
     }
 
     @Test(dependsOnMethods="createRMSite")
     public void testRMNavigation()
     {
-        drone.navigateTo(shareUrl + "/page/site/rm/dashboard");
-        RMDashBoardPage site = drone.getCurrentPage().render();
-        RMSiteNavigation nav = site.getSiteNav();
-        FilePlanPage filePlan = nav.selectFilePlan().render();
-        nav = filePlan.getSiteNav();
-        Assert.assertFalse(nav.isDashboardActive());
-        Assert.assertTrue(nav.isFilePlanActive());
-        Assert.assertTrue(nav.isFilePlanDisplayed());
-        Assert.assertTrue(nav.isMoreDisplayed());
-        Assert.assertFalse(nav.isSelectSiteMembersDisplayed());
+        drone.navigateTo(rmDashbordUrl);
+        RMDashBoardPage rmDashBoardPage = drone.getCurrentPage().render();
+        RMSiteNavigation rmSiteNavigation = rmDashBoardPage.getSiteNav();
+        filePlanPage = rmSiteNavigation.selectFilePlan().render();
+        rmSiteNavigation = filePlanPage.getSiteNav();
+        Assert.assertFalse(rmSiteNavigation.isDashboardActive());
+        Assert.assertTrue(rmSiteNavigation.isFilePlanActive());
+        Assert.assertTrue(rmSiteNavigation.isFilePlanDisplayed());
+        Assert.assertTrue(rmSiteNavigation.isMoreDisplayed());
+        Assert.assertFalse(rmSiteNavigation.isSelectSiteMembersDisplayed());
 
-        RMSitePage dashboard = nav.selectSiteDashBoard().render();
-        nav = dashboard.getSiteNav();
-        Assert.assertTrue(nav.isDashboardDisplayed());
-        Assert.assertTrue(nav.isDashboardActive());
-        Assert.assertFalse(nav.isFilePlanActive());
-        Assert.assertFalse(nav.isRecordSearchDisplayed());
-        Assert.assertFalse(nav.isSelectSiteMembersDisplayed());
-        Assert.assertTrue(nav.isMoreDisplayed());
+        RMSitePage dashboard = rmSiteNavigation.selectSiteDashBoard().render();
+        rmSiteNavigation = dashboard.getSiteNav();
+        Assert.assertTrue(rmSiteNavigation.isDashboardDisplayed());
+        Assert.assertTrue(rmSiteNavigation.isDashboardActive());
+        Assert.assertFalse(rmSiteNavigation.isFilePlanActive());
+        Assert.assertFalse(rmSiteNavigation.isRecordSearchDisplayed());
+        Assert.assertFalse(rmSiteNavigation.isSelectSiteMembersDisplayed());
+        Assert.assertTrue(rmSiteNavigation.isMoreDisplayed());
 
-        RecordSearchPage recordSearch = nav.selectRecordSearch().render();
-        nav = recordSearch.getSiteNav();
+        RecordSearchPage recordSearch = rmSiteNavigation.selectRecordSearch().render();
+        rmSiteNavigation = recordSearch.getSiteNav();
 
-        Assert.assertTrue(nav.isRecordSearchDisplayed());
-        Assert.assertTrue(nav.isRecordSearchActive());
-        Assert.assertFalse(nav.isDashboardActive());
-        Assert.assertFalse(nav.isFilePlanDisplayed());
-        Assert.assertFalse(nav.isSelectSiteMembersDisplayed());
-        Assert.assertTrue(nav.isMoreDisplayed());
+        Assert.assertTrue(rmSiteNavigation.isRecordSearchDisplayed());
+        Assert.assertTrue(rmSiteNavigation.isRecordSearchActive());
+        Assert.assertFalse(rmSiteNavigation.isDashboardActive());
+        Assert.assertFalse(rmSiteNavigation.isFilePlanDisplayed());
+        Assert.assertFalse(rmSiteNavigation.isSelectSiteMembersDisplayed());
+        Assert.assertTrue(rmSiteNavigation.isMoreDisplayed());
 
-        RMSiteMembersPage siteMembers = nav.selectSiteMembers().render();
-        nav = siteMembers.getSiteNav();
-        Assert.assertTrue(nav.isSelectSiteMembersDisplayed());
-        Assert.assertTrue(nav.isSelectSiteMembersActive());
-        Assert.assertFalse(nav.isDashboardActive());
-        Assert.assertFalse(nav.isFilePlanDisplayed());
-        Assert.assertTrue(nav.isMoreDisplayed());
+        RMSiteMembersPage siteMembers = rmSiteNavigation.selectSiteMembers().render();
+        rmSiteNavigation = siteMembers.getSiteNav();
+        Assert.assertTrue(rmSiteNavigation.isSelectSiteMembersDisplayed());
+        Assert.assertTrue(rmSiteNavigation.isSelectSiteMembersActive());
+        Assert.assertFalse(rmSiteNavigation.isDashboardActive());
+        Assert.assertFalse(rmSiteNavigation.isFilePlanDisplayed());
+        Assert.assertTrue(rmSiteNavigation.isMoreDisplayed());
 
-        RMConsolePage console = nav.selectRMConsole().render();
+        RMConsolePage console = rmSiteNavigation.selectRMConsole().render();
         Assert.assertNotNull(console);
-        Assert.assertTrue("Records Management Console".equalsIgnoreCase(site.getPageTitle()));
+        Assert.assertTrue("Records Management Console".equalsIgnoreCase(rmDashBoardPage.getPageTitle()));
     }
 
     @Test(dependsOnMethods="createRMSite")
     public void createCategory()
     {
-        drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
-        FilePlanPage filePlanPage = drone.getCurrentPage().render();
+        drone.navigateTo(rmFilePlanUrl);
+        filePlanPage = drone.getCurrentPage().render();
         Assert.assertTrue(filePlanPage.isCreateNewCategoryDisplayed());
         CreateNewCategoryForm form = filePlanPage.selectCreateNewCategory().render();
         Assert.assertNotNull(form.getRecordCategoryId());
-        filePlanPage = form.selectCancel().render();
-
-        form = filePlanPage.selectCreateNewCategory().render();
-        form.enterName("rmtest");
-        form.enterTitle("rmtest-title");
-        form.enterDescription("test rm new record");
+        form.enterName(RM_CATEGORY_NAME);
+        form.enterTitle(RM_CATEGORY_TITLE);
+        form.enterDescription(RM_CATEGORY_DESC);
         filePlanPage = form.selectSave().render();
-        Assert.assertTrue(filePlanPage.hasRecords());
     }
 
-    @Test(dependsOnMethods="createRMSite")
+    @Test(dependsOnMethods="createCategory")
+    public void createFolder()
+    {
+        drone.navigateTo(rmFilePlanUrl);
+        filePlanPage = drone.getCurrentPage().render();
+        Assert.assertTrue(filePlanPage.isCreateNewCategoryDisplayed());
+        Assert.assertTrue(filePlanPage.hasRecords());
+        FileDirectoryInfo recordsManagemnetCategory = filePlanPage.getFileDirectoryInfo(RM_CATEGORY_NAME);
+        Assert.assertNotNull(recordsManagemnetCategory);
+        recordsManagemnetCategory.clickOnTitle();
+        Assert.assertTrue(filePlanPage.isCreateNewCategoryDisplayed());
+        Assert.assertTrue(filePlanPage.isCreateNewFolderDisplayed());
+        // FIXME
+        drone.waitFor(2000);
+        CreateNewFolderForm form = filePlanPage.selectCreateNewFolder().render();
+        form.enterName(RM_FOLDER_NAME);
+        form.enterTitle(RM_FOLDER_TITLE);
+        form.enterDescription(RM_FOLDER_DESC);
+        filePlanPage = form.selectSave().render();
+    }
+
+    @Test(dependsOnMethods="createFolder")
     public void createRecord() throws IOException
     {
+        Assert.assertTrue(filePlanPage.isCreateNewFolderDisplayed());
+        Assert.assertTrue(filePlanPage.hasRecords());
+        FileDirectoryInfo recordsManagemnetFolder = filePlanPage.getFileDirectoryInfo(RM_FOLDER_NAME);
+        Assert.assertNotNull(recordsManagemnetFolder);
+        recordsManagemnetFolder.clickOnTitle();
+        Assert.assertTrue(filePlanPage.isFileRecordDisplayed());
+        // FIXME
+        drone.waitFor(2000);
+        RMUploadFilePage rmUploadFilePage = filePlanPage.selectFileRecord().render();
+        WebElement prompt = drone.findAndWait(PROMPT_PANEL_ID);
+        List<WebElement> elements = prompt.findElements(BUTTON_TAG_NAME);
+        WebElement electronicRecordButton = rmUploadFilePage.findButton("Electronic", elements);
+        electronicRecordButton.click();
+        rmUploadFilePage.uploadFile(SiteUtil.prepareFile(Long.valueOf(System.currentTimeMillis()).toString()).getCanonicalPath()).render();
+
+
+        /*
         drone.navigateTo(shareUrl + String.format("/page/site/%s/documentlibrary",siteName));
         DocumentLibraryPage libPage = drone.getCurrentPage().render();
         FileDirectoryInfo file = libPage.getFileDirectoryInfo(1);
@@ -206,27 +265,29 @@ public class RecordsManagmentTest extends AbstractTest
         Assert.assertFalse(detailsPage.isAddRecordMetaDataVisible());
         FilePlanPage filePlanPage = detailsPage.selectDeclareRecod().render();
         Assert.assertTrue(filePlanPage.isAddRecordMetaDataVisible());
+        */
     }
+
     @Test(dependsOnMethods="createRecord")
     public void navigateToUnfiledRecords()
     {
-        drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
-        FilePlanPage filePlanPage = drone.getCurrentPage().render();
+        drone.navigateTo(rmFilePlanUrl);
+        filePlanPage = drone.getCurrentPage().render();
         FilePlanNavigation nav = filePlanPage.getFilePlanNavigation();
 
         Assert.assertNotNull(nav);
         Assert.assertTrue(nav.isUnfiledRecordsVisible());
         filePlanPage = nav.selectUnfiledRecords().render();
         String current = filePlanPage.getFilePlanDescription();
-        Assert.assertTrue(current.contains("Unfiled Records"));
+        Assert.assertTrue(current.contains(RM_UNFILED_RECORDS));
+        /*
         List<FileDirectoryInfo> files = filePlanPage.getFiles();
         Assert.assertEquals(2, files.size());
         String name = files.get(0).getName();
         Assert.assertNotNull(name);
         FileDirectoryInfo result = filePlanPage.getFileDirectoryInfo(name);
         Assert.assertNotNull(result);
-        Assert.assertEquals(result.getName(),name);
-
-
+        Assert.assertEquals(result.getName(), name);
+        */
     }
 }

@@ -37,10 +37,10 @@
             <div class="hideable toolbar-hidden DocListTree">
                <div class="new-folder"><button id="${id}-newCategory-button">${msg("button.new-category")}</button></div>
             </div>
-            <div class="hideable toolbar-hidden DocListTree">
+            <div class="hideable toolbar-hidden DocListTree DocListFilePlan_unfiledRecords">
                <div class="new-folder"><button id="${id}-newFolder-button">${msg("button.new-folder")}</button></div>
             </div>
-            <div class="hideable toolbar-hidden DocListTree">
+            <div class="hideable toolbar-hidden DocListTree DocListFilePlan_unfiledRecords">
                <div class="file-upload"><button id="${id}-fileUpload-button">${msg("button.upload")}</button></div>
             </div>
             <div id="${id}-import-section" class="hideable toolbar-hidden DocListTree">
