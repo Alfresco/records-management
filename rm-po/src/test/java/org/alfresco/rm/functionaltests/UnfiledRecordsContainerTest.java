@@ -1,26 +1,27 @@
-package org.alfresco.po.rm;
+package org.alfresco.rm.functionaltests;
 
 import java.io.IOException;
 import java.util.List;
 
+import org.alfresco.po.RMUtils;
+import org.alfresco.po.rm.CreateNewFolderForm;
+import org.alfresco.po.rm.FilePlanNavigation;
+import org.alfresco.po.rm.FilePlanPage;
+import org.alfresco.po.rm.RMDashBoardPage;
+import org.alfresco.po.rm.RMUploadFilePage;
 import org.alfresco.po.share.AbstractTest;
-import org.alfresco.po.share.DashBoardPage;
-import org.alfresco.po.share.ShareUtil;
-import org.alfresco.po.share.rm.CreateNewFolderForm;
-import org.alfresco.po.share.rm.FilePlanNavigation;
-import org.alfresco.po.share.rm.FilePlanPage;
-import org.alfresco.po.share.rm.RMDashBoardPage;
-import org.alfresco.po.share.rm.RMUploadFilePage;
-import org.alfresco.po.share.site.CreateSitePage;
+import org.alfresco.po.share.RMCreateSitePage;
 import org.alfresco.po.share.site.SiteFinderPage;
 import org.alfresco.po.share.site.SiteType;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.SiteUtil;
+import org.alfresco.po.util.FailedTestListener;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 /**
@@ -35,6 +36,7 @@ import org.testng.annotations.Test;
  * @author Tuna Aksoy
  * @version 2.2
  */
+@Listeners(FailedTestListener.class)
 public class UnfiledRecordsContainerTest extends AbstractTest
 {
     private static final String RM_SITE_NAME = "Records Management";
@@ -48,14 +50,14 @@ public class UnfiledRecordsContainerTest extends AbstractTest
     private static final By BUTTON_TAG_NAME = By.tagName("button");
     private static final By INPUT_TITLE_SELECTOR = By.cssSelector("input[id$='prop_cm_title']");
     private static final By INPUT_DESCRIPTION_SELECTOR = By.cssSelector("textarea[id$='prop_cm_description']");
-    private DashBoardPage dashBoard;
+    private RMDashBoardPage dashBoard;
     private FilePlanPage filePlanPage;
 
     @BeforeClass(groups={"RM","nonCloud"})
     public void setUp()
     {
         // Login to Share
-        dashBoard = ShareUtil.loginAs(drone, shareUrl, username, password).render();
+        dashBoard = RMUtils.loginAs(drone, shareUrl, username, password).render();
 
         // Check if the RM Site already exists, if so delete it
         SiteFinderPage siteFinderPage = SiteUtil.searchSite(drone, RM_SITE_NAME).render();
@@ -65,7 +67,7 @@ public class UnfiledRecordsContainerTest extends AbstractTest
         }
 
         // Click create site dialog
-        CreateSitePage createSite = dashBoard.getNav().selectCreateSite().render();
+        RMCreateSitePage createSite = dashBoard.getRMNavigation().selectCreateSite().render();
         Assert.assertTrue(createSite.isCreateSiteDialogDisplayed());
 
         // Select RM Site
@@ -75,11 +77,11 @@ public class UnfiledRecordsContainerTest extends AbstractTest
         Assert.assertEquals(createSite.getSiteUrl(), RM_SITE_URL);
 
         // Create RM Site
-        RMDashBoardPage site = createSite.createRMSite().render();
+        RMDashBoardPage site = ((RMDashBoardPage) createSite.createRMSite()).rmRender();
         Assert.assertNotNull(site);
         Assert.assertTrue(RM_SITE_NAME.equalsIgnoreCase(site.getPageTitle()));
-        Assert.assertTrue(site.getSiteNav().isDashboardActive());
-        Assert.assertFalse(site.getSiteNav().isFilePlanActive());
+        Assert.assertTrue(site.getRMSiteNavigation().isDashboardActive());
+        Assert.assertFalse(site.getRMSiteNavigation().isFilePlanActive());
     }
 
     @AfterClass(groups={"RM","nonCloud"})
@@ -127,7 +129,7 @@ public class UnfiledRecordsContainerTest extends AbstractTest
         form.enterTitle(RM_UNFILED_RECORDS_CONTAINER_TITLE);
         form.enterDescription(RM_UNFILED_RECORDS_CONTAINER_DESC);
         filePlanPage = form.selectSave().render();
-        // FIXME
+        // FIXME: The render method for the "FilePlanPage" must be fixed!!!
         drone.waitFor(2000);
         Assert.assertTrue(filePlanPage.getFiles().size() == 2);
     }
@@ -142,7 +144,7 @@ public class UnfiledRecordsContainerTest extends AbstractTest
     @Test(dependsOnMethods="fileRecordInUnfiledRecordsFolder")
     public void goBackToUnfiledRecordsContainerRoot()
     {
-        // FIXME
+        // FIXME: The render method for the "FilePlanPage" must be fixed!!!
         filePlanPage.getFilePlanNavigation().selectUnfiledRecords().render();
         drone.waitFor(2000);
     }
@@ -156,7 +158,7 @@ public class UnfiledRecordsContainerTest extends AbstractTest
         WebElement editProperties = folder.findElement(By.cssSelector("div.rm-edit-details>a"));
         editProperties.click();
 
-        // FIXME
+        // FIXME: Need to find out why it fails without waiting!!!
         drone.waitFor(2000);
 
         WebElement title = drone.find(INPUT_TITLE_SELECTOR);
@@ -177,7 +179,7 @@ public class UnfiledRecordsContainerTest extends AbstractTest
     @Test(dependsOnMethods="editUnfiledRecordsFolderMetadata")
     public void clickUnfiledRecordsFolderDetails()
     {
-        // FIXME
+        // FIXME: The render method for the "FilePlanPage" must be fixed!!!
         drone.waitFor(2000);
         filePlanPage = filePlanPage.render();
 
@@ -191,7 +193,7 @@ public class UnfiledRecordsContainerTest extends AbstractTest
     @Test(dependsOnMethods={"clickUnfiledRecordsFolderDetails", "navigateToUnfiledRecords"})
     public void deleteFiledRecordAndFolder()
     {
-        // FIXME
+        // FIXME: Need to find out why it fails without waiting!!!
         drone.waitFor(2000);
 
         for (FileDirectoryInfo fileDirectoryInfo : filePlanPage.getFiles())
@@ -199,7 +201,7 @@ public class UnfiledRecordsContainerTest extends AbstractTest
             fileDirectoryInfo.selectDelete();
             WebElement confirmDelete = drone.find(By.cssSelector("div#prompt div.ft span span button"));
             confirmDelete.click();
-            // FIXME
+            // FIXME: Need to find out why it fails without waiting!!!
             drone.waitFor(2000);
         }
     }
