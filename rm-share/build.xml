@@ -6,4 +6,14 @@
    <property file="../build.properties" />
    <property file="build.local.properties" />
    <property file="build.properties" />
+
+   <target name="assembleIconPackage" description="">
+      <delete dir="${ant.build.directory}/icons" failonerror="true" />
+      <copy todir="${ant.build.directory}/icons/${ant.project.name}" failonerror="true">
+         <fileset dir=".">
+            <include name="**/*.png"/>
+            <exclude name="**/${ant.build.directory}/**"/>
+         </fileset>
+      </copy>
+   </target>
 </project>
