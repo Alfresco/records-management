@@ -263,6 +263,7 @@
                   case "metadata-stub-folder":
                   case "transfer-container":
                   case "hold-container":
+                  case "unfiled-record-container-child":
                      elCell.innerHTML = '<span class="folder-small">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generatePathMarkup(locn) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-32.png" /></a>';
                      break;
 
@@ -307,6 +308,7 @@
                   case "metadata-stub-folder":
                   case "transfer-container":
                   case "hold-container":
+                  case "unfiled-record-container-child":
                      elCell.innerHTML = '<span class="folder">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generatePathMarkup(locn) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-48.png" /></a>';
                      break;
 

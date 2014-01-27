@@ -495,7 +495,14 @@
        */
       onNewFolder: function DLTB_onNewFolder(e, p_obj)
       {
-         this._newContainer("rma:recordFolder");
+         if (Alfresco.rm.getParamValueFromUrl("filter").split("|")[0] !== 'path')
+         {
+            this._newContainer("rma:unfiledRecordContainerChild");
+         }
+         else
+         {
+            this._newContainer("rma:recordFolder");
+         }
       },
 
       /**

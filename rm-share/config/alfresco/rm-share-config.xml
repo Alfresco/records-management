@@ -157,9 +157,8 @@
          <template id="rmUnfiledRecordsContainerChild">
             <evaluator>evaluator.rm.unfiledRecordsContainer.child</evaluator>
             <title>{RM_unfiledRecordsContainerChild}</title>
-            <line index="10" id="identifier">{rma_identifier details.folder.identifier}</line>
-            <line index="20" id="vitalRecord" view="detailed">{RM_vitalRecordIndicator details.folder.vital-record-indicator}</line>
-            <line index="30" id="createdByModifiedOn">{RM_createdBy details.created.by}{RM_modifiedOn details.modified.on}</line>
+            <line index="10" id="identifier">{rma_identifier details.unfiled-records-container-child.identifier}</line>
+            <line index="20" id="createdByModifiedOn">{RM_createdBy details.created.by}{RM_modifiedOn details.modified.on}</line>
          </template>
 
          <!-- DocLib Record -->
@@ -784,6 +783,22 @@
             <action index="110" id="rm-unfreeze-all" />
             <action index="120" id="rm-edit-reason" />
             <action index="130" id="rm-view-audit-log" />
+         </actionGroup>
+
+         <actionGroup id="rm-unfiled-record-container-child-browse">
+            <action index="100" id="rm-record-folder-view-details" />
+            <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-manage-permissions" />
+            <action index="130" id="rm-delete" label="actions.delete" />
+            <action index="140" id="rm-view-audit-log" />
+            <action index="150" id="rm-manage-rules" />
+         </actionGroup>
+         <actionGroup id="rm-unfiled-record-container-child-details">
+            <action index="100" id="rm-edit-details" />
+            <action index="110" id="rm-manage-permissions" />
+            <action index="120" id="rm-delete" label="actions.delete" />
+            <action index="130" id="rm-view-audit-log" />
+            <action index="140" id="rm-manage-rules" />
          </actionGroup>
 
          <!--  Extensions to the standard DM UI actions -->

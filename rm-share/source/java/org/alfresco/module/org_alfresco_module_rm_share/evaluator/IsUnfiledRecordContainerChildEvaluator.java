@@ -33,14 +33,9 @@ public class IsUnfiledRecordContainerChildEvaluator extends BaseRMEvaluator
     {
         boolean result = false;
         JSONObject rmNode = getRMNode(jsonObject);
-        if (rmNode != null)
+        if (rmNode != null && ((String) rmNode.get("uiType")).equalsIgnoreCase("unfiled-record-container-child"))
         {
-            boolean isRecordFolder = ((String) rmNode.get("uiType")).equalsIgnoreCase("record-folder");
-            boolean isUnfileRecordContainerChild = (boolean) rmNode.get("isUnfileRecordContainerChild");
-            if (isRecordFolder == true && isUnfileRecordContainerChild == true)
-            {
-                result = true;
-            }
+            result = true;
         }
         return result;
     }

@@ -239,6 +239,29 @@
       </forms>
    </config>
 
+   <config evaluator="model-type" condition="rma:unfiledRecordContainerChild">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="cm:name" force="true"/>
+               <show id="cm:title" force="true" />
+               <show id="cm:description" force="true" />
+            </field-visibility>
+            <create-form template="/org/alfresco/rm/components/form/create-container.ftl" />
+            <appearance>
+               <field id="cm:title" mandatory="true">
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+               </field>
+               <field id="cm:description">
+                  <control>
+                     <control-param name="activateLinks">true</control-param>
+                  </control>
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>
+
    <config evaluator="rm-kind" condition="RECORD_FOLDER">
       <forms>
          <form>
