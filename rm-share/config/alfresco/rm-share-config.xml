@@ -205,7 +205,7 @@
          <action type="action-link" id="onActionLinkTo" permission="linkTo" asset="record" label="menu.selected-items.link-to" rmaction="true" />
          <action type="action-link" id="onActionFileTo" permission="fileTo" asset="undeclared-record" label="menu.selected-items.file-to" rmaction="true" />
          <action type="action-link" id="onActionDeleteRecord" permission="Delete" label="menu.selected-items.delete" asset="record,undeclared-record" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
-         <action type="action-link" id="onActionDeleteRecordFolder" permission="Delete" label="menu.selected-items.delete" asset="record-folder" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
+         <action type="action-link" id="onActionDeleteRecordFolder" permission="Delete" label="menu.selected-items.delete" asset="record-folder,unfiled-record-container-child" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
          <action type="action-link" id="onActionDeleteRecordCategory" permission="Delete" label="menu.selected-items.delete" asset="record-category" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
          <action type="action-link" id="onActionExport" permission="" notAspect="rma:cutOff" label="menu.selected-items.export" asset="record,undeclared-record,record-folder,record-category" rmaction="true" />
       </multi-select>

@@ -78,6 +78,9 @@
       <property name="indicator" value="nonElectronic" />
       <property name="expected" value="false" />
    </bean>
+   <bean id="evaluator.rm.unfiledRecordsContainer.child" parent="evaluator.rm.common.uiType">
+      <property name="type" value="unfiled-record-container-child" />
+   </bean>
 
    <!--                             -->
    <!-- File Plan Indicator Evaluators -->
@@ -278,11 +281,6 @@
       <property name="serviceRegistry" ref="webframework.service.registry" />
    </bean>
 
-   <!--                                      -->
-   <!-- Unfiled Records Container Evaluators -->
-   <!--                                      -->
-   <bean id="evaluator.rm.unfiledRecordsContainer.child" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.IsUnfiledRecordContainerChildEvaluator" />
-   
    <!-- DOD 5015 context import -->
    <import resource="classpath:alfresco/dod5015/dod5015-context.xml"/>
 </beans>

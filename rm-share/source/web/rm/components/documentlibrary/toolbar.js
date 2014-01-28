@@ -678,7 +678,7 @@
        */
       onNonElectronicDocument: function DLTB_onNonElectronicDocument()
       {
-         var destination = this.modules.docList.doclistMetadata.parent.nodeRef,
+         var destination = this._getFolderDestination(),
             label = "label.new-rma_nonElectronicDocument",
             msgTitle = this.msg(label + ".title"),
             msgHeader = this.msg(label + ".header");

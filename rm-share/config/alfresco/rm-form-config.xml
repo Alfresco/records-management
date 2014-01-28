@@ -245,6 +245,7 @@
             <field-visibility>
                <show id="cm:name" force="true"/>
                <show id="cm:title" force="true" />
+               <show id="rma:identifier"/>
                <show id="cm:description" force="true" />
             </field-visibility>
             <create-form template="/org/alfresco/rm/components/form/create-container.ftl" />
@@ -252,6 +253,35 @@
                <field id="cm:title" mandatory="true">
                   <control template="/org/alfresco/components/form/controls/textfield.ftl" />
                </field>
+               <field id="rma:identifier">
+                  <control>
+                     <control-param name="forceEditable">true</control-param>
+                  </control>
+               </field>
+               <field id="cm:description">
+                  <control>
+                     <control-param name="activateLinks">true</control-param>
+                  </control>
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>
+
+   <config evaluator="node-type" condition="rma:unfiledRecordContainerChild">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="cm:name" />
+               <show id="cm:title" />
+               <show id="rma:identifier"/>
+               <show id="cm:description" />
+            </field-visibility>
+            <appearance>
+               <field id="cm:title" mandatory="true">
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+               </field>
+               <field id="rma:identifier" read-only="true"/>
                <field id="cm:description">
                   <control>
                      <control-param name="activateLinks">true</control-param>
