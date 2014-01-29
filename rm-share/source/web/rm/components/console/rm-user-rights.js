@@ -157,7 +157,7 @@
                list: '<dl>{data}</dl>',
                title: '<dt class={className}>{data}</dt>',
                item: '<dd class={className}>{data}</dd>',
-               link: '<a href="' + Alfresco.constants.URL_PAGECONTEXT + 'console/admin-console/users#state=panel%3Dview%26userid%3D{userId}%26search%3D{userId}">{name}</a>'
+               link: '<a href="' + Alfresco.constants.URL_PAGECONTEXT + 'user/{userId}/profile">{name}</a>'
             },
             users = args[1].users,
             dataKeys =
