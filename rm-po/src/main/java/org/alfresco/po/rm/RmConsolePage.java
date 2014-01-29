@@ -26,20 +26,20 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 /**
- * Records management site members page object.
+ * Records management console page object.
  *
  * @author Michael Suzuki
  * @author Tuna Aksoy
- * @version 1.7.1
+ * @since 1.7.1
  */
-public class RMSiteMembersPage extends RMSitePage
+public class RmConsolePage extends RmSitePage
 {
     /**
      * Constructor.
      *
      * @param drone {@link WebDrone}
      */
-    public RMSiteMembersPage(WebDrone drone)
+    public RmConsolePage(WebDrone drone)
     {
         super(drone);
     }
@@ -49,7 +49,7 @@ public class RMSiteMembersPage extends RMSitePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMSiteMembersPage render(RenderTime timer)
+    public RmConsolePage render(RenderTime timer)
     {
         RmUtils.checkMandotaryParam("timer", timer);
 
@@ -59,9 +59,9 @@ public class RMSiteMembersPage extends RMSitePage
             try
             {
                 // if search body is found we are rendered
-                By siteMembers = By.cssSelector("div.site-members");
-                WebElement siteMembersElement = drone.find(siteMembers);
-                if (siteMembersElement.isDisplayed())
+                By rmConsole = By.cssSelector("div[id$='_rm-console']");
+                WebElement rmConsoleElement = drone.find(rmConsole);
+                if (rmConsoleElement.isDisplayed())
                 {
                     break;
                 }
@@ -82,7 +82,7 @@ public class RMSiteMembersPage extends RMSitePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMSiteMembersPage render(long time)
+    public RmConsolePage render(long time)
     {
         RenderTime timer = new RenderTime(time);
         return render(timer);
@@ -93,7 +93,7 @@ public class RMSiteMembersPage extends RMSitePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMSiteMembersPage render()
+    public RmConsolePage render()
     {
         RenderTime timer = new RenderTime(maxPageLoadingTime);
         return render(timer);

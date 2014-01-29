@@ -18,11 +18,11 @@
  */
 package org.alfresco.rm;
 
-import org.alfresco.po.RMFactoryPage;
+import org.alfresco.po.RmFactoryPage;
 import org.alfresco.po.rm.FilePlanPage;
-import org.alfresco.po.rm.RMConsolePage;
-import org.alfresco.po.rm.RMDashBoardPage;
-import org.alfresco.po.rm.RMSiteMembersPage;
+import org.alfresco.po.rm.RmConsolePage;
+import org.alfresco.po.rm.RmDashBoardPage;
+import org.alfresco.po.rm.RmSiteMembersPage;
 import org.alfresco.po.rm.RecordSearchPage;
 import org.alfresco.po.share.AlfrescoVersion;
 import org.alfresco.po.share.FactorySharePage;
@@ -38,15 +38,15 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * Test class for {@link RMFactoryPage}
+ * Test class for {@link RmFactoryPage}
  *
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class RMFactoryPageTest
+public class RmFactoryPageTest
 {
     private final String baseUrl = "http://localhost:8081/share";
-    private static Log logger = LogFactory.getLog(RMFactoryPageTest.class);
+    private static Log logger = LogFactory.getLog(RmFactoryPageTest.class);
     private final String rmManageRules = baseUrl + "%s/page/site/rm/folder-rules?nodeRef=workspace://SpacesStore/2ce53134-4677-43c7-9816-a25b4a61cae4";
     private final String rmdashboard = baseUrl + "%s/page/site/rm/dashboard";
     private final String rmSiteMembers = baseUrl + "%s/page/site/rm/site-members";
@@ -67,11 +67,11 @@ public class RMFactoryPageTest
             Assert.assertTrue(page instanceof ManageRulesPage);
 
             page = resolvePage(rmdashboard, "rmdashboard", drone);
-            Assert.assertTrue(page instanceof RMDashBoardPage);
+            Assert.assertTrue(page instanceof RmDashBoardPage);
             Assert.assertFalse(page instanceof FilePlanPage);
 
             page = resolvePage(rmSiteMembers, "rmSiteMembers", drone);
-            Assert.assertTrue(page instanceof RMSiteMembersPage);
+            Assert.assertTrue(page instanceof RmSiteMembersPage);
 
             page = resolvePage(filePlan, "filePlan", drone);
             Assert.assertTrue(page instanceof FilePlanPage);
@@ -80,7 +80,7 @@ public class RMFactoryPageTest
             Assert.assertTrue(page instanceof RecordSearchPage);
 
             page = resolvePage(rmConsole, "rmConsole", drone);
-            Assert.assertTrue(page instanceof RMConsolePage);
+            Assert.assertTrue(page instanceof RmConsolePage);
 
             long duration = System.currentTimeMillis() - start;
             logger.info("Total duration of test in milliseconds: " + duration);

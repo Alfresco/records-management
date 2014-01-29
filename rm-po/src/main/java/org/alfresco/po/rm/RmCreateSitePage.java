@@ -39,7 +39,7 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class RMCreateSitePage extends CreateSitePage
+public class RmCreateSitePage extends CreateSitePage
 {
     private static final By SITE_PRESET = By.id("alfresco-rm-createSite-instance-sitePreset");
     private static final By OPTION_COLLAB_SITE = By.cssSelector("option:nth-of-type(1)");
@@ -52,7 +52,7 @@ public class RMCreateSitePage extends CreateSitePage
      *
      * @param drone {@link WebDrone}
      */
-    public RMCreateSitePage(WebDrone drone)
+    public RmCreateSitePage(WebDrone drone)
     {
         super(drone);
     }
@@ -62,11 +62,11 @@ public class RMCreateSitePage extends CreateSitePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMCreateSitePage render(RenderTime timer)
+    public RmCreateSitePage render(RenderTime timer)
     {
         RmUtils.checkMandotaryParam("timer", timer);
 
-        return (RMCreateSitePage) super.render(timer);
+        return (RmCreateSitePage) super.render(timer);
     }
 
     /**
@@ -74,9 +74,9 @@ public class RMCreateSitePage extends CreateSitePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMCreateSitePage render()
+    public RmCreateSitePage render()
     {
-        return (RMCreateSitePage) super.render();
+        return (RmCreateSitePage) super.render();
     }
 
     /**
@@ -84,9 +84,9 @@ public class RMCreateSitePage extends CreateSitePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMCreateSitePage render(final long time)
+    public RmCreateSitePage render(final long time)
     {
-        return (RMCreateSitePage) super.render(time);
+        return (RmCreateSitePage) super.render(time);
     }
 
     /**
@@ -112,7 +112,7 @@ public class RMCreateSitePage extends CreateSitePage
             case RecordsManagement:
                 selectSiteType(siteType);
                 drone.find(SUBMIT_BUTTON).click();
-                return new RMDashBoardPage(drone);
+                return new RmDashBoardPage(drone);
 
             case Collaboration:
                 WebElement siteNameElement = drone.findAndWait(INPUT_TITLE);

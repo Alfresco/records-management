@@ -19,7 +19,7 @@
       </property>
    </bean>
 
-   <bean id="factoryPage" class="org.alfresco.po.RMFactoryPage" />
+   <bean id="factoryPage" class="org.alfresco.po.RmFactoryPage" />
    <bean id="poProperties" class="org.alfresco.po.share.ShareProperties">
       <constructor-arg name="alfrescoVersion" value="${share.version}" />
    </bean>

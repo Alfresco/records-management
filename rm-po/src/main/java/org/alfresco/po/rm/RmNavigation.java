@@ -29,7 +29,7 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class RMNavigation extends Navigation
+public class RmNavigation extends Navigation
 {
     private static final String CREATE_SITE = "ul.create-site-menuitem>li>a";
     private static final String CREATE_SITE_DOJO_SUPPORT = "td#HEADER_SITES_MENU_CREATE_SITE_text";
@@ -39,7 +39,7 @@ public class RMNavigation extends Navigation
      *
      * @param drone {@link WebDrone}
      */
-    public RMNavigation(WebDrone drone)
+    public RmNavigation(WebDrone drone)
     {
         super(drone);
     }
@@ -47,15 +47,15 @@ public class RMNavigation extends Navigation
     /**
      * Mimics the action of selecting create site link.
      *
-     * @return {@link RMCreateSitePage} Returns records management create site page
+     * @return {@link RmCreateSitePage} Returns records management create site page
      */
-    public RMCreateSitePage selectCreateSite()
+    public RmCreateSitePage selectCreateSite()
     {
         selectSitesDropdown();
         String selectorText = dojoSupport ? CREATE_SITE_DOJO_SUPPORT : CREATE_SITE;
         By selector = By.cssSelector(selectorText);
         WebElement selectorElement = drone.find(selector);
         selectorElement.click();
-        return new RMCreateSitePage(drone);
+        return new RmCreateSitePage(drone);
     }
 }

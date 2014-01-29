@@ -16,27 +16,37 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.rm.pageobjecttests;
+package org.alfresco.po.rm;
 
-import org.alfresco.po.rm.RMSiteMembersPage;
-import org.alfresco.po.share.AbstractTest;
-import org.alfresco.po.util.FailedTestListener;
-import org.testng.Assert;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.alfresco.po.share.SharePage;
+import org.alfresco.webdrone.WebDrone;
+
 /**
- * Tests record management site members page.
+ * Records management site page abstract.
  *
  * @author Michael Suzuki
+ * @author Tuna Aksoy
  * @version 1.7.1
  */
-@Listeners(FailedTestListener.class)
-public class SiteMembersPageTest extends AbstractTest
+public abstract class RmSitePage extends SharePage
 {
-    @Test
-    public void createPage()
+    /**
+     * Constructor.
+     *
+     * @param drone {@link WebDrone}
+     */
+    protected RmSitePage(WebDrone drone)
     {
-        RMSiteMembersPage page = new RMSiteMembersPage(drone);
-        Assert.assertNotNull(page);
+        super(drone);
+    }
+
+    /**
+     * Get main navigation.
+     *
+     * @return {@link RmSiteNavigation} Navigation page object
+     */
+    public RmSiteNavigation getSiteNav()
+    {
+        return new RmSiteNavigation(drone);
     }
 }

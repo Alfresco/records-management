@@ -31,13 +31,13 @@ import org.alfresco.webdrone.exception.PageException;
  * @author Tuna Aksoy
  * @version 1.7.1
  */
-public class RMDashBoardPage extends DashBoardPage
+public class RmDashBoardPage extends DashBoardPage
 {
     /**
      * Constructor.
      * @param drone {@link WebDrone}
      */
-    public RMDashBoardPage(WebDrone drone)
+    public RmDashBoardPage(WebDrone drone)
     {
         super(drone);
     }
@@ -47,11 +47,11 @@ public class RMDashBoardPage extends DashBoardPage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMDashBoardPage render(RenderTime timer)
+    public RmDashBoardPage render(RenderTime timer)
     {
         RmUtils.checkMandotaryParam("timer", timer);
 
-        return (RMDashBoardPage) super.render(timer);
+        return (RmDashBoardPage) super.render(timer);
     }
 
     /**
@@ -59,9 +59,9 @@ public class RMDashBoardPage extends DashBoardPage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMDashBoardPage render(long time)
+    public RmDashBoardPage render(long time)
     {
-        return (RMDashBoardPage) super.render(time);
+        return (RmDashBoardPage) super.render(time);
     }
 
     /**
@@ -69,17 +69,17 @@ public class RMDashBoardPage extends DashBoardPage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMDashBoardPage render()
+    public RmDashBoardPage render()
     {
-        return (RMDashBoardPage) super.render();
+        return (RmDashBoardPage) super.render();
     }
 
     /**
      * Renders the RM Dash board page
      *
-     * @return {@link RMDashBoardPage} page object
+     * @return {@link RmDashBoardPage} page object
      */
-    public RMDashBoardPage rmRender()
+    public RmDashBoardPage rmRender()
     {
         try
         {
@@ -98,20 +98,20 @@ public class RMDashBoardPage extends DashBoardPage
     /**
      * Gets the navigation object for RM.
      *
-     * @return {@link RMNavigation} page object
+     * @return {@link RmNavigation} page object
      */
-    public RMNavigation getRMNavigation()
+    public RmNavigation getRMNavigation()
     {
-        return new RMNavigation(drone);
+        return new RmNavigation(drone);
     }
 
     /**
      * Gets the site navigation object for RM.
      *
-     * @return {@link RMSiteNavigation} page object
+     * @return {@link RmSiteNavigation} page object
      */
-    public RMSiteNavigation getRMSiteNavigation()
+    public RmSiteNavigation getRMSiteNavigation()
     {
-        return new RMSiteNavigation(drone);
+        return new RmSiteNavigation(drone);
     }
 }

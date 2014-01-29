@@ -36,7 +36,7 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class RMDocumentDetailsPage extends DocumentDetailsPage
+public class RmDocumentDetailsPage extends DocumentDetailsPage
 {
     private static final By HIDE_RECORD = By.cssSelector("div#onHideRecordAction.rm-hide-record");
     private static final By POP_UP = By.cssSelector("div.bd");
@@ -48,7 +48,7 @@ public class RMDocumentDetailsPage extends DocumentDetailsPage
      *
      * @param drone {@link WebDrone}
      */
-    public RMDocumentDetailsPage(WebDrone drone)
+    public RmDocumentDetailsPage(WebDrone drone)
     {
         super(drone);
     }
@@ -62,7 +62,7 @@ public class RMDocumentDetailsPage extends DocumentDetailsPage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public synchronized RMDocumentDetailsPage render(RenderTime timer)
+    public synchronized RmDocumentDetailsPage render(RenderTime timer)
     {
         RmUtils.checkMandotaryParam("timer", timer);
 
@@ -125,7 +125,7 @@ public class RMDocumentDetailsPage extends DocumentDetailsPage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMDocumentDetailsPage render()
+    public RmDocumentDetailsPage render()
     {
         return render(new RenderTime(maxPageLoadingTime));
     }
@@ -135,7 +135,7 @@ public class RMDocumentDetailsPage extends DocumentDetailsPage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMDocumentDetailsPage render(final long time)
+    public RmDocumentDetailsPage render(final long time)
     {
         return render(new RenderTime(time));
     }

@@ -44,7 +44,7 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @version 1.7.1
  */
-public class FilePlanPage extends RMSitePage
+public class FilePlanPage extends RmSitePage
 {
     private static Log logger = LogFactory.getLog(FilePlanPage.class);
     private static final String NODEREF_ID = "id";
@@ -235,13 +235,13 @@ public class FilePlanPage extends RMSitePage
     /**
      * Action mimicking select click on file button on the file plan page header.
      *
-     * @return {@link RMUploadFilePage} Returns the upload file page for RM
+     * @return {@link RmUploadFilePage} Returns the upload file page for RM
      */
-    public RMUploadFilePage selectFileRecord()
+    public RmUploadFilePage selectFileRecord()
     {
         WebElement newFile = drone.find(NEW_FILE_BTN);
         newFile.click();
-        return new RMUploadFilePage(drone);
+        return new RmUploadFilePage(drone);
     }
 
     /**
@@ -277,9 +277,9 @@ public class FilePlanPage extends RMSitePage
     /**
      * Action mimicking select click on file button for unfiled records container.
      *
-     * @return {@link RMUploadFilePage} Returns the upload file page for RM
+     * @return {@link RmUploadFilePage} Returns the upload file page for RM
      */
-    public RMUploadFilePage selectCreateNewUnfiledRecordsContainerFile()
+    public RmUploadFilePage selectCreateNewUnfiledRecordsContainerFile()
     {
         return selectFileRecord();
     }

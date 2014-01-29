@@ -32,7 +32,7 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @version 1.7.1
  */
-public class RMSiteNavigation extends AbstractSiteNavigation
+public class RmSiteNavigation extends AbstractSiteNavigation
 {
     private static final By MENU_BAR = By.cssSelector("div.alf-menu-bar");
     private static final By MORE_BTN = By.cssSelector("span#HEADER_SITE_MORE_PAGES_text");
@@ -48,7 +48,7 @@ public class RMSiteNavigation extends AbstractSiteNavigation
      * Constructor.
      * @param drone {@link WebDrone}
      */
-    public RMSiteNavigation(WebDrone drone)
+    public RmSiteNavigation(WebDrone drone)
     {
         super(drone);
         WebElement menuBar = drone.find(MENU_BAR);
@@ -161,9 +161,9 @@ public class RMSiteNavigation extends AbstractSiteNavigation
     /**
      * Mimics selecting the site members link on site navigation bar.
      *
-     * @return {@link RMSiteMembersPage} Return the records management site member page
+     * @return {@link RmSiteMembersPage} Return the records management site member page
      */
-    public RMSiteMembersPage selectSiteMembers()
+    public RmSiteMembersPage selectSiteMembers()
     {
         if (!isSelectSiteMembersDisplayed())
         {
@@ -171,7 +171,7 @@ public class RMSiteNavigation extends AbstractSiteNavigation
         }
 
         select(SITE_MEMBERS_TXT);
-        return new RMSiteMembersPage(drone);
+        return new RmSiteMembersPage(drone);
     }
 
     /**
@@ -197,12 +197,12 @@ public class RMSiteNavigation extends AbstractSiteNavigation
     /**
      * Mimics selecting the records management console link on site navigation bar.
      *
-     * @return {@link RMConsolePage} Returns the records management console page
+     * @return {@link RmConsolePage} Returns the records management console page
      */
-    public RMConsolePage selectRMConsole()
+    public RmConsolePage selectRMConsole()
     {
         selectMore();
         select(RM_CONSOLE_TXT);
-        return new RMConsolePage(drone);
+        return new RmConsolePage(drone);
     }
 }

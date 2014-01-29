@@ -18,7 +18,7 @@
  */
 package org.alfresco.po.utils;
 
-import org.alfresco.po.rm.RMDashBoardPage;
+import org.alfresco.po.rm.RmDashBoardPage;
 import org.alfresco.po.share.LoginPage;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.WebDrone;
@@ -47,8 +47,9 @@ public class RmPoUtils
         RmUtils.checkMandotaryParam("userInfo", userInfo);
 
         drone.navigateTo(url);
-        LoginPage lp = new LoginPage(drone).render();
-        lp.loginAs(userInfo[0], userInfo[1]);
-        return new RMDashBoardPage(drone);
+        LoginPage loginPage = new LoginPage(drone).render();
+        loginPage.loginAs(userInfo[0], userInfo[1]);
+
+        return new RmDashBoardPage(drone);
     }
 }

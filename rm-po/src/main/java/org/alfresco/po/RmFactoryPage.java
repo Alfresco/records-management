@@ -19,9 +19,9 @@
 package org.alfresco.po;
 
 import org.alfresco.po.rm.FilePlanPage;
-import org.alfresco.po.rm.RMConsolePage;
-import org.alfresco.po.rm.RMDashBoardPage;
-import org.alfresco.po.rm.RMSiteMembersPage;
+import org.alfresco.po.rm.RmConsolePage;
+import org.alfresco.po.rm.RmDashBoardPage;
+import org.alfresco.po.rm.RmSiteMembersPage;
 import org.alfresco.po.rm.RecordSearchPage;
 import org.alfresco.po.share.FactorySharePage;
 import org.alfresco.po.share.LoginPage;
@@ -42,7 +42,7 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class RMFactoryPage extends FactorySharePage
+public class RmFactoryPage extends FactorySharePage
 {
     private static final String RM_S = "rm-%s";
     private static final String SITE_RM = "site/rm";
@@ -57,13 +57,13 @@ public class RMFactoryPage extends FactorySharePage
     /**
      * Constructor.
      */
-    public RMFactoryPage()
+    public RmFactoryPage()
     {
         super();
-        pages.put(RM_SITE_MEMBERS, RMSiteMembersPage.class);
-        pages.put(RM_CONSOLE, RMConsolePage.class);
+        pages.put(RM_SITE_MEMBERS, RmSiteMembersPage.class);
+        pages.put(RM_CONSOLE, RmConsolePage.class);
         pages.put(RM_RMSEARCH, RecordSearchPage.class);
-        pages.put(RM_DASHBOARD, RMDashBoardPage.class);
+        pages.put(RM_DASHBOARD, RmDashBoardPage.class);
         pages.put(RM_FILE_PLAN, FilePlanPage.class);
     }
 
@@ -74,7 +74,7 @@ public class RMFactoryPage extends FactorySharePage
     {
         RmUtils.checkMandotaryParam("drone", drone);
 
-        return RMFactoryPage.resolvePage(drone);
+        return RmFactoryPage.resolvePage(drone);
     }
 
     /**
@@ -110,7 +110,7 @@ public class RMFactoryPage extends FactorySharePage
             }
 
             // Determine what page we're on based on url
-            return RMFactoryPage.getPage(drone.getCurrentUrl(), drone);
+            return RmFactoryPage.getPage(drone.getCurrentUrl(), drone);
         }
     }
 
@@ -128,7 +128,7 @@ public class RMFactoryPage extends FactorySharePage
         RmUtils.checkMandotaryParam("url", url);
         RmUtils.checkMandotaryParam("drone", drone);
 
-        String pageName = RMFactoryPage.resolvePage(url);
+        String pageName = RmFactoryPage.resolvePage(url);
         return instantiatePage(drone, pages.get(pageName));
     }
 

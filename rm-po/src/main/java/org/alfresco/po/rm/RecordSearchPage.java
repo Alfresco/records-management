@@ -32,7 +32,7 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @version 1.7.1
  */
-public class RecordSearchPage extends RMSitePage
+public class RecordSearchPage extends RmSitePage
 {
     /**
      * Constructor.

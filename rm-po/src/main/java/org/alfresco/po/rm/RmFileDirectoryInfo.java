@@ -33,7 +33,7 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class RMFileDirectoryInfo extends FileDirectoryInfo
+public class RmFileDirectoryInfo extends FileDirectoryInfo
 {
     private static final By BANNER = By.cssSelector("div.info-banner");
     private static final By CREATE_RECORD = By.cssSelector("div#onActionSimpleRepoAction.rm-create-record a");
@@ -45,7 +45,7 @@ public class RMFileDirectoryInfo extends FileDirectoryInfo
      * @param webElement {@link WebElement}
      * @param drone {@link WebDrone}
      */
-    public RMFileDirectoryInfo(String nodeRef, WebElement webElement,
+    public RmFileDirectoryInfo(String nodeRef, WebElement webElement,
             WebDrone drone)
     {
         super(nodeRef, webElement, drone);

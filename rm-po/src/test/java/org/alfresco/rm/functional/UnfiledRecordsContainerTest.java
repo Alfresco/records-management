@@ -1,4 +1,4 @@
-package org.alfresco.rm.functionaltests;
+package org.alfresco.rm.functional;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,9 +6,9 @@ import java.util.List;
 import org.alfresco.po.rm.CreateNewFolderForm;
 import org.alfresco.po.rm.FilePlanNavigation;
 import org.alfresco.po.rm.FilePlanPage;
-import org.alfresco.po.rm.RMCreateSitePage;
-import org.alfresco.po.rm.RMDashBoardPage;
-import org.alfresco.po.rm.RMUploadFilePage;
+import org.alfresco.po.rm.RmCreateSitePage;
+import org.alfresco.po.rm.RmDashBoardPage;
+import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.share.site.SiteFinderPage;
 import org.alfresco.po.share.site.SiteType;
@@ -50,7 +50,7 @@ public class UnfiledRecordsContainerTest extends AbstractTest
     private static final By BUTTON_TAG_NAME = By.tagName("button");
     private static final By INPUT_TITLE_SELECTOR = By.cssSelector("input[id$='prop_cm_title']");
     private static final By INPUT_DESCRIPTION_SELECTOR = By.cssSelector("textarea[id$='prop_cm_description']");
-    private RMDashBoardPage dashBoard;
+    private RmDashBoardPage dashBoard;
     private FilePlanPage filePlanPage;
 
     @BeforeClass(groups={"RM","nonCloud"})
@@ -67,7 +67,7 @@ public class UnfiledRecordsContainerTest extends AbstractTest
         }
 
         // Click create site dialog
-        RMCreateSitePage createSite = dashBoard.getRMNavigation().selectCreateSite().render();
+        RmCreateSitePage createSite = dashBoard.getRMNavigation().selectCreateSite().render();
         Assert.assertTrue(createSite.isCreateSiteDialogDisplayed());
 
         // Select RM Site
@@ -77,7 +77,7 @@ public class UnfiledRecordsContainerTest extends AbstractTest
         Assert.assertEquals(createSite.getSiteUrl(), RM_SITE_URL);
 
         // Create RM Site
-        RMDashBoardPage site = ((RMDashBoardPage) createSite.createRMSite()).rmRender();
+        RmDashBoardPage site = ((RmDashBoardPage) createSite.createRMSite()).rmRender();
         Assert.assertNotNull(site);
         Assert.assertTrue(RM_SITE_NAME.equalsIgnoreCase(site.getPageTitle()));
         Assert.assertTrue(site.getRMSiteNavigation().isDashboardActive());
@@ -110,7 +110,7 @@ public class UnfiledRecordsContainerTest extends AbstractTest
     public void fileRecord() throws IOException
     {
         Assert.assertTrue(filePlanPage.isUnfiledRecordsContainerFileDisplayed());
-        RMUploadFilePage uploadForm = filePlanPage.selectCreateNewUnfiledRecordsContainerFile().render();
+        RmUploadFilePage uploadForm = filePlanPage.selectCreateNewUnfiledRecordsContainerFile().render();
 
         WebElement prompt = drone.findAndWait(PROMPT_PANEL_ID);
         List<WebElement> elements = prompt.findElements(BUTTON_TAG_NAME);

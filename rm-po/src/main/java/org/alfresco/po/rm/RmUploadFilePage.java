@@ -18,7 +18,7 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.RMFactoryPage;
+import org.alfresco.po.RmFactoryPage;
 import org.alfresco.po.share.SharePage;
 import org.alfresco.po.share.site.UploadFilePage;
 import org.alfresco.po.utils.RmUtils;
@@ -41,7 +41,7 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class RMUploadFilePage extends UploadFilePage
+public class RmUploadFilePage extends UploadFilePage
 {
     private static final By FILE_DATA_FILE = By.cssSelector("input[id$='default-filedata-file']");
     private static final By FILE_SELECTION = By.cssSelector("input.dnd-file-selection-button");
@@ -53,7 +53,7 @@ public class RMUploadFilePage extends UploadFilePage
      *
      * @param drone {@link WebDrone}
      */
-    public RMUploadFilePage(WebDrone drone)
+    public RmUploadFilePage(WebDrone drone)
     {
         super(drone);
     }
@@ -63,7 +63,7 @@ public class RMUploadFilePage extends UploadFilePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMUploadFilePage render(RenderTime timer)
+    public RmUploadFilePage render(RenderTime timer)
     {
         RmUtils.checkMandotaryParam("timer", timer);
 
@@ -76,7 +76,7 @@ public class RMUploadFilePage extends UploadFilePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMUploadFilePage render()
+    public RmUploadFilePage render()
     {
         RenderTime timer = new RenderTime(maxPageLoadingTime);
         return render(timer);
@@ -87,7 +87,7 @@ public class RMUploadFilePage extends UploadFilePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RMUploadFilePage render(final long time)
+    public RmUploadFilePage render(final long time)
     {
         RenderTime timer = new RenderTime(time);
         return render(timer);
@@ -162,7 +162,7 @@ public class RMUploadFilePage extends UploadFilePage
             logger.trace("Upload button has been actioned");
         }
 
-        FilePlanPage filePlanPage = RMFactoryPage.getPage(getCurrentUrl(), drone).render();
+        FilePlanPage filePlanPage = RmFactoryPage.getPage(getCurrentUrl(), drone).render();
 
         // FIXME: This is a workaround. The render method must be changed for {@link FilePlanPage}
         drone.waitFor(3000);
