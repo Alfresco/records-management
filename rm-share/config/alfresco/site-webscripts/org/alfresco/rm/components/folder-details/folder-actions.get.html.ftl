@@ -8,7 +8,7 @@
          containerId: "${container?js_string}",
          rootNode: "${rootNode}",
          <#if repositoryUrl??>repositoryUrl: "${repositoryUrl}",</#if>
-         replicationUrlMapping: ${replicationUrlMappingJSON!"{}"},
+         replicationUrlMapping: ${jsonUtils.toJSONString(replicationUrlMappingJSON)!"{}"},
          repositoryBrowsing: ${(rootNode??)?string},
          folderDetails: ${folderDetailsJSON}
       }).setMessages(
