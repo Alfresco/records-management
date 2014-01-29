@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.share;
+package org.alfresco.po.rm;
 
 import java.util.List;
 
-import org.alfresco.po.rm.RMDashBoardPage;
 import org.alfresco.po.share.site.CreateSitePage;
 import org.alfresco.po.share.site.SiteType;
+import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.ElementState;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.exception.PageOperationException;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -40,18 +41,37 @@ import org.openqa.selenium.WebElement;
  */
 public class RMCreateSitePage extends CreateSitePage
 {
+    private static final By SITE_PRESET = By.id("alfresco-rm-createSite-instance-sitePreset");
+    private static final By OPTION_COLLAB_SITE = By.cssSelector("option:nth-of-type(1)");
+    private static final By OPTION_RM_SITE = By.cssSelector("option:nth-of-type(2)");
+    private static final By OPTION = By.tagName("option");
+    private static final By SELECT = By.tagName("select");
+
+    /**
+     * Constructor.
+     *
+     * @param drone {@link WebDrone}
+     */
     public RMCreateSitePage(WebDrone drone)
     {
         super(drone);
     }
 
+    /**
+     * @see org.alfresco.po.share.site.CreateSitePage#render(org.alfresco.webdrone.RenderTime)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMCreateSitePage render(RenderTime timer)
     {
+        RmUtils.checkMandotaryParam("timer", timer);
+
         return (RMCreateSitePage) super.render(timer);
     }
 
+    /**
+     * @see org.alfresco.po.share.site.CreateSitePage#render()
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMCreateSitePage render()
@@ -59,6 +79,9 @@ public class RMCreateSitePage extends CreateSitePage
         return (RMCreateSitePage) super.render();
     }
 
+    /**
+     * @see org.alfresco.po.share.site.CreateSitePage#render(long)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMCreateSitePage render(final long time)
@@ -78,6 +101,9 @@ public class RMCreateSitePage extends CreateSitePage
         return createNewSite(null, null, false, false, SiteType.RecordsManagement);
     }
 
+    /**
+     * @see org.alfresco.po.share.site.CreateSitePage#createSite(java.lang.String, java.lang.String, org.alfresco.po.share.site.SiteType)
+     */
     protected HtmlPage createSite(final String siteName, final String description,
             final SiteType siteType)
     {
@@ -89,45 +115,48 @@ public class RMCreateSitePage extends CreateSitePage
                 return new RMDashBoardPage(drone);
 
             case Collaboration:
-                WebElement inputSiteName = drone.findAndWait(INPUT_TITLE);
-                inputSiteName.sendKeys(siteName);
-                if(description != null)
+                WebElement siteNameElement = drone.findAndWait(INPUT_TITLE);
+                siteNameElement.sendKeys(siteName);
+                if (StringUtils.isNotBlank(description))
                 {
-                    WebElement inputDescription = drone.find(INPUT_DESCRIPTION);
-                    inputDescription.clear();
-                    inputDescription.sendKeys(description);
+                    WebElement descriptionElement = drone.find(INPUT_DESCRIPTION);
+                    descriptionElement.clear();
+                    descriptionElement.sendKeys(description);
                 }
                 selectSiteType(siteType);
                 return submit(SUBMIT_BUTTON, ElementState.DELETE_FROM_DOM);
-                //drone.find(SUBMIT_BUTTON).click();
-                //return new SiteDashboardPage(drone);
+
             default:
                 throw new PageOperationException("No site type match found for: " + siteType +
                         " out of the following possible options: RecordsManagment or Collaboration");
         }
     }
+
     /**
-     * Action of selecting site type drop down.
-     * @param type of site
+     * @see org.alfresco.po.share.site.CreateSitePage#selectSiteType(org.alfresco.po.share.site.SiteType)
      */
     public void selectSiteType(SiteType siteType)
     {
-        WebElement dropdown = drone.find(By.tagName("select"));
-        //Check option size if only one in dropdown return.
-        List<WebElement> options = dropdown.findElements(By.tagName("option"));
-        if(options.isEmpty() || options.size() > 1)
+        RmUtils.checkMandotaryParam("siteType", siteType);
+
+        WebElement dropdown = drone.find(SELECT);
+        // Check option size if only one in dropdown return.
+        List<WebElement> options = dropdown.findElements(OPTION);
+        if (options.isEmpty() || options.size() > 1)
         {
             WebElement siteOption;
             switch (siteType)
             {
-            case RecordsManagement:
-                siteOption = dropdown.findElement(By.cssSelector("option:nth-of-type(2)"));
-                break;
-            case Collaboration:
-                siteOption = dropdown.findElement(By.cssSelector("option:nth-of-type(1)"));
-                break;
-            default:
-                throw new PageOperationException("No suitable site type was found");
+                case RecordsManagement:
+                    siteOption = dropdown.findElement(OPTION_RM_SITE);
+                    break;
+
+                case Collaboration:
+                    siteOption = dropdown.findElement(OPTION_COLLAB_SITE);
+                    break;
+
+                default:
+                    throw new PageOperationException("No suitable site type was found");
             }
             siteOption.click();
         }
@@ -135,16 +164,20 @@ public class RMCreateSitePage extends CreateSitePage
 
     /**
      * Checks if drop down contains option for records management.
-     * This can be confirmed by checking the dropdown id
-     * @return true if id matches alfresco-rm
+     * This can be confirmed by checking the dropdown id.
+     *
+     * @return <code>true</code> if id matches alfresco-rm <code>false</code> otherwise
      */
     public boolean isRecordManagementTypeSupported()
     {
         try
         {
-            return drone.find(By.id("alfresco-rm-createSite-instance-sitePreset")).isDisplayed();
+            WebElement sitePreset = drone.find(SITE_PRESET);
+            return sitePreset.isDisplayed();
         }
-        catch (NoSuchElementException e){}
+        catch (NoSuchElementException e)
+        {
+        }
         return false;
     }
 }

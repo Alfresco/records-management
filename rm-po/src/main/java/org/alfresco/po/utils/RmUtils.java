@@ -16,33 +16,31 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po;
+package org.alfresco.po.utils;
 
-import org.alfresco.po.rm.RMDashBoardPage;
-import org.alfresco.po.share.LoginPage;
-import org.alfresco.webdrone.HtmlPage;
-import org.alfresco.webdrone.WebDrone;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- * Util class for the RM page objects
+ * Util class for the RM PO project
  *
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class RMUtils
+public final class RmUtils
 {
     /**
-     * Logs user into share.
-     * @param drone {@link WebDrone}
-     * @param url Share url
-     * @param userInfo username and password
-     * @return {@link HtmlPage} page response
+     * Helper method to check the parameters. This method should be used for all public methods.
+     *
+     * @param paramName {@link String} A name for the parameter to check
+     * @param object {@link Object} The object to check
+     * @exception IllegalArgumentException will be thrown if the parameter value is null
+     * (for {@link String} also if the value is empty or blank)
      */
-    public static HtmlPage loginAs(final WebDrone drone, final String url, final String ... userInfo)
+    public static final void checkMandotaryParam(String paramName, Object object)
     {
-        drone.navigateTo(url);
-        LoginPage lp = new LoginPage(drone).render();
-        lp.loginAs(userInfo[0], userInfo[1]);
-        return new RMDashBoardPage(drone);
+        if (object == null || (object instanceof String && StringUtils.isBlank((String) object)))
+        {
+            throw new IllegalArgumentException("'" + paramName + "' is a mandatory parameter!");
+        }
     }
 }

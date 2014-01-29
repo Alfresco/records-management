@@ -3,19 +3,19 @@ package org.alfresco.rm.functionaltests;
 import java.io.IOException;
 import java.util.List;
 
-import org.alfresco.po.RMUtils;
 import org.alfresco.po.rm.CreateNewFolderForm;
 import org.alfresco.po.rm.FilePlanNavigation;
 import org.alfresco.po.rm.FilePlanPage;
+import org.alfresco.po.rm.RMCreateSitePage;
 import org.alfresco.po.rm.RMDashBoardPage;
 import org.alfresco.po.rm.RMUploadFilePage;
 import org.alfresco.po.share.AbstractTest;
-import org.alfresco.po.share.RMCreateSitePage;
 import org.alfresco.po.share.site.SiteFinderPage;
 import org.alfresco.po.share.site.SiteType;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.SiteUtil;
 import org.alfresco.po.util.FailedTestListener;
+import org.alfresco.po.utils.RmPoUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -57,7 +57,7 @@ public class UnfiledRecordsContainerTest extends AbstractTest
     public void setUp()
     {
         // Login to Share
-        dashBoard = RMUtils.loginAs(drone, shareUrl, username, password).render();
+        dashBoard = RmPoUtils.loginAs(drone, shareUrl, username, password).render();
 
         // Check if the RM Site already exists, if so delete it
         SiteFinderPage siteFinderPage = SiteUtil.searchSite(drone, RM_SITE_NAME).render();
@@ -190,9 +190,59 @@ public class UnfiledRecordsContainerTest extends AbstractTest
         folderDetails.click();
     }
 
-    @Test(dependsOnMethods={"clickUnfiledRecordsFolderDetails", "navigateToUnfiledRecords"})
+    @Test(dependsOnMethods="clickUnfiledRecordsFolderDetails")
+    public void managePermissions()
+    {
+        navigateToUnfiledRecords();
+
+        // FIXME: The render method for the "FilePlanPage" must be fixed!!!
+        drone.waitFor(2000);
+        filePlanPage = filePlanPage.render();
+
+        FileDirectoryInfo folder = filePlanPage.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
+        WebElement actions = folder.findElement(By.cssSelector("td:nth-of-type(5)"));
+        drone.mouseOverOnElement(actions);
+        WebElement folderPermissions = folder.findElement(By.cssSelector("div.rm-manage-permissions>a"));
+        folderPermissions.click();
+
+        // FIXME: Need to find out why it fails without waiting!!!
+        drone.waitFor(2000);
+
+        WebElement addUserOrGroupButton = drone.findAndWait(By.cssSelector("button[id$='-addusergroup-button-button']"));
+        addUserOrGroupButton.click();
+
+        WebElement doneButton = drone.findAndWait(By.cssSelector("button[id$='-finish-button-button']"));
+        doneButton.click();
+    }
+
+    @Test(dependsOnMethods="managePermissions")
+    public void manageRules()
+    {
+        navigateToUnfiledRecords();
+
+        // FIXME: The render method for the "FilePlanPage" must be fixed!!!
+        drone.waitFor(2000);
+        filePlanPage = filePlanPage.render();
+
+        FileDirectoryInfo folder = filePlanPage.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
+        WebElement actions = folder.findElement(By.cssSelector("td:nth-of-type(5)"));
+        drone.mouseOverOnElement(actions);
+
+        WebElement showMore = folder.findElement(By.cssSelector("div.internal-show-more>a"));
+        showMore.click();
+
+        WebElement folderRules = folder.findElement(By.cssSelector("div.rm-manage-rules>a"));
+        folderRules.click();
+
+        // FIXME: Need to find out why it fails without waiting!!!
+        drone.waitFor(2000);
+    }
+
+    @Test(dependsOnMethods="manageRules")
     public void deleteFiledRecordAndFolder()
     {
+        navigateToUnfiledRecords();
+
         // FIXME: Need to find out why it fails without waiting!!!
         drone.waitFor(2000);
 

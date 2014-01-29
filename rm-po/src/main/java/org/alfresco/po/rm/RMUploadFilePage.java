@@ -21,6 +21,7 @@ package org.alfresco.po.rm;
 import org.alfresco.po.RMFactoryPage;
 import org.alfresco.po.share.SharePage;
 import org.alfresco.po.share.site.UploadFilePage;
+import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.HtmlElement;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderTime;
@@ -42,64 +43,80 @@ import org.openqa.selenium.WebElement;
  */
 public class RMUploadFilePage extends UploadFilePage
 {
+    private static final By FILE_DATA_FILE = By.cssSelector("input[id$='default-filedata-file']");
+    private static final By FILE_SELECTION = By.cssSelector("input.dnd-file-selection-button");
+    private static final By HTML_UPLOAD = By.cssSelector("button[id*='html-upload']");
     private Log logger = LogFactory.getLog(this.getClass());
 
+    /**
+     * Constructor.
+     *
+     * @param drone {@link WebDrone}
+     */
     public RMUploadFilePage(WebDrone drone)
     {
         super(drone);
     }
 
+    /**
+     * @see org.alfresco.po.share.site.UploadFilePage#render(org.alfresco.webdrone.RenderTime)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMUploadFilePage render(RenderTime timer)
     {
+        RmUtils.checkMandotaryParam("timer", timer);
+
         basicRender(timer);
         return this;
     }
 
+    /**
+     * @see org.alfresco.po.share.site.UploadFilePage#render()
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMUploadFilePage render()
     {
-        return render(new RenderTime(maxPageLoadingTime));
+        RenderTime timer = new RenderTime(maxPageLoadingTime);
+        return render(timer);
     }
 
+    /**
+     * @see org.alfresco.po.share.site.UploadFilePage#render(long)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMUploadFilePage render(final long time)
     {
-        return render(new RenderTime(time));
+        RenderTime timer = new RenderTime(time);
+        return render(timer);
     }
 
     /**
      * Action that selects the submit upload button.
-     * @return boolean true if submitted.
+     *
+     * @return <code>true</code> if submitted <code>false</code> otherwise
      */
     private void submitUpload()
     {
-        By selector;
-        if(alfrescoVersion.isCloud())
-        {
-            selector = By.id("template_x002e_dnd-upload_x002e_documentlibrary_x0023_default-cancelOk-button-button");
-        }
-        else
-        {
-            selector = By.cssSelector("button[id*='html-upload']");
-        }
         try
         {
-            HtmlElement okButton = new HtmlElement(drone.find(selector), drone);
+            WebElement htmlUpload = drone.find(HTML_UPLOAD);
+            HtmlElement okButton = new HtmlElement(htmlUpload, drone);
             String ready = okButton.click();
-            if(logger.isTraceEnabled())
+
+            if (logger.isTraceEnabled())
             {
-                logger.trace(String.format("operation completed in: %s",ready));
+                logger.trace(String.format("Operation completed in: %s",ready));
             }
-            while(true)
+
+            while (true)
             {
                 try
                 {
                     //Verify button has been actioned
-                    if(!drone.find(selector).isDisplayed())
+                    if (!htmlUpload.isDisplayed())
                     {
                         break;
                     }
@@ -111,8 +128,11 @@ public class RMUploadFilePage extends UploadFilePage
             }
 
         }
+
         //Check result has been updated
-        catch (TimeoutException te){}
+        catch (TimeoutException te)
+        {
+        }
     }
 
     /**
@@ -124,16 +144,16 @@ public class RMUploadFilePage extends UploadFilePage
      */
     public HtmlPage uploadFile(final String filePath)
     {
-        WebElement input;
-        if(alfrescoVersion.isFileUploadHtml5())
+        WebElement fileSelection;
+        if (alfrescoVersion.isFileUploadHtml5())
         {
-            input = drone.find(By.cssSelector("input.dnd-file-selection-button"));
-            input.sendKeys(filePath);
+            fileSelection = drone.find(FILE_SELECTION);
+            fileSelection.sendKeys(filePath);
         }
         else
         {
-            input = drone.find(By.cssSelector("input[id$='default-filedata-file']"));
-            input.sendKeys(filePath);
+            fileSelection = drone.find(FILE_DATA_FILE);
+            fileSelection.sendKeys(filePath);
             submitUpload();
         }
 
@@ -151,9 +171,15 @@ public class RMUploadFilePage extends UploadFilePage
         {
             throw new RuntimeException("A file should have been uploaded!");
         }
+
         return filePlanPage;
     }
 
+    /**
+     * Helper method for getting the current URL without any parameters.
+     *
+     * @return {@link String} Current url without any parameters
+     */
     private String getCurrentUrl()
     {
         String currentUrl = drone.getCurrentUrl();

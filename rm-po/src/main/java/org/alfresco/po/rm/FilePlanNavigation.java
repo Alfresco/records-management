@@ -24,48 +24,57 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
-
 /**
  * Records management file plan side navigation.
- * @author Michael Suzuki
- * @version 1.7.1
  *
+ * @author Michael Suzuki
+ * @author Tuna Aksoy
+ * @version 1.7.1
  */
 public class FilePlanNavigation extends HtmlElement
 {
-    private static By UNFILED_RECORDS_LINK = By.cssSelector("span.unfiledRecords a");
+    private static final By FILEPLAN_FILTER = By.cssSelector("div.filter.fileplan-filter");
+    private static final By UNFILED_RECORDS_LINK = By.cssSelector("span.unfiledRecords a");
+
     /**
      * Constructor.
+     *
      * @param drone {@link WebDrone}
      */
     public FilePlanNavigation(WebDrone drone)
     {
         super(drone);
-        WebElement nav = drone.find(By.cssSelector("div.filter.fileplan-filter"));
-        setWebElement(nav);
+        WebElement filePlanFilter = drone.find(FILEPLAN_FILTER);
+        setWebElement(filePlanFilter);
     }
+
     /**
      * Check if the unfiled record link is displayed.
-     * @return if link is displayed
+     *
+     * @return <code>true</code> if link is displayed <code>false</code> otherwise
      */
     public boolean isUnfiledRecordsVisible()
     {
         try
         {
-            return find(UNFILED_RECORDS_LINK).isDisplayed();
+            WebElement unfileRecordsLink = find(UNFILED_RECORDS_LINK);
+            return unfileRecordsLink.isDisplayed();
         }
-        catch (NoSuchElementException nse) 
+        catch (NoSuchElementException nse)
         {
-            
         }
         return false;
     }
+
     /**
      * Select the link of unfiled records.
+     *
+     * @return {@link FilePlanPage} Returns the file plan page
      */
     public FilePlanPage selectUnfiledRecords()
     {
-        find(UNFILED_RECORDS_LINK).click();
+        WebElement unfileRecordsLink = find(UNFILED_RECORDS_LINK);
+        unfileRecordsLink.click();
         return new FilePlanPage(drone);
     }
 }

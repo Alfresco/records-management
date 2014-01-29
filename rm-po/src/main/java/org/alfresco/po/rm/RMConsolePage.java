@@ -18,56 +18,84 @@
  */
 package org.alfresco.po.rm;
 
+import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 
 /**
  * Records management console page object.
- * @author Michael Suzuki
  *
+ * @author Michael Suzuki
+ * @author Tuna Aksoy
+ * @since 1.7.1
  */
 public class RMConsolePage extends RMSitePage
 {
+    /**
+     * Constructor.
+     *
+     * @param drone {@link WebDrone}
+     */
     public RMConsolePage(WebDrone drone)
     {
         super(drone);
     }
-    
+
+    /**
+     * @see org.alfresco.webdrone.Render#render(org.alfresco.webdrone.RenderTime)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMConsolePage render(RenderTime timer)
     {
-        while(true)
+        RmUtils.checkMandotaryParam("timer", timer);
+
+        while (true)
         {
             timer.start();
             try
             {
-                //if search body is found we are rendered
-                if(drone.find(By.cssSelector("div[id$='_rm-console']")).isDisplayed())
+                // if search body is found we are rendered
+                By rmConsole = By.cssSelector("div[id$='_rm-console']");
+                WebElement rmConsoleElement = drone.find(rmConsole);
+                if (rmConsoleElement.isDisplayed())
                 {
                     break;
                 }
             }
-            catch (NoSuchElementException e){ }
-            finally { timer.end();}
+            catch (NoSuchElementException e)
+            {
+            }
+            finally
+            {
+                timer.end();
+            }
         }
         return this;
     }
-    
+
+    /**
+     * @see org.alfresco.webdrone.Render#render(long)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMConsolePage render(long time)
     {
-        return render(new RenderTime(time));
+        RenderTime timer = new RenderTime(time);
+        return render(timer);
     }
 
+    /**
+     * @see org.alfresco.webdrone.Render#render()
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMConsolePage render()
     {
-        return render(new RenderTime(maxPageLoadingTime));
+        RenderTime timer = new RenderTime(maxPageLoadingTime);
+        return render(timer);
     }
-    
 }

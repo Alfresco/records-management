@@ -26,7 +26,8 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 /**
- * Tests record management module.
+ * Tests record search page.
+ *
  * @author Michael Suzuki
  * @version 1.7.1
  */

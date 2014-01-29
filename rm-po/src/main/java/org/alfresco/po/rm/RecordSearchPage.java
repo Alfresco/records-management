@@ -18,56 +18,84 @@
  */
 package org.alfresco.po.rm;
 
+import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 
 /**
  * Records management search page.
+ *
  * @author Michael Suzuki
+ * @author Tuna Aksoy
  * @version 1.7.1
  */
 public class RecordSearchPage extends RMSitePage
 {
+    /**
+     * Constructor.
+     *
+     * @param drone {@link WebDrone}
+     */
     public RecordSearchPage(WebDrone drone)
     {
         super(drone);
     }
 
+    /**
+     * @see org.alfresco.webdrone.Render#render(org.alfresco.webdrone.RenderTime)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RecordSearchPage render(RenderTime timer)
     {
-        while(true)
+        RmUtils.checkMandotaryParam("timer", timer);
+
+        while (true)
         {
             timer.start();
             try
             {
-                //if search body is found we are rendered
-                if(drone.find(By.cssSelector("div.rm-search")).isDisplayed())
+                // if search body is found we are rendered
+                By rmSearch = By.cssSelector("div.rm-search");
+                WebElement rmSearchElement = drone.find(rmSearch);
+                if (rmSearchElement.isDisplayed())
                 {
                     break;
                 }
             }
-            catch (NoSuchElementException e){ }
-            finally { timer.end();}
+            catch (NoSuchElementException e)
+            {
+            }
+            finally
+            {
+                timer.end();
+            }
         }
         return this;
     }
 
+    /**
+     * @see org.alfresco.webdrone.Render#render(long)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RecordSearchPage render(long time)
     {
-        return render(new RenderTime(time));
+        RenderTime timer = new RenderTime(time);
+        return render(timer);
     }
 
+    /**
+     * @see org.alfresco.webdrone.Render#render()
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RecordSearchPage render()
     {
-        return render(new RenderTime(maxPageLoadingTime));
+        RenderTime timer = new RenderTime(maxPageLoadingTime);
+        return render(timer);
     }
-
 }

@@ -26,7 +26,8 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 /**
- * Tests record management module.
+ * Tests file plan page.
+ *
  * @author Michael Suzuki
  * @version 1.7.1
  */

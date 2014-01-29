@@ -20,28 +20,30 @@ package org.alfresco.po.rm;
 
 import org.alfresco.po.share.site.AbstractSiteNavigation;
 import org.alfresco.webdrone.WebDrone;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
-
 /**
  * Records management site navigation.
- * @author Michael Suzuki
- * @version 1.7.1
  *
+ * @author Michael Suzuki
+ * @author Tuna Aksoy
+ * @version 1.7.1
  */
 public class RMSiteNavigation extends AbstractSiteNavigation
 {
-    private static final By RM_CONSOLE_TXT_CSS_SELECTOR = By.cssSelector("span#HEADER_SITE_RM_MANAGEMENT_CONSOLE_text");
-    private static final By SITE_MEMBERS_CSS_SELECTOR = By.cssSelector("div#HEADER_SITE_MEMBERS");
-    private static final By SITE_MEMBERS_TXT_CSS_SELECTOR = By.cssSelector("span#HEADER_SITE_MEMBERS_text");
-    private static final By RM_SEARCH_CSS = By.cssSelector("div#HEADER_SITE_RMSEARCH");
-    private static final By RM_SEARCH_TXT_CSS = By.cssSelector("span#HEADER_SITE_RMSEARCH_text");
-    private static final By MORE_BTN_CSS = By.cssSelector("span#HEADER_SITE_MORE_PAGES_text");
-    private static final By FILE_PLAN_CSS = By.cssSelector("div#HEADER_SITE_DOCUMENTLIBRARY");
-    private static final By FILE_PLAN_TXT_CSS = By.cssSelector("span#HEADER_SITE_DOCUMENTLIBRARY_text");
-    
+    private static final By MENU_BAR = By.cssSelector("div.alf-menu-bar");
+    private static final By MORE_BTN = By.cssSelector("span#HEADER_SITE_MORE_PAGES_text");
+    private static final By SITE_MEMBERS = By.cssSelector("div#HEADER_SITE_MEMBERS");
+    private static final By SITE_MEMBERS_TXT = By.cssSelector("span#HEADER_SITE_MEMBERS_text");
+    private static final By RECORD_SEARCH = By.cssSelector("div#HEADER_SITE_RMSEARCH");
+    private static final By RECORD_SEARCH_TXT = By.cssSelector("span#HEADER_SITE_RMSEARCH_text");
+    private static final By FILE_PLAN = By.cssSelector("div#HEADER_SITE_DOCUMENTLIBRARY");
+    private static final By FILE_PLAN_TXT = By.cssSelector("span#HEADER_SITE_DOCUMENTLIBRARY_text");
+    private static final By RM_CONSOLE_TXT = By.cssSelector("span#HEADER_SITE_RM_MANAGEMENT_CONSOLE_text");
+
     /**
      * Constructor.
      * @param drone {@link WebDrone}
@@ -49,142 +51,158 @@ public class RMSiteNavigation extends AbstractSiteNavigation
     public RMSiteNavigation(WebDrone drone)
     {
         super(drone);
-        WebElement nav = drone.find(By.cssSelector("div.alf-menu-bar"));
-        setWebElement(nav);
+        WebElement menuBar = drone.find(MENU_BAR);
+        setWebElement(menuBar);
     }
+
     /**
      * Check if the site navigation has file plan link highlighted.
-     * This is only available in RM module and is basically doc lib
-     * with a different label
-     * @return if link is highlighted
+     * This is only available in RM module and is basically doc lib with a different label
+     *
+     * @return <code>true</code> if link is highlighted <code>false</code> otherwise
      */
     public boolean isFilePlanActive()
     {
-        return isLinkActive(FILE_PLAN_CSS);
+        return isLinkActive(FILE_PLAN);
     }
-    
-    
+
     /**
      * Checks if File plan link is displayed.
-     * @return true if displayed
+     *
+     * @return <code>true</code> if displayed <code>false</code> otherwise
      */
     public boolean isFilePlanDisplayed()
     {
         try
         {
-            WebElement filePlanButton = find(FILE_PLAN_CSS);
-            //Do a text check as its using the same css as doc lib.
+            WebElement filePlanButton = find(FILE_PLAN);
+            // Do a text check as its using the same css as doc lib.
             String label = filePlanButton.getText();
-            if(label != null && "File plan".equalsIgnoreCase(label.trim()))
+            String filePlan = "File plan";
+            if (StringUtils.isNotBlank(label) && filePlan.equalsIgnoreCase(label.trim()))
             {
                 return true;
             }
         }
-        catch (NoSuchElementException e) { }
+        catch (NoSuchElementException e)
+        {
+        }
         return false;
-    }
-    
-    /**
-     * Checks if More drop down is displayed.
-     * @return true if displayed
-     */
-    public boolean isMoreDisplayed()
-    {
-        return isLinkDisplayed(MORE_BTN_CSS);
-    }
-    
-    /**
-     * Checks if More drop down is displayed.
-     * @return true if displayed
-     */
-    public void selectMore()
-    {
-        drone.find(MORE_BTN_CSS).click();
-    }
-    
-    /**
-     * Mimics selecting the file plan link on
-     * site navigation bar.
-     */
-    public FilePlanPage selectFilePlan()
-    {
-        select(FILE_PLAN_TXT_CSS);
-        return new FilePlanPage(getDrone());
-    }
-    
-    /**
-     * Mimics selecting the record search link on
-     * site navigation bar.
-     */
-    public RecordSearchPage selectRecordSearch()
-    {
-        if(!isRecordSearchDisplayed())
-        {
-            selectMore();
-        }
-        select(RM_SEARCH_TXT_CSS);
-        return new RecordSearchPage(drone);
-    }
-    
-    /**
-     * Checks if record search is displayed.
-     * @return true if displayed
-     */
-    public boolean isRecordSearchDisplayed()
-    {
-        return isLinkDisplayed(RM_SEARCH_CSS);
-    }
-    
-    /**
-     * Checks if record search link is active.
-     * @return true if  high lighted
-     */
-    public boolean isRecordSearchActive()
-    {
-        return isLinkActive(RM_SEARCH_CSS);
-    }
-    
-    /**
-     * Mimics selecting the site members link on
-     * site navigation bar.
-     */
-    public RMSiteMembersPage selectSiteMembers()
-    {
-        if(!isSelectSiteMembersDisplayed())
-        {
-            selectMore();
-        }
-        select(SITE_MEMBERS_TXT_CSS_SELECTOR);
-        return new RMSiteMembersPage(drone);
-    }
-    
-    /**
-     * Checks if site members is displayed.
-     * @return true if displayed
-     */
-    public boolean isSelectSiteMembersDisplayed()
-    {
-        return isLinkDisplayed(SITE_MEMBERS_CSS_SELECTOR);
-    }
-    
-    /**
-     * Checks if site members link is active.
-     * @return true if  high lighted
-     */
-    public boolean isSelectSiteMembersActive()
-    {
-        return isLinkActive(SITE_MEMBERS_CSS_SELECTOR);
     }
 
     /**
-     * Mimics selecting the records management console link on
-     * site navigation bar.
+     * Checks if More drop down is displayed.
+     *
+     * @return <code>true</code> if displayed <code>false</code> otherwise
+     */
+    public boolean isMoreDisplayed()
+    {
+        return isLinkDisplayed(MORE_BTN);
+    }
+
+    /**
+     * Checks if More drop down is displayed.
+     *
+     * @return <code>true</code> if displayed <code>false</code> otherwise
+     */
+    public void selectMore()
+    {
+        WebElement moreButton = drone.find(MORE_BTN);
+        moreButton.click();
+    }
+
+    /**
+     * Mimics selecting the file plan link on site navigation bar.
+     *
+     * @return {@link FilePlanPage} Returns the file plan page object
+     */
+    public FilePlanPage selectFilePlan()
+    {
+        select(FILE_PLAN_TXT);
+        return new FilePlanPage(getDrone());
+    }
+
+    /**
+     * Mimics selecting the record search link on site navigation bar.
+     *
+     * @return {@link RecordSearchPage} Return the record search page
+     */
+    public RecordSearchPage selectRecordSearch()
+    {
+        if (!isRecordSearchDisplayed())
+        {
+            selectMore();
+        }
+
+        select(RECORD_SEARCH_TXT);
+        return new RecordSearchPage(drone);
+    }
+
+    /**
+     * Checks if record search is displayed.
+     *
+     * @return <code>true</code> if displayed <code>false</code> otherwise
+     */
+    public boolean isRecordSearchDisplayed()
+    {
+        return isLinkDisplayed(RECORD_SEARCH);
+    }
+
+    /**
+     * Checks if record search link is active.
+     *
+     * @return <code>true</code> if  high lighted <code>false</code> otherwise
+     */
+    public boolean isRecordSearchActive()
+    {
+        return isLinkActive(RECORD_SEARCH);
+    }
+
+    /**
+     * Mimics selecting the site members link on site navigation bar.
+     *
+     * @return {@link RMSiteMembersPage} Return the records management site member page
+     */
+    public RMSiteMembersPage selectSiteMembers()
+    {
+        if (!isSelectSiteMembersDisplayed())
+        {
+            selectMore();
+        }
+
+        select(SITE_MEMBERS_TXT);
+        return new RMSiteMembersPage(drone);
+    }
+
+    /**
+     * Checks if site members is displayed.
+     *
+     * @return <code>true</code> if displayed <code>false</code> otherwise
+     */
+    public boolean isSelectSiteMembersDisplayed()
+    {
+        return isLinkDisplayed(SITE_MEMBERS);
+    }
+
+    /**
+     * Checks if site members link is active.
+     *
+     * @return <code>true</code> if high lighted <code>false</code> otherwise
+     */
+    public boolean isSelectSiteMembersActive()
+    {
+        return isLinkActive(SITE_MEMBERS);
+    }
+
+    /**
+     * Mimics selecting the records management console link on site navigation bar.
+     *
+     * @return {@link RMConsolePage} Returns the records management console page
      */
     public RMConsolePage selectRMConsole()
     {
         selectMore();
-        select(RM_CONSOLE_TXT_CSS_SELECTOR);
+        select(RM_CONSOLE_TXT);
         return new RMConsolePage(drone);
     }
-    
 }

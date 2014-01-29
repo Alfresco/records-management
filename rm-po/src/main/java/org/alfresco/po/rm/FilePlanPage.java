@@ -25,6 +25,7 @@ import java.util.List;
 import org.alfresco.po.share.Pagination;
 import org.alfresco.po.share.site.ManageRulesPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
+import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.exception.PageException;
@@ -34,30 +35,40 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
+
 /**
- * Records management file plan page, based on
- * the document library page with specific action
- * and operation related to file plan.
+ * Records management file plan page, based on the document library
+ * page with specific action and operation related to file plan.
+ *
  * @author Michael Suzuki
+ * @author Tuna Aksoy
  * @version 1.7.1
  */
 public class FilePlanPage extends RMSitePage
 {
     private static Log logger = LogFactory.getLog(FilePlanPage.class);
+    private static final String NODEREF_ID = "id";
+    private static final String FILE_DIRECTORY_INFO_ROW_TITLE = "//h3//a[text()='%s']/../../../../..";
+    private static final String FILE_DIRECTORY_INFO_ROW_NUMBER = "tbody.yui-dt-data tr:nth-of-type(%d)";
+    private static final String VALUE = "value";
     private static final String PAGINATION_BUTTON_NEXT = "a.yui-pg-next";
     private static final String PAGINATION_BUTTON_PREVIOUS = "a.yui-pg-previous";
     private static final String JS_SCRIPT_CHECK_DOCLIST = "return Alfresco.util.ComponentManager.findFirst('Alfresco.DocumentList').widgets.dataTable._getViewRecords();";
+    private static final String NODEREF_LOCATOR = "input[id^='checkbox-yui']";
     private static final By MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-manageRules-button-button']");
     private static final By NEW_CATEGORY_BTN = By.cssSelector("button[id$='default-newCategory-button-button']");
     private static final By NEW_FOLDER_BTN = By.cssSelector("button[id$='default-newFolder-button-button']");
     private static final By NEW_FILE_BTN = By.cssSelector("button[id$='default-fileUpload-button-button']");
     private static final By NODE_REF_CSS = By.cssSelector("td div.yui-dt-liner input");
-    private static final String NODEREF_LOCATOR = "input[id^='checkbox-yui']";
     private static final By RM_ADD_META_DATA_LINK = By.cssSelector("div#onActionAddRecordMetadata a");
+    private static final By RECORD = By.cssSelector("tbody.yui-dt-data > tr");
+    private static final By DESCRIPTION = By.cssSelector("div[id$='_default-description'] div");
+    private static final By FILEPLAN = By.id("template_x002e_tree_x002e_documentlibrary_x0023_rm-fileplan");
     private final boolean expectingRecord;
 
     /**
      * Constructor.
+     *
      * @param drone {@link WebDrone}
      */
     public FilePlanPage(WebDrone drone)
@@ -65,9 +76,12 @@ public class FilePlanPage extends RMSitePage
         super(drone);
         this.expectingRecord = false;
     }
+
     /**
      * Constructor.
+     *
      * @param drone {@link WebDrone}
+     * @param hasRecords {@link Boolean}
      */
     public FilePlanPage(WebDrone drone, boolean hasRecords)
     {
@@ -75,22 +89,26 @@ public class FilePlanPage extends RMSitePage
         this.expectingRecord = hasRecords;
     }
 
-    private static final String FILE_PLAN_TREE_ID = "template_x002e_tree_x002e_documentlibrary_x0023_rm-fileplan";
-
+    /**
+     * @see org.alfresco.webdrone.Render#render(org.alfresco.webdrone.RenderTime)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public FilePlanPage render(RenderTime timer)
     {
-        while(true)
+        RmUtils.checkMandotaryParam("timer", timer);
+
+        while (true)
         {
             timer.start();
             try
             {
-                if(drone.find(By.id(FILE_PLAN_TREE_ID)).isDisplayed())
+                WebElement filePlan = drone.find(FILEPLAN);
+                if (filePlan.isDisplayed())
                 {
-                    if(expectingRecord)
+                    if (expectingRecord)
                     {
-                        if(hasRecords())
+                        if (hasRecords())
                         {
                             break;
                         }
@@ -101,7 +119,9 @@ public class FilePlanPage extends RMSitePage
                     }
                 }
             }
-            catch (NoSuchElementException e){ }
+            catch (NoSuchElementException e)
+            {
+            }
             finally
             {
                 timer.end();
@@ -110,97 +130,124 @@ public class FilePlanPage extends RMSitePage
         return this;
     }
 
+    /**
+     * @see org.alfresco.webdrone.Render#render(long)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public FilePlanPage render(long time)
     {
-        return render(new RenderTime(time));
+        RenderTime timer = new RenderTime(time);
+        return render(timer);
     }
 
+    /**
+     * @see org.alfresco.webdrone.Render#render()
+     */
     @SuppressWarnings("unchecked")
     @Override
     public FilePlanPage render()
     {
-        return render(new RenderTime(maxPageLoadingTime));
+        RenderTime timer = new RenderTime(maxPageLoadingTime);
+        return render(timer);
     }
 
     /**
      * Checks visibility of create new category button
      * on the file plan page header.
-     * @return true if visible
+     *
+     * @return <code>true</code> if visible <code>false</code> otherwise
      */
     public boolean isCreateNewCategoryDisplayed()
     {
         try
         {
-            return drone.find(NEW_CATEGORY_BTN).isDisplayed();
+            WebElement newCategory = drone.find(NEW_CATEGORY_BTN);
+            return newCategory.isDisplayed();
         }
-        catch (NoSuchElementException nse){ }
+        catch (NoSuchElementException nse)
+        {
+        }
         return false;
     }
 
     /**
      * Action mimicking select click on new category button.
+     *
+     * @return {@link CreateNewCategoryForm} Returns the create category form dialog
      */
     public CreateNewCategoryForm selectCreateNewCategory()
     {
-        drone.find(NEW_CATEGORY_BTN).click();
+        WebElement newCategory = drone.find(NEW_CATEGORY_BTN);
+        newCategory.click();
         return new CreateNewCategoryForm(drone);
     }
 
     /**
      * Checks visibility of create new folder button
      * on the file plan page header.
-     * @return true if visible
+     *
+     * @return <code>true</code> if visible <code>false</code> otherwise
      */
     public boolean isCreateNewFolderDisplayed()
     {
         try
         {
-            return drone.find(NEW_FOLDER_BTN).isDisplayed();
+            WebElement newFolder = drone.find(NEW_FOLDER_BTN);
+            return newFolder.isDisplayed();
         }
-        catch (NoSuchElementException nse){ }
+        catch (NoSuchElementException nse)
+        {
+        }
         return false;
     }
 
     /**
      * Action mimicking select click on new folder button.
+     *
+     * @return {@link CreateNewFolderForm} Returns the create folder form dialog
      */
     public CreateNewFolderForm selectCreateNewFolder()
     {
-        drone.find(NEW_FOLDER_BTN).click();
+        WebElement newFolder = drone.find(NEW_FOLDER_BTN);
+        newFolder.click();
         return new CreateNewFolderForm(drone);
     }
 
     /**
-     * Checks visibility of file button
-     * on the file plan page header.
-     * @return true if visible
+     * Checks visibility of file button on the file plan page header.
+     *
+     * @return <code>true</code> if visible <code>false</code> otherwise
      */
     public boolean isFileRecordDisplayed()
     {
         try
         {
-            return drone.find(NEW_FILE_BTN).isDisplayed();
+            WebElement newFile = drone.find(NEW_FILE_BTN);
+            return newFile.isDisplayed();
         }
-        catch (NoSuchElementException nse){ }
+        catch (NoSuchElementException nse)
+        {
+        }
         return false;
     }
 
     /**
-     * Action mimicking select click on file button
-     * on the file plan page header.
+     * Action mimicking select click on file button on the file plan page header.
+     *
+     * @return {@link RMUploadFilePage} Returns the upload file page for RM
      */
     public RMUploadFilePage selectFileRecord()
     {
-        drone.find(NEW_FILE_BTN).click();
+        WebElement newFile = drone.find(NEW_FILE_BTN);
+        newFile.click();
         return new RMUploadFilePage(drone);
     }
 
     /**
-     * Checks visibility of create new folder button
-     * in the unfiled records container.
-     * @return true if visible
+     * Checks visibility of create new folder button in the unfiled records container.
+     *
+     * @return <code>true</code> if visible <code>false</code> otherwise
      */
     public boolean isUnfiledRecordsContainerFolderDisplayed()
     {
@@ -208,8 +255,9 @@ public class FilePlanPage extends RMSitePage
     }
 
     /**
-     * Action mimicking select click on new folder button
-     * for unfiled records container.
+     * Action mimicking select click on new folder button for unfiled records container.
+     *
+     * @return {@link CreateNewFolderForm} Returns the create folder folder form dialog
      */
     public CreateNewFolderForm selectCreateNewUnfiledRecordsContainerFolder()
     {
@@ -217,9 +265,9 @@ public class FilePlanPage extends RMSitePage
     }
 
     /**
-     * Checks visibility of file button
-     * in the unfiled records container.
-     * @return true if visible
+     * Checks visibility of file button in the unfiled records container.
+     *
+     * @return <code>true</code> if visible <code>false</code> otherwise
      */
     public boolean isUnfiledRecordsContainerFileDisplayed()
     {
@@ -227,8 +275,9 @@ public class FilePlanPage extends RMSitePage
     }
 
     /**
-     * Action mimicking select click on file button
-     * for unfiled records container.
+     * Action mimicking select click on file button for unfiled records container.
+     *
+     * @return {@link RMUploadFilePage} Returns the upload file page for RM
      */
     public RMUploadFilePage selectCreateNewUnfiledRecordsContainerFile()
     {
@@ -237,43 +286,56 @@ public class FilePlanPage extends RMSitePage
 
     /**
      * Verify if records exists.
-     * @return true if visible
+     *
+     * @return <code>true</code> if visible <code>false</code> otherwise
      */
     public boolean hasRecords()
     {
         try
         {
-            return drone.find(By.cssSelector("tbody.yui-dt-data > tr")).isDisplayed();
+            WebElement record = drone.find(RECORD);
+            return record.isDisplayed();
         }
-        catch (NoSuchElementException e){ }
+        catch (NoSuchElementException e)
+        {
+        }
         return false;
     }
+
     /**
      * Verify if header sub navigation has manage rules button visible.
-     * @return true if button
+     *
+     * @return <code>true</code> if visible <code>false</code> otherwise
      */
     public boolean isManageRulesDisplayed()
     {
         try
         {
-            return drone.find(MANAGE_RULES_BTN).isDisplayed();
+            WebElement manageRules = drone.find(MANAGE_RULES_BTN);
+            return manageRules.isDisplayed();
         }
-        catch (NoSuchElementException e) { }
+        catch (NoSuchElementException e)
+        {
+        }
         return false;
     }
 
     /**
      * Action of click on manage rules button.
+     *
      * @return {@link RMManageRulesPage} page response
      */
     public ManageRulesPage selectManageRules()
     {
-        drone.find(MANAGE_RULES_BTN).click();
+        WebElement manageRules = drone.find(MANAGE_RULES_BTN);
+        manageRules.click();
         return new ManageRulesPage(drone);
     }
+
     /**
      * Checks if pagination next button is active.
-     * @return true if next page exists
+     *
+     * @return <code>true</code> if next page exists <code>false</code> otherwise
      */
     public boolean hasNextPage()
     {
@@ -282,7 +344,8 @@ public class FilePlanPage extends RMSitePage
 
     /**
      * Checks if pagination previous button is active.
-     * @return true if next page exists
+     *
+     * @return <code>true</code> if next page exists <code>false</code> otherwise
      */
     public boolean hasPreviousPage()
     {
@@ -304,50 +367,59 @@ public class FilePlanPage extends RMSitePage
     {
         Pagination.selectPagiantionButton(drone, PAGINATION_BUTTON_PREVIOUS);
     }
+
     /**
-     * Get html element on the side of the page with
-     * file plan sub navigation also known as filters.
+     * Get html element on the side of the page with file plan sub
+     * navigation also known as filters.
+     *
      * @return {@link FilePlanNavigation} side element filter
      */
     public FilePlanNavigation getFilePlanNavigation()
     {
         return new FilePlanNavigation(drone);
     }
+
     /**
      * The file plan filter description.
      * Options are unfiled records, transfers and holds.
+     *
      * @return String name of filtered view
      */
     public String getFilePlanDescription()
     {
-        return drone.findAndWait(By.cssSelector("div[id$='_default-description'] div")).getText();
+        WebElement description = drone.findAndWait(DESCRIPTION);
+        return description.getText();
     }
+
     /**
      * Select a particular file directory info row based on the title.
-     * @param title String item title
+     *
+     * @param title {@link String} item title
      * @return {@link FileDirectoryInfo} page response
      */
     public FileDirectoryInfo getFileDirectoryInfo(final String title)
     {
-        if(title == null || title.isEmpty())
-        {
-            throw new IllegalArgumentException("Title is required");
-        }
+        RmUtils.checkMandotaryParam("title", title);
+
         try
         {
-            WebElement row = drone.find(By.xpath(String.format("//h3//a[text()='%s']/../../../../..",title)));
-            String nodeRef = row.findElement(NODE_REF_CSS).getAttribute("value");
+            String formattedRow = String.format(FILE_DIRECTORY_INFO_ROW_TITLE, title);
+            By RowByXpath = By.xpath(formattedRow);
+            WebElement row = drone.find(RowByXpath);
+            WebElement nodeRefElement = row.findElement(NODE_REF_CSS);
+            String nodeRef = nodeRefElement.getAttribute(VALUE);
             return new FileDirectoryInfo(nodeRef, row, drone);
         }
         catch (NoSuchElementException e)
         {
-            throw new PageException(String.format("File directory info with title %s was not found",title), e);
+            throw new PageException(String.format("File directory info with title %s was not found", title), e);
         }
     }
 
     /**
      * Select a particular file directory info row
      * based on the count, the accepted range is 1-50.
+     *
      * @param number Integer item row
      * @return {@link FileDirectoryInfo} page response
      */
@@ -357,17 +429,22 @@ public class FilePlanPage extends RMSitePage
         {
             throw new IllegalArgumentException("A valid number range of 1 to 50 is required");
         }
+
         try
         {
-            WebElement row = drone.find(By.cssSelector(String.format("tbody.yui-dt-data tr:nth-of-type(%d)", number)));
-            String nodeRef = row.findElement(NODE_REF_CSS).getAttribute("id");
+            String formattedRow = String.format(FILE_DIRECTORY_INFO_ROW_NUMBER, number);
+            By rowSelector = By.cssSelector(formattedRow);
+            WebElement row = drone.find(rowSelector);
+            WebElement nodeRefElement = row.findElement(NODE_REF_CSS);
+            String nodeRef = nodeRefElement.getAttribute(NODEREF_ID);
             return new FileDirectoryInfo(nodeRef, row, drone);
         }
         catch (NoSuchElementException e)
         {
-            throw new PageException(String.format("File directory info row %d was not found",number), e);
+            throw new PageException(String.format("File directory info row %d was not found", number), e);
         }
     }
+
     /**
      * Extracts the results from result table that matches the file name.
      *
@@ -378,15 +455,19 @@ public class FilePlanPage extends RMSitePage
         try
         {
             boolean noFiles = !hasFiles();
-            if(logger.isTraceEnabled()) logger.trace(String.format("Documet list has no files: %s", noFiles));
+            if (logger.isTraceEnabled())
+            {
+                logger.trace(String.format("Documet list has no files: %s", noFiles));
+            }
 
-            if(noFiles)
+            if (noFiles)
             {
                 return Collections.emptyList();
             }
 
-            List<WebElement> results = drone.findAll(By.cssSelector(NODEREF_LOCATOR));
-            if(logger.isTraceEnabled())
+            By nodeRefLocator = By.cssSelector(NODEREF_LOCATOR);
+            List<WebElement> results = drone.findAll(nodeRefLocator);
+            if (logger.isTraceEnabled())
             {
                 logger.trace(String.format("getFiles list is empty: %s file size %d",
                         results.isEmpty(),
@@ -398,7 +479,7 @@ public class FilePlanPage extends RMSitePage
                 List<FileDirectoryInfo> fileDirectoryList = new ArrayList<FileDirectoryInfo>();
                 for (WebElement result : results)
                 {
-                    FileDirectoryInfo file = new FileDirectoryInfo(result.getAttribute("value"), result, drone);
+                    FileDirectoryInfo file = new FileDirectoryInfo(result.getAttribute(VALUE), result, drone);
                     if(logger.isTraceEnabled())
                     {
                         logger.trace("adding file" + file.getName());
@@ -407,10 +488,13 @@ public class FilePlanPage extends RMSitePage
                 }
                 return fileDirectoryList;
             }
+
             //Try again as we are expecting results.
             return getFiles();
         }
-        catch (NoSuchElementException e) { }
+        catch (NoSuchElementException e)
+        {
+        }
         catch (StaleElementReferenceException e)
         {
             if(logger.isTraceEnabled())
@@ -423,36 +507,43 @@ public class FilePlanPage extends RMSitePage
     }
 
     /**
-     * Checks document list is populated by injecting
-     * a javascript in to an alfresco component that
-     * renders the document list.
-     * @return true if collection of documents exists
+     * Checks document list is populated by injecting a javascript in to
+     * an alfresco component that renders the document list.
+     *
+     * @return <code>true</code> if collection of documents exists <code>false</code> otherwise
      */
     public boolean hasFiles()
     {
         try
         {
             ArrayList<?> objs = (ArrayList<?>) drone.executeJavaScript(JS_SCRIPT_CHECK_DOCLIST);
-            if(!objs.isEmpty())
+            if (!objs.isEmpty())
             {
                 return true;
             }
         }
-        catch (Exception e) { }
+        catch (Exception e)
+        {
+        }
         return false;
     }
+
     /**
      * Checked if add record metadata link is visibile.
      * This is a records management feature.
-     * @return true if link is visible
+     *
+     * @return <code>true</code> if link is visible <code>false</code> otherwise
      */
     public boolean isAddRecordMetaDataVisible()
     {
         try
         {
-            return drone.find(RM_ADD_META_DATA_LINK).isDisplayed();
+            WebElement addMetaDataLink = drone.find(RM_ADD_META_DATA_LINK);
+            return addMetaDataLink.isDisplayed();
         }
-        catch (NoSuchElementException nse) { }
+        catch (NoSuchElementException nse)
+        {
+        }
         return false;
     }
 }

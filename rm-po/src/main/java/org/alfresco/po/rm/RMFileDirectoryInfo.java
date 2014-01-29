@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.share;
+package org.alfresco.po.rm;
 
+import org.alfresco.po.share.FactorySharePage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.WebDrone;
@@ -34,7 +35,16 @@ import org.openqa.selenium.WebElement;
  */
 public class RMFileDirectoryInfo extends FileDirectoryInfo
 {
+    private static final By BANNER = By.cssSelector("div.info-banner");
+    private static final By CREATE_RECORD = By.cssSelector("div#onActionSimpleRepoAction.rm-create-record a");
 
+    /**
+     * Constructor.
+     *
+     * @param nodeRef {@link String}
+     * @param webElement {@link WebElement}
+     * @param drone {@link WebDrone}
+     */
     public RMFileDirectoryInfo(String nodeRef, WebElement webElement,
             WebDrone drone)
     {
@@ -43,15 +53,17 @@ public class RMFileDirectoryInfo extends FileDirectoryInfo
 
     /**
      * Action of selecting the declare records button
-     * that appear in the action drop down, this is only
-     * available in the Records Management Module.
+     * that appear in the action drop down.
+     *
+     * @return {@link HtmlPage}
      */
     public HtmlPage declareRecord()
     {
         selectMoreAction().click();
         try
         {
-            drone.find(By.cssSelector("div#onActionSimpleRepoAction.rm-create-record a")).click();
+            WebElement createRecord = drone.find(CREATE_RECORD);
+            createRecord.click();
         }
         catch (NoSuchElementException nse)
         {
@@ -63,18 +75,20 @@ public class RMFileDirectoryInfo extends FileDirectoryInfo
 
     /**
      * Verify if item is a record.
-     * Part of Records management module, when a document
-     * is a record a small banner info is displayed indicating
-     * that it is a record
-     * @return true if record banner is visible
+     * Part of Records management module, when a document is a record
+     * a small banner info is displayed indicating that it is a record.
+     *
+     * @return <code>true</code> if record banner is visible <code>false</code> otherwise
      */
     public boolean isRecord()
     {
         try
         {
-            return this.find(By.cssSelector("div.info-banner")).isDisplayed();
+            return find(BANNER).isDisplayed();
         }
-        catch (NoSuchElementException e) { }
+        catch (NoSuchElementException e)
+        {
+        }
         return false;
     }
 }

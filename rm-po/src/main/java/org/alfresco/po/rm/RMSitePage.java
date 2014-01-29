@@ -23,11 +23,18 @@ import org.alfresco.webdrone.WebDrone;
 
 /**
  * Records management site page abstract.
+ *
  * @author Michael Suzuki
+ * @author Tuna Aksoy
  * @version 1.7.1
  */
 public abstract class RMSitePage extends SharePage
 {
+    /**
+     * Constructor.
+     *
+     * @param drone {@link WebDrone}
+     */
     protected RMSitePage(WebDrone drone)
     {
         super(drone);
@@ -35,7 +42,8 @@ public abstract class RMSitePage extends SharePage
 
     /**
      * Get main navigation.
-     * @return Navigation page object
+     *
+     * @return {@link RMSiteNavigation} Navigation page object
      */
     public RMSiteNavigation getSiteNav()
     {

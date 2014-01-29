@@ -27,13 +27,13 @@ import org.alfresco.po.share.FactorySharePage;
 import org.alfresco.po.share.LoginPage;
 import org.alfresco.po.share.ShareErrorPopup;
 import org.alfresco.po.share.SharePage;
-import org.alfresco.po.share.site.ManageRulesPage;
+import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.exception.PageException;
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -44,34 +44,54 @@ import org.openqa.selenium.WebElement;
  */
 public class RMFactoryPage extends FactorySharePage
 {
+    private static final String RM_S = "rm-%s";
+    private static final String SITE_RM = "site/rm";
+    private static final String DASHBOARD = "dashboard";
+    private static final String LOGIN = "login";
+    private static final String RM_FILE_PLAN = "rm-documentlibrary";
+    private static final String RM_DASHBOARD = "rm-dashboard";
+    private static final String RM_RMSEARCH = "rm-rmsearch";
+    private static final String RM_CONSOLE = "rm-console";
+    private static final String RM_SITE_MEMBERS = "rm-site-members";
+
+    /**
+     * Constructor.
+     */
     public RMFactoryPage()
     {
         super();
-        pages.put("rm-site-members", RMSiteMembersPage.class);
-        pages.put("rm-console", RMConsolePage.class);
-        pages.put("rm-rmsearch", RecordSearchPage.class);
-        pages.put("rm-dashboard", RMDashBoardPage.class);
-        pages.put("rm-documentlibrary", FilePlanPage.class);
-        pages.put("rm-folder-rules", ManageRulesPage.class);
+        pages.put(RM_SITE_MEMBERS, RMSiteMembersPage.class);
+        pages.put(RM_CONSOLE, RMConsolePage.class);
+        pages.put(RM_RMSEARCH, RecordSearchPage.class);
+        pages.put(RM_DASHBOARD, RMDashBoardPage.class);
+        pages.put(RM_FILE_PLAN, FilePlanPage.class);
     }
 
+    /**
+     * @see org.alfresco.po.share.FactorySharePage#getPage(org.alfresco.webdrone.WebDrone)
+     */
     public HtmlPage getPage(WebDrone drone)
     {
+        RmUtils.checkMandotaryParam("drone", drone);
+
         return RMFactoryPage.resolvePage(drone);
     }
 
     /**
      * Creates the appropriate page object based on the current page the
      * {@link WebDrone} is on.
-     * 
-     * @param drone WebDrone Alfresco unmanned web browser client
-     * @return SharePage the page object response
+     *
+     * @param drone {@link WebDrone} Alfresco unmanned web browser client
+     * @return {@link SharePage} The page object response
      * @throws PageException
      */
     public static HtmlPage resolvePage(final WebDrone drone) throws PageException
     {
+        RmUtils.checkMandotaryParam("drone", drone);
+
         // Determine if user is logged in if not return login page
-        if (drone.getTitle().toLowerCase().contains("login"))
+        String title = drone.getTitle().toLowerCase();
+        if (title.contains(LOGIN))
         {
             return new LoginPage(drone);
         }
@@ -80,12 +100,14 @@ public class RMFactoryPage extends FactorySharePage
             try
             {
                 WebElement errorPrompt = drone.find(By.cssSelector(FAILURE_PROMPT));
-                if(errorPrompt.isDisplayed())
+                if (errorPrompt.isDisplayed())
                 {
                     return new ShareErrorPopup(drone);
                 }
             }
-            catch(NoSuchElementException nse){ }
+            catch (NoSuchElementException nse)
+            {
+            }
 
             // Determine what page we're on based on url
             return RMFactoryPage.getPage(drone.getCurrentUrl(), drone);
@@ -97,12 +119,15 @@ public class RMFactoryPage extends FactorySharePage
      * that identify's the page the drone is currently on. Once a the name
      * is extracted it is used to get the class from the map which is
      * then instantiated.
-     * 
-     * @param driver WebDriver browser client
-     * @return SharePage page object
+     *
+     * @param driver {@link WebDriver} Browser client
+     * @return {@link SharePage} Share page object
      */
     public static SharePage getPage(final String url, WebDrone drone)
     {
+        RmUtils.checkMandotaryParam("url", url);
+        RmUtils.checkMandotaryParam("drone", drone);
+
         String pageName = RMFactoryPage.resolvePage(url);
         return instantiatePage(drone, pages.get(pageName));
     }
@@ -110,26 +135,23 @@ public class RMFactoryPage extends FactorySharePage
     /**
      * Extracts the String value from the last occurrence of slash in the url.
      *
-     * @param url String url.
-     * @return String page title
+     * @param url {@link String} url.
+     * @return {@link String} Page title
      */
     protected static String resolvePage(String url)
     {
-        if (StringUtils.isBlank(url))
+        RmUtils.checkMandotaryParam("url", url);
+
+        if (url.endsWith(DASHBOARD) && url.contains(SITE_RM))
         {
-            throw new UnsupportedOperationException("Empty url is not allowed");
+            return RM_DASHBOARD;
         }
 
-        if (url.endsWith("dashboard") && url.contains("site/rm"))
+        // Check if rm based url
+        if (url.contains(SITE_RM))
         {
-            return "rm-dashboard";
-        }
-
-        //Check if rm based url
-        if(url.contains("site/rm"))
-        {
-            String val[] = url.split("site/rm/");
-            return String.format("rm-%s",val[1]);
+            String val[] = url.split(SITE_RM + "/");
+            return String.format(RM_S, val[1]);
         }
 
         return FactorySharePage.resolvePage(url);

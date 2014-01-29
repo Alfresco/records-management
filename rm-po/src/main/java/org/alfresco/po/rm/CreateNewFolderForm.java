@@ -18,18 +18,14 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.share.SharePage;
-import org.alfresco.webdrone.RenderElement;
+import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 /**
- * Create new record folder popup page form.
- * The form that is displayed to user when creating
- * a new record folder.
- * 
+ * Create new record folder popup page form. The form that is
+ * displayed to user when creating a new record folder.
+ *
  * This is only available to Records management module and
  * is accessed via the file plan page when a user selects
  * the create new folder button.
@@ -37,118 +33,69 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class CreateNewFolderForm extends SharePage
+public class CreateNewFolderForm extends BaseCreateNewForm
 {
-    private final By nameInput = By.cssSelector("input[id$='_default-createFolder_prop_cm_name']");
-    private final By titleInput = By.cssSelector("input[id$='_default-createFolder_prop_cm_title']");
-    private final By descriptionInput = By.tagName("textarea");
-    private final By recordFolderIdentifier = By.cssSelector("input[id$='_default-createFolder_prop_rma_identifier']");
-    private RenderElement name = RenderElement.getVisibleRenderElement(nameInput);
-    private RenderElement title = RenderElement.getVisibleRenderElement(titleInput);
-    private RenderElement description = RenderElement.getVisibleRenderElement(descriptionInput);
-    private RenderElement recordFolderId = RenderElement.getVisibleRenderElement(recordFolderIdentifier);
-
+    /**
+     * Constructor.
+     *
+     * @param drone {@link WebDrone}
+     */
     protected CreateNewFolderForm(WebDrone drone)
     {
         super(drone);
     }
 
+    /**
+     * @see org.alfresco.po.rm.BaseCreateNewForm#render(org.alfresco.webdrone.RenderTime)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public CreateNewFolderForm render(RenderTime timer)
     {
-        elementRender(timer, name, title, description, recordFolderId);
-        return this;
+        RmUtils.checkMandotaryParam("timer", timer);
+
+        return (CreateNewFolderForm) super.render(timer);
     }
 
+    /**
+     * @see org.alfresco.po.rm.BaseCreateNewForm#render(long)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public CreateNewFolderForm render(long time)
     {
-        return render(new RenderTime(time));
+        return (CreateNewFolderForm) super.render(time);
     }
 
+    /**
+     * @see org.alfresco.po.rm.BaseCreateNewForm#render()
+     */
     @SuppressWarnings("unchecked")
     @Override
     public CreateNewFolderForm render()
     {
-        return render(maxPageLoadingTime);
-    }
-
-    /**
-     * Enter name value to name input field.
-     * @param name String name of new folder
-     */
-    public void enterName(final String name)
-    {
-        if(name == null) throw new IllegalArgumentException("Name value required");
-        WebElement input = drone.find(nameInput);
-        input.clear();
-        input.sendKeys(name);
-    }
-
-    /**
-     * Enter title value to title input field.
-     * @param title String new folder title
-     */
-    public void enterTitle(final String title)
-    {
-        if(title == null) throw new IllegalArgumentException("Title value required");
-        WebElement input = drone.find(titleInput);
-        input.clear();
-        input.sendKeys(title);
-    }
-
-    /**
-     * Enter description value to description input field.
-     * @param title String new folder description
-     */
-    public void enterDescription(final String description)
-    {
-        if(description == null) throw new IllegalArgumentException("Description value required");
-        WebElement input = drone.find(descriptionInput);
-        input.clear();
-        input.sendKeys(description);
+        return (CreateNewFolderForm) super.render();
     }
 
     /**
      * Enter record folder id value to record folder id input field.
-     * @param title String new record folder id
+     *
+     * @param title {@link String} New record folder id
      */
     public void enterRecordFolderId(final String recordFolderId)
     {
-        if(recordFolderId == null) throw new IllegalArgumentException("Record Folder Id value required");
-        WebElement input = drone.find(recordFolderIdentifier);
-        input.clear();
-        input.sendKeys(recordFolderId);
+        RmUtils.checkMandotaryParam("recordFolderId", recordFolderId);
+
+        super.enterId(recordFolderId);
     }
 
     /**
      * Gets the new record folder id input value.
-     * @return String record folder id
+     *
+     * @return {@link String} Record folder id
      */
     public String getRecordFolderId()
     {
-        WebElement input = drone.find(recordFolderIdentifier);
-        return input.getAttribute("value");
-    }
-
-    /**
-     * Action that selects the save button.
-     */
-    public FilePlanPage selectSave()
-    {
-        drone.find(By.cssSelector("button[id$='_default-createFolder-form-submit-button']")).click();
-        canResume();
-        return new FilePlanPage(drone, true);
-    }
-
-    /**
-     * Action that selects the cancel button.
-     */
-    public FilePlanPage selectCancel()
-    {
-        drone.find(By.cssSelector("button[id$='_default-createFolder-form-cancel-button']")).click();
-        return new FilePlanPage(drone);
+        return super.getId();
     }
 }

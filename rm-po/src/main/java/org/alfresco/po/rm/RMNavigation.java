@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.share;
+package org.alfresco.po.rm;
 
+import org.alfresco.po.share.Navigation;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 /**
  * Extends {@link Navigation} to add RM specific methods
@@ -29,6 +31,14 @@ import org.openqa.selenium.By;
  */
 public class RMNavigation extends Navigation
 {
+    private static final String CREATE_SITE = "ul.create-site-menuitem>li>a";
+    private static final String CREATE_SITE_DOJO_SUPPORT = "td#HEADER_SITES_MENU_CREATE_SITE_text";
+
+    /**
+     * Constructor.
+     *
+     * @param drone {@link WebDrone}
+     */
     public RMNavigation(WebDrone drone)
     {
         super(drone);
@@ -37,13 +47,15 @@ public class RMNavigation extends Navigation
     /**
      * Mimics the action of selecting create site link.
      *
-     * @return HtmlPage people finder page object
+     * @return {@link RMCreateSitePage} Returns records management create site page
      */
     public RMCreateSitePage selectCreateSite()
     {
         selectSitesDropdown();
-        String selector = dojoSupport ? "td#HEADER_SITES_MENU_CREATE_SITE_text" : "ul.create-site-menuitem>li>a";
-        drone.find(By.cssSelector(selector)).click();
+        String selectorText = dojoSupport ? CREATE_SITE_DOJO_SUPPORT : CREATE_SITE;
+        By selector = By.cssSelector(selectorText);
+        WebElement selectorElement = drone.find(selector);
+        selectorElement.click();
         return new RMCreateSitePage(drone);
     }
 }

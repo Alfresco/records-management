@@ -19,7 +19,7 @@
 package org.alfresco.po.rm;
 
 import org.alfresco.po.share.DashBoardPage;
-import org.alfresco.po.share.RMNavigation;
+import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.exception.PageException;
@@ -28,6 +28,7 @@ import org.alfresco.webdrone.exception.PageException;
  * Records management dash board page object.
  *
  * @author Michael Suzuki
+ * @author Tuna Aksoy
  * @version 1.7.1
  */
 public class RMDashBoardPage extends DashBoardPage
@@ -41,13 +42,21 @@ public class RMDashBoardPage extends DashBoardPage
         super(drone);
     }
 
+    /**
+     * @see org.alfresco.po.share.DashBoardPage#render(org.alfresco.webdrone.RenderTime)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMDashBoardPage render(RenderTime timer)
     {
+        RmUtils.checkMandotaryParam("timer", timer);
+
         return (RMDashBoardPage) super.render(timer);
     }
 
+    /**
+     * @see org.alfresco.po.share.DashBoardPage#render(long)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMDashBoardPage render(long time)
@@ -55,6 +64,9 @@ public class RMDashBoardPage extends DashBoardPage
         return (RMDashBoardPage) super.render(time);
     }
 
+    /**
+     * @see org.alfresco.po.share.DashBoardPage#render()
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMDashBoardPage render()

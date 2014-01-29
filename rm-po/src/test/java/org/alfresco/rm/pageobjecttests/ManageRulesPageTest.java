@@ -15,6 +15,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+/**
+ * Testss manage rule page.
+ *
+ * @author Michael Suzuki
+ * @version 1.7.1
+ */
 @Listeners(FailedTestListener.class)
 public class ManageRulesPageTest extends AbstractTest
 {
@@ -33,21 +39,21 @@ public class ManageRulesPageTest extends AbstractTest
         NewFolderPage newFolderPage = documentLibPage.getNavigation().selectCreateNewFolder();
         newFolderPage.createNewFolder(folderName).render();
     }
-    
+
     @Test
     public void testPage()
     {
         ManageRulesPage page = new ManageRulesPage(drone);
         Assert.assertNotNull(page);
     }
-    
+
     @Test(expectedExceptions=IllegalArgumentException.class)
     public void testPageWithNull()
     {
         ManageRulesPage page = new ManageRulesPage(null);
         Assert.assertNotNull(page);
     }
-    
+
     @Test
     public void createNewRule()
     {
@@ -59,11 +65,11 @@ public class ManageRulesPageTest extends AbstractTest
         Assert.assertNotNull(manageRules);
         RulesPage rulesPage = manageRules.selectCreateRules().render();
         Assert.assertNotNull(rulesPage);
-        
+
         //check cancel works
         manageRules = rulesPage.selectCancel().render();
         rulesPage = manageRules.selectCreateRules().render();
-        
+
         //Complete form
         rulesPage.selectPerformAction("Declare as record");
         rulesPage.enterTitle("m1");

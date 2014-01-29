@@ -16,17 +16,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.share;
+package org.alfresco.po.rm;
 
-import org.alfresco.po.rm.FilePlanPage;
 import org.alfresco.po.share.site.document.DocumentDetailsPage;
+import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.exception.PageException;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebElement;
 
 /**
  * Extends {@link DocumentDetailsPage} to add RM specific methods
@@ -36,14 +38,20 @@ import org.openqa.selenium.TimeoutException;
  */
 public class RMDocumentDetailsPage extends DocumentDetailsPage
 {
+    private static final By HIDE_RECORD = By.cssSelector("div#onHideRecordAction.rm-hide-record");
+    private static final By POP_UP = By.cssSelector("div.bd");
     private static final By RM_ADD_META_DATA_LINK = By.cssSelector("div#onActionAddRecordMetadata a");
+    private static final By DELCARE_RM_LINK = By.cssSelector("div#onActionSimpleRepoAction.rm-create-record a");
 
+    /**
+     * Constructor.
+     *
+     * @param drone {@link WebDrone}
+     */
     public RMDocumentDetailsPage(WebDrone drone)
     {
         super(drone);
     }
-
-    private static final By DELCARE_RM_LINK = By.cssSelector("div#onActionSimpleRepoAction.rm-create-record a");
 
     /**
      * Verifies if the page has rendered completely by checking the page load is
@@ -56,26 +64,37 @@ public class RMDocumentDetailsPage extends DocumentDetailsPage
     @Override
     public synchronized RMDocumentDetailsPage render(RenderTime timer)
     {
+        RmUtils.checkMandotaryParam("timer", timer);
+
         while (true)
         {
             timer.start();
             synchronized (this)
             {
-                try{ this.wait(100L); } catch (InterruptedException e) {}
+                try
+                {
+                    this.wait(100L);
+                }
+                catch (InterruptedException e)
+                {
+                }
             }
             try
             {
                 //If popup is not displayed start render check
-                if(!drone.find(By.cssSelector("div.bd")).isDisplayed())
+                WebElement popUp = drone.find(POP_UP);
+                if (!popUp.isDisplayed())
                 {
-                    String docVersionOnScreen = drone.find(By.cssSelector(DOCUMENT_VERSION_PLACEHOLDER)).getText().trim();
+                    WebElement documentVersion = drone.find(By.cssSelector(DOCUMENT_VERSION_PLACEHOLDER));
+                    String docVersionOnScreen = documentVersion.getText().trim();
                     // If the text is not what we expect it to be, then repeat
-                    if (this.previousVersion != null && docVersionOnScreen.equals(this.previousVersion))
+                    if (StringUtils.isNotBlank(this.previousVersion) && docVersionOnScreen.equals(this.previousVersion))
                     {
                         // We are still seeing the old version number
                         // Go around again
                         continue;
                     }
+
                     // Populate the doc version
                     this.documentVersion = docVersionOnScreen;
                     break;
@@ -101,6 +120,9 @@ public class RMDocumentDetailsPage extends DocumentDetailsPage
         return this;
     }
 
+    /**
+     * @see org.alfresco.po.share.site.document.DocumentDetailsPage#render()
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMDocumentDetailsPage render()
@@ -108,6 +130,9 @@ public class RMDocumentDetailsPage extends DocumentDetailsPage
         return render(new RenderTime(maxPageLoadingTime));
     }
 
+    /**
+     * @see org.alfresco.po.share.site.document.DocumentDetailsPage#render(long)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RMDocumentDetailsPage render(final long time)
@@ -117,13 +142,13 @@ public class RMDocumentDetailsPage extends DocumentDetailsPage
 
     /**
      * Mimics the action of selecting declare record.
-     * This link is only available in the records
-     * management module and is displayed in the action
-     * link section of the document details page.
+     *
+     * @return {@link FilePlanPage} Returns the file plan page object
      */
     public FilePlanPage selectDeclareRecod()
     {
-        drone.find(DELCARE_RM_LINK).click();
+        WebElement declareRmLink = drone.find(DELCARE_RM_LINK);
+        declareRmLink.click();
         canResume();
         return new FilePlanPage(drone);
     }
@@ -131,15 +156,19 @@ public class RMDocumentDetailsPage extends DocumentDetailsPage
     /**
      * Checked if add record metadata link is visibile.
      * This is a records management feature.
-     * @return true if link is visible
+     *
+     * @return <code>true</code> if link is visible <code>false</code> otherwise
      */
     public boolean isAddRecordMetaDataVisible()
     {
         try
         {
-            return drone.find(RM_ADD_META_DATA_LINK).isDisplayed();
+            WebElement addMetaDataLink = drone.find(RM_ADD_META_DATA_LINK);
+            return addMetaDataLink.isDisplayed();
         }
-        catch (NoSuchElementException nse) { }
+        catch (NoSuchElementException nse)
+        {
+        }
         return false;
     }
 
@@ -151,15 +180,18 @@ public class RMDocumentDetailsPage extends DocumentDetailsPage
      *  <li> Record management module enabled</li>
      *  <li> When the document has been declared as record</li>
      * </ul>
-     * @return true if link is displayed
+     * @return <code>true</code> if link is displayed <code>false</code> otherwise
      */
     public boolean isHideRecordLinkDisplayed()
     {
         try
         {
-            return drone.find(By.cssSelector("div#onHideRecordAction.rm-hide-record")).isDisplayed();
+            WebElement hideRecord = drone.find(HIDE_RECORD);
+            return hideRecord.isDisplayed();
         }
-        catch (NoSuchElementException nse) { }
+        catch (NoSuchElementException nse)
+        {
+        }
         return false;
     }
 }
