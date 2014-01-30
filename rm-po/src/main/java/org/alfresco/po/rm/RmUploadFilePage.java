@@ -18,10 +18,9 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.RmFactoryPage;
+import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.SharePage;
 import org.alfresco.po.share.site.UploadFilePage;
-import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.HtmlElement;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderTime;

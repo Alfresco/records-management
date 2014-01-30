@@ -1,4 +1,4 @@
-package org.alfresco.rm.functional;
+package org.alfresco.rm;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,13 +9,13 @@ import org.alfresco.po.rm.FilePlanPage;
 import org.alfresco.po.rm.RmCreateSitePage;
 import org.alfresco.po.rm.RmDashBoardPage;
 import org.alfresco.po.rm.RmUploadFilePage;
+import org.alfresco.po.rm.util.RmPoUtils;
 import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.share.site.SiteFinderPage;
 import org.alfresco.po.share.site.SiteType;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.SiteUtil;
 import org.alfresco.po.util.FailedTestListener;
-import org.alfresco.po.utils.RmPoUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -37,7 +37,7 @@ import org.testng.annotations.Test;
  * @version 2.2
  */
 @Listeners(FailedTestListener.class)
-public class UnfiledRecordsContainerTest extends AbstractTest
+public class UnfiledRecordsContainerIntTest extends AbstractTest
 {
     private static final String RM_SITE_NAME = "Records Management";
     private static final String RM_SITE_DESC = "Records Management Site";

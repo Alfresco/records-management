@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.Pagination;
 import org.alfresco.po.share.site.ManageRulesPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
-import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.exception.PageException;

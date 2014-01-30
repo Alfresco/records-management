@@ -37,7 +37,6 @@
          <groupId>org.alfresco</groupId>
          <artifactId>share-po</artifactId>
          <version>${dependency.share.po.version}</version>
-         <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.alfresco</groupId>
@@ -63,6 +62,12 @@
          <artifactId>guice</artifactId>
          <version>3.0</version>
          <scope>test</scope>
+      </dependency>
+      <!-- FIXME: Remove this dependency after wedrone has been released. -->
+      <dependency>
+         <groupId>org.alfresco</groupId>
+         <artifactId>webdrone</artifactId>
+         <version>2.2-SNAPSHOT</version>
       </dependency>
    </dependencies>
 </project>

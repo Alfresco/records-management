@@ -18,8 +18,8 @@
  */
 package org.alfresco.po.rm;
 
+import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.SharePage;
-import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.RenderElement;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;

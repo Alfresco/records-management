@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.rm.pageobject;
+package org.alfresco.rm.po;
 
-import org.alfresco.po.rm.RmSiteMembersPage;
+import org.alfresco.po.rm.FilePlanPage;
 import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.util.FailedTestListener;
 import org.testng.Assert;
@@ -26,18 +26,18 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 /**
- * Tests record management site members page.
+ * Tests file plan page.
  *
  * @author Michael Suzuki
  * @version 1.7.1
  */
 @Listeners(FailedTestListener.class)
-public class SiteMembersPageTest extends AbstractTest
+public class FilePlanPageTest extends AbstractTest
 {
     @Test
     public void createPage()
     {
-        RmSiteMembersPage page = new RmSiteMembersPage(drone);
+        FilePlanPage page = new FilePlanPage(drone);
         Assert.assertNotNull(page);
     }
 }

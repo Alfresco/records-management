@@ -18,7 +18,7 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.utils.RmUtils;
+import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;

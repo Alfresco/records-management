@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.rm;
+package org.alfresco.rm.po;
 
-import org.alfresco.po.RmFactoryPage;
 import org.alfresco.po.rm.FilePlanPage;
 import org.alfresco.po.rm.RmConsolePage;
 import org.alfresco.po.rm.RmDashBoardPage;
+import org.alfresco.po.rm.RmFactoryPage;
 import org.alfresco.po.rm.RmSiteMembersPage;
 import org.alfresco.po.rm.RecordSearchPage;
 import org.alfresco.po.share.AlfrescoVersion;

@@ -20,9 +20,9 @@ package org.alfresco.po.rm;
 
 import java.util.List;
 
+import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.site.CreateSitePage;
 import org.alfresco.po.share.site.SiteType;
-import org.alfresco.po.utils.RmUtils;
 import org.alfresco.webdrone.ElementState;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderTime;

@@ -3,7 +3,7 @@
 <suite name="TestNG AllTestSuite" verbose="1" >
    <test name="AllTests">
       <classes>
-         <class name="org.alfresco.po.rm.RecordsManagmentTest"/>
+         <class name="org.alfresco.rm.UnfiledRecordsContainerIntTest"/>
       </classes>
    </test>
 </suite>
