@@ -18,11 +18,11 @@
  */
 package org.alfresco.po.rm;
 
+import java.io.File;
+
 import org.alfresco.po.rm.util.RmUtils;
-import org.alfresco.po.share.SharePage;
 import org.alfresco.po.share.site.UploadFilePage;
 import org.alfresco.webdrone.HtmlElement;
-import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.apache.commons.lang3.StringUtils;
@@ -139,9 +139,9 @@ public class RmUploadFilePage extends UploadFilePage
      * submitting the form.
      *
      * @param filePath String file location to upload
-     * @return {@link SharePage} DocumentLibrary or a RepositoryPage response
+     * @return {@link FilePlanPage} File plan page response
      */
-    public HtmlPage uploadFile(final String filePath)
+    public FilePlanPage uploadFile(final String filePath)
     {
         WebElement fileSelection;
         if (alfrescoVersion.isFileUploadHtml5())
@@ -161,10 +161,10 @@ public class RmUploadFilePage extends UploadFilePage
             logger.trace("Upload button has been actioned");
         }
 
-        FilePlanPage filePlanPage = RmFactoryPage.getPage(getCurrentUrl(), drone).render();
-
-        // FIXME: This is a workaround. The render method must be changed for {@link FilePlanPage}
-        drone.waitFor(3000);
+        FilePlanPage filePlanPage = (FilePlanPage) RmFactoryPage.getPage(getCurrentUrl(), drone);
+        filePlanPage.setExpectingRecord(true);
+        filePlanPage.setExpectedRecordName(getFileName(filePath));
+        filePlanPage.render();
 
         if (filePlanPage.hasFiles() == false)
         {
@@ -172,6 +172,18 @@ public class RmUploadFilePage extends UploadFilePage
         }
 
         return filePlanPage;
+    }
+
+    /**
+     * Extracts the name of the record from the path
+     * 
+     * @param filePath The path of the file to upload
+     * @return The name of the file to upload
+     */
+    private String getFileName(String filePath)
+    {
+        String fileNameWithExtension = StringUtils.substringAfterLast(filePath, File.separator);
+        return StringUtils.substringBeforeLast(fileNameWithExtension, ".");
     }
 
     /**

@@ -21,6 +21,7 @@ package org.alfresco.po.rm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.Pagination;
@@ -29,6 +30,7 @@ import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.exception.PageException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -63,8 +65,29 @@ public class FilePlanPage extends RmSitePage
     private static final By RM_ADD_META_DATA_LINK = By.cssSelector("div#onActionAddRecordMetadata a");
     private static final By RECORD = By.cssSelector("tbody.yui-dt-data > tr");
     private static final By DESCRIPTION = By.cssSelector("div[id$='_default-description'] div");
-    private static final By FILEPLAN = By.id("template_x002e_tree_x002e_documentlibrary_x0023_rm-fileplan");
-    private final boolean expectingRecord;
+    private static final By FILEPLAN = By.id("template_x002e_tree_x002e_documentlibrary_x0023_default");
+    private boolean expectingRecord;
+    private String expectedRecordName;
+
+    /**
+     * Indicates that a record/folder will be expected in the file plan
+     *
+     * @param expectingRecord <code>true</code> if a record/folder is expected <code>false</code> otherwise
+     */
+    public void setExpectingRecord(boolean expectingRecord)
+    {
+        this.expectingRecord = expectingRecord;
+    }
+
+    /**
+     * Set the name of the expected record/folder
+     *
+     * @param expectedRecordName Name of the expected record/folder
+     */
+    public void setExpectedRecordName(String expectedRecordName)
+    {
+        this.expectedRecordName = expectedRecordName;
+    }
 
     /**
      * Constructor.
@@ -104,13 +127,71 @@ public class FilePlanPage extends RmSitePage
             try
             {
                 WebElement filePlan = drone.find(FILEPLAN);
-                if (filePlan.isDisplayed())
+                if (filePlan.isDisplayed() && !isJSMessageDisplayed())
                 {
+                    if (drone.getCurrentUrl().contains("filter=unfiledRecords"))
+                    {
+                        if (isUnfiledRecordsContainerFileDisplayed() && isUnfiledRecordsContainerFolderDisplayed())
+                        {
+                            long timeOut = TimeUnit.SECONDS.convert(maxPageLoadingTime, TimeUnit.MILLISECONDS);
+                            drone.waitUntilElementClickable(NEW_FILE_BTN, timeOut);
+                            drone.waitUntilElementClickable(NEW_FOLDER_BTN, timeOut);
+                            if (expectingRecord)
+                            {
+                                if (StringUtils.isNotBlank(expectedRecordName))
+                                {
+                                    boolean found = false;
+                                    for (FileDirectoryInfo fileDirectoryInfo : getFiles())
+                                    {
+                                        if (fileDirectoryInfo.getName().contains(expectedRecordName))
+                                        {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (found)
+                                    {
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    if (hasFiles())
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
                     if (expectingRecord)
                     {
-                        if (hasRecords())
+                        if (StringUtils.isNotBlank(expectedRecordName))
                         {
-                            break;
+                            boolean found = false;
+                            for (FileDirectoryInfo fileDirectoryInfo : getFiles())
+                            {
+                                if (fileDirectoryInfo.getName().contains(expectedRecordName))
+                                {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (found)
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (hasFiles())
+                            {
+                                break;
+                            }
                         }
                     }
                     else
