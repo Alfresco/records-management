@@ -20,7 +20,7 @@ package org.alfresco.rm.po;
 
 import org.alfresco.po.rm.RmSiteMembersPage;
 import org.alfresco.po.share.AbstractTest;
-import org.alfresco.po.util.FailedTestListener;
+import org.alfresco.po.share.util.FailedTestListener;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;

@@ -19,11 +19,11 @@
 package org.alfresco.rm.po;
 
 import org.alfresco.po.rm.FilePlanPage;
+import org.alfresco.po.rm.RecordSearchPage;
 import org.alfresco.po.rm.RmConsolePage;
 import org.alfresco.po.rm.RmDashBoardPage;
 import org.alfresco.po.rm.RmFactoryPage;
 import org.alfresco.po.rm.RmSiteMembersPage;
-import org.alfresco.po.rm.RecordSearchPage;
 import org.alfresco.po.share.AlfrescoVersion;
 import org.alfresco.po.share.FactorySharePage;
 import org.alfresco.po.share.SharePage;
