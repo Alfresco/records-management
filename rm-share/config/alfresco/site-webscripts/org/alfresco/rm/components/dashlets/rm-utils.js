@@ -56,7 +56,7 @@ function isRmSite(conn, site)
       var obj = eval('(' + json + ')');
       if (obj)
       {
-         isRmSite = obj.sitePreset == "rm-site-dashboard";
+         isRmSite = (obj.sitePreset == "rm-site-dashboard" || obj.sitePreset == "rm-site-dod5015-dashboard");
       }
    }
 

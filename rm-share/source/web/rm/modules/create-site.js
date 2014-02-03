@@ -100,6 +100,11 @@
        */
       doBeforeFormSubmit: function RM_CreateSite_doBeforeFormSubmit(form, obj)
       {
+         if (Dom.get(this.id + "-sitePreset").value === "rm-site-dod5015-dashboard")
+         {
+            Dom.get(this.id + "-sitePreset").value = "rm-site-dashboard";
+         }
+      
          Alfresco.rm.module.CreateSite.superclass.doBeforeFormSubmit.call(this, form, obj);
          this.disableFormElements();
       },
@@ -153,6 +158,16 @@
             Dom.get(this.id + "-title").value = this.msg("title.recordsManagementSite");
             Dom.get(this.id + "-description").value = this.msg("description.recordsManagementSite");
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite";
+            Dom.get(this.id + "-isPublic").checked = true;
+            Dom.get(this.id + "-isModerated").checked = false;
+            this.enableFormElements();
+         }
+         else if (sitePreset === "rm-site-dod5015-dashboard")
+         {
+            Dom.get(this.id + "-shortName").value = "rm";
+            Dom.get(this.id + "-title").value = this.msg("title.dod5015RecordsManagementSite");
+            Dom.get(this.id + "-description").value = this.msg("description.dod5015RecordsManagementSite");
+            Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/dod5015/1.0}site";
             Dom.get(this.id + "-isPublic").checked = true;
             Dom.get(this.id + "-isModerated").checked = false;
             this.enableFormElements();
