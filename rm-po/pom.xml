@@ -43,7 +43,8 @@
          <artifactId>share-po</artifactId>
          <version>${dependency.share.po.version}</version>
          <type>test-jar</type>
-         <scope>test</scope>
+         <!-- FIXME!!! -->
+         <!-- <scope>test</scope> -->
       </dependency>
       <dependency>
          <groupId>org.uncommons</groupId>
