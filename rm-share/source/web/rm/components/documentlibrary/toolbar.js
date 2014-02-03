@@ -591,7 +591,7 @@
          var filterParam = Alfresco.rm.getParamValueFromUrl("filter");
          if (filterParam)
          {
-            var filter = filterParam.split("|");
+            var filter = decodeURIComponent(filterParam).split("|");
             if (filter[0] !== 'path' && filter[1])
             {
                uploadDirectory = decodeURIComponent(filter[1]);
