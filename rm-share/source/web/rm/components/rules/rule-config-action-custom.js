@@ -89,7 +89,7 @@
                path._displayLabelToRight = false;
                path._hideColon = true;
 
-               var createRecordFolder = this._getParamDef(configDef, "createRecordFolder");
+               var createRecordFolder = this._getParamDef(configDef, "createRecordPath");
                createRecordFolder._type = null;
                createRecordFolder._displayLabelToRight = false;
                createRecordFolder._hideColon = true;
@@ -331,7 +331,6 @@
 
                   this.widgets.destinationDialog.showDialog();
                });
-
                this._createLabel(this._getParamDef(configDef, "path").displayLabel, containerEl);
                var el = document.createElement("input");
                el.setAttribute("type", "text");
@@ -344,7 +343,108 @@
                {
                   Selector.query("[param=" + "path" + "]")[0].value = this.value;
                }, false);
+               
                containerEl.appendChild(el);
+
+               // create an autocomplete div which will get populated with the drop down containing
+               // the autocomplete suggestions
+               var autoCompleteDiv = document.createElement("div");
+               containerEl.appendChild(autoCompleteDiv);
+               YUIDom.addClass(containerEl, "inlineItemEditAutoCompleteWrapper");
+               YUIDom.addClass(autoCompleteDiv, "inlineItemEditAutoComplete");
+               var dataSource = new YAHOO.util.XHRDataSource(Alfresco.constants.PROXY_URI + "api/rm/rm-substitutionsuggestions");
+               dataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
+               dataSource.responseSchema =
+               {
+                  resultsList : "substitutions"
+               };
+               
+               // create the auto complete widget. this has the side effect of adding the class yui-ac-input
+               // to the input class which adds the style position: absolute. we need to undo this to stop
+               // the autocomplete breaking our layout
+               var autoComp = new YAHOO.widget.AutoComplete(el, autoCompleteDiv, dataSource);
+               YUIDom.setStyle(el, "position", "relative");
+               
+               // work in both directions from the cursor to get the current fragment to send to the 
+               // substitution suggestions api
+               autoComp.generateRequest = function(sQuery) 
+               {
+                  var fragmentDetails = getAutoCompleteFragment(el.value, getCursorPosition(el));
+                  autoCompleteSelectPreFragment = fragmentDetails[0];
+                  var fragment = fragmentDetails[1];
+                  autoCompleteSelectPostFragment = fragmentDetails[2];
+                  return Alfresco.util.encodeURIPath("?fragment=" + fragment);
+               }
+               
+               // handle the autocomplete selection handler so we place the suggestion in the 
+               // current path value at the correct place rather than the default behaviour 
+               // of overwriting the whole thing
+               var itemSelectHandler = function(sType, aArgs) 
+               {
+                  var oData = aArgs[2];
+                  var selectedValue = oData[0];
+                  var path = autoCompleteSelectPreFragment;
+                  if(!((autoCompleteSelectPreFragment.length > 0) && (autoCompleteSelectPreFragment.charAt(autoCompleteSelectPreFragment.length - 1) == "{")))
+                  {
+                     path += "{";
+                  }
+                  path += selectedValue;
+                  if(!((autoCompleteSelectPostFragment.length > 0) && (autoCompleteSelectPostFragment.charAt(0) == "}")))
+                  {
+                     path += "}";
+                  }
+                  path += autoCompleteSelectPostFragment;
+                  el.value = path;
+               };
+               autoComp.itemSelectEvent.subscribe(itemSelectHandler);
+              
+               function getCursorPosition(textField) 
+               {
+                  if(!textField) return;
+                  if('selectionStart' in textField)
+                  {
+                     return textField.selectionStart;
+                  }
+                  else if(document.selection)
+                  {
+                        // IE8
+                        input.focus();
+                        var sel = document.selection.createRange();
+                        var selLen = document.selection.createRange().text.length;
+                        sel.moveStart('character', -input.value.length);
+                        return sel.text.length - selLen;                
+                  }
+               }
+               
+               // get the auto complete fragment from the whole path by traveling in both directions
+               // from the cursor position looking for curly braces and path separators
+               function getAutoCompleteFragment(fullPathText, cursorPosition)
+               {
+                  var fragment = fullPathText;
+                  var preFragment = "";
+                  var postFragment = "";
+                  if(cursorPosition != undefined)
+                  {
+                     var preCursorText = fullPathText.substring(0, cursorPosition);
+                     var postCursorText = fullPathText.substring(cursorPosition);
+                     var lastPathDelim = preCursorText.lastIndexOf('/');
+                     var lastStartSubstitutionDelim = preCursorText.lastIndexOf('{');
+                     var lastEndSubstitutionDelim = preCursorText.lastIndexOf('}');
+                     var startFragment = Math.max(lastPathDelim, lastStartSubstitutionDelim, lastEndSubstitutionDelim);
+                     var firstPathDelim = postCursorText.indexOf('/');
+                     var firstStartSubstitutionDelim = postCursorText.indexOf('{');
+                     var firstEndSubstitutionDelim = postCursorText.indexOf('}');
+                     var endFragment = Math.min(
+                        firstPathDelim == -1 ? Number.MAX_VALUE : firstPathDelim, 
+                        firstStartSubstitutionDelim == -1 ? Number.MAX_VALUE : firstStartSubstitutionDelim, 
+                        firstEndSubstitutionDelim == -1 ? Number.MAX_VALUE : firstEndSubstitutionDelim
+                     );
+                     preFragment = preCursorText.substring(0, startFragment + 1);
+                     fragment = preCursorText.substring(startFragment + 1) + (endFragment == -1 ? postCursorText : postCursorText.substring(0, endFragment));
+                     postFragment = postCursorText.substring(endFragment);
+                  }
+                  return [preFragment, fragment, postFragment];
+               }
             }
          },
          "arca:rm-add-record-types-dialog-button":
