@@ -20,7 +20,6 @@ package org.alfresco.po.rm;
 
 import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.site.CreateSitePage;
-import org.alfresco.po.share.site.SiteType;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
@@ -43,16 +42,16 @@ public class RmCreateSitePage extends CreateSitePage
     public static final String RM_SITE_NAME = "Records Management";
     public static final String RM_SITE_DESC = "Records Management Site";
     public static final String RM_SITE_URL = "rm";
-    
+
     /** RM site compliance */
     public enum RMSiteCompliance
     {
         STANDARD,
         DOD5015
     }
-    
+
     private static final By SITE_PRESET = By.id("alfresco-rm-createSite-instance-sitePreset");
-    
+
     /** page controls */
     public static final By SELECT_COMPLIANCE = By.name("compliance");
 
@@ -97,7 +96,7 @@ public class RmCreateSitePage extends CreateSitePage
     {
         return (RmCreateSitePage) super.render(time);
     }
-    
+
     /**
      * Create a new public site action.
      *
@@ -107,21 +106,21 @@ public class RmCreateSitePage extends CreateSitePage
     public HtmlPage createRMSite(RMSiteCompliance compliance)
     {
         // setup the type and compliance
-        selectSiteType(SiteType.RecordsManagement);
+        selectSiteType(RMSiteType.RECORDS_MANAGEMENT);
         selectRMSiteCompliance(compliance);
-        
+
         // FIXME!!!
-        return createNewSite(null, null, false, false, SiteType.RecordsManagement);
+        return createNewSite(null, null, false, false, RMSiteType.RECORDS_MANAGEMENT);
     }
 
     /**
-     * @see org.alfresco.po.share.site.CreateSitePage#createSite(java.lang.String, java.lang.String, org.alfresco.po.share.site.SiteType)
+     * @see org.alfresco.po.share.site.CreateSitePage#createSite(java.lang.String, java.lang.String, java.lang.String)
      */
-    protected HtmlPage createSite(final String siteName, final String description, final SiteType siteType)
+    protected HtmlPage createSite(final String siteName, final String description, final String siteType)
     {
         switch (siteType)
         {
-            case RecordsManagement:
+            case RMSiteType.RECORDS_MANAGEMENT:
                 drone.find(SUBMIT_BUTTON).click();
                 return new RmDashBoardPage(drone);
 
@@ -131,20 +130,20 @@ public class RmCreateSitePage extends CreateSitePage
     }
 
     /**
-     * @see org.alfresco.po.share.site.CreateSitePage#selectSiteType(org.alfresco.po.share.site.SiteType)
+     * @see org.alfresco.po.share.site.CreateSitePage#selectSiteType(java.lang.String)
      */
-    public void selectSiteType(SiteType siteType)
+    public void selectSiteType(String siteType)
     {
         RmUtils.checkMandotaryParam("siteType", siteType);
 
         Select dropdown = new Select(drone.find(SITE_PRESET));
         switch (siteType)
         {
-            case RecordsManagement:
+            case RMSiteType.RECORDS_MANAGEMENT:
                 dropdown.selectByIndex(1);
                 break;
 
-            case Collaboration:
+            case RMSiteType.COLLABORATION:
                 dropdown.selectByIndex(0);
                 break;
 
@@ -156,21 +155,21 @@ public class RmCreateSitePage extends CreateSitePage
     /**
      * @return  site type
      */
-    public SiteType getSiteType()
+    public String getSiteType()
     {
-        SiteType result = SiteType.Collaboration;
-        
+        String result = RMSiteType.COLLABORATION;
+
         Select select = new Select(drone.find(SITE_PRESET));
         String selectedValue = select.getFirstSelectedOption().getAttribute("value");
-        
+
         if (selectedValue.contains("rm-site-dashboard") == true)
         {
-            result = SiteType.RecordsManagement;
+            result = RMSiteType.RECORDS_MANAGEMENT;
         }
-        
-        return result;        
+
+        return result;
     }
-    
+
     /**
      * @param compliance    site compliance
      */
@@ -192,25 +191,25 @@ public class RmCreateSitePage extends CreateSitePage
             default:
                 throw new PageOperationException("No suitable compliance was found");
         }
-        
+
     }
-    
+
     /**
      * @return  site compliance value
      */
     public RMSiteCompliance getSiteCompliance()
     {
         RMSiteCompliance result = RMSiteCompliance.STANDARD;
-        
+
         Select select = new Select(drone.find(SELECT_COMPLIANCE));
         String selectedValue = select.getFirstSelectedOption().getAttribute("value");
-        
+
         if (selectedValue.contains("dod") == true)
         {
             result = RMSiteCompliance.DOD5015;
         }
-        
-        return result;        
+
+        return result;
     }
 
     /**
@@ -222,7 +221,7 @@ public class RmCreateSitePage extends CreateSitePage
     public boolean isRecordManagementTypeSupported()
     {
         // TODO .. not sure this is doing the correct check!
-        
+
         try
         {
             WebElement sitePreset = drone.find(SITE_PRESET);
