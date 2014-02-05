@@ -4,6 +4,7 @@
    <test name="AllTests">
       <classes>
          <class name="org.alfresco.rm.UnfiledRecordsContainerIntTest"/>
+         <class name="org.alfresco.rm.VanillaRecordsManagementSiteIntTest"/>
       </classes>
    </test>
 </suite>
