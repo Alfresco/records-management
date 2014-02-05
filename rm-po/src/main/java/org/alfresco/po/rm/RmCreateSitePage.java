@@ -39,6 +39,11 @@ import org.openqa.selenium.support.ui.Select;
  */
 public class RmCreateSitePage extends CreateSitePage
 {
+    /** Default site details */
+    public static final String RM_SITE_NAME = "Records Management";
+    public static final String RM_SITE_DESC = "Records Management Site";
+    public static final String RM_SITE_URL = "rm";
+    
     /** RM site compliance */
     public enum RMSiteCompliance
     {
@@ -46,9 +51,10 @@ public class RmCreateSitePage extends CreateSitePage
         DOD5015
     }
     
-    /** page item id's */
     private static final By SITE_PRESET = By.id("alfresco-rm-createSite-instance-sitePreset");
-    private static final By SITE_COMPLIANCE = By.id("alfresco-rm-createSite-instance-compliance");
+    
+    /** page controls */
+    public static final By SELECT_COMPLIANCE = By.name("compliance");
 
     /**
      * Constructor.
@@ -172,15 +178,15 @@ public class RmCreateSitePage extends CreateSitePage
     {
         RmUtils.checkMandotaryParam("compliance", compliance);
 
-        Select dropdown = new Select(drone.find(SITE_COMPLIANCE));
+        Select dropdown = new Select(drone.find(SELECT_COMPLIANCE));
         switch (compliance)
         {
             case STANDARD:
-                dropdown.selectByIndex(1);
+                dropdown.selectByIndex(0);
                 break;
 
             case DOD5015:
-                dropdown.selectByIndex(0);
+                dropdown.selectByIndex(1);
                 break;
 
             default:
@@ -196,7 +202,7 @@ public class RmCreateSitePage extends CreateSitePage
     {
         RMSiteCompliance result = RMSiteCompliance.STANDARD;
         
-        Select select = new Select(drone.find(SITE_COMPLIANCE));
+        Select select = new Select(drone.find(SELECT_COMPLIANCE));
         String selectedValue = select.getFirstSelectedOption().getAttribute("value");
         
         if (selectedValue.contains("dod") == true)

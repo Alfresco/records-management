@@ -39,6 +39,12 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         login(username, password);
     }
     
+    @Override
+    protected void teardown()
+    {
+        // do nothing 
+    }
+    
     @Test
     public void testDODSite()
     {

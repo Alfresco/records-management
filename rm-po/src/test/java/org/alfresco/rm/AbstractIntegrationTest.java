@@ -24,7 +24,6 @@ import org.alfresco.po.rm.RmDashBoardPage;
 import org.alfresco.po.rm.util.RmPoUtils;
 import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.share.site.SiteFinderPage;
-import org.alfresco.po.share.site.SiteType;
 import org.alfresco.po.share.util.SiteUtil;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -37,12 +36,7 @@ import org.testng.annotations.BeforeClass;
  * @since 2.2
  */
 public abstract class AbstractIntegrationTest extends AbstractTest
-{
-    /** Default site details */
-    protected static final String RM_SITE_NAME = "Records Management";
-    protected static final String RM_SITE_DESC = "Records Management Site";
-    protected static final String RM_SITE_URL = "rm";
-    
+{   
     /** RM dashboard for loged in user */
     protected RmDashBoardPage dashBoard;
 
@@ -116,16 +110,10 @@ public abstract class AbstractIntegrationTest extends AbstractTest
         RmCreateSitePage createSite = dashBoard.getRMNavigation().selectCreateSite().render();
         Assert.assertTrue(createSite.isCreateSiteDialogDisplayed());
 
-        // Select RM Site
-        createSite.selectSiteType(SiteType.RecordsManagement);
-        Assert.assertEquals(createSite.getSiteName(), RM_SITE_NAME);
-        Assert.assertEquals(createSite.getDescription(), RM_SITE_DESC);
-        Assert.assertEquals(createSite.getSiteUrl(), RM_SITE_URL);
-
         // Create RM Site
         RmDashBoardPage site = ((RmDashBoardPage) createSite.createRMSite(RMSiteCompliance.STANDARD)).rmRender();
         Assert.assertNotNull(site);
-        Assert.assertTrue(RM_SITE_NAME.equalsIgnoreCase(site.getPageTitle()));
+        Assert.assertTrue(RmCreateSitePage.RM_SITE_NAME.equalsIgnoreCase(site.getPageTitle()));
         Assert.assertTrue(site.getRMSiteNavigation().isDashboardActive());
         Assert.assertFalse(site.getRMSiteNavigation().isFilePlanActive());        
     }
@@ -136,10 +124,10 @@ public abstract class AbstractIntegrationTest extends AbstractTest
     protected void deleteRMSite()
     {
         // Check if the RM Site already exists, if so delete it
-        SiteFinderPage siteFinderPage = SiteUtil.searchSite(drone, RM_SITE_NAME).render();
+        SiteFinderPage siteFinderPage = SiteUtil.searchSite(drone, RmCreateSitePage.RM_SITE_NAME).render();
         if (siteFinderPage.hasResults() == true)
         {
-            siteFinderPage.deleteSite(RM_SITE_NAME).render();
+            siteFinderPage.deleteSite(RmCreateSitePage.RM_SITE_NAME).render();
         }       
     }
 

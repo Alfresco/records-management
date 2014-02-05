@@ -63,16 +63,6 @@
          Alfresco.rm.module.CreateSite.superclass.onTemplateLoaded.call(this, response);
          Event.removeListener(this.widgets.panel.close, "click");
          Event.addListener(this.widgets.panel.close, "click", this.onCancelButtonClick, this, true);
-         
-         var complianceEl = Dom.get(this.id + "-compliance");
-         Event.addListener(complianceEl, "change", function CreateSite_compliance_change()
-         {
-            this.onComplianceChange(complianceEl.options[complianceEl.selectedIndex].value);
-         }, this, true);
-         if (complianceEl.options.length > 0)
-         {
-            this.onComplianceChange(complianceEl.options[complianceEl.selectedIndex].value);
-         }
       },
 
       /**
@@ -112,7 +102,18 @@
        */
       doBeforeFormSubmit: function RM_CreateSite_doBeforeFormSubmit(form, obj)
       {
+      	 var sitePresetEl = Dom.get(this.id + "-sitePreset");
+      	 if (sitePresetEl.value === "rm-site-dashboard")
+         {
+            Dom.get(this.id + "-type").value = Dom.get(this.id + "-compliance").value;
+         }
+         else
+         {
+            Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/site/1.0}site";
+         }
+      
          Alfresco.rm.module.CreateSite.superclass.doBeforeFormSubmit.call(this, form, obj);
+         
          this.disableFormElements();
       },
 
@@ -138,19 +139,18 @@
       onCreateSiteFailure: function RM_CreateSite_onCreateSiteFailure(response)
       {
          Alfresco.rm.module.CreateSite.superclass.onCreateSiteFailure.call(this, response);
-         this.enableFormElements();
+         
+         var sitePresetEl = Dom.get(this.id + "-sitePreset");
+      	 if (sitePresetEl.value === "rm-site-dashboard")
+         {
+            this.enableFormElements();
+         }
+         else
+         {
+            this.disableFormElements();
+         }         
       },
       
-      /**
-       * Called when a compliance has been selected.
-       *
-       * @method onComplianceChange
-       * @param compliance
-       */
-      onComplianceChange: function RM_CreateSite_onComplianceChange(compliance)
-      {
-      	 Dom.get(this.id + "-type").value = Dom.get(this.id + "-compliance").value;	
-      },
 
       /**
        * Called when a preset has been selected.
@@ -175,7 +175,6 @@
             Dom.get(this.id + "-shortName").value = "rm";
             Dom.get(this.id + "-title").value = this.msg("title.recordsManagementSite");
             Dom.get(this.id + "-description").value = this.msg("description.recordsManagementSite");
-            Dom.get(this.id + "-type").value = Dom.get(this.id + "-compliance").value;
             Dom.get(this.id + "-isPublic").checked = true;
             Dom.get(this.id + "-isModerated").checked = false;
             this.enableFormElements();
@@ -185,7 +184,7 @@
             Dom.get(this.id + "-shortName").value = "";
             Dom.get(this.id + "-title").value = "";
             Dom.get(this.id + "-description").value = "";
-            Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/site/1.0}site";
+            
             this.disableFormElements();
          }
       }
