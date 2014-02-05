@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
+ *
+ * This file is part of Alfresco
+ *
+ * Alfresco is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Alfresco is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.alfresco.rm;
 
 import java.io.IOException;
@@ -5,21 +23,13 @@ import java.io.IOException;
 import org.alfresco.po.rm.CreateNewFolderForm;
 import org.alfresco.po.rm.FilePlanNavigation;
 import org.alfresco.po.rm.FilePlanPage;
-import org.alfresco.po.rm.RmCreateSitePage;
-import org.alfresco.po.rm.RmDashBoardPage;
 import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.util.RmPoUtils;
-import org.alfresco.po.share.AbstractTest;
-import org.alfresco.po.share.site.SiteFinderPage;
-import org.alfresco.po.share.site.SiteType;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.FailedTestListener;
-import org.alfresco.po.share.util.SiteUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -36,58 +46,16 @@ import org.testng.annotations.Test;
  * @version 2.2
  */
 @Listeners(FailedTestListener.class)
-public class UnfiledRecordsContainerIntTest extends AbstractTest
+public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
 {
-    private static final String RM_SITE_NAME = "Records Management";
-    private static final String RM_SITE_DESC = "Records Management Site";
-    private static final String RM_SITE_URL = "rm";
     // private static final String RM_UNFILED_RECORDS = "Unfiled Records";
     private static final String RM_UNFILED_RECORDS_CONTAINER_NAME = "Test folder name";
     private static final String RM_UNFILED_RECORDS_CONTAINER_TITLE = "Test folder title";
     private static final String RM_UNFILED_RECORDS_CONTAINER_DESC = "Test folder description";
     private static final By INPUT_TITLE_SELECTOR = By.cssSelector("input[id$='prop_cm_title']");
     private static final By INPUT_DESCRIPTION_SELECTOR = By.cssSelector("textarea[id$='prop_cm_description']");
-    private RmDashBoardPage dashBoard;
+    
     private FilePlanPage filePlanPage;
-
-    @BeforeClass(groups={"RM","nonCloud"})
-    public void setUp()
-    {
-        // Login to Share
-        dashBoard = RmPoUtils.loginAs(drone, shareUrl, username, password).render();
-
-        // Check if the RM Site already exists, if so delete it
-        SiteFinderPage siteFinderPage = SiteUtil.searchSite(drone, RM_SITE_NAME).render();
-        if (siteFinderPage.hasResults() == true)
-        {
-            siteFinderPage.deleteSite(RM_SITE_NAME).render();
-        }
-
-        // Click create site dialog
-        RmCreateSitePage createSite = dashBoard.getRMNavigation().selectCreateSite().render();
-        Assert.assertTrue(createSite.isCreateSiteDialogDisplayed());
-
-        // Select RM Site
-        createSite.selectSiteType(SiteType.RecordsManagement);
-        Assert.assertEquals(createSite.getSiteName(), RM_SITE_NAME);
-        Assert.assertEquals(createSite.getDescription(), RM_SITE_DESC);
-        Assert.assertEquals(createSite.getSiteUrl(), RM_SITE_URL);
-
-        // Create RM Site
-        RmDashBoardPage site = ((RmDashBoardPage) createSite.createRMSite()).rmRender();
-        Assert.assertNotNull(site);
-        Assert.assertTrue(RM_SITE_NAME.equalsIgnoreCase(site.getPageTitle()));
-        Assert.assertTrue(site.getRMSiteNavigation().isDashboardActive());
-        Assert.assertFalse(site.getRMSiteNavigation().isFilePlanActive());
-    }
-
-    @AfterClass(groups={"RM","nonCloud"})
-    public void teardown()
-    {
-        // Delete the RM Site
-        SiteUtil.deleteSite(drone, RM_SITE_NAME);
-        Assert.assertFalse(SiteUtil.searchSite(drone, RM_SITE_NAME).hasResults());
-    }
 
     @Test
     public void navigateToUnfiledRecords()
