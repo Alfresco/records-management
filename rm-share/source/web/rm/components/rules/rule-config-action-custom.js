@@ -89,10 +89,10 @@
                path._displayLabelToRight = false;
                path._hideColon = true;
 
-               var createRecordFolder = this._getParamDef(configDef, "createRecordPath");
-               createRecordFolder._type = null;
-               createRecordFolder._displayLabelToRight = false;
-               createRecordFolder._hideColon = true;
+               var createRecordPath = this._getParamDef(configDef, "createRecordPath");
+               createRecordPath._type = null;
+               createRecordPath._displayLabelToRight = false;
+               createRecordPath._hideColon = true;
 
                return configDef;
             }
@@ -343,62 +343,96 @@
                {
                   Selector.query("[param=" + "path" + "]")[0].value = this.value;
                }, false);
-               
+
                containerEl.appendChild(el);
 
                // create an autocomplete div which will get populated with the drop down containing
                // the autocomplete suggestions
                var autoCompleteDiv = document.createElement("div");
                containerEl.appendChild(autoCompleteDiv);
-               YUIDom.addClass(containerEl, "inlineItemEditAutoCompleteWrapper");
-               YUIDom.addClass(autoCompleteDiv, "inlineItemEditAutoComplete");
                var dataSource = new YAHOO.util.XHRDataSource(Alfresco.constants.PROXY_URI + "api/rm/rm-substitutionsuggestions");
                dataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
                dataSource.responseSchema =
                {
                   resultsList : "substitutions"
                };
-               
-               // create the auto complete widget. this has the side effect of adding the class yui-ac-input
-               // to the input class which adds the style position: absolute. we need to undo this to stop
-               // the autocomplete breaking our layout
+
+               // create the auto complete widget.
                var autoComp = new YAHOO.widget.AutoComplete(el, autoCompleteDiv, dataSource);
+
+               // fix any css applied by creating the autocomplete widget and tweak a couple of other styles
+               YUIDom.setStyle(autoCompleteDiv, "width", "500px");
                YUIDom.setStyle(el, "position", "relative");
-               
-               // work in both directions from the cursor to get the current fragment to send to the 
+               YUIDom.setStyle(el, "width", "500px");
+
+               // format the items in the autosuggest list
+               var me = this;
+               autoComp.formatResult = function(oResultData, sQuery, sResultMatch) {
+                  if(sResultMatch.indexOf("/") == 0)
+                  {
+                     return "<code><strong>" + sResultMatch + "</strong></code>";
+                  }
+                  else
+                  {
+                     var message = me.msg("file-to.substitution." + sResultMatch + ".label");
+                     return (message.indexOf("file-to.substitution.") != -1 ? sResultMatch : message);
+                  }
+               };
+
+               // work in both directions from the cursor to get the current fragment to send to the
                // substitution suggestions api
-               autoComp.generateRequest = function(sQuery) 
+               autoComp.generateRequest = function(sQuery)
                {
                   var fragmentDetails = getAutoCompleteFragment(el.value, getCursorPosition(el));
                   autoCompleteSelectPreFragment = fragmentDetails[0];
                   var fragment = fragmentDetails[1];
                   autoCompleteSelectPostFragment = fragmentDetails[2];
-                  return Alfresco.util.encodeURIPath("?fragment=" + fragment);
+                  var parameterString = "?fragment=" + fragment;
+                  if((autoCompleteSelectPreFragment.indexOf("{") == -1) && (autoCompleteSelectPreFragment.indexOf("}") == -1))
+                  {
+                     parameterString += "&path=" + autoCompleteSelectPreFragment;
+                  }
+                  console.log("parameter string <" + parameterString + ">");
+                  return Alfresco.util.encodeURIPath(parameterString);
                }
-               
-               // handle the autocomplete selection handler so we place the suggestion in the 
-               // current path value at the correct place rather than the default behaviour 
+
+               // handle the autocomplete selection handler so we place the suggestion in the
+               // current path value at the correct place rather than the default behaviour
                // of overwriting the whole thing
-               var itemSelectHandler = function(sType, aArgs) 
+               var itemSelectHandler = function(sType, aArgs)
                {
                   var oData = aArgs[2];
                   var selectedValue = oData[0];
                   var path = autoCompleteSelectPreFragment;
-                  if(!((autoCompleteSelectPreFragment.length > 0) && (autoCompleteSelectPreFragment.charAt(autoCompleteSelectPreFragment.length - 1) == "{")))
+                  if(selectedValue.indexOf("/") == 0)
                   {
-                     path += "{";
+                     if((autoCompleteSelectPreFragment.length > 0) && (autoCompleteSelectPreFragment.charAt(autoCompleteSelectPreFragment.length - 1) == "/"))
+                     {
+                        path += selectedValue.substring(1);
+                     }
+                     else
+                     {
+                        path += selectedValue;
+                     }
                   }
-                  path += selectedValue;
-                  if(!((autoCompleteSelectPostFragment.length > 0) && (autoCompleteSelectPostFragment.charAt(0) == "}")))
+                  else
                   {
-                     path += "}";
+                     if(!((autoCompleteSelectPreFragment.length > 0) && (autoCompleteSelectPreFragment.charAt(autoCompleteSelectPreFragment.length - 1) == "{")))
+                     {
+                        path += "{";
+                     }
+                     path += selectedValue;
+                     if(!((autoCompleteSelectPostFragment.length > 0) && (autoCompleteSelectPostFragment.charAt(0) == "}")))
+                     {
+                        path += "}";
+                     }
                   }
                   path += autoCompleteSelectPostFragment;
                   el.value = path;
                };
                autoComp.itemSelectEvent.subscribe(itemSelectHandler);
-              
-               function getCursorPosition(textField) 
+
+               function getCursorPosition(textField)
                {
                   if(!textField) return;
                   if('selectionStart' in textField)
@@ -412,10 +446,10 @@
                         var sel = document.selection.createRange();
                         var selLen = document.selection.createRange().text.length;
                         sel.moveStart('character', -input.value.length);
-                        return sel.text.length - selLen;                
+                        return sel.text.length - selLen;
                   }
                }
-               
+
                // get the auto complete fragment from the whole path by traveling in both directions
                // from the cursor position looking for curly braces and path separators
                function getAutoCompleteFragment(fullPathText, cursorPosition)
@@ -435,8 +469,8 @@
                      var firstStartSubstitutionDelim = postCursorText.indexOf('{');
                      var firstEndSubstitutionDelim = postCursorText.indexOf('}');
                      var endFragment = Math.min(
-                        firstPathDelim == -1 ? Number.MAX_VALUE : firstPathDelim, 
-                        firstStartSubstitutionDelim == -1 ? Number.MAX_VALUE : firstStartSubstitutionDelim, 
+                        firstPathDelim == -1 ? Number.MAX_VALUE : firstPathDelim,
+                        firstStartSubstitutionDelim == -1 ? Number.MAX_VALUE : firstStartSubstitutionDelim,
                         firstEndSubstitutionDelim == -1 ? Number.MAX_VALUE : firstEndSubstitutionDelim
                      );
                      preFragment = preCursorText.substring(0, startFragment + 1);
