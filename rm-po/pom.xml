@@ -159,6 +159,7 @@
                               </artifactItem>
                            </artifactItems>
                            <outputDirectory>${project.build.directory}/amps</outputDirectory>
+                           <useBaseVersion>true</useBaseVersion>
                         </configuration>
                      </execution>
                   </executions>
