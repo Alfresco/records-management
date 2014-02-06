@@ -52,8 +52,8 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
     private static final String RM_UNFILED_RECORDS_CONTAINER_NAME = "Test folder name";
     private static final String RM_UNFILED_RECORDS_CONTAINER_TITLE = "Test folder title";
     private static final String RM_UNFILED_RECORDS_CONTAINER_DESC = "Test folder description";
-    private static final By INPUT_TITLE_SELECTOR = By.cssSelector("input[id$='prop_cm_title']");
-    private static final By INPUT_DESCRIPTION_SELECTOR = By.cssSelector("textarea[id$='prop_cm_description']");
+    private static final By INPUT_TITLE_SELECTOR = By.name("prop_cm_title");
+    private static final By INPUT_DESCRIPTION_SELECTOR = By.name("prop_cm_description");
     
     private FilePlanPage filePlanPage;
 
@@ -118,7 +118,8 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
         drone.mouseOverOnElement(actions);
         WebElement editProperties = folder.findElement(By.cssSelector("div.rm-edit-details>a"));
         editProperties.click();
-
+        
+        drone.waitForElement(INPUT_TITLE_SELECTOR, 5);        
         WebElement title = drone.find(INPUT_TITLE_SELECTOR);
         title.clear();
         title.sendKeys("My new title ABC");
