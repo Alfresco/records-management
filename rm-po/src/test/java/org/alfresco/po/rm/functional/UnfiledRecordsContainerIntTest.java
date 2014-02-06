@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.rm;
+package org.alfresco.po.rm.functional;
 
 import java.io.IOException;
 
@@ -24,7 +24,6 @@ import org.alfresco.po.rm.CreateNewFolderForm;
 import org.alfresco.po.rm.FilePlanNavigation;
 import org.alfresco.po.rm.FilePlanPage;
 import org.alfresco.po.rm.RmUploadFilePage;
-import org.alfresco.po.rm.util.RmPoUtils;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
@@ -54,7 +53,7 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
     private static final String RM_UNFILED_RECORDS_CONTAINER_DESC = "Test folder description";
     private static final By INPUT_TITLE_SELECTOR = By.name("prop_cm_title");
     private static final By INPUT_DESCRIPTION_SELECTOR = By.name("prop_cm_description");
-    
+
     private FilePlanPage filePlanPage;
 
     @Test
@@ -82,7 +81,7 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
         Assert.assertTrue(filePlanPage.isUnfiledRecordsContainerFileDisplayed());
         RmUploadFilePage rmRecordFileDialog = filePlanPage.selectCreateNewUnfiledRecordsContainerFile().render();
         String fileName = Long.valueOf(System.currentTimeMillis()).toString();
-        RmPoUtils.fileElectronicRecord(drone, rmRecordFileDialog, fileName);
+        fileElectronicRecord(drone, rmRecordFileDialog, fileName);
         filePlanPage = filePlanPage.render();
         Assert.assertEquals(1, filePlanPage.getFiles().size());
     }
@@ -115,11 +114,11 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
 
         FileDirectoryInfo folder = filePlanPage.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
         WebElement actions = folder.findElement(By.cssSelector("td:nth-of-type(5)"));
-        drone.mouseOverOnElement(actions);
+        drone.mouseOver(actions);
         WebElement editProperties = folder.findElement(By.cssSelector("div.rm-edit-details>a"));
         editProperties.click();
-        
-        drone.waitForElement(INPUT_TITLE_SELECTOR, 5);        
+
+        drone.waitForElement(INPUT_TITLE_SELECTOR, 5);
         WebElement title = drone.find(INPUT_TITLE_SELECTOR);
         title.clear();
         title.sendKeys("My new title ABC");
@@ -139,7 +138,7 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
 
         FileDirectoryInfo folder = filePlanPage.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
         WebElement actions = folder.findElement(By.cssSelector("td:nth-of-type(5)"));
-        drone.mouseOverOnElement(actions);
+        drone.mouseOver(actions);
         WebElement folderDetails = folder.findElement(By.cssSelector("div.rm-record-folder-view-details>a"));
         folderDetails.click();
     }
@@ -151,7 +150,7 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
 
         FileDirectoryInfo folder = filePlanPage.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
         WebElement actions = folder.findElement(By.cssSelector("td:nth-of-type(5)"));
-        drone.mouseOverOnElement(actions);
+        drone.mouseOver(actions);
         WebElement folderPermissions = folder.findElement(By.cssSelector("div.rm-manage-permissions>a"));
         folderPermissions.click();
 
@@ -169,7 +168,7 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
 
         FileDirectoryInfo folder = filePlanPage.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
         WebElement actions = folder.findElement(By.cssSelector("td:nth-of-type(5)"));
-        drone.mouseOverOnElement(actions);
+        drone.mouseOver(actions);
 
         WebElement showMore = folder.findAndWait(By.cssSelector("div.internal-show-more>a"));
         showMore.click();

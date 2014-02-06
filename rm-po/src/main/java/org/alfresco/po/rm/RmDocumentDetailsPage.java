@@ -18,10 +18,10 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.site.document.DocumentDetailsPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.alfresco.webdrone.exception.PageException;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -64,7 +64,7 @@ public class RmDocumentDetailsPage extends DocumentDetailsPage
     @Override
     public synchronized RmDocumentDetailsPage render(RenderTime timer)
     {
-        RmUtils.checkMandotaryParam("timer", timer);
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
         while (true)
         {

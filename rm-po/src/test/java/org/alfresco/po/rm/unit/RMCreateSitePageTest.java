@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.rm.po;
+package org.alfresco.po.rm.unit;
 
 import org.alfresco.po.rm.RMSiteType;
 import org.alfresco.po.rm.RmCreateSitePage;
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
 import org.alfresco.po.rm.RmDashBoardPage;
-import org.alfresco.po.rm.util.RmPoUtils;
 import org.alfresco.po.share.AbstractTest;
+import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
 import org.testng.Assert;
@@ -46,7 +46,7 @@ public class RMCreateSitePageTest extends AbstractTest
     @BeforeClass(groups={"RM","nonCloud"})
     public void doSetup() throws Exception
     {
-        dashBoard = RmPoUtils.loginAs(drone, shareUrl, username, password).render();
+        dashBoard = ShareUtil.loginAs(drone, shareUrl, username, password).render();
 
         page = dashBoard.getRMNavigation().selectCreateSite().render();
         Assert.assertTrue(page.isCreateSiteDialogDisplayed());

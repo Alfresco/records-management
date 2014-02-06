@@ -20,11 +20,11 @@ package org.alfresco.po.rm;
 
 import java.io.File;
 
-import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.site.UploadFilePage;
 import org.alfresco.webdrone.HtmlElement;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -64,7 +64,7 @@ public class RmUploadFilePage extends UploadFilePage
     @Override
     public RmUploadFilePage render(RenderTime timer)
     {
-        RmUtils.checkMandotaryParam("timer", timer);
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
         basicRender(timer);
         return this;
@@ -176,7 +176,7 @@ public class RmUploadFilePage extends UploadFilePage
 
     /**
      * Extracts the name of the record from the path
-     * 
+     *
      * @param filePath The path of the file to upload
      * @return The name of the file to upload
      */

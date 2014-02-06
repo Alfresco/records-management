@@ -23,12 +23,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.Pagination;
 import org.alfresco.po.share.site.ManageRulesPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.alfresco.webdrone.exception.PageException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -119,7 +119,7 @@ public class FilePlanPage extends RmSitePage
     @Override
     public FilePlanPage render(RenderTime timer)
     {
-        RmUtils.checkMandotaryParam("timer", timer);
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
         while (true)
         {
@@ -480,7 +480,7 @@ public class FilePlanPage extends RmSitePage
      */
     public FileDirectoryInfo getFileDirectoryInfo(final String title)
     {
-        RmUtils.checkMandotaryParam("title", title);
+        WebDroneUtil.checkMandotaryParam("title", title);
 
         try
         {

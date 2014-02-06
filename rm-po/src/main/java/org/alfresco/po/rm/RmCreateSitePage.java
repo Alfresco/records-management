@@ -18,11 +18,11 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.site.CreateSitePage;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.alfresco.webdrone.exception.PageOperationException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -72,7 +72,7 @@ public class RmCreateSitePage extends CreateSitePage
     @Override
     public RmCreateSitePage render(RenderTime timer)
     {
-        RmUtils.checkMandotaryParam("timer", timer);
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
         return (RmCreateSitePage) super.render(timer);
     }
@@ -134,7 +134,7 @@ public class RmCreateSitePage extends CreateSitePage
      */
     public void selectSiteType(String siteType)
     {
-        RmUtils.checkMandotaryParam("siteType", siteType);
+        WebDroneUtil.checkMandotaryParam("siteType", siteType);
 
         Select dropdown = new Select(drone.find(SITE_PRESET));
         switch (siteType)
@@ -175,7 +175,7 @@ public class RmCreateSitePage extends CreateSitePage
      */
     public void selectRMSiteCompliance(RMSiteCompliance compliance)
     {
-        RmUtils.checkMandotaryParam("compliance", compliance);
+        WebDroneUtil.checkMandotaryParam("compliance", compliance);
 
         Select dropdown = new Select(drone.find(SELECT_COMPLIANCE));
         switch (compliance)

@@ -18,9 +18,9 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 
 /**
  * Create new category pop up page form. The form that is
@@ -53,7 +53,7 @@ public class CreateNewCategoryForm extends BaseCreateNewForm
     @Override
     public CreateNewCategoryForm render(RenderTime timer)
     {
-        RmUtils.checkMandotaryParam("timer", timer);
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
         return (CreateNewCategoryForm) super.render(timer);
     }
@@ -85,7 +85,7 @@ public class CreateNewCategoryForm extends BaseCreateNewForm
      */
     public void enterRecordCategoryId(final String recordCategoryId)
     {
-        RmUtils.checkMandotaryParam("recordCategoryId", recordCategoryId);
+        WebDroneUtil.checkMandotaryParam("recordCategoryId", recordCategoryId);
 
         super.enterId(recordCategoryId);
     }

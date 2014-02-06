@@ -18,9 +18,9 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -51,7 +51,7 @@ public class RmSiteMembersPage extends RmSitePage
     @Override
     public RmSiteMembersPage render(RenderTime timer)
     {
-        RmUtils.checkMandotaryParam("timer", timer);
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
         while (true)
         {

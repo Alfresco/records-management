@@ -60,8 +60,14 @@
          <artifactId>share-po</artifactId>
          <version>${dependency.share.po.version}</version>
          <type>test-jar</type>
-         <!-- FIXME!!! -->
-         <!-- <scope>test</scope> -->
+         <scope>test</scope>
+      </dependency>
+      <!-- FIXME: Remove this dependency after webrone has 2.3 has been released!!! -->
+      <dependency>
+         <groupId>org.alfresco</groupId>
+         <artifactId>webdrone</artifactId>
+         <version>2.3-SNAPSHOT</version>
+         <type>jar</type>
       </dependency>
       <dependency>
          <groupId>org.uncommons</groupId>

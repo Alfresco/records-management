@@ -18,11 +18,11 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.SharePage;
 import org.alfresco.webdrone.RenderElement;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -59,7 +59,7 @@ public class BaseCreateNewForm extends SharePage
     @Override
     public BaseCreateNewForm render(RenderTime timer)
     {
-        RmUtils.checkMandotaryParam("timer", timer);
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
         RenderElement name = RenderElement.getVisibleRenderElement(NAME_INPUT);
         RenderElement element = RenderElement.getVisibleRenderElement(TITLE_INPUT);
@@ -98,7 +98,7 @@ public class BaseCreateNewForm extends SharePage
      */
     public void enterName(final String name)
     {
-        RmUtils.checkMandotaryParam("name", name);
+        WebDroneUtil.checkMandotaryParam("name", name);
 
         WebElement nameInput = drone.find(NAME_INPUT);
         nameInput.clear();
@@ -112,7 +112,7 @@ public class BaseCreateNewForm extends SharePage
      */
     public void enterTitle(final String title)
     {
-        RmUtils.checkMandotaryParam("title", title);
+        WebDroneUtil.checkMandotaryParam("title", title);
 
         WebElement titleInput = drone.find(TITLE_INPUT);
         titleInput.clear();
@@ -126,7 +126,7 @@ public class BaseCreateNewForm extends SharePage
      */
     public void enterDescription(final String description)
     {
-        RmUtils.checkMandotaryParam("description", description);
+        WebDroneUtil.checkMandotaryParam("description", description);
 
         WebElement descriptionInput = drone.find(DESCRIPTION_INPUT);
         descriptionInput.clear();
@@ -140,7 +140,7 @@ public class BaseCreateNewForm extends SharePage
      */
     public void enterId(final String id)
     {
-        RmUtils.checkMandotaryParam("id", id);
+        WebDroneUtil.checkMandotaryParam("id", id);
 
         WebElement identifier = drone.find(IDENTIFIER);
         identifier.clear();

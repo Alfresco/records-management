@@ -16,29 +16,44 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.rm;
+package org.alfresco.po.rm.functional;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import org.alfresco.po.rm.RmCreateSitePage;
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
 import org.alfresco.po.rm.RmDashBoardPage;
-import org.alfresco.po.rm.util.RmPoUtils;
+import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.share.AbstractTest;
+import org.alfresco.po.share.LoginPage;
 import org.alfresco.po.share.site.SiteFinderPage;
 import org.alfresco.po.share.util.SiteUtil;
+import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 /**
  * Abstract Records Management integration test.
- * 
+ *
  * @author Roy Wetherall
  * @since 2.2
  */
 public abstract class AbstractIntegrationTest extends AbstractTest
-{   
-    /** RM dashboard for loged in user */
+{
+    /** RM dashboard for logged in user */
     protected RmDashBoardPage dashBoard;
+
+    /** File record dialog constants */
+    protected static final By PROMPT_PANEL_ID = By.id("prompt");
+    protected static final By BUTTON_TAG_NAME = By.tagName("button");
+    protected static final String ELECTRONIC = "Electronic";
 
     /**
      * Executed before class
@@ -48,7 +63,7 @@ public abstract class AbstractIntegrationTest extends AbstractTest
     {
         setup();
     }
-    
+
     /**
      * Test setup
      */
@@ -66,10 +81,10 @@ public abstract class AbstractIntegrationTest extends AbstractTest
      */
     @AfterClass(groups={"RM","nonCloud"})
     public void doTeardown()
-    {        
+    {
         teardown();
     }
-    
+
     /**
      * Test teardown
      */
@@ -78,18 +93,21 @@ public abstract class AbstractIntegrationTest extends AbstractTest
         // delete RM site
         deleteRMSite();
     }
-    
+
     /**
      * Helper method that logs into share and sets the dashboard PO
-     * 
+     *
      * @param userName  user name
      * @param password  password
      */
     protected void login(String userName, String password)
     {
-        dashBoard = RmPoUtils.loginAs(drone, shareUrl, username, password).render();        
+        drone.navigateTo(shareUrl);
+        LoginPage loginPage = new LoginPage(drone).render();
+        loginPage.loginAs(username, password);
+        dashBoard = new RmDashBoardPage(drone).render();
     }
-    
+
     /**
      * Helper method to create a 'vanilla' RM site
      */
@@ -97,7 +115,7 @@ public abstract class AbstractIntegrationTest extends AbstractTest
     {
         createRMSite(RMSiteCompliance.STANDARD);
     }
-    
+
     /**
      * Helper method to create RM site
      */
@@ -105,7 +123,7 @@ public abstract class AbstractIntegrationTest extends AbstractTest
     {
         // delete RM site
         deleteRMSite();
-        
+
         // Click create site dialog
         RmCreateSitePage createSite = dashBoard.getRMNavigation().selectCreateSite().render();
         Assert.assertTrue(createSite.isCreateSiteDialogDisplayed());
@@ -115,9 +133,9 @@ public abstract class AbstractIntegrationTest extends AbstractTest
         Assert.assertNotNull(site);
         Assert.assertTrue(RmCreateSitePage.RM_SITE_NAME.equalsIgnoreCase(site.getPageTitle()));
         Assert.assertTrue(site.getRMSiteNavigation().isDashboardActive());
-        Assert.assertFalse(site.getRMSiteNavigation().isFilePlanActive());        
+        Assert.assertFalse(site.getRMSiteNavigation().isFilePlanActive());
     }
-    
+
     /**
      * Helper method to delete RM site
      */
@@ -128,7 +146,26 @@ public abstract class AbstractIntegrationTest extends AbstractTest
         if (siteFinderPage.hasResults() == true)
         {
             siteFinderPage.deleteSite(RmCreateSitePage.RM_SITE_NAME).render();
-        }       
+        }
     }
 
+    /**
+     * Helper method to file a record
+     */
+    protected static void fileElectronicRecord(final WebDrone drone, final RmUploadFilePage rmRecordFileDialog, String fileName) throws IOException
+    {
+        WebDroneUtil.checkMandotaryParam("drone", drone);
+        WebDroneUtil.checkMandotaryParam("rmRecordFileDialog", rmRecordFileDialog);
+        // FileName can be blank. In this case a name will be generated
+
+        WebElement prompt = drone.findAndWait(PROMPT_PANEL_ID);
+        List<WebElement> elements = prompt.findElements(BUTTON_TAG_NAME);
+        WebElement electronicRecordButton = rmRecordFileDialog.findButton(ELECTRONIC, elements);
+        electronicRecordButton.click();
+
+        String name = StringUtils.isNotBlank(fileName) ? fileName : Long.valueOf(System.currentTimeMillis()).toString();
+        File file = SiteUtil.prepareFile(name);
+        String filePath = file.getCanonicalPath();
+        rmRecordFileDialog.uploadFile(filePath);
+    }
 }

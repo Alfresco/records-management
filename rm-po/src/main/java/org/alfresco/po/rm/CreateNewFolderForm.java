@@ -18,9 +18,9 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 
 /**
  * Create new record folder popup page form. The form that is
@@ -52,7 +52,7 @@ public class CreateNewFolderForm extends BaseCreateNewForm
     @Override
     public CreateNewFolderForm render(RenderTime timer)
     {
-        RmUtils.checkMandotaryParam("timer", timer);
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
         return (CreateNewFolderForm) super.render(timer);
     }
@@ -84,7 +84,7 @@ public class CreateNewFolderForm extends BaseCreateNewForm
      */
     public void enterRecordFolderId(final String recordFolderId)
     {
-        RmUtils.checkMandotaryParam("recordFolderId", recordFolderId);
+        WebDroneUtil.checkMandotaryParam("recordFolderId", recordFolderId);
 
         super.enterId(recordFolderId);
     }

@@ -18,13 +18,13 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.FactorySharePage;
 import org.alfresco.po.share.LoginPage;
 import org.alfresco.po.share.ShareErrorPopup;
 import org.alfresco.po.share.SharePage;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.alfresco.webdrone.exception.PageException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -67,7 +67,7 @@ public class RmFactoryPage extends FactorySharePage
      */
     public HtmlPage getPage(WebDrone drone)
     {
-        RmUtils.checkMandotaryParam("drone", drone);
+        WebDroneUtil.checkMandotaryParam("drone", drone);
 
         return RmFactoryPage.resolvePage(drone);
     }
@@ -82,7 +82,7 @@ public class RmFactoryPage extends FactorySharePage
      */
     public static HtmlPage resolvePage(final WebDrone drone) throws PageException
     {
-        RmUtils.checkMandotaryParam("drone", drone);
+        WebDroneUtil.checkMandotaryParam("drone", drone);
 
         // Determine if user is logged in if not return login page
         String title = drone.getTitle().toLowerCase();
@@ -120,8 +120,8 @@ public class RmFactoryPage extends FactorySharePage
      */
     public static SharePage getPage(final String url, WebDrone drone)
     {
-        RmUtils.checkMandotaryParam("url", url);
-        RmUtils.checkMandotaryParam("drone", drone);
+        WebDroneUtil.checkMandotaryParam("url", url);
+        WebDroneUtil.checkMandotaryParam("drone", drone);
 
         String pageName = RmFactoryPage.resolvePage(url);
         return instantiatePage(drone, pages.get(pageName));
@@ -135,7 +135,7 @@ public class RmFactoryPage extends FactorySharePage
      */
     protected static String resolvePage(String url)
     {
-        RmUtils.checkMandotaryParam("url", url);
+        WebDroneUtil.checkMandotaryParam("url", url);
 
         if (url.endsWith(DASHBOARD) && url.contains(SITE_RM))
         {

@@ -3,8 +3,8 @@
 <suite name="TestNG AllTestSuite" verbose="1" >
    <test name="AllTests">
       <classes>
-         <class name="org.alfresco.rm.UnfiledRecordsContainerIntTest"/>
-         <class name="org.alfresco.rm.VanillaRecordsManagementSiteIntTest"/>
+         <class name="org.alfresco.po.rm.functional.UnfiledRecordsContainerIntTest"/>
+         <class name="org.alfresco.po.rm.functional.VanillaRecordsManagementSiteIntTest"/>
       </classes>
    </test>
 </suite>

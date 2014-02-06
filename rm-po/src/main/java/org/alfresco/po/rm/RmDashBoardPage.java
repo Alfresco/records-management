@@ -18,10 +18,10 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.rm.util.RmUtils;
 import org.alfresco.po.share.DashBoardPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.alfresco.webdrone.exception.PageException;
 
 /**
@@ -49,7 +49,7 @@ public class RmDashBoardPage extends DashBoardPage
     @Override
     public RmDashBoardPage render(RenderTime timer)
     {
-        RmUtils.checkMandotaryParam("timer", timer);
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
         return (RmDashBoardPage) super.render(timer);
     }
