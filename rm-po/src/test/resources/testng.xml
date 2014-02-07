@@ -2,9 +2,8 @@
 
 <suite name="TestNG AllTestSuite" verbose="1" >
    <test name="AllTests">
-      <classes>
-         <class name="org.alfresco.po.rm.functional.UnfiledRecordsContainerIntTest"/>
-         <class name="org.alfresco.po.rm.functional.VanillaRecordsManagementSiteIntTest"/>
-      </classes>
+      <packages>
+         <package name="org.alfresco.po.rm.functional" />
+      </packages>
    </test>
 </suite>
