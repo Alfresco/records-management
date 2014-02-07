@@ -26,8 +26,7 @@ import org.alfresco.po.rm.RmCreateSitePage;
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
 import org.alfresco.po.rm.RmDashBoardPage;
 import org.alfresco.po.rm.RmUploadFilePage;
-import org.alfresco.po.share.AbstractTest;
-import org.alfresco.po.share.LoginPage;
+import org.alfresco.po.rm.common.AbstractRecordsManagementTest;
 import org.alfresco.po.share.site.SiteFinderPage;
 import org.alfresco.po.share.util.SiteUtil;
 import org.alfresco.webdrone.WebDrone;
@@ -45,11 +44,8 @@ import org.testng.annotations.BeforeClass;
  * @author Roy Wetherall
  * @since 2.2
  */
-public abstract class AbstractIntegrationTest extends AbstractTest
+public abstract class AbstractIntegrationTest extends AbstractRecordsManagementTest
 {
-    /** RM dashboard for logged in user */
-    protected RmDashBoardPage dashBoard;
-
     /** File record dialog constants */
     protected static final By PROMPT_PANEL_ID = By.id("prompt");
     protected static final By BUTTON_TAG_NAME = By.tagName("button");
@@ -92,20 +88,6 @@ public abstract class AbstractIntegrationTest extends AbstractTest
     {
         // delete RM site
         deleteRMSite();
-    }
-
-    /**
-     * Helper method that logs into share and sets the dashboard PO
-     *
-     * @param userName  user name
-     * @param password  password
-     */
-    protected void login(String userName, String password)
-    {
-        drone.navigateTo(shareUrl);
-        LoginPage loginPage = new LoginPage(drone).render();
-        loginPage.loginAs(username, password);
-        dashBoard = new RmDashBoardPage(drone).render();
     }
 
     /**

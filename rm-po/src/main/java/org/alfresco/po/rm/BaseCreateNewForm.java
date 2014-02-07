@@ -100,7 +100,7 @@ public class BaseCreateNewForm extends SharePage
     {
         WebDroneUtil.checkMandotaryParam("name", name);
 
-        WebElement nameInput = drone.find(NAME_INPUT);
+        WebElement nameInput = drone.findAndWait(NAME_INPUT);
         nameInput.clear();
         nameInput.sendKeys(name);
     }
@@ -114,7 +114,7 @@ public class BaseCreateNewForm extends SharePage
     {
         WebDroneUtil.checkMandotaryParam("title", title);
 
-        WebElement titleInput = drone.find(TITLE_INPUT);
+        WebElement titleInput = drone.findAndWait(TITLE_INPUT);
         titleInput.clear();
         titleInput.sendKeys(title);
     }
@@ -128,7 +128,7 @@ public class BaseCreateNewForm extends SharePage
     {
         WebDroneUtil.checkMandotaryParam("description", description);
 
-        WebElement descriptionInput = drone.find(DESCRIPTION_INPUT);
+        WebElement descriptionInput = drone.findAndWait(DESCRIPTION_INPUT);
         descriptionInput.clear();
         descriptionInput.sendKeys(description);
     }
@@ -142,7 +142,7 @@ public class BaseCreateNewForm extends SharePage
     {
         WebDroneUtil.checkMandotaryParam("id", id);
 
-        WebElement identifier = drone.find(IDENTIFIER);
+        WebElement identifier = drone.findAndWait(IDENTIFIER);
         identifier.clear();
         identifier.sendKeys(id);
     }
@@ -154,7 +154,7 @@ public class BaseCreateNewForm extends SharePage
      */
     public String getId()
     {
-        WebElement identifier = drone.find(IDENTIFIER);
+        WebElement identifier = drone.findAndWait(IDENTIFIER);
         return identifier.getAttribute(VALUE);
     }
 
@@ -165,7 +165,7 @@ public class BaseCreateNewForm extends SharePage
      */
     public FilePlanPage selectSave()
     {
-        WebElement save = drone.find(SAVE);
+        WebElement save = drone.findAndWait(SAVE);
         save.click();
         canResume();
         return new FilePlanPage(drone, true);
@@ -178,7 +178,7 @@ public class BaseCreateNewForm extends SharePage
      */
     public FilePlanPage selectCancel()
     {
-        WebElement cancel = drone.find(CANCEL);
+        WebElement cancel = drone.findAndWait(CANCEL);
         cancel.click();
         return new FilePlanPage(drone);
     }

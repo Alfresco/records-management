@@ -21,9 +21,7 @@ package org.alfresco.po.rm.unit;
 import org.alfresco.po.rm.RMSiteType;
 import org.alfresco.po.rm.RmCreateSitePage;
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
-import org.alfresco.po.rm.RmDashBoardPage;
-import org.alfresco.po.share.AbstractTest;
-import org.alfresco.po.share.ShareUtil;
+import org.alfresco.po.rm.common.AbstractRecordsManagementTest;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
 import org.testng.Assert;
@@ -38,16 +36,18 @@ import org.testng.annotations.Test;
  * @since 2.2
  */
 @Listeners(FailedTestListener.class)
-public class RMCreateSitePageTest extends AbstractTest
+public class RMCreateSitePageTest extends AbstractRecordsManagementTest
 {
-    RmDashBoardPage dashBoard;
+    /** create site page object */
     RmCreateSitePage page;
 
     @BeforeClass(groups={"RM","nonCloud"})
     public void doSetup() throws Exception
     {
-        dashBoard = ShareUtil.loginAs(drone, shareUrl, username, password).render();
+        // log into share
+        login(username, password);
 
+        // render create site page
         page = dashBoard.getRMNavigation().selectCreateSite().render();
         Assert.assertTrue(page.isCreateSiteDialogDisplayed());
     }

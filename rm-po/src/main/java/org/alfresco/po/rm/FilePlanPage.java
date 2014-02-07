@@ -243,7 +243,7 @@ public class FilePlanPage extends RmSitePage
     {
         try
         {
-            WebElement newCategory = drone.find(NEW_CATEGORY_BTN);
+            WebElement newCategory = drone.findAndWait(NEW_CATEGORY_BTN);
             return newCategory.isDisplayed();
         }
         catch (NoSuchElementException nse)
@@ -259,10 +259,10 @@ public class FilePlanPage extends RmSitePage
      */
     public CreateNewCategoryForm selectCreateNewCategory()
     {
-        WebElement newCategory = drone.find(NEW_CATEGORY_BTN);
-        newCategory.click();
+        waitForEnabled(NEW_CATEGORY_BTN).click();
         return new CreateNewCategoryForm(drone);
     }
+    
 
     /**
      * Checks visibility of create new folder button
@@ -274,7 +274,7 @@ public class FilePlanPage extends RmSitePage
     {
         try
         {
-            WebElement newFolder = drone.find(NEW_FOLDER_BTN);
+            WebElement newFolder = drone.findAndWait(NEW_FOLDER_BTN);
             return newFolder.isDisplayed();
         }
         catch (NoSuchElementException nse)
@@ -290,8 +290,12 @@ public class FilePlanPage extends RmSitePage
      */
     public CreateNewFolderForm selectCreateNewFolder()
     {
-        WebElement newFolder = drone.find(NEW_FOLDER_BTN);
-        newFolder.click();
+        waitForEnabled(NEW_FOLDER_BTN).click();
+
+        // need to check the dialog is there before we continue
+        // TODO add this into a dialog for base class for convenience?
+        //drone.waitForElement(By.cssSelector("div[id$='createFolder-dialog']"), 5);
+        
         return new CreateNewFolderForm(drone);
     }
 
@@ -304,7 +308,7 @@ public class FilePlanPage extends RmSitePage
     {
         try
         {
-            WebElement newFile = drone.find(NEW_FILE_BTN);
+            WebElement newFile = drone.findAndWait(NEW_FILE_BTN);
             return newFile.isDisplayed();
         }
         catch (NoSuchElementException nse)
@@ -320,8 +324,7 @@ public class FilePlanPage extends RmSitePage
      */
     public RmUploadFilePage selectFileRecord()
     {
-        WebElement newFile = drone.find(NEW_FILE_BTN);
-        newFile.click();
+        waitForEnabled(NEW_FILE_BTN).click();
         return new RmUploadFilePage(drone);
     }
 
@@ -374,7 +377,7 @@ public class FilePlanPage extends RmSitePage
     {
         try
         {
-            WebElement record = drone.find(RECORD);
+            WebElement record = drone.findAndWait(RECORD);
             return record.isDisplayed();
         }
         catch (NoSuchElementException e)
@@ -392,7 +395,7 @@ public class FilePlanPage extends RmSitePage
     {
         try
         {
-            WebElement manageRules = drone.find(MANAGE_RULES_BTN);
+            WebElement manageRules = drone.findAndWait(MANAGE_RULES_BTN);
             return manageRules.isDisplayed();
         }
         catch (NoSuchElementException e)
@@ -408,7 +411,7 @@ public class FilePlanPage extends RmSitePage
      */
     public ManageRulesPage selectManageRules()
     {
-        WebElement manageRules = drone.find(MANAGE_RULES_BTN);
+        WebElement manageRules = drone.findAndWait(MANAGE_RULES_BTN);
         manageRules.click();
         return new ManageRulesPage(drone);
     }

@@ -19,7 +19,11 @@
 package org.alfresco.po.rm;
 
 import org.alfresco.po.share.SharePage;
+import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneImpl;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 /**
  * Records management site page abstract.
@@ -48,5 +52,43 @@ public abstract class RmSitePage extends SharePage
     public RmSiteNavigation getSiteNav()
     {
         return new RmSiteNavigation(drone);
+    }
+     
+    /**
+     * Wait for element to be enabled 
+     * 
+     * @param by
+     */
+    protected WebElement waitForEnabled(By by)
+    {
+        long maxPageLoadingTime = ((WebDroneImpl)drone).getMaxPageRenderWaitTime();        
+        return waitForEnabled(by, new RenderTime(maxPageLoadingTime));
+    }
+    
+    /**
+     * Wait for element to be enabled
+     * 
+     * @param by
+     * @param timer
+     */
+    protected WebElement waitForEnabled(By by, RenderTime timer)
+    {
+        while (true)
+        {
+            timer.start();
+            try
+            {
+                WebElement webElement = drone.findAndWait(by);
+                if (webElement.isEnabled() == true)
+                {
+                    return webElement;
+                }
+            }
+            finally
+            {
+                timer.end();
+            }
+        }
+        
     }
 }

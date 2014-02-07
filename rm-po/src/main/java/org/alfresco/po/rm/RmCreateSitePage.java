@@ -121,7 +121,7 @@ public class RmCreateSitePage extends CreateSitePage
         switch (siteType)
         {
             case RMSiteType.RECORDS_MANAGEMENT:
-                drone.find(SUBMIT_BUTTON).click();
+                drone.findAndWait(SUBMIT_BUTTON).click();
                 return new RmDashBoardPage(drone);
 
             default:
@@ -136,7 +136,7 @@ public class RmCreateSitePage extends CreateSitePage
     {
         WebDroneUtil.checkMandotaryParam("siteType", siteType);
 
-        Select dropdown = new Select(drone.find(SITE_PRESET));
+        Select dropdown = new Select(drone.findAndWait(SITE_PRESET));
         switch (siteType)
         {
             case RMSiteType.RECORDS_MANAGEMENT:
@@ -159,7 +159,7 @@ public class RmCreateSitePage extends CreateSitePage
     {
         String result = RMSiteType.COLLABORATION;
 
-        Select select = new Select(drone.find(SITE_PRESET));
+        Select select = new Select(drone.findAndWait(SITE_PRESET));
         String selectedValue = select.getFirstSelectedOption().getAttribute("value");
 
         if (selectedValue.contains("rm-site-dashboard") == true)
@@ -177,7 +177,7 @@ public class RmCreateSitePage extends CreateSitePage
     {
         WebDroneUtil.checkMandotaryParam("compliance", compliance);
 
-        Select dropdown = new Select(drone.find(SELECT_COMPLIANCE));
+        Select dropdown = new Select(drone.findAndWait(SELECT_COMPLIANCE));
         switch (compliance)
         {
             case STANDARD:
@@ -201,7 +201,7 @@ public class RmCreateSitePage extends CreateSitePage
     {
         RMSiteCompliance result = RMSiteCompliance.STANDARD;
 
-        Select select = new Select(drone.find(SELECT_COMPLIANCE));
+        Select select = new Select(drone.findAndWait(SELECT_COMPLIANCE));
         String selectedValue = select.getFirstSelectedOption().getAttribute("value");
 
         if (selectedValue.contains("dod") == true)
@@ -224,7 +224,7 @@ public class RmCreateSitePage extends CreateSitePage
 
         try
         {
-            WebElement sitePreset = drone.find(SITE_PRESET);
+            WebElement sitePreset = drone.findAndWait(SITE_PRESET);
             return sitePreset.isDisplayed();
         }
         catch (NoSuchElementException e)
