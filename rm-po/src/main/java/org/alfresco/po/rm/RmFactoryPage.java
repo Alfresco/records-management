@@ -42,6 +42,7 @@ public class RmFactoryPage extends FactorySharePage
     private static final String RM_S = "rm-%s";
     private static final String SITE_RM = "site/rm";
     private static final String DASHBOARD = "dashboard";
+    private static final String DOCUMENT_DETAILS = "document-details";
     private static final String LOGIN = "login";
     private static final String RM_FILE_PLAN = "rm-documentlibrary";
     private static final String RM_DASHBOARD = "rm-dashboard";
@@ -55,6 +56,10 @@ public class RmFactoryPage extends FactorySharePage
     public RmFactoryPage()
     {
         super();
+        // Extend the pages in share
+        pages.put("DASHBOARD", RmDashBoardPage.class);
+        pages.put(DOCUMENT_DETAILS, RmDocumentDetailsPage.class);
+        // RM related pages
         pages.put(RM_SITE_MEMBERS, RmSiteMembersPage.class);
         pages.put(RM_CONSOLE, RmConsolePage.class);
         pages.put(RM_RMSEARCH, RecordSearchPage.class);

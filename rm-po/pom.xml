@@ -62,13 +62,6 @@
          <type>test-jar</type>
          <scope>test</scope>
       </dependency>
-      <!-- FIXME: Remove this dependency after webrone has 2.3 has been released!!! -->
-      <dependency>
-         <groupId>org.alfresco</groupId>
-         <artifactId>webdrone</artifactId>
-         <version>2.3-SNAPSHOT</version>
-         <type>jar</type>
-      </dependency>
       <dependency>
          <groupId>org.uncommons</groupId>
          <artifactId>reportng</artifactId>
