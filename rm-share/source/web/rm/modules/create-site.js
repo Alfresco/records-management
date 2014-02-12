@@ -72,11 +72,11 @@
        */
       disableFormElements: function RM_CreateSite_disableFormElements()
       {
-         Dom.get(this.id + "-title").disabled = false;
-         Dom.get(this.id + "-shortName").disabled = false;
-         Dom.get(this.id + "-isPrivate").disabled = false;
-         Dom.get(this.id + "-isModerated").disabled = false;
-         Dom.get(this.id + "-compliance-field").hidden = true;
+         Dom.get(this.id + "-title").disabled = true;
+         Dom.get(this.id + "-shortName").disabled = true;
+         Dom.get(this.id + "-isPrivate").disabled = true;
+         Dom.get(this.id + "-isModerated").disabled = true;
+         Dom.get(this.id + "-compliance-field").hidden = false;
       },
 
       /**
@@ -86,11 +86,11 @@
        */
       enableFormElements: function RM_CreateSite_enableFormElements()
       {
-         Dom.get(this.id + "-title").disabled = true;
-         Dom.get(this.id + "-shortName").disabled = true;
-         Dom.get(this.id + "-isPrivate").disabled = true;
-         Dom.get(this.id + "-isModerated").disabled = true;
-         Dom.get(this.id + "-compliance-field").hidden = false;
+         Dom.get(this.id + "-title").disabled = false;
+         Dom.get(this.id + "-shortName").disabled = false;
+         Dom.get(this.id + "-isPrivate").disabled = false;
+         Dom.get(this.id + "-isModerated").disabled = false;
+         Dom.get(this.id + "-compliance-field").hidden = true;
       },
 
       /**
@@ -102,8 +102,8 @@
        */
       doBeforeFormSubmit: function RM_CreateSite_doBeforeFormSubmit(form, obj)
       {
-      	 var sitePresetEl = Dom.get(this.id + "-sitePreset");
-      	 if (sitePresetEl.value === "rm-site-dashboard")
+         var sitePresetEl = Dom.get(this.id + "-sitePreset");
+         if (sitePresetEl.value === "rm-site-dashboard")
          {
             Dom.get(this.id + "-type").value = Dom.get(this.id + "-compliance").value;
          }
@@ -111,10 +111,9 @@
          {
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/site/1.0}site";
          }
-      
+
          Alfresco.rm.module.CreateSite.superclass.doBeforeFormSubmit.call(this, form, obj);
-         
-         this.disableFormElements();
+         this.enableFormElements();
       },
 
       /**
@@ -127,7 +126,7 @@
       onCancelButtonClick: function RM_CreateSite_onCancelButtonClick(type, args)
       {
          Alfresco.rm.module.CreateSite.superclass.onCancelButtonClick.call(this, type, args);
-         this.disableFormElements();
+         this.enableFormElements();
       },
 
       /**
@@ -139,18 +138,17 @@
       onCreateSiteFailure: function RM_CreateSite_onCreateSiteFailure(response)
       {
          Alfresco.rm.module.CreateSite.superclass.onCreateSiteFailure.call(this, response);
-         
+
          var sitePresetEl = Dom.get(this.id + "-sitePreset");
-      	 if (sitePresetEl.value === "rm-site-dashboard")
+         if (sitePresetEl.value === "rm-site-dashboard")
          {
-            this.enableFormElements();
+            this.disableFormElements();
          }
          else
          {
-            this.disableFormElements();
-         }         
+            this.enableFormElements();
+         }
       },
-      
 
       /**
        * Called when a preset has been selected.
@@ -177,15 +175,16 @@
             Dom.get(this.id + "-description").value = this.msg("description.recordsManagementSite");
             Dom.get(this.id + "-isPublic").checked = true;
             Dom.get(this.id + "-isModerated").checked = false;
-            this.enableFormElements();
+
+            this.disableFormElements();
          }
          else
          {
             Dom.get(this.id + "-shortName").value = "";
             Dom.get(this.id + "-title").value = "";
             Dom.get(this.id + "-description").value = "";
-            
-            this.disableFormElements();
+
+            this.enableFormElements();
          }
       }
    });
