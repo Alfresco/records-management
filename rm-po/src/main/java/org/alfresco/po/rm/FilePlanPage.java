@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.alfresco.po.share.Pagination;
 import org.alfresco.po.share.site.ManageRulesPage;
+import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
@@ -58,6 +59,7 @@ public class FilePlanPage extends RmSitePage
     private static final String JS_SCRIPT_CHECK_DOCLIST = "return Alfresco.util.ComponentManager.findFirst('Alfresco.DocumentList').widgets.dataTable._getViewRecords();";
     private static final String NODEREF_LOCATOR = "input[id^='checkbox-yui']";
     private static final By MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-manageRules-button-button']");
+    private static final By UNFILED_MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-unfiledManageRules-button-button']");
     private static final By NEW_CATEGORY_BTN = By.cssSelector("button[id$='default-newCategory-button-button']");
     private static final By NEW_FOLDER_BTN = By.cssSelector("button[id$='default-newFolder-button-button']");
     private static final By NEW_FILE_BTN = By.cssSelector("button[id$='default-fileUpload-button-button']");
@@ -262,7 +264,7 @@ public class FilePlanPage extends RmSitePage
         waitForEnabled(NEW_CATEGORY_BTN).click();
         return new CreateNewCategoryForm(drone);
     }
-    
+
 
     /**
      * Checks visibility of create new folder button
@@ -295,7 +297,7 @@ public class FilePlanPage extends RmSitePage
         // need to check the dialog is there before we continue
         // TODO add this into a dialog for base class for convenience?
         //drone.waitForElement(By.cssSelector("div[id$='createFolder-dialog']"), 5);
-        
+
         return new CreateNewFolderForm(drone);
     }
 
@@ -409,11 +411,23 @@ public class FilePlanPage extends RmSitePage
      *
      * @return {@link RMManageRulesPage} page response
      */
-    public ManageRulesPage selectManageRules()
+    public RmManageRulesPage selectManageRules()
     {
         WebElement manageRules = drone.findAndWait(MANAGE_RULES_BTN);
         manageRules.click();
-        return new ManageRulesPage(drone);
+        return new RmManageRulesPage(drone);
+    }
+
+    /**
+     * Action of click on manage rules button.
+     *
+     * @return {@link RMManageRulesPage} page response
+     */
+    public RmManageRulesPage selectUnfiledManageRules()
+    {
+        WebElement manageRules = drone.findAndWait(UNFILED_MANAGE_RULES_BTN);
+        manageRules.click();
+        return new RmManageRulesPage(drone);
     }
 
     /**
@@ -630,4 +644,40 @@ public class FilePlanPage extends RmSitePage
         }
         return false;
     }
+
+    /**
+     * Selects the title of the category link.
+     *
+     * @param title String category title
+     * @return FilePlanPage page response object
+     */
+    public FilePlanPage selectCategory(final String title, final long timeout)
+    {
+        selectEntry(title, timeout).click();
+        return new FilePlanPage(drone);
+    }
+
+    /**
+     * Selects the title of the folder link.
+     *
+     * @param title String folder title
+     * @return FilePlanPage page response object
+     */
+    public FilePlanPage selectFolder(final String title, final long timeout)
+    {
+        selectEntry(title, timeout).click();
+        return new FilePlanPage(drone);
+    }
+
+    /**
+     * Selects an entry regardless of type (file or folder)
+     * @return
+     */
+    protected WebElement selectEntry(final String title, final long timeout)
+    {
+        if(title == null || title.isEmpty()) throw new IllegalArgumentException("Title is required");
+        String search = String.format("//h3/span/a[text()='%s']",title);
+        return drone.findAndWait(By.xpath(search), timeout);
+    }
+
 }
