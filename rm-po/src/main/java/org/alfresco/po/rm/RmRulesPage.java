@@ -1,8 +1,6 @@
 package org.alfresco.po.rm;
 
-import org.alfresco.po.share.FactorySharePage;
 import org.alfresco.po.share.site.RulesPage;
-import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;

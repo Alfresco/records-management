@@ -23,8 +23,6 @@ import org.alfresco.po.share.site.RulesPage;
 import org.alfresco.po.share.site.UploadFilePage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -37,8 +35,6 @@ import org.openqa.selenium.WebElement;
  */
 public class RmManageRulesPage extends ManageRulesPage
 {
-    private Log logger = LogFactory.getLog(this.getClass());
-
     /**
      * Constructor.
      *

@@ -24,11 +24,8 @@ import org.alfresco.po.rm.FilePlanNavigation;
 import org.alfresco.po.rm.FilePlanPage;
 import org.alfresco.po.rm.RmManageRulesPage;
 import org.alfresco.po.rm.RmRulesPage;
-import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.FailedTestListener;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -51,8 +48,6 @@ public class FileToCreatePathIntegrationTest extends AbstractIntegrationTest
 
     private final static String FILE_TO_ACTION = "File to";
     private final static String FILE_TO_PATH = "/one/two/three";
-
-    private static Log logger = LogFactory.getLog(FileToCreatePathIntegrationTest.class);
 
     private RmRulesPage rulesPage;
     private RmManageRulesPage manageRulesPage;
