@@ -36,7 +36,6 @@ import org.testng.annotations.Test;
  * This test suite tests the following new features:
  *
  *  - Create a file to rule that creates a full path that doesn't currently exists
- *  - Allow auto-completion suggestions to be presented to the user based on path fragments
  *
  * @author Mark Hibbins
  * @version 2.2
