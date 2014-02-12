@@ -72,10 +72,10 @@
        */
       disableFormElements: function RM_CreateSite_disableFormElements()
       {
-         Dom.get(this.id + "-title").disabled = false;
-         Dom.get(this.id + "-shortName").disabled = false;
-         Dom.get(this.id + "-isPrivate").disabled = false;
-         Dom.get(this.id + "-isModerated").disabled = false;
+         Dom.get(this.id + "-title").disabled = true;
+         Dom.get(this.id + "-shortName").disabled = true;
+         Dom.get(this.id + "-isPrivate").disabled = true;
+         Dom.get(this.id + "-isModerated").disabled = true;
       },
 
       /**
@@ -85,10 +85,10 @@
        */
       enableFormElements: function RM_CreateSite_enableFormElements()
       {
-         Dom.get(this.id + "-title").disabled = true;
-         Dom.get(this.id + "-shortName").disabled = true;
-         Dom.get(this.id + "-isPrivate").disabled = true;
-         Dom.get(this.id + "-isModerated").disabled = true;
+         Dom.get(this.id + "-title").disabled = false;
+         Dom.get(this.id + "-shortName").disabled = false;
+         Dom.get(this.id + "-isPrivate").disabled = false;
+         Dom.get(this.id + "-isModerated").disabled = false;
       },
 
       /**
@@ -101,7 +101,7 @@
       doBeforeFormSubmit: function RM_CreateSite_doBeforeFormSubmit(form, obj)
       {
          Alfresco.rm.module.CreateSite.superclass.doBeforeFormSubmit.call(this, form, obj);
-         this.disableFormElements();
+         this.enableFormElements();
       },
 
       /**
@@ -114,7 +114,7 @@
       onCancelButtonClick: function RM_CreateSite_onCancelButtonClick(type, args)
       {
          Alfresco.rm.module.CreateSite.superclass.onCancelButtonClick.call(this, type, args);
-         this.disableFormElements();
+         this.enableFormElements();
       },
 
       /**
@@ -126,7 +126,15 @@
       onCreateSiteFailure: function RM_CreateSite_onCreateSiteFailure(response)
       {
          Alfresco.rm.module.CreateSite.superclass.onCreateSiteFailure.call(this, response);
-         this.enableFormElements();
+         var sitePresetEl = Dom.get(this.id + "-sitePreset");
+         if (sitePresetEl.value === "rm-site-dashboard")
+         {
+            this.disableFormElements();
+         }
+         else
+         {
+            this.enableFormElements();
+         }
       },
 
       /**
@@ -155,7 +163,7 @@
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite";
             Dom.get(this.id + "-isPublic").checked = true;
             Dom.get(this.id + "-isModerated").checked = false;
-            this.enableFormElements();
+            this.disableFormElements();
          }
          else
          {
@@ -163,7 +171,7 @@
             Dom.get(this.id + "-title").value = "";
             Dom.get(this.id + "-description").value = "";
             Dom.get(this.id + "-type").value = "{http://www.alfresco.org/model/site/1.0}site";
-            this.disableFormElements();
+            this.enableFormElements();
          }
       }
    });
