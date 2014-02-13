@@ -26,8 +26,6 @@ import org.alfresco.po.rm.FilePlanPage;
 import org.alfresco.po.rm.RmManageRulesPage;
 import org.alfresco.po.rm.RmRulesPage;
 import org.alfresco.po.share.util.FailedTestListener;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -49,12 +47,14 @@ public class FileToAutoCompleteIntegrationTest extends AbstractIntegrationTest
 
     private final static String FILE_TO_ACTION = "File to";
 
-    @SuppressWarnings("unused")
-    private static Log logger = LogFactory.getLog(FileToAutoCompleteIntegrationTest.class);
-
     private RmRulesPage rulesPage;
     private RmManageRulesPage manageRulesPage;
 
+    /**
+     * Test the auto suggestion functionality for the fragment '/da'.
+     *
+     * The expected results are that we should see all of the date suggestions.
+     */
     @Test
     public void testAutoSuggestionDateFragment()
     {
@@ -72,6 +72,11 @@ public class FileToAutoCompleteIntegrationTest extends AbstractIntegrationTest
         testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[0], "/{date.day.short}");
     }
 
+    /**
+     * Test the auto suggestion functionality for the fragment '/date.mon'.
+     *
+     * The expected results are that we should see all of the date.month suggestions.
+     */
     @Test
     public void testAutoSuggestionDateMonthFragment()
     {
@@ -84,6 +89,11 @@ public class FileToAutoCompleteIntegrationTest extends AbstractIntegrationTest
         testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[1], "/{date.month.long}");
     }
 
+    /**
+     * Test the auto suggestion functionality for the fragment '/mon'.
+     *
+     * The expected results are that we should see all of the date.month suggestions.
+     */
     @Test
     public void testAutoSuggestionMonthFragment()
     {
@@ -96,6 +106,15 @@ public class FileToAutoCompleteIntegrationTest extends AbstractIntegrationTest
         testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[2], "/{date.month.number}");
     }
 
+    /**
+     * Test the auto suggestion functionality for the given fragment, expected suggestions, the suggestion to choose
+     * from the provided suggestions and the final value of the path once this value is chosen.
+     *
+     * @param fragment             The fragment to initially type in to the path input (e.g. '/mon')
+     * @param expectedSuggestions  A list of expected suggestions as they would appear to the user
+     * @param suggestionToChoose   The suggestion to choose from the provided suggestions
+     * @param expectedPath         The expected path value once the suggestion has been chosen
+     */
     private void testAutoComplete(String fragment, String[] expectedSuggestions, String suggestionToChoose, String expectedPath)
     {
         // FIXME!!! Click on the link rather than navigating
@@ -144,6 +163,4 @@ public class FileToAutoCompleteIntegrationTest extends AbstractIntegrationTest
         String path = input.getAttribute("value");
         Assert.assertEquals(path, expectedPath);
     }
-
-
 }

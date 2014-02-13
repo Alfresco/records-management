@@ -51,6 +51,9 @@ public class FileToCreatePathIntegrationTest extends AbstractIntegrationTest
     private RmRulesPage rulesPage;
     private RmManageRulesPage manageRulesPage;
 
+    /**
+     * This test creates a rule that uses file to to file a new record to a non-existent path.
+     */
     @Test
     public void createAndTestFileToRuleThatCreatesAPath()
     {
@@ -59,6 +62,9 @@ public class FileToCreatePathIntegrationTest extends AbstractIntegrationTest
         ensureSampleDocumentHasBeenFiledCorrectly();
     }
 
+    /**
+     * Create the test file-to rule
+     */
     private void createRule()
     {
         // FIXME!!! Click on the link rather than navigating
@@ -81,6 +87,10 @@ public class FileToCreatePathIntegrationTest extends AbstractIntegrationTest
                         MAX_WAIT_TIME);
     }
 
+    /**
+     * Create new content in the sample site an declare it as a record in order to exercise the
+     * rule we created in the previous step.
+     */
     private void createContentAndDeclareAsRecord()
     {
         drone.navigateTo(shareUrl + "/page/site/swsdp/documentlibrary");
@@ -99,6 +109,9 @@ public class FileToCreatePathIntegrationTest extends AbstractIntegrationTest
         okButton.click();
     }
 
+    /**
+     * Ensure that the document we created has been filed in the the specified path correctly.
+     */
     private void ensureSampleDocumentHasBeenFiledCorrectly()
     {
         drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
