@@ -49,6 +49,7 @@ public class FileToAutoCompleteIntegrationTest extends AbstractIntegrationTest
 
     private final static String FILE_TO_ACTION = "File to";
 
+    @SuppressWarnings("unused")
     private static Log logger = LogFactory.getLog(FileToAutoCompleteIntegrationTest.class);
 
     private RmRulesPage rulesPage;
