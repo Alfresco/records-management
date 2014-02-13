@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.alfresco.po.share.Pagination;
-import org.alfresco.po.share.site.ManageRulesPage;
-import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
