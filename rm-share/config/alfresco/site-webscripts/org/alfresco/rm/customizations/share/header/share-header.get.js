@@ -8,8 +8,8 @@ if (siteNavigationWidgets.length > 0)
    // Highlight "Site Dashboard"
    siteNavigationWidgets[0].config.selected = isRmPageTitle;
 
-   lastNavigationWidget = siteNavigationWidgets.pop();
-   lastNavigationWidget.config.widgets[0].config.widgets.push({
+   var managementConsoleWidget = {
+      id: "HEADER_SITE_RM_MANAGEMENT_CONSOLE",
       name: "alfresco/menus/AlfMenuBarItem",
       config: {
          id: "HEADER_SITE_RM_MANAGEMENT_CONSOLE",
@@ -17,8 +17,43 @@ if (siteNavigationWidgets.length > 0)
          targetUrl: "console/rm-console/",
          selected: false
       }
-   });
-   siteNavigationWidgets.push(lastNavigationWidget);
+   };
+      
+   if (siteNavigationWidgets.length < config.global.header.maxDisplayedSitePages)
+   {
+      siteNavigationWidgets.push(managementConsoleWidget);
+   }
+   else 
+   {
+      lastNavigationWidget = siteNavigationWidgets.pop();
+      if(lastNavigationWidget.config.widgets == undefined) 
+      {
+         siteNavigationWidgets.push(lastNavigationWidget);
+         siteNavigationWidgets.push(managementConsoleWidget);
+         var forMoreMenu = siteNavigationWidgets.splice(config.global.header.maxDisplayedSitePages - 1, siteNavigationWidgets.length - config.global.header.maxDisplayedSitePages + 1);
+         siteNavigationWidgets.push({
+            id: "HEADER_SITE_MORE_PAGES",
+            name: "alfresco/menus/AlfMenuBarPopup",
+            config: {
+               id: "HEADER_SITE_MORE_PAGES",
+               label: "page.navigation.more.label",
+               widgets: [
+                  {
+                     name: "alfresco/menus/AlfMenuGroup",
+                     config: {
+                        widgets: forMoreMenu
+                     }
+                  }
+               ]
+            }
+         });
+      }
+      else
+      {
+         lastNavigationWidget.config.widgets[0].config.widgets.push(managementConsoleWidget);
+         siteNavigationWidgets.push(lastNavigationWidget);
+      }
+   }
    widgetUtils.findObject(model.jsonModel, "id", "HEADER_NAVIGATION_MENU_BAR").config.widgets = siteNavigationWidgets;
 }
 
