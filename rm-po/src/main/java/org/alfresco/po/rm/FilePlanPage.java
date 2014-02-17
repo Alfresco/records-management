@@ -535,4 +535,19 @@ public class FilePlanPage extends DocumentLibraryPage
         return drone.findAndWait(By.xpath(search), timeout);
     }
 
+    // FIXME: This method will be deleted after the original method has been fixed
+    @Override
+    public FileDirectoryInfo getFileDirectoryInfo(String title)
+    {
+        FileDirectoryInfo result = null;
+        for (FileDirectoryInfo fileDirectoryInfo : getFiles())
+        {
+            if (fileDirectoryInfo.getName().equals(title))
+            {
+                result = fileDirectoryInfo;
+                break;
+            }
+        }
+        return result;
+    }
 }
