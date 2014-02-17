@@ -359,6 +359,7 @@
 
                // create the auto complete widget.
                var autoComp = new YAHOO.widget.AutoComplete(el, autoCompleteDiv, dataSource);
+               autoComp.maxResultsDisplayed = 20;
 
                // fix any css applied by creating the autocomplete widget and tweak a couple of other styles
                YUIDom.setStyle(autoCompleteDiv, "width", "500px");
@@ -383,17 +384,18 @@
                // substitution suggestions api
                autoComp.generateRequest = function(sQuery)
                {
+                  Selector.query("[param=" + "path" + "]")[0].value = el.value;
                   var fragmentDetails = getAutoCompleteFragment(el.value, getCursorPosition(el));
                   autoCompleteSelectPreFragment = fragmentDetails[0];
                   var fragment = fragmentDetails[1];
                   autoCompleteSelectPostFragment = fragmentDetails[2];
-                  var parameterString = "?fragment=" + fragment;
+                  var parameterString = "?fragment=" + fragment.replace(/ /g,'+') + "&path=";
                   if((autoCompleteSelectPreFragment.indexOf("{") == -1) && (autoCompleteSelectPreFragment.indexOf("}") == -1))
                   {
-                     parameterString += "&path=" + autoCompleteSelectPreFragment;
+                     parameterString += autoCompleteSelectPreFragment.replace(/ /g,'+');
                   }
-                  console.log("parameter string <" + parameterString + ">");
-                  return Alfresco.util.encodeURIPath(parameterString);
+                  parameterString = Alfresco.util.encodeURIPath(parameterString);
+                  return parameterString;
                }
 
                // handle the autocomplete selection handler so we place the suggestion in the

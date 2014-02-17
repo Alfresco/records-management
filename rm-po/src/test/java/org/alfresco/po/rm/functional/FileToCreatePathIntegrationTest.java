@@ -18,6 +18,7 @@
  */
 package org.alfresco.po.rm.functional;
 
+import java.util.Date;
 import java.util.List;
 
 import org.alfresco.po.rm.FilePlanNavigation;
@@ -100,7 +101,7 @@ public class FileToCreatePathIntegrationTest extends AbstractIntegrationTest
         createPlainTextFileAction.click();
         WebElement fileNameField = drone.findAndWait(By.xpath("//input[@name='prop_cm_name']"), MAX_WAIT_TIME);
         fileNameField.clear();
-        fileNameField.sendKeys("fileToTestFile");
+        fileNameField.sendKeys("fileToTestFile-" + new Date().getTime());
         WebElement createButton = drone.findAndWait(By.xpath("//button[.='Create']"), MAX_WAIT_TIME);
         createButton.click();
         WebElement createRecordAction = drone.findAndWait(By.cssSelector("div.rm-create-record>a"), MAX_WAIT_TIME);
