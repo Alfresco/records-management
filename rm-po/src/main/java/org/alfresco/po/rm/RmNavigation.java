@@ -33,7 +33,7 @@ public class RmNavigation extends Navigation
 {
     private static final String CREATE_SITE = "ul.create-site-menuitem>li>a";
     private static final String CREATE_SITE_DOJO_SUPPORT = "td#HEADER_SITES_MENU_CREATE_SITE_text";
-    
+
     private static final By FILE_PLAN_LINK = By.cssSelector("a[href$='rm/documentlibrary']");
 
     /**
@@ -54,21 +54,21 @@ public class RmNavigation extends Navigation
     public RmCreateSitePage selectCreateSite()
     {
         selectSitesDropdown();
-        String selectorText = dojoSupport ? CREATE_SITE_DOJO_SUPPORT : CREATE_SITE;
+        String selectorText = isDojoSupport() ? CREATE_SITE_DOJO_SUPPORT : CREATE_SITE;
         By selector = By.cssSelector(selectorText);
         WebElement selectorElement = drone.find(selector);
         selectorElement.click();
         return new RmCreateSitePage(drone);
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     public FilePlanPage selectFilePlan()
     {
         WebElement filePlanLink = drone.find(FILE_PLAN_LINK);
-        filePlanLink.click();        
+        filePlanLink.click();
         return new FilePlanPage(drone);
     }
 }

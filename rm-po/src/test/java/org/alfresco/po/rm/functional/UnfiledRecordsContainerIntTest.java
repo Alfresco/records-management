@@ -62,6 +62,7 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
         // FIXME!!! Click on the link rather than navigating
         drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
         filePlanPage = drone.getCurrentPage().render();
+        Assert.assertNotNull(filePlanPage);
 
         // FIXME!!!
         /*
@@ -73,6 +74,7 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
         Assert.assertNotNull(filePlanNavigation);
         Assert.assertTrue(filePlanNavigation.isUnfiledRecordsVisible());
         filePlanPage = filePlanNavigation.selectUnfiledRecords().render();
+        Assert.assertNotNull(filePlanPage);
     }
 
     @Test(dependsOnMethods="navigateToUnfiledRecords")
@@ -80,9 +82,11 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
     {
         Assert.assertTrue(filePlanPage.isUnfiledRecordsContainerFileDisplayed());
         RmUploadFilePage rmRecordFileDialog = filePlanPage.selectCreateNewUnfiledRecordsContainerFile().render();
+        Assert.assertNotNull(rmRecordFileDialog);
         String fileName = Long.valueOf(System.currentTimeMillis()).toString();
         fileElectronicRecord(drone, rmRecordFileDialog, fileName);
         filePlanPage = filePlanPage.render();
+        Assert.assertNotNull(filePlanPage);
         Assert.assertEquals(1, filePlanPage.getFiles().size());
     }
 
@@ -91,11 +95,13 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
     {
         Assert.assertTrue(filePlanPage.isUnfiledRecordsContainerFolderDisplayed());
         CreateNewFolderForm createNewFolderDialog = filePlanPage.selectCreateNewUnfiledRecordsContainerFolder().render();
+        Assert.assertNotNull(createNewFolderDialog);
         Assert.assertNotNull(createNewFolderDialog.getRecordFolderId());
         createNewFolderDialog.enterName(RM_UNFILED_RECORDS_CONTAINER_NAME);
         createNewFolderDialog.enterTitle(RM_UNFILED_RECORDS_CONTAINER_TITLE);
         createNewFolderDialog.enterDescription(RM_UNFILED_RECORDS_CONTAINER_DESC);
         filePlanPage = createNewFolderDialog.selectSave().render();
+        Assert.assertNotNull(filePlanPage);
         Assert.assertEquals(2, filePlanPage.getFiles().size());
     }
 
@@ -103,6 +109,7 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
     public void fileRecordInUnfiledRecordsFolder() throws IOException
     {
         FileDirectoryInfo fileDirectoryInfo = filePlanPage.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
+        Assert.assertNotNull(fileDirectoryInfo);
         fileDirectoryInfo.clickOnTitle();
         fileRecord();
     }
@@ -113,8 +120,8 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
         navigateToUnfiledRecords();
 
         FileDirectoryInfo folder = filePlanPage.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
-        WebElement actions = folder.findElement(By.cssSelector("td:nth-of-type(5)"));
-        drone.mouseOver(actions);
+        WebElement selectMoreAction = folder.selectMoreAction();
+        selectMoreAction.click();
         WebElement editProperties = folder.findElement(By.cssSelector("div.rm-edit-details>a"));
         editProperties.click();
 
@@ -137,8 +144,8 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
         navigateToUnfiledRecords();
 
         FileDirectoryInfo folder = filePlanPage.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
-        WebElement actions = folder.findElement(By.cssSelector("td:nth-of-type(5)"));
-        drone.mouseOver(actions);
+        WebElement selectMoreAction = folder.selectMoreAction();
+        selectMoreAction.click();
         WebElement folderDetails = folder.findElement(By.cssSelector("div.rm-record-folder-view-details>a"));
         folderDetails.click();
     }
@@ -149,8 +156,8 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
         navigateToUnfiledRecords();
 
         FileDirectoryInfo folder = filePlanPage.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
-        WebElement actions = folder.findElement(By.cssSelector("td:nth-of-type(5)"));
-        drone.mouseOver(actions);
+        WebElement selectMoreAction = folder.selectMoreAction();
+        selectMoreAction.click();
         WebElement folderPermissions = folder.findElement(By.cssSelector("div.rm-manage-permissions>a"));
         folderPermissions.click();
 
@@ -167,10 +174,10 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
         navigateToUnfiledRecords();
 
         FileDirectoryInfo folder = filePlanPage.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
-        WebElement actions = folder.findElement(By.cssSelector("td:nth-of-type(5)"));
-        drone.mouseOver(actions);
+        WebElement selectMoreAction = folder.selectMoreAction();
+        selectMoreAction.click();
 
-        WebElement showMore = folder.findAndWait(By.cssSelector("div.internal-show-more>a"));
+        WebElement showMore = folder.findElement(By.cssSelector("div.internal-show-more>a"));
         showMore.click();
 
         WebElement folderRules = folder.findElement(By.cssSelector("div.rm-manage-rules>a"));

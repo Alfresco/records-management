@@ -161,9 +161,9 @@ public class RmUploadFilePage extends UploadFilePage
             logger.trace("Upload button has been actioned");
         }
 
-        FilePlanPage filePlanPage = (FilePlanPage) RmFactoryPage.getPage(getCurrentUrl(), drone);
-        filePlanPage.setExpectingRecord(true);
-        filePlanPage.setExpectedRecordName(getFileName(filePath));
+        FilePlanPage filePlanPage = (FilePlanPage) RmFactoryPage.getPage(drone.getCurrentUrl(), drone);
+        filePlanPage.setExpectingRecordOrFolder(true);
+        filePlanPage.setExpectedRecordOrFolderName(getFileName(filePath));
         filePlanPage.render();
 
         if (filePlanPage.hasFiles() == false)
@@ -184,20 +184,5 @@ public class RmUploadFilePage extends UploadFilePage
     {
         String fileNameWithExtension = StringUtils.substringAfterLast(filePath, File.separator);
         return StringUtils.substringBeforeLast(fileNameWithExtension, ".");
-    }
-
-    /**
-     * Helper method for getting the current URL without any parameters.
-     *
-     * @return {@link String} Current url without any parameters
-     */
-    private String getCurrentUrl()
-    {
-        String currentUrl = drone.getCurrentUrl();
-        if (StringUtils.contains(currentUrl, "#"))
-        {
-            currentUrl = drone.getCurrentUrl().split("#")[0];
-        }
-        return currentUrl;
     }
 }

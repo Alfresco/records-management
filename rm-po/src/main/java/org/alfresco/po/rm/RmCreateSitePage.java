@@ -106,11 +106,11 @@ public class RmCreateSitePage extends CreateSitePage
     public HtmlPage createRMSite(RMSiteCompliance compliance)
     {
         // setup the type and compliance
-        selectSiteType(RMSiteType.RECORDS_MANAGEMENT);
+        selectSiteType(RmSiteType.RECORDS_MANAGEMENT);
         selectRMSiteCompliance(compliance);
 
         // FIXME!!!
-        return createNewSite(null, null, false, false, RMSiteType.RECORDS_MANAGEMENT);
+        return createNewSite(null, null, false, false, RmSiteType.RECORDS_MANAGEMENT);
     }
 
     /**
@@ -120,7 +120,7 @@ public class RmCreateSitePage extends CreateSitePage
     {
         switch (siteType)
         {
-            case RMSiteType.RECORDS_MANAGEMENT:
+            case RmSiteType.RECORDS_MANAGEMENT:
                 drone.findAndWait(SUBMIT_BUTTON).click();
                 return new RmDashBoardPage(drone);
 
@@ -139,11 +139,11 @@ public class RmCreateSitePage extends CreateSitePage
         Select dropdown = new Select(drone.findAndWait(SITE_PRESET));
         switch (siteType)
         {
-            case RMSiteType.RECORDS_MANAGEMENT:
+            case RmSiteType.RECORDS_MANAGEMENT:
                 dropdown.selectByIndex(1);
                 break;
 
-            case RMSiteType.COLLABORATION:
+            case RmSiteType.COLLABORATION:
                 dropdown.selectByIndex(0);
                 break;
 
@@ -157,14 +157,14 @@ public class RmCreateSitePage extends CreateSitePage
      */
     public String getSiteType()
     {
-        String result = RMSiteType.COLLABORATION;
+        String result = RmSiteType.COLLABORATION;
 
         Select select = new Select(drone.findAndWait(SITE_PRESET));
         String selectedValue = select.getFirstSelectedOption().getAttribute("value");
 
         if (selectedValue.contains("rm-site-dashboard") == true)
         {
-            result = RMSiteType.RECORDS_MANAGEMENT;
+            result = RmSiteType.RECORDS_MANAGEMENT;
         }
 
         return result;

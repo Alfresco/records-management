@@ -18,7 +18,7 @@
  */
 package org.alfresco.po.rm.unit;
 
-import org.alfresco.po.rm.RMSiteType;
+import org.alfresco.po.rm.RmSiteType;
 import org.alfresco.po.rm.RmCreateSitePage;
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
 import org.alfresco.po.rm.common.AbstractRecordsManagementTest;
@@ -36,7 +36,7 @@ import org.testng.annotations.Test;
  * @since 2.2
  */
 @Listeners(FailedTestListener.class)
-public class RMCreateSitePageTest extends AbstractRecordsManagementTest
+public class RmCreateSitePageTest extends AbstractRecordsManagementTest
 {
     /** create site page object */
     RmCreateSitePage page;
@@ -60,7 +60,7 @@ public class RMCreateSitePageTest extends AbstractRecordsManagementTest
         Assert.assertTrue(page.getSiteUrl().isEmpty());
         Assert.assertTrue(page.getDescription().isEmpty());
 
-        Assert.assertEquals(RMSiteType.COLLABORATION, page.getSiteType());
+        Assert.assertEquals(RmSiteType.COLLABORATION, page.getSiteType());
         // TODO check contents of drop down
 
         // TODO check site visibility
@@ -72,7 +72,7 @@ public class RMCreateSitePageTest extends AbstractRecordsManagementTest
     public void testCloseReopen()
     {
         // select RM type
-        page.selectSiteType(RMSiteType.RECORDS_MANAGEMENT);
+        page.selectSiteType(RmSiteType.RECORDS_MANAGEMENT);
         Assert.assertTrue(drone.find(RmCreateSitePage.SELECT_COMPLIANCE).isDisplayed());
 
         // cancel page
@@ -87,7 +87,7 @@ public class RMCreateSitePageTest extends AbstractRecordsManagementTest
         Assert.assertTrue(page.getSiteUrl().isEmpty());
         Assert.assertTrue(page.getDescription().isEmpty());
 
-        Assert.assertEquals(RMSiteType.COLLABORATION, page.getSiteType());
+        Assert.assertEquals(RmSiteType.COLLABORATION, page.getSiteType());
         // TODO check contents of drop down
 
         // TODO check site visibility
@@ -120,14 +120,14 @@ public class RMCreateSitePageTest extends AbstractRecordsManagementTest
     public void testSetType()
     {
         // select the records management type
-        page.selectSiteType(RMSiteType.RECORDS_MANAGEMENT);
+        page.selectSiteType(RmSiteType.RECORDS_MANAGEMENT);
 
         // check the controls after selecting RM site type
         Assert.assertEquals(page.getSiteName(), RmCreateSitePage.RM_SITE_NAME);
         Assert.assertEquals(page.getDescription(), RmCreateSitePage.RM_SITE_DESC);
         Assert.assertEquals(page.getSiteUrl(), RmCreateSitePage.RM_SITE_URL);
 
-        Assert.assertEquals(RMSiteType.RECORDS_MANAGEMENT, page.getSiteType());
+        Assert.assertEquals(RmSiteType.RECORDS_MANAGEMENT, page.getSiteType());
 
         // TODO check site visibility
 
@@ -139,13 +139,13 @@ public class RMCreateSitePageTest extends AbstractRecordsManagementTest
         page.selectRMSiteCompliance(RMSiteCompliance.DOD5015);
 
         // select collaboration site
-        page.selectSiteType(RMSiteType.COLLABORATION);
+        page.selectSiteType(RmSiteType.COLLABORATION);
 
         // check the controls
         Assert.assertTrue(page.getSiteName().isEmpty());
         Assert.assertTrue(page.getSiteUrl().isEmpty());
         Assert.assertTrue(page.getDescription().isEmpty());
-        Assert.assertEquals(page.getSiteType(), RMSiteType.COLLABORATION);
+        Assert.assertEquals(page.getSiteType(), RmSiteType.COLLABORATION);
 
         // TODO check site visibility
 

@@ -23,8 +23,9 @@ import java.util.List;
 
 import org.alfresco.po.rm.FilePlanNavigation;
 import org.alfresco.po.rm.FilePlanPage;
-import org.alfresco.po.rm.RmManageRulesPage;
-import org.alfresco.po.rm.RmRulesPage;
+import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
+import org.alfresco.po.rm.RmCreateRulePage;
+import org.alfresco.po.rm.RmFolderRulesPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
@@ -42,15 +43,11 @@ import org.testng.annotations.Test;
  * @version 2.2
  */
 @Listeners(FailedTestListener.class)
-public class FileToCreatePathIntegrationTest extends AbstractIntegrationTest
+public class FileToCreatePathIntTest extends AbstractIntegrationTest
 {
     private final static long MAX_WAIT_TIME = 60000;
-
-    private final static String FILE_TO_ACTION = "File to";
+    private final static String RULE_TITLE = "Path creation test rule";
     private final static String FILE_TO_PATH = "/one/two/three";
-
-    private RmRulesPage rulesPage;
-    private RmManageRulesPage manageRulesPage;
 
     /**
      * This test creates a rule that uses file to to file a new record to a non-existent path.
@@ -73,13 +70,12 @@ public class FileToCreatePathIntegrationTest extends AbstractIntegrationTest
         FilePlanPage filePlanPage = drone.getCurrentPage().render();
         FilePlanNavigation filePlanNavigation = filePlanPage.getFilePlanNavigation();
         filePlanPage = filePlanNavigation.selectUnfiledRecords().render();
-        this.manageRulesPage = filePlanPage.selectUnfiledManageRules().render();
-        this.rulesPage = manageRulesPage.selectCreateRules().render();
-        rulesPage.selectPerformAction(FILE_TO_ACTION);
-        rulesPage.setFileToPath(FILE_TO_PATH, MAX_WAIT_TIME);
-        rulesPage.enterTitle("Path creation test rule");
-        rulesPage.toggleCreateRecordPath(MAX_WAIT_TIME);
-        rulesPage.selectCreateButton(MAX_WAIT_TIME);
+        RmFolderRulesPage manageRulesPage = filePlanPage.selectUnfiledManageRules().render();
+        RmCreateRulePage rulesPage = manageRulesPage.openCreateRulePage().render();
+        rulesPage.fillNameField(RULE_TITLE);
+        RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
+        actionSelectorEnter.selectFileTo(FILE_TO_PATH, true);
+        rulesPage.clickCreate().render();
         drone.findAndWait(
                 By.xpath(
                         "//div[@class='parameters']/"

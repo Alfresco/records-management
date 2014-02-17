@@ -23,8 +23,9 @@ import java.util.List;
 
 import org.alfresco.po.rm.FilePlanNavigation;
 import org.alfresco.po.rm.FilePlanPage;
-import org.alfresco.po.rm.RmManageRulesPage;
-import org.alfresco.po.rm.RmRulesPage;
+import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
+import org.alfresco.po.share.site.contentrule.FolderRulesPage;
+import org.alfresco.po.share.site.contentrule.createrules.CreateRulePage;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -41,14 +42,9 @@ import org.testng.annotations.Test;
  * @version 2.2
  */
 @Listeners(FailedTestListener.class)
-public class FileToAutoCompleteIntegrationTest extends AbstractIntegrationTest
+public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
 {
     private final static long MAX_WAIT_TIME = 60000;
-
-    private final static String FILE_TO_ACTION = "File to";
-
-    private RmRulesPage rulesPage;
-    private RmManageRulesPage manageRulesPage;
 
     /**
      * Test the auto suggestion functionality for the fragment '/da'.
@@ -122,9 +118,10 @@ public class FileToAutoCompleteIntegrationTest extends AbstractIntegrationTest
         FilePlanPage filePlanPage = drone.getCurrentPage().render();
         FilePlanNavigation filePlanNavigation = filePlanPage.getFilePlanNavigation();
         filePlanPage = filePlanNavigation.selectUnfiledRecords().render();
-        this.manageRulesPage = filePlanPage.selectUnfiledManageRules().render();
-        this.rulesPage = manageRulesPage.selectCreateRules().render();
-        rulesPage.selectPerformAction(FILE_TO_ACTION);
+        FolderRulesPage manageRulesPage = filePlanPage.selectUnfiledManageRules().render();
+        CreateRulePage createRulePage = manageRulesPage.openCreateRulePage().render();
+        RmActionSelectorEnterpImpl actionSelectorEnter = (RmActionSelectorEnterpImpl) createRulePage.getActionOptionsObj();
+        actionSelectorEnter.selectFileTo();
 
         // send the fragment key strokes
         WebElement input = drone.findAndWait(By.className("yui-ac-input"), MAX_WAIT_TIME);

@@ -20,8 +20,9 @@ package org.alfresco.po.rm;
 
 import org.alfresco.po.share.FactorySharePage;
 import org.alfresco.po.share.LoginPage;
-import org.alfresco.po.share.ShareErrorPopup;
 import org.alfresco.po.share.SharePage;
+import org.alfresco.po.share.SharePopup;
+import org.alfresco.po.share.site.contentrule.FolderRulesPreRender;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
@@ -49,6 +50,8 @@ public class RmFactoryPage extends FactorySharePage
     private static final String RM_RMSEARCH = "rm-rmsearch";
     private static final String RM_CONSOLE = "rm-console";
     private static final String RM_SITE_MEMBERS = "rm-site-members";
+    private static final String RM_RULE_EDIT = "rm-rule-edit";
+    private static final String RM_FOLDER_FULES = "rm-folder-rules";
 
     /**
      * Constructor.
@@ -57,7 +60,7 @@ public class RmFactoryPage extends FactorySharePage
     {
         super();
         // Extend the pages in share
-        pages.put("DASHBOARD", RmDashBoardPage.class);
+        pages.put(DASHBOARD, RmDashBoardPage.class);
         pages.put(DOCUMENT_DETAILS, RmDocumentDetailsPage.class);
         // RM related pages
         pages.put(RM_SITE_MEMBERS, RmSiteMembersPage.class);
@@ -65,6 +68,8 @@ public class RmFactoryPage extends FactorySharePage
         pages.put(RM_RMSEARCH, RecordSearchPage.class);
         pages.put(RM_DASHBOARD, RmDashBoardPage.class);
         pages.put(RM_FILE_PLAN, FilePlanPage.class);
+        pages.put(RM_RULE_EDIT, RmCreateRulePage.class);
+        pages.put(RM_FOLDER_FULES, FolderRulesPreRender.class);
     }
 
     /**
@@ -102,7 +107,7 @@ public class RmFactoryPage extends FactorySharePage
                 WebElement errorPrompt = drone.find(By.cssSelector(FAILURE_PROMPT));
                 if (errorPrompt.isDisplayed())
                 {
-                    return new ShareErrorPopup(drone);
+                    return new SharePopup(drone);
                 }
             }
             catch (NoSuchElementException nse)
@@ -150,6 +155,10 @@ public class RmFactoryPage extends FactorySharePage
         // Check if rm based url
         if (url.contains(SITE_RM))
         {
+            if (url.contains("?") || url.contains("#"))
+            {
+                url = url.split("([?&#])")[0];
+            }
             String val[] = url.split(SITE_RM + "/");
             return String.format(RM_S, val[1]);
         }

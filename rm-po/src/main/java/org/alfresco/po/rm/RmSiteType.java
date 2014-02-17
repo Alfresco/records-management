@@ -26,7 +26,7 @@ import org.alfresco.po.share.site.SiteType;
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class RMSiteType extends SiteType
+public class RmSiteType extends SiteType
 {
     public static final String RECORDS_MANAGEMENT = "RecordsManagement";
 }

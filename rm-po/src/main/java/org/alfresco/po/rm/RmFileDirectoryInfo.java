@@ -19,7 +19,7 @@
 package org.alfresco.po.rm;
 
 import org.alfresco.po.share.FactorySharePage;
-import org.alfresco.po.share.site.document.FileDirectoryInfo;
+import org.alfresco.po.share.site.document.FileDirectoryInfoImpl;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.exception.PageOperationException;
@@ -28,12 +28,12 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 /**
- * Extends {@link FileDirectoryInfo} to add RM specific methods
+ * Extends {@link FileDirectoryInfoImpl} to add RM specific methods
  *
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class RmFileDirectoryInfo extends FileDirectoryInfo
+public class RmFileDirectoryInfo extends FileDirectoryInfoImpl
 {
     private static final By BANNER = By.cssSelector("div.info-banner");
     private static final By CREATE_RECORD = By.cssSelector("div#onActionSimpleRepoAction.rm-create-record a");
