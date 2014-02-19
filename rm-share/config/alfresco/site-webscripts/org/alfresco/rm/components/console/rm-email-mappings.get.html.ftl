@@ -5,7 +5,7 @@
    new Alfresco.rm.component.PropertyMenu('${htmlid}-rmproperty-button').setOptions(
    {
       showIMAPFields: true,
-      groups: YAHOO.lang.JSON.parse('${jsonUtils.toJSONString(groups)}')
+      groups: ${jsonUtils.toJSONString(groups)}
    });
    new Alfresco.rm.component.RMEmailMappings('${htmlid}').setOptions(
    {
