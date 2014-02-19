@@ -5,12 +5,12 @@
       showSearchFields: true,
       showIdentiferField: true,
       updateButtonLabel: false,
-      groups: YAHOO.lang.JSON.parse('${jsonUtils.toJSONString(groups)}')
+      groups: ${jsonUtils.toJSONString(groups)}
    }).setMessages(${messages});
    new Alfresco.rm.component.Search("${el}").setOptions(
    {
       siteId: "${page.url.templateArgs.site!""}",
-      groups: YAHOO.lang.JSON.parse('${jsonUtils.toJSONString(groups)}')
+      groups: ${jsonUtils.toJSONString(groups)}
    }).setMessages(${messages});
 //]]></script>
 
@@ -26,7 +26,7 @@
                <span class="first-child"><button>${msg("button.newsearch")}</button></span>
             </span>
          </div>
-         
+
          <!-- Save Search button -->
          <div class="right-button">
             <span class="yui-button yui-push-button" id="${el}-savesearch-button">
@@ -49,12 +49,12 @@
          </div>
       </div>
    </div>
-   
+
    <div id="${el}-tabs" class="yui-navset">
       <ul class="yui-nav" id="${el}-tabset">
          <li class="selected"><a href="#${el}-critera-tab"><em>${msg("label.criteria")}</em></a></li>
          <li><a href="#${el}-results-tab"><em>${msg("label.results")}</em></a></li>
-      </ul>            
+      </ul>
       <div class="yui-content tab-content">
          <div id="${el}-critera-tab" class="terms">
             <span class="header">${msg("label.searchterm")}</span>
@@ -80,7 +80,7 @@
                </div>
             </div>
          </div>
-         
+
          <div id="${el}-results-tab">
             <div class="yui-g">
                <div class="yui-u first">
