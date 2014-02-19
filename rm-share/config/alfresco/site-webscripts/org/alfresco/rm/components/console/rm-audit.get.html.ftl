@@ -6,7 +6,7 @@
    {
       showIdentiferField: true,
       showAllField: true,
-      groups: YAHOO.lang.JSON.parse('${jsonUtils.toJSONString(groups)}')
+      groups: ${jsonUtils.toJSONString(groups)}
    });
    new Alfresco.rm.component.RMAudit('${htmlid}-audit').setOptions(
    {
@@ -46,9 +46,9 @@
          </div>
       </div>
     </div>
-    
+
     <div class="yui-gb filters">
-       
+
        <div class="yui-u first">
           <div id="${htmlid}-entriesFilter" class="filter">
              <div class="hd">
@@ -59,7 +59,7 @@
              </div>
           </div>
        </div>
-       
+
        <div class="yui-u">
           <div id="${htmlid}-dateFilter" class="filter">
              <div class="hd">
@@ -77,9 +77,9 @@
                 </a>
                 <div id="${htmlid}-audit-toDate-cal" class="datepicker"></div>
              </div>
-          </div>      
+          </div>
       </div>
-      
+
       <div class="yui-u">
          <div id="${htmlid}-userFilter" class="filter">
             <div class="hd">
@@ -96,7 +96,7 @@
             </div>
          </div>
      </div>
-      
+
      <div class="yui-u">
         <div id="${htmlid}-eventsFilter" class="filter">
            <div class="hd">
@@ -113,10 +113,10 @@
            </div>
         </div>
      </div>
-      
+
    </div>
-   
-   
+
+
    <div class="yui-g">
       <div class="yui-u first">&nbsp;</div>
       <div class="rm-audit-details-button">
