@@ -17,7 +17,7 @@ function sortById(obj1, obj2)
 function main()
 {
    // Load rm specific record types
-   var result = remote.call("/api/rma/recordmetadataaspects");
+   var result = remote.call("/api/rma/recordmetadataaspects?noderef=" + args.nodeRef);
    if (result.status == 200)
    {
       var rmAspects = eval('(' + result + ')').data.recordMetaDataAspects;
