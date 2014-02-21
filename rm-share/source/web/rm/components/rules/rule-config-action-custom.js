@@ -369,15 +369,33 @@
                // format the items in the autosuggest list
                var me = this;
                autoComp.formatResult = function(oResultData, sQuery, sResultMatch) {
+                  var prefix = "";
+                  var postfix = "";
+                  var message = "";
                   if(sResultMatch.indexOf("/") == 0)
                   {
-                     return "<code><strong>" + sResultMatch + "</strong></code>";
+                     message =
+                        "<strong><code><span class='substitutionSuggestion'>"
+                        + sResultMatch
+                        + "</span></code></strong>";
+                  }
+                  else if(sResultMatch.indexOf("node.") == 0)
+                  {
+                     message = me.msg("file-to.substitution." + sResultMatch.replace(/:/g,'.') + ".label");
+                     message =
+                        "<span class='substitutionSuggestion'>"
+                        + (message.indexOf("file-to.substitution.") != -1 ? " <em>{" + sResultMatch + "}</em>" : message + " <em>{" + sResultMatch + "}</em>")
+                        + "</span>";
                   }
                   else
                   {
-                     var message = me.msg("file-to.substitution." + sResultMatch + ".label");
-                     return (message.indexOf("file-to.substitution.") != -1 ? sResultMatch : message);
+                     message = me.msg("file-to.substitution." + sResultMatch + ".label");
+                     message =
+                        "<span class='substitutionSuggestion'>"
+                        + (message.indexOf("file-to.substitution.") != -1 ? " <em>{" + sResultMatch + "}</em>" : message + " <em>{" + sResultMatch + "}</em>")
+                        + "</span>";
                   }
+                  return message;
                };
 
                // work in both directions from the cursor to get the current fragment to send to the

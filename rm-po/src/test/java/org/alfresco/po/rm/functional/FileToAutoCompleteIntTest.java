@@ -46,26 +46,13 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
 {
     private final static long MAX_WAIT_TIME = 60000;
 
-    /**
-     * Test the auto suggestion functionality for the fragment '/da'.
-     *
-     * The expected results are that we should see all of the date suggestions.
-     */
     @Test
-    public void testAutoSuggestionDateFragment()
+    public void runAutoCompleteTests()
     {
-        String fragment = "/da";
-        String[] expectedSuggestions = {
-                "Short Day (Mon)",
-                "Long Day (Monday)",
-                "Day Number (1)",
-                "Short Month (Jan)",
-                "Long Month (January)",
-                "Month Number (01)",
-                "Short Year (14)",
-                "Long Year (2014)"
-            };
-        testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[0], "/{date.day.short}");
+        testAutoSuggestionDateMonthFragment();
+        testAutoSuggestionMonthFragment();
+        testAutoSuggestionDateFragment();
+        testAutoSuggestionTitleFragment();
     }
 
     /**
@@ -73,14 +60,13 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
      *
      * The expected results are that we should see all of the date.month suggestions.
      */
-    @Test
     public void testAutoSuggestionDateMonthFragment()
     {
         String fragment = "/date.mon";
         String[] expectedSuggestions = {
-                "Short Month (Jan)",
-                "Long Month (January)",
-                "Month Number (01)"
+                "Short Month",
+                "Long Month",
+                "Month Number"
             };
         testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[1], "/{date.month.long}");
     }
@@ -90,16 +76,52 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
      *
      * The expected results are that we should see all of the date.month suggestions.
      */
-    @Test
     public void testAutoSuggestionMonthFragment()
     {
         String fragment = "/mon";
         String[] expectedSuggestions = {
-                "Short Month (Jan)",
-                "Long Month (January)",
-                "Month Number (01)"
+                "Short Month",
+                "Long Month",
+                "Month Number"
             };
         testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[2], "/{date.month.number}");
+    }
+
+    /**
+     * Test the auto suggestion functionality for the fragment '/da'.
+     *
+     * The expected results are that we should see all of the date suggestions along with a node
+     * suggestion for date filed.
+     */
+    public void testAutoSuggestionDateFragment()
+    {
+        String fragment = "/da";
+        String[] expectedSuggestions = {
+                "Date filed",
+                "Short Day",
+                "Long Day",
+                "Day Number",
+                "Short Month",
+                "Long Month",
+                "Month Number",
+                "Short Year",
+                "Long Year"
+            };
+        testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[1], "/{date.day.short}");
+    }
+
+    /**
+     * Test the auto suggestion functionality for the fragment '/da'.
+     *
+     * The expected results are that we should see all of the date suggestions.
+     */
+    public void testAutoSuggestionTitleFragment()
+    {
+        String fragment = "/title";
+        String[] expectedSuggestions = {
+                "Title"
+            };
+        testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[0], "/{node.cm:title}");
     }
 
     /**
@@ -126,23 +148,23 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
         // send the fragment key strokes
         WebElement input = drone.findAndWait(By.className("yui-ac-input"), MAX_WAIT_TIME);
         input.clear();
-        for(int i = 0; i < fragment.length(); i++)
-        {
-            input.sendKeys("" + fragment.charAt(i));
-        }
+        input.sendKeys(fragment);
+
+        // wait for the ajax autosuggestion drop down menu to settle
+        try{Thread.sleep(5000);}catch(Exception e){}
 
         // read the suggestions
         WebElement dropDownList = drone.findAndWait(By.xpath("//div[@class='yui-ac-bd']/child::ul"), MAX_WAIT_TIME);
         Assert.assertTrue(dropDownList.isDisplayed());
-        WebElement lastExpectedListItem = drone.findAndWait(By.xpath("//div[@class='yui-ac-bd']/child::ul/child::li[.='" + expectedSuggestions[expectedSuggestions.length - 1] + "']"), MAX_WAIT_TIME);
-        Assert.assertTrue(lastExpectedListItem.isDisplayed());
-        List<WebElement> listItems = dropDownList.findElements(By.tagName("li"));
+        WebElement expectedListItem = drone.findAndWait(By.className("substitutionSuggestion"), MAX_WAIT_TIME);
+        Assert.assertTrue(expectedListItem.isDisplayed());
+        List<WebElement> listItems = dropDownList.findElements(By.className("substitutionSuggestion"));
         List<String> suggestions = new ArrayList<String>();
         WebElement suggestionToSelect = null;
         for(WebElement listItem : listItems)
         {
             suggestions.add(listItem.getText());
-            if(suggestionToChoose.equals(listItem.getText()))
+            if(listItem.getText().startsWith(suggestionToChoose))
             {
                 suggestionToSelect = listItem;
             }
@@ -151,7 +173,16 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
         // ensure that the expected suggestions have been supplied
         for(String expectedSuggestion : expectedSuggestions)
         {
-            Assert.assertTrue(suggestions.contains(expectedSuggestion));
+            boolean found = false;
+            for(String suggestion : suggestions)
+            {
+                if(suggestion.startsWith(expectedSuggestion))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            Assert.assertTrue(found);
         }
 
         // select the specified suggestion and ensure that the path field is populated correctly
