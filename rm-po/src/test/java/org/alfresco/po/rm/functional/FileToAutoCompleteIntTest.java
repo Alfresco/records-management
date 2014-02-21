@@ -65,10 +65,11 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
         String fragment = "/date.mon";
         String[] expectedSuggestions = {
                 "Short Month",
+                "Month",
                 "Long Month",
                 "Month Number"
             };
-        testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[1], "/{date.month.long}");
+        testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[2], "/{date.month.long}");
     }
 
     /**
@@ -81,10 +82,11 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
         String fragment = "/mon";
         String[] expectedSuggestions = {
                 "Short Month",
+                "Month",
                 "Long Month",
                 "Month Number"
             };
-        testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[2], "/{date.month.number}");
+        testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[3], "/{date.month.number}");
     }
 
     /**
@@ -99,19 +101,24 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
         String[] expectedSuggestions = {
                 "Date filed",
                 "Short Day",
+                "Day",
                 "Long Day",
                 "Day Number",
+                "Day of Year",
                 "Short Month",
+                "Month",
                 "Long Month",
                 "Month Number",
                 "Short Year",
-                "Long Year"
+                "Year",
+                "Long Year",
+                "Year Week"
             };
         testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[1], "/{date.day.short}");
     }
 
     /**
-     * Test the auto suggestion functionality for the fragment '/da'.
+     * Test the auto suggestion functionality for the fragment '/title'.
      *
      * The expected results are that we should see all of the date suggestions.
      */
