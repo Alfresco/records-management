@@ -18,14 +18,13 @@
  */
 package org.alfresco.po.rm.functional;
 
-import org.alfresco.po.rm.CreateNewCategoryForm;
-import org.alfresco.po.rm.CreateNewFolderForm;
-import org.alfresco.po.rm.FilePlanPage;
-import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
+import org.alfresco.po.rm.RmUploadFilePage;
+import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
+import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.FailedTestListener;
-import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -55,61 +54,45 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         // create DOD site
         createRMSite(RMSiteCompliance.DOD5015);
 
-        FilePlanPage filePlan = dashBoard.getRMNavigation().selectFilePlan().render();
-        Assert.assertNotNull(filePlan);
+        FilePlanPage filePlan = dashBoard.getRMNavigation().selectFilePlan();
+        filePlan.setInFilePlanRoot(true);
+        filePlan = filePlan.render();
 
-        Assert.assertTrue(filePlan.isCreateNewCategoryDisplayed());
-        CreateNewCategoryForm createNewCategory = filePlan.selectCreateNewCategory().render();
-        Assert.assertNotNull(createNewCategory);
-
+        CreateNewRecordCategoryDialog createNewCategory = filePlan.selectCreateNewCategory().render();
         createNewCategory.enterName(NAME);
         createNewCategory.enterTitle(TITLE);
         createNewCategory.enterDescription(DESC);
 
-        filePlan.setExpectingRecordOrFolder(true);
-        filePlan.setExpectedRecordOrFolderName(NAME);
-        filePlan = createNewCategory.selectSave().render();
-        Assert.assertNotNull(filePlan);
+        filePlan = ((FilePlanPage) createNewCategory.selectSave());
+        filePlan.setInFilePlanRoot(true);
+        filePlan = filePlan.render(NAME);
 
         FileDirectoryInfo recordCategory = filePlan.getFileDirectoryInfo(NAME);
-        Assert.assertNotNull(recordCategory);
-
         recordCategory.clickOnTitle();
         filePlan.setInRecordCategory(true);
         filePlan = filePlan.render();
-        Assert.assertNotNull(filePlan);
 
         // create record folder
-        Assert.assertTrue(filePlan.isCreateNewFolderDisplayed());
-        CreateNewFolderForm createNewFolder = filePlan.selectCreateNewFolder().render();
-        Assert.assertNotNull(createNewFolder);
-
+        CreateNewRecordFolderDialog createNewFolder = filePlan.selectCreateNewFolder().render();
         createNewFolder.enterName(NAME);
         createNewFolder.enterTitle(TITLE);
         createNewFolder.enterDescription(DESC);
 
-        filePlan.setExpectingRecordOrFolder(true);
-        filePlan.setExpectedRecordOrFolderName(NAME);
-        filePlan = createNewFolder.selectSave().render();
-        Assert.assertNotNull(filePlan);
+        filePlan = ((FilePlanPage) createNewFolder.selectSave());
+        filePlan.setInRecordCategory(true);
+        filePlan = filePlan.render(NAME);
 
         FileDirectoryInfo recordFolder = filePlan.getFileDirectoryInfo(NAME);
-        Assert.assertNotNull(recordFolder);
-
         recordFolder.clickOnTitle();
         filePlan.setInRecordFolder(true);
         filePlan = filePlan.render();
-        Assert.assertNotNull(filePlan);
 
         // file a record
-        Assert.assertTrue(filePlan.isUnfiledRecordsContainerFileDisplayed());
         RmUploadFilePage rmRecordFileDialog = filePlan.selectCreateNewUnfiledRecordsContainerFile().render();
-        Assert.assertNotNull(rmRecordFileDialog);
-
         String fileName = Long.valueOf(System.currentTimeMillis()).toString();
-        fileElectronicRecord(drone, rmRecordFileDialog, fileName);
-        filePlan = filePlan.render();
-        Assert.assertNotNull(filePlan);
+        fileElectronicRecordToFilePlan(drone, rmRecordFileDialog, fileName);
+        filePlan.setInRecordFolder(true);
+        filePlan = filePlan.render(fileName);
 
         // FIXME: view record details
 
@@ -123,61 +106,45 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         // create vanilla site
         createRMSite();
 
-        FilePlanPage filePlan = dashBoard.getRMNavigation().selectFilePlan().render();
-        Assert.assertNotNull(filePlan);
+        FilePlanPage filePlan = dashBoard.getRMNavigation().selectFilePlan();
+        filePlan.setInFilePlanRoot(true);
+        filePlan = filePlan.render();
 
-        Assert.assertTrue(filePlan.isCreateNewCategoryDisplayed());
-        CreateNewCategoryForm createNewCategory = filePlan.selectCreateNewCategory().render();
-        Assert.assertNotNull(createNewCategory);
-
+        CreateNewRecordCategoryDialog createNewCategory = filePlan.selectCreateNewCategory().render();
         createNewCategory.enterName(NAME);
         createNewCategory.enterTitle(TITLE);
         createNewCategory.enterDescription(DESC);
 
-        filePlan.setExpectingRecordOrFolder(true);
-        filePlan.setExpectedRecordOrFolderName(NAME);
-        filePlan = createNewCategory.selectSave().render();
-        Assert.assertNotNull(filePlan);
+        filePlan = ((FilePlanPage) createNewCategory.selectSave());
+        filePlan.setInFilePlanRoot(true);
+        filePlan = filePlan.render(NAME);
 
         FileDirectoryInfo recordCategory = filePlan.getFileDirectoryInfo(NAME);
-        Assert.assertNotNull(recordCategory);
-
         recordCategory.clickOnTitle();
         filePlan.setInRecordCategory(true);
         filePlan = filePlan.render();
-        Assert.assertNotNull(filePlan);
 
         // create record folder
-        Assert.assertTrue(filePlan.isCreateNewFolderDisplayed());
-        CreateNewFolderForm createNewFolder = filePlan.selectCreateNewFolder().render();
-        Assert.assertNotNull(createNewFolder);
-
+        CreateNewRecordFolderDialog createNewFolder = filePlan.selectCreateNewFolder().render();
         createNewFolder.enterName(NAME);
         createNewFolder.enterTitle(TITLE);
         createNewFolder.enterDescription(DESC);
 
-        filePlan.setExpectingRecordOrFolder(true);
-        filePlan.setExpectedRecordOrFolderName(NAME);
-        filePlan = createNewFolder.selectSave().render();
-        Assert.assertNotNull(filePlan);
+        filePlan = ((FilePlanPage) createNewFolder.selectSave());
+        filePlan.setInRecordCategory(true);
+        filePlan = filePlan.render(NAME);
 
         FileDirectoryInfo recordFolder = filePlan.getFileDirectoryInfo(NAME);
-        Assert.assertNotNull(recordFolder);
-
         recordFolder.clickOnTitle();
         filePlan.setInRecordFolder(true);
         filePlan = filePlan.render();
-        Assert.assertNotNull(filePlan);
 
         // file a record
-        Assert.assertTrue(filePlan.isUnfiledRecordsContainerFileDisplayed());
         RmUploadFilePage rmRecordFileDialog = filePlan.selectCreateNewUnfiledRecordsContainerFile().render();
-        Assert.assertNotNull(rmRecordFileDialog);
-
         String fileName = Long.valueOf(System.currentTimeMillis()).toString();
-        fileElectronicRecord(drone, rmRecordFileDialog, fileName);
+        fileElectronicRecordToFilePlan(drone, rmRecordFileDialog, fileName);
+        filePlan.setInRecordFolder(true);
         filePlan = filePlan.render();
-        Assert.assertNotNull(filePlan);
 
         // FIXME: view record details
 

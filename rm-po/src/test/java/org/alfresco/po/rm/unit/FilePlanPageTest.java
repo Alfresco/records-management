@@ -18,7 +18,7 @@
  */
 package org.alfresco.po.rm.unit;
 
-import org.alfresco.po.rm.FilePlanPage;
+import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.testng.Assert;

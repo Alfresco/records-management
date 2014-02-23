@@ -18,14 +18,13 @@
  */
 package org.alfresco.po.rm;
 
-import java.io.File;
-
+import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.UploadFilePage;
 import org.alfresco.webdrone.HtmlElement;
+import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -66,7 +65,26 @@ public class RmUploadFilePage extends UploadFilePage
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
 
-        basicRender(timer);
+        while (true)
+        {
+            timer.start();
+            try
+            {
+                RmPageObjectUtils.select(drone, By.cssSelector("button[id$='default-fileUpload-button-button']"));
+                if (RmPageObjectUtils.isDisplayed(drone, By.cssSelector("div#prompt_h")))
+                {
+                    break;
+                }
+            }
+            catch (NoSuchElementException e)
+            {
+            }
+            finally
+            {
+                timer.end();
+            }
+        }
+
         return this;
     }
 
@@ -139,9 +157,9 @@ public class RmUploadFilePage extends UploadFilePage
      * submitting the form.
      *
      * @param filePath String file location to upload
-     * @return {@link FilePlanPage} File plan page response
+     * @return {@link HtmlPage} File plan page response
      */
-    public FilePlanPage uploadFile(final String filePath)
+    public HtmlPage uploadFile(final String filePath)
     {
         WebElement fileSelection;
         if (alfrescoVersion.isFileUploadHtml5())
@@ -161,28 +179,6 @@ public class RmUploadFilePage extends UploadFilePage
             logger.trace("Upload button has been actioned");
         }
 
-        FilePlanPage filePlanPage = (FilePlanPage) RmFactoryPage.getPage(drone.getCurrentUrl(), drone);
-        filePlanPage.setExpectingRecordOrFolder(true);
-        filePlanPage.setExpectedRecordOrFolderName(getFileName(filePath));
-        filePlanPage.render();
-
-        if (filePlanPage.hasFiles() == false)
-        {
-            throw new RuntimeException("A file should have been uploaded!");
-        }
-
-        return filePlanPage;
-    }
-
-    /**
-     * Extracts the name of the record from the path
-     *
-     * @param filePath The path of the file to upload
-     * @return The name of the file to upload
-     */
-    private String getFileName(String filePath)
-    {
-        String fileNameWithExtension = StringUtils.substringAfterLast(filePath, File.separator);
-        return StringUtils.substringBeforeLast(fileNameWithExtension, ".");
+        return RmFactoryPage.getPage(drone.getCurrentUrl(), drone);
     }
 }

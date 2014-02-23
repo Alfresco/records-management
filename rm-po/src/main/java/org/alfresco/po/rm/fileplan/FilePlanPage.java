@@ -16,10 +16,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.rm;
+package org.alfresco.po.rm.fileplan;
 
 import java.util.concurrent.TimeUnit;
 
+import org.alfresco.po.rm.RmFolderRulesPage;
+import org.alfresco.po.rm.RmUploadFilePage;
+import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
+import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
+import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
+import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.webdrone.RenderTime;
@@ -40,38 +46,26 @@ import org.openqa.selenium.WebElement;
  */
 public class FilePlanPage extends DocumentLibraryPage
 {
-    private static final By MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-manageRules-button-button']");
-    private static final By UNFILED_MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-unfiledManageRules-button-button']");
-    private static final By NEW_CATEGORY_BTN = By.cssSelector("button[id$='default-newCategory-button-button']");
-    private static final By NEW_FOLDER_BTN = By.cssSelector("button[id$='default-newFolder-button-button']");
-    private static final By NEW_FILE_BTN = By.cssSelector("button[id$='default-fileUpload-button-button']");
-    private static final By RM_ADD_META_DATA_LINK = By.cssSelector("div#onActionAddRecordMetadata a");
-    private static final By RECORD = By.cssSelector("tbody.yui-dt-data > tr");
-    private static final By DESCRIPTION = By.cssSelector("div[id$='_default-description'] div");
-    private static final By FILEPLAN = By.id("template_x002e_tree_x002e_documentlibrary_x0023_default");
-    private boolean expectingRecordOrFolder;
-    private String expectedRecordOrFolderName;
-    private boolean inRecordCategory;
-    private boolean inRecordFolder;
+    protected static final By MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-manageRules-button-button']");
+    protected static final By NEW_CATEGORY_BTN = By.cssSelector("button[id$='default-newCategory-button-button']");
+    protected static final By NEW_FOLDER_BTN = By.cssSelector("button[id$='default-newFolder-button-button']");
+    protected static final By NEW_FILE_BTN = By.cssSelector("button[id$='default-fileUpload-button-button']");
+    protected static final By RM_ADD_META_DATA_LINK = By.cssSelector("div#onActionAddRecordMetadata a");
+    protected static final By RECORD = By.cssSelector("tbody.yui-dt-data > tr");
+    protected static final By DESCRIPTION = By.cssSelector("div[id$='_default-description'] div");
+    protected static final By FILEPLAN = By.id("template_x002e_tree_x002e_documentlibrary_x0023_default");
+    protected boolean inFilePlanRoot;
+    protected boolean inRecordCategory;
+    protected boolean inRecordFolder;
 
     /**
-     * Indicates that a record/folder will be expected in the file plan
+     * Indicates that the user is in the file plan root
      *
-     * @param expectingRecordOrFolder <code>true</code> if a record/folder is expected <code>false</code> otherwise
+     * @param inFilePlanRoot <code>true</code> if the user is in the file plan root <code>false</code> otherwise
      */
-    public void setExpectingRecordOrFolder(boolean expectingRecordOrFolder)
+    public void setInFilePlanRoot(boolean inFilePlanRoot)
     {
-        this.expectingRecordOrFolder = expectingRecordOrFolder;
-    }
-
-    /**
-     * Set the name of the expected record/folder
-     *
-     * @param expectedRecordOrFolderName Name of the expected record/folder
-     */
-    public void setExpectedRecordOrFolderName(String expectedRecordOrFolderName)
-    {
-        this.expectedRecordOrFolderName = expectedRecordOrFolderName;
+        this.inFilePlanRoot = inFilePlanRoot;
     }
 
     /**
@@ -101,20 +95,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public FilePlanPage(WebDrone drone)
     {
-        this(drone, false);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param drone {@link WebDrone}
-     * @param hasRecords {@link Boolean}
-     */
-    public FilePlanPage(WebDrone drone, boolean hasRecords)
-    {
         super(drone);
-        this.expectingRecordOrFolder = hasRecords;
-        setViewType(getNavigation().getViewType());
     }
 
     /**
@@ -126,54 +107,69 @@ public class FilePlanPage extends DocumentLibraryPage
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
 
+        return render(timer, null);
+    }
+
+    /**
+     * FIXME!!!
+     *
+     * @param expectedRecordOrFolderName
+     * @return
+     */
+    public FilePlanPage render(String expectedRecordOrFolderName)
+    {
+        RenderTime timer = new RenderTime(maxPageLoadingTime);
+        return render(timer, expectedRecordOrFolderName);
+    }
+
+    /**
+     * FIXME!!!
+     *
+     * @param timer
+     * @param expectedRecordOrFolderName
+     * @return
+     */
+    private FilePlanPage render(RenderTime timer, String expectedRecordOrFolderName)
+    {
+        WebDroneUtil.checkMandotaryParam("timer", timer);
+        // "expectedRecordOrFolderName" can be blank
+
+        boolean found = false;
         while (true)
         {
+            setViewType(getNavigation().getViewType());
             timer.start();
             try
             {
-                WebElement filePlan = drone.find(FILEPLAN);
-                if (filePlan.isDisplayed() && !isJSMessageDisplayed())
+                if (RmPageObjectUtils.isDisplayed(drone, FILEPLAN) && !isJSMessageDisplayed())
                 {
-                    long timeOut = TimeUnit.SECONDS.convert(maxPageLoadingTime, TimeUnit.MILLISECONDS);
-                    if (drone.getCurrentUrl().contains("filter=unfiledRecords"))
+                    if (StringUtils.isNotBlank(expectedRecordOrFolderName) && !found)
                     {
-                        if (isUnfiledRecordsContainerFileDisplayed() && isUnfiledRecordsContainerFolderDisplayed())
+                        for (FileDirectoryInfo fileDirectoryInfo : getFiles())
                         {
-                            drone.waitUntilElementClickable(NEW_FILE_BTN, timeOut);
-                            drone.waitUntilElementClickable(NEW_FOLDER_BTN, timeOut);
-                            if (expectingRecordOrFolder)
+                            if (fileDirectoryInfo.getName().contains(expectedRecordOrFolderName))
                             {
-                                if (StringUtils.isNotBlank(expectedRecordOrFolderName))
-                                {
-                                    boolean found = false;
-                                    for (FileDirectoryInfo fileDirectoryInfo : getFiles())
-                                    {
-                                        if (fileDirectoryInfo.getName().contains(expectedRecordOrFolderName))
-                                        {
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-                                    if (found)
-                                    {
-                                        break;
-                                    }
-                                }
-                                else
-                                {
-                                    if (hasFiles())
-                                    {
-                                        break;
-                                    }
-                                }
+                                found = true;
+                                break;
                             }
                         }
-                        else
+                        if (!found)
                         {
                             continue;
                         }
                     }
-                    // FIXME: Assume we are in the file plan view. Need to split to smaller objects for having individual render methods (e.g. for filters)
+                    long timeOut = TimeUnit.SECONDS.convert(maxPageLoadingTime, TimeUnit.MILLISECONDS);
+                    if (inFilePlanRoot)
+                    {
+                        if (!isCreateNewCategoryDisplayed())
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            drone.waitUntilElementClickable(NEW_CATEGORY_BTN, timeOut);
+                        }
+                    }
                     if (inRecordCategory)
                     {
                         if (!(isCreateNewCategoryDisplayed() && isCreateNewFolderDisplayed()))
@@ -184,7 +180,6 @@ public class FilePlanPage extends DocumentLibraryPage
                         {
                             drone.waitUntilElementClickable(NEW_CATEGORY_BTN, timeOut);
                             drone.waitUntilElementClickable(NEW_FOLDER_BTN, timeOut);
-                            break;
                         }
                     }
                     if (inRecordFolder)
@@ -196,39 +191,9 @@ public class FilePlanPage extends DocumentLibraryPage
                         else
                         {
                             drone.waitUntilElementClickable(NEW_FILE_BTN, timeOut);
-                            break;
                         }
                     }
-                    if (expectingRecordOrFolder)
-                    {
-                        if (StringUtils.isNotBlank(expectedRecordOrFolderName))
-                        {
-                            boolean found = false;
-                            for (FileDirectoryInfo fileDirectoryInfo : getFiles())
-                            {
-                                if (fileDirectoryInfo.getName().contains(expectedRecordOrFolderName))
-                                {
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (found)
-                            {
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            if (hasFiles())
-                            {
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
             catch (NoSuchElementException e)
@@ -237,6 +202,10 @@ public class FilePlanPage extends DocumentLibraryPage
             finally
             {
                 timer.end();
+                // FIXME!!!
+                setInFilePlanRoot(false);
+                setInRecordCategory(false);
+                setInRecordFolder(false);
             }
         }
         return this;
@@ -272,26 +241,18 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public boolean isCreateNewCategoryDisplayed()
     {
-        try
-        {
-            WebElement newCategory = drone.findAndWait(NEW_CATEGORY_BTN);
-            return newCategory.isDisplayed();
-        }
-        catch (NoSuchElementException nse)
-        {
-        }
-        return false;
+        return RmPageObjectUtils.isDisplayed(drone, NEW_CATEGORY_BTN);
     }
 
     /**
      * Action mimicking select click on new category button.
      *
-     * @return {@link CreateNewCategoryForm} Returns the create category form dialog
+     * @return {@link CreateNewRecordCategoryDialog} Returns the create category form dialog
      */
-    public CreateNewCategoryForm selectCreateNewCategory()
+    public CreateNewRecordCategoryDialog selectCreateNewCategory()
     {
-        drone.findAndWait(NEW_CATEGORY_BTN).click();
-        return new CreateNewCategoryForm(drone);
+        RmPageObjectUtils.select(drone, NEW_CATEGORY_BTN);
+        return new CreateNewRecordCategoryDialog(drone);
     }
 
     /**
@@ -302,31 +263,18 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public boolean isCreateNewFolderDisplayed()
     {
-        try
-        {
-            WebElement newFolder = drone.findAndWait(NEW_FOLDER_BTN);
-            return newFolder.isDisplayed();
-        }
-        catch (NoSuchElementException nse)
-        {
-        }
-        return false;
+        return RmPageObjectUtils.isDisplayed(drone, NEW_FOLDER_BTN);
     }
 
     /**
      * Action mimicking select click on new folder button.
      *
-     * @return {@link CreateNewFolderForm} Returns the create folder form dialog
+     * @return {@link CreateNewRecordFolderDialog} Returns the create folder form dialog
      */
-    public CreateNewFolderForm selectCreateNewFolder()
+    public CreateNewRecordFolderDialog selectCreateNewFolder()
     {
-        drone.findAndWait(NEW_FOLDER_BTN).click();
-
-        // need to check the dialog is there before we continue
-        // TODO add this into a dialog for base class for convenience?
-        //drone.waitForElement(By.cssSelector("div[id$='createFolder-dialog']"), 5);
-
-        return new CreateNewFolderForm(drone);
+        RmPageObjectUtils.select(drone, NEW_FOLDER_BTN);
+        return new CreateNewRecordFolderDialog(drone);
     }
 
     /**
@@ -336,26 +284,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public boolean isFileRecordDisplayed()
     {
-        try
-        {
-            WebElement newFile = drone.findAndWait(NEW_FILE_BTN);
-            return newFile.isDisplayed();
-        }
-        catch (NoSuchElementException nse)
-        {
-        }
-        return false;
-    }
-
-    /**
-     * Action mimicking select click on file button on the file plan page header.
-     *
-     * @return {@link RmUploadFilePage} Returns the upload file page for RM
-     */
-    public RmUploadFilePage selectFileRecord()
-    {
-        drone.findAndWait(NEW_FILE_BTN).click();
-        return new RmUploadFilePage(drone);
+        return RmPageObjectUtils.isDisplayed(drone, NEW_FILE_BTN);
     }
 
     /**
@@ -371,9 +300,9 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * Action mimicking select click on new folder button for unfiled records container.
      *
-     * @return {@link CreateNewFolderForm} Returns the create folder folder form dialog
+     * @return {@link CreateNewRecordFolderDialog} Returns the create folder folder form dialog
      */
-    public CreateNewFolderForm selectCreateNewUnfiledRecordsContainerFolder()
+    public CreateNewRecordFolderDialog selectCreateNewUnfiledRecordsContainerFolder()
     {
         return selectCreateNewFolder();
     }
@@ -395,7 +324,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public RmUploadFilePage selectCreateNewUnfiledRecordsContainerFile()
     {
-        return selectFileRecord();
+        return new RmUploadFilePage(drone);
     }
 
     /**
@@ -405,15 +334,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public boolean hasRecords()
     {
-        try
-        {
-            WebElement record = drone.findAndWait(RECORD);
-            return record.isDisplayed();
-        }
-        catch (NoSuchElementException e)
-        {
-        }
-        return false;
+        return RmPageObjectUtils.isDisplayed(drone, RECORD);
     }
 
     /**
@@ -423,15 +344,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public boolean isManageRulesDisplayed()
     {
-        try
-        {
-            WebElement manageRules = drone.findAndWait(MANAGE_RULES_BTN);
-            return manageRules.isDisplayed();
-        }
-        catch (NoSuchElementException e)
-        {
-        }
-        return false;
+        return RmPageObjectUtils.isDisplayed(drone, MANAGE_RULES_BTN);
     }
 
     /**
@@ -441,20 +354,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public RmFolderRulesPage selectManageRules()
     {
-        WebElement manageRules = drone.findAndWait(MANAGE_RULES_BTN);
-        manageRules.click();
-        return new RmFolderRulesPage(drone);
-    }
-
-    /**
-     * Action of click on manage rules button.
-     *
-     * @return {@link RmFolderRulesPage} page response
-     */
-    public RmFolderRulesPage selectUnfiledManageRules()
-    {
-        WebElement manageRules = drone.findAndWait(UNFILED_MANAGE_RULES_BTN);
-        manageRules.click();
+        RmPageObjectUtils.select(drone, MANAGE_RULES_BTN);
         return new RmFolderRulesPage(drone);
     }
 
@@ -462,11 +362,11 @@ public class FilePlanPage extends DocumentLibraryPage
      * Get html element on the side of the page with file plan sub
      * navigation also known as filters.
      *
-     * @return {@link FilePlanNavigation} side element filter
+     * @return {@link FilePlanFilter} side element filter
      */
-    public FilePlanNavigation getFilePlanNavigation()
+    public FilePlanFilter getFilePlanFilter()
     {
-        return new FilePlanNavigation(drone);
+        return new FilePlanFilter(drone);
     }
 
     /**
@@ -489,15 +389,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public boolean isAddRecordMetaDataVisible()
     {
-        try
-        {
-            WebElement addMetaDataLink = drone.find(RM_ADD_META_DATA_LINK);
-            return addMetaDataLink.isDisplayed();
-        }
-        catch (NoSuchElementException nse)
-        {
-        }
-        return false;
+        return RmPageObjectUtils.isDisplayed(drone, RM_ADD_META_DATA_LINK);
     }
 
     /**

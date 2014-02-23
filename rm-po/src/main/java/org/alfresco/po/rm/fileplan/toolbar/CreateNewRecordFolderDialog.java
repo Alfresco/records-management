@@ -16,71 +16,68 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.rm;
+package org.alfresco.po.rm.fileplan.toolbar;
 
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 
 /**
- * Create new record folder popup page form. The form that is
- * displayed to user when creating a new record folder.
- *
- * This is only available to Records management module and
- * is accessed via the file plan page when a user selects
- * the create new folder button.
+ * Creates a new record folder dialog.
  *
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class CreateNewFolderForm extends BaseCreateNewForm
+public class CreateNewRecordFolderDialog extends BaseDialog
 {
     /**
      * Constructor.
      *
      * @param drone {@link WebDrone}
      */
-    protected CreateNewFolderForm(WebDrone drone)
+    public CreateNewRecordFolderDialog(WebDrone drone)
     {
         super(drone);
     }
 
     /**
-     * @see org.alfresco.po.rm.BaseCreateNewForm#render(org.alfresco.webdrone.RenderTime)
+     * @see org.alfresco.po.rm.fileplan.toolbar.BaseDialog#render(org.alfresco.webdrone.RenderTime)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public CreateNewFolderForm render(RenderTime timer)
+    public CreateNewRecordFolderDialog render(RenderTime timer)
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
 
-        return (CreateNewFolderForm) super.render(timer);
+        return (CreateNewRecordFolderDialog) super.render(timer);
     }
 
     /**
-     * @see org.alfresco.po.rm.BaseCreateNewForm#render(long)
+     * @see org.alfresco.po.rm.fileplan.toolbar.BaseDialog#render(long)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public CreateNewFolderForm render(long time)
+    public CreateNewRecordFolderDialog render(long time)
     {
-        return (CreateNewFolderForm) super.render(time);
+        WebDroneUtil.checkMandotaryParam("time", time);
+
+        return (CreateNewRecordFolderDialog) super.render(time);
     }
 
     /**
-     * @see org.alfresco.po.rm.BaseCreateNewForm#render()
+     * @see org.alfresco.po.rm.fileplan.toolbar.BaseDialog#render()
      */
     @SuppressWarnings("unchecked")
     @Override
-    public CreateNewFolderForm render()
+    public CreateNewRecordFolderDialog render()
     {
-        return (CreateNewFolderForm) super.render();
+        return (CreateNewRecordFolderDialog) super.render();
     }
 
     /**
      * Enter record folder id value to record folder id input field.
      *
-     * @param title {@link String} New record folder id
+     * @param title {@link String} Record folder id
      */
     public void enterRecordFolderId(final String recordFolderId)
     {
@@ -90,7 +87,7 @@ public class CreateNewFolderForm extends BaseCreateNewForm
     }
 
     /**
-     * Gets the new record folder id input value.
+     * Gets the record folder id input value.
      *
      * @return {@link String} Record folder id
      */

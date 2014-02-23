@@ -18,6 +18,8 @@
  */
 package org.alfresco.po.rm;
 
+import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;
 import org.alfresco.po.share.FactorySharePage;
 import org.alfresco.po.share.LoginPage;
 import org.alfresco.po.share.SharePage;
@@ -27,6 +29,8 @@ import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.alfresco.webdrone.exception.PageException;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.net.URLCodec;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -46,6 +50,8 @@ public class RmFactoryPage extends FactorySharePage
     private static final String DOCUMENT_DETAILS = "document-details";
     private static final String LOGIN = "login";
     private static final String RM_FILE_PLAN = "rm-documentlibrary";
+    private static final String RM_FILE_PLAN_FILTER = "rm-documentlibrary#filter=path";
+    private static final String RM_UNFILED_RECORDS_CONTAINER = RM_FILE_PLAN + "#filter=unfiledRecords";
     private static final String RM_DASHBOARD = "rm-dashboard";
     private static final String RM_RMSEARCH = "rm-rmsearch";
     private static final String RM_CONSOLE = "rm-console";
@@ -68,6 +74,8 @@ public class RmFactoryPage extends FactorySharePage
         pages.put(RM_RMSEARCH, RecordSearchPage.class);
         pages.put(RM_DASHBOARD, RmDashBoardPage.class);
         pages.put(RM_FILE_PLAN, FilePlanPage.class);
+        pages.put(RM_FILE_PLAN_FILTER, FilePlanPage.class);
+        pages.put(RM_UNFILED_RECORDS_CONTAINER, UnfiledRecordsContainer.class);
         pages.put(RM_RULE_EDIT, RmCreateRulePage.class);
         pages.put(RM_FOLDER_FULES, FolderRulesPreRender.class);
     }
@@ -155,14 +163,35 @@ public class RmFactoryPage extends FactorySharePage
         // Check if rm based url
         if (url.contains(SITE_RM))
         {
-            if (url.contains("?") || url.contains("#"))
+            url = decodeUrl(url);
+            if (url.contains("?") || url.contains("&") || url.contains("|"))
             {
-                url = url.split("([?&#])")[0];
+                url = url.split("([?&|])")[0];
             }
             String val[] = url.split(SITE_RM + "/");
             return String.format(RM_S, val[1]);
         }
 
         return FactorySharePage.resolvePage(url);
+    }
+
+    /**
+     * Decodes the URL.
+     *
+     * @return {@link String} Decoded URL.
+     */
+    private static String decodeUrl(String url)
+    {
+        String decodedUrl = null;
+        try
+        {
+            URLCodec codec = new URLCodec();
+            decodedUrl = codec.decode(url);
+        }
+        catch (DecoderException error)
+        {
+            throw new RuntimeException("Cannot decode the current URL: '" + url + "'");
+        }
+        return decodedUrl;
     }
 }

@@ -18,6 +18,7 @@
  */
 package org.alfresco.po.rm;
 
+import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.site.AbstractSiteNavigation;
 import org.alfresco.webdrone.WebDrone;
 import org.apache.commons.lang3.StringUtils;

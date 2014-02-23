@@ -21,9 +21,10 @@ package org.alfresco.po.rm.functional;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.alfresco.po.rm.FilePlanNavigation;
-import org.alfresco.po.rm.FilePlanPage;
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
+import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
+import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;
 import org.alfresco.po.share.site.contentrule.FolderRulesPage;
 import org.alfresco.po.share.site.contentrule.createrules.CreateRulePage;
 import org.alfresco.po.share.util.FailedTestListener;
@@ -145,9 +146,9 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
         // FIXME!!! Click on the link rather than navigating
         drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
         FilePlanPage filePlanPage = drone.getCurrentPage().render();
-        FilePlanNavigation filePlanNavigation = filePlanPage.getFilePlanNavigation();
-        filePlanPage = filePlanNavigation.selectUnfiledRecords().render();
-        FolderRulesPage manageRulesPage = filePlanPage.selectUnfiledManageRules().render();
+        FilePlanFilter filePlanFilter = filePlanPage.getFilePlanFilter();
+        UnfiledRecordsContainer unfiledRecordsContainer = filePlanFilter.selectUnfiledRecordsContainer().render();
+        FolderRulesPage manageRulesPage = unfiledRecordsContainer.selectManageRules().render();
         CreateRulePage createRulePage = manageRulesPage.openCreateRulePage().render();
         RmActionSelectorEnterpImpl actionSelectorEnter = (RmActionSelectorEnterpImpl) createRulePage.getActionOptionsObj();
         actionSelectorEnter.selectFileTo();

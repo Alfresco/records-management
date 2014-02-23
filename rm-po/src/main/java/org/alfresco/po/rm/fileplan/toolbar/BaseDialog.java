@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.rm;
+package org.alfresco.po.rm.fileplan.toolbar;
 
 import org.alfresco.po.share.SharePage;
+import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderElement;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
@@ -27,19 +28,19 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 /**
- * Base class for the form creation dialogs
+ * Base class for the dialogs
  *
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class BaseCreateNewForm extends SharePage
+public class BaseDialog extends SharePage
 {
-    private final By NAME_INPUT = By.cssSelector("input[id$='_default-createFolder_prop_cm_name']");
-    private final By TITLE_INPUT = By.cssSelector("input[id$='_default-createFolder_prop_cm_title']");
-    private final By IDENTIFIER = By.cssSelector("input[id$='_default-createFolder_prop_rma_identifier']");
-    private final By DESCRIPTION_INPUT = By.tagName("textarea");
-    private final By SAVE = By.cssSelector("button[id$='_default-createFolder-form-submit-button']");
-    private final By CANCEL = By.cssSelector("button[id$='_default-createFolder-form-cancel-button']");
+    private static final By NAME_INPUT = By.cssSelector("input[id$='_default-createFolder_prop_cm_name']");
+    private static final By TITLE_INPUT = By.cssSelector("input[id$='_default-createFolder_prop_cm_title']");
+    private static final By IDENTIFIER = By.cssSelector("input[id$='_default-createFolder_prop_rma_identifier']");
+    private static final By DESCRIPTION_INPUT = By.tagName("textarea");
+    private static final By SAVE = By.cssSelector("button[id$='_default-createFolder-form-submit-button']");
+    private static final By CANCEL = By.cssSelector("button[id$='_default-createFolder-form-cancel-button']");
     private static final String VALUE = "value";
 
     /**
@@ -47,7 +48,7 @@ public class BaseCreateNewForm extends SharePage
      *
      * @param drone {@link WebDrone}
      */
-    protected BaseCreateNewForm(WebDrone drone)
+    protected BaseDialog(WebDrone drone)
     {
         super(drone);
     }
@@ -57,7 +58,7 @@ public class BaseCreateNewForm extends SharePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public BaseCreateNewForm render(RenderTime timer)
+    public BaseDialog render(RenderTime timer)
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
 
@@ -67,6 +68,7 @@ public class BaseCreateNewForm extends SharePage
         RenderElement id = RenderElement.getVisibleRenderElement(IDENTIFIER);
 
         elementRender(timer, name, element, description, id);
+
         return this;
     }
 
@@ -75,8 +77,10 @@ public class BaseCreateNewForm extends SharePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public BaseCreateNewForm render(long time)
+    public BaseDialog render(long time)
     {
+        WebDroneUtil.checkMandotaryParam("time", time);
+
         RenderTime timer = new RenderTime(time);
         return render(timer);
     }
@@ -86,7 +90,7 @@ public class BaseCreateNewForm extends SharePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public BaseCreateNewForm render()
+    public BaseDialog render()
     {
         return render(maxPageLoadingTime);
     }
@@ -161,25 +165,25 @@ public class BaseCreateNewForm extends SharePage
     /**
      * Action that selects the save button.
      *
-     * @return {@link FilePlanPage} Returns to the FilePlanPage
+     * @return {@link HtmlPage} Returns the current page
      */
-    public FilePlanPage selectSave()
+    public HtmlPage selectSave()
     {
         WebElement save = drone.findAndWait(SAVE);
         save.click();
         canResume();
-        return new FilePlanPage(drone, true);
+        return drone.getCurrentPage();
     }
 
     /**
      * Action that selects the cancel button.
      *
-     * @return {@link FilePlanPage} Returns to the FilePlanPage
+     * @return {@link HtmlPage} Returns the current page
      */
-    public FilePlanPage selectCancel()
+    public HtmlPage selectCancel()
     {
         WebElement cancel = drone.findAndWait(CANCEL);
         cancel.click();
-        return new FilePlanPage(drone);
+        return drone.getCurrentPage();
     }
 }

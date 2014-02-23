@@ -21,11 +21,12 @@ package org.alfresco.po.rm.functional;
 import java.util.Date;
 import java.util.List;
 
-import org.alfresco.po.rm.FilePlanNavigation;
-import org.alfresco.po.rm.FilePlanPage;
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
 import org.alfresco.po.rm.RmCreateRulePage;
 import org.alfresco.po.rm.RmFolderRulesPage;
+import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
+import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
@@ -68,9 +69,9 @@ public class FileToCreatePathIntTest extends AbstractIntegrationTest
         // FIXME!!! Click on the link rather than navigating
         drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
         FilePlanPage filePlanPage = drone.getCurrentPage().render();
-        FilePlanNavigation filePlanNavigation = filePlanPage.getFilePlanNavigation();
-        filePlanPage = filePlanNavigation.selectUnfiledRecords().render();
-        RmFolderRulesPage manageRulesPage = filePlanPage.selectUnfiledManageRules().render();
+        FilePlanFilter filePlanFilter = filePlanPage.getFilePlanFilter();
+        UnfiledRecordsContainer unfiledRecordsContainer = filePlanFilter.selectUnfiledRecordsContainer().render();
+        RmFolderRulesPage manageRulesPage = unfiledRecordsContainer.selectManageRules().render();
         RmCreateRulePage rulesPage = manageRulesPage.openCreateRulePage().render();
         rulesPage.fillNameField(RULE_TITLE);
         RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();

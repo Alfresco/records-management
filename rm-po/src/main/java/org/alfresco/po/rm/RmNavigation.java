@@ -18,6 +18,7 @@
  */
 package org.alfresco.po.rm;
 
+import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.Navigation;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;

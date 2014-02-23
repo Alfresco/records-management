@@ -33,8 +33,7 @@ import org.openqa.selenium.WebElement;
 public class RmFolderRulesPage extends FolderRulesPage
 {
 
-    private static final   By LINK_CREATE_RULE_PAGE_SELECTOR = By
-            .cssSelector("div[class=dialog-option] a[href*='rule-edit']");
+    private static final By LINK_CREATE_RULE_PAGE_SELECTOR = By.cssSelector("div[class=dialog-option] a[href*='rule-edit']");
 
     public RmFolderRulesPage(WebDrone drone)
     {

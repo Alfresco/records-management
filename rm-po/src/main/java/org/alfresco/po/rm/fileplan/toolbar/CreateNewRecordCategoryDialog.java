@@ -16,72 +16,69 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.rm;
+package org.alfresco.po.rm.fileplan.toolbar;
 
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 
 /**
- * Create new category pop up page form. The form that is
- * displayed to user when creating a new category.
- *
- * This is only available to Records management module and
- * is accessed via the file plan page when a user selects
- * the create new category button.
+ * Creates a new record category dialog.
  *
  * @author Michael Suzuki
  * @author Tuna Aksoy
  * @version 1.7.1
  */
-public class CreateNewCategoryForm extends BaseCreateNewForm
+public class CreateNewRecordCategoryDialog extends BaseDialog
 {
     /**
      * Constructor.
      *
      * @param drone {@link WebDrone}
      */
-    protected CreateNewCategoryForm(WebDrone drone)
+    public CreateNewRecordCategoryDialog(WebDrone drone)
     {
         super(drone);
     }
 
     /**
-     * @see org.alfresco.po.rm.BaseCreateNewForm#render(org.alfresco.webdrone.RenderTime)
+     * @see org.alfresco.po.rm.fileplan.toolbar.BaseDialog#render(org.alfresco.webdrone.RenderTime)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public CreateNewCategoryForm render(RenderTime timer)
+    public CreateNewRecordCategoryDialog render(RenderTime timer)
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
 
-        return (CreateNewCategoryForm) super.render(timer);
+        return (CreateNewRecordCategoryDialog) super.render(timer);
     }
 
     /**
-     * @see org.alfresco.po.rm.BaseCreateNewForm#render(long)
+     * @see org.alfresco.po.rm.fileplan.toolbar.BaseDialog#render(long)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public CreateNewCategoryForm render(long time)
+    public CreateNewRecordCategoryDialog render(long time)
     {
-        return (CreateNewCategoryForm) super.render(time);
+        WebDroneUtil.checkMandotaryParam("time", time);
+
+        return (CreateNewRecordCategoryDialog) super.render(time);
     }
 
     /**
-     * @see org.alfresco.po.rm.BaseCreateNewForm#render()
+     * @see org.alfresco.po.rm.fileplan.toolbar.BaseDialog#render()
      */
     @SuppressWarnings("unchecked")
     @Override
-    public CreateNewCategoryForm render()
+    public CreateNewRecordCategoryDialog render()
     {
-        return (CreateNewCategoryForm) super.render();
+        return (CreateNewRecordCategoryDialog) super.render();
     }
 
     /**
      * Enter record category id value to record category id input field.
      *
-     * @param recordCategoryId {@link String} New record category id
+     * @param recordCategoryId {@link String} Record category id
      */
     public void enterRecordCategoryId(final String recordCategoryId)
     {
@@ -91,7 +88,7 @@ public class CreateNewCategoryForm extends BaseCreateNewForm
     }
 
     /**
-     * Gets the new record category id input value.
+     * Gets the record category id input value.
      *
      * @return {@link String} Record category id
      */

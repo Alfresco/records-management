@@ -3,6 +3,8 @@
 <suite name="TestNG AllTestSuite" verbose="1" >
    <test name="AllTests">
       <packages>
+         <package name="org.alfresco.po.rm.unit" />
+         <package name="org.alfresco.po.rm.regression" />
          <package name="org.alfresco.po.rm.functional" />
       </packages>
    </test>
