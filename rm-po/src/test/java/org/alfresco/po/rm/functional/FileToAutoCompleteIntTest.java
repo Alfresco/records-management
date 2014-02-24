@@ -143,9 +143,7 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
      */
     private void testAutoComplete(String fragment, String[] expectedSuggestions, String suggestionToChoose, String expectedPath)
     {
-        // FIXME!!! Click on the link rather than navigating
-        drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
-        FilePlanPage filePlanPage = drone.getCurrentPage().render();
+        FilePlanPage filePlanPage = rmSiteDashBoard.selectFilePlan().render();
         FilePlanFilter filePlanFilter = filePlanPage.getFilePlanFilter();
         UnfiledRecordsContainer unfiledRecordsContainer = filePlanFilter.selectUnfiledRecordsContainer().render();
         FolderRulesPage manageRulesPage = unfiledRecordsContainer.selectManageRules().render();

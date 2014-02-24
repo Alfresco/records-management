@@ -109,7 +109,7 @@ public class RmCreateSitePage extends CreateSitePage
         selectSiteType(RmSiteType.RECORDS_MANAGEMENT);
         selectRMSiteCompliance(compliance);
 
-        // FIXME!!!
+        // FIXME: Refactor
         return createNewSite(null, null, false, false, RmSiteType.RECORDS_MANAGEMENT);
     }
 
@@ -122,7 +122,7 @@ public class RmCreateSitePage extends CreateSitePage
         {
             case RmSiteType.RECORDS_MANAGEMENT:
                 drone.findAndWait(SUBMIT_BUTTON).click();
-                return new RmDashBoardPage(drone);
+                return new RmSiteDashBoardPage(drone);
 
             default:
                 return super.createSite(siteName, description, siteType);

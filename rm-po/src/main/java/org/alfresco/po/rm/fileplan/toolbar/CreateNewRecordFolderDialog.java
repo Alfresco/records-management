@@ -28,7 +28,7 @@ import org.alfresco.webdrone.WebDroneUtil;
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class CreateNewRecordFolderDialog extends BaseDialog
+public class CreateNewRecordFolderDialog extends Dialog
 {
     /**
      * Constructor.
@@ -41,7 +41,7 @@ public class CreateNewRecordFolderDialog extends BaseDialog
     }
 
     /**
-     * @see org.alfresco.po.rm.fileplan.toolbar.BaseDialog#render(org.alfresco.webdrone.RenderTime)
+     * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render(org.alfresco.webdrone.RenderTime)
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -53,7 +53,7 @@ public class CreateNewRecordFolderDialog extends BaseDialog
     }
 
     /**
-     * @see org.alfresco.po.rm.fileplan.toolbar.BaseDialog#render(long)
+     * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render(long)
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -65,7 +65,7 @@ public class CreateNewRecordFolderDialog extends BaseDialog
     }
 
     /**
-     * @see org.alfresco.po.rm.fileplan.toolbar.BaseDialog#render()
+     * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render()
      */
     @SuppressWarnings("unchecked")
     @Override

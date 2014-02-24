@@ -18,7 +18,7 @@
  */
 package org.alfresco.po.rm.common;
 
-import org.alfresco.po.rm.RmDashBoardPage;
+import org.alfresco.po.rm.RmSiteDashBoardPage;
 import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.share.LoginPage;
 
@@ -30,8 +30,8 @@ import org.alfresco.po.share.LoginPage;
  */
 public abstract class AbstractRecordsManagementTest extends AbstractTest
 {
-    /** RM dashboard for logged in user */
-    protected RmDashBoardPage dashBoard;
+    /** RM site dashboard for logged in user */
+    protected RmSiteDashBoardPage rmSiteDashBoard;
 
     /**
      * Helper method that logs into share and sets the dashboard PO
@@ -43,8 +43,8 @@ public abstract class AbstractRecordsManagementTest extends AbstractTest
     {
         drone.navigateTo(shareUrl);
         LoginPage loginPage = new LoginPage(drone).render();
-        
+
         loginPage.loginAs(username, password);
-        dashBoard = new RmDashBoardPage(drone).render();
+        rmSiteDashBoard = new RmSiteDashBoardPage(drone).render();
     }
 }

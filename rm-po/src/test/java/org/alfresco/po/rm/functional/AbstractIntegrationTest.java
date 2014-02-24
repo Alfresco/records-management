@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.alfresco.po.rm.RmCreateSitePage;
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
-import org.alfresco.po.rm.RmDashBoardPage;
+import org.alfresco.po.rm.RmSiteDashBoardPage;
 import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.common.AbstractRecordsManagementTest;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
@@ -112,11 +112,11 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
         deleteRMSite();
 
         // Click create site dialog
-        RmCreateSitePage createSite = dashBoard.getRMNavigation().selectCreateSite().render();
+        RmCreateSitePage createSite = rmSiteDashBoard.getRMNavigation().selectCreateSite().render();
         Assert.assertTrue(createSite.isCreateSiteDialogDisplayed());
 
         // Create RM Site
-        RmDashBoardPage site = ((RmDashBoardPage) createSite.createRMSite(RMSiteCompliance.STANDARD)).rmRender();
+        RmSiteDashBoardPage site = ((RmSiteDashBoardPage) createSite.createRMSite(RMSiteCompliance.STANDARD)).rmRender();
         Assert.assertNotNull(site);
         Assert.assertTrue(RmCreateSitePage.RM_SITE_NAME.equalsIgnoreCase(site.getPageTitle()));
         Assert.assertTrue(site.getRMSiteNavigation().isDashboardActive());
@@ -156,12 +156,12 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
     }
 
     /**
-     * FIXME!!!
+     * Helper method to file a record
      *
-     * @param drone
-     * @param rmRecordFileDialog
-     * @param fileName
-     * @throws IOException
+     * @param drone {@link WebDrone} The web drone instance
+     * @param rmRecordFileDialog {@link RmUploadFilePage} The upload file dialog for RM
+     * @param fileName {@link String} The name of the file
+     * @throws IOException Can throw an {@link IOException} whilst getting the canonical path
      */
     private static HtmlPage fileElectronicRecord(final WebDrone drone, final RmUploadFilePage rmRecordFileDialog, String fileName) throws IOException
     {
@@ -177,12 +177,12 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
     }
 
     /**
-     * Helper method to file a record
+     * Helper method to file a record in the hold container
      *
-     * @param drone
-     * @param rmRecordFileDialog
-     * @param fileName
-     * @throws IOException
+     * @param drone {@link WebDrone} The web drone instance
+     * @param rmRecordFileDialog {@link RmUploadFilePage} The upload file dialog for RM
+     * @param fileName {@link String} The name of the file
+     * @throws IOException Can throw an {@link IOException} whilst getting the canonical path
      */
     protected static void fileElectronicRecordToFilePlan(final WebDrone drone, final RmUploadFilePage rmRecordFileDialog, String fileName) throws IOException
     {
@@ -195,12 +195,12 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
     }
 
     /**
-     * Helper method to file a record
+     * Helper method to file a record in the unfiled records container
      *
-     * @param drone
-     * @param rmRecordFileDialog
-     * @param fileName
-     * @throws IOException
+     * @param drone {@link WebDrone} The web drone instance
+     * @param rmRecordFileDialog {@link RmUploadFilePage} The upload file dialog for RM
+     * @param fileName {@link String} The name of the file
+     * @throws IOException Can throw an {@link IOException} whilst getting the canonical path
      */
     protected static void fileElectronicRecordToUnfiledRecordsContainer(final WebDrone drone, final RmUploadFilePage rmRecordFileDialog, String fileName) throws IOException
     {

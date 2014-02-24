@@ -21,6 +21,7 @@ package org.alfresco.po.rm.functional;
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
 import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
@@ -54,7 +55,7 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         // create DOD site
         createRMSite(RMSiteCompliance.DOD5015);
 
-        FilePlanPage filePlan = dashBoard.getRMNavigation().selectFilePlan();
+        FilePlanPage filePlan = rmSiteDashBoard.getRMNavigation().selectFilePlan();
         filePlan.setInFilePlanRoot(true);
         filePlan = filePlan.render();
 
@@ -88,7 +89,8 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         filePlan = filePlan.render();
 
         // file a record
-        RmUploadFilePage rmRecordFileDialog = filePlan.selectCreateNewUnfiledRecordsContainerFile().render();
+        UnfiledRecordsContainer unfiledRecordsContainer = filePlan.getFilePlanFilter().selectUnfiledRecordsContainer();
+        RmUploadFilePage rmRecordFileDialog = unfiledRecordsContainer.selectCreateNewUnfiledRecordsContainerFile().render();
         String fileName = Long.valueOf(System.currentTimeMillis()).toString();
         fileElectronicRecordToFilePlan(drone, rmRecordFileDialog, fileName);
         filePlan.setInRecordFolder(true);
@@ -106,7 +108,7 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         // create vanilla site
         createRMSite();
 
-        FilePlanPage filePlan = dashBoard.getRMNavigation().selectFilePlan();
+        FilePlanPage filePlan = rmSiteDashBoard.getRMNavigation().selectFilePlan();
         filePlan.setInFilePlanRoot(true);
         filePlan = filePlan.render();
 
@@ -140,7 +142,8 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         filePlan = filePlan.render();
 
         // file a record
-        RmUploadFilePage rmRecordFileDialog = filePlan.selectCreateNewUnfiledRecordsContainerFile().render();
+        UnfiledRecordsContainer unfiledRecordsContainer = filePlan.getFilePlanFilter().selectUnfiledRecordsContainer();
+        RmUploadFilePage rmRecordFileDialog = unfiledRecordsContainer.selectCreateNewUnfiledRecordsContainerFile().render();
         String fileName = Long.valueOf(System.currentTimeMillis()).toString();
         fileElectronicRecordToFilePlan(drone, rmRecordFileDialog, fileName);
         filePlan.setInRecordFolder(true);

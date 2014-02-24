@@ -48,7 +48,7 @@ public class RmCreateSitePageTest extends AbstractRecordsManagementTest
         login(username, password);
 
         // render create site page
-        page = dashBoard.getRMNavigation().selectCreateSite().render();
+        page = rmSiteDashBoard.getRMNavigation().selectCreateSite().render();
         Assert.assertTrue(page.isCreateSiteDialogDisplayed());
     }
 
@@ -79,7 +79,7 @@ public class RmCreateSitePageTest extends AbstractRecordsManagementTest
         page.cancel();
 
         // reopen page
-        page = dashBoard.getRMNavigation().selectCreateSite().render();
+        page = rmSiteDashBoard.getRMNavigation().selectCreateSite().render();
         Assert.assertTrue(page.isCreateSiteDialogDisplayed());
 
         // check the initial states of the controls

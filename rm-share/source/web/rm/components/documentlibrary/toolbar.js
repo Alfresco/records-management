@@ -87,6 +87,22 @@
             value: "newFolder"
          });
 
+         // New Unfiled Records Folder button: user needs "newFolder" access
+         this.widgets.newUnfiledRecordsFolder = $createYUIButton(this, "newUnfiledRecordsFolder-button", this.onNewUnfiledRecordsFolder,
+         {
+            disabled: true,
+            value: "newFolder"
+         });
+
+         // New Hold button: user needs "newHold" access
+         this.widgets.newHold = $createYUIButton(this, "newHold-button", this.onNewHold,
+         {
+            /*
+            disabled: true,
+            value: "newHold"
+            */
+         });
+
          // File Upload button: user needs "file" access
          this.widgets.fileUpload = $createYUIButton(this, "fileUpload-button", this.onFileUpload,
          {
@@ -495,15 +511,31 @@
        */
       onNewFolder: function DLTB_onNewFolder(e, p_obj)
       {
-         var filter = decodeURIComponent(Alfresco.rm.getParamValueFromUrl("filter"));
-         if (filter.split("|")[0] !== 'path')
-         {
-            this._newContainer("rma:unfiledRecordContainerChild");
-         }
-         else
-         {
-            this._newContainer("rma:recordFolder");
-         }
+         this._newContainer("rma:recordFolder");
+      },
+
+      /**
+       * New Unfiled Records Folder button click handler
+       *
+       * @method onNewUnfiledRecordsFolder
+       * @param e {object} DomEvent
+       * @param p_obj {object} Object passed back from addListener method
+       */
+      onNewUnfiledRecordsFolder: function DLTB_onNewUnfiledRecordsFolder(e, p_obj)
+      {
+         this._newContainer("rma:unfiledRecordContainerChild");
+      },
+
+      /**
+       * New Hold button click handler
+       *
+       * @method onNewHold
+       * @param e {object} DomEvent
+       * @param p_obj {object} Object passed back from addListener method
+       */
+      onNewHold: function DLTB_onNewHold(e, p_obj)
+      {
+         this._newContainer("rma:holdContainerChild");
       },
 
       /**
@@ -559,10 +591,7 @@
                      name: folderName,
                      parentNodeRef: destination
                   });
-                  $popupManager.displayMessage(
-                  {
-                     text: this.msg("message.new-folder.success", folderName)
-                  });
+                  this._displayMessageByType(folderType, "success", folderName);
                },
                scope: this
             },
@@ -570,15 +599,47 @@
             {
                fn: function DLTB__newContainer_failure(response)
                {
-                  var msgKey = (folderType == "rma:recordCategory") ? "message.new-category.failure": "message.new-folder.failure";
-                  $popupManager.displayMessage(
-                  {
-                     text: this.msg(msgKey)
-                  });
+                  var folderName = response.config.dataObj["prop_cm_name"];
+                  this._displayMessageByType(folderType, "failure", folderName);
                },
                scope: this
             }
          }).show();
+      },
+
+      /**
+       * Helper method to display the correct message for each type in the UI
+       *
+       * @method _displayMessageByType
+       * @param type The type of the created element
+       * @param callbackAction The callback action type which is either "success" or "failure"
+       * @param name The name of the created element
+       */
+      _displayMessageByType: function DLTB_getMessageByType(type, callbackAction, name)
+      {
+         var message = null;
+         switch (type)
+         {
+            case "rma:recordCategory":
+               message = "message.new-category.";
+               break;
+            case "rma:recordFolder":
+               message = "message.new-folder.";
+               break;
+            case "rma:unfiledRecordContainerChild":
+               message = "message.new-unfiledRecordsFolder.";
+               break;
+            case "rma:holdContainerChild":
+               message = "message.new-hold.";
+               break;
+            default:
+               throw this.msg("message.new-unknown.error", type);
+         }
+
+         $popupManager.displayMessage(
+         {
+            text: this.msg(message + callbackAction, name)
+         });
       },
 
       /**
@@ -588,17 +649,17 @@
        */
       _getFolderDestination: function DLTB__getFolderDestination()
       {
-         var uploadDirectory = this.modules.docList.doclistMetadata.parent.nodeRef;
+         var destination = this.modules.docList.doclistMetadata.parent.nodeRef;
          var filterParam = Alfresco.rm.getParamValueFromUrl("filter");
          if (filterParam)
          {
             var filter = decodeURIComponent(filterParam).split("|");
             if (filter[0] !== 'path' && filter[1])
             {
-               uploadDirectory = decodeURIComponent(filter[1]);
+               destination = decodeURIComponent(filter[1]);
             }
          }
-         return uploadDirectory;
+         return destination;
       },
 
       /**

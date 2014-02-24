@@ -66,9 +66,7 @@ public class FileToCreatePathIntTest extends AbstractIntegrationTest
      */
     private void createRule()
     {
-        // FIXME!!! Click on the link rather than navigating
-        drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
-        FilePlanPage filePlanPage = drone.getCurrentPage().render();
+        FilePlanPage filePlanPage = rmSiteDashBoard.selectFilePlan().render();
         FilePlanFilter filePlanFilter = filePlanPage.getFilePlanFilter();
         UnfiledRecordsContainer unfiledRecordsContainer = filePlanFilter.selectUnfiledRecordsContainer().render();
         RmFolderRulesPage manageRulesPage = unfiledRecordsContainer.selectManageRules().render();

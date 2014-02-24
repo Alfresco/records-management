@@ -21,7 +21,6 @@ package org.alfresco.po.rm.fileplan;
 import java.util.concurrent.TimeUnit;
 
 import org.alfresco.po.rm.RmFolderRulesPage;
-import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
@@ -50,6 +49,7 @@ public class FilePlanPage extends DocumentLibraryPage
     protected static final By NEW_CATEGORY_BTN = By.cssSelector("button[id$='default-newCategory-button-button']");
     protected static final By NEW_FOLDER_BTN = By.cssSelector("button[id$='default-newFolder-button-button']");
     protected static final By NEW_FILE_BTN = By.cssSelector("button[id$='default-fileUpload-button-button']");
+    protected static final By NEW_UNFILED_RECORDS_FOLDER_BTN = By.cssSelector("button[id$='default-newUnfiledRecordsFolder-button-button']");
     protected static final By RM_ADD_META_DATA_LINK = By.cssSelector("div#onActionAddRecordMetadata a");
     protected static final By RECORD = By.cssSelector("tbody.yui-dt-data > tr");
     protected static final By DESCRIPTION = By.cssSelector("div[id$='_default-description'] div");
@@ -111,28 +111,32 @@ public class FilePlanPage extends DocumentLibraryPage
     }
 
     /**
-     * FIXME!!!
+     * Renders the page and waits until the element with the
+     * expected name has has been displayed.
      *
-     * @param expectedRecordOrFolderName
-     * @return
+     * @param expectedName {@link String} The name of the expected element
+     * @return {@link FilePlanPage} The file plan page displaying the expected element
      */
-    public FilePlanPage render(String expectedRecordOrFolderName)
+    public FilePlanPage render(String expectedName)
     {
+        // "expectedName" can be blank so no check required
+
         RenderTime timer = new RenderTime(maxPageLoadingTime);
-        return render(timer, expectedRecordOrFolderName);
+        return render(timer, expectedName);
     }
 
     /**
-     * FIXME!!!
+     * Renders the page and waits until the element with the
+     * expected name has has been displayed.
      *
-     * @param timer
-     * @param expectedRecordOrFolderName
-     * @return
+     * timer {@link RenderTime} time to wait
+     * @param expectedName {@link String} The name of the expected element
+     * @return {@link FilePlanPage} The file plan page displaying the expected element
      */
-    private FilePlanPage render(RenderTime timer, String expectedRecordOrFolderName)
+    private FilePlanPage render(RenderTime timer, String expectedName)
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
-        // "expectedRecordOrFolderName" can be blank
+        // "expectedName" can be blank
 
         boolean found = false;
         while (true)
@@ -143,11 +147,11 @@ public class FilePlanPage extends DocumentLibraryPage
             {
                 if (RmPageObjectUtils.isDisplayed(drone, FILEPLAN) && !isJSMessageDisplayed())
                 {
-                    if (StringUtils.isNotBlank(expectedRecordOrFolderName) && !found)
+                    if (StringUtils.isNotBlank(expectedName) && !found)
                     {
                         for (FileDirectoryInfo fileDirectoryInfo : getFiles())
                         {
-                            if (fileDirectoryInfo.getName().contains(expectedRecordOrFolderName))
+                            if (fileDirectoryInfo.getName().contains(expectedName))
                             {
                                 found = true;
                                 break;
@@ -202,7 +206,6 @@ public class FilePlanPage extends DocumentLibraryPage
             finally
             {
                 timer.end();
-                // FIXME!!!
                 setInFilePlanRoot(false);
                 setInRecordCategory(false);
                 setInRecordFolder(false);
@@ -288,46 +291,6 @@ public class FilePlanPage extends DocumentLibraryPage
     }
 
     /**
-     * Checks visibility of create new folder button in the unfiled records container.
-     *
-     * @return <code>true</code> if visible <code>false</code> otherwise
-     */
-    public boolean isUnfiledRecordsContainerFolderDisplayed()
-    {
-        return isCreateNewFolderDisplayed();
-    }
-
-    /**
-     * Action mimicking select click on new folder button for unfiled records container.
-     *
-     * @return {@link CreateNewRecordFolderDialog} Returns the create folder folder form dialog
-     */
-    public CreateNewRecordFolderDialog selectCreateNewUnfiledRecordsContainerFolder()
-    {
-        return selectCreateNewFolder();
-    }
-
-    /**
-     * Checks visibility of file button in the unfiled records container.
-     *
-     * @return <code>true</code> if visible <code>false</code> otherwise
-     */
-    public boolean isUnfiledRecordsContainerFileDisplayed()
-    {
-        return isFileRecordDisplayed();
-    }
-
-    /**
-     * Action mimicking select click on file button for unfiled records container.
-     *
-     * @return {@link RmUploadFilePage} Returns the upload file page for RM
-     */
-    public RmUploadFilePage selectCreateNewUnfiledRecordsContainerFile()
-    {
-        return new RmUploadFilePage(drone);
-    }
-
-    /**
      * Verify if records exists.
      *
      * @return <code>true</code> if visible <code>false</code> otherwise
@@ -367,29 +330,6 @@ public class FilePlanPage extends DocumentLibraryPage
     public FilePlanFilter getFilePlanFilter()
     {
         return new FilePlanFilter(drone);
-    }
-
-    /**
-     * The file plan filter description.
-     * Options are unfiled records, transfers and holds.
-     *
-     * @return String name of filtered view
-     */
-    public String getFilePlanDescription()
-    {
-        WebElement description = drone.findAndWait(DESCRIPTION);
-        return description.getText();
-    }
-
-    /**
-     * Checked if add record metadata link is visibile.
-     * This is a records management feature.
-     *
-     * @return <code>true</code> if link is visible <code>false</code> otherwise
-     */
-    public boolean isAddRecordMetaDataVisible()
-    {
-        return RmPageObjectUtils.isDisplayed(drone, RM_ADD_META_DATA_LINK);
     }
 
     /**

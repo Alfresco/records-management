@@ -153,9 +153,16 @@
             <line index="10" id="holdReason">{RM_holdReason details.hold-container.reason}</line>
          </template>
 
+         <!-- Hold Container Child -->
+         <template id="rmHoldContainerChild">
+            <evaluator>evaluator.rm.common.isHoldContainerChild</evaluator>
+            <title>{RM_holdContainerChild}</title>
+            <line index="10" id="holdReason">{RM_holdReason details.hold-container.reason}</line>
+         </template>
+
          <!-- Unfiled Records Container Child -->
          <template id="rmUnfiledRecordsContainerChild">
-            <evaluator>evaluator.rm.unfiledRecordsContainer.child</evaluator>
+            <evaluator>evaluator.rm.unfiledRecordsContainerChild</evaluator>
             <title>{RM_unfiledRecordsContainerChild}</title>
             <line index="10" id="identifier">{rma_identifier details.unfiled-records-container-child.identifier}</line>
             <line index="20" id="createdByModifiedOn">{RM_createdBy details.created.by}{RM_modifiedOn details.modified.on}</line>

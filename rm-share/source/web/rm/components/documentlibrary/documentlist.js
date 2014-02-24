@@ -130,6 +130,20 @@
             return '<h3 class="filename"><a class="filter-change" href="#" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '">' + $html(holdTitle) + '</a></h3>';
          });
 
+         // Hold Container Child title
+         this.registerRenderer("RM_holdContainerChild", function rma_holdContainerChild(record, label)
+         {
+            var holdName = $html(record.jsNode.properties.cm_name),
+               filterObj =
+               {
+                  filterId: "holds",
+                  filterData: record.nodeRef,
+                  filterDisplay: holdName
+               };
+
+            return '<h3 class="filename"><a class="filter-change" href="#" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '">' + holdName + '</a></h3>';
+         });
+
          // Unfiled Record Container Child title
          this.registerRenderer("RM_unfiledRecordsContainerChild", function rma_unfiledRecordsContainerChild(record, label)
          {
@@ -263,6 +277,7 @@
                   case "metadata-stub-folder":
                   case "transfer-container":
                   case "hold-container":
+                  case "hold-container-child":
                   case "unfiled-record-container-child":
                      elCell.innerHTML = '<span class="folder-small">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generatePathMarkup(locn) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-32.png" /></a>';
                      break;
@@ -308,6 +323,7 @@
                   case "metadata-stub-folder":
                   case "transfer-container":
                   case "hold-container":
+                  case "hold-container-child":
                   case "unfiled-record-container-child":
                      elCell.innerHTML = '<span class="folder">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generatePathMarkup(locn) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-48.png" /></a>';
                      break;
@@ -435,6 +451,29 @@
          }
 
          YAHOO.Bubbling.fire("selectedFilesChanged");
+      },
+
+      /**
+       * DocList View change filter request event handler
+       *
+       * This function extends the original function in order to
+       * reflect the changed filter id in the url
+       *
+       * @method onChangeFilter
+       * @param layer {object} Event fired (unused)
+       * @param args {array} Event parameters (new filterId)
+       */
+      onChangeFilter: function RDL_onChangeFilter(layer, args)
+      {
+         Alfresco.rm.component.DocumentList.superclass.onChangeFilter.call(this, layer, args);
+         var currentFilter = this.currentFilter.filterId,
+            filterId = args[1].filterId;
+         if (currentFilter !== filterId && filterId !== "path" && filterId !== "savedsearch")
+         {
+            var hash = window.location.hash;
+            hash = hash.replace(/(filter=)[^\&]+/, '$1' + filterId);
+            window.location.hash = hash;
+         }
       }
    }, true);
 })();

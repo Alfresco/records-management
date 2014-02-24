@@ -29,7 +29,7 @@ import org.alfresco.webdrone.WebDroneUtil;
  * @author Tuna Aksoy
  * @version 1.7.1
  */
-public class CreateNewRecordCategoryDialog extends BaseDialog
+public class CreateNewRecordCategoryDialog extends Dialog
 {
     /**
      * Constructor.
@@ -42,7 +42,7 @@ public class CreateNewRecordCategoryDialog extends BaseDialog
     }
 
     /**
-     * @see org.alfresco.po.rm.fileplan.toolbar.BaseDialog#render(org.alfresco.webdrone.RenderTime)
+     * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render(org.alfresco.webdrone.RenderTime)
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -54,7 +54,7 @@ public class CreateNewRecordCategoryDialog extends BaseDialog
     }
 
     /**
-     * @see org.alfresco.po.rm.fileplan.toolbar.BaseDialog#render(long)
+     * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render(long)
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -66,7 +66,7 @@ public class CreateNewRecordCategoryDialog extends BaseDialog
     }
 
     /**
-     * @see org.alfresco.po.rm.fileplan.toolbar.BaseDialog#render()
+     * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render()
      */
     @SuppressWarnings("unchecked")
     @Override

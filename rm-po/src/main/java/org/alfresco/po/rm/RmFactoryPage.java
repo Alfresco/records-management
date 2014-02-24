@@ -19,6 +19,7 @@
 package org.alfresco.po.rm;
 
 import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.rm.fileplan.filter.hold.HoldsContainer;
 import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;
 import org.alfresco.po.share.FactorySharePage;
 import org.alfresco.po.share.LoginPage;
@@ -52,6 +53,7 @@ public class RmFactoryPage extends FactorySharePage
     private static final String RM_FILE_PLAN = "rm-documentlibrary";
     private static final String RM_FILE_PLAN_FILTER = "rm-documentlibrary#filter=path";
     private static final String RM_UNFILED_RECORDS_CONTAINER = RM_FILE_PLAN + "#filter=unfiledRecords";
+    private static final String RM_HOLDS_CONTAINER = RM_FILE_PLAN + "#filter=holds";
     private static final String RM_DASHBOARD = "rm-dashboard";
     private static final String RM_RMSEARCH = "rm-rmsearch";
     private static final String RM_CONSOLE = "rm-console";
@@ -66,18 +68,19 @@ public class RmFactoryPage extends FactorySharePage
     {
         super();
         // Extend the pages in share
-        pages.put(DASHBOARD, RmDashBoardPage.class);
+        pages.put(DASHBOARD, RmSiteDashBoardPage.class);
         pages.put(DOCUMENT_DETAILS, RmDocumentDetailsPage.class);
         // RM related pages
         pages.put(RM_SITE_MEMBERS, RmSiteMembersPage.class);
         pages.put(RM_CONSOLE, RmConsolePage.class);
         pages.put(RM_RMSEARCH, RecordSearchPage.class);
-        pages.put(RM_DASHBOARD, RmDashBoardPage.class);
+        pages.put(RM_DASHBOARD, RmSiteDashBoardPage.class);
         pages.put(RM_FILE_PLAN, FilePlanPage.class);
         pages.put(RM_FILE_PLAN_FILTER, FilePlanPage.class);
         pages.put(RM_UNFILED_RECORDS_CONTAINER, UnfiledRecordsContainer.class);
         pages.put(RM_RULE_EDIT, RmCreateRulePage.class);
         pages.put(RM_FOLDER_FULES, FolderRulesPreRender.class);
+        pages.put(RM_HOLDS_CONTAINER, HoldsContainer.class);
     }
 
     /**

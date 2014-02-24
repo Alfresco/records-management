@@ -18,10 +18,18 @@
  */
 package org.alfresco.po.rm.fileplan.filter.hold;
 
-import org.alfresco.webdrone.Page;
+import java.util.NoSuchElementException;
+import java.util.concurrent.TimeUnit;
+
+import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.rm.fileplan.toolbar.CreateNewHoldDialog;
+import org.alfresco.po.rm.util.RmPageObjectUtils;
+import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.By;
 
 /**
  * File plan filter for holds container
@@ -29,8 +37,10 @@ import org.alfresco.webdrone.WebDroneUtil;
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class HoldsContainer extends Page
+public class HoldsContainer extends FilePlanPage
 {
+    private static final By NEW_HOLD_BTN = By.cssSelector("button[id$='default-newHold-button-button']");
+
     /**
      * Constructor.
      *
@@ -50,8 +60,7 @@ public class HoldsContainer extends Page
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
 
-        // FIXME!!!
-        return this;
+        return render(timer, null);
     }
 
     /**
@@ -76,5 +85,114 @@ public class HoldsContainer extends Page
     {
         RenderTime timer = new RenderTime(maxPageLoadingTime);
         return render(timer);
+    }
+
+    /**
+     * Renders the page and waits until the element with the
+     * expected name has has been displayed.
+     *
+     * @param expectedName {@link String} The name of the expected element
+     * @return {@link HoldsContainer} The holds container displaying the expected element
+     */
+    public HoldsContainer render(String expectedName)
+    {
+        // "expectedName" can be blank so no check required
+
+        RenderTime timer = new RenderTime(maxPageLoadingTime);
+        return render(timer, expectedName);
+    }
+
+    /**
+     * Renders the page and waits until the element with the
+     * expected name has has been displayed.
+     *
+     * timer {@link RenderTime} time to wait
+     * @param expectedName {@link String} The name of the expected element
+     * @return {@link HoldsContainer} The holds container displaying the expected element
+     */
+    private HoldsContainer render(RenderTime timer, String expectedName)
+    {
+        WebDroneUtil.checkMandotaryParam("timer", timer);
+        // "expectedName" can be blank so no check required
+
+        while (true)
+        {
+            setViewType(getNavigation().getViewType());
+            timer.start();
+            try
+            {
+                if (RmPageObjectUtils.isDisplayed(drone, FILEPLAN) && !isJSMessageDisplayed() && toolbarButtonsDisplayed())
+                {
+                    waitUntilToolbarButtonsClickable();
+                    if (StringUtils.isNotBlank(expectedName))
+                    {
+                        boolean found = false;
+                        for (FileDirectoryInfo fileDirectoryInfo : getFiles())
+                        {
+                            if (fileDirectoryInfo.getName().contains(expectedName))
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            catch (NoSuchElementException e)
+            {
+            }
+            finally
+            {
+                timer.end();
+            }
+        }
+
+        return this;
+    }
+
+    /**
+     * Checks if the toolbar buttons are displayed.
+     *
+     * @return <code>true</code> if the toolbar buttons are displayed <code>false</code> otherwise
+     */
+    private boolean toolbarButtonsDisplayed()
+    {
+        return RmPageObjectUtils.isDisplayed(drone, NEW_HOLD_BTN);
+    }
+
+    /**
+     * Waits until the toolbar buttons are clickable
+     */
+    private void waitUntilToolbarButtonsClickable()
+    {
+        long timeOut = TimeUnit.SECONDS.convert(maxPageLoadingTime, TimeUnit.MILLISECONDS);
+        drone.waitUntilElementClickable(NEW_HOLD_BTN, timeOut);
+    }
+
+    /**
+     * Action mimicking select click on new hold button.
+     *
+     * @return {@link CreateNewHoldDialog} Returns the new hold dialog
+     */
+    public CreateNewHoldDialog selectCreateNewHold()
+    {
+        RmPageObjectUtils.select(drone, NEW_HOLD_BTN);
+        return new CreateNewHoldDialog(drone);
     }
 }

@@ -33,22 +33,23 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class BaseDialog extends SharePage
+public class Dialog extends SharePage
 {
-    private static final By NAME_INPUT = By.cssSelector("input[id$='_default-createFolder_prop_cm_name']");
-    private static final By TITLE_INPUT = By.cssSelector("input[id$='_default-createFolder_prop_cm_title']");
-    private static final By IDENTIFIER = By.cssSelector("input[id$='_default-createFolder_prop_rma_identifier']");
-    private static final By DESCRIPTION_INPUT = By.tagName("textarea");
-    private static final By SAVE = By.cssSelector("button[id$='_default-createFolder-form-submit-button']");
-    private static final By CANCEL = By.cssSelector("button[id$='_default-createFolder-form-cancel-button']");
-    private static final String VALUE = "value";
+    /** Selectors */
+    protected static final By NAME_INPUT = By.cssSelector("input[id$='_default-createFolder_prop_cm_name']");
+    protected static final By TITLE_INPUT = By.cssSelector("input[id$='_default-createFolder_prop_cm_title']");
+    protected static final By IDENTIFIER = By.cssSelector("input[id$='_default-createFolder_prop_rma_identifier']");
+    protected static final By DESCRIPTION_INPUT = By.tagName("textarea");
+    protected static final By SAVE = By.cssSelector("button[id$='_default-createFolder-form-submit-button']");
+    protected static final By CANCEL = By.cssSelector("button[id$='_default-createFolder-form-cancel-button']");
+    protected static final String VALUE = "value";
 
     /**
      * Constructor.
      *
      * @param drone {@link WebDrone}
      */
-    protected BaseDialog(WebDrone drone)
+    protected Dialog(WebDrone drone)
     {
         super(drone);
     }
@@ -58,7 +59,7 @@ public class BaseDialog extends SharePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public BaseDialog render(RenderTime timer)
+    public Dialog render(RenderTime timer)
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
 
@@ -77,7 +78,7 @@ public class BaseDialog extends SharePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public BaseDialog render(long time)
+    public Dialog render(long time)
     {
         WebDroneUtil.checkMandotaryParam("time", time);
 
@@ -90,7 +91,7 @@ public class BaseDialog extends SharePage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public BaseDialog render()
+    public Dialog render()
     {
         return render(maxPageLoadingTime);
     }

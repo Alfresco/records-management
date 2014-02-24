@@ -74,11 +74,14 @@
    <bean id="evaluator.rm.common.isHoldContainer" parent="evaluator.rm.common.uiType">
       <property name="type" value="hold-container" />
    </bean>
+   <bean id="evaluator.rm.common.isHoldContainerChild" parent="evaluator.rm.common.uiType">
+      <property name="type" value="hold-container-child" />
+   </bean>
    <bean id="evaluator.rm.common.isElectronicRecord" parent="evaluator.rm.common.indicatorEvaluator">
       <property name="indicator" value="nonElectronic" />
       <property name="expected" value="false" />
    </bean>
-   <bean id="evaluator.rm.unfiledRecordsContainer.child" parent="evaluator.rm.common.uiType">
+   <bean id="evaluator.rm.unfiledRecordsContainerChild" parent="evaluator.rm.common.uiType">
       <property name="type" value="unfiled-record-container-child" />
    </bean>
 

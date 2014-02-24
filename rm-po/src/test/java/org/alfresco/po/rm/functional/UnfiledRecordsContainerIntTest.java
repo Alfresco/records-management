@@ -72,9 +72,9 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Helper method to select the unfiled records container
      *
-     * @param name
+     * @param name {@link String} The name of file/record in the unfiled records container
      */
     private void selectUnfiledRecordsContainer(String name)
     {
@@ -94,7 +94,6 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
     @Test(dependsOnMethods="navigateToUnfiledRecords")
     public void fileRecord() throws IOException
     {
-        Assert.assertTrue(unfiledRecordsContainer.isUnfiledRecordsContainerFileDisplayed());
         RmUploadFilePage rmRecordFileDialog = unfiledRecordsContainer.selectCreateNewUnfiledRecordsContainerFile().render();
         Assert.assertNotNull(rmRecordFileDialog);
         String fileName = Long.valueOf(System.currentTimeMillis()).toString();
@@ -107,7 +106,6 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
     @Test(dependsOnMethods="fileRecord")
     public void createUnfiledRecordsFolder() throws IOException
     {
-        Assert.assertTrue(unfiledRecordsContainer.isUnfiledRecordsContainerFolderDisplayed());
         CreateNewRecordFolderDialog createNewFolderDialog = unfiledRecordsContainer.selectCreateNewUnfiledRecordsContainerFolder().render();
         Assert.assertNotNull(createNewFolderDialog);
         Assert.assertNotNull(createNewFolderDialog.getRecordFolderId());

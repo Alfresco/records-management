@@ -22,7 +22,9 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 import org.alfresco.po.rm.RmFolderRulesPage;
+import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.webdrone.RenderTime;
@@ -88,30 +90,32 @@ public class UnfiledRecordsContainer extends FilePlanPage
     }
 
     /**
-     * FIXME!!!
+     * Renders the page and waits until the element with the
+     * expected name has has been displayed.
      *
-     * @param expectedRecordOrFolderName
-     * @return
+     * @param expectedName {@link String} The name of the expected element
+     * @return {@link UnfiledRecordsContainer} The unfiled records container displaying the expected element
      */
-    public UnfiledRecordsContainer render(String expectedRecordOrFolderName)
+    public UnfiledRecordsContainer render(String expectedName)
     {
-        // "expectedRecordOrFolderName" can be blank
+        // "expectedName" can be blank
 
         RenderTime timer = new RenderTime(maxPageLoadingTime);
-        return render(timer, expectedRecordOrFolderName);
+        return render(timer, expectedName);
     }
 
     /**
-     * FIXME!!!
+     * Renders the page and waits until the element with the
+     * expected name has has been displayed.
      *
-     * @param timer
-     * @param expectedRecordOrFolderName
-     * @return
+     * timer {@link RenderTime} time to wait
+     * @param expectedName {@link String} The name of the expected element
+     * @return {@link UnfiledRecordsContainer} The unfiled records container displaying the expected element
      */
-    private UnfiledRecordsContainer render(RenderTime timer, String expectedRecordOrFolderName)
+    private UnfiledRecordsContainer render(RenderTime timer, String expectedName)
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
-        // "expectedRecordOrFolderName" can be blank
+        // "expectedName" can be blank
 
         while (true)
         {
@@ -122,12 +126,12 @@ public class UnfiledRecordsContainer extends FilePlanPage
                 if (RmPageObjectUtils.isDisplayed(drone, FILEPLAN) && !isJSMessageDisplayed() && toolbarButtonsDisplayed())
                 {
                     waitUntilToolbarButtonsClickable();
-                    if (StringUtils.isNotBlank(expectedRecordOrFolderName))
+                    if (StringUtils.isNotBlank(expectedName))
                     {
                         boolean found = false;
                         for (FileDirectoryInfo fileDirectoryInfo : getFiles())
                         {
-                            if (fileDirectoryInfo.getName().contains(expectedRecordOrFolderName))
+                            if (fileDirectoryInfo.getName().contains(expectedName))
                             {
                                 found = true;
                                 break;
@@ -160,27 +164,49 @@ public class UnfiledRecordsContainer extends FilePlanPage
                 timer.end();
             }
         }
+
         return this;
     }
 
     /**
-     * FIXME!!!
+     * Checks if the toolbar buttons are displayed.
      *
-     * @return
+     * @return <code>true</code> if the toolbar buttons are displayed <code>false</code> otherwise
      */
     private boolean toolbarButtonsDisplayed()
     {
-        return isUnfiledRecordsContainerFolderDisplayed() && isUnfiledRecordsContainerFileDisplayed();
+        return RmPageObjectUtils.isDisplayed(drone, NEW_UNFILED_RECORDS_FOLDER_BTN);
     }
 
     /**
-     * FIXME!!!
+     * Waits until the toolbar buttons are clickable
      */
     private void waitUntilToolbarButtonsClickable()
     {
         long timeOut = TimeUnit.SECONDS.convert(maxPageLoadingTime, TimeUnit.MILLISECONDS);
-        drone.waitUntilElementClickable(NEW_FOLDER_BTN, timeOut);
+        drone.waitUntilElementClickable(NEW_UNFILED_RECORDS_FOLDER_BTN, timeOut);
         drone.waitUntilElementClickable(NEW_FILE_BTN, timeOut);
+    }
+
+    /**
+     * Action mimicking select click on new folder button for unfiled records container.
+     *
+     * @return {@link CreateNewRecordFolderDialog} Returns the create folder folder form dialog
+     */
+    public CreateNewRecordFolderDialog selectCreateNewUnfiledRecordsContainerFolder()
+    {
+        RmPageObjectUtils.select(drone, NEW_UNFILED_RECORDS_FOLDER_BTN);
+        return new CreateNewRecordFolderDialog(drone);
+    }
+
+    /**
+     * Action mimicking select click on file button for unfiled records container.
+     *
+     * @return {@link RmUploadFilePage} Returns the upload file page for RM
+     */
+    public RmUploadFilePage selectCreateNewUnfiledRecordsContainerFile()
+    {
+        return new RmUploadFilePage(drone);
     }
 
     /**

@@ -18,26 +18,33 @@
  */
 package org.alfresco.po.rm;
 
+import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.DashBoardPage;
+import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.alfresco.webdrone.exception.PageException;
+import org.openqa.selenium.By;
 
 /**
- * Records management dash board page object.
+ * Records management site dash board page object.
  *
  * @author Michael Suzuki
  * @author Tuna Aksoy
  * @version 1.7.1
  */
-public class RmDashBoardPage extends DashBoardPage
+public class RmSiteDashBoardPage extends DashBoardPage
 {
+    /** Selectors */
+    private static final By NAVIGATION_MENU_FILE_PLAN = By.cssSelector("div#HEADER_SITE_DOCUMENTLIBRARY");
+
     /**
      * Constructor.
      * @param drone {@link WebDrone}
      */
-    public RmDashBoardPage(WebDrone drone)
+    public RmSiteDashBoardPage(WebDrone drone)
     {
         super(drone);
     }
@@ -47,11 +54,11 @@ public class RmDashBoardPage extends DashBoardPage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RmDashBoardPage render(RenderTime timer)
+    public RmSiteDashBoardPage render(RenderTime timer)
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
 
-        return (RmDashBoardPage) super.render(timer);
+        return (RmSiteDashBoardPage) super.render(timer);
     }
 
     /**
@@ -59,9 +66,9 @@ public class RmDashBoardPage extends DashBoardPage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RmDashBoardPage render(long time)
+    public RmSiteDashBoardPage render(long time)
     {
-        return (RmDashBoardPage) super.render(time);
+        return (RmSiteDashBoardPage) super.render(time);
     }
 
     /**
@@ -69,17 +76,17 @@ public class RmDashBoardPage extends DashBoardPage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RmDashBoardPage render()
+    public RmSiteDashBoardPage render()
     {
-        return (RmDashBoardPage) super.render();
+        return (RmSiteDashBoardPage) super.render();
     }
 
     /**
      * Renders the RM Dash board page
      *
-     * @return {@link RmDashBoardPage} page object
+     * @return {@link RmSiteDashBoardPage} page object
      */
-    public RmDashBoardPage rmRender()
+    public RmSiteDashBoardPage rmRender()
     {
         try
         {
@@ -113,5 +120,17 @@ public class RmDashBoardPage extends DashBoardPage
     public RmSiteNavigation getRMSiteNavigation()
     {
         return new RmSiteNavigation(drone);
+    }
+
+    /**
+     * Selects the file plan from the menu bar
+     *
+     * @return {@link HtmlPage} Returns the currently displayed page,
+     * which is the {@link FilePlanPage} in this case
+     */
+    public HtmlPage selectFilePlan()
+    {
+        RmPageObjectUtils.select(drone, NAVIGATION_MENU_FILE_PLAN);
+        return drone.getCurrentPage();
     }
 }
