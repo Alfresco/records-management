@@ -359,7 +359,8 @@
 
                // create the auto complete widget.
                var autoComp = new YAHOO.widget.AutoComplete(el, autoCompleteDiv, dataSource);
-               autoComp.maxResultsDisplayed = 20;
+               // sanity check as server should limit number of results based on configuration
+               autoComp.maxResultsDisplayed = 30;
 
                // fix any css applied by creating the autocomplete widget and tweak a couple of other styles
                YUIDom.setStyle(autoCompleteDiv, "width", "500px");

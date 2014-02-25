@@ -19,6 +19,7 @@
 package org.alfresco.po.rm.functional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
@@ -29,6 +30,7 @@ import org.alfresco.po.share.site.contentrule.FolderRulesPage;
 import org.alfresco.po.share.site.contentrule.createrules.CreateRulePage;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
@@ -105,15 +107,7 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
                 "Day",
                 "Long Day",
                 "Day Number",
-                "Day of Year",
-                "Short Month",
-                "Month",
-                "Long Month",
-                "Month Number",
-                "Short Year",
-                "Year",
-                "Long Year",
-                "Year Week"
+                "Day of Year"
             };
         testAutoComplete(fragment, expectedSuggestions, expectedSuggestions[1], "/{date.day.short}");
     }
@@ -156,45 +150,108 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
         input.clear();
         input.sendKeys(fragment);
 
-        // wait for the ajax autosuggestion drop down menu to settle
-        try{Thread.sleep(5000);}catch(Exception e){}
-
-        // read the suggestions
-        WebElement dropDownList = drone.findAndWait(By.xpath("//div[@class='yui-ac-bd']/child::ul"), MAX_WAIT_TIME);
-        Assert.assertTrue(dropDownList.isDisplayed());
-        WebElement expectedListItem = drone.findAndWait(By.className("substitutionSuggestion"), MAX_WAIT_TIME);
-        Assert.assertTrue(expectedListItem.isDisplayed());
-        List<WebElement> listItems = dropDownList.findElements(By.className("substitutionSuggestion"));
-        List<String> suggestions = new ArrayList<String>();
-        WebElement suggestionToSelect = null;
-        for(WebElement listItem : listItems)
-        {
-            suggestions.add(listItem.getText());
-            if(listItem.getText().startsWith(suggestionToChoose))
-            {
-                suggestionToSelect = listItem;
-            }
-        }
-
-        // ensure that the expected suggestions have been supplied
-        for(String expectedSuggestion : expectedSuggestions)
-        {
-            boolean found = false;
-            for(String suggestion : suggestions)
-            {
-                if(suggestion.startsWith(expectedSuggestion))
-                {
-                    found = true;
-                    break;
-                }
-            }
-            Assert.assertTrue(found);
-        }
+        // check the resulting suggestions
+        WebElement suggestionToSelect = checkResultingSuggestions(expectedSuggestions, suggestionToChoose, 30000);
 
         // select the specified suggestion and ensure that the path field is populated correctly
         Assert.assertNotNull(suggestionToSelect);
         suggestionToSelect.click();
         String path = input.getAttribute("value");
         Assert.assertEquals(path, expectedPath);
+    }
+
+    private WebElement checkResultingSuggestions(String[] expectedSuggestions, String suggestionToChoose, long timeout)
+    {
+        long start = new Date().getTime();
+        boolean timedOut = false;
+        WebElement suggestionToSelect = null;
+        boolean foundExpectedSuggestions = false;
+        List<String> actualSuggestions = null;
+        do
+        {
+            try
+            {
+                suggestionToSelect = null;
+                foundExpectedSuggestions = false;
+
+                // read the suggestions
+                WebElement dropDownList = drone.findAndWait(By.xpath("//div[@class='yui-ac-bd']/child::ul"), MAX_WAIT_TIME);
+                if(dropDownList.isDisplayed())
+                {
+                    WebElement expectedListItem = drone.findAndWait(By.className("substitutionSuggestion"), MAX_WAIT_TIME);
+                    if(expectedListItem.isDisplayed())
+                    {
+                        List<WebElement> listItems = dropDownList.findElements(By.className("substitutionSuggestion"));
+                        actualSuggestions = new ArrayList<String>();
+
+                        for(WebElement listItem : listItems)
+                        {
+                            actualSuggestions.add(listItem.getText());
+                            if(listItem.getText().startsWith(suggestionToChoose))
+                            {
+                                suggestionToSelect = listItem;
+                            }
+                        }
+
+                        // ensure that the expected suggestions have been supplied
+                        boolean foundAllSuggestions = true;
+                        for(String expectedSuggestion : expectedSuggestions)
+                        {
+                            boolean foundExpectedSuggestion = false;
+                            for(String suggestion : actualSuggestions)
+                            {
+                                if(suggestion.startsWith(expectedSuggestion))
+                                {
+                                    foundExpectedSuggestion = true;
+                                    break;
+                                }
+                            }
+                            if(!foundExpectedSuggestion)
+                            {
+                                foundAllSuggestions = false;
+                                break;
+                            }
+                        }
+                        foundExpectedSuggestions = foundAllSuggestions;
+                    }
+                }
+            }
+            catch(StaleElementReferenceException e) { }
+
+            if((suggestionToSelect == null) || (!foundExpectedSuggestions))
+            {
+                long now = new Date().getTime();
+                if((now - start) > timeout)
+                {
+                    timedOut = true;
+                }
+                else
+                {
+                    try { Thread.sleep(1000); } catch(InterruptedException e) { }
+                }
+            }
+        } while(!timedOut && !foundExpectedSuggestions);
+
+        if(timedOut)
+        {
+            StringBuffer message = new StringBuffer();
+            message.append("autocomplete results not as expected.\nExpected... ");
+            for(String expectedSuggestion : expectedSuggestions)
+            {
+                message.append(expectedSuggestion);
+                message.append(",");
+            }
+            message.append("\nActual...   ");
+            if(actualSuggestions != null)
+            {
+                for(String actualSuggestion: actualSuggestions)
+                {
+                    message.append(actualSuggestion);
+                    message.append(",");
+                }
+            }
+            Assert.fail(message.toString());
+        }
+        return suggestionToSelect;
     }
 }
