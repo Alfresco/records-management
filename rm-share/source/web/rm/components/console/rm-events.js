@@ -205,6 +205,7 @@
                });
                editBtn.on("click", me.onEditEventClick, oRecord, me);
 
+               /* FIXME: Workaround to avoid problems described in RM-879
                // Delete event button
                var deleteBtn = new YAHOO.widget.Button(
                {
@@ -212,6 +213,7 @@
                   label: parent.msg("button.delete")
                });
                deleteBtn.on("click", me.onDeleteEventClick, oRecord, me);
+               */
             };
 
             // DataTable column defintions
