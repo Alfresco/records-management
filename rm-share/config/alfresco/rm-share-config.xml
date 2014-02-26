@@ -808,6 +808,10 @@
             <action index="140" id="rm-manage-rules" />
          </actionGroup>
 
+         <actionGroup id="rm-hold-container-child-browse">
+            <action index="100" id="rm-delete" label="actions.delete" />
+         </actionGroup>
+
          <!--  Extensions to the standard DM UI actions -->
          <actionGroup id="document-browse">
             <action index="400" id="rm-create-record" />
