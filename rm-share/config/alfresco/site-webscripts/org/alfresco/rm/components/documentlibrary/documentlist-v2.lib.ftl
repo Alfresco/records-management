@@ -69,6 +69,9 @@
             <div class="hideable toolbar-hidden DocListFilePlan_unfiledRecords">
                <div class="manage-permissions"><button id="${id}-unfiledManagePermissions-button">${msg("button.manage-permissions")}</button></div>
             </div>
+            <div class="hideable toolbar-hidden DocListFilePlan_holds">
+               <div class="manage-permissions"><button id="${id}-holdPermissions-button">${msg("button.manage-permissions")}</button></div>
+            </div>
             <div class="hideable toolbar-hidden DocListFilePlan_unfiledRecords">
                 <div class="manage-rules"><button id="${id}-unfiledManageRules-button">${msg("button.manage-rules")}</button></div>
             </div>

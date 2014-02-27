@@ -22,6 +22,7 @@ import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.filter.hold.HoldsContainer;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewHoldDialog;
+import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
@@ -33,7 +34,8 @@ import org.testng.annotations.Test;
  * This test suite tests the following new features:
  * <p>
  * <ul>
- *  <li>Creating a new hold in the holds container (also sub hold containers)</li>
+ *  <li>Creating a new hold in the holds container</li>
+ *  <li>Viewing the manage permissions page for the newly created hold</li>
  *  <li>Deleting the new hold in the holds container</li>
  * </ul>
  * <p>
@@ -46,14 +48,16 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     /** Constants for the new hold dialog */
     private static final String NAME = "New Hold";
     private static final String REASON = "Reason for hold";
-    /** Member variable */
+    /** Member variables */
     HoldsContainer holdsContainer;
+    FilePlanPage filePlan;
+    FilePlanFilter filePlanFilter;
 
     @Test
     public void createNewHold()
     {
-        FilePlanPage filePlan = rmSiteDashBoard.selectFilePlan().render();
-        FilePlanFilter filePlanFilter = filePlan.getFilePlanFilter();
+        filePlan = rmSiteDashBoard.selectFilePlan().render();
+        filePlanFilter = filePlan.getFilePlanFilter();
         holdsContainer = filePlanFilter.selectHoldsContainer().render();
         CreateNewHoldDialog newHoldDialog = holdsContainer.selectCreateNewHold().render();
         newHoldDialog.enterName(NAME);
@@ -63,8 +67,24 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     }
 
     @Test(dependsOnMethods="createNewHold")
+    public void managePermissionsForRoot()
+    {
+        RmPageObjectUtils.select(drone, By.cssSelector("button[id$='default-holdPermissions-button-button']"));
+
+        // drone.navigateTo(drone.getPreviousUrl());
+        WebElement addUserOrGroupButton = drone.findAndWait(By.cssSelector("button[id$='-addusergroup-button-button']"));
+        addUserOrGroupButton.click();
+
+        WebElement doneButton = drone.findAndWait(By.cssSelector("button[id$='-finish-button-button']"));
+        doneButton.click();
+    }
+
+    @Test(dependsOnMethods="managePermissionsForRoot")
     public void deleteHold()
     {
+        filePlan = rmSiteDashBoard.selectFilePlan().render();
+        filePlanFilter = filePlan.getFilePlanFilter();
+        holdsContainer = filePlanFilter.selectHoldsContainer().render();
         FileDirectoryInfo hold = holdsContainer.getFileDirectoryInfo(NAME);
         WebElement actions = hold.findElement(By.cssSelector("td:nth-of-type(5)"));
         drone.mouseOverOnElement(actions);
