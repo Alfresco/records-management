@@ -35,7 +35,9 @@ import org.testng.annotations.Test;
  * <p>
  * <ul>
  *  <li>Creating a new hold in the holds container</li>
+ *  <li>Viewing the manage permissions page for the for hold container</li>
  *  <li>Viewing the manage permissions page for the newly created hold</li>
+ *  <li>Viewing the details page of the hold container</li>
  *  <li>Deleting the new hold in the holds container</li>
  * </ul>
  * <p>
@@ -62,7 +64,7 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
         CreateNewHoldDialog newHoldDialog = holdsContainer.selectCreateNewHold().render();
         newHoldDialog.enterName(NAME);
         newHoldDialog.enterReason(REASON);
-        newHoldDialog.tickDeleteHold(true);
+        //newHoldDialog.tickDeleteHold(true);
         holdsContainer = ((HoldsContainer) newHoldDialog.selectSave()).render(NAME);
     }
 
@@ -89,6 +91,18 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     }
 
     @Test(dependsOnMethods="managePermissions")
+    public void editDetails()
+    {
+        filePlan = rmSiteDashBoard.selectFilePlan().render();
+        filePlanFilter = filePlan.getFilePlanFilter();
+        holdsContainer = filePlanFilter.selectHoldsContainer().render();
+        FileDirectoryInfo hold = holdsContainer.getFileDirectoryInfo(NAME);
+        WebElement actions = hold.findElement(By.cssSelector("td:nth-of-type(5)"));
+        drone.mouseOverOnElement(actions);
+        hold.findElement(By.cssSelector("div.rm-edit-details>a")).click();
+    }
+
+    @Test(dependsOnMethods="editDetails")
     public void deleteHold()
     {
         filePlan = rmSiteDashBoard.selectFilePlan().render();

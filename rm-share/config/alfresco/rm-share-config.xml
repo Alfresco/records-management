@@ -809,8 +809,9 @@
          </actionGroup>
 
          <actionGroup id="rm-hold-container-child-browse">
-            <action index="100" id="rm-manage-permissions" />
-            <action index="110" id="rm-delete" label="actions.delete" />
+            <action index="100" id="rm-edit-details" label="action.edit.hold"/>
+            <action index="110" id="rm-manage-permissions" />
+            <action index="120" id="rm-delete" label="actions.delete.hold" />
          </actionGroup>
 
          <!--  Extensions to the standard DM UI actions -->
