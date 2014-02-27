@@ -70,16 +70,25 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     public void managePermissionsForRoot()
     {
         RmPageObjectUtils.select(drone, By.cssSelector("button[id$='default-holdPermissions-button-button']"));
-
-        // drone.navigateTo(drone.getPreviousUrl());
         WebElement addUserOrGroupButton = drone.findAndWait(By.cssSelector("button[id$='-addusergroup-button-button']"));
         addUserOrGroupButton.click();
-
         WebElement doneButton = drone.findAndWait(By.cssSelector("button[id$='-finish-button-button']"));
         doneButton.click();
     }
 
     @Test(dependsOnMethods="managePermissionsForRoot")
+    public void managePermissions()
+    {
+        filePlan = rmSiteDashBoard.selectFilePlan().render();
+        filePlanFilter = filePlan.getFilePlanFilter();
+        holdsContainer = filePlanFilter.selectHoldsContainer().render();
+        FileDirectoryInfo hold = holdsContainer.getFileDirectoryInfo(NAME);
+        WebElement actions = hold.findElement(By.cssSelector("td:nth-of-type(5)"));
+        drone.mouseOverOnElement(actions);
+        hold.findElement(By.cssSelector("div.rm-manage-permissions>a")).click();
+    }
+
+    @Test(dependsOnMethods="managePermissions")
     public void deleteHold()
     {
         filePlan = rmSiteDashBoard.selectFilePlan().render();
