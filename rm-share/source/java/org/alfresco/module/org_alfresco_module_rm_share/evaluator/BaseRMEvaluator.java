@@ -68,7 +68,7 @@ public abstract class BaseRMEvaluator extends BaseEvaluator
         }
         catch (Exception err)
         {
-            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err.getMessage());
+            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err);
         }
 
         return rmNode;
@@ -94,7 +94,7 @@ public abstract class BaseRMEvaluator extends BaseEvaluator
         }
         catch (Exception err)
         {
-            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err.getMessage());
+            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err);
         }
 
         return indicators;
@@ -120,7 +120,7 @@ public abstract class BaseRMEvaluator extends BaseEvaluator
         }
         catch (Exception err)
         {
-            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err.getMessage());
+            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err);
         }
 
         return actions;

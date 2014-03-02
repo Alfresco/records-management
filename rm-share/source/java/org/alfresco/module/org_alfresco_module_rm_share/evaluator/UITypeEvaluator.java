@@ -47,7 +47,7 @@ public class UITypeEvaluator extends BaseRMEvaluator
         {
             return false;
         }
-        
+
         if (isDocLibRecord(jsonObject) == true)
         {
             return false;
@@ -71,7 +71,7 @@ public class UITypeEvaluator extends BaseRMEvaluator
         }
         catch (Exception err)
         {
-            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err.getMessage());
+            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err);
         }
 
         return false;

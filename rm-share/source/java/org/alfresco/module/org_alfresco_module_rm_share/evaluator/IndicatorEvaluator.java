@@ -30,7 +30,7 @@ import org.json.simple.JSONObject;
 public class IndicatorEvaluator extends BaseRMEvaluator
 {
     private String indicator;
-    
+
     private boolean expected = true;
 
     /**
@@ -42,7 +42,7 @@ public class IndicatorEvaluator extends BaseRMEvaluator
     {
         this.indicator = indicator;
     }
-    
+
     public void setExpected(boolean expected)
     {
         this.expected = expected;
@@ -57,11 +57,11 @@ public class IndicatorEvaluator extends BaseRMEvaluator
         }
 
         boolean result = false;
-        
+
         try
         {
             JSONArray indicators = getRMIndicators(jsonObject);
-            if (indicators != null)            
+            if (indicators != null)
             {
                 if (indicators.contains(indicator))
                 {
@@ -71,7 +71,7 @@ public class IndicatorEvaluator extends BaseRMEvaluator
         }
         catch (Exception err)
         {
-            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err.getMessage());
+            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err);
         }
 
         return (result == expected);

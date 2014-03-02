@@ -66,7 +66,7 @@ public class ActionEvaluator extends BaseRMEvaluator
         }
         catch (Exception err)
         {
-            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err.getMessage());
+            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err);
         }
 
         return false;
