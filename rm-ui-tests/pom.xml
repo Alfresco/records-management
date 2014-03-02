@@ -6,7 +6,7 @@
       <version>2.2-SNAPSHOT</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
-   <artifactId>alfresco-rm-po</artifactId>
+   <artifactId>alfresco-rm-ui-tests</artifactId>
    <properties>
       <dependency.share.po.version>4.3.0-BF-SNAPSHOT</dependency.share.po.version>
    </properties>
