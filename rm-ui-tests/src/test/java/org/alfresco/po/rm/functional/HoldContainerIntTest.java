@@ -50,68 +50,83 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     /** Constants for the new hold dialog */
     private static final String NAME = "New Hold";
     private static final String REASON = "Reason for hold";
+
+    /** Selectors */
+    private static final String ACTION_SELECTOR_TEXT_MANAGE_PERMISSONS = "div.rm-manage-permissions>a";
+    private static final String ACTION_SELECTOR_TEXT_EDIT_DETAILS = "div.rm-edit-details>a";
+    private static final String ACTION_SELECTOR_TEXT_DELETE = "div.rm-delete>a";
+    private static final String ACTIONS = "td:nth-of-type(5)";
+    private static final By MANAGE_PERMISSIONS_BUTTON = By.cssSelector("button[id$='default-holdPermissions-button-button']");
+    private static final By ADD_USER_GROUP_BUTTON = By.cssSelector("button[id$='-addusergroup-button-button']");
+    private static final By FINISH_BUTTON = By.cssSelector("button[id$='-finish-button-button']");
+    private static final By PROMPT = By.cssSelector("div#prompt div.ft span span button");
+
     /** Member variables */
-    HoldsContainer holdsContainer;
-    FilePlanPage filePlan;
-    FilePlanFilter filePlanFilter;
+    private HoldsContainer holdsContainer;
+    private FilePlanPage filePlan;
+    private FilePlanFilter filePlanFilter;
+
+    /**
+     * Helper method to select the holds container
+     *
+     * @return {@link HoldsContainer} Returns the hold container object
+     */
+    private HoldsContainer selectHoldsContainer()
+    {
+        filePlan = rmSiteDashBoard.selectFilePlan().render();
+        filePlanFilter = filePlan.getFilePlanFilter();
+        return filePlanFilter.selectHoldsContainer().render();
+    }
+
+    /**
+     * Helper method to click on an action for a given hold
+     *
+     * @param selector {@link String} The selector text for the action to select
+     */
+    private void clickAction(String selector)
+    {
+        holdsContainer = selectHoldsContainer();
+        FileDirectoryInfo hold = holdsContainer.getFileDirectoryInfo(NAME);
+        WebElement actions = hold.findElement(By.cssSelector(ACTIONS));
+        drone.mouseOverOnElement(actions);
+        hold.findElement(By.cssSelector(selector)).click();
+    }
 
     @Test
     public void createNewHold()
     {
-        filePlan = rmSiteDashBoard.selectFilePlan().render();
-        filePlanFilter = filePlan.getFilePlanFilter();
-        holdsContainer = filePlanFilter.selectHoldsContainer().render();
+        holdsContainer = selectHoldsContainer();
         CreateNewHoldDialog newHoldDialog = holdsContainer.selectCreateNewHold().render();
         newHoldDialog.enterName(NAME);
         newHoldDialog.enterReason(REASON);
-        //newHoldDialog.tickDeleteHold(true);
+        newHoldDialog.tickDeleteHold(true);
         holdsContainer = ((HoldsContainer) newHoldDialog.selectSave()).render(NAME);
     }
 
     @Test(dependsOnMethods="createNewHold")
     public void managePermissionsForRoot()
     {
-        RmPageObjectUtils.select(drone, By.cssSelector("button[id$='default-holdPermissions-button-button']"));
-        WebElement addUserOrGroupButton = drone.findAndWait(By.cssSelector("button[id$='-addusergroup-button-button']"));
-        addUserOrGroupButton.click();
-        WebElement doneButton = drone.findAndWait(By.cssSelector("button[id$='-finish-button-button']"));
-        doneButton.click();
+        RmPageObjectUtils.select(drone, MANAGE_PERMISSIONS_BUTTON);
+        RmPageObjectUtils.select(drone, ADD_USER_GROUP_BUTTON);
+        RmPageObjectUtils.select(drone, FINISH_BUTTON);
     }
 
     @Test(dependsOnMethods="managePermissionsForRoot")
     public void managePermissions()
     {
-        filePlan = rmSiteDashBoard.selectFilePlan().render();
-        filePlanFilter = filePlan.getFilePlanFilter();
-        holdsContainer = filePlanFilter.selectHoldsContainer().render();
-        FileDirectoryInfo hold = holdsContainer.getFileDirectoryInfo(NAME);
-        WebElement actions = hold.findElement(By.cssSelector("td:nth-of-type(5)"));
-        drone.mouseOverOnElement(actions);
-        hold.findElement(By.cssSelector("div.rm-manage-permissions>a")).click();
+        clickAction(ACTION_SELECTOR_TEXT_MANAGE_PERMISSONS);
     }
 
     @Test(dependsOnMethods="managePermissions")
     public void editDetails()
     {
-        filePlan = rmSiteDashBoard.selectFilePlan().render();
-        filePlanFilter = filePlan.getFilePlanFilter();
-        holdsContainer = filePlanFilter.selectHoldsContainer().render();
-        FileDirectoryInfo hold = holdsContainer.getFileDirectoryInfo(NAME);
-        WebElement actions = hold.findElement(By.cssSelector("td:nth-of-type(5)"));
-        drone.mouseOverOnElement(actions);
-        hold.findElement(By.cssSelector("div.rm-edit-details>a")).click();
+        clickAction(ACTION_SELECTOR_TEXT_EDIT_DETAILS);
     }
 
     @Test(dependsOnMethods="editDetails")
     public void deleteHold()
     {
-        filePlan = rmSiteDashBoard.selectFilePlan().render();
-        filePlanFilter = filePlan.getFilePlanFilter();
-        holdsContainer = filePlanFilter.selectHoldsContainer().render();
-        FileDirectoryInfo hold = holdsContainer.getFileDirectoryInfo(NAME);
-        WebElement actions = hold.findElement(By.cssSelector("td:nth-of-type(5)"));
-        drone.mouseOverOnElement(actions);
-        hold.findElement(By.cssSelector("div.rm-delete>a")).click();
-        drone.find(By.cssSelector("div#prompt div.ft span span button")).click();
+        clickAction(ACTION_SELECTOR_TEXT_DELETE);
+        RmPageObjectUtils.select(drone, PROMPT);
     }
 }
