@@ -61,3 +61,4 @@ function isRmSite(conn, site)
    }
 
    return isRmSite;
+}
