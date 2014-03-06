@@ -48,7 +48,7 @@ public class FilePlanPage extends DocumentLibraryPage
     protected static final By MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-manageRules-button-button']");
     protected static final By NEW_CATEGORY_BTN = By.cssSelector("button[id$='default-newCategory-button-button']");
     protected static final By NEW_FOLDER_BTN = By.cssSelector("button[id$='default-newFolder-button-button']");
-    protected static final By NEW_FILE_BTN = By.cssSelector("button[id$='default-fileUpload-button-button']");
+    protected static final By NEW_DECLARE_RECORD_BTN = By.cssSelector("button[id$='default-declareRecord-button-button']");
     protected static final By NEW_UNFILED_RECORDS_FOLDER_BTN = By.cssSelector("button[id$='default-newUnfiledRecordsFolder-button-button']");
     protected static final By RM_ADD_META_DATA_LINK = By.cssSelector("div#onActionAddRecordMetadata a");
     protected static final By RECORD = By.cssSelector("tbody.yui-dt-data > tr");
@@ -188,13 +188,13 @@ public class FilePlanPage extends DocumentLibraryPage
                     }
                     if (inRecordFolder)
                     {
-                        if (!isFileRecordDisplayed())
+                        if (!isDeclaredRecordButtonDisplayed())
                         {
                             continue;
                         }
                         else
                         {
-                            drone.waitUntilElementClickable(NEW_FILE_BTN, timeOut);
+                            drone.waitUntilElementClickable(NEW_DECLARE_RECORD_BTN, timeOut);
                         }
                     }
                     break;
@@ -281,13 +281,13 @@ public class FilePlanPage extends DocumentLibraryPage
     }
 
     /**
-     * Checks visibility of file button on the file plan page header.
+     * Checks visibility of the undeclared records button on the unfiled records container toolbar.
      *
      * @return <code>true</code> if visible <code>false</code> otherwise
      */
-    public boolean isFileRecordDisplayed()
+    public boolean isDeclaredRecordButtonDisplayed()
     {
-        return RmPageObjectUtils.isDisplayed(drone, NEW_FILE_BTN);
+        return RmPageObjectUtils.isDisplayed(drone, NEW_DECLARE_RECORD_BTN);
     }
 
     /**

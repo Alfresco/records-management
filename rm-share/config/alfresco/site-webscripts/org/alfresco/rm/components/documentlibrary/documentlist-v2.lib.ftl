@@ -46,8 +46,11 @@
             <div class="hideable toolbar-hidden DocListFilePlan_holds">
                <div class="new-folder"><button id="${id}-newHold-button">${msg("button.new-hold")}</button></div>
             </div>
-            <div class="hideable toolbar-hidden DocListTree DocListFilePlan_unfiledRecords">
+            <div class="hideable toolbar-hidden DocListTree">
                <div class="file-upload"><button id="${id}-fileUpload-button">${msg("button.upload")}</button></div>
+            </div>
+            <div class="hideable toolbar-hidden DocListFilePlan_unfiledRecords">
+               <div class="file-upload"><button id="${id}-declareRecord-button">${msg("button.declare-record")}</button></div>
             </div>
             <div id="${id}-import-section" class="hideable toolbar-hidden DocListTree">
                <div class="import"><button id="${id}-import-button">${msg("button.import")}</button></div>

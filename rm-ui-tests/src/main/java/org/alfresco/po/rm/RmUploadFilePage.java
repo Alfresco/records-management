@@ -70,7 +70,7 @@ public class RmUploadFilePage extends UploadFilePage
             timer.start();
             try
             {
-                RmPageObjectUtils.select(drone, By.cssSelector("button[id$='default-fileUpload-button-button']"));
+                RmPageObjectUtils.select(drone, By.cssSelector("button[id$='default-declareRecord-button-button']"));
                 if (RmPageObjectUtils.isDisplayed(drone, By.cssSelector("div#prompt_h")))
                 {
                     break;

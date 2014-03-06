@@ -110,6 +110,13 @@
             value: "file"
          });
 
+         // Declare record button: user needs "file" access
+         this.widgets.declareRecord = $createYUIButton(this, "declareRecord-button", this.onFileUpload,
+         {
+            disabled: true,
+            value: "file"
+         });
+
          // Import button: user needs "import" access
          this.widgets.importButton = $createYUIButton(this, "import-button", this.onImport,
          {

@@ -185,7 +185,7 @@ public class UnfiledRecordsContainer extends FilePlanPage
     {
         long timeOut = TimeUnit.SECONDS.convert(maxPageLoadingTime, TimeUnit.MILLISECONDS);
         drone.waitUntilElementClickable(NEW_UNFILED_RECORDS_FOLDER_BTN, timeOut);
-        drone.waitUntilElementClickable(NEW_FILE_BTN, timeOut);
+        drone.waitUntilElementClickable(NEW_DECLARE_RECORD_BTN, timeOut);
     }
 
     /**
