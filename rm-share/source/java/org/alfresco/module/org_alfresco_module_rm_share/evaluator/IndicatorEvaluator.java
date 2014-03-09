@@ -61,12 +61,9 @@ public class IndicatorEvaluator extends BaseRMEvaluator
         try
         {
             JSONArray indicators = getRMIndicators(jsonObject);
-            if (indicators != null)
+            if (indicators != null && indicators.contains(indicator))
             {
-                if (indicators.contains(indicator))
-                {
-                    result = true;
-                }
+                result = true;
             }
         }
         catch (Exception err)
