@@ -97,10 +97,8 @@
          // New Hold button: user needs "newHold" access
          this.widgets.newHold = $createYUIButton(this, "newHold-button", this.onNewHold,
          {
-            /*
             disabled: true,
             value: "newHold"
-            */
          });
 
          // File Upload button: user needs "file" access
