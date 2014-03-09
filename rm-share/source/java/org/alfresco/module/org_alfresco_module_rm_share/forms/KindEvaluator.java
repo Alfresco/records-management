@@ -32,21 +32,21 @@ import org.springframework.extensions.surf.util.URLEncoder;
 
 /**
  * File plan component kind forms evaluator.
- * 
+ *
  * @author Roy Wetherall
  */
 public class KindEvaluator extends ServiceBasedEvaluator
 {
     private static final String JSON_KIND = "kind";
-    
+
     private static Log logger = LogFactory.getLog(KindEvaluator.class);
-    
-    protected static final Pattern nodeRefPattern = Pattern.compile(".+://.+/.+");
+
+    protected static final Pattern NODE_REF_PATTERN = Pattern.compile(".+://.+/.+");
 
     /**
      * Determines whether the given node type matches the path of the given
      * object
-     * 
+     *
      * @see org.springframework.extensions.config.evaluator.Evaluator#applies(java.lang.Object,
      *      java.lang.String)
      */
@@ -60,13 +60,13 @@ public class KindEvaluator extends ServiceBasedEvaluator
             // quick test before running slow match for full NodeRef pattern
             if (objAsString.indexOf(':') != -1 || objAsString.startsWith("{") == true)
             {
-                Matcher m = nodeRefPattern.matcher(objAsString);
+                Matcher m = NODE_REF_PATTERN.matcher(objAsString);
                 if (m.matches())
                 {
                     try
                     {
                         String jsonResponseString = callService("/api/rmmetadata?noderef=" + objAsString);
-                        
+
                         if (jsonResponseString != null)
                         {
                             result = checkJsonAgainstCondition(condition, jsonResponseString);
@@ -75,7 +75,7 @@ public class KindEvaluator extends ServiceBasedEvaluator
                         {
                             getLogger().warn("RM metadata service response appears to be null!");
                         }
-                    }                    
+                    }
                     catch (ConnectorServiceException e)
                     {
                         if (getLogger().isWarnEnabled())
@@ -89,7 +89,7 @@ public class KindEvaluator extends ServiceBasedEvaluator
                     try
                     {
                         String jsonResponseString = callService("/api/rmmetadata?type=" + URLEncoder.encodeUriComponent(objAsString));
-                        
+
                         if (jsonResponseString != null)
                         {
                             result = checkJsonAgainstCondition(condition, jsonResponseString);
@@ -98,21 +98,21 @@ public class KindEvaluator extends ServiceBasedEvaluator
                         {
                             getLogger().warn("RM metadata service response appears to be null!");
                         }
-                    }                    
+                    }
                     catch (ConnectorServiceException e)
                     {
                         if (getLogger().isWarnEnabled())
                         {
                             getLogger().warn("Failed to connect to RM metadata service.", e);
                         }
-                    }                    
+                    }
                 }
             }
         }
 
         return result;
     }
-    
+
     protected boolean checkJsonAgainstCondition(String condition, String jsonResponseString)
     {
         boolean result = false;
@@ -120,8 +120,8 @@ public class KindEvaluator extends ServiceBasedEvaluator
         {
             JSONObject json = new JSONObject(new JSONTokener(jsonResponseString));
             String kind = json.getString(JSON_KIND);
-            result = condition.equals(kind);            
-        } 
+            result = condition.equals(kind);
+        }
         catch (JSONException e)
         {
             if (getLogger().isWarnEnabled())
