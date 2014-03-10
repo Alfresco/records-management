@@ -60,6 +60,9 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     private static final By ADD_USER_GROUP_BUTTON = By.cssSelector("button[id$='-addusergroup-button-button']");
     private static final By FINISH_BUTTON = By.cssSelector("button[id$='-finish-button-button']");
     private static final By PROMPT = By.cssSelector("div#prompt div.ft span span button");
+    private static final By INPUT_NAME_SELECTOR = By.name("prop_cm_name");
+    private static final By INPUT_DESCRIPTION_SELECTOR = By.name("prop_cm_description");
+    private static final By INPUT_REASON_SELECTOR = By.name("prop_rma_holdReason");
 
     /** Member variables */
     private HoldsContainer holdsContainer;
@@ -121,6 +124,22 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     public void editDetails()
     {
         clickAction(ACTION_SELECTOR_TEXT_EDIT_DETAILS);
+
+        drone.waitForElement(INPUT_NAME_SELECTOR, 5);
+        WebElement title = drone.find(INPUT_NAME_SELECTOR);
+        title.clear();
+        title.sendKeys("My new name ABC");
+
+        WebElement description = drone.find(INPUT_DESCRIPTION_SELECTOR);
+        description.clear();
+        description.sendKeys("My new description...");
+
+        WebElement reason = drone.find(INPUT_REASON_SELECTOR);
+        reason.clear();
+        reason.sendKeys("My new reason...");
+
+        WebElement saveButton = drone.find(By.cssSelector("button[id$='form-submit-button']"));
+        saveButton.click();
     }
 
     @Test(dependsOnMethods="editDetails")
