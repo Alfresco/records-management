@@ -1,0 +1,5 @@
+<webscript>
+   <shortname>Remove from hold dialog</shortname>
+   <description>A dialog which displays the list of holds which include the item so that the item can be removed from the hold(s)</description>
+   <url>/rm/modules/documentlibrary/hold/remove-from-hold</url>
+</webscript>
