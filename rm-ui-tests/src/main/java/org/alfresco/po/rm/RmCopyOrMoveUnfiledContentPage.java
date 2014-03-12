@@ -50,12 +50,14 @@ public class RmCopyOrMoveUnfiledContentPage extends SharePage
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmCopyOrMoveUnfiledContentPage render(long time)
     {
         return render(new RenderTime(time));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmCopyOrMoveUnfiledContentPage render()
     {

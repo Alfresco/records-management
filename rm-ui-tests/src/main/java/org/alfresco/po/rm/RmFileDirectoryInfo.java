@@ -18,10 +18,7 @@
  */
 package org.alfresco.po.rm;
 
-import java.util.List;
-
 import org.alfresco.po.share.FactorySharePage;
-import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.site.document.FileDirectoryInfoImpl;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.WebDrone;

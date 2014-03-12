@@ -28,13 +28,10 @@ import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
-import org.alfresco.po.share.site.document.FileDirectoryInfoImpl;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -46,8 +43,6 @@ import org.openqa.selenium.WebElement;
  */
 public class UnfiledRecordsContainer extends FilePlanPage
 {
-    private static Log logger = LogFactory.getLog(UnfiledRecordsContainer.class);
-
     private static final By MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-unfiledManageRules-button-button']");
 
     /**
