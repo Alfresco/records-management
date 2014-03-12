@@ -8,7 +8,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 
 public class RmCopyOrMoveUnfiledContentPage extends SharePage
 {
@@ -83,9 +82,6 @@ public class RmCopyOrMoveUnfiledContentPage extends SharePage
             WebElement okButton = drone.findAndWait(By.xpath("//button[contains(@id,'ok-button')]"), PATH_EXPAND_MAX_WAIT);
             okButton.click();
         }
-        catch(TimeoutException e)
-        {
-            Assert.fail("Unable to select path <" + path + ">");
-        }
+        catch(TimeoutException e) { }
     }
 }
