@@ -46,6 +46,19 @@
    YAHOO.extend(Alfresco.rm.module.RemoveFromHold, Alfresco.component.Base,
    {
       /**
+       * Object container for initialization options
+       */
+      options:
+      {
+         /**
+          * Node reference of the item which will be removed from the hold(s)
+          * @type string
+          * @default null
+          */
+         itemNodeRef: null
+      },
+
+      /**
        * Selected holds.
        *
        * @property selectedNode
@@ -80,7 +93,7 @@
                   fn: this.onTemplateLoaded,
                   scope: this
                },
-               failureMessage: Alfresco.util.message("failure.template.not.loaded"),
+               failureMessage: this.msg("failure.template.not.loaded"),
                execScripts: true
             });
          }
@@ -105,10 +118,6 @@
          // Create the panel
          this.widgets.dialog = Alfresco.util.createYUIPanel(dialogDiv);
 
-         // Setup data table
-         this._setupDataSource();
-         this._setupDataTable();
-
          // OK button
          this.widgets.okButton = Alfresco.util.createYUIButton(this, "ok", this.onOK);
 
@@ -128,14 +137,14 @@
       _setupDataSource: function RemoveFromHold__setupDataSource()
       {
          // DataSource definition
-         var uriHolds = Alfresco.constants.PROXY_URI + "api/rma/holds";
+         var uriHolds = encodeURI(Alfresco.constants.PROXY_URI + "api/rma/holds?itemNodeRef=" + this.options.itemNodeRef);
          this.widgets.listDataSource = new YAHOO.util.DataSource(uriHolds,
          {
             responseType: YAHOO.util.DataSource.TYPE_JSON,
             connXhrMode: "queueRequests",
             responseSchema:
             {
-                resultsList: "data.holds"
+               resultsList: "data.holds"
             }
          });
       },
@@ -164,24 +173,24 @@
             scrollable: true,
             height: "300px",
             width: "200px",
-            MSG_EMPTY: Alfresco.util.message("message.loading.holds")
+            MSG_EMPTY: this.msg("message.empty.holds")
          });
 
-       var me = this;
+         var me = this;
          this.widgets.listDataTable.on('checkboxClickEvent', function (oArgs)
          {
             var checkbox = oArgs.target,
                checked = checkbox.checked,
-            record = this.getRecord(checkbox),
-            nodeRef = record.getData("nodeRef");
-         if (checked)
-         {
-            me.selectedHolds.push(nodeRef);
-         }
-         else
-         {
-            Alfresco.util.arrayRemove(me.selectedHolds, nodeRef);
-         }
+               record = this.getRecord(checkbox),
+               nodeRef = record.getData("nodeRef");
+            if (checked)
+            {
+               me.selectedHolds.push(nodeRef);
+            }
+            else
+            {
+               Alfresco.util.arrayRemove(me.selectedHolds, nodeRef);
+            }
          });
       },
 
@@ -194,13 +203,56 @@
        */
       onOK: function RemoveFromHold_onOK(e, p_obj)
       {
-         this.widgets.escapeListener.disable();
-         this.widgets.dialog.hide();
+         if (this.selectedHolds.length > 0)
+         {
+            Alfresco.util.Ajax.request(
+            {
+               url: encodeURI(Alfresco.constants.PROXY_URI + "api/rma/holds"),
+               method: Alfresco.util.Ajax.PUT,
+               dataObj:
+               {
+                  "nodeRef": this.options.itemNodeRef,
+                  "holds": this.selectedHolds
+               },
+               requestContentType: Alfresco.util.Ajax.JSON,
+               successCallback:
+               {
+                  fn: function(response)
+                  {
+                     Alfresco.util.PopupManager.displayMessage(
+                     {
+                        text: this.msg("message.remove-success")
+                     });
+                     this._reset();
+                  },
+                  scope: this
+               },
+               failureCallback:
+               {
+                  fn: function(response)
+                  {
+                     var json = Alfresco.util.parseJSON(response.serverResponse.responseText),
+                        failureMsg = response.serverResponse.responseText;
+                     if (json != null && json.message != null)
+                     {
+                        failureMsg = json.message;
+                     }
 
-         // FIXME!!!
-         alert(this.selectedHolds);
-
-         this._reset();
+                     Alfresco.util.PopupManager.displayPrompt(
+                     {
+                        title: this.msg("message.failure"),
+                        text: this.msg("message.remove-failure", failureMsg)
+                     });
+                     this._reset();
+                  },
+                  scope: this
+               }
+            });
+         }
+         else
+         {
+            this._reset()
+         }
       },
 
       /**
@@ -212,24 +264,23 @@
        */
       onCancel: function RemoveFromHold_onCancel(e, p_obj)
       {
-         this.widgets.escapeListener.disable();
-         this.widgets.dialog.hide();
-       this._reset();
+         this._reset();
       },
 
-     /**
-      * Resets the array which keeps the selected holds and
-      * also the checkboxes will be resetted.
-      *
-      * @method _reset
-      * @private
-      */
-     _reset: function RemoveFromHold__reset()
-     {
-        // FIXME!!!
-        // Chechboxes must be resetted
-        this.selectedHolds = [];
-     },
+      /**
+       * Disables the escape listener,
+       * hides the dialog and
+       * resets the array which keeps the selected holds.
+       *
+       * @method _reset
+       * @private
+       */
+      _reset: function RemoveFromHold__reset()
+      {
+         this.widgets.escapeListener.disable();
+         this.widgets.dialog.hide();
+         this.selectedHolds = [];
+      },
 
       /**
        * Prepares the gui and shows the dialog.
@@ -239,6 +290,10 @@
        */
       _showDialog: function RemoveFromHold__showDialog()
       {
+         // Setup data table
+         this._setupDataSource();
+         this._setupDataTable();
+
          // Show the upload dialog
          this.widgets.dialog.show();
 

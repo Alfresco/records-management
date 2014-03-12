@@ -1,4 +1,11 @@
 <#assign el=args.htmlid?html>
+
+<script type="text/javascript">//<![CDATA[
+   new Alfresco.rm.module.RemoveFromHold("${el}").setMessages(
+      ${messages}
+   );
+//]]></script>
+
 <div id="${el}-dialog">
    <div id="${el}-title" class="hd">${msg("header.remove-hold")}</div>
    <div class="bd">
