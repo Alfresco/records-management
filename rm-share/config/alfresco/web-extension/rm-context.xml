@@ -155,8 +155,14 @@
    <bean id="evaluator.rm.action.copyRecord" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="copyRecord" />
    </bean>
+   <bean id="evaluator.rm.action.copyUnfiledRecord" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="copyUnfiledRecord" />
+   </bean>
    <bean id="evaluator.rm.action.copyRecordFolder" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="copyRecordFolder" />
+   </bean>
+   <bean id="evaluator.rm.action.copyUnfiledRecordFolder" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="copyUnfiledRecordFolder" />
    </bean>
    <bean id="evaluator.rm.action.copyRecordCategory" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="copyRecordCategory" />
@@ -164,8 +170,14 @@
    <bean id="evaluator.rm.action.moveRecord" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="moveRecord" />
    </bean>
+   <bean id="evaluator.rm.action.moveUnfiledRecord" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="moveUnfiledRecord" />
+   </bean>
    <bean id="evaluator.rm.action.moveRecordFolder" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="moveRecordFolder" />
+   </bean>
+   <bean id="evaluator.rm.action.moveUnfiledRecordFolder" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="moveUnfiledRecordFolder" />
    </bean>
    <bean id="evaluator.rm.action.moveRecordCategory" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="moveRecordCategory" />

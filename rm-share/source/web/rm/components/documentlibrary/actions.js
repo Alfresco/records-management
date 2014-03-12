@@ -139,6 +139,17 @@
       },
 
       /**
+       * Copy single unfiled document or folder.
+       *
+       * @method onActionCopyUnfiledTo
+       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+       */
+      onActionCopyUnfiledTo: function RDLA_onActionCopyTo(assets)
+      {
+         this._copyMoveLinkFileToUnfiled("copy", assets);
+      },
+
+      /**
        * Copy record.
        *
        * @method onActionCopyRecordTo
@@ -150,6 +161,17 @@
       },
 
       /**
+       * Copy unfiled record.
+       *
+       * @method onActionCopyUnfiledRecordTo
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       */
+      onActionCopyUnfiledRecordTo: function RDLA_onActionCopyTo(assets)
+      {
+         this.onActionCopyUnfiledTo(assets);
+      },
+
+      /**
        * Copy record folder.
        *
        * @method onActionCopyRecordFolderTo
@@ -158,6 +180,17 @@
       onActionCopyRecordFolderTo: function RDLA_onActionCopyTo(assets)
       {
          this.onActionCopyTo(assets);
+      },
+
+      /**
+       * Copy unfiled record folder.
+       *
+       * @method onActionCopyUnfiledRecordFolderTo
+       * @param assets {object} Object literal representing one or more record folder(s) to be actioned
+       */
+      onActionCopyUnfiledRecordFolderTo: function RDLA_onActionCopyTo(assets)
+      {
+         this.onActionCopyUnfiledTo(assets);
       },
 
       /**
@@ -191,6 +224,17 @@
       onActionMoveTo: function RDLA_onActionMoveTo(assets)
       {
          this._copyMoveLinkFileTo("move", assets);
+      },
+
+      /**
+       * Move single unfiled document or folder.
+       *
+       * @method onActionMoveToUnfiled
+       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+       */
+      onActionMoveToUnfiled: function RDLA_onActionMoveTo(assets)
+      {
+         this._copyMoveLinkFileToUnfiled("move", assets);
       },
 
       /**
@@ -1091,7 +1135,6 @@
          }
       },
 
-
       /**
        * Private action helper functions
        */
@@ -1129,9 +1172,49 @@
             siteId: this.options.siteId,
             containerId: this.options.containerId,
             path: this.currentPath,
-            files: assets
+            files: assets,
+            unfiled: false
          }).showDialog();
       },
+
+     /**
+      * Copy/Move/Link/File To implementation for unfiled.
+      *
+      * @method _copyMoveLinkUnfi,edFileTo
+      * @param mode {String} Operation mode: copy|move|link|file
+      * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+      * @private
+      */
+
+     _copyMoveLinkFileToUnfiled: function RDLA__copyMoveLinkFileToUnfiled(mode, assets)
+     {
+        // Check mode is an allowed one
+        if (!mode in
+           {
+              copy: true,
+              move: true,
+              link: true,
+              file: true
+           })
+        {
+           throw new Error("'" + mode + "' is not a valid Copy/Move/Link/File to mode.");
+        }
+
+        if (!this.modules.copyMoveLinkFileTo)
+        {
+           this.modules.copyMoveLinkFileTo = new Alfresco.rm.module.CopyMoveLinkFileTo(this.id + "-copyMoveLinkFileTo");
+        }
+
+        this.modules.copyMoveLinkFileTo.setOptions(
+        {
+           mode: mode,
+           siteId: this.options.siteId,
+           containerId: this.options.containerId,
+           path: "/Unfiled Records",
+           files: assets,
+           unfiled: true
+        }).showDialog();
+     },
 
       /**
        * Transfer and Accession action result processing.

@@ -268,6 +268,42 @@
           });
 
           return url;
+       },
+
+       /**
+        * Creates the TreeView control and renders it to the parent element.
+        *
+        * @method _buildTree
+        * @private
+        */
+       _buildTree: function RMCMLFT__buildTree()
+       {
+          Alfresco.logger.debug("RMCMLFT__buildTree");
+
+          // Create a new tree
+          var tree = new YAHOO.widget.TreeView(this.id + "-treeview");
+          this.widgets.treeview = tree;
+
+          // Having both focus and highlight are just confusing (YUI 2.7.0 addition)
+          YAHOO.widget.TreeView.FOCUS_CLASS_NAME = "";
+
+          // Turn dynamic loading on for entire tree
+          tree.setDynamicLoad(this.fnLoadNodeData);
+
+          // Add default top-level node
+          var tempNode = new YAHOO.widget.TextNode(
+          {
+             label: (this.options.unfiled ? this.msg("node.unfiledroot") : this.msg("node.root")),
+             path: (this.options.unfiled ? "/Unfiled Records" : "/"),
+             nodeRef: ""
+          }, tree.getRoot(), false);
+
+          // Register tree-level listeners
+          tree.subscribe("clickEvent", this.onNodeClicked, this, true);
+          tree.subscribe("expandComplete", this.onExpandComplete, this, true);
+
+          // Render tree with this one top-level node
+          tree.render();
        }
    });
 

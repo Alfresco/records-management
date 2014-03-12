@@ -134,7 +134,17 @@
    background-image: url(actions/rm-copy-record-to-16.png);
 }
 
+.toolbar .onActionCopyUnfiledRecordTo
+{
+   background-image: url(actions/rm-copy-record-to-16.png);
+}
+
 .toolbar .onActionCopyRecordFolderTo
+{
+   background-image: url(actions/rm-copy-folder-to-16.png);
+}
+
+.toolbar .onActionCopyUnfiledRecordFolderTo
 {
    background-image: url(actions/rm-copy-folder-to-16.png);
 }
@@ -149,7 +159,17 @@
    background-image: url(images/move-record-to-16.png);
 }
 
+.toolbar .onActionMoveUnfiledRecordTo
+{
+   background-image: url(images/move-record-to-16.png);
+}
+
 .toolbar .onActionMoveRecordFolderTo
+{
+   background-image: url(images/move-folder-to-16.png);
+}
+
+.toolbar .onActionMoveUnfiledRecordFolderTo
 {
    background-image: url(images/move-folder-to-16.png);
 }
