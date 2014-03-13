@@ -40,7 +40,7 @@ public abstract class BaseRMEvaluator extends BaseEvaluator
         // TODO .. need to check the type of the site (not assume the id of the site)
         // TODO .. need to ensure this is a record (not something else)
 
-        if (rmNode != null && siteId != null && siteId.equals("rm") == false)
+        if (rmNode != null && siteId != null && !siteId.equals("rm"))
         {
             result = true;
         }
