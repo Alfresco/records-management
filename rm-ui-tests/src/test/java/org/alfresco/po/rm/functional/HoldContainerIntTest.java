@@ -50,6 +50,7 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     /** Constants for the new hold dialog */
     private static final String NAME = "New Hold";
     private static final String REASON = "Reason for hold";
+    private static final String EDITED_NAME = "Edited Name";
 
     /** Selectors */
     private static final String ACTION_SELECTOR_TEXT_MANAGE_PERMISSONS = "div.rm-manage-permissions>a";
@@ -86,10 +87,10 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
      *
      * @param selector {@link String} The selector text for the action to select
      */
-    private void clickAction(String selector)
+    private void clickAction(String selector, String name)
     {
         holdsContainer = selectHoldsContainer();
-        FileDirectoryInfo hold = holdsContainer.getFileDirectoryInfo(NAME);
+        FileDirectoryInfo hold = holdsContainer.getFileDirectoryInfo(name);
         WebElement actions = hold.findElement(By.cssSelector(ACTIONS));
         drone.mouseOverOnElement(actions);
         hold.findElement(By.cssSelector(selector)).click();
@@ -117,18 +118,18 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     @Test(dependsOnMethods="managePermissionsForRoot")
     public void managePermissions()
     {
-        clickAction(ACTION_SELECTOR_TEXT_MANAGE_PERMISSONS);
+        clickAction(ACTION_SELECTOR_TEXT_MANAGE_PERMISSONS, NAME);
     }
 
     @Test(dependsOnMethods="managePermissions")
     public void editDetails()
     {
-        clickAction(ACTION_SELECTOR_TEXT_EDIT_DETAILS);
+        clickAction(ACTION_SELECTOR_TEXT_EDIT_DETAILS, NAME);
 
         drone.waitForElement(INPUT_NAME_SELECTOR, 5);
         WebElement title = drone.find(INPUT_NAME_SELECTOR);
         title.clear();
-        title.sendKeys("My new name ABC");
+        title.sendKeys(EDITED_NAME);
 
         WebElement description = drone.find(INPUT_DESCRIPTION_SELECTOR);
         description.clear();
@@ -145,7 +146,7 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     @Test(dependsOnMethods="editDetails")
     public void deleteHold()
     {
-        clickAction(ACTION_SELECTOR_TEXT_DELETE);
+        clickAction(ACTION_SELECTOR_TEXT_DELETE, EDITED_NAME);
         RmPageObjectUtils.select(drone, PROMPT);
     }
 }

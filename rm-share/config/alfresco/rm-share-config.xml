@@ -153,13 +153,6 @@
             <line index="10" id="holdReason">{RM_holdReason details.hold-container.reason}</line>
          </template>
 
-         <!-- Hold Container Child -->
-         <template id="rmHoldContainerChild">
-            <evaluator>evaluator.rm.common.isHoldContainerChild</evaluator>
-            <title>{RM_holdContainerChild}</title>
-            <line index="10" id="holdReason">{RM_holdReason details.hold-container.reason}</line>
-         </template>
-
          <!-- Unfiled Records Container Child -->
          <template id="rmUnfiledRecordsContainerChild">
             <evaluator>evaluator.rm.unfiledRecordsContainerChild</evaluator>
@@ -810,15 +803,15 @@
          </actionGroup>
 
          <actionGroup id="rm-hold-container-browse">
-            <action index="100" id="rm-relinquish" />
-            <action index="110" id="rm-unfreeze-all" />
-            <action index="120" id="rm-edit-reason" />
+            <action index="100" id="rm-edit-details" label="action.edit.hold"/>
+            <action index="110" id="rm-manage-permissions" />
+            <action index="120" id="rm-delete" label="actions.delete.hold" />
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
          <actionGroup id="rm-hold-container-details">
-            <action index="100" id="rm-relinquish" />
-            <action index="110" id="rm-unfreeze-all" />
-            <action index="120" id="rm-edit-reason" />
+            <action index="100" id="rm-edit-details" label="action.edit.hold"/>
+            <action index="110" id="rm-manage-permissions" />
+            <action index="120" id="rm-delete" label="actions.delete.hold" />
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
 
@@ -840,12 +833,6 @@
             <action index="120" id="rm-delete" label="actions.delete" />
             <action index="130" id="rm-view-audit-log" />
             <action index="140" id="rm-manage-rules" />
-         </actionGroup>
-
-         <actionGroup id="rm-hold-container-child-browse">
-            <action index="100" id="rm-edit-details" label="action.edit.hold"/>
-            <action index="110" id="rm-manage-permissions" />
-            <action index="120" id="rm-delete" label="actions.delete.hold" />
          </actionGroup>
 
          <!--  Extensions to the standard DM UI actions -->

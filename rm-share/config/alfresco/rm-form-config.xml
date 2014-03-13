@@ -292,14 +292,14 @@
       </forms>
    </config>
 
-   <config evaluator="model-type" condition="rma:holdContainerChild">
+   <config evaluator="model-type" condition="rma:hold">
       <forms>
          <form>
             <field-visibility>
                <show id="cm:name" force="true"/>
                <show id="cm:description" force="true" />
                <show id="rma:holdReason" force="true" />
-               <show id="deleteEmpty" force="true" />
+               <show id="rma:deleteWhenEmpty" force="true" />
             </field-visibility>
             <create-form template="/org/alfresco/rm/components/form/create-container.ftl" />
             <appearance>
@@ -314,7 +314,7 @@
                <field id="rma:holdReason" label-id="label.hold.reason" mandatory="true">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl" />
                </field>
-               <field id="deleteEmpty" label-id="label.hold.delete.empty">
+               <field id="rma:deleteWhenEmpty" label-id="label.hold.delete.empty">
                   <control template="/org/alfresco/components/form/controls/checkbox.ftl" />
                </field>
             </appearance>
@@ -322,14 +322,14 @@
       </forms>
    </config>
 
-   <config evaluator="node-type" condition="rma:holdContainerChild">
+   <config evaluator="node-type" condition="rma:hold">
       <forms>
          <form>
             <field-visibility>
                <show id="cm:name" />
                <show id="cm:description" />
                <show id="rma:holdReason" force="true" />
-               <show id="deleteEmpty" force="true" />
+               <show id="rma:deleteWhenEmpty" force="true" />
             </field-visibility>
             <appearance>
                <field id="cm:name" mandatory="true">
@@ -343,7 +343,7 @@
                <field id="rma:holdReason" label-id="label.hold.reason" mandatory="true">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl" />
                </field>
-               <field id="deleteEmpty" label-id="label.hold.delete.empty">
+               <field id="rma:deleteWhenEmpty" label-id="label.hold.delete.empty">
                   <control template="/org/alfresco/components/form/controls/checkbox.ftl" />
                </field>
             </appearance>

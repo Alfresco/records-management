@@ -547,7 +547,7 @@
        */
       onNewHold: function DLTB_onNewHold(e, p_obj)
       {
-         this._newContainer("rma:holdContainerChild");
+         this._newContainer("rma:hold");
       },
 
       /**
@@ -641,7 +641,7 @@
             case "rma:unfiledRecordContainerChild":
                message = "message.new-unfiledRecordsFolder.";
                break;
-            case "rma:holdContainerChild":
+            case "rma:hold":
                message = "message.new-hold.";
                break;
             default:

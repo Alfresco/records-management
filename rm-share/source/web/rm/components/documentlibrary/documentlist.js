@@ -116,22 +116,22 @@
          });
 
          // Hold Container title
+         //this.registerRenderer("RM_holdContainer", function rma_holdContainer(record, label)
+         //{
+         //   var createdOn = $date(record.jsNode.properties.created.iso8601, this.msg("details.hold-container.title.date-format")),
+         //      holdTitle = this.msg("details.hold-container.title",  createdOn),
+         //      filterObj =
+         //      {
+         //         filterId: "holds",
+         //         filterData: record.nodeRef,
+         //         filterDisplay: holdTitle
+         //      };
+
+         //   return '<h3 class="filename"><a class="filter-change" href="#" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '">' + $html(holdTitle) + '</a></h3>';
+         //});
+
+         // Hold Container title
          this.registerRenderer("RM_holdContainer", function rma_holdContainer(record, label)
-         {
-            var createdOn = $date(record.jsNode.properties.created.iso8601, this.msg("details.hold-container.title.date-format")),
-               holdTitle = this.msg("details.hold-container.title",  createdOn),
-               filterObj =
-               {
-                  filterId: "holds",
-                  filterData: record.nodeRef,
-                  filterDisplay: holdTitle
-               };
-
-            return '<h3 class="filename"><a class="filter-change" href="#" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '">' + $html(holdTitle) + '</a></h3>';
-         });
-
-         // Hold Container Child title
-         this.registerRenderer("RM_holdContainerChild", function rma_holdContainerChild(record, label)
          {
             var holdName = $html(record.jsNode.properties.cm_name),
                filterObj =
