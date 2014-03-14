@@ -130,8 +130,8 @@
          //   return '<h3 class="filename"><a class="filter-change" href="#" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '">' + $html(holdTitle) + '</a></h3>';
          //});
 
-         // Hold Container title
-         this.registerRenderer("RM_holdContainer", function rma_holdContainer(record, label)
+         // Hold title
+         this.registerRenderer("RM_hold", function rma_hold(record, label)
          {
             var holdName = $html(record.jsNode.properties.cm_name),
                filterObj =
@@ -218,7 +218,7 @@
          // Hold Reason
          this.registerRenderer("RM_holdReason", function(record, label)
          {
-            var holdReason = $html(record.jsNode.properties.rma_holdReason) || scope.msg("details.hold-container.reason.none");
+            var holdReason = $html(record.jsNode.properties.rma_holdReason) || scope.msg("details.hold.reason.none");
 
             return '<span class="item">' + label + holdReason + '</span>';
          });
@@ -276,8 +276,7 @@
                   case "record-folder":
                   case "metadata-stub-folder":
                   case "transfer-container":
-                  case "hold-container":
-                  case "hold-container-child":
+                  case "hold":
                   case "unfiled-record-container-child":
                      elCell.innerHTML = '<span class="folder-small">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generatePathMarkup(locn) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-32.png" /></a>';
                      break;
@@ -322,8 +321,7 @@
                   case "record-folder":
                   case "metadata-stub-folder":
                   case "transfer-container":
-                  case "hold-container":
-                  case "hold-container-child":
+                  case "hold":
                   case "unfiled-record-container-child":
                      elCell.innerHTML = '<span class="folder">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generatePathMarkup(locn) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-48.png" /></a>';
                      break;

@@ -71,8 +71,8 @@
    <bean id="evaluator.rm.common.isTransferContainer" parent="evaluator.rm.common.uiType">
       <property name="type" value="transfer-container" />
    </bean>
-   <bean id="evaluator.rm.common.isHoldContainer" parent="evaluator.rm.common.uiType">
-      <property name="type" value="hold-container" />
+   <bean id="evaluator.rm.common.isHold" parent="evaluator.rm.common.uiType">
+      <property name="type" value="hold" />
    </bean>
    <bean id="evaluator.rm.common.isElectronicRecord" parent="evaluator.rm.common.indicatorEvaluator">
       <property name="indicator" value="nonElectronic" />

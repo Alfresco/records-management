@@ -146,11 +146,11 @@
             <line index="20" id="accessionIndicator">{rma_transferAccessionIndicator details.transfer-container.is-accession}</line>
          </template>
 
-         <!-- Hold Container -->
-         <template id="rmHoldContainer">
-            <evaluator>evaluator.rm.common.isHoldContainer</evaluator>
-            <title>{RM_holdContainer}</title>
-            <line index="10" id="holdReason">{RM_holdReason details.hold-container.reason}</line>
+         <!-- Hold -->
+         <template id="rmHold">
+            <evaluator>evaluator.rm.common.isHold</evaluator>
+            <title>{RM_hold}</title>
+            <line index="10" id="holdReason">{RM_holdReason details.hold.reason}</line>
          </template>
 
          <!-- Unfiled Records Container Child -->
@@ -802,13 +802,13 @@
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
 
-         <actionGroup id="rm-hold-container-browse">
+         <actionGroup id="rm-hold-browse">
             <action index="100" id="rm-edit-details" label="action.edit.hold"/>
             <action index="110" id="rm-manage-permissions" />
             <action index="120" id="rm-delete" label="actions.delete.hold" />
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
-         <actionGroup id="rm-hold-container-details">
+         <actionGroup id="rm-hold-details">
             <action index="100" id="rm-edit-details" label="action.edit.hold"/>
             <action index="110" id="rm-manage-permissions" />
             <action index="120" id="rm-delete" label="actions.delete.hold" />
