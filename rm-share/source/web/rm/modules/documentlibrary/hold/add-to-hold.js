@@ -18,10 +18,10 @@
  */
 
 /**
- * Dialog to remove a record or a folder from hold(s).
+ * Dialog to add a record or a folder to hold(s).
  *
  * @namespace Alfresco.rm.module
- * @class Alfresco.rm.module.RemoveFromHold
+ * @class Alfresco.rm.module.AddToHold
  */
 (function()
 {
@@ -31,44 +31,44 @@
    var KeyListener = YAHOO.util.KeyListener;
 
    /**
-    * RemoveFromHold constructor.
+    * AddToHold constructor.
     *
     * @param htmlId {string} A unique id for this component
-    * @return {Alfresco.rm.module.RemoveFromHold} The new RemoveFromHold instance
+    * @return {Alfresco.rm.module.AddToHold} The new AddToHold instance
     * @constructor
     */
-   Alfresco.rm.module.RemoveFromHold = function(htmlId)
+   Alfresco.rm.module.AddToHold = function(htmlId)
    {
-      Alfresco.rm.module.RemoveFromHold.superclass.constructor.call(this, "Alfresco.rm.module.RemoveFromHold", htmlId);
+      Alfresco.rm.module.AddToHold.superclass.constructor.call(this, "Alfresco.rm.module.AddToHold", htmlId);
       return this;
    };
 
-   YAHOO.extend(Alfresco.rm.module.RemoveFromHold, Alfresco.rm.module.Hold,
+   YAHOO.extend(Alfresco.rm.module.AddToHold, Alfresco.rm.module.Hold,
    {
       /**
        * Indicates whether the holds should be retrieved which include the itemNodeRef
        *
        * @type boolean
-       * @default true
+       * @default false
        */
-      includedInHold: true,
+      includedInHold: false,
 
       /**
        * The URL for the dialog template
        *
        * @property templateUrl
        * @type string
-       * @default Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/hold/remove-from-hold"
+       * @default Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/hold/add-to-hold"
        */
-      templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/hold/remove-from-hold",
+      templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/hold/add-to-hold",
 
       /**
        * The ajax request method type when the user clicks on the OK button
        *
        * @property onOKAjaxRequestMethodType
        * @type string
-       * @default Alfresco.util.Ajax.PUT
+       * @default Alfresco.util.Ajax.POST
        */
-      onOKAjaxRequestMethodType: Alfresco.util.Ajax.PUT
+      onOKAjaxRequestMethodType: Alfresco.util.Ajax.POST
    });
 })();

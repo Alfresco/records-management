@@ -1,7 +1,7 @@
 <#assign el=args.htmlid?html>
 
 <script type="text/javascript">//<![CDATA[
-   new Alfresco.rm.module.RemoveFromHold("${el}").setMessages(
+   new Alfresco.rm.module.AddToHold("${el}").setMessages(
       ${messages}
    );
 //]]></script>
