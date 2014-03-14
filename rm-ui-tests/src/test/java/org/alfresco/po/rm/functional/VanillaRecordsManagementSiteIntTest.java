@@ -18,14 +18,16 @@
  */
 package org.alfresco.po.rm.functional;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
 import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
-import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;
-import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
-import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
-import org.alfresco.po.share.site.document.FileDirectoryInfo;
+import org.alfresco.po.rm.fileplan.RecordDetailsPage;
 import org.alfresco.po.share.util.FailedTestListener;
+import org.alfresco.po.share.util.SiteUtil;
+import org.junit.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -48,56 +50,43 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         // log into Share
         login(username, password);
     }
+    
+    private FilePlanPage loadTestData() throws IOException
+    {
+        // get file plan root
+        FilePlanPage filePlan = FilePlanPage.getFilePlanRoot(rmSiteDashBoard);
+
+        // create new category
+        filePlan = createNewCategory(filePlan, NAME, TITLE, DESC);
+        
+        // click on category
+        filePlan = filePlan.selectCategory(NAME, drone.getDefaultWaitTime()).render();
+
+        // create record folder
+        filePlan = createNewRecordFolder(filePlan, NAME, TITLE, DESC);
+
+        // click on record folder
+        filePlan = filePlan.selectFolder(NAME, drone.getDefaultWaitTime()).render();
+
+        // file a record        
+        return fileElectronicToRecordFolder(filePlan);
+        
+    }
 
     @Test
     public void testDODSite() throws Exception
     {
         // create DOD site
         createRMSite(RMSiteCompliance.DOD5015);
-
-        FilePlanPage filePlan = rmSiteDashBoard.getRMNavigation().selectFilePlan();
-        filePlan.setInFilePlanRoot(true);
-        filePlan = filePlan.render();
-
-        CreateNewRecordCategoryDialog createNewCategory = filePlan.selectCreateNewCategory().render();
-        createNewCategory.enterName(NAME);
-        createNewCategory.enterTitle(TITLE);
-        createNewCategory.enterDescription(DESC);
-
-        filePlan = ((FilePlanPage) createNewCategory.selectSave());
-        filePlan.setInFilePlanRoot(true);
-        filePlan = filePlan.render(NAME);
-
-        FileDirectoryInfo recordCategory = filePlan.getFileDirectoryInfo(NAME);
-        recordCategory.clickOnTitle();
-        filePlan.setInRecordCategory(true);
-        filePlan = filePlan.render();
-
-        // create record folder
-        CreateNewRecordFolderDialog createNewFolder = filePlan.selectCreateNewFolder().render();
-        createNewFolder.enterName(NAME);
-        createNewFolder.enterTitle(TITLE);
-        createNewFolder.enterDescription(DESC);
-
-        filePlan = ((FilePlanPage) createNewFolder.selectSave());
-        filePlan.setInRecordCategory(true);
-        filePlan = filePlan.render(NAME);
-
-        FileDirectoryInfo recordFolder = filePlan.getFileDirectoryInfo(NAME);
-        recordFolder.clickOnTitle();
-        filePlan.setInRecordFolder(true);
-        filePlan = filePlan.render();
-
-        // file a record
-        UnfiledRecordsContainer unfiledRecordsContainer = filePlan.getFilePlanFilter().selectUnfiledRecordsContainer();
-        RmUploadFilePage rmRecordFileDialog = unfiledRecordsContainer.selectCreateNewUnfiledRecordsContainerFile().render();
-        String fileName = Long.valueOf(System.currentTimeMillis()).toString();
-        fileElectronicRecordToFilePlan(drone, rmRecordFileDialog, fileName);
-        filePlan.setInRecordFolder(true);
-        filePlan = filePlan.render(fileName);
-
-        // FIXME: view record details
-
+        FilePlanPage filePlan = loadTestData();
+        
+        // view record details
+        RecordDetailsPage recordDetails = filePlan.selectRecord(0, drone.getDefaultWaitTime());
+        recordDetails.render();
+        
+        // check that the DOD properties are visible
+        Assert.assertTrue(recordDetails.isPropertySetVisible("DOD5015"));
+        
         // delete DOD site
         deleteRMSite();
     }
@@ -107,51 +96,37 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
     {
         // create vanilla site
         createRMSite();
+        FilePlanPage filePlan = loadTestData();
 
-        FilePlanPage filePlan = rmSiteDashBoard.getRMNavigation().selectFilePlan();
-        filePlan.setInFilePlanRoot(true);
-        filePlan = filePlan.render();
-
-        CreateNewRecordCategoryDialog createNewCategory = filePlan.selectCreateNewCategory().render();
-        createNewCategory.enterName(NAME);
-        createNewCategory.enterTitle(TITLE);
-        createNewCategory.enterDescription(DESC);
-
-        filePlan = ((FilePlanPage) createNewCategory.selectSave());
-        filePlan.setInFilePlanRoot(true);
-        filePlan = filePlan.render(NAME);
-
-        FileDirectoryInfo recordCategory = filePlan.getFileDirectoryInfo(NAME);
-        recordCategory.clickOnTitle();
-        filePlan.setInRecordCategory(true);
-        filePlan = filePlan.render();
-
-        // create record folder
-        CreateNewRecordFolderDialog createNewFolder = filePlan.selectCreateNewFolder().render();
-        createNewFolder.enterName(NAME);
-        createNewFolder.enterTitle(TITLE);
-        createNewFolder.enterDescription(DESC);
-
-        filePlan = ((FilePlanPage) createNewFolder.selectSave());
-        filePlan.setInRecordCategory(true);
-        filePlan = filePlan.render(NAME);
-
-        FileDirectoryInfo recordFolder = filePlan.getFileDirectoryInfo(NAME);
-        recordFolder.clickOnTitle();
-        filePlan.setInRecordFolder(true);
-        filePlan = filePlan.render();
-
-        // file a record
-        UnfiledRecordsContainer unfiledRecordsContainer = filePlan.getFilePlanFilter().selectUnfiledRecordsContainer();
-        RmUploadFilePage rmRecordFileDialog = unfiledRecordsContainer.selectCreateNewUnfiledRecordsContainerFile().render();
-        String fileName = Long.valueOf(System.currentTimeMillis()).toString();
-        fileElectronicRecordToFilePlan(drone, rmRecordFileDialog, fileName);
-        filePlan.setInRecordFolder(true);
-        filePlan = filePlan.render();
-
-        // FIXME: view record details
+        // view record details
+        RecordDetailsPage recordDetails = filePlan.selectRecord(0, drone.getDefaultWaitTime());
+        recordDetails.render();
+        
+        // check that the DOD properties are visible
+        Assert.assertFalse(recordDetails.isPropertySetVisible("DOD5015"));
 
         // delete RM vanilla site
         deleteRMSite();
+    }
+        
+    private FilePlanPage fileElectronicToRecordFolder(FilePlanPage filePlan) throws IOException
+    {
+        // generate random file name
+        String fileName = Long.valueOf(System.currentTimeMillis()).toString();
+        
+        // open file dialog
+        RmUploadFilePage rmRecordFileDialog = filePlan.selectFile(); 
+        
+        // select to upload electronic record
+        rmRecordFileDialog.selectElectronic(drone);
+
+        // upload file
+        File file = SiteUtil.prepareFile(fileName);
+        String filePath = file.getCanonicalPath();
+        filePlan = (FilePlanPage)rmRecordFileDialog.uploadFile(filePath);
+        
+        // render file plan
+        filePlan.setInRecordFolder(true);
+        return filePlan.render(fileName);        
     }
 }

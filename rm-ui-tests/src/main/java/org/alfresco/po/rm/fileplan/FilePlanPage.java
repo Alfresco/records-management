@@ -18,9 +18,12 @@
  */
 package org.alfresco.po.rm.fileplan;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.alfresco.po.rm.RmFolderRulesPage;
+import org.alfresco.po.rm.RmSiteDashBoardPage;
+import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
@@ -48,12 +51,13 @@ public class FilePlanPage extends DocumentLibraryPage
     protected static final By MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-manageRules-button-button']");
     protected static final By NEW_CATEGORY_BTN = By.cssSelector("button[id$='default-newCategory-button-button']");
     protected static final By NEW_FOLDER_BTN = By.cssSelector("button[id$='default-newFolder-button-button']");
-    protected static final By NEW_DECLARE_RECORD_BTN = By.cssSelector("button[id$='default-declareRecord-button-button']");
-    protected static final By NEW_UNFILED_RECORDS_FOLDER_BTN = By.cssSelector("button[id$='default-newUnfiledRecordsFolder-button-button']");
+    protected static final By FILE_BTN = By.cssSelector("button[id$='default-fileUpload-button-button']");
+    
     protected static final By RM_ADD_META_DATA_LINK = By.cssSelector("div#onActionAddRecordMetadata a");
     protected static final By RECORD = By.cssSelector("tbody.yui-dt-data > tr");
     protected static final By DESCRIPTION = By.cssSelector("div[id$='_default-description'] div");
     protected static final By FILEPLAN = By.id("template_x002e_tree_x002e_documentlibrary_x0023_default");
+    
     protected boolean inFilePlanRoot;
     protected boolean inRecordCategory;
     protected boolean inRecordFolder;
@@ -96,6 +100,21 @@ public class FilePlanPage extends DocumentLibraryPage
     public FilePlanPage(WebDrone drone)
     {
         super(drone);
+    }
+    
+    /**
+     * Helper method to get the root file plan page.
+     * <p>
+     * Returned file plan page is correct initialised and render has been run.
+     * 
+     * @param   rmSiteDashBoard         records management dashboard
+     * @return  {@link FilePlanPage}    rendered file plan page
+     */
+    public static FilePlanPage getFilePlanRoot(RmSiteDashBoardPage rmSiteDashBoard)
+    {
+        FilePlanPage filePlan = rmSiteDashBoard.getRMNavigation().selectFilePlan();
+        filePlan.setInFilePlanRoot(true);
+        return filePlan.render();
     }
 
     /**
@@ -187,14 +206,14 @@ public class FilePlanPage extends DocumentLibraryPage
                         }
                     }
                     if (inRecordFolder)
-                    {
-                        if (!isDeclaredRecordButtonDisplayed())
+                    {                        
+                        if (RmPageObjectUtils.isDisplayed(drone, FILE_BTN))
                         {
-                            continue;
+                            drone.waitUntilElementClickable(FILE_BTN, timeOut);
                         }
                         else
                         {
-                            drone.waitUntilElementClickable(NEW_DECLARE_RECORD_BTN, timeOut);
+                            continue;
                         }
                     }
                     break;
@@ -206,9 +225,9 @@ public class FilePlanPage extends DocumentLibraryPage
             finally
             {
                 timer.end();
-                setInFilePlanRoot(false);
-                setInRecordCategory(false);
-                setInRecordFolder(false);
+               // setInFilePlanRoot(false);
+               // setInRecordCategory(false);
+               // setInRecordFolder(false);
             }
         }
         return this;
@@ -234,6 +253,17 @@ public class FilePlanPage extends DocumentLibraryPage
     {
         RenderTime timer = new RenderTime(maxPageLoadingTime);
         return render(timer);
+    }
+
+    /**
+     * Get html element on the side of the page with file plan sub
+     * navigation also known as filters.
+     *
+     * @return {@link FilePlanFilter} side element filter
+     */
+    public FilePlanFilter getFilePlanFilter()
+    {
+        return new FilePlanFilter(drone);
     }
 
     /**
@@ -281,16 +311,6 @@ public class FilePlanPage extends DocumentLibraryPage
     }
 
     /**
-     * Checks visibility of the undeclared records button on the unfiled records container toolbar.
-     *
-     * @return <code>true</code> if visible <code>false</code> otherwise
-     */
-    public boolean isDeclaredRecordButtonDisplayed()
-    {
-        return RmPageObjectUtils.isDisplayed(drone, NEW_DECLARE_RECORD_BTN);
-    }
-
-    /**
      * Verify if records exists.
      *
      * @return <code>true</code> if visible <code>false</code> otherwise
@@ -320,16 +340,16 @@ public class FilePlanPage extends DocumentLibraryPage
         RmPageObjectUtils.select(drone, MANAGE_RULES_BTN);
         return new RmFolderRulesPage(drone);
     }
-
+    
     /**
-     * Get html element on the side of the page with file plan sub
-     * navigation also known as filters.
-     *
-     * @return {@link FilePlanFilter} side element filter
+     * Click on the 'file' action on the toolbar
+     * 
+     * @return  {@link RmUploadFilePage}    rm upload page
      */
-    public FilePlanFilter getFilePlanFilter()
+    public RmUploadFilePage selectFile()
     {
-        return new FilePlanFilter(drone);
+        RmPageObjectUtils.select(drone, FILE_BTN);
+        return new RmUploadFilePage(drone);
     }
 
     /**
@@ -341,7 +361,9 @@ public class FilePlanPage extends DocumentLibraryPage
     public FilePlanPage selectCategory(final String title, final long timeout)
     {
         selectEntry(title, timeout).click();
-        return new FilePlanPage(drone);
+        FilePlanPage filePlan = new FilePlanPage(drone);
+        filePlan.setInRecordCategory(true);
+        return filePlan;
     }
 
     /**
@@ -353,7 +375,29 @@ public class FilePlanPage extends DocumentLibraryPage
     public FilePlanPage selectFolder(final String title, final long timeout)
     {
         selectEntry(title, timeout).click();
-        return new FilePlanPage(drone);
+        FilePlanPage filePlan = new FilePlanPage(drone);
+        filePlan.setInRecordFolder(true);
+        return filePlan;
+    }
+    
+    /**
+     * Selects the title of the record link.
+     * 
+     * @param title     record title
+     * @param timeout   timeout
+     * @return {@link RecordDetailsPage}    record detail page
+     */
+    public RecordDetailsPage selectRecord(final int index, final long timeout)
+    {
+        List<FileDirectoryInfo> records = getFiles();
+        if (index >= records.size())
+        {
+            throw new RuntimeException("Record index is out of bounds.");
+        }
+        
+        FileDirectoryInfo fileDirectoryInfo = getFiles().get(index);
+        fileDirectoryInfo.clickOnTitle();
+        return new RecordDetailsPage(drone);        
     }
 
     /**

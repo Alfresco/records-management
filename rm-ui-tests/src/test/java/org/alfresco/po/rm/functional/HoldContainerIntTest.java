@@ -76,8 +76,8 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
      * @return {@link HoldsContainer} Returns the hold container object
      */
     private HoldsContainer selectHoldsContainer()
-    {
-        filePlan = rmSiteDashBoard.selectFilePlan().render();
+    {        
+        filePlan = FilePlanPage.getFilePlanRoot(rmSiteDashBoard);
         filePlanFilter = filePlan.getFilePlanFilter();
         return filePlanFilter.selectHoldsContainer().render();
     }

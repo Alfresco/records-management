@@ -20,7 +20,6 @@ package org.alfresco.po.rm.functional;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.alfresco.po.rm.RmCreateSitePage;
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
@@ -29,6 +28,8 @@ import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.common.AbstractRecordsManagementTest;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;
+import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
+import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.share.site.SiteFinderPage;
 import org.alfresco.po.share.util.SiteUtil;
 import org.alfresco.webdrone.HtmlPage;
@@ -36,9 +37,7 @@ import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -51,11 +50,6 @@ import org.testng.annotations.BeforeClass;
  */
 public abstract class AbstractIntegrationTest extends AbstractRecordsManagementTest
 {
-    /** File record dialog constants */
-    protected static final By PROMPT_PANEL_ID = By.id("prompt");
-    protected static final By BUTTON_TAG_NAME = By.tagName("button");
-    protected static final String ELECTRONIC = "Electronic";
-
     /**
      * Executed before class
      */
@@ -116,7 +110,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
         Assert.assertTrue(createSite.isCreateSiteDialogDisplayed());
 
         // Create RM Site
-        RmSiteDashBoardPage site = ((RmSiteDashBoardPage) createSite.createRMSite(RMSiteCompliance.STANDARD)).rmRender();
+        RmSiteDashBoardPage site = ((RmSiteDashBoardPage) createSite.createRMSite(compliance)).rmRender();
         Assert.assertNotNull(site);
         Assert.assertTrue(RmCreateSitePage.RM_SITE_NAME.equalsIgnoreCase(site.getPageTitle()));
         Assert.assertTrue(site.getRMSiteNavigation().isDashboardActive());
@@ -165,10 +159,8 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      */
     private static HtmlPage fileElectronicRecord(final WebDrone drone, final RmUploadFilePage rmRecordFileDialog, String fileName) throws IOException
     {
-        WebElement prompt = drone.findAndWait(PROMPT_PANEL_ID);
-        List<WebElement> elements = prompt.findElements(BUTTON_TAG_NAME);
-        WebElement electronicRecordButton = rmRecordFileDialog.findButton(ELECTRONIC, elements);
-        electronicRecordButton.click();
+        // select to upload electronic record
+        rmRecordFileDialog.selectElectronic(drone);
 
         String name = StringUtils.isNotBlank(fileName) ? fileName : Long.valueOf(System.currentTimeMillis()).toString();
         File file = SiteUtil.prepareFile(name);
@@ -210,5 +202,63 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
 
         UnfiledRecordsContainer unfiledRecordsContainer = (UnfiledRecordsContainer) fileElectronicRecord(drone, rmRecordFileDialog, fileName);
         unfiledRecordsContainer.render(fileName);
+    }
+    
+    /**
+     * Helper method to create a new record category in the file plan root or a record category
+     * 
+     * @param filePlan      file plan page, should be showing the parent record category
+     * @param name          name 
+     * @param title         title
+     * @param description   description
+     * @return {@link FilePlanPage} file plan page showing the parent record category with the new category in the list
+     */
+    protected static FilePlanPage createNewCategory(FilePlanPage filePlan, String name, String title, String description)
+    {
+        WebDroneUtil.checkMandotaryParam("filePlan", filePlan);
+        WebDroneUtil.checkMandotaryParam("name", name);
+        WebDroneUtil.checkMandotaryParam("title", name);
+        
+        // TODO check that the file plan is in the correct state
+        
+        CreateNewRecordCategoryDialog createNewCategory = filePlan.selectCreateNewCategory().render();
+        createNewCategory.enterName(name);
+        createNewCategory.enterTitle(title);
+        if (!description.isEmpty())
+        {
+            createNewCategory.enterDescription(description);
+        }
+        filePlan = ((FilePlanPage) createNewCategory.selectSave());
+        filePlan.setInFilePlanRoot(true);
+        return filePlan.render(name);        
+    }
+    
+    /**
+     * Helper method to create a new record folder in the a record category
+     * 
+     * @param filePlan      file plan page, should be showing the parent record folder
+     * @param name          name 
+     * @param title         title
+     * @param description   description
+     * @return {@link FilePlanPage} file plan page showing the parent record record category with the new record folder in the list
+     */
+    protected static FilePlanPage createNewRecordFolder(FilePlanPage filePlan, String name, String title, String description)
+    {
+        WebDroneUtil.checkMandotaryParam("filePlan", filePlan);
+        WebDroneUtil.checkMandotaryParam("name", name);
+        WebDroneUtil.checkMandotaryParam("title", name);
+        
+        // TODO check that the file plan is in the correct state
+        
+        CreateNewRecordFolderDialog createNewFolder = filePlan.selectCreateNewFolder().render();
+        createNewFolder.enterName(name);
+        createNewFolder.enterTitle(title);
+        if (!description.isEmpty())
+        {
+            createNewFolder.enterDescription(description);
+        }
+        filePlan = ((FilePlanPage) createNewFolder.selectSave());
+        filePlan.setInRecordCategory(true);
+        return filePlan.render(name);
     }
 }

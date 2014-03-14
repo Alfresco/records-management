@@ -67,6 +67,7 @@ public class RmPageObjectUtils
         WebDroneUtil.checkMandotaryParam("webDrone", webDrone);
         WebDroneUtil.checkMandotaryParam("selector", selector);
 
-        webDrone.findAndWait(selector).click();
+        WebElement webElement = webDrone.findAndWait(selector);
+        webElement.click();
     }
 }

@@ -19,6 +19,7 @@
 package org.alfresco.po.rm;
 
 import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.rm.fileplan.RecordDetailsPage;
 import org.alfresco.po.rm.fileplan.filter.hold.HoldsContainer;
 import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;
 import org.alfresco.po.share.FactorySharePage;
@@ -69,7 +70,7 @@ public class RmFactoryPage extends FactorySharePage
         super();
         // Extend the pages in share
         pages.put(DASHBOARD, RmSiteDashBoardPage.class);
-        pages.put(DOCUMENT_DETAILS, RmDocumentDetailsPage.class);
+        pages.put(DOCUMENT_DETAILS, RecordDetailsPage.class);
         // RM related pages
         pages.put(RM_SITE_MEMBERS, RmSiteMembersPage.class);
         pages.put(RM_CONSOLE, RmConsolePage.class);

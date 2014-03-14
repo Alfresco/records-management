@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.rm;
+package org.alfresco.po.rm.fileplan;
 
-import org.alfresco.po.rm.fileplan.FilePlanPage;
+import java.util.List;
+
 import org.alfresco.po.share.site.document.DocumentDetailsPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
@@ -32,24 +33,26 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
 /**
- * Extends {@link DocumentDetailsPage} to add RM specific methods
+ * Extends {@link DocumentDetailsPage} to add RM specific methods for records
  *
  * @author Tuna Aksoy
  * @since 2.2
  */
-public class RmDocumentDetailsPage extends DocumentDetailsPage
+public class RecordDetailsPage extends DocumentDetailsPage
 {
     private static final By HIDE_RECORD = By.cssSelector("div#onHideRecordAction.rm-hide-record");
     private static final By POP_UP = By.cssSelector("div.bd");
     private static final By RM_ADD_META_DATA_LINK = By.cssSelector("div#onActionAddRecordMetadata a");
     private static final By DELCARE_RM_LINK = By.cssSelector("div#onActionSimpleRepoAction.rm-create-record a");
+    private static final By PROPERTY_SET_HEADER = By.cssSelector("div.set-panel-heading");
+    
 
     /**
      * Constructor.
      *
      * @param drone {@link WebDrone}
      */
-    public RmDocumentDetailsPage(WebDrone drone)
+    public RecordDetailsPage(WebDrone drone)
     {
         super(drone);
     }
@@ -63,7 +66,7 @@ public class RmDocumentDetailsPage extends DocumentDetailsPage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public synchronized RmDocumentDetailsPage render(RenderTime timer)
+    public synchronized RecordDetailsPage render(RenderTime timer)
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
 
@@ -126,7 +129,7 @@ public class RmDocumentDetailsPage extends DocumentDetailsPage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RmDocumentDetailsPage render()
+    public RecordDetailsPage render()
     {
         return render(new RenderTime(maxPageLoadingTime));
     }
@@ -136,7 +139,7 @@ public class RmDocumentDetailsPage extends DocumentDetailsPage
      */
     @SuppressWarnings("unchecked")
     @Override
-    public RmDocumentDetailsPage render(final long time)
+    public RecordDetailsPage render(final long time)
     {
         return render(new RenderTime(time));
     }
@@ -194,5 +197,28 @@ public class RmDocumentDetailsPage extends DocumentDetailsPage
         {
         }
         return false;
+    }
+    
+    /**
+     * Indicates whether a property set is visible in the record details view.
+     * 
+     * @param title title of the property set
+     * @return boolean  true if present, false otherwise
+     */
+    public boolean isPropertySetVisible(String title)
+    {
+        boolean result = false;
+        List<WebElement> webElements = drone.findAll(PROPERTY_SET_HEADER);
+        for (WebElement webElement : webElements)
+        {
+            if (webElement.getText().contains(title))
+            {
+                result = true;
+                break;
+            }
+              
+        }
+        
+        return result;
     }
 }

@@ -43,7 +43,9 @@ import org.openqa.selenium.WebElement;
  */
 public class UnfiledRecordsContainer extends FilePlanPage
 {
-    private static final By MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-unfiledManageRules-button-button']");
+    protected static final By NEW_UNFILED_RECORDS_FOLDER_BTN = By.cssSelector("button[id$='default-newUnfiledRecordsFolder-button-button']");
+    protected static final By NEW_DECLARE_RECORD_BTN = By.cssSelector("button[id$='default-declareRecord-button-button']");
+    protected static final By MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-unfiledManageRules-button-button']");
 
     /**
      * Constructor.
@@ -208,6 +210,7 @@ public class UnfiledRecordsContainer extends FilePlanPage
      */
     public RmUploadFilePage selectCreateNewUnfiledRecordsContainerFile()
     {
+        RmPageObjectUtils.select(drone, NEW_DECLARE_RECORD_BTN);
         return new RmUploadFilePage(drone);
     }
 

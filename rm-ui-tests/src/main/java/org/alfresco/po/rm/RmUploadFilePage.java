@@ -18,6 +18,8 @@
  */
 package org.alfresco.po.rm;
 
+import java.util.List;
+
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.UploadFilePage;
 import org.alfresco.webdrone.HtmlElement;
@@ -41,6 +43,13 @@ import org.openqa.selenium.WebElement;
  */
 public class RmUploadFilePage extends UploadFilePage
 {
+    protected static final By PROMPT_PANEL_ID = By.id("prompt");
+    protected static final By BUTTON_TAG_NAME = By.tagName("button");
+    
+    protected static final String ELECTRONIC = "Electronic";
+    protected static final String NONELECTRONIC = "Non-Electronic";
+    protected static final String CANCEL = "Cancel";
+    
     private static final By FILE_DATA_FILE = By.cssSelector("input[id$='default-filedata-file']");
     private static final By FILE_SELECTION = By.cssSelector("input.dnd-file-selection-button");
     private static final By HTML_UPLOAD = By.cssSelector("button[id*='html-upload']");
@@ -69,8 +78,7 @@ public class RmUploadFilePage extends UploadFilePage
         {
             timer.start();
             try
-            {
-                RmPageObjectUtils.select(drone, By.cssSelector("button[id$='default-declareRecord-button-button']"));
+            {                
                 if (RmPageObjectUtils.isDisplayed(drone, By.cssSelector("div#prompt_h")))
                 {
                     break;
@@ -108,6 +116,45 @@ public class RmUploadFilePage extends UploadFilePage
     {
         RenderTime timer = new RenderTime(time);
         return render(timer);
+    }
+    
+    /**
+     * Select electronic from prompt dialog
+     * 
+     * @param drone web drone
+     */
+    public void selectElectronic(WebDrone drone)
+    {
+        WebElement prompt = drone.findAndWait(PROMPT_PANEL_ID);
+        List<WebElement> elements = prompt.findElements(BUTTON_TAG_NAME);
+        WebElement electronicRecordButton = findButton(ELECTRONIC, elements);
+        electronicRecordButton.click();
+    }
+    
+    /**
+     * Select non electronic from prompt dialog
+     * 
+     * @param drone web drone
+     */
+    public void selectNonElectronic(WebDrone drone)
+    {
+        WebElement prompt = drone.findAndWait(PROMPT_PANEL_ID);
+        List<WebElement> elements = prompt.findElements(BUTTON_TAG_NAME);
+        WebElement electronicRecordButton = findButton(NONELECTRONIC, elements);
+        electronicRecordButton.click();
+    }
+    
+    /**
+     * Select cancel from prompt dialog
+     * 
+     * @param drone web drone
+     */
+    public void selectCancel(WebDrone drone)
+    {
+        WebElement prompt = drone.findAndWait(PROMPT_PANEL_ID);
+        List<WebElement> elements = prompt.findElements(BUTTON_TAG_NAME);
+        WebElement electronicRecordButton = findButton(CANCEL, elements);
+        electronicRecordButton.click();
     }
 
     /**
