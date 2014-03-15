@@ -40,6 +40,11 @@
    Alfresco.rm.module.RemoveFromHold = function(htmlId)
    {
       Alfresco.rm.module.RemoveFromHold.superclass.constructor.call(this, "Alfresco.rm.module.RemoveFromHold", htmlId);
+
+      // Re-register with our own name
+      this.name = "Alfresco.rm.module.RemoveFromHold";
+      Alfresco.util.ComponentManager.reregister(this);
+
       return this;
    };
 

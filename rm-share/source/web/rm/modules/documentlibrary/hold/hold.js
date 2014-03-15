@@ -169,7 +169,7 @@
                key: "check", label: " ", sortable: false, formatter: "checkbox"
             },
             {
-               key: "name", label: " ", sortable: false
+               key: "name", label: this.msg("name.column.header"), sortable: true, width: 450
             }];
 
          // ListDataTable definition
@@ -177,8 +177,7 @@
          {
             renderLoopSize: 32,
             scrollable: true,
-            height: "300px",
-            width: "200px",
+            height: "200px",
             MSG_EMPTY: this.msg("message.empty.holds")
          });
 

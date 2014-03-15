@@ -40,6 +40,11 @@
    Alfresco.rm.module.AddToHold = function(htmlId)
    {
       Alfresco.rm.module.AddToHold.superclass.constructor.call(this, "Alfresco.rm.module.AddToHold", htmlId);
+
+      // Re-register with our own name
+      this.name = "Alfresco.rm.module.AddToHold";
+      Alfresco.util.ComponentManager.reregister(this);
+
       return this;
    };
 
