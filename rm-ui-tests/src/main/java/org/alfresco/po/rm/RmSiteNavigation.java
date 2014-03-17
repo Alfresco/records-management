@@ -19,6 +19,7 @@
 package org.alfresco.po.rm;
 
 import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.share.site.AbstractSiteNavigation;
 import org.alfresco.webdrone.WebDrone;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -32,7 +33,7 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @version 1.7.1
  */
-public class RmSiteNavigation extends org.alfresco.po.rm.util.AbstractSiteNavigation
+public class RmSiteNavigation extends AbstractSiteNavigation
 {
     private static final By MENU_BAR = By.cssSelector("div.alf-menu-bar");
     private static final By MORE_BTN = By.cssSelector("span#HEADER_SITE_MORE_PAGES_text");
