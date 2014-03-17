@@ -535,7 +535,7 @@
        */
       onNewUnfiledRecordsFolder: function DLTB_onNewUnfiledRecordsFolder(e, p_obj)
       {
-         this._newContainer("rma:unfiledRecordContainerChild");
+         this._newContainer("rma:unfiledRecordFolder");
       },
 
       /**
@@ -638,7 +638,7 @@
             case "rma:recordFolder":
                message = "message.new-folder.";
                break;
-            case "rma:unfiledRecordContainerChild":
+            case "rma:unfiledRecordFolder":
                message = "message.new-unfiledRecordsFolder.";
                break;
             case "rma:hold":

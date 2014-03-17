@@ -207,7 +207,7 @@
          <action type="action-link" id="onActionLinkTo" permission="linkTo" asset="record" label="menu.selected-items.link-to" rmaction="true" />
          <action type="action-link" id="onActionFileTo" permission="fileTo" asset="undeclared-record" label="menu.selected-items.file-to" rmaction="true" />
          <action type="action-link" id="onActionDeleteRecord" permission="Delete" label="menu.selected-items.delete" asset="record,undeclared-record" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
-         <action type="action-link" id="onActionDeleteRecordFolder" permission="Delete" label="menu.selected-items.delete" asset="record-folder,unfiled-record-container-child" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
+         <action type="action-link" id="onActionDeleteRecordFolder" permission="Delete" label="menu.selected-items.delete" asset="record-folder,unfiled-record-folder" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
          <action type="action-link" id="onActionDeleteRecordCategory" permission="Delete" label="menu.selected-items.delete" asset="record-category" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
          <action type="action-link" id="onActionExport" permission="" notAspect="rma:cutOff" label="menu.selected-items.export" asset="record,undeclared-record,record-folder,record-category" rmaction="true" />
       </multi-select>
@@ -815,7 +815,7 @@
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
 
-         <actionGroup id="rm-unfiled-record-container-child-browse">
+         <actionGroup id="rm-unfiled-record-folder-browse">
             <action index="100" id="rm-record-folder-view-details" />
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-manage-permissions" />
@@ -825,7 +825,7 @@
             <action index="140" id="rm-view-audit-log" />
             <action index="150" id="rm-manage-rules" />
          </actionGroup>
-         <actionGroup id="rm-unfiled-record-container-child-details">
+         <actionGroup id="rm-unfiled-record-folder-details">
             <action index="100" id="rm-edit-details" />
             <action index="110" id="rm-manage-permissions" />
             <action index="115" id="rm-copy-unfiledrecordfolder-to" />

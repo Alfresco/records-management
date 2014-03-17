@@ -239,7 +239,7 @@
       </forms>
    </config>
 
-   <config evaluator="model-type" condition="rma:unfiledRecordContainerChild">
+   <config evaluator="model-type" condition="rma:unfiledRecordFolder">
       <forms>
          <form>
             <field-visibility>
@@ -268,7 +268,7 @@
       </forms>
    </config>
 
-   <config evaluator="node-type" condition="rma:unfiledRecordContainerChild">
+   <config evaluator="node-type" condition="rma:unfiledRecordFolder">
       <forms>
          <form>
             <field-visibility>

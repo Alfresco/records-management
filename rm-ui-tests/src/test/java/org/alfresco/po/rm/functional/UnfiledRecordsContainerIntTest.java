@@ -123,6 +123,7 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
         FileDirectoryInfo fileDirectoryInfo = unfiledRecordsContainer.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
         Assert.assertNotNull(fileDirectoryInfo);
         fileDirectoryInfo.clickOnTitle();
+        unfiledRecordsContainer.render();
         fileRecord();
     }
 

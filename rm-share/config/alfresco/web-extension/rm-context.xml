@@ -79,7 +79,7 @@
       <property name="expected" value="false" />
    </bean>
    <bean id="evaluator.rm.unfiledRecordsContainerChild" parent="evaluator.rm.common.uiType">
-      <property name="type" value="unfiled-record-container-child" />
+      <property name="type" value="unfiled-record-folder" />
    </bean>
 
    <!--                             -->
