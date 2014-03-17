@@ -76,7 +76,7 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
      * @return {@link HoldsContainer} Returns the hold container object
      */
     private HoldsContainer selectHoldsContainer()
-    {        
+    {
         filePlan = FilePlanPage.getFilePlanRoot(rmSiteDashBoard);
         filePlanFilter = filePlan.getFilePlanFilter();
         return filePlanFilter.selectHoldsContainer().render();
@@ -103,7 +103,7 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
         CreateNewHoldDialog newHoldDialog = holdsContainer.selectCreateNewHold().render();
         newHoldDialog.enterName(NAME);
         newHoldDialog.enterReason(REASON);
-        newHoldDialog.tickDeleteHold(true);
+        //newHoldDialog.tickDeleteHold(true);
         holdsContainer = ((HoldsContainer) newHoldDialog.selectSave()).render(NAME);
     }
 
