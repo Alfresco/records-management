@@ -49,7 +49,7 @@ public class RmFactoryPage extends FactorySharePage
     private static final String RM_S = "rm-%s";
     private static final String SITE_RM = "site/rm";
     private static final String DASHBOARD = "dashboard";
-    private static final String DOCUMENT_DETAILS = "document-details";
+    private static final String DOCUMENT_DETAILS = "rm-document-details";
     private static final String LOGIN = "login";
     private static final String RM_FILE_PLAN = "rm-documentlibrary";
     private static final String RM_FILE_PLAN_FILTER = "rm-documentlibrary#filter=path";
@@ -145,7 +145,7 @@ public class RmFactoryPage extends FactorySharePage
         WebDroneUtil.checkMandotaryParam("url", url);
         WebDroneUtil.checkMandotaryParam("drone", drone);
 
-        String pageName = RmFactoryPage.resolvePage(url);
+        String pageName = RmFactoryPage.resolvePage(url);        
         return instantiatePage(drone, pages.get(pageName));
     }
 

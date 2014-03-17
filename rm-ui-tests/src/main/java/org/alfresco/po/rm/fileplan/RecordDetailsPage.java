@@ -20,6 +20,8 @@ package org.alfresco.po.rm.fileplan;
 
 import java.util.List;
 
+import org.alfresco.po.rm.fileplan.action.AddRecordMetadataAction;
+import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.document.DocumentDetailsPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
@@ -46,7 +48,12 @@ public class RecordDetailsPage extends DocumentDetailsPage
     private static final By DELCARE_RM_LINK = By.cssSelector("div#onActionSimpleRepoAction.rm-create-record a");
     private static final By PROPERTY_SET_HEADER = By.cssSelector("div.set-panel-heading");
     
-
+    /** key rm areas on the record details page that need to be rendered */
+    private static final By PROPERTIES = By.cssSelector("div.form-fields");
+    private static final By ACTIONS = By.cssSelector("div.action-set");
+    private static final By REFERENCES = By.cssSelector("div[id$='rm-references']");
+    private static final By EVENTS = By.cssSelector("div[id$='rm-events']");
+    
     /**
      * Constructor.
      *
@@ -101,6 +108,13 @@ public class RecordDetailsPage extends DocumentDetailsPage
 
                     // Populate the doc version
                     this.documentVersion = docVersionOnScreen;
+                    
+                    // make sure the key RM areas are ready
+                    drone.findAndWait(ACTIONS);
+                    drone.findAndWait(PROPERTIES);
+                    drone.findAndWait(REFERENCES);
+                    drone.findAndWait(EVENTS);
+                    
                     break;
                 }
             }
@@ -174,6 +188,17 @@ public class RecordDetailsPage extends DocumentDetailsPage
         {
         }
         return false;
+    }
+    
+    /**
+     * Select 'Add Record Metadata' action 
+     *  
+     * @return {@link AddRecordMetadataAction} page object
+     */
+    public AddRecordMetadataAction selectAddRecordMetadata()
+    {
+        RmPageObjectUtils.select(drone, RM_ADD_META_DATA_LINK);
+        return new AddRecordMetadataAction(drone);
     }
 
     /**

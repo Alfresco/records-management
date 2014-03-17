@@ -20,13 +20,18 @@ package org.alfresco.po.rm.functional;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
 import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.RecordDetailsPage;
+import org.alfresco.po.rm.fileplan.RecordInfo;
+import org.alfresco.po.rm.fileplan.action.AddRecordMetadataAction;
+import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.alfresco.po.share.util.SiteUtil;
+import org.alfresco.webdrone.HtmlPage;
 import org.junit.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -80,15 +85,46 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         createRMSite(RMSiteCompliance.DOD5015);
         FilePlanPage filePlan = loadTestData();
         
+        //FileDirectoryInfo fileDirectoryInfo = filePlan.getFileDirectoryInfo(1);
+        
+        List<FileDirectoryInfo> files = filePlan.getFiles();
+        Assert.assertEquals(1, files.size());
+        
+        // check the add record metadata action on the record
+        RecordInfo recordInfo = filePlan.getRecordInfo(0);
+        Assert.assertTrue(recordInfo.isVisibleAddRecordMetadata());
+        AddRecordMetadataAction addRecordMetadata = recordInfo.clickAddRecordMetadata();
+        checkDoDAddRecordMetadata(addRecordMetadata);
+        
         // view record details
-        RecordDetailsPage recordDetails = filePlan.selectRecord(0, drone.getDefaultWaitTime());
+        recordInfo = filePlan.render().getRecordInfo(0);
+        RecordDetailsPage recordDetails = recordInfo.clickTitle();
         recordDetails.render();
         
         // check that the DOD properties are visible
         Assert.assertTrue(recordDetails.isPropertySetVisible("DOD5015"));
         
+        // check that the add record metadata action is visible 
+        Assert.assertTrue(recordDetails.isAddRecordMetaDataVisible());
+        
+        // select the add record metadata action and check the expected aspects are present
+        addRecordMetadata = recordDetails.selectAddRecordMetadata().render();
+        checkDoDAddRecordMetadata(addRecordMetadata);
+        
         // delete DOD site
         deleteRMSite();
+    }
+    
+    private HtmlPage checkDoDAddRecordMetadata(AddRecordMetadataAction addRecordMetadata)
+    {
+        // check that all the DoD aspects are showing
+        List<String> aspects = addRecordMetadata.getAllRecordAspects();
+        Assert.assertEquals(4, aspects.size());
+        Assert.assertTrue(aspects.contains("dod:scannedRecord"));
+        Assert.assertTrue(aspects.contains("dod:pdfRecord"));
+        Assert.assertTrue(aspects.contains("dod:digitalPhotographRecord"));
+        Assert.assertTrue(aspects.contains("dod:webRecord"));        
+        return addRecordMetadata.clickCancel();        
     }
 
     @Test
@@ -97,13 +133,19 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         // create vanilla site
         createRMSite();
         FilePlanPage filePlan = loadTestData();
+        
+        // check the add record metadata action on the record
+        RecordInfo recordInfo = filePlan.getRecordInfo(0);
+        Assert.assertFalse(recordInfo.isVisibleAddRecordMetadata());
 
         // view record details
-        RecordDetailsPage recordDetails = filePlan.selectRecord(0, drone.getDefaultWaitTime());
-        recordDetails.render();
+        RecordDetailsPage recordDetails = recordInfo.clickTitle().render();        
         
-        // check that the DOD properties are visible
+        // check that the DOD properties are not visible
         Assert.assertFalse(recordDetails.isPropertySetVisible("DOD5015"));
+        
+        // check that the add record metadata action is not visible (since there are not aspects out of the box for vanilla)
+        Assert.assertFalse(recordDetails.isAddRecordMetaDataVisible());
 
         // delete RM vanilla site
         deleteRMSite();

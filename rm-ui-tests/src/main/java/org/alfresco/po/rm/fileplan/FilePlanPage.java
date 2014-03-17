@@ -48,15 +48,18 @@ import org.openqa.selenium.WebElement;
  */
 public class FilePlanPage extends DocumentLibraryPage
 {
+    /** tool bar buttons */
     protected static final By MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-manageRules-button-button']");
     protected static final By NEW_CATEGORY_BTN = By.cssSelector("button[id$='default-newCategory-button-button']");
     protected static final By NEW_FOLDER_BTN = By.cssSelector("button[id$='default-newFolder-button-button']");
     protected static final By FILE_BTN = By.cssSelector("button[id$='default-fileUpload-button-button']");
     
-    protected static final By RM_ADD_META_DATA_LINK = By.cssSelector("div#onActionAddRecordMetadata a");
     protected static final By RECORD = By.cssSelector("tbody.yui-dt-data > tr");
     protected static final By DESCRIPTION = By.cssSelector("div[id$='_default-description'] div");
     protected static final By FILEPLAN = By.id("template_x002e_tree_x002e_documentlibrary_x0023_default");
+    
+    /** actions */
+    protected static final By EDIT_RECORD_METADATA_ACTION = By.cssSelector("");
     
     protected boolean inFilePlanRoot;
     protected boolean inRecordCategory;
@@ -225,9 +228,6 @@ public class FilePlanPage extends DocumentLibraryPage
             finally
             {
                 timer.end();
-               // setInFilePlanRoot(false);
-               // setInRecordCategory(false);
-               // setInRecordFolder(false);
             }
         }
         return this;
@@ -379,26 +379,6 @@ public class FilePlanPage extends DocumentLibraryPage
         filePlan.setInRecordFolder(true);
         return filePlan;
     }
-    
-    /**
-     * Selects the title of the record link.
-     * 
-     * @param title     record title
-     * @param timeout   timeout
-     * @return {@link RecordDetailsPage}    record detail page
-     */
-    public RecordDetailsPage selectRecord(final int index, final long timeout)
-    {
-        List<FileDirectoryInfo> records = getFiles();
-        if (index >= records.size())
-        {
-            throw new RuntimeException("Record index is out of bounds.");
-        }
-        
-        FileDirectoryInfo fileDirectoryInfo = getFiles().get(index);
-        fileDirectoryInfo.clickOnTitle();
-        return new RecordDetailsPage(drone);        
-    }
 
     /**
      * Selects an entry regardless of type (file or folder)
@@ -411,6 +391,21 @@ public class FilePlanPage extends DocumentLibraryPage
         return drone.findAndWait(By.xpath(search), timeout);
     }
 
+    /**
+     * Gets the record information for a given row index.
+     * <p>
+     * Note that this is zero indexed.
+     * 
+     * @param index                 index
+     * @return {@link RecordInfo}   record information
+     */
+    public RecordInfo getRecordInfo(final int index)
+    {
+        List<FileDirectoryInfo> list = getFiles();
+        return new RecordInfo(drone, list.get(index));
+    }
+        
+    
     // FIXME: This method will be deleted after the original method has been fixed
     @Override
     public FileDirectoryInfo getFileDirectoryInfo(String title)
