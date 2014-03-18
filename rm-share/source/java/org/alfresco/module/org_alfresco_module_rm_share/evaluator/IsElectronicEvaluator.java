@@ -29,11 +29,10 @@ public class IsElectronicEvaluator extends IndicatorEvaluator
     {
         setIndicator("nonElectronic");
     }
-    
+
     @Override
     public boolean evaluate(JSONObject jsonObject)
     {
-        boolean result = super.evaluate(jsonObject);
-        return !result;
+        return !super.evaluate(jsonObject);
     }
 }
