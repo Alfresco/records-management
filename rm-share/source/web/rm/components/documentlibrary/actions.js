@@ -990,66 +990,6 @@
       },
 
       /**
-       * Freeze action.
-       *
-       * @method onActionFreeze
-       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
-       */
-      onActionFreeze: function RDLA_onActionFreeze(assets)
-      {
-         Alfresco.util.PopupManager.getUserInput(
-         {
-            title: this.msg("message.freeze.title", assets.length),
-            text: this.msg("message.freeze.reason"),
-            okButtonText: this.msg("button.freeze.record"),
-            callback:
-            {
-               fn: function RDLA_onActionFreeze_callback(value)
-               {
-                  this._rmAction("message.freeze", assets, "freeze",
-                  {
-                     "reason": value
-                  });
-               },
-               scope: this
-            }
-         });
-      },
-
-      /**
-       * Freeze record.
-       *
-       * @method onActionFreezeRecord
-       * @param assets {object} Object literal representing one or more record(s) to be actioned
-       */
-      onActionFreezeRecord: function RDLA_onActionFreezeRecord(assets)
-      {
-         this.onActionFreeze(assets);
-      },
-
-      /**
-       * Freeze record folder.
-       *
-       * @method onActionFreezeRecordFolder
-       * @param assets {object} Object literal representing one or more record folder(s) to be actioned
-       */
-      onActionFreezeRecordFolder: function RDLA_onActionFreezeRecordFolder(assets)
-      {
-         this.onActionFreeze(assets);
-      },
-
-      /**
-       * Freeze record category.
-       *
-       * @method onActionFreezeRecordCategory
-       * @param assets {object} Object literal representing one or more record category (categories) to be actioned
-       */
-      onActionFreezeRecordCategory: function RDLA_onActionFreezeRecordCategory(assets)
-      {
-         this.onActionFreeze(assets);
-      },
-
-      /**
        * Set Record Type
        *
        * @method onActionAddRecordMetadata
@@ -1554,20 +1494,9 @@
       },
 
       /**
-       * Unfreeze record.
-       *
-       * @method onActionUnfreeze
-       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
-       */
-      onActionUnfreeze: function DLTB_onActionUnfreeze(assets)
-      {
-         this._rmAction("message.unfreeze", assets, "unfreeze");
-      },
-
-      /**
        * Create Disposition.
        *
-       * @method onActionUnfreeze
+       * @method onActionCreateDisposition
        * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
        */
       onActionCreateDisposition: function DLTB_onActionCreateDisposition(assets)
@@ -1676,6 +1605,40 @@
                },
                scope: this
             }
+         }).show();
+      },
+
+      /**
+       * Add a record/folder to the hold(s)
+       *
+       * @method onActionAddToHold
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       */
+      onActionAddToHold: function RDLA_onActionAddToHold(assets)
+      {
+         if (!this.modules.addToHold)
+         {
+            this.modules.addToHold = new Alfresco.rm.module.AddToHold(this.id + "-listofholds");
+         }
+         this.modules.addToHold.setOptions({
+            itemNodeRef: assets.nodeRef
+         }).show();
+      },
+
+      /**
+       * Remove a record/folder from the hold(s)
+       *
+       * @method onActionRemoveFromHold
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       */
+      onActionRemoveFromHold: function RDLA_onActionRemoveFromHold(assets)
+      {
+         if (!this.modules.removeFromHold)
+         {
+            this.modules.removeFromHold = new Alfresco.rm.module.RemoveFromHold(this.id + "-listofholds");
+         }
+         this.modules.removeFromHold.setOptions({
+            itemNodeRef: assets.nodeRef
          }).show();
       }
    };

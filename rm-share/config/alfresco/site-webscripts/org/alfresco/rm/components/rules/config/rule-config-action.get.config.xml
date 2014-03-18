@@ -19,20 +19,16 @@
          <action name="closeRecordFolder"/>
       </group>
       <group>
-         <action name="freeze"/>
-         <action name="unfreeze"/>
-      </group>
-      <group>      	 
          <action name="fileTo"/>
          <action name="reject"/>
          <action name="requestInfo"/>
       </group>
-      <group>      	 
+      <group>
          <action name="completeEvent"/>
          <action name="addRecordTypes"/>
       </group>
       <group>
-         
+
          <action name="executeScript"/>
          <action name="sendEmail"/>
          <action name="setPropertyValue"/>
@@ -44,7 +40,6 @@
 
    <customise>
       <item id="select">Select</item>
-      <action name="freeze">Freeze</action>
       <action name="fileTo">FileTo</action>
       <action name="reject">Reject</action>
       <action name="requestInfo">RequestInfo</action>

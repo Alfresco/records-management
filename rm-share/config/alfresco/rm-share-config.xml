@@ -192,10 +192,6 @@
          <action type="action-link" id="onActionTransferComplete" permission="transferComplete" label="menu.selected-items.transfer-complete" rmaction="true" />
          <action type="action-link" id="onActionAccession" permission="accession" label="menu.selected-items.accession" rmaction="true" />
          <action type="action-link" id="onActionUndoCutoff" permission="undoCutoff" label="menu.selected-items.undo-cutoff" rmaction="true" />
-         <action type="action-link" id="onActionFreezeRecord" permission="freeze" asset="record,undeclared-record" label="menu.selected-items.freeze" rmaction="true" />
-         <action type="action-link" id="onActionFreezeRecordFolder" permission="freeze" asset="record-folder" label="menu.selected-items.freeze" rmaction="true" />
-         <action type="action-link" id="onActionFreezeRecordCategory" permission="freeze" asset="record-category" label="menu.selected-items.freeze" rmaction="true" />
-         <action type="action-link" id="onActionUnfreeze" permission="unfreeze" label="menu.selected-items.unfreeze" rmaction="true" />
          <action type="action-link" id="onActionCopyRecordTo" permission="copyRecord" asset="record" label="menu.selected-items.copy-to" rmaction="true" />
          <action type="action-link" id="onActionCopyUnfiledRecordTo" permission="copyRecord" asset="record" label="menu.selected-items.copy-to" rmaction="true" />
          <action type="action-link" id="onActionCopyRecordFolderTo" permission="copyRecordFolder" asset="record-folder" label="menu.selected-items.copy-to" rmaction="true" />
@@ -408,28 +404,6 @@
             <evaluator>evaluator.rm.action.edit-disposition-as-of-date</evaluator>
          </action>
 
-         <!-- Freeze -->
-         <action id="rm-freeze" type="javascript" label="actions.freeze" icon="../../../rm/components/documentlibrary/actions/rm-freeze">
-            <param name="function">onActionFreeze</param>
-            <evaluator>evaluator.rm.action.freeze</evaluator>
-         </action>
-
-         <!-- Unfreeze -->
-         <action id="rm-unfreeze" type="javascript" label="actions.unfreeze"  icon="../../../rm/components/documentlibrary/actions/rm-unfreeze">
-            <param name="function">onActionRecordsManagementRepoAction</param>
-            <param name="action">unfreeze</param>
-            <param name="message">message.unfreeze</param>
-            <evaluator>evaluator.rm.action.unfreeze</evaluator>
-         </action>
-
-         <!-- Unfreeze All -->
-         <action id="rm-unfreeze-all" type="javascript" label="actions.unfreeze-all" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-all">
-            <param name="function">onActionRecordsManagementRepoAction</param>
-            <param name="action">unfreezeAll</param>
-            <param name="message">message.unfreeze-all</param>
-            <evaluator>evaluator.rm.action.unfreeze-all</evaluator>
-         </action>
-
          <!-- Download Electronic Record -->
          <action id="rm-download" type="link" label="actions.download" icon="../../../rm/components/documentlibrary/actions/rm-download">
             <param name="href">{downloadUrl}</param>
@@ -564,6 +538,7 @@
             <evaluator>evaluator.rm.action.fileDestructionReport</evaluator>
          </action>
 
+         <!-- End retention -->
          <action id="rm-end-retention" type="javascript" label="actions.end-retention" icon="../../../rm/components/documentlibrary/actions/rm-hide-record">
             <param name="function">onActionRecordsManagementRepoAction</param>
             <param name="action">retain</param>
@@ -571,6 +546,17 @@
             <evaluator>evaluator.rm.action.endRetention</evaluator>
          </action>
 
+         <!-- Add to Hold -->
+         <action id="rm-add-to-hold" type="javascript" label="actions.add-to-hold" icon="../../../rm/components/documentlibrary/actions/rm-add-to-hold">
+            <param name="function">onActionAddToHold</param>
+            <evaluator>evaluator.rm.action.addToHold</evaluator>
+         </action>
+
+         <!-- Remove from Hold -->
+         <action id="rm-remove-from-hold" type="javascript" label="actions.remove-from-hold" icon="../../../rm/components/documentlibrary/actions/rm-remove-from-hold">
+            <param name="function">onActionRemoveFromHold</param>
+            <evaluator>evaluator.rm.action.removeFromHold</evaluator>
+         </action>
       </actions>
 
       <!--
@@ -616,8 +602,8 @@
             <action index="180" id="rm-accession" />
             <action index="190" id="rm-undo-cutoff" />
             <action index="200" id="rm-edit-disposition-as-of-date" />
-            <action index="210" id="rm-freeze" icon="../../../rm/components/documentlibrary/actions/rm-freeze-folder" />
-            <action index="220" id="rm-unfreeze" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-folder" />
+            <action index="210" id="rm-add-to-hold" icon="../../../rm/components/documentlibrary/actions/rm-add-to-hold-folder" />
+            <action index="220" id="rm-remove-from-hold" icon="../../../rm/components/documentlibrary/actions/rm-remove-from-hold-folder" />
             <action index="230" id="rm-copy-recordfolder-to" />
             <action index="240" id="rm-move-recordfolder-to" />
             <action index="250" id="rm-link-to" />
@@ -639,8 +625,8 @@
             <action index="180" id="rm-accession" />
             <action index="190" id="rm-undo-cutoff" />
             <action index="200" id="rm-edit-disposition-as-of-date" />
-            <action index="210" id="rm-freeze" icon="../../../rm/components/documentlibrary/actions/rm-freeze-folder" />
-            <action index="220" id="rm-unfreeze" icon="../../../rm/components/documentlibrary/actions/rm-unfreeze-folder" />
+            <action index="210" id="rm-add-to-hold" icon="../../../rm/components/documentlibrary/actions/rm-add-to-hold-folder" />
+            <action index="220" id="rm-remove-from-hold" icon="../../../rm/components/documentlibrary/actions/rm-remove-from-hold-folder" />
             <action index="230" id="rm-copy-recordfolder-to" />
             <action index="240" id="rm-move-recordfolder-to" />
             <action index="250" id="rm-link-to" />
@@ -664,8 +650,8 @@
             <action index="180" id="rm-accession" />
             <action index="190" id="rm-undo-cutoff" />
             <action index="200" id="rm-edit-disposition-as-of-date" />
-            <action index="210" id="rm-freeze" />
-            <action index="220" id="rm-unfreeze" />
+            <action index="210" id="rm-add-to-hold" />
+            <action index="220" id="rm-remove-from-hold" />
             <action index="230" id="rm-copy-record-to" />
             <action index="235" id="rm-copy-unfiledrecord-to" />
             <action index="240" id="rm-move-record-to" />
@@ -695,8 +681,8 @@
             <action index="180" id="rm-accession" />
             <action index="190" id="rm-undo-cutoff" />
             <action index="200" id="rm-edit-disposition-as-of-date" />
-            <action index="210" id="rm-freeze" />
-            <action index="220" id="rm-unfreeze" />
+            <action index="210" id="rm-add-to-hold" />
+            <action index="220" id="rm-remove-from-hold" />
             <action index="230" id="rm-copy-record-to" />
             <action index="235" id="rm-copy-unfiledrecord-to" />
             <action index="240" id="rm-move-record-to" />
@@ -717,9 +703,9 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-declare" />
             <action index="130" id="rm-add-record-metadata" />
-            <action index="210" id="rm-freeze" />
-            <action index="220" id="rm-unfreeze" />
-            <action index="140" id="rm-split-email" />
+            <action index="135" id="rm-add-to-hold" />
+            <action index="140" id="rm-remove-from-hold" />
+            <action index="145" id="rm-split-email" />
             <action index="150" id="rm-copy-record-to" />
             <action index="155" id="rm-copy-unfiledrecord-to" />
             <action index="160" id="rm-move-record-to" />
@@ -742,9 +728,9 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-declare" />
             <action index="130" id="rm-add-record-metadata" />
-            <action index="210" id="rm-freeze" />
-            <action index="220" id="rm-unfreeze" />
-            <action index="140" id="rm-split-email" />
+            <action index="135" id="rm-add-to-hold" />
+            <action index="140" id="rm-remove-from-hold" />
+            <action index="145" id="rm-split-email" />
             <action index="150" id="rm-copy-record-to" />
             <action index="155" id="rm-copy-unfiledrecord-to" />
             <action index="160" id="rm-move-record-to" />
@@ -764,25 +750,25 @@
 
          <actionGroup id="rm-metadata-stub-folder-browse">
             <action index="100" id="rm-record-folder-view-details" />
-         	<action index="101" id="rm-file-destruction-report" />
+            <action index="101" id="rm-file-destruction-report" />
             <action index="110" id="rm-manage-permissions" />
             <action index="120" id="rm-delete" label="actions.delete" />
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
          <actionGroup id="rm-metadata-stub-folder-details">
-         	<action index="50" id="rm-file-destruction-report" />
+            <action index="50" id="rm-file-destruction-report" />
             <action index="110" id="rm-manage-permissions" />
             <action index="120" id="rm-delete" label="actions.delete" />
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
 
          <actionGroup id="rm-metadata-stub-browse">
-         	<action index="50" id="rm-file-destruction-report" />
+            <action index="50" id="rm-file-destruction-report" />
             <action index="100" id="rm-delete" label="actions.delete" />
             <action index="110" id="rm-view-audit-log" />
          </actionGroup>
          <actionGroup id="rm-metadata-stub-details">
-         	<action index="50" id="rm-file-destruction-report" />
+            <action index="50" id="rm-file-destruction-report" />
             <action index="100" id="rm-delete" label="actions.delete" />
             <action index="110" id="rm-view-audit-log" />
          </actionGroup>

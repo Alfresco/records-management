@@ -181,6 +181,8 @@
             MSG_EMPTY: this.msg("message.empty.holds")
          });
 
+         this.selectedHolds = [];
+
          var me = this;
          this.widgets.listDataTable.on('checkboxClickEvent', function (oArgs)
          {
@@ -228,6 +230,8 @@
                      {
                         text: this.msg("message.hold-success")
                      });
+
+                     YAHOO.Bubbling.fire("metadataRefresh");
                      this._reset();
                   },
                   scope: this
@@ -284,7 +288,6 @@
       {
          this.widgets.escapeListener.disable();
          this.widgets.dialog.hide();
-         this.selectedHolds = [];
       },
 
       /**

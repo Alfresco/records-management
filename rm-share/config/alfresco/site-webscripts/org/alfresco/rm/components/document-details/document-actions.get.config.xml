@@ -14,8 +14,6 @@
          <action type="action-link" id="onActionAccession" permission="AuthorizeNominatedTransfers,accession" label="actions.accession" />
          <action type="action-link" id="onActionUndoCutoff" permission="CreateModifyRecordsInCutoffFolders,undo-cutoff" label="actions.undo-cutoff" />
          <action type="action-link" id="onActionEditDispositionAsOf" permission="ManuallyChangeDispositionDates,disposition-as-of" label="actions.edit-disposition-as-of-date" />
-         <action type="action-link" id="onActionFreeze" permission="freeze" label="actions.freeze" />
-         <action type="action-link" id="onActionUnfreeze" permission="unfreeze" label="actions.unfreeze" />
          <action type="action-link" id="onActionCopyTo" permission="" label="actions.copy-to" />
          <action type="action-link" id="onActionMoveTo" permission="Delete" label="actions.move-to" />
          <action type="action-link" id="onActionLinkTo" permission="" label="actions.link-to" />

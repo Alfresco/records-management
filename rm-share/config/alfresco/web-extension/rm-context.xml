@@ -74,10 +74,6 @@
    <bean id="evaluator.rm.common.isHold" parent="evaluator.rm.common.uiType">
       <property name="type" value="hold" />
    </bean>
-   <bean id="evaluator.rm.common.isElectronicRecord" parent="evaluator.rm.common.indicatorEvaluator">
-      <property name="indicator" value="nonElectronic" />
-      <property name="expected" value="false" />
-   </bean>
    <bean id="evaluator.rm.unfiledRecordFolder" parent="evaluator.rm.common.uiType">
       <property name="type" value="unfiled-record-folder" />
    </bean>
@@ -124,6 +120,10 @@
    </bean>
    <bean id="evaluator.rm.indicator.dispositionSchedule" parent="evaluator.rm.common.indicatorEvaluator">
       <property name="indicator" value="dispositionSchedule" />
+   </bean>
+   <bean id="evaluator.rm.common.isElectronicRecord" parent="evaluator.rm.common.indicatorEvaluator">
+      <property name="indicator" value="nonElectronic" />
+      <property name="expected" value="false" />
    </bean>
 
    <!--  Extended DocLib Evaluators -->
@@ -224,15 +224,6 @@
    <bean id="evaluator.rm.action.edit-disposition-as-of-date" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="editDispositionAsOfDate" />
    </bean>
-   <bean id="evaluator.rm.action.freeze" parent="evaluator.rm.common.actionEvaluator">
-      <property name="action" value="freeze" />
-   </bean>
-   <bean id="evaluator.rm.action.unfreeze" parent="evaluator.rm.common.actionEvaluator">
-      <property name="action" value="unfreeze" />
-   </bean>
-   <bean id="evaluator.rm.action.unfreeze-all" parent="evaluator.rm.common.actionEvaluator">
-      <property name="action" value="unfreezeAll" />
-   </bean>
    <bean id="evaluator.rm.action.edit-review-as-of-date" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="editReviewAsOfDate" />
    </bean>
@@ -284,6 +275,12 @@
    </bean>
    <bean id="evaluator.rm.action.fileTransferReport" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="fileTransferReport" />
+   </bean>
+   <bean id="evaluator.rm.action.addToHold" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="addToHold" />
+   </bean>
+   <bean id="evaluator.rm.action.removeFromHold" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="removeFromHold" />
    </bean>
 
    <!--                          -->

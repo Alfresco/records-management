@@ -30,18 +30,6 @@
    {
       customisations:
       {
-         Freeze:
-         {
-            edit: function(configDef, ruleConfig, configEl)
-            {
-               this._hideParameters(configDef.parameterDefinitions);
-               configDef.parameterDefinitions.push({
-                  type: "arca:freeze-dialog-button",
-                  _buttonLabel: this.msg("button.freeze")
-               });
-               return configDef;
-            }
-         },
          Reject:
          {
             edit: function(configDef, ruleConfig, configEl)
@@ -112,39 +100,6 @@
       },
       renderers:
       {
-         "arca:freeze-dialog-button":
-         {
-            manual: { edit: true },
-            currentCtx: {},
-            edit: function (containerEl, configDef, paramDef, ruleConfig, value)
-            {
-               this._createButton(containerEl, configDef, paramDef, ruleConfig, function RCAC_freezeFormButton_onClick(type, obj)
-               {
-                  this.renderers["arca:freeze-dialog-button"].currentCtx =
-                  {
-                     configDef: obj.configDef,
-                     ruleConfig: obj.ruleConfig
-                  };
-                  Alfresco.util.PopupManager.getUserInput(
-                  {
-                     title: this.msg("message.freeze.title"),
-                     text: this.msg("message.freeze.reason"),
-                     okButtonText: this.msg("button.ok"),
-                     value: this._getParameters(obj.configDef).reason || "",
-                     callback:
-                     {
-                        fn: function RCAC_freezeOKButton_callback(value)
-                        {
-                           var ctx = this.renderers["arca:freeze-dialog-button"].currentCtx;
-                           this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "reason", value);
-                           this._updateSubmitElements(ctx.configDef);
-                        },
-                        scope: this
-                     }
-                  });
-               });
-            }
-         },
          "arca:reject-dialog-button":
          {
             manual: { edit: true },

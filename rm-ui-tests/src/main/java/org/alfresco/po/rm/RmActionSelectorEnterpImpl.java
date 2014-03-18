@@ -39,16 +39,14 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
         REOPEN_RECORD(2),
         OPEN_RECORD_FOLDER(3),
         CLOSE_RECORD_FOLDER(4),
-        FREEZE(5),
-        UNFREEZE(6),
-        FILE_TO(7),
-        REJECT(8),
-        REQUEST_INFORMATION(9),
-        COMPLETE_EVENT(10),
-        ADD_RECORD_TYPES(11),
-        EXECUTE_SCRIPT(12),
-        SEND_EMAIL(13),
-        SET_PROPERTY_VALUE(14);
+        FILE_TO(5),
+        REJECT(6),
+        REQUEST_INFORMATION(7),
+        COMPLETE_EVENT(8),
+        ADD_RECORD_TYPES(9),
+        EXECUTE_SCRIPT(10),
+        SEND_EMAIL(11),
+        SET_PROPERTY_VALUE(12);
 
         private final int numberPosition;
 

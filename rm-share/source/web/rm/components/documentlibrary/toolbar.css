@@ -89,21 +89,6 @@
    background-image: url(actions/rm-link-to-16.png);
 }
 
-.toolbar .onActionFreezeRecord
-{
-   background-image: url(actions/rm-freeze-16.png);
-}
-
-.toolbar .onActionFreezeRecordFolder
-{
-   background-image: url(actions/rm-freeze-folder-16.png);
-}
-
-.toolbar .onActionFreezeRecordCategory
-{
-   background-image: url(actions/rm-freeze-folder-16.png);
-}
-
 .toolbar .onActionSplitEmail
 {
    background-image: url(actions/rm-split-email-16.png);
@@ -122,11 +107,6 @@
 .toolbar .onActionUndoCutoff
 {
    background-image: url(actions/rm-undo-cutoff-16.png);
-}
-
-.toolbar .onActionUnfreeze
-{
-   background-image: url(actions/rm-unfreeze-16.png);
 }
 
 .toolbar .onActionCopyRecordTo
