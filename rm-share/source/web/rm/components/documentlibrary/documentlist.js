@@ -144,8 +144,8 @@
             return '<h3 class="filename"><a class="filter-change" href="#" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '">' + holdName + '</a></h3>';
          });
 
-         // Unfiled Record Container Child title
-         this.registerRenderer("RM_unfiledRecordsContainerChild", function rma_unfiledRecordsContainerChild(record, label)
+         // Unfiled Record Folder title
+         this.registerRenderer("RM_unfiledRecordFolder", function rma_unfiledRecordFolder(record, label)
          {
             var displayName = $html(record.jsNode.properties.cm_name);
             filterObj =

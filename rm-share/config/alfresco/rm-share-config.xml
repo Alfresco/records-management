@@ -153,11 +153,11 @@
             <line index="10" id="holdReason">{RM_holdReason details.hold.reason}</line>
          </template>
 
-         <!-- Unfiled Records Container Child -->
-         <template id="rmUnfiledRecordsContainerChild">
-            <evaluator>evaluator.rm.unfiledRecordsContainerChild</evaluator>
-            <title>{RM_unfiledRecordsContainerChild}</title>
-            <line index="10" id="identifier">{rma_identifier details.unfiled-records-container-child.identifier}</line>
+         <!-- Unfiled Record Folder -->
+         <template id="rmUnfiledRecordFolder">
+            <evaluator>evaluator.rm.unfiledRecordFolder</evaluator>
+            <title>{RM_unfiledRecordFolder}</title>
+            <line index="10" id="identifier">{rma_identifier details.unfiled-record-folder.identifier}</line>
             <line index="20" id="createdByModifiedOn">{RM_createdBy details.created.by}{RM_modifiedOn details.modified.on}</line>
          </template>
 

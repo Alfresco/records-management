@@ -78,7 +78,7 @@
       <property name="indicator" value="nonElectronic" />
       <property name="expected" value="false" />
    </bean>
-   <bean id="evaluator.rm.unfiledRecordsContainerChild" parent="evaluator.rm.common.uiType">
+   <bean id="evaluator.rm.unfiledRecordFolder" parent="evaluator.rm.common.uiType">
       <property name="type" value="unfiled-record-folder" />
    </bean>
 
