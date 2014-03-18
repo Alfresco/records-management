@@ -117,12 +117,16 @@ public class HoldsContainer extends FilePlanPage
 
         while (true)
         {
-            setViewType(getNavigation().getViewType());
             timer.start();
             try
             {
-                if (RmPageObjectUtils.isDisplayed(drone, FILEPLAN) && !isJSMessageDisplayed() && toolbarButtonsDisplayed())
+                if (RmPageObjectUtils.isDisplayed(drone, FILEPLAN) &&
+                    RmPageObjectUtils.isDisplayed(drone, FILEPLAN_NAV)  && 
+                    !isJSMessageDisplayed() && 
+                    toolbarButtonsDisplayed())
                 {
+                    setViewType(getNavigation().getViewType());
+                    
                     waitUntilToolbarButtonsClickable();
                     if (StringUtils.isNotBlank(expectedName))
                     {

@@ -143,7 +143,6 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
 
         WebElement saveButton = drone.find(By.cssSelector("button[id$='form-submit-button']"));
         saveButton.click();
-        drone.findAndWait(By.cssSelector("div[id$='navBar']"));
     }
 
     @Test(dependsOnMethods="editDetails")

@@ -57,6 +57,7 @@ public class FilePlanPage extends DocumentLibraryPage
     protected static final By RECORD = By.cssSelector("tbody.yui-dt-data > tr");
     protected static final By DESCRIPTION = By.cssSelector("div[id$='_default-description'] div");
     protected static final By FILEPLAN = By.id("template_x002e_tree_x002e_documentlibrary_x0023_default");
+    protected static final By FILEPLAN_NAV = By.cssSelector("div[id$='navBar']");
     
     /** actions */
     protected static final By EDIT_RECORD_METADATA_ACTION = By.cssSelector("");
@@ -163,12 +164,15 @@ public class FilePlanPage extends DocumentLibraryPage
         boolean found = false;
         while (true)
         {
-            setViewType(getNavigation().getViewType());
             timer.start();
             try
             {
-                if (RmPageObjectUtils.isDisplayed(drone, FILEPLAN) && !isJSMessageDisplayed())
+                if (RmPageObjectUtils.isDisplayed(drone, FILEPLAN) && 
+                    RmPageObjectUtils.isDisplayed(drone, FILEPLAN_NAV) && 
+                    !isJSMessageDisplayed())
                 {
+                    setViewType(getNavigation().getViewType());
+                    
                     if (StringUtils.isNotBlank(expectedName) && !found)
                     {
                         for (FileDirectoryInfo fileDirectoryInfo : getFiles())
