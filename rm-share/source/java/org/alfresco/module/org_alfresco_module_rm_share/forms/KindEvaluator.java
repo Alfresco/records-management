@@ -58,7 +58,7 @@ public class KindEvaluator extends ServiceBasedEvaluator
         {
             String objAsString = (String) obj;
             // quick test before running slow match for full NodeRef pattern
-            if (objAsString.indexOf(':') != -1 || objAsString.startsWith("{") == true)
+            if (objAsString.indexOf(':') != -1 || objAsString.startsWith("{"))
             {
                 Matcher m = NODE_REF_PATTERN.matcher(objAsString);
                 if (m.matches())

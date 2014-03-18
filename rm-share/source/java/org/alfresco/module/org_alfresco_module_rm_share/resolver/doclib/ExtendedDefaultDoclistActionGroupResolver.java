@@ -23,7 +23,7 @@ import org.json.simple.JSONObject;
 
 /**
  * Extended default doclist action group resolver.
- * 
+ *
  * @see DefaultDoclistActionGroupResolver
  * @author Roy Wetherall
  * @since 2.1
@@ -32,7 +32,7 @@ public class ExtendedDefaultDoclistActionGroupResolver extends DefaultDoclistAct
 {
     /** RM group resolver **/
     private FilePlanDoclistActionGroupResolver filePlanDoclistActionGroupResolver;
-    
+
     /**
      * @param filePlanDoclistActionGroupResolver    rm group resolver
      */
@@ -40,23 +40,23 @@ public class ExtendedDefaultDoclistActionGroupResolver extends DefaultDoclistAct
     {
         this.filePlanDoclistActionGroupResolver = filePlanDoclistActionGroupResolver;
     }
-    
+
     /**
      * Extend the default resolution code to account for records.
-     * 
+     *
      * @see org.alfresco.web.resolver.doclib.DefaultDoclistActionGroupResolver#resolve(org.json.simple.JSONObject, java.lang.String)
      */
     @Override
     public String resolve(JSONObject jsonObject, String view)
     {
         String result = null;
-        
+
         // get the json object representing the node
         JSONObject node = (org.json.simple.JSONObject)jsonObject.get("node");
-        
-        // determine whether we are dealing with a RM node or not        
+
+        // determine whether we are dealing with a RM node or not
         Boolean isRMNode = (Boolean)node.get("isRmNode");
-        if (isRMNode != null && isRMNode.booleanValue() == true)
+        if (isRMNode != null && isRMNode.booleanValue())
         {
             // use the file plan resolver
             result = filePlanDoclistActionGroupResolver.resolve(jsonObject, view, true);
@@ -66,7 +66,7 @@ public class ExtendedDefaultDoclistActionGroupResolver extends DefaultDoclistAct
             // use the default resolver
             result = super.resolve(jsonObject, view);
         }
-            
+
         return result;
     }
 }

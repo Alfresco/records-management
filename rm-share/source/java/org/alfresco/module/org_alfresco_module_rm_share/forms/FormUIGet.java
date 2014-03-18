@@ -50,7 +50,7 @@ public class FormUIGet extends org.alfresco.web.scripts.forms.FormUIGet
         List<String> result = null;
         String id = setConfig.getSetId();
 
-        if (SET_RM_CUSTOM.equals(id) == true || id.startsWith(SET_RM_METADATA) == true)
+        if (SET_RM_CUSTOM.equals(id) || id.startsWith(SET_RM_METADATA))
         {
             Map<String, List<String>> setMembership = discoverSetMembership(context);
             result = setMembership.get(id);
@@ -155,7 +155,7 @@ public class FormUIGet extends org.alfresco.web.scripts.forms.FormUIGet
                 if (fieldDefinition.has(MODEL_GROUP))
                 {
                     String set = fieldDefinition.getString(MODEL_GROUP);
-                    if (!result.containsKey(set) && set.startsWith(SET_RM_METADATA) == true)
+                    if (!result.containsKey(set) && set.startsWith(SET_RM_METADATA))
                     {
                         FormSet formSet = new FormSet(set, null, "panel", null, LABEL_ID_PREFIX + set);
                         result.put(set, formSet);

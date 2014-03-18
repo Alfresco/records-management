@@ -40,9 +40,9 @@ public class FilePlanDoclistActionGroupResolver extends DefaultDoclistActionGrou
     {
         return resolve(jsonObject, view, false);
     }
-    
+
     /**
-     * 
+     *
      * @param jsonObject
      * @param view
      * @param isDocLib
@@ -51,12 +51,12 @@ public class FilePlanDoclistActionGroupResolver extends DefaultDoclistActionGrou
     public String resolve(JSONObject jsonObject, String view, boolean isDocLib)
     {
         String actionGroupId = "rm-";
-        
-        if (isDocLib == true)
+
+        if (isDocLib)
         {
             actionGroupId += "doclib-";
         }
-        
+
         JSONObject node = (org.json.simple.JSONObject) jsonObject.get("node");
         boolean isLink = (Boolean) node.get("isLink");
         if (isLink)
