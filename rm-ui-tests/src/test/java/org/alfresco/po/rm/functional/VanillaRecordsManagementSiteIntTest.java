@@ -82,6 +82,7 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
     public void testDODSite() throws Exception
     {
         // create DOD site
+        deleteRMSite();
         createRMSite(RMSiteCompliance.DOD5015);
         FilePlanPage filePlan = loadTestData();
         
@@ -131,6 +132,7 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
     public void testVanillaSite() throws Exception
     {
         // create vanilla site
+        deleteRMSite();
         createRMSite();
         FilePlanPage filePlan = loadTestData();
         

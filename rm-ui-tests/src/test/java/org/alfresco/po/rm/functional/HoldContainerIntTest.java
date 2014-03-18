@@ -64,22 +64,22 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     private static final By INPUT_NAME_SELECTOR = By.name("prop_cm_name");
     private static final By INPUT_DESCRIPTION_SELECTOR = By.name("prop_cm_description");
     private static final By INPUT_REASON_SELECTOR = By.name("prop_rma_holdReason");
-
-    /** Member variables */
-    private HoldsContainer holdsContainer;
-    private FilePlanPage filePlan;
-    private FilePlanFilter filePlanFilter;
-
-    /**
-     * Helper method to select the holds container
-     *
-     * @return {@link HoldsContainer} Returns the hold container object
-     */
-    private HoldsContainer selectHoldsContainer()
+    
+    @Override
+    protected boolean isRMSiteDeletedOnTearDown()
     {
-        filePlan = FilePlanPage.getFilePlanRoot(rmSiteDashBoard);
-        filePlanFilter = filePlan.getFilePlanFilter();
-        return filePlanFilter.selectHoldsContainer().render();
+        return false;
+    }
+
+    @Override
+    protected void setup()
+    {
+        super.setup();
+        
+        // show the hold container
+        FilePlanPage filePlan = FilePlanPage.getFilePlanRoot(rmSiteDashBoard);
+        FilePlanFilter filePlanFilter = filePlan.getFilePlanFilter();
+        filePlanFilter.selectHoldsContainer().render();
     }
 
     /**
@@ -87,9 +87,8 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
      *
      * @param selector {@link String} The selector text for the action to select
      */
-    private void clickAction(String selector, String name)
+    private void clickAction(HoldsContainer holdsContainer, String selector, String name)
     {
-        holdsContainer = selectHoldsContainer();
         FileDirectoryInfo hold = holdsContainer.getFileDirectoryInfo(name);
         WebElement actions = hold.findElement(By.cssSelector(ACTIONS));
         drone.mouseOverOnElement(actions);
@@ -99,11 +98,10 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     @Test
     public void createNewHold()
     {
-        holdsContainer = selectHoldsContainer();
+        HoldsContainer holdsContainer = new HoldsContainer(drone).render();
         CreateNewHoldDialog newHoldDialog = holdsContainer.selectCreateNewHold().render();
         newHoldDialog.enterName(NAME);
         newHoldDialog.enterReason(REASON);
-        //newHoldDialog.tickDeleteHold(true);
         holdsContainer = ((HoldsContainer) newHoldDialog.selectSave()).render(NAME);
     }
 
@@ -118,13 +116,17 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     @Test(dependsOnMethods="managePermissionsForRoot")
     public void managePermissions()
     {
-        clickAction(ACTION_SELECTOR_TEXT_MANAGE_PERMISSONS, NAME);
+        HoldsContainer holdsContainer = new HoldsContainer(drone).render(NAME);
+        clickAction(holdsContainer, ACTION_SELECTOR_TEXT_MANAGE_PERMISSONS, NAME);
+        RmPageObjectUtils.select(drone, ADD_USER_GROUP_BUTTON);
+        RmPageObjectUtils.select(drone, FINISH_BUTTON);
     }
 
     @Test(dependsOnMethods="managePermissions")
     public void editDetails()
     {
-        clickAction(ACTION_SELECTOR_TEXT_EDIT_DETAILS, NAME);
+        HoldsContainer holdsContainer = new HoldsContainer(drone).render(NAME);
+        clickAction(holdsContainer, ACTION_SELECTOR_TEXT_EDIT_DETAILS, NAME);
 
         drone.waitForElement(INPUT_NAME_SELECTOR, 5);
         WebElement title = drone.find(INPUT_NAME_SELECTOR);
@@ -141,12 +143,14 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
 
         WebElement saveButton = drone.find(By.cssSelector("button[id$='form-submit-button']"));
         saveButton.click();
+        drone.findAndWait(By.cssSelector("div[id$='navBar']"));
     }
 
     @Test(dependsOnMethods="editDetails")
     public void deleteHold()
     {
-        clickAction(ACTION_SELECTOR_TEXT_DELETE, EDITED_NAME);
+        HoldsContainer holdsContainer = new HoldsContainer(drone).render(EDITED_NAME);
+        clickAction(holdsContainer, ACTION_SELECTOR_TEXT_DELETE, EDITED_NAME);
         RmPageObjectUtils.select(drone, PROMPT);
     }
 }

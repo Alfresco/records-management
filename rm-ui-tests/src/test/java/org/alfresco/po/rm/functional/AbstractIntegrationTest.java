@@ -51,6 +51,28 @@ import org.testng.annotations.BeforeClass;
 public abstract class AbstractIntegrationTest extends AbstractRecordsManagementTest
 {
     /**
+     * Indicates whether an existing RM site should be delete on
+     * test startup
+     * 
+     * @return  boolean true if site should be deleted, false otherwise
+     */
+    protected boolean isExisitingRMSiteDeletedOnStartup()
+    {
+        return true;
+    }
+    
+    /**
+     * Indicates whether an existing RM site should be deleted on 
+     * test tear down.
+     * 
+     * @return  boolean true if site should be deleted, false otherwise
+     */
+    protected boolean isRMSiteDeletedOnTearDown()
+    {
+        return true;
+    }
+    
+    /**
      * Executed before class
      */
     @BeforeClass(groups={"RM","nonCloud"})
@@ -67,8 +89,25 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
         // log into Share
         login(username, password);
 
-        // create RM site
-        createRMSite();
+        // find the RM site
+        SiteFinderPage siteFinderPage = SiteUtil.searchSite(drone, RmCreateSitePage.RM_SITE_NAME).render();
+        if (siteFinderPage.hasResults())
+        {
+            if (isExisitingRMSiteDeletedOnStartup())
+            {
+                deleteRMSite();
+                createRMSite();
+            }
+            else
+            {
+                siteFinderPage.selectSite(RmCreateSitePage.RM_SITE_NAME);
+            }
+        }
+        else
+        {
+            // create a new RM site
+            createRMSite();
+        }
     }
 
     /**
@@ -85,8 +124,11 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      */
     protected void teardown()
     {
-        // delete RM site
-        deleteRMSite();
+        if (isRMSiteDeletedOnTearDown())
+        {
+            // delete RM site
+            deleteRMSite();
+        }
     }
 
     /**
@@ -102,9 +144,6 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      */
     protected void createRMSite(RMSiteCompliance compliance)
     {
-        // delete RM site
-        deleteRMSite();
-
         // Click create site dialog
         RmCreateSitePage createSite = rmSiteDashBoard.getRMNavigation().selectCreateSite().render();
         Assert.assertTrue(createSite.isCreateSiteDialogDisplayed());
