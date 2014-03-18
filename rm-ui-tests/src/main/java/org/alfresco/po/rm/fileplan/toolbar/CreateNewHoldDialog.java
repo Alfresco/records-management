@@ -35,7 +35,6 @@ public class CreateNewHoldDialog extends Dialog
 {
     /** Selectors */
     protected static final By REASON_INPUT = By.cssSelector("textarea[id$='_default-createFolder_prop_rma_holdReason']");
-    protected static final By DELETE_HOLD_INPUT = By.cssSelector("input[id$='_default-createFolder_prop_rma_deleteWhenEmpty-entry']");
 
     /**
      * Constructor.
@@ -99,23 +98,5 @@ public class CreateNewHoldDialog extends Dialog
         WebElement input = drone.findAndWait(REASON_INPUT);
         input.clear();
         input.sendKeys(reason);
-    }
-
-    /**
-     * Tick/Untick the check box to determine if the hold
-     * should be delete if it is empty.
-     *
-     * @param tick {@link Boolean} tick for delete the hold if it is empty untick otherwise
-     */
-    public void tickDeleteHold(final boolean tick)
-    {
-        WebDroneUtil.checkMandotaryParam("tick", tick);
-
-        WebElement checkbox = drone.findAndWait(DELETE_HOLD_INPUT);
-        boolean selected = checkbox.isSelected();
-        if ((tick && !selected) || !tick && selected)
-        {
-            checkbox.click();
-        }
     }
 }
