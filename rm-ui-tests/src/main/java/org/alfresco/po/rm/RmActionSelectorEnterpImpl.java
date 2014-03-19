@@ -33,32 +33,44 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
 {
     private final static long MAX_WAIT_TIME = 60000;
 
-    private enum PerformActions
+    public static enum PerformActions
     {
-        COMPLETE_RECORD(1),
-        REOPEN_RECORD(2),
-        OPEN_RECORD_FOLDER(3),
-        CLOSE_RECORD_FOLDER(4),
-        FILE_TO(5),
-        REJECT(6),
-        REQUEST_INFORMATION(7),
-        COMPLETE_EVENT(8),
-        ADD_RECORD_TYPES(9),
-        EXECUTE_SCRIPT(10),
-        SEND_EMAIL(11),
-        SET_PROPERTY_VALUE(12);
+        COMPLETE_RECORD(1, "Complete record"),
+        REOPEN_RECORD(2, "Reopen record"),
+        OPEN_RECORD_FOLDER(3, "Open record folder"),
+        CLOSE_RECORD_FOLDER(4, "Close record folder"),
+        FILE_TO(5, "File to"),
+        REJECT(6, "Reject"),
+        REQUEST_INFORMATION(7, "Request information"),
+        COMPLETE_EVENT(8, "Complete event"),
+        ADD_RECORD_TYPES(9, "Add record types"),
+        EXECUTE_SCRIPT(10, "Execute script"),
+        SEND_EMAIL(11, "Send email"),
+        SET_PROPERTY_VALUE(12, "Set property value");
+
 
         private final int numberPosition;
+        private final String value;
 
-        PerformActions(int numberPosition)
+        PerformActions(int numberPosition, String value)
         {
             this.numberPosition = numberPosition;
+            this.value = value;
+        }
+
+        public String getValue()
+        {
+            return value;
         }
     }
 
     public RmActionSelectorEnterpImpl(WebDrone drone)
     {
         super(drone);
+    }
+
+    public void selectAction(PerformActions action){
+        super.selectAction(action.numberPosition);
     }
 
     public void selectFileTo()

@@ -60,7 +60,6 @@
          <artifactId>share-po</artifactId>
          <version>${dependency.share.po.version}</version>
          <type>test-jar</type>
-         <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.uncommons</groupId>
@@ -80,6 +79,22 @@
          <version>3.0</version>
          <scope>test</scope>
       </dependency>
+       <dependency>
+           <groupId>org.testng</groupId>
+           <artifactId>testng</artifactId>
+           <version>6.8.7</version>
+       </dependency>
+       <dependency>
+           <groupId>org.alfresco</groupId>
+           <artifactId>alfresco-benchmark-util</artifactId>
+           <version>1.2.0</version>
+           <exclusions>
+               <exclusion>
+                   <groupId>org.slf4j</groupId>
+                   <artifactId>slf4j-api</artifactId>
+               </exclusion>
+           </exclusions>
+       </dependency>
    </dependencies>
    <profiles>
       <profile>

@@ -18,9 +18,19 @@
  */
 package org.alfresco.po.rm;
 
+import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.share.site.contentrule.FolderRulesPageWithRules;
 import org.alfresco.po.share.site.contentrule.createrules.CreateRulePage;
+import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.WhenSelectorImpl;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Extends the {@link CreateRulePage} to add RM specific methods
@@ -30,6 +40,63 @@ import org.alfresco.webdrone.WebDrone;
  */
 public class RmCreateRulePage extends CreateRulePage
 {
+    private static final By SAVE_BUTTON                    = By
+            .cssSelector("span[id*='save-button'] button[id*='save-button']");
+    public static final By SELECT_PROPERTY_BUTTON           = By.xpath("//button[text()='Select...']");
+    private static final By CREATED_ALERT                   = By.xpath(".//*[@id='message']/div/span");
+    public static final By SELECT_PROPERTY_DIALOG          = By
+            .cssSelector("div[id$='ruleConfigAction-selectSetPropertyDialog-dialog']");
+    public static final By SELECT_CRITERIA_DIALOG          = By
+            .cssSelector("div[id$='ruleConfigIfCondition-showMoreDialog-dialog']");
+    private static final By SHOW_ALL_LABEL                  = By.xpath("//span[text()='All']");
+    private static final By OK_PROPERTY                     = By
+            .cssSelector("button[id$='ruleConfigAction-selectSetPropertyDialog-ok-button-button']");
+
+    public static final By PROPERTY_VALUE_INPUT             = By
+            .xpath("//span[contains(@class, 'menuname_setPropertyValue')]//input[@type='text']");
+    public static By CRITERIAS_SELECT = By
+            .cssSelector("ul[id$=ruleConfigIfCondition-configs]>li select[class$='config-name']");
+
+    public static enum RuleCriterias{
+        ALL_ITEMS(0, "All Items"),
+        PUBLICATION_DATE(1, "Publication Date"),
+        DISPOSITION_AUTHORITY(2, "Disposition Authority"),
+        DISPOSITION_INSTRUCTIONS(3, "Disposition Instructions"),
+        NAME(4, "Name"),
+        ORIGINATING_ORGANIZATION(5, "Originating Organization"),
+        ORIGINATOR(6, "Originator"),
+        TITLE(7, "Title"),
+        HAS_TAG(8, "Has tag"),
+        HAS_CATEGORY(9, "Has category"),
+        CONTENT_OF_TYPE(10, "Content of type or sub-type"),
+        HAS_ASPECT(11, "Has aspect"),
+        TYPE_OF_RECORDS(12, "Type of records management item"),
+        HAS_RECORD_TYPE(13, "Has record type"),
+        RECORD_COMPLETED(14, "Record completed"),
+        RECORD_FILED(15, "Record filed"),
+        RECORD_FOLDER_CLOSED(16, "Record folder closed."),
+        VITAL_RECORD(17, "Vital record"),
+        HAS_DISPOSITION_ACTION(18, "Has disposition action"),
+        CLASSIFIED_BY_DISPOSITION(19, "Classified by disposition schedule"),
+        CUTOFF(20, "Cutoff"),
+        FROZEN(21, "Frozen"),
+        SHOW_MORE(22, "Show more...");
+
+        public final int numberPosition;
+        private final String value;
+
+        RuleCriterias(int numberPosition, String value)
+        {
+            this.numberPosition = numberPosition;
+            this.value = value;
+        }
+
+        public String getValue()
+        {
+            return value;
+        }
+    }
+
     public RmCreateRulePage(WebDrone drone)
     {
         super(drone);
@@ -60,5 +127,46 @@ public class RmCreateRulePage extends CreateRulePage
     public RmActionSelectorEnterpImpl getActionOptionsObj()
     {
         return new RmActionSelectorEnterpImpl(drone);
+    }
+
+    @SuppressWarnings("unchecked")
+    public WhenSelectorImpl getWhenOptionObj()
+    {
+        return new WhenSelectorImpl(drone);
+    }
+
+
+    public RmFolderRulesWithRules clickSave()
+    {
+        click(SAVE_BUTTON);
+        return new RmFolderRulesWithRules(drone).render();
+    }
+
+    private void click(By locator)
+    {
+        WebElement element = drone.findAndWait(locator);
+        element.click();
+    }
+
+    public RmCreateRulePage selectSetProperty(String propertyValue){
+        drone.findAndWait(SELECT_PROPERTY_BUTTON).isDisplayed();
+        click(SELECT_PROPERTY_BUTTON);
+        drone.findAndWait(SELECT_PROPERTY_DIALOG).isDisplayed();
+        click(SHOW_ALL_LABEL);
+        WebElement selectValue = drone.findAndWait(By.xpath("//div[text() = '" + propertyValue + "']"));
+        selectValue.click();
+        click(OK_PROPERTY);
+        return new RmCreateRulePage(drone).render();
+    }
+
+    public void selectCriteriaOption(int criteriaOptionNumber)
+    {
+        List<WebElement> criteriaOptions = drone.findAndWaitForElements(CRITERIAS_SELECT);
+        List<Select> criteriaSelects = new ArrayList<Select>();
+        for (WebElement whenOption : criteriaOptions)
+        {
+            criteriaSelects.add(new Select(whenOption));
+        }
+        criteriaSelects.get(criteriaSelects.size()-1).selectByIndex(criteriaOptionNumber);
     }
 }

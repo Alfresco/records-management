@@ -24,6 +24,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
+import java.util.Random;
+
 /**
  * Utility methods for the page objects
  *
@@ -69,5 +71,16 @@ public class RmPageObjectUtils
 
         WebElement webElement = webDrone.findAndWait(selector);
         webElement.click();
+    }
+
+    public static String getRandomString(int length)
+    {
+        StringBuilder rv = new StringBuilder();
+        Random rnd = new Random();
+        char from[] = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+
+        for (int i = 0; i < length; i++)
+            rv.append(from[rnd.nextInt((from.length - 1))]);
+        return rv.toString();
     }
 }

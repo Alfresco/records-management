@@ -21,15 +21,20 @@ package org.alfresco.po.rm.fileplan;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.alfresco.po.rm.RmConsolePage;
 import org.alfresco.po.rm.RmFolderRulesPage;
+import org.alfresco.po.rm.RmFolderRulesWithRules;
 import org.alfresco.po.rm.RmSiteDashBoardPage;
 import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
+import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
+import org.alfresco.po.share.site.document.DocumentDetailsPage;
 import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
+import org.alfresco.po.share.site.document.FolderDetailsPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
@@ -37,6 +42,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.*;
+import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.*;
 
 /**
  * Records management file plan page, based on the document library
@@ -50,6 +57,10 @@ public class FilePlanPage extends DocumentLibraryPage
 {
     /** tool bar buttons */
     protected static final By MANAGE_RULES_BTN = By.cssSelector("button[id$='_default-manageRules-button-button']");
+    public static final By NEW_FILE_BTN = By.cssSelector("button[id$='default-fileUpload-button-button']");
+    public static final By NEW_UNFILED_RECORDS_FOLDER_BTN = By.cssSelector("button[id$='default-newUnfiledRecordsFolder-button-button']");
+    public static final By RM_ADD_META_DATA_LINK = By.cssSelector("div#onActionAddRecordMetadata a");
+    public static final By RECORD_MANAGEMENT_CONSOLE = By.xpath("//span[contains(@id, 'HEADER_SITE_RM_MANAGEMENT_CONSOLE')]");
     protected static final By NEW_CATEGORY_BTN = By.cssSelector("button[id$='default-newCategory-button-button']");
     protected static final By NEW_FOLDER_BTN = By.cssSelector("button[id$='default-newFolder-button-button']");
     protected static final By FILE_BTN = By.cssSelector("button[id$='default-fileUpload-button-button']");
@@ -346,6 +357,21 @@ public class FilePlanPage extends DocumentLibraryPage
     }
     
     /**
+     * Action of click on manage rules button.
+     *
+     * @return {@link RmFolderRulesWithRules} page response
+     */
+    public RmFolderRulesWithRules selectManageRulesWithRules()
+    {
+        RmPageObjectUtils.select(drone, MANAGE_RULES_BTN);
+        return new RmFolderRulesWithRules(drone).render();
+    }
+
+    /**
+     * Get html element on the side of the page with file plan sub
+     * navigation also known as filters.
+     *
+     * @return {@link FilePlanFilter} side element filter
      * Click on the 'file' action on the toolbar
      * 
      * @return  {@link RmUploadFilePage}    rm upload page
@@ -425,4 +451,65 @@ public class FilePlanPage extends DocumentLibraryPage
         }
         return result;
     }
+
+    public boolean isFolderClosed(WebDrone drone, String folderName){
+        By closeIcon = By.xpath("//a[contains(text(), '" + folderName + "')]" +
+                "/ancestor::tr//div[@class='status']//img[@title='Closed']");
+        return RmPageObjectUtils.isDisplayed(drone, closeIcon);
+    }
+
+    /**
+     * Action of click on RmConsolePage button.
+     *
+     * @return {@link RmFolderRulesWithRules} page response
+     */
+    public RmConsolePage openRmConsolePage()
+    {
+        RmPageObjectUtils.select(drone, RECORD_MANAGEMENT_CONSOLE);
+        return new RmConsolePage(drone).render();
+    }
+
+    /**
+     * Action of click on Create Non-Electronic Record button.
+     *
+     * @return {@link RmFolderRulesWithRules} page response
+     */
+    public CreateNewRecordDialog selectNewNonElectronicRecord()
+    {
+        RmPageObjectUtils.select(drone, NEW_FILE_BTN);
+        drone.findAndWait(By.xpath("//div[contains(@class, 'panel-container')]")).isDisplayed();
+        WebElement nonElectronic = drone.findAndWait(NON_ELECTRONIC_BUTTON);
+        nonElectronic.click();
+        return new CreateNewRecordDialog(drone).render();
+    }
+
+    public FolderDetailsPage openDetailsPage(String itemValue){
+        FilePlanPage filePlan = drone.getCurrentPage().render();
+        FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
+        WebElement selectMoreAction = folder.selectMoreAction();
+        selectMoreAction.click();
+        WebElement viewDetails = folder.findElement(By.cssSelector("div[class$='view-details']>a"));
+        viewDetails.click();
+        return new FolderDetailsPage(drone).render();
+    }
+
+    public FolderDetailsPage openRecordDetailsPage(String itemValue){
+        FilePlanPage filePlan = drone.getCurrentPage().render();
+        WebElement record = drone.findAndWait(By.xpath("//span//a[contains(text(), '" + itemValue + "')]"));
+        record.click();
+        return new FolderDetailsPage(drone).render();
+    }
+
+    public RmCreateDispositionPage openCreateDisposition(){
+        click(CREATE_DISPOSITION_BUTTON);
+        return new RmCreateDispositionPage(drone).render();
+    }
+
+    public void click(By locator)
+    {
+        WebElement element = drone.findAndWait(locator);
+        drone.mouseOverOnElement(element);
+        element.click();
+    }
+
 }

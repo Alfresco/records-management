@@ -131,6 +131,6 @@ public class RmSiteDashBoardPage extends DashBoardPage
     public HtmlPage selectFilePlan()
     {
         RmPageObjectUtils.select(drone, NAVIGATION_MENU_FILE_PLAN);
-        return drone.getCurrentPage();
+        return drone.getCurrentPage().render();
     }
 }

@@ -37,6 +37,7 @@ import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -50,6 +51,12 @@ import org.testng.annotations.BeforeClass;
  */
 public abstract class AbstractIntegrationTest extends AbstractRecordsManagementTest
 {
+    protected final static long MAX_WAIT_TIME = 60000;
+    /** File record dialog constants */
+    protected static final By PROMPT_PANEL_ID = By.id("prompt");
+    protected static final By BUTTON_TAG_NAME = By.tagName("button");
+    protected static final String ELECTRONIC = "Electronic";
+
     /**
      * Indicates whether an existing RM site should be delete on
      * test startup
@@ -134,7 +141,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
     /**
      * Helper method to create a 'vanilla' RM site
      */
-    protected void createRMSite()
+    public void createRMSite()
     {
         createRMSite(RMSiteCompliance.STANDARD);
     }
@@ -142,7 +149,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
     /**
      * Helper method to create RM site
      */
-    protected void createRMSite(RMSiteCompliance compliance)
+    public void createRMSite(RMSiteCompliance compliance)
     {
         // Click create site dialog
         RmCreateSitePage createSite = rmSiteDashBoard.getRMNavigation().selectCreateSite().render();
@@ -159,7 +166,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
     /**
      * Helper method to delete RM site
      */
-    protected void deleteRMSite()
+    public void deleteRMSite()
     {
         // Check if the RM Site already exists, if so delete it
         SiteFinderPage siteFinderPage = SiteUtil.searchSite(drone, RmCreateSitePage.RM_SITE_NAME).render();
@@ -242,7 +249,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
         UnfiledRecordsContainer unfiledRecordsContainer = (UnfiledRecordsContainer) fileElectronicRecord(drone, rmRecordFileDialog, fileName);
         unfiledRecordsContainer.render(fileName);
     }
-    
+
     /**
      * Helper method to create a new record category in the file plan root or a record category
      * 

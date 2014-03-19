@@ -61,6 +61,9 @@ public class RmFactoryPage extends FactorySharePage
     private static final String RM_SITE_MEMBERS = "rm-site-members";
     private static final String RM_RULE_EDIT = "rm-rule-edit";
     private static final String RM_FOLDER_FULES = "rm-folder-rules";
+    private static final String RM_CONSOLE_DEFINE_ROLES = RM_CONSOLE + "/rm-define-roles";
+    private static final String RM_CONSOLE_NEW_ROLE = RM_CONSOLE_DEFINE_ROLES + "?action=new";
+    private static final String Rm_CONSOLE_USERS_AND_GROUPS = RM_CONSOLE + "rm-users-and-groups";
 
     /**
      * Constructor.
@@ -82,6 +85,9 @@ public class RmFactoryPage extends FactorySharePage
         pages.put(RM_RULE_EDIT, RmCreateRulePage.class);
         pages.put(RM_FOLDER_FULES, FolderRulesPreRender.class);
         pages.put(RM_HOLDS_CONTAINER, HoldsContainer.class);
+        pages.put(RM_CONSOLE_DEFINE_ROLES, RmConsoleDefineRolesPage.class);
+        pages.put(RM_CONSOLE_NEW_ROLE, RmConsoleNewRolePage.class);
+        pages.put(Rm_CONSOLE_USERS_AND_GROUPS, RmConsoleUsersAndGroups.class);
     }
 
     /**

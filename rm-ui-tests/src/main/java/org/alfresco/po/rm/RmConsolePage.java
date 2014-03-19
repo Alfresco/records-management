@@ -18,6 +18,7 @@
  */
 package org.alfresco.po.rm;
 
+import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
@@ -34,6 +35,20 @@ import org.openqa.selenium.WebElement;
  */
 public class RmConsolePage extends RmSitePage
 {
+    protected enum RmConsoleMenu{
+        DEFINE_ROLES(By.xpath("//a[@title = 'Create and edit roles']")),
+        USERS_AND_GROUPS(By.xpath("//a[@title = 'Users and groups']")),
+        RECORDS_MANAGEMENT_RECVORDS_MANAGER(By.xpath("//a[@title = 'Create and edit roles']")),
+        RECORDS_MANAGEMENT_SECURITY_OFFICER(By.xpath("//a[@title = 'Create and edit roles']")),
+        RECORDS_MANAGEMENT_User(By.xpath("//a[@title = 'Create and edit roles']"));
+
+        private final By locator;
+
+        RmConsoleMenu(By locator)
+        {
+            this.locator = locator;
+        }
+}
     /**
      * Constructor.
      *
@@ -97,5 +112,15 @@ public class RmConsolePage extends RmSitePage
     {
         RenderTime timer = new RenderTime(maxPageLoadingTime);
         return render(timer);
+    }
+
+    public RmConsoleDefineRolesPage openDefineRolesPage(){
+        RmPageObjectUtils.select(drone, RmConsoleMenu.DEFINE_ROLES.locator);
+        return new RmConsoleDefineRolesPage(drone).render();
+    }
+
+    public RmConsoleUsersAndGroups openUsersAndGroupsPage(){
+        RmPageObjectUtils.select(drone, RmConsoleMenu.USERS_AND_GROUPS.locator);
+        return new RmConsoleUsersAndGroups(drone).render();
     }
 }

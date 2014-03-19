@@ -18,10 +18,13 @@
  */
 package org.alfresco.po.rm;
 
+import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.site.contentrule.FolderRulesPage;
+import org.alfresco.po.share.site.contentrule.FolderRulesPageWithRules;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -32,8 +35,10 @@ import org.openqa.selenium.WebElement;
  */
 public class RmFolderRulesPage extends FolderRulesPage
 {
-
     private static final By LINK_CREATE_RULE_PAGE_SELECTOR = By.cssSelector("div[class=dialog-option] a[href*='rule-edit']");
+    private static final By LINK_TO_RULE_DIALOG_SELECTOR = By.cssSelector("div[class=dialog-option] a[id*='linkToRuleSet']");
+    private static final By LINK_TO_RULE_DIALOG = By.cssSelector("div[id$='rulesPicker-dialog']");
+    public static final By LINK_BUTTON = By.cssSelector("button[id$='rulesPicker-ok-button']");
 
     public RmFolderRulesPage(WebDrone drone)
     {
@@ -67,4 +72,36 @@ public class RmFolderRulesPage extends FolderRulesPage
         element.click();
         return drone.getCurrentPage().render();
     }
+
+    public void openLinkToDialog()
+    {
+        WebElement element = drone.findAndWait(LINK_TO_RULE_DIALOG_SELECTOR);
+        element.click();
+        isDisplay(drone, LINK_TO_RULE_DIALOG);
+    }
+
+    public static boolean isDisplay(final WebDrone drone, By locator)
+    {
+        try
+        {
+            return drone.findAndWait(locator, 2000).isDisplayed();
+        }
+        catch (TimeoutException e)
+        {
+            return false;
+        }
+    }
+
+    public RmLinkToRulePage clickLink(){
+        click(LINK_BUTTON);
+        return new RmLinkToRulePage(drone).render();
+    }
+
+    public void click(By locator)
+    {
+        WebElement element = drone.findAndWait(locator);
+        drone.mouseOverOnElement(element);
+        element.click();
+    }
+
 }
