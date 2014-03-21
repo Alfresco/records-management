@@ -108,6 +108,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage {
         super(drone);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmEditDispositionSchedulePage render(RenderTime timer)
     {
@@ -117,12 +118,14 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmEditDispositionSchedulePage render()
     {
         return render(new RenderTime(maxPageLoadingTime));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmEditDispositionSchedulePage render(final long time)
     {

@@ -36,8 +36,6 @@ import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.WhenSelectorImpl;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.FailedTestListener;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -51,10 +49,8 @@ import org.testng.annotations.Test;
 @Listeners(FailedTestListener.class)
 public class ManageRules extends RmAbstractTest {
 
-    private static Log logger = LogFactory.getLog(ManageRules.class);
     private static final By INPUT_TITLE_SELECTOR = By.name("prop_cm_title");
     private static final By INPUT_DESCRIPTION_SELECTOR = By.name("prop_cm_description");
-    private String userName;
 
     private By descriptionProperty(String description){
         return By.xpath("//span[text()='Description:']/following-sibling::span[text()='" + description + "']");
@@ -304,7 +300,7 @@ public class ManageRules extends RmAbstractTest {
             filePlan.navigateToFolder(categoryName);
             //Delete rule
             RmFolderRulesWithRules rulesPage = filePlan.selectManageRulesWithRules();
-            RmFolderRulesPage manageRulesPage = (RmFolderRulesPage) rulesPage.deleteRule(ruleName);
+            rulesPage.deleteRule(ruleName);
 
             //Verify that rule does not executed
             rmSiteDashBoard.selectFilePlan();

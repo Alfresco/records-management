@@ -72,6 +72,7 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
     /**
      * @see org.alfresco.webdrone.Render#render(org.alfresco.webdrone.RenderTime)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public RmConsoleUsersAndGroups render(RenderTime timer)
     {
@@ -104,6 +105,7 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
     /**
      * @see org.alfresco.webdrone.Render#render(long)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public RmConsoleUsersAndGroups render(long time)
     {
@@ -114,6 +116,7 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
     /**
      * @see org.alfresco.webdrone.Render#render()
      */
+    @SuppressWarnings("unchecked")
     @Override
     public RmConsoleUsersAndGroups render()
     {

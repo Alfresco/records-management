@@ -64,8 +64,8 @@ public class RmCreateRecordPageTest extends AbstractIntegrationTest {
 
     @Test
     public void createNonElectronicRecord(){
-        FilePlanPage filePlan = drone.getCurrentPage().render();
-        RmPageObjectUtils.select(drone, filePlan.NEW_FILE_BTN);
+        drone.getCurrentPage().render();
+        RmPageObjectUtils.select(drone, FilePlanPage.NEW_FILE_BTN);
         assertTrue(isDisplay(drone, By.xpath("//div[contains(@class, 'panel-container')]")));
         assertTrue(isDisplay(drone, ELECTRONIC_BUTTON));
         assertTrue(isDisplay(drone, NON_ELECTRONIC_BUTTON));

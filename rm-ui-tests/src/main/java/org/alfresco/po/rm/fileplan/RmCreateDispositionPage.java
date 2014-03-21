@@ -84,6 +84,7 @@ public class RmCreateDispositionPage extends FolderDetailsPage {
         super(drone);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmCreateDispositionPage render(RenderTime timer)
     {
@@ -94,12 +95,14 @@ public class RmCreateDispositionPage extends FolderDetailsPage {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmCreateDispositionPage render()
     {
         return render(new RenderTime(maxPageLoadingTime));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmCreateDispositionPage render(final long time)
     {

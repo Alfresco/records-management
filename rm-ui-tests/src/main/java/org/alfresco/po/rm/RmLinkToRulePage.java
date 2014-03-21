@@ -41,6 +41,7 @@ public class RmLinkToRulePage extends RmFolderRulesWithRules {
         super(drone);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmLinkToRulePage render(RenderTime timer)
     {
@@ -52,12 +53,14 @@ public class RmLinkToRulePage extends RmFolderRulesWithRules {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmLinkToRulePage render()
     {
         return render(new RenderTime(maxPageLoadingTime));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmLinkToRulePage render(final long time)
     {

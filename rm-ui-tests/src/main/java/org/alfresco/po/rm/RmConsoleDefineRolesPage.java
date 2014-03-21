@@ -21,7 +21,6 @@ package org.alfresco.po.rm;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
-import org.openqa.selenium.By;
 
 /**
  * Records management Define Roles page.
@@ -31,8 +30,7 @@ import org.openqa.selenium.By;
  */
 public class RmConsoleDefineRolesPage extends RmSitePage {
 
-    private static final By NEW_ROLE = By.cssSelector("#newRole-button");
-
+    //private static final By NEW_ROLE = By.cssSelector("#newRole-button");
 
     /**
      * Constructor.

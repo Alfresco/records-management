@@ -32,7 +32,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl.PerformActions;
 import org.alfresco.po.rm.RmConsolePage;
 import org.alfresco.po.rm.RmConsoleUsersAndGroups;
@@ -96,7 +95,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
 
         }
         rulesPage.fillNameField(ruleTitle);
-        RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
+        //RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
         WhenSelectorImpl whenSelectorEnter = rulesPage.getWhenOptionObj();
         whenSelectorEnter.selectInbound();
         rulesPage.selectRmAction(ruleAction.getValue());
@@ -134,7 +133,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
 
         }
         rulesPage.fillNameField(ruleTitle);
-        RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
+        //RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
         WhenSelectorImpl whenSelectorEnter = rulesPage.getWhenOptionObj();
         whenSelectorEnter.selectOutbound();
         rulesPage.selectRmAction(ruleAction.getValue());
@@ -172,7 +171,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
 
         }
         rulesPage.fillNameField(ruleTitle);
-        RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
+        //RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
         WhenSelectorImpl whenSelectorEnter = rulesPage.getWhenOptionObj();
         whenSelectorEnter.selectUpdate();
         rulesPage.selectRmAction(ruleAction.getValue());
@@ -210,7 +209,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
 
         }
         rulesPage.fillNameField(ruleTitle);
-        RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
+        //RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
         WhenSelectorImpl whenSelectorEnter = rulesPage.getWhenOptionObj();
         whenSelectorEnter.selectInbound();
         rulesPage.selectRmAction(PerformActions.SET_PROPERTY_VALUE.getValue());

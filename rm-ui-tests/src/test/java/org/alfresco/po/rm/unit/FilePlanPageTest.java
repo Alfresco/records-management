@@ -39,7 +39,7 @@ public class FilePlanPageTest extends AbstractIntegrationTest
     public void openPage()
     {
         drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
-        FilePlanPage page = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+        rmSiteDashBoard.selectFilePlan();
     }
 
     @Test (dependsOnMethods="openPage")

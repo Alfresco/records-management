@@ -65,6 +65,7 @@ public class RmConsoleNewRolePage extends RmSitePage {
     /**
      * @see org.alfresco.webdrone.Render#render(org.alfresco.webdrone.RenderTime)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public RmConsoleNewRolePage render(RenderTime timer)
     {
@@ -97,7 +98,7 @@ public class RmConsoleNewRolePage extends RmSitePage {
     /**
      * @see org.alfresco.webdrone.Render#render(long)
      */
-
+    @SuppressWarnings("unchecked")
     @Override
     public RmConsoleNewRolePage render(long time)
     {
@@ -108,7 +109,7 @@ public class RmConsoleNewRolePage extends RmSitePage {
     /**
      * @see org.alfresco.webdrone.Render#render()
      */
-
+    @SuppressWarnings("unchecked")
     @Override
     public RmConsoleNewRolePage render()
     {

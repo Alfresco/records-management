@@ -42,7 +42,7 @@ public class RmCreateRulePage extends CreateRulePage
     private static final By SAVE_BUTTON                    = By
             .cssSelector("span[id*='save-button'] button[id*='save-button']");
     public static final By SELECT_PROPERTY_BUTTON           = By.xpath("//button[text()='Select...']");
-    private static final By CREATED_ALERT                   = By.xpath(".//*[@id='message']/div/span");
+    //private static final By CREATED_ALERT                   = By.xpath(".//*[@id='message']/div/span");
     public static final By SELECT_PROPERTY_DIALOG          = By
             .cssSelector("div[id$='ruleConfigAction-selectSetPropertyDialog-dialog']");
     public static final By SELECT_CRITERIA_DIALOG          = By
@@ -129,24 +129,28 @@ public class RmCreateRulePage extends CreateRulePage
         super(drone);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmCreateRulePage render(RenderTime timer)
     {
         return (RmCreateRulePage) super.render(timer);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmCreateRulePage render(long time)
     {
         return (RmCreateRulePage) super.render(time);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmCreateRulePage render()
     {
         return (RmCreateRulePage) super.render();
     }
 
+    @SuppressWarnings("unchecked")
     public RmActionSelectorEnterpImpl getActionOptionsObj()
     {
         return new RmActionSelectorEnterpImpl(drone);

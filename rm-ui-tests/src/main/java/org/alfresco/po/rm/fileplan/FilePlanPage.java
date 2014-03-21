@@ -64,7 +64,7 @@ public class FilePlanPage extends DocumentLibraryPage
     protected static final By NEW_CATEGORY_BTN = By.cssSelector("button[id$='default-newCategory-button-button']");
     protected static final By NEW_FOLDER_BTN = By.cssSelector("button[id$='default-newFolder-button-button']");
     protected static final By FILE_BTN = By.cssSelector("button[id$='default-fileUpload-button-button']");
-    
+
     protected static final By RECORD = By.cssSelector("tbody.yui-dt-data > tr");
     protected static final By DESCRIPTION = By.cssSelector("div[id$='_default-description'] div");
     protected static final By FILEPLAN = By.id("template_x002e_tree_x002e_documentlibrary_x0023_default");
@@ -74,7 +74,7 @@ public class FilePlanPage extends DocumentLibraryPage
 
     /** actions */
     protected static final By EDIT_RECORD_METADATA_ACTION = By.cssSelector("");
-    
+
     protected boolean inFilePlanRoot;
     protected boolean inRecordCategory;
     protected boolean inRecordFolder;
@@ -118,12 +118,12 @@ public class FilePlanPage extends DocumentLibraryPage
     {
         super(drone);
     }
-    
+
     /**
      * Helper method to get the root file plan page.
      * <p>
      * Returned file plan page is correct initialised and render has been run.
-     * 
+     *
      * @param   rmSiteDashBoard         records management dashboard
      * @return  {@link FilePlanPage}    rendered file plan page
      */
@@ -180,12 +180,12 @@ public class FilePlanPage extends DocumentLibraryPage
             timer.start();
             try
             {
-                if (RmPageObjectUtils.isDisplayed(drone, FILEPLAN) && 
-                    RmPageObjectUtils.isDisplayed(drone, FILEPLAN_NAV) && 
+                if (RmPageObjectUtils.isDisplayed(drone, FILEPLAN) &&
+                    RmPageObjectUtils.isDisplayed(drone, FILEPLAN_NAV) &&
                     !isJSMessageDisplayed())
                 {
                     setViewType(getNavigation().getViewType());
-                    
+
                     if (StringUtils.isNotBlank(expectedName) && !found)
                     {
                         for (FileDirectoryInfo fileDirectoryInfo : getFiles())
@@ -226,7 +226,7 @@ public class FilePlanPage extends DocumentLibraryPage
                         }
                     }
                     if (inRecordFolder)
-                    {                        
+                    {
                         if (RmPageObjectUtils.isDisplayed(drone, FILE_BTN))
                         {
                             drone.waitUntilElementClickable(FILE_BTN, timeOut);
@@ -367,7 +367,7 @@ public class FilePlanPage extends DocumentLibraryPage
     {
         return RmPageObjectUtils.isDisplayed(drone, NEW_FILE_BTN);
     }
-    
+
     /**
      * Action of click on manage rules button.
      *
@@ -385,7 +385,7 @@ public class FilePlanPage extends DocumentLibraryPage
      *
      * @return {@link FilePlanFilter} side element filter
      * Click on the 'file' action on the toolbar
-     * 
+     *
      * @return  {@link RmUploadFilePage}    rm upload page
      */
     public RmUploadFilePage selectFile()
@@ -437,7 +437,7 @@ public class FilePlanPage extends DocumentLibraryPage
      * Gets the record information for a given row index.
      * <p>
      * Note that this is zero indexed.
-     * 
+     *
      * @param index                 index
      * @return {@link RecordInfo}   record information
      */
@@ -446,8 +446,8 @@ public class FilePlanPage extends DocumentLibraryPage
         List<FileDirectoryInfo> list = getFiles();
         return new RecordInfo(drone, list.get(index));
     }
-        
-    
+
+
     // FIXME: This method will be deleted after the original method has been fixed
     @Override
     public FileDirectoryInfo getFileDirectoryInfo(String title)
@@ -536,7 +536,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
 
     public FolderDetailsPage openRecordDetailsPage(String itemValue){
-        FilePlanPage filePlan = drone.getCurrentPage().render();
+        drone.getCurrentPage().render();
         WebElement record = drone.findAndWait(By.xpath("//span//a[contains(text(), '" + itemValue + "')]"));
         record.click();
         return new FolderDetailsPage(drone).render();

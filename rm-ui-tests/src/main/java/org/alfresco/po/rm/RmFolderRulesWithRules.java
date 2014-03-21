@@ -50,7 +50,7 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
     private static final By ALERT_DELETE_BLOCK      = By.cssSelector("div[id='prompt']");
     //Delete and Cancel button has same css.
     private static final By ALERT_DELETE_OK         = By.xpath("//button[text()='Delete']");
-    private static final By SAVE_BUTTON             = By.xpath("//button[text()='Save']");
+    //private static final By SAVE_BUTTON             = By.xpath("//button[text()='Save']");
 
 
     public RmFolderRulesWithRules(WebDrone drone)
@@ -58,6 +58,7 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
         super(drone);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmFolderRulesWithRules render(RenderTime timer)
     {
@@ -68,12 +69,14 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmFolderRulesWithRules render()
     {
         return render(new RenderTime(maxPageLoadingTime));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public RmFolderRulesWithRules render(final long time)
     {

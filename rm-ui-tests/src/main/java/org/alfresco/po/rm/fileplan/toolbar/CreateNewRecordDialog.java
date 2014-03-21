@@ -72,7 +72,7 @@ public class CreateNewRecordDialog extends SharePage {
     /**
      * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render(org.alfresco.webdrone.RenderTime)
      */
-
+    @SuppressWarnings("unchecked")
     @Override
     public CreateNewRecordDialog render(RenderTime timer)
     {
@@ -89,12 +89,14 @@ public class CreateNewRecordDialog extends SharePage {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public CreateNewRecordDialog render()
     {
         return this.render(new RenderTime(maxPageLoadingTime));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public CreateNewRecordDialog render(final long time)
     {
