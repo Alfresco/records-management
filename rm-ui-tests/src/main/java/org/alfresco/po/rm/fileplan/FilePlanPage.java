@@ -575,7 +575,6 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public FilePlanPage createCategory(String categoryName, boolean isRootFolder){
         FilePlanPage filePlan = drone.getCurrentPage().render();
-        sleep(1000);
         filePlan.setInFilePlanRoot(isRootFolder);
         filePlan = filePlan.render();
 
@@ -648,19 +647,5 @@ public class FilePlanPage extends DocumentLibraryPage
         recordCategory.clickOnTitle();
         filePlan.setInRecordCategory(true);
         return new FilePlanPage(drone).render();
-    }
-
-    /**
-     * Helper method wait for long ms
-     *
-     * @param ms
-     */
-    public static void sleep(long ms)
-    {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
-        }
     }
 }

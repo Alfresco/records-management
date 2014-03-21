@@ -447,13 +447,11 @@ public class ManageRules extends RmAbstractTest {
             filePlan.navigateToFolder(categoryName);
             //Create SubCategory
             filePlan.createCategory(subCategoryName, false);
-            sleep(2000);
             filePlan.navigateToFolder(subCategoryName);
             //Create Folder
             filePlan.createFolder(folderName);
             filePlan.navigateToFolder(folderName);
             //Create Record
-            sleep(2000);
             filePlan.createRecord(recordName);
 
             //Any rule is created for Category1
@@ -474,7 +472,6 @@ public class ManageRules extends RmAbstractTest {
             click(RUN_RULES_FOR_FOLDER);
             Assert.assertFalse(isFailureMessageAppears(), "Failed to run rule for Category");
 //            waitUntilCreatedAlert();
-            sleep(2000);
             OpenRmSite();
             rmSiteDashBoard.selectFilePlan();
             //Verify that Rule applied for Category
