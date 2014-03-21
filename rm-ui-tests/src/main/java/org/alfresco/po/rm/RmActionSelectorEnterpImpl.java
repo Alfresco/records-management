@@ -22,6 +22,10 @@ import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.ActionS
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Extends the {@link ActionSelectorEnterpImpl} in order to add the RM specific actions
@@ -35,29 +39,35 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
 
     public static enum PerformActions
     {
-        COMPLETE_RECORD(1, "Complete record"),
-        REOPEN_RECORD(2, "Reopen record"),
-        OPEN_RECORD_FOLDER(3, "Open record folder"),
-        CLOSE_RECORD_FOLDER(4, "Close record folder"),
-        FILE_TO(5, "File to"),
-        REJECT(6, "Reject"),
-        REQUEST_INFORMATION(7, "Request information"),
-        COMPLETE_EVENT(8, "Complete event"),
-        ADD_RECORD_TYPES(9, "Add record types"),
-        EXECUTE_SCRIPT(10, "Execute script"),
-        SEND_EMAIL(11, "Send email"),
-        SET_PROPERTY_VALUE(12, "Set property value");
+        COMPLETE_RECORD(1, "Complete record", "declareRecord"),
+        REOPEN_RECORD(2, "Reopen record", "undeclareRecord"),
+        OPEN_RECORD_FOLDER(3, "Open record folder", "openRecordFolder"),
+        CLOSE_RECORD_FOLDER(4, "Close record folder", "closeRecordFolder"),
+        FILE_TO(5, "File to", "fileTo"),
+        REJECT(6, "Reject", "reject"),
+        REQUEST_INFORMATION(7, "Request information", "requestInfo"),
+        COMPLETE_EVENT(8, "Complete event", "completeEvent"),
+        ADD_RECORD_TYPES(9, "Add record types", "addRecordTypes"),
+        EXECUTE_SCRIPT(10, "Execute script", "executeScript"),
+        SEND_EMAIL(11, "Send email", "sendEmail"),
+        SET_PROPERTY_VALUE(12, "Set property value", "setPropertyValue");
 
 
         private final int numberPosition;
+        private final String name;
         private final String value;
 
-        PerformActions(int numberPosition, String value)
+        PerformActions(int numberPosition, String name, String value)
         {
             this.numberPosition = numberPosition;
+            this.name = name;
             this.value = value;
         }
 
+        public String getName()
+        {
+            return name;
+        }
         public String getValue()
         {
             return value;

@@ -9,7 +9,10 @@ import org.openqa.selenium.WebElement;
 import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 /**
- * Created by polly on 3/17/14.
+ * Records management Create Disposition page.
+ *
+ * @author Polina Lushchinskaya
+ * @version 1.1
  */
 public class RmCreateDispositionPage extends FolderDetailsPage {
 
@@ -17,26 +20,38 @@ public class RmCreateDispositionPage extends FolderDetailsPage {
     public static By DISPOSITION_SECTION        = By.cssSelector("div[class$='disposition']");
     public static By EDIT_PROPERTIES_BUTTON     = By.cssSelector("button[id$='editproperties-button-button']");
     public static By EDIT_SCHEDULE_BUTTON       = By.cssSelector("button[id$='editschedule-button-button']");
-    public static By EDIT_DISPOSITION_SECTION   = By.cssSelector("div[id$='rm-disposition-edit']");
-    public static By ADD_STEP_BUTTON            = By.cssSelector("button[id$='createaction-button-button']");
 
     public static enum DispositionAction{
-        ACCESSION(0, By.xpath("//a[text()='Accession']")),
-        DESTROY(1,  By.xpath("//a[text()='Destroy']")),
-        RETAIN(2,  By.xpath("//a[text()='Retain']")),
-        TRANSFER(3,  By.xpath("//a[text()='Transfer']")),
-        CUTOFF(4,  By.xpath("//a[text()='Cut off']"));
+        ACCESSION(0, By.xpath("//a[text()='Accession']"), "Accession", "accession"),
+        DESTROY(2,  By.xpath("//a[text()='Destroy']"), "Destroy", "destroy"),
+        RETAIN(3,  By.xpath("//a[text()='Retain']"), "Retain", "retain"),
+        TRANSFER(4,  By.xpath("//a[text()='Transfer']"), "Transfer", "transfer"),
+        CUTOFF(1,  By.xpath("//a[text()='Cut off']"), "Cut off", "cutoff");
 
-        private final int numberPosition;
-        private final By value;
+        public final int numberPosition;
+        private final By xpath;
+        private final String name;
+        private final String value;
 
-        DispositionAction(int numberPosition, By value)
+        DispositionAction(int numberPosition, By xpath, String name, String value)
         {
             this.numberPosition = numberPosition;
+            this.xpath = xpath;
+            this.name = name;
             this.value = value;
         }
 
-        public By getValue()
+        public By getXpath()
+        {
+            return xpath;
+        }
+
+        public String getName()
+        {
+            return name;
+        }
+
+        public String getValue()
         {
             return value;
         }
@@ -51,7 +66,6 @@ public class RmCreateDispositionPage extends FolderDetailsPage {
         super(drone);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmCreateDispositionPage render(RenderTime timer)
     {
@@ -62,19 +76,23 @@ public class RmCreateDispositionPage extends FolderDetailsPage {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmCreateDispositionPage render()
     {
         return render(new RenderTime(maxPageLoadingTime));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmCreateDispositionPage render(final long time)
     {
         return render(new RenderTime(time));
     }
+
+    /**
+     * Helper method that clicks by element
+     *
+     * @param locator element By locator
+     */
 
     public void click(By locator)
     {
@@ -83,17 +101,9 @@ public class RmCreateDispositionPage extends FolderDetailsPage {
         element.click();
     }
 
-    public void selectEditDisposition(){
+    public RmEditDispositionSchedulePage selectEditDisposition(){
         click(EDIT_SCHEDULE_BUTTON);
-        drone.findAndWait(EDIT_DISPOSITION_SECTION);
-    }
-
-    public RmEditDispositionSchedulePage selectDispositionStep(DispositionAction step)
-    {
-        click(ADD_STEP_BUTTON);
-        click(step.getValue());
         return new RmEditDispositionSchedulePage(drone).render();
+
     }
-
-
 }

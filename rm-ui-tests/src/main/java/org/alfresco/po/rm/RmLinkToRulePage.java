@@ -8,7 +8,10 @@ import org.openqa.selenium.By;
 import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 /**
- * Created by polly on 3/12/14.
+ * Records management Link To Rule page.
+ *
+ * @author Polina Lushchinskaya
+ * @version 1.1
  */
 public class RmLinkToRulePage extends RmFolderRulesWithRules {
 
@@ -21,7 +24,6 @@ public class RmLinkToRulePage extends RmFolderRulesWithRules {
         super(drone);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmLinkToRulePage render(RenderTime timer)
     {
@@ -33,14 +35,12 @@ public class RmLinkToRulePage extends RmFolderRulesWithRules {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmLinkToRulePage render()
     {
         return render(new RenderTime(maxPageLoadingTime));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmLinkToRulePage render(final long time)
     {

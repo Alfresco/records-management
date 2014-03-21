@@ -2,9 +2,6 @@ package org.alfresco.po.rm.functional;
 
 import org.alfresco.po.rm.*;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
-import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
-import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog;
-import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.share.*;
 import org.alfresco.po.share.site.*;
 import org.alfresco.po.share.site.contentrule.FolderRulesPage;
@@ -15,7 +12,6 @@ import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.WhenSel
 import org.alfresco.po.share.site.document.DocumentAspect;
 import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
-import org.alfresco.po.share.util.SiteUtil;
 import org.alfresco.webdrone.WebDrone;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -52,7 +48,6 @@ public class RmAbstractTest extends AbstractIntegrationTest {
         drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
     }
 
-
     protected void createInboundRule(String ruleTitle, PerformActions ruleAction, boolean applytosubfolders, boolean isNoRule)
     {
         RmCreateRulePage rulesPage;
@@ -70,7 +65,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
         RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
         WhenSelectorImpl whenSelectorEnter = rulesPage.getWhenOptionObj();
         whenSelectorEnter.selectInbound();
-        actionSelectorEnter.selectAction(ruleAction);
+        rulesPage.selectRmAction(ruleAction.getValue());
         if(applytosubfolders){
             rulesPage.selectApplyToSubfolderCheckbox();
         }
@@ -85,24 +80,10 @@ public class RmAbstractTest extends AbstractIntegrationTest {
                         By.xpath(
                                 "//div[@class='parameters']"
                                         + "//ancestor::div[contains(@id,'ruleConfigAction')]"
-                                        + "//span[contains(text(), '" + ruleAction.getValue() + "')]"),
+                                        + "//span[contains(text(), '" + ruleAction.getName() + "')]"),
                         MAX_WAIT_TIME);
             }
         }
-    }
-
-    public void click(By locator)
-    {
-        WebElement element = drone.findAndWait(locator);
-        drone.mouseOverOnElement(element);
-        element.click();
-    }
-
-    public void type(By locator, String text)
-    {
-        WebElement title = drone.find(locator);
-        title.clear();
-        title.sendKeys(text);
     }
 
     protected void createOutboundRule(String ruleTitle, PerformActions ruleAction, boolean applytosubfolders, boolean isNoRule)
@@ -122,7 +103,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
         RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
         WhenSelectorImpl whenSelectorEnter = rulesPage.getWhenOptionObj();
         whenSelectorEnter.selectOutbound();
-        actionSelectorEnter.selectAction(ruleAction);
+        rulesPage.selectRmAction(ruleAction.getValue());
         if(applytosubfolders){
             rulesPage.selectApplyToSubfolderCheckbox();
         }
@@ -137,7 +118,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
                         By.xpath(
                                 "//div[@class='parameters']"
                                         + "//ancestor::div[contains(@id,'ruleConfigAction')]"
-                                        + "//span[contains(text(), '" + ruleAction.getValue() + "')]"),
+                                        + "//span[contains(text(), '" + ruleAction.getName() + "')]"),
                         MAX_WAIT_TIME);
             }
         }
@@ -160,7 +141,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
         RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
         WhenSelectorImpl whenSelectorEnter = rulesPage.getWhenOptionObj();
         whenSelectorEnter.selectUpdate();
-        actionSelectorEnter.selectAction(ruleAction);
+        rulesPage.selectRmAction(ruleAction.getValue());
         if(applytosubfolders){
             rulesPage.selectApplyToSubfolderCheckbox();
         }
@@ -175,7 +156,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
                         By.xpath(
                                 "//div[@class='parameters']"
                                         + "//ancestor::div[contains(@id,'ruleConfigAction')]"
-                                        + "//span[contains(text(), '" + ruleAction.getValue() + "')]"),
+                                        + "//span[contains(text(), '" + ruleAction.getName() + "')]"),
                         MAX_WAIT_TIME);
             }
         }
@@ -198,7 +179,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
         RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
         WhenSelectorImpl whenSelectorEnter = rulesPage.getWhenOptionObj();
         whenSelectorEnter.selectInbound();
-        actionSelectorEnter.selectAction(PerformActions.SET_PROPERTY_VALUE);
+        rulesPage.selectRmAction(PerformActions.SET_PROPERTY_VALUE.getValue());
         rulesPage.selectSetProperty(property);
         type(PROPERTY_VALUE_INPUT, value);
         if(applytosubfolders){
@@ -215,7 +196,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
                         By.xpath(
                                 "//div[@class='parameters']"
                                         + "//ancestor::div[contains(@id,'ruleConfigAction')]"
-                                        + "//span[contains(text(), '" + PerformActions.SET_PROPERTY_VALUE.getValue() + "')]"),
+                                        + "//span[contains(text(), '" + PerformActions.SET_PROPERTY_VALUE.getName() + "')]"),
                         MAX_WAIT_TIME);
             }
         }
@@ -247,13 +228,13 @@ public class RmAbstractTest extends AbstractIntegrationTest {
         manageRulesPage.openLinkToDialog();
         WebElement siteLink = drone.findAndWait(By.xpath("//div[contains(@id, 'sitePicker')]//span[contains(text(), 'Records Management')]"), MAX_WAIT_TIME);
         siteLink.click();
-        webDriverWait(drone, 1000);
+        sleep(1000);
         WebElement folderLink = drone.findAndWait(By.xpath("//span[contains(text(), '"+folderName+"')]"), MAX_WAIT_TIME);
         folderLink.click();
-        webDriverWait(drone, 1000);
+        sleep(1000);
         WebElement ruleLink = drone.findAndWait(By.xpath("//div[contains(@id, 'rulePicker')]//span[contains(text(), '"+ruleName+"')]"), MAX_WAIT_TIME);
         ruleLink.click();
-        webDriverWait(drone, 1000);
+        sleep(1000);
         drone.waitUntilElementClickable(LINK_BUTTON, MAX_WAIT_TIME);
         manageRulesPage.clickLink();
         return new RmLinkToRulePage(drone).render();
@@ -263,74 +244,19 @@ public class RmAbstractTest extends AbstractIntegrationTest {
         login(username, password);
     }
 
-    protected FilePlanPage createCategory(String categoryName, boolean isRootFolder){
-        FilePlanPage filePlan = drone.getCurrentPage().render();
-        webDriverWait(drone, 1000);
-        filePlan.setInFilePlanRoot(isRootFolder);
-        filePlan = filePlan.render();
-
-        CreateNewRecordCategoryDialog createNewCategory = filePlan.selectCreateNewCategory().render();
-        createNewCategory.enterName(categoryName);
-        createNewCategory.enterTitle(categoryName);
-        createNewCategory.enterDescription(categoryName);
-
-        filePlan = ((FilePlanPage) createNewCategory.selectSave());
-        filePlan.setInFilePlanRoot(isRootFolder);
-        return new FilePlanPage(drone).render();
-    }
-
-    protected FilePlanPage createFolder(String folderName){
-        FilePlanPage filePlan = drone.getCurrentPage().render();
-        CreateNewRecordFolderDialog createNewFolder = filePlan.selectCreateNewFolder().render();
-        createNewFolder.enterName(folderName);
-        createNewFolder.enterTitle(folderName);
-        createNewFolder.enterDescription(folderName);
-
-        filePlan = ((FilePlanPage) createNewFolder.selectSave());
-        filePlan.setInRecordCategory(true);
-        return filePlan.render(folderName);
-    }
-
-    protected FilePlanPage createRecord(String recordName){
-        FilePlanPage filePlan = drone.getCurrentPage().render();
-        CreateNewRecordDialog createNewRecord = filePlan.selectNewNonElectronicRecord();
-        createNewRecord.enterName(recordName);
-        createNewRecord.enterTitle(recordName);
-        createNewRecord.enterDescription(recordName);
-
-        filePlan = ((FilePlanPage) createNewRecord.selectSave());
-//        waitUntilCreatedAlert();
-        filePlan.setInRecordFolder(true);
-        return filePlan.render(recordName);
-    }
-
-    protected FilePlanPage navigateToFolder(String folderName){
-        FilePlanPage filePlan = drone.getCurrentPage().render();
-        FileDirectoryInfo recordCategory = filePlan.getFileDirectoryInfo(folderName);
-        recordCategory.clickOnTitle();
-        filePlan.setInRecordCategory(true);
-        return filePlan.render();
-    }
-
     /**
      * Common method to wait for the next solr indexing cycle.
      *
-     * @param waitMiliSec
+     * @param ms
      *            Wait duration in milliseconds
      */
-    protected void webDriverWait(WebDrone driver, long waitMiliSec)
+    public static void sleep(long ms)
     {
-        if (waitMiliSec <= 0)
-        {
-            waitMiliSec = MAX_WAIT_TIME;
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
         }
-        logger.info("Waiting For: " + waitMiliSec / 1000 + " seconds");
-        /*
-         * try { Thread.sleep(waitMiliSec); //driver.refresh(); }
-         * catch(InterruptedException ie) { throw new
-         * RuntimeException("Wait interrupted / timed out"); }
-         */
-        driver.waitFor(waitMiliSec);
     }
 
     /**
@@ -340,7 +266,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
      *            WebDrone Instance
      * @param testName
      *            String test case ID
-     * @param Throwable
+     * @param t
      *            t Throwable Error & Exception to include testng assert
      *            failures being reported as Errors
      */
@@ -382,7 +308,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
     /**
      * Helper to return the stack trace as a string for reporting purposes.
      *
-     * @param Throwable
+     * @param ex
      *            exception / error
      * @return String: stack trace
      */
@@ -513,7 +439,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
         searchInput.clear();
         searchInput.sendKeys(userName);
         //Click search button and wait
-        webDriverWait(drone, 1000);
+        sleep(1000);
         click(SEARCH_USER_BUTTON);
         for(int i=0; i<3; i++){
             if(!isElementPresent(addUserButton(userName)))

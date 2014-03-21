@@ -6,7 +6,10 @@ import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
 
 /**
- * Created by polly on 3/4/14.
+ * Records management Define Roles page.
+ *
+ * @author Polina Lushchinskaya
+ * @version 1.1
  */
 public class RmConsoleDefineRolesPage extends RmSitePage {
 
@@ -22,19 +25,16 @@ public class RmConsoleDefineRolesPage extends RmSitePage {
         super(drone);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends HtmlPage> T render(RenderTime renderTime) {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends HtmlPage> T render(long l) {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends HtmlPage> T render() {
         return null;

@@ -40,6 +40,8 @@ import java.util.List;
  */
 public class RmCreateRulePage extends CreateRulePage
 {
+    private static final By ACTION_OPTIONS_SELECT     = By
+            .cssSelector("ul[id$=ruleConfigAction-configs]>li select[class$='config-name']");
     private static final By SAVE_BUTTON                    = By
             .cssSelector("span[id*='save-button'] button[id*='save-button']");
     public static final By SELECT_PROPERTY_BUTTON           = By.xpath("//button[text()='Select...']");
@@ -54,8 +56,10 @@ public class RmCreateRulePage extends CreateRulePage
 
     public static final By PROPERTY_VALUE_INPUT             = By
             .xpath("//span[contains(@class, 'menuname_setPropertyValue')]//input[@type='text']");
-    public static By CRITERIAS_SELECT = By
+    public static By CRITERIAS_SELECT                       = By
             .cssSelector("ul[id$=ruleConfigIfCondition-configs]>li select[class$='config-name']");
+    public static By POSITION_SELECT                        = By.cssSelector("select[title$='position']");
+    public static By DISPOSITION_STEP_SELECT                = By.cssSelector("select[title$='action']");
 
     public static enum RuleCriterias{
         ALL_ITEMS(0, "All Items"),
@@ -97,57 +101,93 @@ public class RmCreateRulePage extends CreateRulePage
         }
     }
 
+    public static enum WhenExecute{
+        ANY(0, "Any", "ANY"),
+        NEXT(1, "Next", "NEXT"),
+        PREVIOUS(2, "Previous", "PREVIOUS");
+
+        public final int numberPosition;
+        private final String name;
+        private final String value;
+
+        WhenExecute(int numberPosition, String name, String value)
+        {
+            this.numberPosition = numberPosition;
+            this.name = name;
+            this.value = value;
+        }
+
+        public String getName()
+        {
+            return name;
+        }
+        public String getValue()
+        {
+            return value;
+        }
+    }
+
     public RmCreateRulePage(WebDrone drone)
     {
         super(drone);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmCreateRulePage render(RenderTime timer)
     {
         return (RmCreateRulePage) super.render(timer);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmCreateRulePage render(long time)
     {
         return (RmCreateRulePage) super.render(time);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmCreateRulePage render()
     {
         return (RmCreateRulePage) super.render();
     }
 
-    @SuppressWarnings("unchecked")
     public RmActionSelectorEnterpImpl getActionOptionsObj()
     {
         return new RmActionSelectorEnterpImpl(drone);
     }
 
-    @SuppressWarnings("unchecked")
     public WhenSelectorImpl getWhenOptionObj()
     {
         return new WhenSelectorImpl(drone);
     }
 
-
+    /**
+     * Action Click on save button
+     *
+     * @return  {@link RmFolderRulesWithRules} page response
+     */
     public RmFolderRulesWithRules clickSave()
     {
         click(SAVE_BUTTON);
         return new RmFolderRulesWithRules(drone).render();
     }
 
+    /**
+     * Helper method that clicks by element
+     *
+     * @param locator element By locator
+     */
     private void click(By locator)
     {
         WebElement element = drone.findAndWait(locator);
         element.click();
     }
 
+    /**
+     * Action select property value from select property dialog
+     *
+     * @param propertyValue value of property
+     * @return  {@link RmCreateRulePage} page response
+     */
     public RmCreateRulePage selectSetProperty(String propertyValue){
         drone.findAndWait(SELECT_PROPERTY_BUTTON).isDisplayed();
         click(SELECT_PROPERTY_BUTTON);
@@ -159,7 +199,12 @@ public class RmCreateRulePage extends CreateRulePage
         return new RmCreateRulePage(drone).render();
     }
 
-    public void selectCriteriaOption(int criteriaOptionNumber)
+    /**
+     * Action select criteria by value tag
+     *
+     * @param criteriaOptionValue  criteria name
+     */
+    public void selectCriteriaOption(String criteriaOptionValue)
     {
         List<WebElement> criteriaOptions = drone.findAndWaitForElements(CRITERIAS_SELECT);
         List<Select> criteriaSelects = new ArrayList<Select>();
@@ -167,6 +212,56 @@ public class RmCreateRulePage extends CreateRulePage
         {
             criteriaSelects.add(new Select(whenOption));
         }
-        criteriaSelects.get(criteriaSelects.size()-1).selectByIndex(criteriaOptionNumber);
+        criteriaSelects.get(criteriaSelects.size()-1).selectByValue(criteriaOptionValue);
+    }
+
+    /**
+     * Action select Disposition created value when Has disposition criteria selected
+     *
+     * @param whenOptionValue - when disposiotion step will execute
+     */
+    public void selectWhenDispositionOption(String whenOptionValue)
+    {
+        List<WebElement> criteriaOptions = drone.findAndWaitForElements(POSITION_SELECT);
+        List<Select> criteriaSelects = new ArrayList<Select>();
+        for (WebElement whenOption : criteriaOptions)
+        {
+            criteriaSelects.add(new Select(whenOption));
+        }
+        criteriaSelects.get(criteriaSelects.size()-1).selectByValue(whenOptionValue);
+    }
+
+    /**
+     * Action select Disposiotion step value when Has disposition criteria selected
+     *
+     * @param dispositionStepValue
+     */
+    public void selectDispositionStep(String dispositionStepValue)
+    {
+        List<WebElement> criteriaOptions = drone.findAndWaitForElements(DISPOSITION_STEP_SELECT);
+        List<Select> criteriaSelects = new ArrayList<Select>();
+        for (WebElement whenOption : criteriaOptions)
+        {
+            criteriaSelects.add(new Select(whenOption));
+        }
+
+
+        criteriaSelects.get(criteriaSelects.size()-1).selectByValue(dispositionStepValue);
+    }
+
+    /**
+     * Action select Rule Action by value
+     *
+     * @param actionOptionValue
+     */
+    public void selectRmAction(String actionOptionValue)
+    {
+        List<WebElement> actionOptions = drone.findAndWaitForElements(ACTION_OPTIONS_SELECT);
+        List<Select> actionSelects = new ArrayList<Select>();
+        for (WebElement actionOption : actionOptions)
+        {
+            actionSelects.add(new Select(actionOption));
+        }
+        actionSelects.get(actionSelects.size()-1).selectByValue(actionOptionValue);
     }
 }

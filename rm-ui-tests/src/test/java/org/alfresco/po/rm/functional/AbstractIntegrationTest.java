@@ -39,6 +39,8 @@ import org.alfresco.webdrone.WebDroneUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -306,5 +308,43 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
         filePlan = ((FilePlanPage) createNewFolder.selectSave());
         filePlan.setInRecordCategory(true);
         return filePlan.render(name);
+    }
+    /**
+     * Helper method verifies if element exists on page
+     * @param drone
+     * @param locator
+     * @return true/false
+     */
+    public static boolean isDisplay(final WebDrone drone, By locator) {
+        try {
+            return drone.findAndWait(locator, 2000).isDisplayed();
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Helper method that clicks by element
+     *
+     * @param locator element By locator
+     */
+
+    public void click(By locator)
+    {
+        WebElement element = drone.findAndWait(locator);
+        drone.mouseOverOnElement(element);
+        element.click();
+    }
+
+    /**
+     * Helper method that type to input field
+     *
+     * @param locator element By locator
+     */
+    public void type(By locator, String text)
+    {
+        WebElement title = drone.find(locator);
+        title.clear();
+        title.sendKeys(text);
     }
 }

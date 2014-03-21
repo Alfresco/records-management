@@ -13,7 +13,10 @@ import java.util.List;
 import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 /**
- * Created by polly on 3/11/14.
+ * Records management Rules Page with existing Rules.
+ *
+ * @author Polina Lushchinskaya
+ * @version 1.1
  */
 public class RmFolderRulesWithRules extends FolderRulesPage {
 
@@ -38,7 +41,6 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
         super(drone);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmFolderRulesWithRules render(RenderTime timer)
     {
@@ -49,21 +51,22 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmFolderRulesWithRules render()
     {
         return render(new RenderTime(maxPageLoadingTime));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmFolderRulesWithRules render(final long time)
     {
         return render(new RenderTime(time));
     }
 
-
+    /**
+     * Method verifies is Rules Details Block is displayed
+     * @return true/false
+     */
     private boolean isRuleDetailsDisplay()
     {
         if (drone.find(RULE_DETAILS_BLOCK).isDisplayed()
@@ -75,6 +78,11 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
         return false;
     }
 
+    /**
+     * Delete rule from rules detailes page
+     * @param ruleName
+     * @return {@link RmFolderRulesPage}
+     */
     public RmFolderRulesPage deleteRule(String ruleName)
     {
         List<WebElement> ruleItems = drone.findAndWaitForElements(RULE_ITEMS);
@@ -92,24 +100,31 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
         throw new PageOperationException("Rule with name:" + ruleName + " not found on Page");
     }
 
+    /**
+     * Action click on new rule button
+     * @return {@link RmCreateRulePage}
+     */
     public RmCreateRulePage clickNewRuleButton()
     {
         click(NEW_RULE_BUTTON);
         return drone.getCurrentPage().render();
     }
 
+    /**
+     * Action click on edit rule button
+     * @return {@link RmCreateRulePage}
+     */
     public RmCreateRulePage clickEditButton()
     {
         click(EDIT_BUTTON);
         return drone.getCurrentPage().render();
     }
 
-    public RmCreateRulePage clickSaveButton()
-    {
-        click(SAVE_BUTTON);
-        return drone.getCurrentPage().render();
-    }
-
+    /**
+     * Helper method that clicks by element
+     *
+     * @param locator element By locator
+     */
     public void click(By locator)
     {
         WebElement element = drone.findAndWait(locator);
@@ -117,6 +132,11 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
         element.click();
     }
 
+    /**
+     * Helper method verifies if folder rule page is correct
+     * @param folderName
+     * @return
+     */
     public boolean isPageCorrect(String folderName)
     {
         return (super.isTitleCorrect(folderName) && isRuleDetailsDisplay());

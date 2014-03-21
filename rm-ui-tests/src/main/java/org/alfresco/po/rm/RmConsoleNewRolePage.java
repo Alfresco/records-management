@@ -9,9 +9,12 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 /**
- * Created by polly on 3/4/14.
+ * Records management New Role page.
+ *
+ * @author Polina Lushchinskaya
+ * @version 1.1
  */
-public class RmConsoleNewRolePage extends DocumentLibraryPage {
+public class RmConsoleNewRolePage extends RmSitePage {
 
     public static enum RoleValue{
         MANAGE_RULES("input[id$='ManageRules']"),
@@ -45,7 +48,6 @@ public class RmConsoleNewRolePage extends DocumentLibraryPage {
     /**
      * @see org.alfresco.webdrone.Render#render(org.alfresco.webdrone.RenderTime)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public RmConsoleNewRolePage render(RenderTime timer)
     {
@@ -78,7 +80,7 @@ public class RmConsoleNewRolePage extends DocumentLibraryPage {
     /**
      * @see org.alfresco.webdrone.Render#render(long)
      */
-    @SuppressWarnings("unchecked")
+
     @Override
     public RmConsoleNewRolePage render(long time)
     {
@@ -89,7 +91,7 @@ public class RmConsoleNewRolePage extends DocumentLibraryPage {
     /**
      * @see org.alfresco.webdrone.Render#render()
      */
-    @SuppressWarnings("unchecked")
+
     @Override
     public RmConsoleNewRolePage render()
     {

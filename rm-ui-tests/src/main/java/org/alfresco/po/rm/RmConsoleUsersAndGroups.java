@@ -10,9 +10,12 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
 /**
- * Created by polly on 3/5/14.
+ * Records management Users and groups page.
+ *
+ * @author Polina Lushchinskaya
+ * @version 1.1
  */
-public class RmConsoleUsersAndGroups extends DocumentLibraryPage {
+public class RmConsoleUsersAndGroups extends RmSitePage {
 
     public static final By ADD_BUTTON = By.xpath("//button[@id='addUser-button']");
     public static final By ADD_USER_FORM = By.cssSelector("div[id$='peoplepicker']");
@@ -52,7 +55,6 @@ public class RmConsoleUsersAndGroups extends DocumentLibraryPage {
     /**
      * @see org.alfresco.webdrone.Render#render(org.alfresco.webdrone.RenderTime)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public RmConsoleUsersAndGroups render(RenderTime timer)
     {
@@ -85,7 +87,6 @@ public class RmConsoleUsersAndGroups extends DocumentLibraryPage {
     /**
      * @see org.alfresco.webdrone.Render#render(long)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public RmConsoleUsersAndGroups render(long time)
     {
@@ -96,7 +97,6 @@ public class RmConsoleUsersAndGroups extends DocumentLibraryPage {
     /**
      * @see org.alfresco.webdrone.Render#render()
      */
-    @SuppressWarnings("unchecked")
     @Override
     public RmConsoleUsersAndGroups render()
     {
@@ -104,11 +104,23 @@ public class RmConsoleUsersAndGroups extends DocumentLibraryPage {
         return render(timer);
     }
 
+    /**
+     * Action click on group value
+     *
+     * @param drone
+     * @param groupName
+     */
     public static void selectGroup(final WebDrone drone, String groupName){
         WebElement group = drone.findAndWait(By.cssSelector("#role-" + groupName));
         group.click();
     }
 
+    /**
+     * Helper method verifies if element exists on page
+     * @param drone
+     * @param locator
+     * @return true/false
+     */
     public static boolean isDisplay(final WebDrone drone, By locator)
     {
         try
@@ -121,10 +133,19 @@ public class RmConsoleUsersAndGroups extends DocumentLibraryPage {
         }
     }
 
+    /**
+     * Helper method find Add button by xpath according username
+     *
+     * @param userName
+     * @return By locator
+     */
     public static By addUserButton(String userName){
         return By.xpath("//span[contains(text(), '" + userName + "')]/ancestor::tr//button[contains(text(), 'Add')]");
     }
 
+    /**
+     * Helper method wait until created alert disappeares
+     */
     public void waitUntilCreatedAlert()
     {
         drone.waitUntilElementPresent(CREATED_ALERT, 5);

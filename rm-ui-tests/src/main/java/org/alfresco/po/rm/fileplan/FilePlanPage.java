@@ -69,7 +69,9 @@ public class FilePlanPage extends DocumentLibraryPage
     protected static final By DESCRIPTION = By.cssSelector("div[id$='_default-description'] div");
     protected static final By FILEPLAN = By.id("template_x002e_tree_x002e_documentlibrary_x0023_default");
     protected static final By FILEPLAN_NAV = By.cssSelector("div[id$='navBar']");
-    
+
+    protected final static long MAX_WAIT_TIME = 60000;
+
     /** actions */
     protected static final By EDIT_RECORD_METADATA_ACTION = By.cssSelector("");
     
@@ -355,6 +357,16 @@ public class FilePlanPage extends DocumentLibraryPage
         RmPageObjectUtils.select(drone, MANAGE_RULES_BTN);
         return new RmFolderRulesPage(drone);
     }
+
+    /**
+     * Verify if header sub navigation has File button visible.
+     *
+     * @return <code>true</code> if visible <code>false</code> otherwise
+     */
+    public boolean isCreateNewFileDisplayed()
+    {
+        return RmPageObjectUtils.isDisplayed(drone, NEW_FILE_BTN);
+    }
     
     /**
      * Action of click on manage rules button.
@@ -472,7 +484,7 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * Action of click on Create Non-Electronic Record button.
      *
-     * @return {@link RmFolderRulesWithRules} page response
+     * @return {@link CreateNewRecordDialog} page response
      */
     public CreateNewRecordDialog selectNewNonElectronicRecord()
     {
@@ -483,6 +495,12 @@ public class FilePlanPage extends DocumentLibraryPage
         return new CreateNewRecordDialog(drone).render();
     }
 
+    /**
+     * Action open Folder/Category Details page using MouseOver
+     *
+     * @param itemValue
+     * @return  {@link FolderDetailsPage} page response
+     */
     public FolderDetailsPage openDetailsPage(String itemValue){
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
@@ -493,6 +511,30 @@ public class FilePlanPage extends DocumentLibraryPage
         return new FolderDetailsPage(drone).render();
     }
 
+    /**
+     * Action click Cut Off for element
+     *
+     * @param itemValue
+     * @return {@link FilePlanPage} page response
+     */
+    public FilePlanPage cutOffAction(String itemValue){
+        FilePlanPage filePlan = drone.getCurrentPage().render();
+        FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
+        WebElement selectMoreAction = folder.selectMoreAction();
+        selectMoreAction.click();
+        WebElement viewDetails = folder.findElement(By.cssSelector("div[class$='rm-cutoff']>a"));
+        viewDetails.click();
+        filePlan.setInRecordCategory(true);
+        return new FilePlanPage(drone).render();
+    }
+
+    /**
+     * Action open Record Details page using MouseOver
+     *
+     * @param itemValue
+     * @return  {@link FolderDetailsPage} page response
+     */
+
     public FolderDetailsPage openRecordDetailsPage(String itemValue){
         FilePlanPage filePlan = drone.getCurrentPage().render();
         WebElement record = drone.findAndWait(By.xpath("//span//a[contains(text(), '" + itemValue + "')]"));
@@ -500,10 +542,22 @@ public class FilePlanPage extends DocumentLibraryPage
         return new FolderDetailsPage(drone).render();
     }
 
+    /**
+     * Action click Create Disposition on Category Details Page
+     *
+     * @return  {@link RmCreateDispositionPage} page response
+     */
+
     public RmCreateDispositionPage openCreateDisposition(){
         click(CREATE_DISPOSITION_BUTTON);
         return new RmCreateDispositionPage(drone).render();
     }
+
+    /**
+     * Helper method that clicks by element
+     *
+     * @param locator element By locator
+     */
 
     public void click(By locator)
     {
@@ -512,4 +566,101 @@ public class FilePlanPage extends DocumentLibraryPage
         element.click();
     }
 
+    /**
+     * Action create a category/subcategory
+     *
+     * @param categoryName Name of created Category
+     * @param isRootFolder root or no-root node
+     * @return {@link FilePlanPage} page response
+     */
+    public FilePlanPage createCategory(String categoryName, boolean isRootFolder){
+        FilePlanPage filePlan = drone.getCurrentPage().render();
+        sleep(1000);
+        filePlan.setInFilePlanRoot(isRootFolder);
+        filePlan = filePlan.render();
+
+        CreateNewRecordCategoryDialog createNewCategory = filePlan.selectCreateNewCategory().render();
+        createNewCategory.enterName(categoryName);
+        createNewCategory.enterTitle(categoryName);
+        createNewCategory.enterDescription(categoryName);
+
+        filePlan = ((FilePlanPage) createNewCategory.selectSave());
+        filePlan.setInFilePlanRoot(isRootFolder);
+        return new FilePlanPage(drone).render();
+    }
+
+    /**
+     * Action verifies if category exists in file plan
+     *
+     * @param categoryName
+     * @return  true/false
+     */
+    public boolean isCategoryCreated(String categoryName){
+        return RmPageObjectUtils.isDisplayed(drone, By.
+                xpath("//span//a[contains(text(), '" + categoryName + "')]"));
+    }
+
+    /**
+     * Action create a folder
+     *
+     * @param folderName Name of created Folder
+     * @return {@link FilePlanPage} page response
+     */
+    public FilePlanPage createFolder(String folderName){
+        FilePlanPage filePlan = drone.getCurrentPage().render();
+        CreateNewRecordFolderDialog createNewFolder = filePlan.selectCreateNewFolder().render();
+        createNewFolder.enterName(folderName);
+        createNewFolder.enterTitle(folderName);
+        createNewFolder.enterDescription(folderName);
+
+        filePlan = ((FilePlanPage) createNewFolder.selectSave());
+        filePlan.setInRecordCategory(true);
+        return filePlan.render(folderName);
+    }
+
+    /**
+     * Action create a record
+     *
+     * @param recordName Name of created Record
+     * @return {@link FilePlanPage} page response
+     */
+    public FilePlanPage createRecord(String recordName){
+        FilePlanPage filePlan = drone.getCurrentPage().render();
+        CreateNewRecordDialog createNewRecord = filePlan.selectNewNonElectronicRecord();
+        createNewRecord.enterName(recordName);
+        createNewRecord.enterTitle(recordName);
+        createNewRecord.enterDescription(recordName);
+
+        filePlan = ((FilePlanPage) createNewRecord.selectSave());
+        filePlan.setInRecordFolder(true);
+        return filePlan.render(recordName);
+    }
+
+    /**
+     * Action navigates to already created category/folder
+     *
+     * @param folderName
+     * @return {@link FilePlanPage} page response
+     */
+    public FilePlanPage navigateToFolder(String folderName){
+        FilePlanPage filePlan = drone.getCurrentPage().render();
+        FileDirectoryInfo recordCategory = filePlan.getFileDirectoryInfo(folderName);
+        recordCategory.clickOnTitle();
+        filePlan.setInRecordCategory(true);
+        return new FilePlanPage(drone).render();
+    }
+
+    /**
+     * Helper method wait for long ms
+     *
+     * @param ms
+     */
+    public static void sleep(long ms)
+    {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

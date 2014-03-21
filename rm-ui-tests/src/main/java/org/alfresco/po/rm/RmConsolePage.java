@@ -114,11 +114,21 @@ public class RmConsolePage extends RmSitePage
         return render(timer);
     }
 
+    /**
+     * Action Select Define Roles Page from RM console Menu
+     *
+     * @return  {@link RmConsoleDefineRolesPage}
+     */
     public RmConsoleDefineRolesPage openDefineRolesPage(){
         RmPageObjectUtils.select(drone, RmConsoleMenu.DEFINE_ROLES.locator);
         return new RmConsoleDefineRolesPage(drone).render();
     }
 
+    /**
+     * Action Select Users And Groups Page from RM console Menu
+     *
+     * @return  {@link RmConsoleUsersAndGroups}
+     */
     public RmConsoleUsersAndGroups openUsersAndGroupsPage(){
         RmPageObjectUtils.select(drone, RmConsoleMenu.USERS_AND_GROUPS.locator);
         return new RmConsoleUsersAndGroups(drone).render();

@@ -12,20 +12,25 @@ import java.util.List;
 import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 /**
- * Created by polly on 3/17/14.
+ * Records management Edit Disposition page.
+ *
+ * @author Polina Lushchinskaya
+ * @version 1.1
  */
 public class RmEditDispositionSchedulePage extends RmCreateDispositionPage {
 
+    public static By EDIT_DISPOSITION_SECTION   = By.cssSelector("div[id$='rm-disposition-edit']");
+    public static By ADD_STEP_BUTTON            = By.cssSelector("button[id$='createaction-button-button']");
     public static By DISPOSITION_FORM           = By.cssSelector("div[class$='disposition-form']");
-    public static By SAVE_BUTTON                = By.xpath("//button[text()='Save']");
-    public static By CANCEL_BUTTON              = By.xpath("//button[text()='Cancel']");
+    public static By SAVE_BUTTON                = By.xpath("//div[contains(@style,'block')]//button[contains(text(),'Save')]");
+    public static By CANCEL_BUTTON              = By.xpath("//div[contains(@style,'block')]//button[text()='Cancel']");
     public static By DONE_BUTTON                = By.xpath("//button[text()='Done']");
-    public static By AFTER_PERIOD_CHKBOX        = By.cssSelector("input[class$='period-enabled']");
-    public static By WHEN_EVENT_OCCURS_CHKBOX   = By.cssSelector("input[class$='pevents-enabled']");
-    public static By DESCRIPTION_AREA           = By.cssSelector("textarea[id$='description']");
-    public static By PERIOD_INPUT               = By.cssSelector("input[class$='period-amount']");
-    public static By PERIOD_SELECT              = By.cssSelector("select[class$='period-unit']");
-    public static By PERIOD_ACTION_SELECT       = By.cssSelector("select[class$='period-action']");
+    public static By AFTER_PERIOD_CHKBOX        = By.cssSelector("div[style*='block'] input[class$='period-enabled']");
+    public static By WHEN_EVENT_OCCURS_CHKBOX   = By.cssSelector("div[style*='block'] input[class$='events-enabled']");
+    public static By DESCRIPTION_AREA           = By.cssSelector("div[style*='block'] textarea[id$='description']");
+    public static By PERIOD_INPUT               = By.cssSelector("div[style*='block'] input[class$='period-amount']");
+    public static By PERIOD_SELECT              = By.cssSelector("div[style*='block'] select[class$='period-unit']");
+    public static By PERIOD_ACTION_SELECT       = By.cssSelector("div[style*='block'] select[class$='period-action']");
 
     public static enum AfterPeriodOf{
         DAY(0, "Day"),
@@ -85,61 +90,142 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage {
         super(drone);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmEditDispositionSchedulePage render(RenderTime timer)
     {
         elementRender(timer,
-                getVisibleRenderElement(DISPOSITION_FORM),
-                getVisibleRenderElement(SAVE_BUTTON),
-                getVisibleRenderElement(DONE_BUTTON),
-                getVisibleRenderElement(AFTER_PERIOD_CHKBOX),
-                getVisibleRenderElement(WHEN_EVENT_OCCURS_CHKBOX),
-                getVisibleRenderElement(DESCRIPTION_AREA),
-                getVisibleRenderElement(PERIOD_INPUT),
-                getVisibleRenderElement(PERIOD_SELECT),
-                getVisibleRenderElement(PERIOD_ACTION_SELECT),
-                getVisibleRenderElement(CANCEL_BUTTON));
+                getVisibleRenderElement(EDIT_DISPOSITION_SECTION),
+                getVisibleRenderElement(ADD_STEP_BUTTON));
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmEditDispositionSchedulePage render()
     {
         return render(new RenderTime(maxPageLoadingTime));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public RmEditDispositionSchedulePage render(final long time)
     {
         return render(new RenderTime(time));
     }
 
-    public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String intValue, AfterPeriodOfFrom fromOptionNumber){
-        WebElement afterPeriod = drone.findAndWait(AFTER_PERIOD_CHKBOX);
-        if(!afterPeriod.isSelected()){
-            afterPeriod.click();
-        }
+    public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description, String intValue, AfterPeriodOfFrom fromOptionNumber){
+        checkAfterPeriodChkBox();
         if(intValue!=null){
-            WebElement title = drone.find(PERIOD_INPUT);
-            title.clear();
-            title.sendKeys(intValue);
+            inputPeriodValue(intValue);
         }
         if(fromOptionNumber!=null){
-            List<WebElement> fromOption = drone.findAndWaitForElements(PERIOD_ACTION_SELECT);
-            List<Select> fromSelect = new ArrayList<Select>();
-            for (WebElement action : fromOption)
-            {
-                fromSelect.add(new Select(action));
-            }
-            fromSelect.get(fromSelect.size()-1).selectByIndex(fromOptionNumber.numberPosition);
+            selectFromOption(fromOptionNumber);
         }
+        selectPeriod(period);
+        inputDescription(description);
+        saveStepButton();
         return new RmEditDispositionSchedulePage(drone).render();
     }
 
-    public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period){
-        return selectAfterPeriodOf(period, null, null);
+    public RmEditDispositionSchedulePage selectAfterEventCompleted(AfterPeriodOf period, String description, String intValue, AfterPeriodOfFrom fromOptionNumber){
+        checkAfterPeriodChkBox();
+        if(intValue!=null){
+            inputPeriodValue(intValue);
+        }
+        if(fromOptionNumber!=null){
+            selectFromOption(fromOptionNumber);
+        }
+        selectPeriod(period);
+        inputDescription(description);
+        saveStepButton();
+        return new RmEditDispositionSchedulePage(drone).render();
+    }
+
+    public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description){
+        return selectAfterPeriodOf(period, description, null, null);
+    }
+
+    public void selectDispositionStep(DispositionAction step)
+    {
+        click(ADD_STEP_BUTTON);
+        click(step.getXpath());
+        drone.findAndWait(DISPOSITION_FORM);
+    }
+
+    private void saveStepButton(){
+        List<WebElement> saveElements = drone.findAndWaitForElements(SAVE_BUTTON);
+        for (WebElement button : saveElements)
+        {
+            if (button.isDisplayed()){
+                button.click();
+            }
+        }
+    }
+
+    private void inputDescription(String description){
+        List<WebElement> descriptionElements = drone.findAndWaitForElements(DESCRIPTION_AREA);
+        for (WebElement desc : descriptionElements)
+        {
+            if (desc.isDisplayed()){
+                desc.clear();
+                desc.sendKeys(description);
+            }
+        }
+    }
+
+    private void selectPeriod(AfterPeriodOf period){
+        List<WebElement> periodOption = drone.findAndWaitForElements(PERIOD_SELECT);
+        List<Select> periodSelect = new ArrayList<>();
+        for (WebElement action : periodOption)
+        {
+            if (action.isDisplayed()){
+                periodSelect.add(new Select(action));
+            }
+        }
+        periodSelect.get(periodSelect.size()-1).selectByIndex(period.numberPosition);
+    }
+
+    private void selectFromOption(AfterPeriodOfFrom fromOptionNumber){
+        List<WebElement> fromOption = drone.findAndWaitForElements(PERIOD_ACTION_SELECT);
+        List<Select> fromSelect = new ArrayList<Select>();
+        for (WebElement action : fromOption)
+        {
+            if (action.isDisplayed()){
+                fromSelect.add(new Select(action));
+            }
+        }
+        fromSelect.get(fromSelect.size()-1).selectByIndex(fromOptionNumber.numberPosition);
+    }
+
+    private void checkAfterPeriodChkBox(){
+        List<WebElement> fromOption = drone.findAndWaitForElements(AFTER_PERIOD_CHKBOX);
+        for (WebElement afterPeriod : fromOption)
+        {
+            if (afterPeriod.isDisplayed()){
+                if(!afterPeriod.isSelected()){
+                    afterPeriod.click();
+                }
+            }
+        }
+    }
+
+    private void inputPeriodValue(String value){
+        List<WebElement> periodElements = drone.findAndWaitForElements(DESCRIPTION_AREA);
+        for (WebElement period : periodElements)
+        {
+            if (period.isDisplayed()){
+                period.clear();
+                period.sendKeys(value);
+            }
+        }
+    }
+
+    public RmCreateDispositionPage clickDoneButton(){
+        List<WebElement> saveElements = drone.findAndWaitForElements(DONE_BUTTON);
+        for (WebElement button : saveElements)
+        {
+            if (button.isDisplayed()){
+                button.click();
+            }
+        }
+        return new RmCreateDispositionPage(drone).render();
     }
 }
