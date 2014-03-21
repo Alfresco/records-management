@@ -18,13 +18,13 @@
  */
 package org.alfresco.po.rm.unit;
 
+import static org.testng.AssertJUnit.assertTrue;
+
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.functional.AbstractIntegrationTest;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-
-import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Tests file plan page.

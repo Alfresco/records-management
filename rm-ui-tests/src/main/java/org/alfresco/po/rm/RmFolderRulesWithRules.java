@@ -18,17 +18,16 @@
  */
 package org.alfresco.po.rm;
 
+import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
+
+import java.util.List;
+
 import org.alfresco.po.share.site.contentrule.FolderRulesPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.exception.PageOperationException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import static org.alfresco.po.rm.RmFolderRulesPage.*;
-
-import java.util.List;
-
-import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 /**
  * Records management Rules Page with existing Rules.

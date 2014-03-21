@@ -18,9 +18,7 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.site.contentrule.FolderRulesPage;
-import org.alfresco.po.share.site.contentrule.FolderRulesPageWithRules;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;

@@ -18,10 +18,35 @@
  */
 package org.alfresco.po.rm.functional;
 
-import org.alfresco.po.rm.*;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.ADD_BUTTON;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.ADD_USER_FORM;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.SEARCH_USER_BUTTON;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.SEARCH_USER_INPUT;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.addUserButton;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.selectGroup;
+import static org.alfresco.po.rm.RmCreateRulePage.PROPERTY_VALUE_INPUT;
+import static org.alfresco.po.rm.RmFolderRulesPage.LINK_BUTTON;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.RULE_ITEMS;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
+import org.alfresco.po.rm.RmActionSelectorEnterpImpl.PerformActions;
+import org.alfresco.po.rm.RmConsolePage;
+import org.alfresco.po.rm.RmConsoleUsersAndGroups;
+import org.alfresco.po.rm.RmConsoleUsersAndGroups.SystemRoles;
+import org.alfresco.po.rm.RmCreateRulePage;
+import org.alfresco.po.rm.RmFolderRulesPage;
+import org.alfresco.po.rm.RmFolderRulesWithRules;
+import org.alfresco.po.rm.RmLinkToRulePage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
-import org.alfresco.po.share.*;
-import org.alfresco.po.share.site.*;
+import org.alfresco.po.share.LoginPage;
+import org.alfresco.po.share.ShareUtil;
+import org.alfresco.po.share.site.CreateSitePage;
+import org.alfresco.po.share.site.NewFolderPage;
+import org.alfresco.po.share.site.SiteDashboardPage;
 import org.alfresco.po.share.site.contentrule.FolderRulesPage;
 import org.alfresco.po.share.site.contentrule.FolderRulesPageWithRules;
 import org.alfresco.po.share.site.contentrule.createrules.CreateRulePage;
@@ -38,15 +63,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import static org.alfresco.po.rm.RmActionSelectorEnterpImpl.*;
-import static org.alfresco.po.rm.RmFolderRulesWithRules.*;
-import static org.alfresco.po.rm.RmFolderRulesPage.*;
-import static org.alfresco.po.rm.RmCreateRulePage.*;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by polly on 3/5/14.

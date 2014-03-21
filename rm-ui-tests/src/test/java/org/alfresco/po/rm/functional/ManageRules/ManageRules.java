@@ -18,7 +18,17 @@
  */
 package org.alfresco.po.rm.functional.ManageRules;
 
-import org.alfresco.po.rm.*;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.DELETE_BUTTON;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.EDIT_BUTTON;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.NEW_RULE_BUTTON;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.RUN_RULES_BUTTON;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.RUN_RULES_FOR_FOLDER;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.RUN_RULES_FOR_SUBFOLDER;
+
+import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
+import org.alfresco.po.rm.RmCreateRulePage;
+import org.alfresco.po.rm.RmFolderRulesPage;
+import org.alfresco.po.rm.RmFolderRulesWithRules;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.functional.RmAbstractTest;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
@@ -34,8 +44,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-
-import static org.alfresco.po.rm.RmFolderRulesWithRules.*;
 
 /**
  * Created by polly on 3/3/14.

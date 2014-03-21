@@ -18,19 +18,16 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.rm.fileplan.FilePlanPage;
-import org.alfresco.po.share.site.contentrule.FolderRulesPageWithRules;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.alfresco.po.share.site.contentrule.createrules.CreateRulePage;
 import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.WhenSelectorImpl;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Extends the {@link CreateRulePage} to add RM specific methods

@@ -18,7 +18,6 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;

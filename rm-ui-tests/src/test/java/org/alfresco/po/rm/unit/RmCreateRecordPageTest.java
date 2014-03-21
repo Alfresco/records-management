@@ -18,6 +18,23 @@
  */
 package org.alfresco.po.rm.unit;
 
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.BOX_INPUT;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.CANCEL_BUTTON;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.CANCEL_FILE_BUTTON;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.DESCRIPTION_INPUT;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.ELECTRONIC_BUTTON;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.FILE_INPUT;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.NAME_INPUT;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.NON_ELECTRONIC_BUTTON;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.NUMBER_OF_COPIES_INPUT;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.PHYSICAL_SIZE_INPUT;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.SAVE_BUTTON;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.SHELF_INPUT;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.STORAGE_LOCATION_INPUT;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.TITLE_INPUT;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
+
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog;
 import org.alfresco.po.rm.functional.AbstractIntegrationTest;
@@ -25,9 +42,6 @@ import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.openqa.selenium.By;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.*;
-import static org.testng.AssertJUnit.*;
 
 /**
  * @author Polina Lushchinskaya

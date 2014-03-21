@@ -18,9 +18,9 @@
  */
 package org.alfresco.po.rm.unit;
 
-import org.alfresco.po.rm.RmSiteType;
 import org.alfresco.po.rm.RmCreateSitePage;
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
+import org.alfresco.po.rm.RmSiteType;
 import org.alfresco.po.rm.common.AbstractRecordsManagementTest;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;

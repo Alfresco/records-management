@@ -18,6 +18,9 @@
  */
 package org.alfresco.po.rm.fileplan;
 
+import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.CREATE_DISPOSITION_BUTTON;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.NON_ELECTRONIC_BUTTON;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +34,6 @@ import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
-import org.alfresco.po.share.site.document.DocumentDetailsPage;
 import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.site.document.FolderDetailsPage;
@@ -42,8 +44,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.*;
-import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.*;
 
 /**
  * Records management file plan page, based on the document library

@@ -22,10 +22,6 @@ import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.ActionS
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Extends the {@link ActionSelectorEnterpImpl} in order to add the RM specific actions

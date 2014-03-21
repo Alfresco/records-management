@@ -18,16 +18,16 @@
  */
 package org.alfresco.po.rm.fileplan;
 
+import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 /**
  * Records management Edit Disposition page.
