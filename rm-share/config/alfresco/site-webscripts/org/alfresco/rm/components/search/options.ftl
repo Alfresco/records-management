@@ -51,16 +51,8 @@
                   </li>
                   <li class="metadata-header">${msg("label.menu.records")}</li>
                   <li>
-                     <input type="checkbox" id="${el}-metadata-originator" checked="checked" />
-                     <label for="${el}-metadata-originator">${msg("label.originator")}</label>
-                  </li>
-                  <li>
                      <input type="checkbox" id="${el}-metadata-dateFiled" checked="checked" />
                      <label for="${el}-metadata-dateFiled">${msg("label.dateFiled")}</label>
-                  </li>
-                  <li>
-                     <input type="checkbox" id="${el}-metadata-publicationDate" />
-                     <label for="${el}-metadata-publicationDate">${msg("label.publicationDate")}</label>
                   </li>
                   <li>
                      <input type="checkbox" id="${el}-metadata-reviewDate" />
@@ -71,32 +63,8 @@
                      <label for="${el}-metadata-vitalRecord">${msg("label.vitalRecord")}</label>
                   </li>
                   <li>
-                     <input type="checkbox" id="${el}-metadata-originatingOrganization" />
-                     <label for="${el}-metadata-originatingOrganization">${msg("label.originatingOrganization")}</label>
-                  </li>
-                  <li>
-                     <input type="checkbox" id="${el}-metadata-mediaType" />
-                     <label for="${el}-metadata-mediaType">${msg("label.mediaType")}</label>
-                  </li>
-                  <li>
-                     <input type="checkbox" id="${el}-metadata-format" />
-                     <label for="${el}-metadata-format">${msg("label.format")}</label>
-                  </li>
-                  <li>
-                     <input type="checkbox" id="${el}-metadata-dateReceived" />
-                     <label for="${el}-metadata-dateReceived">${msg("label.dateReceived")}</label>
-                  </li>
-                  <li>
                      <input type="checkbox" id="${el}-metadata-location" />
                      <label for="${el}-metadata-location">${msg("label.location")}</label>
-                  </li>
-                  <li>
-                     <input type="checkbox" id="${el}-metadata-address" />
-                     <label for="${el}-metadata-address">${msg("label.address")}</label>
-                  </li>
-                  <li>
-                     <input type="checkbox" id="${el}-metadata-otherAddress" />
-                     <label for="${el}-metadata-otherAddress">${msg("label.otherAddress")}</label>
                   </li>
                   <li>
                      <input type="checkbox" id="${el}-metadata-supplementalMarkingList" />
@@ -178,16 +146,9 @@
                         <option value="cm:modifier">${msg("label.modifier")}</option>
                         <option value="cm:modified">${msg("label.modified")}</option>
                         <option value="cm:author">${msg("label.author")}</option>
-                        <option value="rma:originator">${msg("label.originator")}</option>
                         <option value="rma:dateFiled">${msg("label.dateFiled")}</option>
-                        <option value="rma:publicationDate">${msg("label.publicationDate")}</option>
-                        <option value="rma:reviewAsOf">${msg("label.reviewDate")}</option>
-                        <option value="rma:originatingOrganization">${msg("label.originatingOrganization")}</option>
-                        <option value="rma:mediaType">${msg("label.mediaType")}</option>
-                        <option value="rma:format">${msg("label.format")}</option>
-                        <option value="rma:dateReceived">${msg("label.dateReceived")}</option>
+                        <option value="rma:reviewAsOf">${msg("label.reviewDate")}</option>                        
                         <option value="rma:location">${msg("label.location")}</option>
-                        <option value="rma:address">${msg("label.address")}</option>
                         <option value="rmc:supplementalMarkingList">${msg("label.supplementalMarkingList")}</option>
                         <!-- double ?html encoding required here due to YUI bug -->
                         <#list groups as group>

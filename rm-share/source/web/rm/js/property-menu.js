@@ -164,17 +164,9 @@
                   id: this.id + "_records",
                   itemdata:
                   [
-                     { text: this.msg("label.originator"), value: "rma:originator" },
                      { text: this.msg("label.dateFiled"), value: "rma:dateFiled" },
-                     { text: this.msg("label.publicationDate"), value: "rma:publicationDate" },
                      { text: this.msg("label.reviewDate"), value: "rma:reviewAsOf" },
-                     { text: this.msg("label.originatingOrganization"), value: "rma:originatingOrganization" },
-                     { text: this.msg("label.mediaType"), value: "rma:mediaType" },
-                     { text: this.msg("label.format"), value: "rma:format" },
-                     { text: this.msg("label.dateReceived"), value: "rma:dateReceived" },
                      { text: this.msg("label.location"), value: "rma:location" },
-                     { text: this.msg("label.address"), value: "rma:address" },
-                     { text: this.msg("label.otherAddress"), value: "rma:otherAddress" },
                      { text: this.msg("label.supplementalMarkingList"), value: "markings" }
                   ]
                }
@@ -212,17 +204,9 @@
                   id: this.id + "_records",
                   itemdata:
                   [
-                     { text: this.msg("label.originator"), value: "rma:originator" },
                      { text: this.msg("label.dateFiled"), value: "rma:dateFiled" },
-                     { text: this.msg("label.publicationDate"), value: "rma:publicationDate" },
                      { text: this.msg("label.reviewDate"), value: "rma:reviewAsOf" },
-                     { text: this.msg("label.originatingOrganization"), value: "rma:originatingOrganization" },
-                     { text: this.msg("label.mediaType"), value: "rma:mediaType" },
-                     { text: this.msg("label.format"), value: "rma:format" },
-                     { text: this.msg("label.dateReceived"), value: "rma:dateReceived" },
                      { text: this.msg("label.location"), value: "rma:location" },
-                     { text: this.msg("label.address"), value: "rma:address" },
-                     { text: this.msg("label.otherAddress"), value: "rma:otherAddress" },
                      { text: this.msg("label.supplementalMarkingList"), value: "rmc:supplementalMarkingList" }
                   ]
                }
