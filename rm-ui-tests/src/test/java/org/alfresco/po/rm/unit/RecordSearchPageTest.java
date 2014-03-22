@@ -30,6 +30,7 @@ import org.testng.annotations.Test;
  *
  * @author Michael Suzuki
  * @version 1.7.1
+ * @since 2.2
  */
 @Listeners(FailedTestListener.class)
 public class RecordSearchPageTest extends AbstractTest

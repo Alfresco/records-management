@@ -109,11 +109,16 @@ public class RmAbstractTest extends AbstractIntegrationTest {
             if (ruleItem.getText().contains(ruleTitle))
             {
                 ruleItem.click();
+
+                // FIXME: ruleAction.getName has been changed to ruleAction.getValue
+                // This might break the xpath expression. Please do not use any hard
+                // coded text in the xpath expressions.
+
                 drone.findAndWait(
                         By.xpath(
                                 "//div[@class='parameters']"
                                         + "//ancestor::div[contains(@id,'ruleConfigAction')]"
-                                        + "//span[contains(text(), '" + ruleAction.getName() + "')]"),
+                                        + "//span[contains(text(), '" + ruleAction.getValue() + "')]"),
                         MAX_WAIT_TIME);
             }
         }
@@ -147,11 +152,16 @@ public class RmAbstractTest extends AbstractIntegrationTest {
             if (ruleItem.getText().contains(ruleTitle))
             {
                 ruleItem.click();
+
+                // FIXME: ruleAction.getName has been changed to ruleAction.getValue
+                // This might break the xpath expression. Please do not use any hard
+                // coded text in the xpath expressions.
+
                 drone.findAndWait(
                         By.xpath(
                                 "//div[@class='parameters']"
                                         + "//ancestor::div[contains(@id,'ruleConfigAction')]"
-                                        + "//span[contains(text(), '" + ruleAction.getName() + "')]"),
+                                        + "//span[contains(text(), '" + ruleAction.getValue() + "')]"),
                         MAX_WAIT_TIME);
             }
         }
@@ -185,11 +195,16 @@ public class RmAbstractTest extends AbstractIntegrationTest {
             if (ruleItem.getText().contains(ruleTitle))
             {
                 ruleItem.click();
+
+                // FIXME: ruleAction.getName has been changed to ruleAction.getValue
+                // This might break the xpath expression. Please do not use any hard
+                // coded text in the xpath expressions.
+
                 drone.findAndWait(
                         By.xpath(
                                 "//div[@class='parameters']"
                                         + "//ancestor::div[contains(@id,'ruleConfigAction')]"
-                                        + "//span[contains(text(), '" + ruleAction.getName() + "')]"),
+                                        + "//span[contains(text(), '" + ruleAction.getValue() + "')]"),
                         MAX_WAIT_TIME);
             }
         }
@@ -225,11 +240,16 @@ public class RmAbstractTest extends AbstractIntegrationTest {
             if (ruleItem.getText().contains(ruleTitle))
             {
                 ruleItem.click();
+
+                // FIXME: ruleAction.getName has been changed to ruleAction.getValue
+                // This might break the xpath expression. Please do not use any hard
+                // coded text in the xpath expressions.
+
                 drone.findAndWait(
                         By.xpath(
                                 "//div[@class='parameters']"
                                         + "//ancestor::div[contains(@id,'ruleConfigAction')]"
-                                        + "//span[contains(text(), '" + PerformActions.SET_PROPERTY_VALUE.getName() + "')]"),
+                                        + "//span[contains(text(), '" + PerformActions.SET_PROPERTY_VALUE.getValue() + "')]"),
                         MAX_WAIT_TIME);
             }
         }

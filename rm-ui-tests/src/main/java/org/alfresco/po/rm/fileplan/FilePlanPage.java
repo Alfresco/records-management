@@ -464,7 +464,17 @@ public class FilePlanPage extends DocumentLibraryPage
         return result;
     }
 
-    public boolean isFolderClosed(WebDrone drone, String folderName){
+    /**
+     * FIXME: Description!!!
+     *
+     * @param drone
+     * @param folderName
+     * @return
+     */
+    public boolean isFolderClosed(WebDrone drone, String folderName)
+    {
+        // FIXME: Parameter check for public methods
+
         By closeIcon = By.xpath("//a[contains(text(), '" + folderName + "')]" +
                 "/ancestor::tr//div[@class='status']//img[@title='Closed']");
         return RmPageObjectUtils.isDisplayed(drone, closeIcon);
@@ -498,10 +508,13 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * Action open Folder/Category Details page using MouseOver
      *
-     * @param itemValue
+     * @param itemValue FIXME!!!
      * @return  {@link FolderDetailsPage} page response
      */
-    public FolderDetailsPage openDetailsPage(String itemValue){
+    public FolderDetailsPage openDetailsPage(String itemValue)
+    {
+        // FIXME: Parameter check for public methods
+
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
         WebElement selectMoreAction = folder.selectMoreAction();
@@ -514,10 +527,13 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * Action click Cut Off for element
      *
-     * @param itemValue
+     * @param itemValue FIXME!!!
      * @return {@link FilePlanPage} page response
      */
-    public FilePlanPage cutOffAction(String itemValue){
+    public FilePlanPage cutOffAction(String itemValue)
+    {
+        // FIXME: Parameter check for public methods
+
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
         WebElement selectMoreAction = folder.selectMoreAction();
@@ -531,11 +547,13 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * Action open Record Details page using MouseOver
      *
-     * @param itemValue
+     * @param itemValue FIXME!!!
      * @return  {@link FolderDetailsPage} page response
      */
+    public FolderDetailsPage openRecordDetailsPage(String itemValue)
+    {
+        // FIXME: Parameter check for public methods
 
-    public FolderDetailsPage openRecordDetailsPage(String itemValue){
         drone.getCurrentPage().render();
         WebElement record = drone.findAndWait(By.xpath("//span//a[contains(text(), '" + itemValue + "')]"));
         record.click();
@@ -547,8 +565,8 @@ public class FilePlanPage extends DocumentLibraryPage
      *
      * @return  {@link RmCreateDispositionPage} page response
      */
-
-    public RmCreateDispositionPage openCreateDisposition(){
+    public RmCreateDispositionPage openCreateDisposition()
+    {
         click(CREATE_DISPOSITION_BUTTON);
         return new RmCreateDispositionPage(drone).render();
     }
@@ -558,9 +576,10 @@ public class FilePlanPage extends DocumentLibraryPage
      *
      * @param locator element By locator
      */
-
     public void click(By locator)
     {
+        // FIXME: Parameter check for public methods
+
         WebElement element = drone.findAndWait(locator);
         drone.mouseOverOnElement(element);
         element.click();
@@ -573,7 +592,10 @@ public class FilePlanPage extends DocumentLibraryPage
      * @param isRootFolder root or no-root node
      * @return {@link FilePlanPage} page response
      */
-    public FilePlanPage createCategory(String categoryName, boolean isRootFolder){
+    public FilePlanPage createCategory(String categoryName, boolean isRootFolder)
+    {
+        // FIXME: Parameter check for public methods
+
         FilePlanPage filePlan = drone.getCurrentPage().render();
         filePlan.setInFilePlanRoot(isRootFolder);
         filePlan = filePlan.render();
@@ -591,10 +613,13 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * Action verifies if category exists in file plan
      *
-     * @param categoryName
-     * @return  true/false
+     * @param categoryName FIXME!!!
+     * @return  true/false FIXME!!!
      */
-    public boolean isCategoryCreated(String categoryName){
+    public boolean isCategoryCreated(String categoryName)
+    {
+        // FIXME: Parameter check for public methods
+
         return RmPageObjectUtils.isDisplayed(drone, By.
                 xpath("//span//a[contains(text(), '" + categoryName + "')]"));
     }
@@ -605,7 +630,10 @@ public class FilePlanPage extends DocumentLibraryPage
      * @param folderName Name of created Folder
      * @return {@link FilePlanPage} page response
      */
-    public FilePlanPage createFolder(String folderName){
+    public FilePlanPage createFolder(String folderName)
+    {
+        // FIXME: Parameter check for public methods
+
         FilePlanPage filePlan = drone.getCurrentPage().render();
         CreateNewRecordFolderDialog createNewFolder = filePlan.selectCreateNewFolder().render();
         createNewFolder.enterName(folderName);
@@ -623,7 +651,10 @@ public class FilePlanPage extends DocumentLibraryPage
      * @param recordName Name of created Record
      * @return {@link FilePlanPage} page response
      */
-    public FilePlanPage createRecord(String recordName){
+    public FilePlanPage createRecord(String recordName)
+    {
+        // FIXME: Parameter check for public methods
+
         FilePlanPage filePlan = drone.getCurrentPage().render();
         CreateNewRecordDialog createNewRecord = filePlan.selectNewNonElectronicRecord();
         createNewRecord.enterName(recordName);
@@ -638,10 +669,13 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * Action navigates to already created category/folder
      *
-     * @param folderName
+     * @param folderName FIXME!!!
      * @return {@link FilePlanPage} page response
      */
-    public FilePlanPage navigateToFolder(String folderName){
+    public FilePlanPage navigateToFolder(String folderName)
+    {
+        // FIXME: Parameter check for public methods
+
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo recordCategory = filePlan.getFileDirectoryInfo(folderName);
         recordCategory.clickOnTitle();

@@ -22,21 +22,25 @@ import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 import java.util.List;
 
+import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.contentrule.FolderRulesPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.alfresco.webdrone.exception.PageOperationException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 /**
- * Records management Rules Page with existing Rules.
+ * Records management rules page with existing rules.
  *
  * @author Polina Lushchinskaya
  * @version 1.1
+ * @since 2.2
  */
-public class RmFolderRulesWithRules extends FolderRulesPage {
-
+public class RmFolderRulesWithRules extends FolderRulesPage
+{
+    /** Constants for the selectors */
     public static final By EDIT_BUTTON              = By.cssSelector("button[id*='edit-button-button']");
     public static final By DELETE_BUTTON            = By.cssSelector("button[id*='delete-button-button']");
     public static final By NEW_RULE_BUTTON          = By.cssSelector("button[id*='default-newRule-button-button']");
@@ -44,24 +48,32 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
     public static final By RUN_RULES_BUTTON         = By.cssSelector("button[id$='default-runRules-menu-button']");
     public static final By RUN_RULES_FOR_FOLDER     = By.xpath("//a[text()='Run rules for this folder']");
     public static final By RUN_RULES_FOR_SUBFOLDER  = By.xpath("//a[text() = 'Run rules for this folder and its subfolders']");
-    public static final By RULE_ITEMS               = By
-            .cssSelector("ul[class*='rules-list-container']>li[class*='rules-list-item']");
+    public static final By RULE_ITEMS               = By.cssSelector("ul[class*='rules-list-container']>li[class*='rules-list-item']");
 
     private static final By ALERT_DELETE_BLOCK      = By.cssSelector("div[id='prompt']");
     //Delete and Cancel button has same css.
     private static final By ALERT_DELETE_OK         = By.xpath("//button[text()='Delete']");
     //private static final By SAVE_BUTTON             = By.xpath("//button[text()='Save']");
 
-
+    /**
+     * Constructor
+     *
+     * @param drone {@link WebDrone} Web drone
+     */
     public RmFolderRulesWithRules(WebDrone drone)
     {
         super(drone);
     }
 
+    /**
+     * @see org.alfresco.po.share.site.contentrule.FolderRulesPage#render(org.alfresco.webdrone.RenderTime)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RmFolderRulesWithRules render(RenderTime timer)
     {
+        WebDroneUtil.checkMandotaryParam("timer", timer);
+
         elementRender(timer,
                 getVisibleRenderElement(TITLE_SELECTOR),
                 getVisibleRenderElement(EDIT_BUTTON),
@@ -69,6 +81,9 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
         return this;
     }
 
+    /**
+     * @see org.alfresco.po.share.site.contentrule.FolderRulesPage#render()
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RmFolderRulesWithRules render()
@@ -76,35 +91,44 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
         return render(new RenderTime(maxPageLoadingTime));
     }
 
+    /**
+     * @see org.alfresco.po.share.site.contentrule.FolderRulesPage#render(long)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RmFolderRulesWithRules render(final long time)
     {
+        WebDroneUtil.checkMandotaryParam("time", time);
+
         return render(new RenderTime(time));
     }
 
     /**
-     * Method verifies is Rules Details Block is displayed
-     * @return true/false
+     * Method verifies if rules details block is displayed
+     * 
+     * @return true/false FIXME!!!
      */
     private boolean isRuleDetailsDisplay()
     {
-        if (drone.find(RULE_DETAILS_BLOCK).isDisplayed()
-                && drone.find(EDIT_BUTTON).isDisplayed()
-                && drone.find(DELETE_BUTTON).isDisplayed())
+        boolean isDisplayed = false;
+        if (RmPageObjectUtils.isDisplayed(drone, RULE_DETAILS_BLOCK) &&
+                RmPageObjectUtils.isDisplayed(drone, EDIT_BUTTON) &&
+                RmPageObjectUtils.isDisplayed(drone, DELETE_BUTTON))
         {
-            return true;
+            isDisplayed = true;
         }
-        return false;
+        return isDisplayed;
     }
 
     /**
-     * Delete rule from rules detailes page
-     * @param ruleName
+     * Delete rule from rules details page
+     * @param ruleName FIXME!!!
      * @return {@link RmFolderRulesPage}
      */
     public RmFolderRulesPage deleteRule(String ruleName)
     {
+        WebDroneUtil.checkMandotaryParam("ruleName", ruleName);
+
         List<WebElement> ruleItems = drone.findAndWaitForElements(RULE_ITEMS);
         for (WebElement ruleItem : ruleItems)
         {
@@ -147,6 +171,8 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
      */
     public void click(By locator)
     {
+        WebDroneUtil.checkMandotaryParam("locator", locator);
+
         WebElement element = drone.findAndWait(locator);
         drone.mouseOverOnElement(element);
         element.click();
@@ -154,12 +180,14 @@ public class RmFolderRulesWithRules extends FolderRulesPage {
 
     /**
      * Helper method verifies if folder rule page is correct
-     * @param folderName
-     * @return
+     * 
+     * @param folderName FIXME!!!
+     * @return FIXME!!!
      */
     public boolean isPageCorrect(String folderName)
     {
+        WebDroneUtil.checkMandotaryParam("folderName", folderName);
+
         return (super.isTitleCorrect(folderName) && isRuleDetailsDisplay());
     }
-
 }

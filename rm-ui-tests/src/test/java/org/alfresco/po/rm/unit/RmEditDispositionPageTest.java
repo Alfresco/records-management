@@ -21,8 +21,12 @@ package org.alfresco.po.rm.unit;
 import org.alfresco.po.rm.functional.AbstractIntegrationTest;
 
 /**
+ * FIXME: Description!!!
+ *
  * @author Polina Lushchinskaya
  * @version 1.1
+ * @since 2.2
  */
-public class RmEditDispositionPageTest extends AbstractIntegrationTest {
+public class RmEditDispositionPageTest extends AbstractIntegrationTest
+{
 }

@@ -31,49 +31,58 @@ import org.testng.annotations.Test;
  *
  * @author Michael Suzuki
  * @version 1.7.1
+ * @since 2.2
  */
 @Listeners(FailedTestListener.class)
 public class FilePlanPageTest extends AbstractIntegrationTest
 {
+    /** Constants */
+    private static final String NEW_CATEGORY = "New Category";
+    private static final String NEW_FOLDER_NAME = "New FolderName";
+    private static final String NEW_RECORD_NAME = "New RecordName";
+
     @Test
-    public void openPage()
+    public void selectFilePlan()
     {
-        drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
         rmSiteDashBoard.selectFilePlan();
     }
 
-    @Test (dependsOnMethods="openPage")
-    public void verifyFilePlanPage(){
+    @Test (dependsOnMethods="selectFilePlan")
+    public void verifyFilePlanPage()
+    {
         FilePlanPage filePlan = drone.getCurrentPage().render();
-        assertTrue(filePlan.isCreateNewCategoryDisplayed());
         assertTrue(filePlan.isCreateNewCategoryDisplayed());
         assertTrue(filePlan.isCreateNewFolderDisplayed());
     }
 
     @Test (dependsOnMethods="verifyFilePlanPage")
-    public void createRootCategory(){
+    public void createRootCategory()
+    {
         FilePlanPage filePlan = drone.getCurrentPage().render();
-        filePlan.createCategory("New Category", true);
-        assertTrue(filePlan.isCategoryCreated("New Category"));
+        filePlan.createCategory(NEW_CATEGORY, true);
+        assertTrue(filePlan.isCategoryCreated(NEW_CATEGORY));
     }
 
     @Test (dependsOnMethods="createRootCategory")
-    public void navigateToCategory(){
+    public void navigateToCategory()
+    {
         FilePlanPage filePlan = drone.getCurrentPage().render();
-        filePlan.navigateToFolder("New Category");
+        filePlan.navigateToFolder(NEW_CATEGORY);
     }
 
     @Test (dependsOnMethods="navigateToCategory")
-    public void createFolder(){
+    public void createFolder()
+    {
         FilePlanPage filePlan = drone.getCurrentPage().render();
-        filePlan.createFolder("New FolderName");
-        filePlan.navigateToFolder("New FolderName");
+        filePlan.createFolder(NEW_FOLDER_NAME);
+        filePlan.navigateToFolder(NEW_FOLDER_NAME);
         assertTrue(filePlan.isCreateNewFileDisplayed());
     }
 
     @Test (dependsOnMethods="createFolder")
-    public void createRecord(){
+    public void createRecord()
+    {
         FilePlanPage filePlan = drone.getCurrentPage().render();
-        filePlan.createRecord("New RecordName");
+        filePlan.createRecord(NEW_RECORD_NAME);
     }
 }

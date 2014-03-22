@@ -29,43 +29,39 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 /**
- * Records management Create New Record Dialog.
+ * Records management create new record dialog.
  *
  * @author Polina Lushchinskaya
  * @version 1.1
+ * @since 2.2
  */
-public class CreateNewRecordDialog extends SharePage {
+public class CreateNewRecordDialog extends SharePage
+{
+    /** Constants for selectors */
+    // FIXME: Change the xpath expression. No hard coded text.
+    public static final By ELECTRONIC_BUTTON        = By.xpath("//button[text()='Electronic']");
+    public static final By NON_ELECTRONIC_BUTTON    = By.xpath("//button[text()='Non-electronic']");
+    public static final By CANCEL_FILE_BUTTON       = By.xpath("//button[text()='Cancel']");
+    public static final By PANEL_CONTAINER          = By.xpath("//div[contains(@class, 'panel-container')]");
+    public static final By DESCRIPTION_INPUT        = By.tagName("textarea");
+    public static final By NAME_INPUT               = By.cssSelector("input[id$='_default-createRecord_prop_cm_name']");
+    public static final By TITLE_INPUT              = By.cssSelector("input[id$='_default-createRecord_prop_cm_title']");
+    public static final By PHYSICAL_SIZE_INPUT      = By.cssSelector("input[id$='_default-createRecord_prop_rma_physicalSize']");
+    public static final By NUMBER_OF_COPIES_INPUT   = By.cssSelector("input[id$='_default-createRecord_prop_rma_numberOfCopies']");
+    public static final By STORAGE_LOCATION_INPUT   = By.cssSelector("input[id$='_default-createRecord_prop_rma_storageLocation']");
+    public static final By SHELF_INPUT              = By.cssSelector("input[id$='_default-createRecord_prop_rma_shelf']");
+    public static final By BOX_INPUT                = By.cssSelector("input[id$='default-createRecord_prop_rma_box']");
+    public static final By FILE_INPUT               = By.cssSelector("input[id$='_default-createRecord_prop_rma_file']");
+    public static final By SAVE_BUTTON              = By.cssSelector("button[id$='createRecord-form-submit-button']");
+    public static final By CANCEL_BUTTON            = By.cssSelector("button[id$='createRecord-form-cancel-button']");
 
-    public static final By ELECTRONIC_BUTTON         = By.xpath("//button[text()='Electronic']");
-    public static final By NON_ELECTRONIC_BUTTON     = By.xpath("//button[text()='Non-electronic']");
-    public static final By CANCEL_FILE_BUTTON             = By.xpath("//button[text()='Cancel']");
-    public static final By NAME_INPUT             = By.
-            cssSelector("input[id$='_default-createRecord_prop_cm_name']");
-    public static final By TITLE_INPUT            = By.
-            cssSelector("input[id$='_default-createRecord_prop_cm_title']");
-    public static final By PHYSICAL_SIZE_INPUT    = By.
-            cssSelector("input[id$='_default-createRecord_prop_rma_physicalSize']");
-    public static final By NUMBER_OF_COPIES_INPUT = By.
-            cssSelector("input[id$='_default-createRecord_prop_rma_numberOfCopies']");
-    public static final By STORAGE_LOCATION_INPUT =
-            By.cssSelector("input[id$='_default-createRecord_prop_rma_storageLocation']");
-    public static final By SHELF_INPUT            = By.
-            cssSelector("input[id$='_default-createRecord_prop_rma_shelf']");
-    public static final By BOX_INPUT              = By.
-            cssSelector("input[id$='default-createRecord_prop_rma_box']");
-    public static final By FILE_INPUT             = By.
-            cssSelector("input[id$='_default-createRecord_prop_rma_file']");
-    public static final By DESCRIPTION_INPUT      = By.tagName("textarea");
-    public static final By SAVE_BUTTON            = By.
-            cssSelector("button[id$='createRecord-form-submit-button']");
-    public static final By CANCEL_BUTTON          = By.
-            cssSelector("button[id$='createRecord-form-cancel-button']");
     /**
      * Constructor.
      *
-     * @param drone {@link org.alfresco.webdrone.WebDrone}
+     * @param drone {@link WebDrone} Web Drone
      */
-    public CreateNewRecordDialog(WebDrone drone) {
+    public CreateNewRecordDialog(WebDrone drone)
+    {
         super(drone);
     }
 
@@ -76,6 +72,8 @@ public class CreateNewRecordDialog extends SharePage {
     @Override
     public CreateNewRecordDialog render(RenderTime timer)
     {
+        // FIXME: Check parameter for public methods
+
         elementRender(timer,
                 getVisibleRenderElement(NAME_INPUT),
                 getVisibleRenderElement(TITLE_INPUT),
@@ -89,6 +87,9 @@ public class CreateNewRecordDialog extends SharePage {
         return this;
     }
 
+    /**
+     * @see org.alfresco.webdrone.Render#render()
+     */
     @SuppressWarnings("unchecked")
     @Override
     public CreateNewRecordDialog render()
@@ -96,10 +97,15 @@ public class CreateNewRecordDialog extends SharePage {
         return this.render(new RenderTime(maxPageLoadingTime));
     }
 
+    /**
+     * @see org.alfresco.webdrone.Render#render(long)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public CreateNewRecordDialog render(final long time)
     {
+        // FIXME: Check parameter for public methods
+
         return this.render(new RenderTime(time));
     }
 

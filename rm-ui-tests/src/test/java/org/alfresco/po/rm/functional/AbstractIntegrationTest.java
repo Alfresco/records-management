@@ -39,7 +39,6 @@ import org.alfresco.webdrone.WebDroneUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -62,25 +61,25 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
     /**
      * Indicates whether an existing RM site should be delete on
      * test startup
-     * 
+     *
      * @return  boolean true if site should be deleted, false otherwise
      */
     protected boolean isExisitingRMSiteDeletedOnStartup()
     {
         return true;
     }
-    
+
     /**
-     * Indicates whether an existing RM site should be deleted on 
+     * Indicates whether an existing RM site should be deleted on
      * test tear down.
-     * 
+     *
      * @return  boolean true if site should be deleted, false otherwise
      */
     protected boolean isRMSiteDeletedOnTearDown()
     {
         return true;
     }
-    
+
     /**
      * Executed before class
      */
@@ -254,9 +253,9 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
 
     /**
      * Helper method to create a new record category in the file plan root or a record category
-     * 
+     *
      * @param filePlan      file plan page, should be showing the parent record category
-     * @param name          name 
+     * @param name          name
      * @param title         title
      * @param description   description
      * @return {@link FilePlanPage} file plan page showing the parent record category with the new category in the list
@@ -266,9 +265,9 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
         WebDroneUtil.checkMandotaryParam("filePlan", filePlan);
         WebDroneUtil.checkMandotaryParam("name", name);
         WebDroneUtil.checkMandotaryParam("title", name);
-        
+
         // TODO check that the file plan is in the correct state
-        
+
         CreateNewRecordCategoryDialog createNewCategory = filePlan.selectCreateNewCategory().render();
         createNewCategory.enterName(name);
         createNewCategory.enterTitle(title);
@@ -278,14 +277,14 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
         }
         filePlan = ((FilePlanPage) createNewCategory.selectSave());
         filePlan.setInFilePlanRoot(true);
-        return filePlan.render(name);        
+        return filePlan.render(name);
     }
-    
+
     /**
      * Helper method to create a new record folder in the a record category
-     * 
+     *
      * @param filePlan      file plan page, should be showing the parent record folder
-     * @param name          name 
+     * @param name          name
      * @param title         title
      * @param description   description
      * @return {@link FilePlanPage} file plan page showing the parent record record category with the new record folder in the list
@@ -295,9 +294,9 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
         WebDroneUtil.checkMandotaryParam("filePlan", filePlan);
         WebDroneUtil.checkMandotaryParam("name", name);
         WebDroneUtil.checkMandotaryParam("title", name);
-        
+
         // TODO check that the file plan is in the correct state
-        
+
         CreateNewRecordFolderDialog createNewFolder = filePlan.selectCreateNewFolder().render();
         createNewFolder.enterName(name);
         createNewFolder.enterTitle(title);
@@ -308,19 +307,6 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
         filePlan = ((FilePlanPage) createNewFolder.selectSave());
         filePlan.setInRecordCategory(true);
         return filePlan.render(name);
-    }
-    /**
-     * Helper method verifies if element exists on page
-     * @param drone
-     * @param locator
-     * @return true/false
-     */
-    public static boolean isDisplay(final WebDrone drone, By locator) {
-        try {
-            return drone.findAndWait(locator, 2000).isDisplayed();
-        } catch (TimeoutException e) {
-            return false;
-        }
     }
 
     /**

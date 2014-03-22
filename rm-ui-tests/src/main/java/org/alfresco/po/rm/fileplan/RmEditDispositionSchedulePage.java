@@ -30,47 +30,51 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 /**
- * Records management Edit Disposition page.
+ * Records management edit disposition page.
  *
  * @author Polina Lushchinskaya
  * @version 1.1
+ * @since 2.2
  */
-public class RmEditDispositionSchedulePage extends RmCreateDispositionPage {
-
+public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
+{
+    /** Constants for selectors */
     public static By EDIT_DISPOSITION_SECTION   = By.cssSelector("div[id$='rm-disposition-edit']");
     public static By ADD_STEP_BUTTON            = By.cssSelector("button[id$='createaction-button-button']");
     public static By DISPOSITION_FORM           = By.cssSelector("div[class$='disposition-form']");
-    public static By SAVE_BUTTON                = By.xpath("//div[contains(@style,'block')]//button[contains(text(),'Save')]");
-    public static By CANCEL_BUTTON              = By.xpath("//div[contains(@style,'block')]//button[text()='Cancel']");
-    public static By DONE_BUTTON                = By.xpath("//button[text()='Done']");
     public static By AFTER_PERIOD_CHKBOX        = By.cssSelector("div[style*='block'] input[class$='period-enabled']");
     public static By WHEN_EVENT_OCCURS_CHKBOX   = By.cssSelector("div[style*='block'] input[class$='events-enabled']");
     public static By DESCRIPTION_AREA           = By.cssSelector("div[style*='block'] textarea[id$='description']");
     public static By PERIOD_INPUT               = By.cssSelector("div[style*='block'] input[class$='period-amount']");
     public static By PERIOD_SELECT              = By.cssSelector("div[style*='block'] select[class$='period-unit']");
     public static By PERIOD_ACTION_SELECT       = By.cssSelector("div[style*='block'] select[class$='period-action']");
+    // FIXME: Change the xpath expression. This contains hard coded text (Save, Cancel, Done). The test won't work with a browser which uses other language than English
+    public static By SAVE_BUTTON                = By.xpath("//div[contains(@style,'block')]//button[contains(text(),'Save')]");
+    public static By CANCEL_BUTTON              = By.xpath("//div[contains(@style,'block')]//button[text()='Cancel']");
+    public static By DONE_BUTTON                = By.xpath("//button[text()='Done']");
 
-    public static enum AfterPeriodOf{
-        DAY(0, "Day"),
-        END_OF_FINANCIAL_MONTH(1,  "End Of Financial Month"),
-        END_OF_FINANCIAL_QUARTER(2,  "End Of Financial Quarter"),
-        END_OF_FINANCIAL_YEAR(3,  "End Of Financial Year"),
-        END_OF_MONTH(4,  "End Of Month"),
-        END_OF_QUARTER(5,  "End Of Quarter"),
-        END_OF_YEAR(6,  "End Of Year"),
-        IMMEDIATELY(7,  "Immediately"),
-        MONTH(8,  "Month"),
-        NONE(9,  "None"),
-        QUARTER(10,  "Quarter"),
-        XML_DURATION(11,  "XML Duration"),
-        YEAR(12,  "Year");
+    // FIXME: Description
+    public static enum AfterPeriodOf
+    {
+        DAY("day"),
+        END_OF_FINANCIAL_MONTH("fmend"),
+        END_OF_FINANCIAL_QUARTER("fqend"),
+        END_OF_FINANCIAL_YEAR("fyend"),
+        END_OF_MONTH("monthend"),
+        END_OF_QUARTER("quarterend"),
+        END_OF_YEAR("yearend"),
+        IMMEDIATELY("immediately"),
+        MONTH("month"),
+        NONE("none"),
+        QUARTER("quarter"),
+        WEEK("week"),
+        XML_DURATION("duration"),
+        YEAR("year");
 
-        private final int numberPosition;
         private final String value;
 
-        AfterPeriodOf(int numberPosition, String value)
+        AfterPeriodOf(String value)
         {
-            this.numberPosition = numberPosition;
             this.value = value;
         }
 
@@ -80,16 +84,16 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage {
         }
     }
 
-    public static enum AfterPeriodOfFrom{
-        CREATED_DATE(0, "Created Date"),
-        DISPOSITION_ACTION(1,  "Disposition Action");
+    // FIXME: Description
+    public static enum AfterPeriodOfFrom
+    {
+        CREATED_DATE("cm:created"),
+        DISPOSITION_ACTION("rma:dispositionAsOf");
 
-        private final int numberPosition;
         private final String value;
 
-        AfterPeriodOfFrom(int numberPosition, String value)
+        AfterPeriodOfFrom(String value)
         {
-            this.numberPosition = numberPosition;
             this.value = value;
         }
 
@@ -102,22 +106,31 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage {
     /**
      * Constructor
      *
-     * @param drone
+     * @param drone FIXME: Description!!!
      */
-    public RmEditDispositionSchedulePage(WebDrone drone) {
+    public RmEditDispositionSchedulePage(WebDrone drone)
+    {
         super(drone);
     }
 
+    /**
+     * @see org.alfresco.po.rm.fileplan.RmCreateDispositionPage#render(org.alfresco.webdrone.RenderTime)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RmEditDispositionSchedulePage render(RenderTime timer)
     {
+        // FIXME: Check parameter for public methods
+
         elementRender(timer,
                 getVisibleRenderElement(EDIT_DISPOSITION_SECTION),
                 getVisibleRenderElement(ADD_STEP_BUTTON));
         return this;
     }
 
+    /**
+     * @see org.alfresco.po.rm.fileplan.RmCreateDispositionPage#render()
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RmEditDispositionSchedulePage render()
@@ -125,19 +138,38 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage {
         return render(new RenderTime(maxPageLoadingTime));
     }
 
+    /**
+     * @see org.alfresco.po.rm.fileplan.RmCreateDispositionPage#render(long)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public RmEditDispositionSchedulePage render(final long time)
     {
+        // FIXME: Check parameter for public methods
+
         return render(new RenderTime(time));
     }
 
-    public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description, String intValue, AfterPeriodOfFrom fromOptionNumber){
+    /**
+     * FIXME: Description!!!
+     *
+     * @param period FIXME!!!
+     * @param description FIXME!!!
+     * @param intValue FIXME!!!
+     * @param fromOptionNumber FIXME!!!
+     * @return FIXME!!!
+     */
+    public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description, String intValue, AfterPeriodOfFrom fromOptionNumber)
+    {
+        // FIXME: Check parameter for public methods
+
         checkAfterPeriodChkBox();
-        if(intValue!=null){
+        if (intValue != null)
+        {
             inputPeriodValue(intValue);
         }
-        if(fromOptionNumber!=null){
+        if (fromOptionNumber != null)
+        {
             selectFromOption(fromOptionNumber);
         }
         selectPeriod(period);
@@ -146,12 +178,26 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage {
         return new RmEditDispositionSchedulePage(drone).render();
     }
 
-    public RmEditDispositionSchedulePage selectAfterEventCompleted(AfterPeriodOf period, String description, String intValue, AfterPeriodOfFrom fromOptionNumber){
+    /**
+     * FIXME: Description!!!
+     *
+     * @param period FIXME!!!
+     * @param description FIXME!!!
+     * @param intValue FIXME!!!
+     * @param fromOptionNumber FIXME!!!
+     * @return FIXME!!!
+     */
+    public RmEditDispositionSchedulePage selectAfterEventCompleted(AfterPeriodOf period, String description, String intValue, AfterPeriodOfFrom fromOptionNumber)
+    {
+        // FIXME: Check parameter for public methods
+
         checkAfterPeriodChkBox();
-        if(intValue!=null){
+        if (intValue != null)
+        {
             inputPeriodValue(intValue);
         }
-        if(fromOptionNumber!=null){
+        if (fromOptionNumber != null)
+        {
             selectFromOption(fromOptionNumber);
         }
         selectPeriod(period);
@@ -160,90 +206,153 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage {
         return new RmEditDispositionSchedulePage(drone).render();
     }
 
-    public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description){
+    /**
+     * FIXME: Description!!!
+     *
+     * @param period FIXME!!!
+     * @param description FIXME!!!
+     * @return FIXME!!!
+     */
+    public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description)
+    {
+        // FIXME: Check parameter for public methods
+
         return selectAfterPeriodOf(period, description, null, null);
     }
 
+    /**
+     * FIXME: Description!!!
+     *
+     * @param step FIXME!!!
+     */
     public void selectDispositionStep(DispositionAction step)
     {
+        // FIXME: Check parameter for public methods
+
         click(ADD_STEP_BUTTON);
         click(step.getXpath());
         drone.findAndWait(DISPOSITION_FORM);
     }
 
-    private void saveStepButton(){
+    /**
+     * FIXME: Description!!!
+     */
+    private void saveStepButton()
+    {
         List<WebElement> saveElements = drone.findAndWaitForElements(SAVE_BUTTON);
         for (WebElement button : saveElements)
         {
-            if (button.isDisplayed()){
+            if (button.isDisplayed())
+            {
                 button.click();
             }
         }
     }
 
-    private void inputDescription(String description){
+    /**
+     * FIXME: Description!!!
+     *
+     * @param description FIXME!!!
+     */
+    private void inputDescription(String description)
+    {
         List<WebElement> descriptionElements = drone.findAndWaitForElements(DESCRIPTION_AREA);
         for (WebElement desc : descriptionElements)
         {
-            if (desc.isDisplayed()){
+            if (desc.isDisplayed())
+            {
                 desc.clear();
                 desc.sendKeys(description);
             }
         }
     }
 
-    private void selectPeriod(AfterPeriodOf period){
+    /**
+     * FIXME: Description!!!
+     *
+     * @param period FIXME!!!
+     */
+    private void selectPeriod(AfterPeriodOf period)
+    {
         List<WebElement> periodOption = drone.findAndWaitForElements(PERIOD_SELECT);
-        List<Select> periodSelect = new ArrayList<>();
+        List<Select> periodSelect = new ArrayList<Select>();
         for (WebElement action : periodOption)
         {
-            if (action.isDisplayed()){
+            if (action.isDisplayed())
+            {
                 periodSelect.add(new Select(action));
             }
         }
-        periodSelect.get(periodSelect.size()-1).selectByIndex(period.numberPosition);
+        periodSelect.get(periodSelect.size()-1).selectByValue(period.getValue());
     }
 
-    private void selectFromOption(AfterPeriodOfFrom fromOptionNumber){
+    /**
+     * FIXME: Description!!!
+     *
+     * @param fromOptionNumber FIXME!!!
+     */
+    private void selectFromOption(AfterPeriodOfFrom fromOptionNumber)
+    {
         List<WebElement> fromOption = drone.findAndWaitForElements(PERIOD_ACTION_SELECT);
         List<Select> fromSelect = new ArrayList<Select>();
         for (WebElement action : fromOption)
         {
-            if (action.isDisplayed()){
+            if (action.isDisplayed())
+            {
                 fromSelect.add(new Select(action));
             }
         }
-        fromSelect.get(fromSelect.size()-1).selectByIndex(fromOptionNumber.numberPosition);
+        fromSelect.get(fromSelect.size()-1).selectByValue(fromOptionNumber.getValue());
     }
 
-    private void checkAfterPeriodChkBox(){
+    /**
+     * FIXME: Description!!!
+     */
+    private void checkAfterPeriodChkBox()
+    {
         List<WebElement> fromOption = drone.findAndWaitForElements(AFTER_PERIOD_CHKBOX);
         for (WebElement afterPeriod : fromOption)
         {
-            if (afterPeriod.isDisplayed()){
-                if(!afterPeriod.isSelected()){
+            if (afterPeriod.isDisplayed())
+            {
+                if(!afterPeriod.isSelected())
+                {
                     afterPeriod.click();
                 }
             }
         }
     }
 
-    private void inputPeriodValue(String value){
+    /**
+     * FIXME: Description!!!
+     *
+     * @param value FIXME!!!
+     */
+    private void inputPeriodValue(String value)
+    {
         List<WebElement> periodElements = drone.findAndWaitForElements(DESCRIPTION_AREA);
         for (WebElement period : periodElements)
         {
-            if (period.isDisplayed()){
+            if (period.isDisplayed())
+            {
                 period.clear();
                 period.sendKeys(value);
             }
         }
     }
 
-    public RmCreateDispositionPage clickDoneButton(){
+    /**
+     * FIXME: Description!!!
+     *
+     * @return FIXME!!!
+     */
+    public RmCreateDispositionPage clickDoneButton()
+    {
         List<WebElement> saveElements = drone.findAndWaitForElements(DONE_BUTTON);
         for (WebElement button : saveElements)
         {
-            if (button.isDisplayed()){
+            if (button.isDisplayed())
+            {
                 button.click();
             }
         }

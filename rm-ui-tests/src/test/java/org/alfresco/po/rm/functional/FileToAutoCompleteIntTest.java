@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
+import org.alfresco.po.rm.RmActionSelectorEnterpImpl.PerformActions;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;
@@ -143,7 +144,7 @@ public class FileToAutoCompleteIntTest extends AbstractIntegrationTest
         FolderRulesPage manageRulesPage = unfiledRecordsContainer.selectManageRules().render();
         CreateRulePage createRulePage = manageRulesPage.openCreateRulePage().render();
         RmActionSelectorEnterpImpl actionSelectorEnter = (RmActionSelectorEnterpImpl) createRulePage.getActionOptionsObj();
-        actionSelectorEnter.selectFileTo();
+        actionSelectorEnter.selectAction(PerformActions.FILE_TO);
 
         // send the fragment key strokes
         WebElement input = drone.findAndWait(By.className("yui-ac-input"), MAX_WAIT_TIME);
