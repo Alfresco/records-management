@@ -18,8 +18,6 @@
  */
 package org.alfresco.po.rm.fileplan.toolbar;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 import org.alfresco.po.rm.fileplan.FilePlanPage;
@@ -74,7 +72,7 @@ public class CreateNewRecordDialog extends SharePage
     @Override
     public CreateNewRecordDialog render(RenderTime timer)
     {
-        checkNotNull(timer);
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
         elementRender(timer,
                 getVisibleRenderElement(NAME_INPUT),
@@ -106,7 +104,7 @@ public class CreateNewRecordDialog extends SharePage
     @Override
     public CreateNewRecordDialog render(final long time)
     {
-        checkArgument(time != 0);
+        WebDroneUtil.checkMandotaryParam("time", time);
 
         return this.render(new RenderTime(time));
     }

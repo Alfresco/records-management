@@ -23,12 +23,10 @@ import java.util.List;
 
 import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.ActionSelectorEnterpImpl;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Extends the {@link ActionSelectorEnterpImpl} in order to add the RM specific actions
@@ -91,7 +89,7 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
      */
     public void selectAction(PerformActions action)
     {
-        checkNotNull(action);
+        WebDroneUtil.checkMandotaryParam("action", action);
 
         List<WebElement> actionOptions = getDrone().findAndWaitForElements(ACTION_OPTIONS_SELECT);
         List<Select> actionSelects = new ArrayList<Select>();
@@ -110,7 +108,8 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
      */
     public void selectFileTo(String path, boolean createRecordPath)
     {
-        checkNotNull(path);
+        WebDroneUtil.checkMandotaryParam("createRecordPath", createRecordPath);
+
         selectAction(PerformActions.FILE_TO);
         setFileToPath(path, MAX_WAIT_TIME);
         if (createRecordPath)
@@ -127,7 +126,9 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
      */
     private void setFileToPath(String path, long timeout)
     {
-        checkArgument(timeout != 0);
+        WebDroneUtil.checkMandotaryParam("path", path);
+        WebDroneUtil.checkMandotaryParam("timeout", timeout);
+
         WebElement input = getDrone().findAndWait(By.className("yui-ac-input"), timeout);
         input.clear();
         input.sendKeys(path);

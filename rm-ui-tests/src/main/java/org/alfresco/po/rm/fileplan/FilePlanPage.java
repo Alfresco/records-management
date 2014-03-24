@@ -18,7 +18,6 @@
  */
 package org.alfresco.po.rm.fileplan;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.CREATE_DISPOSITION_BUTTON;
 import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.NON_ELECTRONIC_BUTTON;
 
@@ -448,7 +447,6 @@ public class FilePlanPage extends DocumentLibraryPage
         return new RecordInfo(drone, list.get(index));
     }
 
-
     // FIXME: This method will be deleted after the original method has been fixed
     @Override
     public FileDirectoryInfo getFileDirectoryInfo(String title)
@@ -473,7 +471,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public boolean isFolderClosed(String folderName)
     {
-        checkNotNull(folderName);
+        WebDroneUtil.checkMandotaryParam("folderName", folderName);
 
         By closeIcon = By.xpath("//a[contains(text(), '" + folderName + "')]" +
                 "/ancestor::tr//div[@class='status']//img[@title='Closed']");
@@ -513,7 +511,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public FolderDetailsPage openDetailsPage(String itemValue)
     {
-        checkNotNull(itemValue);
+        WebDroneUtil.checkMandotaryParam("itemValue", itemValue);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
@@ -532,7 +530,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public FilePlanPage cutOffAction(String itemValue)
     {
-        checkNotNull(itemValue);
+        WebDroneUtil.checkMandotaryParam("itemValue", itemValue);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
@@ -552,7 +550,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public FolderDetailsPage openRecordDetailsPage(String itemValue)
     {
-        checkNotNull(itemValue);
+        WebDroneUtil.checkMandotaryParam("itemValue", itemValue);
 
         drone.getCurrentPage().render();
         WebElement record = drone.findAndWait(By.xpath("//span//a[contains(text(), '" + itemValue + "')]"));
@@ -578,7 +576,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public void click(By locator)
     {
-        checkNotNull(locator);
+        WebDroneUtil.checkMandotaryParam("locator", locator);
 
         WebElement element = drone.findAndWait(locator);
         drone.mouseOverOnElement(element);
@@ -594,7 +592,8 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public FilePlanPage createCategory(String categoryName, boolean isRootFolder)
     {
-        checkNotNull(categoryName);
+        WebDroneUtil.checkMandotaryParam("categoryName", categoryName);
+        WebDroneUtil.checkMandotaryParam("isRootFolder", isRootFolder);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         filePlan.setInFilePlanRoot(isRootFolder);
@@ -618,7 +617,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public boolean isCategoryCreated(String categoryName)
     {
-        checkNotNull(categoryName);
+        WebDroneUtil.checkMandotaryParam("categoryName", categoryName);
 
         return RmPageObjectUtils.isDisplayed(drone, By.
                 xpath("//span//a[contains(text(), '" + categoryName + "')]"));
@@ -632,7 +631,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public FilePlanPage createFolder(String folderName)
     {
-        checkNotNull(folderName);
+        WebDroneUtil.checkMandotaryParam("folderName", folderName);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         CreateNewRecordFolderDialog createNewFolder = filePlan.selectCreateNewFolder().render();
@@ -653,7 +652,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public FilePlanPage createRecord(String recordName)
     {
-        checkNotNull(recordName);
+        WebDroneUtil.checkMandotaryParam("recordName", recordName);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         CreateNewRecordDialog createNewRecord = filePlan.selectNewNonElectronicRecord();
@@ -674,7 +673,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public FilePlanPage navigateToFolder(String folderName)
     {
-        checkNotNull(folderName);
+        WebDroneUtil.checkMandotaryParam("folderName", folderName);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo recordCategory = filePlan.getFileDirectoryInfo(folderName);

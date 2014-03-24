@@ -32,6 +32,7 @@ public abstract class AbstractRecordsManagementTest extends AbstractTest
 {
     /** RM site dashboard for logged in user */
     protected RmSiteDashBoardPage rmSiteDashBoard;
+
     /**
      * Helper method that logs into share and sets the dashboard PO
      *

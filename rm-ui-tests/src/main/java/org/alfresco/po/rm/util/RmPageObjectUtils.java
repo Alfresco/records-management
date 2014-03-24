@@ -73,8 +73,16 @@ public class RmPageObjectUtils
         webElement.click();
     }
 
+    /**
+     * FIXME!!!
+     *
+     * @param length FIXME!!!
+     * @return FIXME!!!
+     */
     public static String getRandomString(int length)
     {
+        // FIXME: Check parameter
+
         StringBuilder rv = new StringBuilder();
         Random rnd = new Random();
         char from[] = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();

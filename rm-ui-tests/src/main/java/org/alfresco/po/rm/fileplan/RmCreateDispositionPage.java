@@ -18,13 +18,13 @@
  */
 package org.alfresco.po.rm.fileplan;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 import org.alfresco.po.share.site.document.FolderDetailsPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -52,7 +52,13 @@ public class RmCreateDispositionPage extends FolderDetailsPage
         /* Don't agree with comment. Can Delete Number position. But, for example, On create Disposition page there no cretarias to select disposiotion except xpath
          * And on Create Rule page we can select by value. So, we need xpath and value too.
          */
-
+        /* FIXME: In this case it's true that the "value" is not enough
+         * The reason for that is after we create a YUI menu button we loose the "value" in the UI
+         * and there is no other reliable way for selecting.
+         * You can keep the "name" but extract the text to a properties file.
+         * No hard coded text in the code please.
+         * And please delete numberPosition and xpath
+         */
         ACCESSION(0, By.xpath("//a[text()='Accession']"), "Accession", "accession"),
         DESTROY(2,  By.xpath("//a[text()='Destroy']"), "Destroy", "destroy"),
         RETAIN(3,  By.xpath("//a[text()='Retain']"), "Retain", "retain"),
@@ -110,7 +116,7 @@ public class RmCreateDispositionPage extends FolderDetailsPage
     @Override
     public RmCreateDispositionPage render(RenderTime timer)
     {
-        checkNotNull(timer);
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
         elementRender(timer,
                 getVisibleRenderElement(DISPOSITION_SECTION),
@@ -136,7 +142,7 @@ public class RmCreateDispositionPage extends FolderDetailsPage
     @Override
     public RmCreateDispositionPage render(final long time)
     {
-        checkArgument(time != 0);
+        WebDroneUtil.checkMandotaryParam("time", time);
 
         return render(new RenderTime(time));
     }
@@ -156,7 +162,7 @@ public class RmCreateDispositionPage extends FolderDetailsPage
     }
 
     /**
-     * Action Click Edoit Disposition Button
+     * Action Click Edit Disposition Button
      *
      * @return Edit Disposition Page
      */

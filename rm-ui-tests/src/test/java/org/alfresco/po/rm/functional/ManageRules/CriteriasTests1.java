@@ -1,9 +1,25 @@
 package org.alfresco.po.rm.functional.ManageRules;
 
-import org.alfresco.po.rm.*;
+import static org.alfresco.po.rm.RmCreateRulePage.CRITERIAS_SELECT;
+import static org.alfresco.po.rm.RmCreateRulePage.SELECT_CRITERIA_DIALOG;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.EDIT_BUTTON;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.RULE_ITEMS;
+import static org.testng.AssertJUnit.assertFalse;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
+import org.alfresco.po.rm.RmConsoleUsersAndGroups;
+import org.alfresco.po.rm.RmCreateRulePage;
+import org.alfresco.po.rm.RmCreateRulePage.RuleCriterias;
+import org.alfresco.po.rm.RmCreateRulePage.WhenExecute;
+import org.alfresco.po.rm.RmFolderRulesPage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.RmCreateDispositionPage;
+import org.alfresco.po.rm.fileplan.RmCreateDispositionPage.DispositionAction;
 import org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage;
+import org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.AfterPeriodOf;
 import org.alfresco.po.rm.functional.RmAbstractTest;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.ShareUtil;
@@ -13,14 +29,6 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import static org.alfresco.po.rm.RmCreateRulePage.*;
-import static org.alfresco.po.rm.RmFolderRulesWithRules.EDIT_BUTTON;
-import static org.alfresco.po.rm.RmFolderRulesWithRules.RULE_ITEMS;
-import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.*;
-import static org.testng.AssertJUnit.assertFalse;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Records management edit disposition page.
@@ -29,9 +37,14 @@ import java.util.List;
  * @version 1.1
  * @since 2.2
  */
-@Listeners(FailedTestListener.class)
-public class CriteriasTests1 extends RmAbstractTest {
 
+/**
+ * FIXME: Please move this class to the regression subpackage
+ */
+
+@Listeners(FailedTestListener.class)
+public class CriteriasTests1 extends RmAbstractTest
+{
     /**
      * Executed after class
      */
@@ -50,7 +63,8 @@ public class CriteriasTests1 extends RmAbstractTest {
         String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
 
-        try{
+        try
+        {
             ShareUtil.logout(drone);
 
             CreateUser(userName);
@@ -70,11 +84,12 @@ public class CriteriasTests1 extends RmAbstractTest {
 
             List<String> suggestions = new ArrayList<String>();
             int suggestionToSelect = 0;
-            for(RuleCriterias value : RuleCriterias.values()){
-                for(WebElement listItem : getAllSelectOptions(CRITERIAS_SELECT, MAX_WAIT_TIME))
+            for (RuleCriterias value : RuleCriterias.values())
+            {
+                for (WebElement listItem : getAllSelectOptions(CRITERIAS_SELECT, MAX_WAIT_TIME))
                 {
                     suggestions.add(listItem.getText());
-                    if(listItem.getText().equals(value.getValue()))
+                    if (listItem.getText().equals(value.getValue()))
                     {
                         suggestionToSelect++;
                     }
@@ -104,7 +119,8 @@ public class CriteriasTests1 extends RmAbstractTest {
         String categoryName = testName + RmPageObjectUtils.getRandomString(3);
         String folderName = testName + RmPageObjectUtils.getRandomString(3);
 
-        try{
+        try
+        {
             ShareUtil.logout(drone);
 
             CreateUser(userName);
@@ -189,7 +205,8 @@ public class CriteriasTests1 extends RmAbstractTest {
         String categoryName1 = testName + RmPageObjectUtils.getRandomString(3);
         String folderName = testName + RmPageObjectUtils.getRandomString(3);
 
-        try{
+        try
+        {
             ShareUtil.logout(drone);
 
             CreateUser(userName);

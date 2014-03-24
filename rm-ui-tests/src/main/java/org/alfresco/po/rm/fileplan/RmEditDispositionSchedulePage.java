@@ -18,8 +18,6 @@
  */
 package org.alfresco.po.rm.fileplan;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 import java.util.ArrayList;
@@ -27,6 +25,7 @@ import java.util.List;
 
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -125,7 +124,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     @Override
     public RmEditDispositionSchedulePage render(RenderTime timer)
     {
-        checkNotNull(timer);
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
         elementRender(timer,
                 getVisibleRenderElement(EDIT_DISPOSITION_SECTION),
@@ -150,7 +149,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     @Override
     public RmEditDispositionSchedulePage render(final long time)
     {
-        checkArgument(time != 0);
+        WebDroneUtil.checkMandotaryParam("time", time);
 
         return render(new RenderTime(time));
     }
@@ -166,10 +165,10 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
      */
     public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description, String intValue, AfterPeriodOfFrom fromOptionNumber)
     {
-        checkNotNull(period);
-        checkNotNull(description);
-        checkNotNull(intValue);
-        checkNotNull(fromOptionNumber);
+        WebDroneUtil.checkMandotaryParam("period", period);
+        WebDroneUtil.checkMandotaryParam("description", description);
+        // intValue can be null
+        // fromOptionNumber can be null
 
         checkAfterPeriodChkBox();
         if (intValue != null)
@@ -197,10 +196,10 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
      */
     public RmEditDispositionSchedulePage selectAfterEventCompleted(AfterPeriodOf period, String description, String intValue, AfterPeriodOfFrom fromOptionNumber)
     {
-        checkNotNull(period);
-        checkNotNull(description);
-        checkNotNull(intValue);
-        checkNotNull(fromOptionNumber);
+        WebDroneUtil.checkMandotaryParam("period", period);
+        WebDroneUtil.checkMandotaryParam("description", description);
+        WebDroneUtil.checkMandotaryParam("intValue", intValue);
+        WebDroneUtil.checkMandotaryParam("fromOptionNumber", fromOptionNumber);
 
         checkAfterPeriodChkBox();
         if (intValue != null)
@@ -226,8 +225,8 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
      */
     public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description)
     {
-        checkNotNull(period);
-        checkNotNull(description);
+        WebDroneUtil.checkMandotaryParam("period", period);
+        WebDroneUtil.checkMandotaryParam("description", description);
 
         return selectAfterPeriodOf(period, description, null, null);
     }
@@ -239,7 +238,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
      */
     public void selectDispositionStep(DispositionAction step)
     {
-        checkNotNull(step);
+        WebDroneUtil.checkMandotaryParam("step", step);
 
         click(ADD_STEP_BUTTON);
         click(step.getXpath());
@@ -318,7 +317,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     }
 
     /**
-     *
+     * FIXME: Description
      */
     private void checkAfterPeriodChkBox()
     {
