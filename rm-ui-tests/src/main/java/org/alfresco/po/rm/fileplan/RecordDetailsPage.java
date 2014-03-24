@@ -241,9 +241,7 @@ public class RecordDetailsPage extends DocumentDetailsPage
                 result = true;
                 break;
             }
-              
         }
-        
         return result;
     }
 }

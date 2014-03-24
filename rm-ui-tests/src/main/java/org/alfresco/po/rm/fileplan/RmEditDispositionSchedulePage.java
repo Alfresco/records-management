@@ -18,6 +18,8 @@
  */
 package org.alfresco.po.rm.fileplan;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 import java.util.ArrayList;
@@ -48,12 +50,13 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     public static By PERIOD_INPUT               = By.cssSelector("div[style*='block'] input[class$='period-amount']");
     public static By PERIOD_SELECT              = By.cssSelector("div[style*='block'] select[class$='period-unit']");
     public static By PERIOD_ACTION_SELECT       = By.cssSelector("div[style*='block'] select[class$='period-action']");
-    // FIXME: Change the xpath expression. This contains hard coded text (Save, Cancel, Done). The test won't work with a browser which uses other language than English
-    public static By SAVE_BUTTON                = By.xpath("//div[contains(@style,'block')]//button[contains(text(),'Save')]");
-    public static By CANCEL_BUTTON              = By.xpath("//div[contains(@style,'block')]//button[text()='Cancel']");
-    public static By DONE_BUTTON                = By.xpath("//button[text()='Done']");
+    public static By SAVE_BUTTON                = By.cssSelector("div[style*='block'] span[class*='saveaction']>*>button");
+    public static By CANCEL_BUTTON              = By.cssSelector("div[style*='block'] span[class*='cancel']>*>button");
+    public static By DONE_BUTTON                = By.xpath("span[class*='done']>*>button");
 
-    // FIXME: Description
+    /**
+     * After Period Of time values
+     */
     public static enum AfterPeriodOf
     {
         DAY("day"),
@@ -84,7 +87,9 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
         }
     }
 
-    // FIXME: Description
+    /**
+     * After Period Of select values
+     */
     public static enum AfterPeriodOfFrom
     {
         CREATED_DATE("cm:created"),
@@ -120,7 +125,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     @Override
     public RmEditDispositionSchedulePage render(RenderTime timer)
     {
-        // FIXME: Check parameter for public methods
+        checkNotNull(timer);
 
         elementRender(timer,
                 getVisibleRenderElement(EDIT_DISPOSITION_SECTION),
@@ -145,23 +150,26 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     @Override
     public RmEditDispositionSchedulePage render(final long time)
     {
-        // FIXME: Check parameter for public methods
+        checkArgument(time != 0);
 
         return render(new RenderTime(time));
     }
 
     /**
-     * FIXME: Description!!!
+     * Select After Period of value
      *
-     * @param period FIXME!!!
-     * @param description FIXME!!!
-     * @param intValue FIXME!!!
-     * @param fromOptionNumber FIXME!!!
-     * @return FIXME!!!
+     * @param period period value
+     * @param description disposition description
+     * @param intValue int value of period
+     * @param fromOptionNumber from select value
+     * @return {@link RmEditDispositionSchedulePage}
      */
     public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description, String intValue, AfterPeriodOfFrom fromOptionNumber)
     {
-        // FIXME: Check parameter for public methods
+        checkNotNull(period);
+        checkNotNull(description);
+        checkNotNull(intValue);
+        checkNotNull(fromOptionNumber);
 
         checkAfterPeriodChkBox();
         if (intValue != null)
@@ -179,17 +187,20 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     }
 
     /**
-     * FIXME: Description!!!
+     * Select After Event Complete of value
      *
-     * @param period FIXME!!!
-     * @param description FIXME!!!
-     * @param intValue FIXME!!!
-     * @param fromOptionNumber FIXME!!!
-     * @return FIXME!!!
+     * @param period period value
+     * @param description disposition description
+     * @param intValue int value of period
+     * @param fromOptionNumber from select value
+     * @return {@link RmEditDispositionSchedulePage}
      */
     public RmEditDispositionSchedulePage selectAfterEventCompleted(AfterPeriodOf period, String description, String intValue, AfterPeriodOfFrom fromOptionNumber)
     {
-        // FIXME: Check parameter for public methods
+        checkNotNull(period);
+        checkNotNull(description);
+        checkNotNull(intValue);
+        checkNotNull(fromOptionNumber);
 
         checkAfterPeriodChkBox();
         if (intValue != null)
@@ -207,27 +218,28 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     }
 
     /**
-     * FIXME: Description!!!
+     * Select After Period of value
      *
-     * @param period FIXME!!!
-     * @param description FIXME!!!
-     * @return FIXME!!!
+     * @param period After Period of value
+     * @param description disposition description
+     * @return {@link RmEditDispositionSchedulePage}
      */
     public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description)
     {
-        // FIXME: Check parameter for public methods
+        checkNotNull(period);
+        checkNotNull(description);
 
         return selectAfterPeriodOf(period, description, null, null);
     }
 
     /**
-     * FIXME: Description!!!
+     * Select Disposition step from select menu
      *
-     * @param step FIXME!!!
+     * @param step disposition step
      */
     public void selectDispositionStep(DispositionAction step)
     {
-        // FIXME: Check parameter for public methods
+        checkNotNull(step);
 
         click(ADD_STEP_BUTTON);
         click(step.getXpath());
@@ -235,7 +247,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     }
 
     /**
-     * FIXME: Description!!!
+     * Action Click save button
      */
     private void saveStepButton()
     {
@@ -250,9 +262,9 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     }
 
     /**
-     * FIXME: Description!!!
+     * Type action description to the description textarea
      *
-     * @param description FIXME!!!
+     * @param description action description
      */
     private void inputDescription(String description)
     {
@@ -268,9 +280,9 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     }
 
     /**
-     * FIXME: Description!!!
+     * Select Period Value from ComboBox
      *
-     * @param period FIXME!!!
+     * @param period After Period Of Value
      */
     private void selectPeriod(AfterPeriodOf period)
     {
@@ -287,9 +299,9 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     }
 
     /**
-     * FIXME: Description!!!
+     * Select After Period From Option
      *
-     * @param fromOptionNumber FIXME!!!
+     * @param fromOptionNumber After Period from value
      */
     private void selectFromOption(AfterPeriodOfFrom fromOptionNumber)
     {
@@ -306,7 +318,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     }
 
     /**
-     * FIXME: Description!!!
+     *
      */
     private void checkAfterPeriodChkBox()
     {
@@ -324,9 +336,9 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     }
 
     /**
-     * FIXME: Description!!!
+     * Type the period value to input
      *
-     * @param value FIXME!!!
+     * @param value integer period value
      */
     private void inputPeriodValue(String value)
     {
@@ -342,9 +354,9 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     }
 
     /**
-     * FIXME: Description!!!
+     * Action Click Done Button
      *
-     * @return FIXME!!!
+     * @return {@link RmCreateDispositionPage}
      */
     public RmCreateDispositionPage clickDoneButton()
     {

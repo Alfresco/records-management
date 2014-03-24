@@ -27,6 +27,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Extends the {@link ActionSelectorEnterpImpl} in order to add the RM specific actions
  *
@@ -35,13 +38,19 @@ import org.openqa.selenium.support.ui.Select;
  */
 public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
 {
-    // FIXME: Description
+    /**
+     * Select locator
+     */
     private static final By ACTION_OPTIONS_SELECT = By.cssSelector("ul[id$=ruleConfigAction-configs]>li select[class$='config-name']");
 
-    // FIXME: Description
+    /**
+     * Wait Time variable
+     */
     private final static long MAX_WAIT_TIME = 60000;
 
-    // FIXME: Description
+    /**
+     * Rules Actions
+     */
     public static enum PerformActions
     {
         COMPLETE_RECORD("declareRecord"),
@@ -70,16 +79,19 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
         }
     }
 
-    // FIXME: Description
     public RmActionSelectorEnterpImpl(WebDrone drone)
     {
         super(drone);
     }
 
-    // FIXME: Description
+    /**
+     * Action select action from Perform Action combobox
+     *
+     * @param action action from Perform Actions enumeration
+     */
     public void selectAction(PerformActions action)
     {
-        // FIXME: Check parameter for public methods
+        checkNotNull(action);
 
         List<WebElement> actionOptions = getDrone().findAndWaitForElements(ACTION_OPTIONS_SELECT);
         List<Select> actionSelects = new ArrayList<Select>();
@@ -90,11 +102,15 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
         actionSelects.get(actionSelects.size() - 1).selectByValue(action.getValue());
     }
 
-    // FIXME: Description
+    /**
+     * Action select File To from Perform Action combobox
+     *
+     * @param path where is file to path
+     * @param createRecordPath
+     */
     public void selectFileTo(String path, boolean createRecordPath)
     {
-        // FIXME: Check parameter for public methods
-
+        checkNotNull(path);
         selectAction(PerformActions.FILE_TO);
         setFileToPath(path, MAX_WAIT_TIME);
         if (createRecordPath)
@@ -103,9 +119,15 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
         }
     }
 
-    // FIXME: Description
+    /**
+     * Input File to path
+     *
+     * @param path File To path
+     * @param timeout
+     */
     private void setFileToPath(String path, long timeout)
     {
+        checkArgument(timeout != 0);
         WebElement input = getDrone().findAndWait(By.className("yui-ac-input"), timeout);
         input.clear();
         input.sendKeys(path);

@@ -106,7 +106,7 @@ public class RmFolderRulesWithRules extends FolderRulesPage
     /**
      * Method verifies if rules details block is displayed
      * 
-     * @return true/false FIXME!!!
+     * @return true/false Rule Details sector is Displayed
      */
     private boolean isRuleDetailsDisplay()
     {
@@ -122,7 +122,7 @@ public class RmFolderRulesWithRules extends FolderRulesPage
 
     /**
      * Delete rule from rules details page
-     * @param ruleName FIXME!!!
+     * @param ruleName Name for Rule
      * @return {@link RmFolderRulesPage}
      */
     public RmFolderRulesPage deleteRule(String ruleName)
@@ -181,8 +181,8 @@ public class RmFolderRulesWithRules extends FolderRulesPage
     /**
      * Helper method verifies if folder rule page is correct
      * 
-     * @param folderName FIXME!!!
-     * @return FIXME!!!
+     * @param folderName Folder Name
+     * @return correct or incorrect page
      */
     public boolean isPageCorrect(String folderName)
     {

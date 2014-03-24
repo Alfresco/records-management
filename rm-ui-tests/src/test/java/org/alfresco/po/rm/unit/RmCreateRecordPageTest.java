@@ -30,7 +30,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
- * FIXME: Description!!!
+ * Tests RM create record page
  *
  * @author Polina Lushchinskaya
  * @version 1.1

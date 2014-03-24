@@ -18,6 +18,8 @@
  */
 package org.alfresco.po.rm.fileplan;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 import org.alfresco.po.share.site.document.FolderDetailsPage;
@@ -41,10 +43,16 @@ public class RmCreateDispositionPage extends FolderDetailsPage
     public static By EDIT_PROPERTIES_BUTTON     = By.cssSelector("button[id$='editproperties-button-button']");
     public static By EDIT_SCHEDULE_BUTTON       = By.cssSelector("button[id$='editschedule-button-button']");
 
-    // FIXME: Description
+    /**
+     * Disposion Actions
+     */
     public static enum DispositionAction
     {
         // FIXME: DispositionAction should only have value and not numberPosition, xpath or name. See AfterPeriodOf as an example
+        /* Don't agree with comment. Can Delete Number position. But, for example, On create Disposition page there no cretarias to select disposiotion except xpath
+         * And on Create Rule page we can select by value. So, we need xpath and value too.
+         */
+
         ACCESSION(0, By.xpath("//a[text()='Accession']"), "Accession", "accession"),
         DESTROY(2,  By.xpath("//a[text()='Destroy']"), "Destroy", "destroy"),
         RETAIN(3,  By.xpath("//a[text()='Retain']"), "Retain", "retain"),
@@ -102,7 +110,7 @@ public class RmCreateDispositionPage extends FolderDetailsPage
     @Override
     public RmCreateDispositionPage render(RenderTime timer)
     {
-        // FIXME: Check parameter for public methods
+        checkNotNull(timer);
 
         elementRender(timer,
                 getVisibleRenderElement(DISPOSITION_SECTION),
@@ -128,7 +136,7 @@ public class RmCreateDispositionPage extends FolderDetailsPage
     @Override
     public RmCreateDispositionPage render(final long time)
     {
-        // FIXME: Check parameter for public methods
+        checkArgument(time != 0);
 
         return render(new RenderTime(time));
     }
@@ -140,7 +148,7 @@ public class RmCreateDispositionPage extends FolderDetailsPage
      */
     public void click(By locator)
     {
-        // FIXME: Check parameter for public methods
+        checkNotNull(locator);
 
         WebElement element = drone.findAndWait(locator);
         drone.mouseOverOnElement(element);
@@ -148,9 +156,9 @@ public class RmCreateDispositionPage extends FolderDetailsPage
     }
 
     /**
-     * FIXME: Description!!!
+     * Action Click Edoit Disposition Button
      *
-     * @return FIXME!!!
+     * @return Edit Disposition Page
      */
     public RmEditDispositionSchedulePage selectEditDisposition()
     {

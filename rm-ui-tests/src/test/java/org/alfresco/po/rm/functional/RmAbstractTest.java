@@ -18,15 +18,10 @@
  */
 package org.alfresco.po.rm.functional;
 
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.ADD_BUTTON;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.ADD_USER_FORM;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.SEARCH_USER_BUTTON;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.SEARCH_USER_INPUT;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.addUserButton;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.selectGroup;
-import static org.alfresco.po.rm.RmCreateRulePage.PROPERTY_VALUE_INPUT;
-import static org.alfresco.po.rm.RmFolderRulesPage.LINK_BUTTON;
-import static org.alfresco.po.rm.RmFolderRulesWithRules.RULE_ITEMS;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.*;
+import static org.alfresco.po.rm.RmCreateRulePage.*;
+import static org.alfresco.po.rm.RmFolderRulesPage.*;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -110,16 +105,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
             {
                 ruleItem.click();
 
-                // FIXME: ruleAction.getName has been changed to ruleAction.getValue
-                // This might break the xpath expression. Please do not use any hard
-                // coded text in the xpath expressions.
-
-                drone.findAndWait(
-                        By.xpath(
-                                "//div[@class='parameters']"
-                                        + "//ancestor::div[contains(@id,'ruleConfigAction')]"
-                                        + "//span[contains(text(), '" + ruleAction.getValue() + "')]"),
-                        MAX_WAIT_TIME);
+                drone.findAndWait(EDIT_BUTTON, MAX_WAIT_TIME);
             }
         }
     }
@@ -153,16 +139,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
             {
                 ruleItem.click();
 
-                // FIXME: ruleAction.getName has been changed to ruleAction.getValue
-                // This might break the xpath expression. Please do not use any hard
-                // coded text in the xpath expressions.
-
-                drone.findAndWait(
-                        By.xpath(
-                                "//div[@class='parameters']"
-                                        + "//ancestor::div[contains(@id,'ruleConfigAction')]"
-                                        + "//span[contains(text(), '" + ruleAction.getValue() + "')]"),
-                        MAX_WAIT_TIME);
+                drone.findAndWait(EDIT_BUTTON, MAX_WAIT_TIME);
             }
         }
     }
@@ -196,16 +173,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
             {
                 ruleItem.click();
 
-                // FIXME: ruleAction.getName has been changed to ruleAction.getValue
-                // This might break the xpath expression. Please do not use any hard
-                // coded text in the xpath expressions.
-
-                drone.findAndWait(
-                        By.xpath(
-                                "//div[@class='parameters']"
-                                        + "//ancestor::div[contains(@id,'ruleConfigAction')]"
-                                        + "//span[contains(text(), '" + ruleAction.getValue() + "')]"),
-                        MAX_WAIT_TIME);
+                drone.findAndWait(EDIT_BUTTON, MAX_WAIT_TIME);
             }
         }
     }
@@ -241,16 +209,7 @@ public class RmAbstractTest extends AbstractIntegrationTest {
             {
                 ruleItem.click();
 
-                // FIXME: ruleAction.getName has been changed to ruleAction.getValue
-                // This might break the xpath expression. Please do not use any hard
-                // coded text in the xpath expressions.
-
-                drone.findAndWait(
-                        By.xpath(
-                                "//div[@class='parameters']"
-                                        + "//ancestor::div[contains(@id,'ruleConfigAction')]"
-                                        + "//span[contains(text(), '" + PerformActions.SET_PROPERTY_VALUE.getValue() + "')]"),
-                        MAX_WAIT_TIME);
+                drone.findAndWait(EDIT_BUTTON, MAX_WAIT_TIME);
             }
         }
     }
@@ -281,13 +240,10 @@ public class RmAbstractTest extends AbstractIntegrationTest {
         manageRulesPage.openLinkToDialog();
         WebElement siteLink = drone.findAndWait(By.xpath("//div[contains(@id, 'sitePicker')]//span[contains(text(), 'Records Management')]"), MAX_WAIT_TIME);
         siteLink.click();
-        sleep(1000);
         WebElement folderLink = drone.findAndWait(By.xpath("//span[contains(text(), '"+folderName+"')]"), MAX_WAIT_TIME);
         folderLink.click();
-        sleep(1000);
         WebElement ruleLink = drone.findAndWait(By.xpath("//div[contains(@id, 'rulePicker')]//span[contains(text(), '"+ruleName+"')]"), MAX_WAIT_TIME);
         ruleLink.click();
-        sleep(1000);
         drone.waitUntilElementClickable(LINK_BUTTON, MAX_WAIT_TIME);
         manageRulesPage.clickLink();
         return new RmLinkToRulePage(drone).render();
@@ -491,8 +447,6 @@ public class RmAbstractTest extends AbstractIntegrationTest {
         WebElement searchInput = drone.findAndWait(SEARCH_USER_INPUT, MAX_WAIT_TIME);
         searchInput.clear();
         searchInput.sendKeys(userName);
-        //Click search button and wait
-        sleep(1000);
         click(SEARCH_USER_BUTTON);
         for(int i=0; i<3; i++){
             if(!isElementPresent(addUserButton(userName)))

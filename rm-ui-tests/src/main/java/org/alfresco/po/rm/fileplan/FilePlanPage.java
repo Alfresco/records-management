@@ -18,6 +18,7 @@
  */
 package org.alfresco.po.rm.fileplan;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.CREATE_DISPOSITION_BUTTON;
 import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.NON_ELECTRONIC_BUTTON;
 
@@ -465,15 +466,14 @@ public class FilePlanPage extends DocumentLibraryPage
     }
 
     /**
-     * FIXME: Description!!!
+     * Actyion verifies if folder is closed
      *
-     * @param drone
-     * @param folderName
-     * @return
+     * @param folderName Name of verified folder
+     * @return true/false Is Folder closed or Not
      */
-    public boolean isFolderClosed(WebDrone drone, String folderName)
+    public boolean isFolderClosed(String folderName)
     {
-        // FIXME: Parameter check for public methods
+        checkNotNull(folderName);
 
         By closeIcon = By.xpath("//a[contains(text(), '" + folderName + "')]" +
                 "/ancestor::tr//div[@class='status']//img[@title='Closed']");
@@ -508,12 +508,12 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * Action open Folder/Category Details page using MouseOver
      *
-     * @param itemValue FIXME!!!
+     * @param itemValue Value of Item that need to open Dettails Page
      * @return  {@link FolderDetailsPage} page response
      */
     public FolderDetailsPage openDetailsPage(String itemValue)
     {
-        // FIXME: Parameter check for public methods
+        checkNotNull(itemValue);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
@@ -527,12 +527,12 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * Action click Cut Off for element
      *
-     * @param itemValue FIXME!!!
+     * @param itemValue Value of Item that should be CutOff
      * @return {@link FilePlanPage} page response
      */
     public FilePlanPage cutOffAction(String itemValue)
     {
-        // FIXME: Parameter check for public methods
+        checkNotNull(itemValue);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
@@ -547,12 +547,12 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * Action open Record Details page using MouseOver
      *
-     * @param itemValue FIXME!!!
+     * @param itemValue value of created folder/category/record
      * @return  {@link FolderDetailsPage} page response
      */
     public FolderDetailsPage openRecordDetailsPage(String itemValue)
     {
-        // FIXME: Parameter check for public methods
+        checkNotNull(itemValue);
 
         drone.getCurrentPage().render();
         WebElement record = drone.findAndWait(By.xpath("//span//a[contains(text(), '" + itemValue + "')]"));
@@ -578,7 +578,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public void click(By locator)
     {
-        // FIXME: Parameter check for public methods
+        checkNotNull(locator);
 
         WebElement element = drone.findAndWait(locator);
         drone.mouseOverOnElement(element);
@@ -594,7 +594,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public FilePlanPage createCategory(String categoryName, boolean isRootFolder)
     {
-        // FIXME: Parameter check for public methods
+        checkNotNull(categoryName);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         filePlan.setInFilePlanRoot(isRootFolder);
@@ -613,12 +613,12 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * Action verifies if category exists in file plan
      *
-     * @param categoryName FIXME!!!
-     * @return  true/false FIXME!!!
+     * @param categoryName name of Category
+     * @return  true/false return is category present on page
      */
     public boolean isCategoryCreated(String categoryName)
     {
-        // FIXME: Parameter check for public methods
+        checkNotNull(categoryName);
 
         return RmPageObjectUtils.isDisplayed(drone, By.
                 xpath("//span//a[contains(text(), '" + categoryName + "')]"));
@@ -632,7 +632,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public FilePlanPage createFolder(String folderName)
     {
-        // FIXME: Parameter check for public methods
+        checkNotNull(folderName);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         CreateNewRecordFolderDialog createNewFolder = filePlan.selectCreateNewFolder().render();
@@ -653,7 +653,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     public FilePlanPage createRecord(String recordName)
     {
-        // FIXME: Parameter check for public methods
+        checkNotNull(recordName);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         CreateNewRecordDialog createNewRecord = filePlan.selectNewNonElectronicRecord();
@@ -669,12 +669,12 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * Action navigates to already created category/folder
      *
-     * @param folderName FIXME!!!
+     * @param folderName Folder Name
      * @return {@link FilePlanPage} page response
      */
     public FilePlanPage navigateToFolder(String folderName)
     {
-        // FIXME: Parameter check for public methods
+        checkNotNull(folderName);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo recordCategory = filePlan.getFileDirectoryInfo(folderName);
