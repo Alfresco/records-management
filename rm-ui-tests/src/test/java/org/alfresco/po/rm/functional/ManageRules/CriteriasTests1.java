@@ -23,7 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by polly on 3/17/14.
+ * Records management edit disposition page.
+ *
+ * @author Polina Lushchinskaya
+ * @version 1.1
+ * @since 2.2
  */
 @Listeners(FailedTestListener.class)
 public class CriteriasTests1 extends RmAbstractTest {
