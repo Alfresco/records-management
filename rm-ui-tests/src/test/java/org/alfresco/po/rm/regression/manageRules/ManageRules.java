@@ -44,7 +44,11 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 /**
- * Created by polly on 3/3/14.
+ * Records management manage rules page.
+ *
+ * @author Polina Lushchinskaya
+ * @version 1.1
+ * @since 2.2
  */
 @Listeners(FailedTestListener.class)
 public class ManageRules extends RmAbstractTest {
@@ -529,13 +533,15 @@ public class ManageRules extends RmAbstractTest {
             filePlan.navigateToFolder(categoryName);
             //Create SubCategory
             filePlan.createCategory(subCategoryName, false);
-            sleep(2000);
+            // FIXME: Please do not use sleep
+            //sleep(2000);
             filePlan.navigateToFolder(subCategoryName);
             //Create Folder
             filePlan.createFolder(folderName);
             filePlan.navigateToFolder(folderName);
             //Create Record
-            sleep(2000);
+            // FIXME: Please do not use sleep
+            //sleep(2000);
             filePlan.createRecord(recordName);
 
             //Any rule is created for Category1
@@ -557,7 +563,8 @@ public class ManageRules extends RmAbstractTest {
             click(RUN_RULES_FOR_FOLDER);
             Assert.assertFalse(isFailureMessageAppears(), "Failed to run rule for SubCategory");
 //            waitUntilCreatedAlert();
-            sleep(2000);
+            // FIXME: Please do not use sleep
+            //sleep(2000);
             OpenRmSite();
             rmSiteDashBoard.selectFilePlan();
             //Verify that Rule applied for Category
@@ -615,13 +622,15 @@ public class ManageRules extends RmAbstractTest {
             filePlan.navigateToFolder(categoryName);
             //Create SubCategory
             filePlan.createCategory(subCategoryName, false);
-            sleep(2000);
+            // FIXME: Please do not use sleep
+            //sleep(2000);
             filePlan.navigateToFolder(subCategoryName);
             //Create Folder
             filePlan.createFolder(folderName);
             filePlan.navigateToFolder(folderName);
             //Create Record
-            sleep(2000);
+            // FIXME: Please do not use sleep
+            //sleep(2000);
             filePlan.createRecord(recordName);
 
             //Any rule is created for Category1
@@ -643,7 +652,8 @@ public class ManageRules extends RmAbstractTest {
                     "Failed To Present Run Rules For FolderAnd Subfolders Button");
             click(RUN_RULES_FOR_FOLDER);
             Assert.assertFalse(isFailureMessageAppears(), "Failed to run rule for Folder");
-            sleep(2000);
+            // FIXME: Please do not use sleep
+            //sleep(2000);
             OpenRmSite();
             rmSiteDashBoard.selectFilePlan();
             //Verify that Rule applied for Category
@@ -702,13 +712,15 @@ public class ManageRules extends RmAbstractTest {
             filePlan.navigateToFolder(categoryName);
             //Create SubCategory
             filePlan.createCategory(subCategoryName, false);
-            sleep(2000);
+            // FIXME: Please do not use sleep
+            //sleep(2000);
             filePlan.navigateToFolder(subCategoryName);
             //Create Folder
             filePlan.createFolder(folderName);
             filePlan.navigateToFolder(folderName);
             //Create Record
-            sleep(2000);
+            // FIXME: Please do not use sleep
+            //sleep(2000);
             filePlan.createRecord(recordName);
 
             //Any rule is created for Category1
@@ -730,7 +742,8 @@ public class ManageRules extends RmAbstractTest {
                     "RM-1273: The rule created for root-node of the File plan are applied to Holds, " +
                             "Transfers and Unfiled Records");
 //            waitUntilCreatedAlert();
-            sleep(2000);
+            // FIXME: Please do not use sleep
+            //sleep(2000);
             OpenRmSite();
             FilePlanPage fileplan = rmSiteDashBoard.selectFilePlan().render();
             //Verify that Rule applied for Category
