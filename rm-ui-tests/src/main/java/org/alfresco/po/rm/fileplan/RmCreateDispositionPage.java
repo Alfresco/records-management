@@ -18,8 +18,8 @@
  */
 package org.alfresco.po.rm.fileplan;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 import org.alfresco.po.share.site.document.FolderDetailsPage;
 import org.alfresco.webdrone.RenderTime;
@@ -116,7 +116,7 @@ public class RmCreateDispositionPage extends FolderDetailsPage
     @Override
     public RmCreateDispositionPage render(RenderTime timer)
     {
-        WebDroneUtil.checkMandotaryParam("timer", timer);
+        checkMandotaryParam("timer", timer);
 
         elementRender(timer,
                 getVisibleRenderElement(DISPOSITION_SECTION),
@@ -142,7 +142,7 @@ public class RmCreateDispositionPage extends FolderDetailsPage
     @Override
     public RmCreateDispositionPage render(final long time)
     {
-        WebDroneUtil.checkMandotaryParam("time", time);
+        checkMandotaryParam("time", time);
 
         return render(new RenderTime(time));
     }
@@ -154,7 +154,7 @@ public class RmCreateDispositionPage extends FolderDetailsPage
      */
     public void click(By locator)
     {
-        checkNotNull(locator);
+        checkMandotaryParam("locator", locator);
 
         WebElement element = drone.findAndWait(locator);
         drone.mouseOverOnElement(element);

@@ -28,6 +28,7 @@ import static org.alfresco.po.rm.RmCreateRulePage.PROPERTY_VALUE_INPUT;
 import static org.alfresco.po.rm.RmFolderRulesPage.LINK_BUTTON;
 import static org.alfresco.po.rm.RmFolderRulesWithRules.EDIT_BUTTON;
 import static org.alfresco.po.rm.RmFolderRulesWithRules.RULE_ITEMS;
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +43,6 @@ import org.alfresco.po.rm.RmFolderRulesPage;
 import org.alfresco.po.rm.RmFolderRulesWithRules;
 import org.alfresco.po.rm.RmLinkToRulePage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
-import org.alfresco.po.share.LoginPage;
 import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.site.CreateSitePage;
 import org.alfresco.po.share.site.NewFolderPage;
@@ -65,10 +65,12 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
 /**
- * FIXME!!!
+ * helper Methods for Regression tests
  *
- * Created by polly on 3/5/14.
+ * @author Polina Lushchinskaya
+ * @version 2.2
  */
+
 public class RmAbstractTest extends AbstractIntegrationTest
 {
     private static Log logger = LogFactory.getLog(RmAbstractTest.class);
@@ -81,22 +83,32 @@ public class RmAbstractTest extends AbstractIntegrationTest
     protected static final String DEFAULT_USER_PASSWORD = "password";
 
     /**
-     * FIXME Description !!!
+     * Method returns element locator by visible text
+     *
+     * @param elementName visible element text
+     * @return  element locator
      */
-    // FIXME: Java convention!!! Method name does not start with a capital letter
-    public void OpenRmSite()
+    public By commonLine(String elementName){
+        checkMandotaryParam("elementName", elementName);
+        return By.xpath("//a[contains(text(), '" + elementName + "')]");
+    }
+    /**
+     * Action renders to RM site
+     */
+    public FilePlanPage openRmSite()
     {
-        // FIXME: Please change this implementation. Click on the "File Plan" menu item instead.
         drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
+        FilePlanPage filePlanPage = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+        return new FilePlanPage(drone).render();
     }
 
     /**
-     * FIXME!!!
+     * Action creates Inbound Rule
      *
-     * @param ruleTitle FIXME!!!
-     * @param ruleAction FIXME!!!
-     * @param applytosubfolders FIXME!!!
-     * @param isNoRule FIXME!!!
+     * @param ruleTitle rule name
+     * @param ruleAction rule action
+     * @param applytosubfolders does rule apply to subfolders
+     * @param isNoRule dies any rules already exists
      */
     protected void createInboundRule(String ruleTitle, PerformActions ruleAction, boolean applytosubfolders, boolean isNoRule)
     {
@@ -135,12 +147,12 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Action creates Outbound Rule
      *
-     * @param ruleTitle FIXME!!!
-     * @param ruleAction FIXME!!!
-     * @param applytosubfolders FIXME!!!
-     * @param isNoRule FIXME!!!
+     * @param ruleTitle rule name
+     * @param ruleAction rule action
+     * @param applytosubfolders does rule apply to subfolders
+     * @param isNoRule dies any rules already exists
      */
     protected void createOutboundRule(String ruleTitle, PerformActions ruleAction, boolean applytosubfolders, boolean isNoRule)
     {
@@ -179,12 +191,12 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Action creates Update Rule
      *
-     * @param ruleTitle FIXME!!!
-     * @param ruleAction FIXME!!!
-     * @param applytosubfolders FIXME!!!
-     * @param isNoRule FIXME!!!
+     * @param ruleTitle rule name
+     * @param ruleAction rule action
+     * @param applytosubfolders does rule apply to subfolders
+     * @param isNoRule dies any rules already exists
      */
     protected void createUpdateRule(String ruleTitle, PerformActions ruleAction, boolean applytosubfolders, boolean isNoRule)
     {
@@ -223,13 +235,13 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Action creates Set Property Value Rule
      *
-     * @param ruleTitle FIXME!!!
-     * @param property FIXME!!!
-     * @param value FIXME!!!
-     * @param applytosubfolders FIXME!!!
-     * @param isNoRule FIXME!!!
+     * @param ruleTitle rule title
+     * @param property property
+     * @param value value of property to be set
+     * @param applytosubfolders does rule apply to subfolders
+     * @param isNoRule does any rules already exists
      */
     protected void createSetPropertyValueRule(String ruleTitle, String property, String value, boolean applytosubfolders, boolean isNoRule)
     {
@@ -270,10 +282,10 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Action Creates Inbound rule, With no Rules and applyed to subfolders
      *
-     * @param ruleTitle FIXME!!!
-     * @param ruleAction FIXME!!!
+     * @param ruleTitle rule title
+     * @param ruleAction rule action
      */
     protected void createInboundRule(String ruleTitle, PerformActions ruleAction)
     {
@@ -281,10 +293,10 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Action Creates Outbound rule, With no Rules and applyed to subfolders
      *
-     * @param ruleTitle FIXME!!!
-     * @param ruleAction FIXME!!!
+     * @param ruleTitle rule title
+     * @param ruleAction rule action
      */
     protected void createOutboundRule(String ruleTitle, PerformActions ruleAction)
     {
@@ -292,10 +304,10 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Action Creates Outbound rule, With no Rules and applyed to subfolders
      *
-     * @param ruleTitle FIXME!!!
-     * @param ruleAction FIXME!!!
+     * @param ruleTitle rule title
+     * @param ruleAction rule action
      */
     protected void createUpdateRule(String ruleTitle, PerformActions ruleAction)
     {
@@ -303,27 +315,11 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Action create Link To Rule
      *
-     * @param drone FIXME!!!
-     * @param userName FIXME!!!
-     * @param password FIXME!!!
-     */
-    // FIXME: Do we really need this method? Is the login method in the abstract class not enough?
-    protected void login(WebDrone drone, String userName, String password)
-    {
-        drone.navigateTo(shareUrl);
-        LoginPage loginPage = new LoginPage(drone).render();
-
-        loginPage.loginAs(userName, password);
-    }
-
-    /**
-     * FIXME!!!
-     *
-     * @param folderName FIXME!!!
-     * @param ruleName FIXME!!!
-     * @return FIXME!!!
+     * @param folderName name of folder with rule
+     * @param ruleName rule name
+     * @return {@link RmLinkToRulePage}
      */
     protected RmLinkToRulePage linkToRule(String folderName, String ruleName)
     {
@@ -343,30 +339,13 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * login with default username/password
      */
     protected void login()
     {
         login(username, password);
     }
 
-    /**
-     * Common method to wait for the next solr indexing cycle.
-     *
-     * @param ms
-     *            Wait duration in milliseconds
-     */
-    /**
-     * FIXME!!! Please delete this method unless there is a really good reason to use it
-     */
-    public static void sleep(long ms)
-    {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 
     /**
      * Helper to report error details for a test.
@@ -444,9 +423,9 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Create alfresco enterprise user with password 'password'
      *
-     * @param userName FIXME!!!
+     * @param userName username
      */
     protected void CreateUser(String userName){
         try {
@@ -457,7 +436,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Action waits undel created/deleted alert disappears
      */
     public void waitUntilCreatedAlert()
     {
@@ -481,11 +460,11 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Method Create folder in collaboration site
      *
-     * @param siteName FIXME!!!
-     * @param folderName FIXME!!!
-     * @return FIXME!!!
+     * @param siteName site in which folder should create
+     * @param folderName nema for newly created folder
+     * @return {@link DocumentLibraryPage}
      */
     public DocumentLibraryPage createRemoteFolder(String siteName, String folderName)
     {
@@ -502,11 +481,11 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Verify if Item exists
      *
-     * @param items FIXME!!!
-     * @param name FIXME!!!
-     * @return FIXME!!!
+     * @param items List of items
+     * @param name item name
+     * @return {@link FileDirectoryInfo}
      */
     private  FileDirectoryInfo getItem(List<FileDirectoryInfo> items, final String name)
     {
@@ -521,14 +500,15 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Action creates rule for folder in collaboration site
      *
-     * @param folderName FIXME!!!
-     * @param ruleName FIXME!!!
+     * @param folderName folder name
+     * @param ruleName name of created rule
      */
     public void createRuleForRemoteFolder(String folderName, String ruleName)
     {
-        // FIXME: Check parameter
+        checkMandotaryParam("folderName", folderName);
+        checkMandotaryParam("ruleName", ruleName);
 
         DocumentLibraryPage docPage = drone.getCurrentPage().render();
         FolderRulesPage folderRulesPage = docPage.getFileDirectoryInfo(folderName).selectManageRules().render();
@@ -547,14 +527,14 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!!
+     * Verifies if element presented on page
      *
-     * @param element FIXME!!!!
-     * @return FIXME!!!!
+     * @param element element locator
+     * @return does element presented or not
      */
     public boolean isElementPresent(By element)
     {
-        // FIXME: Check parameter
+        checkMandotaryParam("element", element);
 
         try
         {
@@ -567,15 +547,15 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Verifies if Failure, error message displayed
      *
-     * @return FIXME!!!
+     * @return does failure exists or not
      */
     public boolean isFailureMessageAppears()
     {
         try
         {
-            // FIXME: No hard coded text
+            // FIXME: No hard coded text (Need tag to error message)
             WebElement failure = drone.findAndWait(By.xpath("//div[text()='Failure']"));
             return failure.isDisplayed();
         }
@@ -586,18 +566,18 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Action assigned user to role
      *
-     * @param drone FIXME!!!
-     * @param userName FIXME!!!
-     * @param roleName FIXME!!!
-     * @return FIXME!!!
+     * @param userName Name of assigbed user
+     * @param roleName Role name applied to user
+     * @return {@link RmConsoleUsersAndGroups}
      */
-    public RmConsoleUsersAndGroups assignUserToRole(final WebDrone drone, String userName, String roleName)
+    public RmConsoleUsersAndGroups assignUserToRole(String userName, String roleName)
     {
-        // FIXME: Check parameter
+        checkMandotaryParam("userName", userName);
+        checkMandotaryParam("roleName", roleName);
 
-        OpenRmSite();
+        openRmSite();
         FilePlanPage filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
         RmConsolePage consolePage= filePlan.openRmConsolePage();
         RmConsoleUsersAndGroups newRole = consolePage.openUsersAndGroupsPage();
@@ -631,9 +611,9 @@ public class RmAbstractTest extends AbstractIntegrationTest
     /**
      * Method returns All Select Box Options
      *
-     * @param Select FIXME!!!
-     * @param timeout FIXME!!!
-     * @return FIXME!!!
+     * @param Select select element locator
+     * @param timeout long timeout waiting for element
+     * @return List of Elements in select box
      */
     protected List<WebElement> getAllSelectOptions(By Select, long timeout)
     {
@@ -643,9 +623,9 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * FIXME!!!
+     * Method creates a RM Admin user
      *
-     * @param userName FIXME!!!
+     * @param userName user name of created user
      */
     protected void createRmAdminUser(String userName)
     {
@@ -654,7 +634,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
 
         CreateUser(userName);
         login();
-        assignUserToRole(drone, userName, SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
+        assignUserToRole(userName, SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
 
         ShareUtil.logout(drone);
     }

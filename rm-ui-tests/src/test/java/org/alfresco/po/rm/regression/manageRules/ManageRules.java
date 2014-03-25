@@ -101,9 +101,8 @@ public class ManageRules extends RmAbstractTest {
             createRmAdminUser(userName);
 
             //login as user
-            login(drone, userName, DEFAULT_USER_PASSWORD);
-            OpenRmSite();
-            FilePlanPage filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+            login(userName, DEFAULT_USER_PASSWORD);
+            FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             filePlan.navigateToFolder(categoryName);
             createInboundRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER);
@@ -138,17 +137,15 @@ public class ManageRules extends RmAbstractTest {
             createRmAdminUser(userName1);
 
             //login as user1 and create  rule
-            login(drone, userName, DEFAULT_USER_PASSWORD);
-            OpenRmSite();
-            FilePlanPage filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+            login(userName, DEFAULT_USER_PASSWORD);
+            FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             filePlan.navigateToFolder(categoryName);
             createSetPropertyValueRule(ruleName1, "cm:description", propertyValue, true, true);
             ShareUtil.logout(drone);
             //login as user2 and try to create a rule. Verify that rule applied
-            login(drone, userName1, DEFAULT_USER_PASSWORD);
-            OpenRmSite();
-            rmSiteDashBoard.selectFilePlan();
+            login(userName, DEFAULT_USER_PASSWORD);
+            filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
             createUpdateRule(ruleName2, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, true, false);
             rmSiteDashBoard.selectFilePlan();
@@ -159,7 +156,7 @@ public class ManageRules extends RmAbstractTest {
             Assert.assertTrue(isElementPresent(descriptionProperty(propertyValue)),
                     "Failed to present Description for Category");
 
-            OpenRmSite();
+            filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
             //Make some upgrades and verify that Upgrade rule applied
             FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(folderName);
@@ -213,22 +210,22 @@ public class ManageRules extends RmAbstractTest {
         try
         {
             createRmAdminUser(userName);
-            login(drone, userName, DEFAULT_USER_PASSWORD);
-            OpenRmSite();
-            FilePlanPage filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+            login(userName, DEFAULT_USER_PASSWORD);
+            FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             filePlan.navigateToFolder(categoryName);
             createSetPropertyValueRule(ruleName, "cm:description", propertyValue, false, true);
 
-            OpenRmSite();
-            rmSiteDashBoard.selectFilePlan();
+            filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
+            drone.waitForPageLoad(MAX_WAIT_TIME);
             //Apply rule
             RmFolderRulesWithRules rulesPage = filePlan.selectManageRulesWithRules().render();
             RmCreateRulePage manageRulesPage = rulesPage.clickEditButton().render();
             WhenSelectorImpl whenSelectorEnter = manageRulesPage.getWhenOptionObj();
             whenSelectorEnter.selectUpdate();
             manageRulesPage.clickSave();
+            drone.findAndWait(EDIT_BUTTON, MAX_WAIT_TIME);
             rmSiteDashBoard.selectFilePlan();
             filePlan.navigateToFolder(categoryName);
             filePlan.createFolder(folderName);
@@ -238,8 +235,7 @@ public class ManageRules extends RmAbstractTest {
                     "The Description is present for Folder");
 
             //Edit Metadata
-            OpenRmSite();
-            rmSiteDashBoard.selectFilePlan();
+            filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
             FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(folderName);
             WebElement selectMoreAction = folder.selectMoreAction();
@@ -293,9 +289,8 @@ public class ManageRules extends RmAbstractTest {
             createRmAdminUser(userName);
 
             //login as user1 and create  rule
-            login(drone, userName, DEFAULT_USER_PASSWORD);
-            OpenRmSite();
-            FilePlanPage filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+            login(userName, DEFAULT_USER_PASSWORD);
+            FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             filePlan.navigateToFolder(categoryName);
             createInboundRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER);
@@ -357,14 +352,11 @@ public class ManageRules extends RmAbstractTest {
             deleteRMSite();
             ShareUtil.logout(drone);
             CreateUser(userName);
-            login(drone, userName, DEFAULT_USER_PASSWORD);
+            login(userName, DEFAULT_USER_PASSWORD);
             createRMSite();
-            OpenRmSite();
-            //Any Category1; Category2 are created
-            FilePlanPage filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+            FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
-            OpenRmSite();
-            filePlan = rmSiteDashBoard.selectFilePlan().render();
+            filePlan = openRmSite();
             filePlan.createCategory(categoryName1, true);
             //Any rule is created for Category2
             filePlan.navigateToFolder(categoryName1);
@@ -377,8 +369,7 @@ public class ManageRules extends RmAbstractTest {
             //Any rule is applied to that Folder1
             createRuleForRemoteFolder(folderName, ruleName1);
 
-            OpenRmSite();
-            rmSiteDashBoard.selectFilePlan();
+            filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
             //Click Link to Rule Set and link to rule set created for Folder1
             RmFolderRulesPage manageRulesPage = filePlan.selectManageRules().render();
@@ -388,13 +379,11 @@ public class ManageRules extends RmAbstractTest {
                     xpath("//div[contains(@id, 'sitePicker')]//h4[contains(text(), '" + siteName + "')]")),
                     "RM-684: User can link to rule set from Collaboration site");
             //Click Link to Rule Set and link to rule set created for Category2
-            OpenRmSite();
-            rmSiteDashBoard.selectFilePlan();
+            filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
             linkToRule(categoryName1, ruleName);
             //Verify that rule applied
-            OpenRmSite();
-            rmSiteDashBoard.selectFilePlan();
+            filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
             filePlan.createFolder(folderName1);
             Assert.assertTrue(filePlan.isFolderClosed(folderName1), "Failed to apply rule");
@@ -405,7 +394,7 @@ public class ManageRules extends RmAbstractTest {
         }
         finally {
             ShareUtil.logout(drone);
-            login(drone, userName, DEFAULT_USER_PASSWORD);
+            login(userName, DEFAULT_USER_PASSWORD);
             deleteRMSite();
         }
     }
@@ -444,9 +433,8 @@ public class ManageRules extends RmAbstractTest {
             createRmAdminUser(userName);
 
             //login as user
-            login(drone, userName, DEFAULT_USER_PASSWORD);
-            OpenRmSite();
-            FilePlanPage filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+            login(userName, DEFAULT_USER_PASSWORD);
+            FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             filePlan.navigateToFolder(categoryName);
             //Create SubCategory
@@ -456,6 +444,7 @@ public class ManageRules extends RmAbstractTest {
             filePlan.createFolder(folderName);
             filePlan.navigateToFolder(folderName);
             //Create Record
+            drone.waitForPageLoad(MAX_WAIT_TIME);
             filePlan.createRecord(recordName);
 
             //Any rule is created for Category1
@@ -475,16 +464,14 @@ public class ManageRules extends RmAbstractTest {
                     "Failed To Present Run Rules For FolderAnd Subfolders Button");
             click(RUN_RULES_FOR_FOLDER);
             Assert.assertFalse(isFailureMessageAppears(), "Failed to run rule for Category");
-//            waitUntilCreatedAlert();
-            OpenRmSite();
-            rmSiteDashBoard.selectFilePlan();
+            drone.waitForPageLoad(MAX_WAIT_TIME);
+            filePlan = openRmSite();
             //Verify that Rule applied for Category
             filePlan.openDetailsPage(categoryName);
             Assert.assertFalse(isElementPresent(descriptionProperty(propertyValue)),
                     "The Description is present for Category");
             //Verify that Rule applied for SubCategory
-            OpenRmSite();
-            rmSiteDashBoard.selectFilePlan();
+            filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
             filePlan.openDetailsPage(subCategoryName);
             Assert.assertTrue(isElementPresent(descriptionProperty(propertyValue)),
@@ -526,22 +513,19 @@ public class ManageRules extends RmAbstractTest {
             createRmAdminUser(userName);
 
             //login as user
-            login(drone, userName, DEFAULT_USER_PASSWORD);
-            OpenRmSite();
-            FilePlanPage filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+            login(userName, DEFAULT_USER_PASSWORD);
+            FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             filePlan.navigateToFolder(categoryName);
             //Create SubCategory
             filePlan.createCategory(subCategoryName, false);
-            // FIXME: Please do not use sleep
-            //sleep(2000);
+            //drone.waitForElement();
             filePlan.navigateToFolder(subCategoryName);
             //Create Folder
             filePlan.createFolder(folderName);
             filePlan.navigateToFolder(folderName);
+            drone.waitForPageLoad(MAX_WAIT_TIME);
             //Create Record
-            // FIXME: Please do not use sleep
-            //sleep(2000);
             filePlan.createRecord(recordName);
 
             //Any rule is created for Category1
@@ -557,23 +541,19 @@ public class ManageRules extends RmAbstractTest {
             Assert.assertTrue(isElementPresent(RUN_RULES_BUTTON), "Failed To Present Run Rules Button");
             click(RUN_RULES_BUTTON);
             Assert.assertTrue(isElementPresent(RUN_RULES_FOR_FOLDER),
-                    "Failed To Present Run Rules For Folder Button");
+                "Failed To Present Run Rules For Folder Button");
             Assert.assertTrue(isElementPresent(RUN_RULES_FOR_SUBFOLDER),
-                    "Failed To Present Run Rules For FolderAnd Subfolders Button");
+                "Failed To Present Run Rules For FolderAnd Subfolders Button");
             click(RUN_RULES_FOR_FOLDER);
             Assert.assertFalse(isFailureMessageAppears(), "Failed to run rule for SubCategory");
-//            waitUntilCreatedAlert();
-            // FIXME: Please do not use sleep
-            //sleep(2000);
-            OpenRmSite();
-            rmSiteDashBoard.selectFilePlan();
+            drone.waitForPageLoad(MAX_WAIT_TIME);
+            filePlan = openRmSite();
             //Verify that Rule applied for Category
             filePlan.openDetailsPage(categoryName);
             Assert.assertFalse(isElementPresent(descriptionProperty(propertyValue)),
                     "The Description is present for Category");
             //Verify that Rule applied for SubCategory
-            OpenRmSite();
-            filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+            filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
             filePlan.openDetailsPage(subCategoryName);
             Assert.assertFalse(isElementPresent(descriptionProperty(propertyValue)),
@@ -615,22 +595,19 @@ public class ManageRules extends RmAbstractTest {
             createRmAdminUser(userName);
 
             //login as user
-            login(drone, userName, DEFAULT_USER_PASSWORD);
-            OpenRmSite();
-            FilePlanPage filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+            login(userName, DEFAULT_USER_PASSWORD);
+            FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             filePlan.navigateToFolder(categoryName);
             //Create SubCategory
             filePlan.createCategory(subCategoryName, false);
-            // FIXME: Please do not use sleep
-            //sleep(2000);
+            drone.findAndWait(commonLine(subCategoryName)).isDisplayed();
             filePlan.navigateToFolder(subCategoryName);
             //Create Folder
             filePlan.createFolder(folderName);
             filePlan.navigateToFolder(folderName);
             //Create Record
-            // FIXME: Please do not use sleep
-            //sleep(2000);
+            drone.waitForPageLoad(MAX_WAIT_TIME);
             filePlan.createRecord(recordName);
 
             //Any rule is created for Category1
@@ -647,22 +624,19 @@ public class ManageRules extends RmAbstractTest {
             Assert.assertTrue(isElementPresent(RUN_RULES_BUTTON), "Failed To Present Run Rules Button");
             click(RUN_RULES_BUTTON);
             Assert.assertTrue(isElementPresent(RUN_RULES_FOR_FOLDER),
-                    "Failed To Present Run Rules For Folder Button");
+                "Failed To Present Run Rules For Folder Button");
             Assert.assertTrue(isElementPresent(RUN_RULES_FOR_SUBFOLDER),
-                    "Failed To Present Run Rules For FolderAnd Subfolders Button");
+                "Failed To Present Run Rules For FolderAnd Subfolders Button");
             click(RUN_RULES_FOR_FOLDER);
             Assert.assertFalse(isFailureMessageAppears(), "Failed to run rule for Folder");
-            // FIXME: Please do not use sleep
-            //sleep(2000);
-            OpenRmSite();
-            rmSiteDashBoard.selectFilePlan();
+            drone.waitForPageLoad(MAX_WAIT_TIME);
+            filePlan = openRmSite();
             //Verify that Rule applied for Category
             filePlan.openDetailsPage(categoryName);
             Assert.assertFalse(isElementPresent(descriptionProperty(propertyValue)),
                     "The Description is present for Category");
             //Verify that Rule applied for SubCategory
-            OpenRmSite();
-            filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+            filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
             filePlan.openDetailsPage(subCategoryName);
             Assert.assertFalse(isElementPresent(descriptionProperty(propertyValue)),
@@ -705,22 +679,18 @@ public class ManageRules extends RmAbstractTest {
             createRmAdminUser(userName);
 
             //login as user
-            login(drone, userName, DEFAULT_USER_PASSWORD);
-            OpenRmSite();
-            FilePlanPage filePlan = rmSiteDashBoard.selectFilePlan().render();
+            login(userName, DEFAULT_USER_PASSWORD);
+            FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             filePlan.navigateToFolder(categoryName);
             //Create SubCategory
             filePlan.createCategory(subCategoryName, false);
-            // FIXME: Please do not use sleep
-            //sleep(2000);
+            drone.findAndWait(commonLine(subCategoryName)).isDisplayed();
             filePlan.navigateToFolder(subCategoryName);
             //Create Folder
             filePlan.createFolder(folderName);
             filePlan.navigateToFolder(folderName);
             //Create Record
-            // FIXME: Please do not use sleep
-            //sleep(2000);
             filePlan.createRecord(recordName);
 
             //Any rule is created for Category1
@@ -734,25 +704,22 @@ public class ManageRules extends RmAbstractTest {
             Assert.assertTrue(isElementPresent(RUN_RULES_BUTTON), "Failed To Present Run Rules Button");
             click(RUN_RULES_BUTTON);
             Assert.assertTrue(isElementPresent(RUN_RULES_FOR_FOLDER),
-                    "Failed To Present Run Rules For Folder Button");
+                "Failed To Present Run Rules For Folder Button");
             Assert.assertTrue(isElementPresent(RUN_RULES_FOR_SUBFOLDER),
-                    "Failed To Present Run Rules For Folder And Subfolders Button");
+                "Failed To Present Run Rules For Folder And Subfolders Button");
             click(RUN_RULES_FOR_SUBFOLDER);
             Assert.assertFalse(isFailureMessageAppears(),
-                    "RM-1273: The rule created for root-node of the File plan are applied to Holds, " +
-                            "Transfers and Unfiled Records");
-//            waitUntilCreatedAlert();
-            // FIXME: Please do not use sleep
-            //sleep(2000);
-            OpenRmSite();
-            FilePlanPage fileplan = rmSiteDashBoard.selectFilePlan().render();
+                "RM-1273: The rule created for root-node of the File plan are applied to Holds, " +
+                    "Transfers and Unfiled Records"
+            );
+            drone.waitForPageLoad(MAX_WAIT_TIME);
+            FilePlanPage fileplan = openRmSite();
             //Verify that Rule applied for Category
             fileplan.openDetailsPage(categoryName);
             Assert.assertTrue(isElementPresent(descriptionProperty(propertyValue)),
                     "Failed to present Description for Category");
             //Verify that Rule applied for SubCategory
-            OpenRmSite();
-            fileplan = rmSiteDashBoard.selectFilePlan().render();
+            fileplan = openRmSite();
             filePlan.navigateToFolder(categoryName);
             fileplan.openDetailsPage(subCategoryName);
             Assert.assertTrue(isElementPresent(descriptionProperty(propertyValue)),

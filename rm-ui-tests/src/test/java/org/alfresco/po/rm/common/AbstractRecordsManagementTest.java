@@ -44,7 +44,7 @@ public abstract class AbstractRecordsManagementTest extends AbstractTest
         drone.navigateTo(shareUrl);
         LoginPage loginPage = new LoginPage(drone).render();
 
-        loginPage.loginAs(username, password);
+        loginPage.loginAs(userName, password);
         rmSiteDashBoard = new RmSiteDashBoardPage(drone).render();
     }
 }

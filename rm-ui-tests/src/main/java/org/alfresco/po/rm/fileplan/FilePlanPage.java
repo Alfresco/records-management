@@ -20,6 +20,7 @@ package org.alfresco.po.rm.fileplan;
 
 import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.CREATE_DISPOSITION_BUTTON;
 import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.NON_ELECTRONIC_BUTTON;
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -141,7 +142,7 @@ public class FilePlanPage extends DocumentLibraryPage
     @Override
     public FilePlanPage render(RenderTime timer)
     {
-        WebDroneUtil.checkMandotaryParam("timer", timer);
+        checkMandotaryParam("timer", timer);
 
         return render(timer, null);
     }
@@ -171,7 +172,7 @@ public class FilePlanPage extends DocumentLibraryPage
      */
     private FilePlanPage render(RenderTime timer, String expectedName)
     {
-        WebDroneUtil.checkMandotaryParam("timer", timer);
+        checkMandotaryParam("timer", timer);
         // "expectedName" can be blank
 
         boolean found = false;
@@ -678,6 +679,7 @@ public class FilePlanPage extends DocumentLibraryPage
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo recordCategory = filePlan.getFileDirectoryInfo(folderName);
         recordCategory.clickOnTitle();
+        drone.waitForElement(By.xpath("//div[contains(@class,'documentDroppable')]//a[contains(text(), '"+folderName+"')]"), MAX_WAIT_TIME);
         filePlan.setInRecordCategory(true);
         return new FilePlanPage(drone).render();
     }

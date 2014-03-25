@@ -69,13 +69,13 @@ public class CriteriasTests1 extends RmAbstractTest
 
             CreateUser(userName);
             login();
-            assignUserToRole(drone, userName, RmConsoleUsersAndGroups.SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
+            assignUserToRole(userName, RmConsoleUsersAndGroups.SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
 
             ShareUtil.logout(drone);
 
             //login as user
-            login(drone, userName, DEFAULT_USER_PASSWORD);
-            OpenRmSite();
+            login(userName, DEFAULT_USER_PASSWORD);
+            openRmSite();
             rmSiteDashBoard.selectFilePlan();
             RmCreateRulePage rulesPage;
             FilePlanPage filePlan = drone.getCurrentPage().render();
@@ -125,13 +125,13 @@ public class CriteriasTests1 extends RmAbstractTest
 
             CreateUser(userName);
             login();
-            assignUserToRole(drone, userName, RmConsoleUsersAndGroups.SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
+            assignUserToRole(userName, RmConsoleUsersAndGroups.SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
 
             ShareUtil.logout(drone);
 
             //login as user
-            login(drone, userName, DEFAULT_USER_PASSWORD);
-            OpenRmSite();
+            login(userName, DEFAULT_USER_PASSWORD);
+            openRmSite();
             FilePlanPage filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
             //Any disposition schedule for Category1 applied for folder is created, e.g. CutOff immediately, Accession immediately, Transfer immediately, Destroy immediately,
             filePlan.createCategory(categoryName, true);
@@ -148,7 +148,7 @@ public class CriteriasTests1 extends RmAbstractTest
             editDisposition.selectAfterPeriodOf(AfterPeriodOf.IMMEDIATELY, testName);
             createDisposition = editDisposition.clickDoneButton();
 
-            OpenRmSite();
+            openRmSite();
             rmSiteDashBoard.selectFilePlan();
             filePlan.navigateToFolder(categoryName);
 
@@ -176,7 +176,7 @@ public class CriteriasTests1 extends RmAbstractTest
                 }
             }
             //Create Folder1 in Category1
-            OpenRmSite();
+            openRmSite();
             rmSiteDashBoard.selectFilePlan();
             filePlan.navigateToFolder(categoryName);
             filePlan.createFolder(folderName);
@@ -211,13 +211,13 @@ public class CriteriasTests1 extends RmAbstractTest
 
             CreateUser(userName);
             login();
-            assignUserToRole(drone, userName, RmConsoleUsersAndGroups.SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
+            assignUserToRole(userName, RmConsoleUsersAndGroups.SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
 
             ShareUtil.logout(drone);
 
             //login as user
-            login(drone, userName, DEFAULT_USER_PASSWORD);
-            OpenRmSite();
+            login(userName, DEFAULT_USER_PASSWORD);
+            openRmSite();
             FilePlanPage filePlan = rmSiteDashBoard.selectFilePlan().render();
             /*
              * Any Category1> Folder1; Category2 are created
@@ -244,7 +244,7 @@ public class CriteriasTests1 extends RmAbstractTest
             editDisposition.selectAfterPeriodOf(AfterPeriodOf.IMMEDIATELY, testName);
             createDisposition = editDisposition.clickDoneButton();
 
-            OpenRmSite();
+            openRmSite();
             rmSiteDashBoard.selectFilePlan();
             filePlan.navigateToFolder(categoryName);
 
@@ -272,7 +272,7 @@ public class CriteriasTests1 extends RmAbstractTest
                 }
             }
             //Create Folder1 in Category1
-            OpenRmSite();
+            openRmSite();
             rmSiteDashBoard.selectFilePlan();
             filePlan.navigateToFolder(categoryName);
             filePlan.createFolder(folderName);
