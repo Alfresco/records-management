@@ -76,7 +76,7 @@ public class RmSiteNavigation extends AbstractSiteNavigation
     {
         try
         {
-            WebElement filePlanButton = find(FILE_PLAN);
+            WebElement filePlanButton = drone.find(FILE_PLAN);
             // Do a text check as its using the same css as doc lib.
             String label = filePlanButton.getText();
             String filePlan = "File plan";

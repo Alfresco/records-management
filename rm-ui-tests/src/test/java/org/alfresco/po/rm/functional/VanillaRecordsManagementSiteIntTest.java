@@ -32,7 +32,7 @@ import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.alfresco.po.share.util.SiteUtil;
 import org.alfresco.webdrone.HtmlPage;
-import org.junit.Assert;
+import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -55,7 +55,7 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         // log into Share
         login(username, password);
     }
-    
+
     private FilePlanPage loadTestData() throws IOException
     {
         // get file plan root
@@ -63,7 +63,7 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
 
         // create new category
         filePlan = createNewCategory(filePlan, NAME, TITLE, DESC);
-        
+
         // click on category
         filePlan = filePlan.selectCategory(NAME, drone.getDefaultWaitTime()).render();
 
@@ -73,9 +73,9 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         // click on record folder
         filePlan = filePlan.selectFolder(NAME, drone.getDefaultWaitTime()).render();
 
-        // file a record        
+        // file a record
         return fileElectronicToRecordFolder(filePlan);
-        
+
     }
 
     @Test
@@ -85,37 +85,37 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         deleteRMSite();
         createRMSite(RMSiteCompliance.DOD5015);
         FilePlanPage filePlan = loadTestData();
-        
+
         //FileDirectoryInfo fileDirectoryInfo = filePlan.getFileDirectoryInfo(1);
-        
+
         List<FileDirectoryInfo> files = filePlan.getFiles();
         Assert.assertEquals(1, files.size());
-        
+
         // check the add record metadata action on the record
         RecordInfo recordInfo = filePlan.getRecordInfo(0);
         Assert.assertTrue(recordInfo.isVisibleAddRecordMetadata());
         AddRecordMetadataAction addRecordMetadata = recordInfo.clickAddRecordMetadata();
         checkDoDAddRecordMetadata(addRecordMetadata);
-        
+
         // view record details
         recordInfo = filePlan.render().getRecordInfo(0);
         RecordDetailsPage recordDetails = recordInfo.clickTitle();
         recordDetails.render();
-        
+
         // check that the DOD properties are visible
         Assert.assertTrue(recordDetails.isPropertySetVisible("DOD5015"));
-        
-        // check that the add record metadata action is visible 
+
+        // check that the add record metadata action is visible
         Assert.assertTrue(recordDetails.isAddRecordMetaDataVisible());
-        
+
         // select the add record metadata action and check the expected aspects are present
         addRecordMetadata = recordDetails.selectAddRecordMetadata().render();
         checkDoDAddRecordMetadata(addRecordMetadata);
-        
+
         // delete DOD site
         deleteRMSite();
     }
-    
+
     private HtmlPage checkDoDAddRecordMetadata(AddRecordMetadataAction addRecordMetadata)
     {
         // check that all the DoD aspects are showing
@@ -124,8 +124,8 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         Assert.assertTrue(aspects.contains("dod:scannedRecord"));
         Assert.assertTrue(aspects.contains("dod:pdfRecord"));
         Assert.assertTrue(aspects.contains("dod:digitalPhotographRecord"));
-        Assert.assertTrue(aspects.contains("dod:webRecord"));        
-        return addRecordMetadata.clickCancel();        
+        Assert.assertTrue(aspects.contains("dod:webRecord"));
+        return addRecordMetadata.clickCancel();
     }
 
     @Test
@@ -135,32 +135,32 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         deleteRMSite();
         createRMSite();
         FilePlanPage filePlan = loadTestData();
-        
+
         // check the add record metadata action on the record
         RecordInfo recordInfo = filePlan.getRecordInfo(0);
         Assert.assertFalse(recordInfo.isVisibleAddRecordMetadata());
 
         // view record details
-        RecordDetailsPage recordDetails = recordInfo.clickTitle().render();        
-        
+        RecordDetailsPage recordDetails = recordInfo.clickTitle().render();
+
         // check that the DOD properties are not visible
         Assert.assertFalse(recordDetails.isPropertySetVisible("DOD5015"));
-        
+
         // check that the add record metadata action is not visible (since there are not aspects out of the box for vanilla)
         Assert.assertFalse(recordDetails.isAddRecordMetaDataVisible());
 
         // delete RM vanilla site
         deleteRMSite();
     }
-        
+
     private FilePlanPage fileElectronicToRecordFolder(FilePlanPage filePlan) throws IOException
     {
         // generate random file name
         String fileName = Long.valueOf(System.currentTimeMillis()).toString();
-        
+
         // open file dialog
-        RmUploadFilePage rmRecordFileDialog = filePlan.selectFile(); 
-        
+        RmUploadFilePage rmRecordFileDialog = filePlan.selectFile();
+
         // select to upload electronic record
         rmRecordFileDialog.selectElectronic(drone);
 
@@ -168,9 +168,9 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         File file = SiteUtil.prepareFile(fileName);
         String filePath = file.getCanonicalPath();
         filePlan = (FilePlanPage)rmRecordFileDialog.uploadFile(filePath);
-        
+
         // render file plan
         filePlan.setInRecordFolder(true);
-        return filePlan.render(fileName);        
+        return filePlan.render(fileName);
     }
 }

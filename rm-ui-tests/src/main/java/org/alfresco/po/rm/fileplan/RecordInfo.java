@@ -31,7 +31,7 @@ import org.openqa.selenium.WebElement;
  * Record information class.
  * <p>
  * Encapsulates the information found about a record on the row of the file plan navigation page.
- * 
+ *
  * @author Roy Wetherall
  * @since 2.2
  */
@@ -39,39 +39,39 @@ public class RecordInfo
 {
     /** record actions */
     private static final By EDIT_RECORD_METADATA_ACTION = By.cssSelector("div.rm-add-record-metadata a");
-    
+
     /** web drone */
     private WebDrone drone;
-    
+
     /** file directory information */
     private FileDirectoryInfo fileDirectoryInfo;
-    
+
     /**
      * Constructor
-     * 
+     *
      * @param drone                 web drone
-     * @param fileDirectoryInfo     file directory information 
+     * @param fileDirectoryInfo     file directory information
      */
     public RecordInfo(WebDrone drone, FileDirectoryInfo fileDirectoryInfo)
     {
         this.drone = drone;
-        this.fileDirectoryInfo = fileDirectoryInfo;        
+        this.fileDirectoryInfo = fileDirectoryInfo;
     }
-    
+
     /**
      * Click on the title of the record
-     * 
+     *
      * @return  {@link RecordDetailsPage}   record details page
      */
     public RecordDetailsPage clickTitle()
     {
         fileDirectoryInfo.clickOnTitle();
-        return new RecordDetailsPage(drone); 
+        return new RecordDetailsPage(drone);
     }
-    
+
     /**
      * Helper method to indicate whether an action is visible or not.
-     * 
+     *
      * @param action    action selector
      * @return boolean  true if visible, false otherwise
      */
@@ -80,7 +80,7 @@ public class RecordInfo
         fileDirectoryInfo.selectMoreAction().click();
         try
         {
-            WebElement link = ((FileDirectoryInfoImpl)fileDirectoryInfo).find(action);
+            WebElement link = drone.find(action);
             return link.isDisplayed();
         }
         catch (NoSuchElementException e)
@@ -90,34 +90,34 @@ public class RecordInfo
         catch (TimeoutException e)
         {
             return false;
-        }   
+        }
     }
-    
+
     /**
      * Helper method to click on an action
-     * 
+     *
      * @param action    action selector
      */
     private void clickAction(By action)
     {
-        fileDirectoryInfo.selectMoreAction().click();        
+        fileDirectoryInfo.selectMoreAction().click();
         WebElement link = ((FileDirectoryInfoImpl)fileDirectoryInfo).findAndWait(action);
         link.click();
     }
-    
+
     /**
      * Indicates whether the add record metadata action is visible or not
-     * 
+     *
      * @return  boolean true if visible, false otherwise
      */
     public boolean isVisibleAddRecordMetadata()
     {
         return isVisibleAction(EDIT_RECORD_METADATA_ACTION);
     }
-    
+
     /**
      * Click on the add record metadata action and render page
-     * 
+     *
      * @return
      */
     public AddRecordMetadataAction clickAddRecordMetadata()

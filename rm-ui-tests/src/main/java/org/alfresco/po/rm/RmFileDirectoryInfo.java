@@ -69,7 +69,10 @@ public class RmFileDirectoryInfo extends FileDirectoryInfoImpl
         {
             throw new PageOperationException("Unable to find declare record button from the drop down", nse);
         }
-        canResume();
+        // FIXME: canResume has been removed from HtmlElement in WebDrone
+        // That's why the code has been commented out. If this breaks any tests
+        // we need to find a solution.
+        //canResume();
         return FactorySharePage.resolvePage(drone);
     }
 
@@ -84,7 +87,7 @@ public class RmFileDirectoryInfo extends FileDirectoryInfoImpl
     {
         try
         {
-            return find(BANNER).isDisplayed();
+            return drone.find(BANNER).isDisplayed();
         }
         catch (NoSuchElementException e)
         {

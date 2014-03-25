@@ -98,8 +98,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
     public FilePlanPage openRmSite()
     {
         drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
-        FilePlanPage filePlanPage = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
-        return new FilePlanPage(drone).render();
+        return (FilePlanPage) rmSiteDashBoard.selectFilePlan();
     }
 
     /**

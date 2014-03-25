@@ -24,7 +24,6 @@ import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 import org.alfresco.po.share.site.document.FolderDetailsPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
-import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
