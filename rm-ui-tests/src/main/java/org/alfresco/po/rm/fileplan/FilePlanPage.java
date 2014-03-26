@@ -607,7 +607,7 @@ public class FilePlanPage extends DocumentLibraryPage
 
         filePlan = ((FilePlanPage) createNewCategory.selectSave());
         filePlan.setInFilePlanRoot(isRootFolder);
-        return new FilePlanPage(drone).render();
+        return filePlan.render(categoryName);
     }
 
     /**
