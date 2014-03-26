@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.rm.regression;
+package org.alfresco.po.rm.regression.managerules;
 
 import static org.alfresco.po.rm.RmFolderRulesWithRules.DELETE_BUTTON;
 import static org.alfresco.po.rm.RmFolderRulesWithRules.EDIT_BUTTON;

@@ -1,4 +1,4 @@
-package org.alfresco.po.rm.regression;
+package org.alfresco.po.rm.regression.managerules;
 
 import static org.alfresco.po.rm.RmCreateRulePage.CRITERIAS_SELECT;
 import static org.alfresco.po.rm.RmCreateRulePage.SELECT_CRITERIA_DIALOG;
