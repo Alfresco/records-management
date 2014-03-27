@@ -332,7 +332,7 @@ public class ManageRules extends RmAbstractTest {
      * 5. Verify that the linked rules actually work for Category1
      */
     //BUG RM-684: https://issues.alfresco.com/jira/browse/RM-684
-    @Test
+    @Test(groups = {"rmBugs"})
     public void RMA_1368()
     {
         String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
@@ -662,7 +662,7 @@ public class ManageRules extends RmAbstractTest {
     }
 
     //BUG RM-1273 https://issues.alfresco.com/jira/browse/RM-1273
-    @Test
+    @Test(groups = {"rmBugs"})
     public void RMA_1372()
     {
         String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
