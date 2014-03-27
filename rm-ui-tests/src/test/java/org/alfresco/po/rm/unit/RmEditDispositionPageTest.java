@@ -18,16 +18,29 @@
  */
 package org.alfresco.po.rm.unit;
 
+import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.CREATE_DISPOSITION_BUTTON;
+import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.EDIT_PROPERTIES_BUTTON;
+import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.EDIT_SCHEDULE_BUTTON;
+import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.ADD_STEP_BUTTON;
+import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.AFTER_PERIOD_CHKBOX;
+import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.CANCEL_BUTTON;
+import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.DESCRIPTION_AREA;
+import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.DISPOSITION_FORM;
+import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.EDIT_DISPOSITION_SECTION;
+import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.PERIOD_ACTION_SELECT;
+import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.PERIOD_INPUT;
+import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.PERIOD_SELECT;
+import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.SAVE_BUTTON;
+import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.WHEN_EVENT_OCCURS_CHKBOX;
+import static org.testng.Assert.assertTrue;
+
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.RmCreateDispositionPage;
+import org.alfresco.po.rm.fileplan.RmCreateDispositionPage.DispositionAction;
 import org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage;
 import org.alfresco.po.rm.functional.RmAbstractTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.*;
-import static org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.*;
-import static org.testng.Assert.assertTrue;
 
 /**
  * Unit Tests for Create/Edit Disposition Page

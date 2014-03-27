@@ -18,10 +18,16 @@
  */
 package org.alfresco.po.rm.functional;
 
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.*;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.ADD_BUTTON;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.ADD_USER_FORM;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.SEARCH_USER_BUTTON;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.SEARCH_USER_INPUT;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.addUserButton;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.selectGroup;
 import static org.alfresco.po.rm.RmCreateRulePage.PROPERTY_VALUE_INPUT;
 import static org.alfresco.po.rm.RmFolderRulesPage.LINK_BUTTON;
-import static org.alfresco.po.rm.RmFolderRulesWithRules.*;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.EDIT_BUTTON;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.RULE_ITEMS;
 import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 import java.io.File;
@@ -30,9 +36,15 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
-import org.alfresco.po.rm.*;
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl.PerformActions;
+import org.alfresco.po.rm.RmConsolePage;
+import org.alfresco.po.rm.RmConsoleUsersAndGroups;
 import org.alfresco.po.rm.RmConsoleUsersAndGroups.SystemRoles;
+import org.alfresco.po.rm.RmCreateRulePage;
+import org.alfresco.po.rm.RmFolderRulesPage;
+import org.alfresco.po.rm.RmFolderRulesWithRules;
+import org.alfresco.po.rm.RmLinkToRulePage;
+import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.site.CreateSitePage;

@@ -28,7 +28,6 @@ import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
 
 /**
  * Records management edit disposition page.

@@ -18,14 +18,14 @@
  */
 package org.alfresco.po.rm;
 
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
+
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
-
-import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Records management Users and groups page.

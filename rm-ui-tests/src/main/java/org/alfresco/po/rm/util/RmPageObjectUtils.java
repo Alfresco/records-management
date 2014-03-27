@@ -18,15 +18,14 @@
  */
 package org.alfresco.po.rm.util;
 
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
+
 import java.util.Random;
 
 import org.alfresco.webdrone.WebDrone;
-import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-
-import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Utility methods for the page objects

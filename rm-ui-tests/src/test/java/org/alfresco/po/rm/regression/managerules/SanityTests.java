@@ -18,13 +18,18 @@
  */
 package org.alfresco.po.rm.regression.managerules;
 
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.*;
-import static org.alfresco.po.rm.RmSiteDashBoardPage.*;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.selectGroup;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.userLinkRmConsole;
+import static org.alfresco.po.rm.RmSiteDashBoardPage.NAVIGATION_MENU_FILE_PLAN;
+import static org.alfresco.po.rm.RmSiteDashBoardPage.NAVIGATION_MENU_RECORDS_SEARCH;
+import static org.alfresco.po.rm.RmSiteDashBoardPage.NAVIGATION_MENU_RM_CONSOLE;
+import static org.alfresco.po.rm.RmSiteDashBoardPage.NAVIGATION_MENU_SITE_DASHBOARD;
+import static org.alfresco.po.rm.RmSiteDashBoardPage.NAVIGATION_MENU_SITE_MEMBERS;
 
 import org.alfresco.po.rm.RmConsolePage;
+import org.alfresco.po.rm.RmConsoleUsersAndGroups.SystemRoles;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
-import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;
 import org.alfresco.po.rm.functional.RmAbstractTest;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.ShareUtil;
