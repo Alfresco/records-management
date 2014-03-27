@@ -26,6 +26,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
+
 /**
  * Utility methods for the page objects
  *
@@ -43,8 +45,8 @@ public class RmPageObjectUtils
      */
     public static boolean isDisplayed(WebDrone webDrone, By selector)
     {
-        WebDroneUtil.checkMandotaryParam("webDrone", webDrone);
-        WebDroneUtil.checkMandotaryParam("selector", selector);
+        checkMandotaryParam("webDrone", webDrone);
+        checkMandotaryParam("selector", selector);
 
         boolean isDisplayed = false;
         try
@@ -66,22 +68,23 @@ public class RmPageObjectUtils
      */
     public static void select(WebDrone webDrone, By selector)
     {
-        WebDroneUtil.checkMandotaryParam("webDrone", webDrone);
-        WebDroneUtil.checkMandotaryParam("selector", selector);
+        checkMandotaryParam("webDrone", webDrone);
+        checkMandotaryParam("selector", selector);
 
         WebElement webElement = webDrone.findAndWait(selector);
         webElement.click();
     }
 
     /**
-     * FIXME!!!
+     * This util method gets the random number for the given length of return
+     * string.
      *
-     * @param length FIXME!!!
-     * @return FIXME!!!
+     * @param length int
+     * @return String
      */
     public static String getRandomString(int length)
     {
-        // FIXME: Check parameter
+        checkMandotaryParam("lenght", length);
 
         StringBuilder rv = new StringBuilder();
         Random rnd = new Random();

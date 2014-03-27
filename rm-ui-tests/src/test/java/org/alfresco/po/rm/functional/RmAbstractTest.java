@@ -18,30 +18,21 @@
  */
 package org.alfresco.po.rm.functional;
 
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.ADD_BUTTON;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.ADD_USER_FORM;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.SEARCH_USER_BUTTON;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.SEARCH_USER_INPUT;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.addUserButton;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.selectGroup;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.*;
 import static org.alfresco.po.rm.RmCreateRulePage.PROPERTY_VALUE_INPUT;
 import static org.alfresco.po.rm.RmFolderRulesPage.LINK_BUTTON;
-import static org.alfresco.po.rm.RmFolderRulesWithRules.EDIT_BUTTON;
-import static org.alfresco.po.rm.RmFolderRulesWithRules.RULE_ITEMS;
+import static org.alfresco.po.rm.RmFolderRulesWithRules.*;
 import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 
+import org.alfresco.po.rm.*;
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl.PerformActions;
-import org.alfresco.po.rm.RmConsolePage;
-import org.alfresco.po.rm.RmConsoleUsersAndGroups;
 import org.alfresco.po.rm.RmConsoleUsersAndGroups.SystemRoles;
-import org.alfresco.po.rm.RmCreateRulePage;
-import org.alfresco.po.rm.RmFolderRulesPage;
-import org.alfresco.po.rm.RmFolderRulesWithRules;
-import org.alfresco.po.rm.RmLinkToRulePage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.site.CreateSitePage;
@@ -55,6 +46,7 @@ import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.WhenSel
 import org.alfresco.po.share.site.document.DocumentAspect;
 import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
+import org.alfresco.po.share.util.SiteUtil;
 import org.alfresco.webdrone.WebDrone;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -81,6 +73,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
     private static String RESULTS_FOLDER = System.getProperty("user.dir") +
             System.getProperty("file.separator") + "test-output" + System.getProperty("file.separator");
     protected static final String DEFAULT_USER_PASSWORD = "password";
+    private Properties prop = new Properties();
 
     /**
      * Method returns element locator by visible text
@@ -92,6 +85,16 @@ public class RmAbstractTest extends AbstractIntegrationTest
         checkMandotaryParam("elementName", elementName);
         return By.xpath("//a[contains(text(), '" + elementName + "')]");
     }
+
+    /**
+     * Helper method get the text of Element By locator
+     *
+     * @return String Text
+     */
+    public String getText(By locator){
+        return drone.findAndWait(locator).getText();
+    }
+
     /**
      * Action renders to RM site
      */
@@ -99,6 +102,38 @@ public class RmAbstractTest extends AbstractIntegrationTest
     {
         drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
         return (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+    }
+
+    /**
+     * Load properties file by file name
+     *
+     * @param propertiesFile properties file name
+     */
+    public void loadProperties(String propertiesFile){
+        checkMandotaryParam("propertiesFile", propertiesFile);
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        InputStream in = loader.getResourceAsStream(propertiesFile);
+        try
+        {
+            prop.load(in);
+            in.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Function returns property value by name
+     *
+     * @param name Name of property
+     * @return String property value
+     */
+    public String getPropertyValue(String name){
+        checkMandotaryParam("name", name);
+        return prop.getProperty(name);
     }
 
     /**
@@ -467,6 +502,8 @@ public class RmAbstractTest extends AbstractIntegrationTest
      */
     public DocumentLibraryPage createRemoteFolder(String siteName, String folderName)
     {
+        checkMandotaryParam("siteName", siteName);
+        checkMandotaryParam("folderName", folderName);
         //Navigate to DocLibPage
         drone.navigateTo(shareUrl + "/page/site/"+siteName+"/documentlibrary");
         DocumentLibraryPage docPage = drone.getCurrentPage().render();
@@ -477,6 +514,32 @@ public class RmAbstractTest extends AbstractIntegrationTest
         Assert.assertNotNull(folder);
         Assert.assertEquals(folder.getName(), folderName);
         return new DocumentLibraryPage(drone).render();
+    }
+
+    /**
+     * Function create content ion remote site and declares it as record
+     *
+     * @param siteName Remote Site Name
+     * @param contentName Name of remote content to create
+     */
+    public void createContentAndDeclareAsRecord(String siteName, String contentName)
+    {
+        checkMandotaryParam("siteName", siteName);
+        checkMandotaryParam("contentName", contentName);
+        drone.navigateTo(shareUrl + "/page/site/"+siteName+"/documentlibrary");
+        WebElement createFileAction = drone.findAndWait(By.xpath("//div[@class='create-content']/descendant::button[.='Create...']"), MAX_WAIT_TIME);
+        createFileAction.click();
+        WebElement createPlainTextFileAction = drone.findAndWait(By.xpath("//div[@class='create-content']/descendant::span[.='Plain Text...']"), MAX_WAIT_TIME);
+        createPlainTextFileAction.click();
+        WebElement fileNameField = drone.findAndWait(By.xpath("//input[@name='prop_cm_name']"), MAX_WAIT_TIME);
+        fileNameField.clear();
+        fileNameField.sendKeys(contentName);
+        WebElement createButton = drone.findAndWait(By.xpath("//button[.='Create']"), MAX_WAIT_TIME);
+        createButton.click();
+        WebElement createRecordAction = drone.findAndWait(By.cssSelector("div.rm-create-record>a"), MAX_WAIT_TIME);
+        createRecordAction.click();
+        WebElement okButton = drone.findAndWait(By.xpath("//div[@class='ft']/descendant::button[.='OK']"), MAX_WAIT_TIME);
+        okButton.click();
     }
 
     /**
@@ -576,8 +639,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
         checkMandotaryParam("userName", userName);
         checkMandotaryParam("roleName", roleName);
 
-        openRmSite();
-        FilePlanPage filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+        FilePlanPage filePlan = openRmSite();
         RmConsolePage consolePage= filePlan.openRmConsolePage();
         RmConsoleUsersAndGroups newRole = consolePage.openUsersAndGroupsPage();
         selectGroup(drone, roleName);
@@ -636,5 +698,42 @@ public class RmAbstractTest extends AbstractIntegrationTest
         assignUserToRole(userName, SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
 
         ShareUtil.logout(drone);
+    }
+
+    /**
+     * Function create Electronic Record
+     *
+     * @param fileName Nam eof electronic File
+     * @return {@link org.alfresco.po.rm.fileplan.FilePlanPage}
+     */
+    protected FilePlanPage fileElectronicToRecordFolder(String fileName)
+    {
+        FilePlanPage filePlan = (FilePlanPage) drone.getCurrentPage();
+        try
+        {
+
+
+        // open file dialog
+        RmUploadFilePage rmRecordFileDialog = filePlan.selectFile();
+
+        // select to upload electronic record
+        rmRecordFileDialog.selectElectronic(drone);
+
+        // upload file
+        File file = SiteUtil.prepareFile(fileName);
+        String filePath = null;
+
+            filePath = file.getCanonicalPath();
+
+        filePlan = (FilePlanPage)rmRecordFileDialog.uploadFile(filePath);
+
+        // render file plan
+        filePlan.setInRecordFolder(true);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return filePlan.render(fileName);
     }
 }

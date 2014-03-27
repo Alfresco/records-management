@@ -58,38 +58,25 @@ public class RmCreateDispositionPage extends FolderDetailsPage
          * No hard coded text in the code please.
          * And please delete numberPosition and xpath
          */
-        ACCESSION(0, By.xpath("//a[text()='Accession']"), "Accession", "accession"),
-        DESTROY(2,  By.xpath("//a[text()='Destroy']"), "Destroy", "destroy"),
-        RETAIN(3,  By.xpath("//a[text()='Retain']"), "Retain", "retain"),
-        TRANSFER(4,  By.xpath("//a[text()='Transfer']"), "Transfer", "transfer"),
-        CUTOFF(1,  By.xpath("//a[text()='Cut off']"), "Cut off", "cutoff");
+        ACCESSION(By.xpath("//a[text()='Accession']"), "accession"),
+        DESTROY(By.xpath("//a[text()='Destroy']"), "destroy"),
+        RETAIN(By.xpath("//a[text()='Retain']"), "retain"),
+        TRANSFER(By.xpath("//a[text()='Transfer']"), "transfer"),
+        CUTOFF( By.xpath("//a[text()='Cut off']"), "cutoff");
 
-        private final int numberPosition;
         private final By xpath;
-        private final String name;
         private final String value;
 
-        DispositionAction(int numberPosition, By xpath, String name, String value)
+        DispositionAction(By xpath, String value)
         {
-            this.numberPosition = numberPosition;
             this.xpath = xpath;
-            this.name = name;
             this.value = value;
         }
 
-        public int getNumberPosition()
-        {
-            return numberPosition;
-        }
 
         public By getXpath()
         {
             return xpath;
-        }
-
-        public String getName()
-        {
-            return name;
         }
 
         public String getValue()

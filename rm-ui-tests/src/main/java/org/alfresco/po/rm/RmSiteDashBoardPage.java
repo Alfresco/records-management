@@ -38,7 +38,11 @@ import org.openqa.selenium.By;
 public class RmSiteDashBoardPage extends DashBoardPage
 {
     /** Selectors */
-    private static final By NAVIGATION_MENU_FILE_PLAN = By.cssSelector("div#HEADER_SITE_DOCUMENTLIBRARY");
+    public static final By NAVIGATION_MENU_FILE_PLAN        = By.cssSelector("div#HEADER_SITE_DOCUMENTLIBRARY");
+    public static final By NAVIGATION_MENU_SITE_DASHBOARD   = By.cssSelector("div#HEADER_SITE_DASHBOARD");
+    public static final By NAVIGATION_MENU_RECORDS_SEARCH   = By.cssSelector("div#HEADER_SITE_RMSEARCH");
+    public static final By NAVIGATION_MENU_SITE_MEMBERS     = By.cssSelector("div#HEADER_SITE_MEMBERS");
+    public static final By NAVIGATION_MENU_RM_CONSOLE       = By.cssSelector("div#HEADER_SITE_RM_MANAGEMENT_CONSOLE");
 
     /**
      * Constructor.

@@ -621,7 +621,7 @@ public class FilePlanPage extends DocumentLibraryPage
         WebDroneUtil.checkMandotaryParam("categoryName", categoryName);
 
         return RmPageObjectUtils.isDisplayed(drone, By.
-                xpath("//span//a[contains(text(), '" + categoryName + "')]"));
+                xpath("//a[contains(text(), '" + categoryName + "')]"));
     }
 
     /**

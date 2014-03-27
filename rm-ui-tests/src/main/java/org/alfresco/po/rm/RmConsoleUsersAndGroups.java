@@ -20,11 +20,12 @@ package org.alfresco.po.rm;
 
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
-import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
+
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Records management Users and groups page.
@@ -76,7 +77,7 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
     @Override
     public RmConsoleUsersAndGroups render(RenderTime timer)
     {
-        WebDroneUtil.checkMandotaryParam("timer", timer);
+        checkMandotaryParam("timer", timer);
 
         while (true)
         {
@@ -93,6 +94,7 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
             }
             catch (NoSuchElementException e)
             {
+                e.printStackTrace();
             }
             finally
             {
@@ -127,22 +129,29 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
     /**
      * Action click on group value
      *
-     * @param drone
-     * @param groupName
+     * @param drone {@link org.alfresco.webdrone.WebDrone}
+     * @param groupName Name of group
      */
+
     public static void selectGroup(final WebDrone drone, String groupName){
+        checkMandotaryParam("drone", drone);
+        checkMandotaryParam("groupName", groupName);
+
         WebElement group = drone.findAndWait(By.cssSelector("#role-" + groupName));
         group.click();
     }
 
     /**
      * Helper method verifies if element exists on page
-     * @param drone
-     * @param locator
-     * @return true/false
+     * @param drone {@link org.alfresco.webdrone.WebDrone}
+     * @param locator locator link
+     * @return true/false is element displayed on page
      */
+
     public static boolean isDisplay(final WebDrone drone, By locator)
     {
+        checkMandotaryParam("drone", drone);
+        checkMandotaryParam("locator", locator);
         try
         {
             return drone.findAndWait(locator, 2000).isDisplayed();
@@ -156,19 +165,31 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
     /**
      * Helper method find Add button by xpath according username
      *
-     * @param userName
-     * @return By locator
+     * @param userName Name of Created user
+     * @return By locator add button locator by xpath
      */
     public static By addUserButton(String userName){
+        checkMandotaryParam("userName", userName);
         return By.xpath("//span[contains(text(), '" + userName + "')]/ancestor::tr//button[contains(text(), 'Add')]");
     }
 
     /**
-     * Helper method wait until created alert disappeares
+     * Helper method wait until created alert disappears
      */
     public void waitUntilCreatedAlert()
     {
         drone.waitUntilElementPresent(CREATED_ALERT, 5);
         drone.waitUntilElementDeletedFromDom(CREATED_ALERT, 5);
+    }
+
+    /**
+     * Helper method return user Link on Users And Groups Page in RM console
+     *
+     * @param userName  Name of user
+     * @return locator of user link
+     */
+    public static By userLinkRmConsole(String userName){
+        checkMandotaryParam("userName", userName);
+        return By.cssSelector("div[id$='roleUsers'] a[id$='user-" + userName + "']");
     }
 }

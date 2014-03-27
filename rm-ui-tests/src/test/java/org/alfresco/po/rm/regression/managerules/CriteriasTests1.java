@@ -38,10 +38,6 @@ import org.testng.annotations.Test;
  * @since 2.2
  */
 
-/**
- * FIXME: Please move this class to the regression subpackage
- */
-
 @Listeners(FailedTestListener.class)
 public class CriteriasTests1 extends RmAbstractTest
 {
@@ -57,7 +53,8 @@ public class CriteriasTests1 extends RmAbstractTest
         deleteRMSite();
     }
 
-    @Test
+    //FIXME Need to verify Text values
+    //@Test
     public void RMA_1221()
     {
         String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
