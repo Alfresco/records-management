@@ -679,7 +679,7 @@ public class FilePlanPage extends DocumentLibraryPage
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo recordCategory = filePlan.getFileDirectoryInfo(folderName);
         recordCategory.clickOnTitle();
-        drone.waitForElement(By.xpath("//div[contains(@class,'documentDroppable')]//a[contains(text(), '"+folderName+"')]"), MAX_WAIT_TIME);
+        drone.waitForElement(By.xpath("//div[contains(@class,'documentDroppable')]//a[contains(text(), '" + folderName + "')]"), MAX_WAIT_TIME);
         filePlan.setInRecordCategory(true);
         return new FilePlanPage(drone).render();
     }

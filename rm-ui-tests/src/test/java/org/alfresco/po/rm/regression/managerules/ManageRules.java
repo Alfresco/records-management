@@ -200,6 +200,7 @@ public class ManageRules extends RmAbstractTest {
     @Test
     public void RMA_1190()
     {
+        // FIXME: Why do you get the test name from the current thread? Is "this.testName" not working?
         String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
         String ruleName = testName + RmPageObjectUtils.getRandomString(3);
@@ -218,6 +219,7 @@ public class ManageRules extends RmAbstractTest {
 
             filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
+            // FIXME: Use isRenderComplete instead of waitForPageLoad as this might be deprecated in the future (see WEBDRONE-518)
             drone.waitForPageLoad(MAX_WAIT_TIME);
             //Apply rule
             RmFolderRulesWithRules rulesPage = filePlan.selectManageRulesWithRules().render();
@@ -254,7 +256,6 @@ public class ManageRules extends RmAbstractTest {
             filePlan.openDetailsPage(folderName);
             Assert.assertTrue(isElementPresent(descriptionProperty(propertyValue)),
                     "Failed to present Description for Updated Folder");
-
         }
         catch (Throwable e)
         {

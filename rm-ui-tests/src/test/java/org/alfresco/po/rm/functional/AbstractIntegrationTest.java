@@ -314,7 +314,6 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      *
      * @param locator element By locator
      */
-
     public void click(By locator)
     {
         WebElement element = drone.findAndWait(locator);

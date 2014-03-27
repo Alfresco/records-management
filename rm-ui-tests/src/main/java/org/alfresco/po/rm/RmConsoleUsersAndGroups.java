@@ -28,20 +28,27 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
 /**
- * Records management Users and groups page.
+ * Records management users and groups page.
  *
  * @author Polina Lushchinskaya
  * @version 1.1
+ * @since 2.2
  */
-public class RmConsoleUsersAndGroups extends RmSitePage {
-
+public class RmConsoleUsersAndGroups extends RmSitePage
+{
     public static final By ADD_BUTTON = By.xpath("//button[@id='addUser-button']");
     public static final By ADD_USER_FORM = By.cssSelector("div[id$='peoplepicker']");
     public static final By SEARCH_USER_INPUT = By.cssSelector("input[id$='rm-search-peoplefinder-search-text']");
+    // FIXME: Extract the string
     public static final By SEARCH_USER_BUTTON = By.xpath("//button[contains(@id, 'search-button') and (text()='Search')]");
     private static final By CREATED_ALERT  = By.xpath(".//*[@id='message']/div/span");
 
-    public enum SystemRoles{
+    public enum SystemRoles
+    {
+        /* 
+         * These value are unique and even if the browser language changes we'll
+         * be able to use them, so no reason to extract them to language properties
+         */
         RECORDS_MANAGEMENT_ADMINISTRATOR("Administrator"),
         RECORDS_MANAGEMENT_POWER_USER("PowerUser"),
         RECORDS_MANAGEMENT_RECORDS_MANAGER("RecordsManager"),
@@ -59,14 +66,15 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
         {
             return cssSelector;
         }
-
     }
+
     /**
      * Constructor.
      *
      * @param drone {@link org.alfresco.webdrone.WebDrone}
      */
-    public RmConsoleUsersAndGroups(WebDrone drone) {
+    public RmConsoleUsersAndGroups(WebDrone drone)
+    {
         super(drone);
     }
 
@@ -94,6 +102,7 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
             }
             catch (NoSuchElementException e)
             {
+                // FIXME: Proper logging
                 e.printStackTrace();
             }
             finally
@@ -111,6 +120,8 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
     @Override
     public RmConsoleUsersAndGroups render(long time)
     {
+        checkMandotaryParam("time", time);
+
         RenderTime timer = new RenderTime(time);
         return render(timer);
     }
@@ -132,8 +143,8 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
      * @param drone {@link org.alfresco.webdrone.WebDrone}
      * @param groupName Name of group
      */
-
-    public static void selectGroup(final WebDrone drone, String groupName){
+    public static void selectGroup(final WebDrone drone, String groupName)
+    {
         checkMandotaryParam("drone", drone);
         checkMandotaryParam("groupName", groupName);
 
@@ -147,11 +158,11 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
      * @param locator locator link
      * @return true/false is element displayed on page
      */
-
     public static boolean isDisplay(final WebDrone drone, By locator)
     {
         checkMandotaryParam("drone", drone);
         checkMandotaryParam("locator", locator);
+
         try
         {
             return drone.findAndWait(locator, 2000).isDisplayed();
@@ -168,8 +179,11 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
      * @param userName Name of Created user
      * @return By locator add button locator by xpath
      */
-    public static By addUserButton(String userName){
+    public static By addUserButton(String userName)
+    {
         checkMandotaryParam("userName", userName);
+
+        // FIXME: Extract text
         return By.xpath("//span[contains(text(), '" + userName + "')]/ancestor::tr//button[contains(text(), 'Add')]");
     }
 
@@ -188,8 +202,10 @@ public class RmConsoleUsersAndGroups extends RmSitePage {
      * @param userName  Name of user
      * @return locator of user link
      */
-    public static By userLinkRmConsole(String userName){
+    public static By userLinkRmConsole(String userName)
+    {
         checkMandotaryParam("userName", userName);
+
         return By.cssSelector("div[id$='roleUsers'] a[id$='user-" + userName + "']");
     }
 }

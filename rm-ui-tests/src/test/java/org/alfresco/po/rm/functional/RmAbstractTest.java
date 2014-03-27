@@ -112,6 +112,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
      */
     public FilePlanPage openRmSite()
     {
+        // FIXME: Instead of putting a hard coded link please click on the file plan menu item like you would when you are using the browser
         drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
         return (FilePlanPage) rmSiteDashBoard.selectFilePlan();
     }
@@ -121,8 +122,10 @@ public class RmAbstractTest extends AbstractIntegrationTest
      *
      * @param propertiesFile properties file name
      */
-    public void loadProperties(String propertiesFile){
+    public void loadProperties(String propertiesFile)
+    {
         checkMandotaryParam("propertiesFile", propertiesFile);
+
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         InputStream in = loader.getResourceAsStream(propertiesFile);
         try
@@ -132,9 +135,9 @@ public class RmAbstractTest extends AbstractIntegrationTest
         }
         catch (IOException e)
         {
+            // FIXME: Proper logging
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -143,8 +146,10 @@ public class RmAbstractTest extends AbstractIntegrationTest
      * @param name Name of property
      * @return String property value
      */
-    public String getPropertyValue(String name){
+    public String getPropertyValue(String name)
+    {
         checkMandotaryParam("name", name);
+
         return prop.getProperty(name);
     }
 
@@ -156,6 +161,8 @@ public class RmAbstractTest extends AbstractIntegrationTest
      * @param applytosubfolders does rule apply to subfolders
      * @param isNoRule dies any rules already exists
      */
+    // FIXME:  createInboundRule, createOutboundRule, createUpdateRule and createSetPropertyValueRule
+    // have common code. Does it make sense to create a helper method to reduce code duplication?
     protected void createInboundRule(String ruleTitle, PerformActions ruleAction, boolean applytosubfolders, boolean isNoRule)
     {
         RmCreateRulePage rulesPage;
@@ -473,10 +480,12 @@ public class RmAbstractTest extends AbstractIntegrationTest
      *
      * @param userName username
      */
+    // FIXME: Why do we need this method? Why can't we directly call "createEnterpriseUser" in our code?
     protected void CreateUser(String userName){
         try {
             createEnterpriseUser(userName);
         } catch (Exception e) {
+            // FIXME: Log the information properly
             e.printStackTrace();
         }
     }
@@ -656,18 +665,18 @@ public class RmAbstractTest extends AbstractIntegrationTest
         RmConsoleUsersAndGroups newRole = consolePage.openUsersAndGroupsPage();
         selectGroup(drone, roleName);
 
-        //Add user
+        // Add user
         click(ADD_BUTTON);
         drone.findAndWait(ADD_USER_FORM).isDisplayed();
 
-        //Search for User
+        // Search for user
         WebElement searchInput = drone.findAndWait(SEARCH_USER_INPUT, MAX_WAIT_TIME);
         searchInput.clear();
         searchInput.sendKeys(userName);
         click(SEARCH_USER_BUTTON);
-        for(int i=0; i<3; i++)
+        for (int i=0; i<3; i++)
         {
-            if(!isElementPresent(addUserButton(userName)))
+            if (!isElementPresent(addUserButton(userName)))
             {
                 click(SEARCH_USER_BUTTON);
             }
@@ -705,6 +714,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
         logger.info("Trying to create user - " + userName);
         ShareUtil.logout(drone);
 
+        // FIXME: Java convention. Method name does not start with a capital letter.
         CreateUser(userName);
         login();
         assignUserToRole(userName, SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
