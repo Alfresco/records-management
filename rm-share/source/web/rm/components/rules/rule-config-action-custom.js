@@ -85,6 +85,68 @@
                return configDef;
             }
          },
+         CopyTo:
+         {
+            edit: function(configDef, ruleConfig, configEl)
+            {
+               this._hideParameters(configDef.parameterDefinitions);
+
+               configDef.parameterDefinitions.splice(0, 0,
+               {
+                  type: "arca:rm-destination-dialog-button",
+                  _buttonLabel: this.msg("button.select-folder"),
+                  _destinationParam: "destination-folder"
+               });
+
+               configDef.parameterDefinitions.splice(1, 0,
+               {
+                  type: "arca:record-path-help-icon"
+               });
+
+               var path = this._getParamDef(configDef, "path");
+               path._type = "hidden";
+               path._displayLabelToRight = false;
+               path._hideColon = true;
+
+               var createRecordPath = this._getParamDef(configDef, "createRecordPath");
+               createRecordPath._type = null;
+               createRecordPath._displayLabelToRight = false;
+               createRecordPath._hideColon = true;
+
+               return configDef;
+            }
+         },
+         MoveTo:
+         {
+            edit: function(configDef, ruleConfig, configEl)
+            {
+               this._hideParameters(configDef.parameterDefinitions);
+
+               configDef.parameterDefinitions.splice(0, 0,
+               {
+                  type: "arca:rm-destination-dialog-button",
+                  _buttonLabel: this.msg("button.select-folder"),
+                  _destinationParam: "destination-folder"
+               });
+
+               configDef.parameterDefinitions.splice(1, 0,
+               {
+                  type: "arca:record-path-help-icon"
+               });
+
+               var path = this._getParamDef(configDef, "path");
+               path._type = "hidden";
+               path._displayLabelToRight = false;
+               path._hideColon = true;
+
+               var createRecordPath = this._getParamDef(configDef, "createRecordPath");
+               createRecordPath._type = null;
+               createRecordPath._displayLabelToRight = false;
+               createRecordPath._hideColon = true;
+
+               return configDef;
+            }
+         },
          AddRecordTypes:
          {
             edit: function(configDef, ruleConfig, configEl)
@@ -211,6 +273,15 @@
             currentCtx: {},
             edit: function (containerEl, configDef, paramDef, ruleConfig, value)
             {
+               var unfiledParameter = YAHOO.util.History.getQueryStringParameter("unfiled");
+               var unfiled = (configDef.name != "fileTo") && (unfiledParameter == "true");
+               if (this.widgets.destinationDialog)
+               {
+                  this.widgets.destinationDialog.setOptions(
+                  {
+                     unfiled: unfiled
+                  });
+               }
                var selectedPath = ruleConfig.parameterValues && ruleConfig.parameterValues.path;
                this._createButton(containerEl, configDef, paramDef, ruleConfig, function RCA_destinationDialogButton_onClick(type, obj)
                {
@@ -229,7 +300,8 @@
                         mode: "file",
                         files: "",
                         siteId: this.options.siteId,
-                        path: selectedPath
+                        path: selectedPath,
+                        unfiled: unfiled
                      });
 
                      YAHOO.Bubbling.on("folderSelected", function (layer, args)
@@ -241,7 +313,12 @@
                            {
                               var ctx = this.renderers["arca:rm-destination-dialog-button"].currentCtx;
                               this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "path", selectedFolder.path);
-                              Dom.get(this.id + "-recordFolderPath").value = selectedFolder.path;
+                              var path = selectedFolder.path;
+                              if(unfiled)
+                              {
+                                 path = path.replace(/^\/.*?\//, '/');
+                              }
+                              Dom.get(this.id + "-recordFolderPath").value = path;
                               this._updateSubmitElements(ctx.configDef);
                               this.widgets.destinationDialog.setOptions({
                                  path: selectedFolder.path
@@ -368,6 +445,7 @@
                   {
                      parameterString += autoCompleteSelectPreFragment.replace(/ /g,'+');
                   }
+                  parameterString += "&unfiled=" + unfiled;
                   parameterString = Alfresco.util.encodeURIPath(parameterString);
                   return parameterString;
                }

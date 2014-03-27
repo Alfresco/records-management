@@ -20,6 +20,8 @@
       </group>
       <group>
          <action name="fileTo"/>
+         <action name="copyTo"/>
+         <action name="moveTo"/>
          <action name="reject"/>
          <action name="requestInfo"/>
       </group>
@@ -41,6 +43,8 @@
    <customise>
       <item id="select">Select</item>
       <action name="fileTo">FileTo</action>
+      <action name="copyTo">CopyTo</action>
+      <action name="moveTo">MoveTo</action>
       <action name="reject">Reject</action>
       <action name="requestInfo">RequestInfo</action>
       <action name="sendEmail">Mail</action>

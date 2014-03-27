@@ -56,6 +56,8 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
         OPEN_RECORD_FOLDER("openRecordFolder"),
         CLOSE_RECORD_FOLDER("closeRecordFolder"),
         FILE_TO("fileTo"),
+        COPY_TO("copyTo"),
+        MOVE_TO("moveTo"),
         REJECT("reject"),
         REQUEST_INFORMATION("requestInfo"),
         COMPLETE_EVENT("completeEvent"),
@@ -108,6 +110,42 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
      */
     public void selectFileTo(String path, boolean createRecordPath)
     {
+        selectAction(PerformActions.FILE_TO);
+        selectCopyMoveFileTo(path, createRecordPath);
+    }
+
+    /**
+     * Action select File To from Perform Action combobox
+     *
+     * @param path where is file to path
+     * @param createRecordPath
+     */
+    public void selectCopyTo(String path, boolean createRecordPath)
+    {
+        selectAction(PerformActions.COPY_TO);
+        selectCopyMoveFileTo(path, createRecordPath);
+    }
+
+    /**
+     * Action select File To from Perform Action combobox
+     *
+     * @param path where is file to path
+     * @param createRecordPath
+     */
+    public void selectMoveTo(String path, boolean createRecordPath)
+    {
+        selectAction(PerformActions.MOVE_TO);
+        selectCopyMoveFileTo(path, createRecordPath);
+    }
+
+    /**
+     * Action select Copy/Move/File-To utility
+     *
+     * @param path where is file to path
+     * @param createRecordPath
+     */
+    public void selectCopyMoveFileTo(String path, boolean createRecordPath)
+    {
         WebDroneUtil.checkMandotaryParam("createRecordPath", createRecordPath);
 
         selectAction(PerformActions.FILE_TO);
@@ -132,6 +170,8 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
         WebElement input = getDrone().findAndWait(By.className("yui-ac-input"), timeout);
         input.clear();
         input.sendKeys(path);
+        // I know we shouldn't have sleeps but I really can't find another way to figure out when yui autocomplete has finished doing its thing
+        try { Thread.sleep(2000); } catch(InterruptedException e) { }
     }
 
     // FIXME: Description

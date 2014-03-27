@@ -6,7 +6,7 @@ function rm_main()
 
 	   if (model.constraints != null) {
 	      scripts = model.constraints["rm-ac-scripts"];
-		  
+
 		  if (scripts != null) {
 	         return scripts;
 		  }
@@ -14,3 +14,5 @@ function rm_main()
 	   return model.scripts;
 }
 model.scripts = rm_main();
+
+model.widgets[0].name = "Alfresco.rm.RuleEdit";

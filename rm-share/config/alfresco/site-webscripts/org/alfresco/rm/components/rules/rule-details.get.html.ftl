@@ -17,9 +17,10 @@
    <@script src="${url.context}/res/components/rules/config/rule-config-condition.js" group="rules"/>
    <@script src="${url.context}/res/components/rules/config/rule-config-action.js" group="rules"/>
    <@script src="${url.context}/res/components/rules/rule-details.js" group="rules"/>
-   
+
    <#-- Modified for RM -->
    <@script src="${url.context}/res/rm/components/rules/rule-config-action-custom.js" group="rules"/>
+   <@script src="${url.context}/res/rm/components/rules/rule-details.js" group="rules"/>
 </@>
 
 <@markup id="widgets">

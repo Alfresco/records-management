@@ -63,6 +63,26 @@
                this.widgets.titleEl.innerHTML = $html(this.msg("filePlan.label"));
             }
          }
-      }
+      },
+
+      /**
+       * Overrides the _displayDetails method from the base class
+       *
+       * @method onNewRuleButtonClick
+       * @param type
+       * @param args
+       */
+      onNewRuleButtonClick: function RulesHeader_onNewRuleButtonClick(type, args)
+      {
+         var unfiled = YAHOO.util.History.getQueryStringParameter("unfiled");
+         if(unfiled != "true")
+         {
+            unfiled = "false";
+         }
+         window.location.href = $siteURL("rule-edit?nodeRef={nodeRef}&unfiled=" + unfiled,
+         {
+            nodeRef: Alfresco.util.NodeRef(this.options.nodeRef).toString()
+         });
+      },
    });
 })();

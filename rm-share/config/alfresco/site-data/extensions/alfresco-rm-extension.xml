@@ -1110,6 +1110,21 @@
                </sub-components>
             </component>
 
+            <component>
+               <scope>template</scope>
+               <region-id>rules-none</region-id>
+               <source-id>folder-rules</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-rule-none">
+                     <url>/rm/components/rules/rules-none</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+
             <!--  Hide document sync -->
             <component>
                <scope>template</scope>
