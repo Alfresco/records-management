@@ -63,7 +63,7 @@ public class CriteriasTests1 extends RmAbstractTest
         {
             ShareUtil.logout(drone);
 
-            CreateUser(userName);
+            createEnterpriseUser(userName);
             login();
             assignUserToRole(userName, RmConsoleUsersAndGroups.SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
 
@@ -119,7 +119,7 @@ public class CriteriasTests1 extends RmAbstractTest
         {
             ShareUtil.logout(drone);
 
-            CreateUser(userName);
+            createEnterpriseUser(userName);
             login();
             assignUserToRole(userName, RmConsoleUsersAndGroups.SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
 
@@ -205,7 +205,7 @@ public class CriteriasTests1 extends RmAbstractTest
         {
             ShareUtil.logout(drone);
 
-            CreateUser(userName);
+            createEnterpriseUser(userName);
             login();
             assignUserToRole(userName, RmConsoleUsersAndGroups.SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
 

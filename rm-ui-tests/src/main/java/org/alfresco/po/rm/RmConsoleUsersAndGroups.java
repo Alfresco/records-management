@@ -22,6 +22,8 @@ import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
@@ -42,6 +44,7 @@ public class RmConsoleUsersAndGroups extends RmSitePage
     // FIXME: Extract the string
     public static final By SEARCH_USER_BUTTON = By.xpath("//button[contains(@id, 'search-button') and (text()='Search')]");
     private static final By CREATED_ALERT  = By.xpath(".//*[@id='message']/div/span");
+    private static Log logger = LogFactory.getLog(RmConsoleUsersAndGroups.class);
 
     public enum SystemRoles
     {
@@ -102,8 +105,7 @@ public class RmConsoleUsersAndGroups extends RmSitePage
             }
             catch (NoSuchElementException e)
             {
-                // FIXME: Proper logging
-                e.printStackTrace();
+                 logger.error(e.getMessage());
             }
             finally
             {

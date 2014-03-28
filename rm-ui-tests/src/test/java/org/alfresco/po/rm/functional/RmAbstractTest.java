@@ -135,8 +135,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
         }
         catch (IOException e)
         {
-            // FIXME: Proper logging
-            e.printStackTrace();
+            logger.debug(e.getMessage());
         }
     }
 
@@ -153,6 +152,9 @@ public class RmAbstractTest extends AbstractIntegrationTest
         return prop.getProperty(name);
     }
 
+    public enum WhenOption{
+        INBOUND, OUTBOUND, UPDATE
+    }
     /**
      * Action creates Inbound Rule
      *
@@ -161,9 +163,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
      * @param applytosubfolders does rule apply to subfolders
      * @param isNoRule dies any rules already exists
      */
-    // FIXME:  createInboundRule, createOutboundRule, createUpdateRule and createSetPropertyValueRule
-    // have common code. Does it make sense to create a helper method to reduce code duplication?
-    protected void createInboundRule(String ruleTitle, PerformActions ruleAction, boolean applytosubfolders, boolean isNoRule)
+    protected void createRule(String ruleTitle, PerformActions ruleAction, WhenOption whenOption, boolean applytosubfolders, boolean isNoRule)
     {
         RmCreateRulePage rulesPage;
         FilePlanPage filePlan = drone.getCurrentPage().render();
@@ -180,95 +180,20 @@ public class RmAbstractTest extends AbstractIntegrationTest
         rulesPage.fillNameField(ruleTitle);
         //RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
         WhenSelectorImpl whenSelectorEnter = rulesPage.getWhenOptionObj();
-        whenSelectorEnter.selectInbound();
-        rulesPage.selectRmAction(ruleAction.getValue());
-        if (applytosubfolders)
-        {
-            rulesPage.selectApplyToSubfolderCheckbox();
-        }
-        rulesPage.clickCreate().render();
-        List<WebElement> ruleItems = drone.findAndWaitForElements(RULE_ITEMS);
-        for (WebElement ruleItem : ruleItems)
-        {
-            if (ruleItem.getText().contains(ruleTitle))
-            {
-                ruleItem.click();
 
-                drone.findAndWait(EDIT_BUTTON, MAX_WAIT_TIME);
-            }
+        switch (whenOption)
+        {
+            case INBOUND:
+                whenSelectorEnter.selectInbound();
+                break;
+            case OUTBOUND:
+                whenSelectorEnter.selectOutbound();
+                break;
+            case UPDATE:
+                whenSelectorEnter.selectUpdate();
+                break;
         }
-    }
 
-    /**
-     * Action creates Outbound Rule
-     *
-     * @param ruleTitle rule name
-     * @param ruleAction rule action
-     * @param applytosubfolders does rule apply to subfolders
-     * @param isNoRule dies any rules already exists
-     */
-    protected void createOutboundRule(String ruleTitle, PerformActions ruleAction, boolean applytosubfolders, boolean isNoRule)
-    {
-        RmCreateRulePage rulesPage;
-        FilePlanPage filePlan = drone.getCurrentPage().render();
-        if (isNoRule)
-        {
-            RmFolderRulesPage manageRulesPage = filePlan.selectManageRules().render();
-            rulesPage = manageRulesPage.openCreateRulePage().render();
-        }
-        else
-        {
-            RmFolderRulesWithRules manageRulesPage = filePlan.selectManageRulesWithRules().render();
-            rulesPage = manageRulesPage.clickNewRuleButton().render();
-        }
-        rulesPage.fillNameField(ruleTitle);
-        //RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
-        WhenSelectorImpl whenSelectorEnter = rulesPage.getWhenOptionObj();
-        whenSelectorEnter.selectOutbound();
-        rulesPage.selectRmAction(ruleAction.getValue());
-        if(applytosubfolders)
-        {
-            rulesPage.selectApplyToSubfolderCheckbox();
-        }
-        rulesPage.clickCreate().render();
-        List<WebElement> ruleItems = drone.findAndWaitForElements(RULE_ITEMS);
-        for (WebElement ruleItem : ruleItems)
-        {
-            if (ruleItem.getText().contains(ruleTitle))
-            {
-                ruleItem.click();
-
-                drone.findAndWait(EDIT_BUTTON, MAX_WAIT_TIME);
-            }
-        }
-    }
-
-    /**
-     * Action creates Update Rule
-     *
-     * @param ruleTitle rule name
-     * @param ruleAction rule action
-     * @param applytosubfolders does rule apply to subfolders
-     * @param isNoRule dies any rules already exists
-     */
-    protected void createUpdateRule(String ruleTitle, PerformActions ruleAction, boolean applytosubfolders, boolean isNoRule)
-    {
-        RmCreateRulePage rulesPage;
-        FilePlanPage filePlan = drone.getCurrentPage().render();
-        if (isNoRule)
-        {
-            RmFolderRulesPage manageRulesPage = filePlan.selectManageRules().render();
-            rulesPage = manageRulesPage.openCreateRulePage().render();
-        }
-        else
-        {
-            RmFolderRulesWithRules manageRulesPage = filePlan.selectManageRulesWithRules().render();
-            rulesPage = manageRulesPage.clickNewRuleButton().render();
-        }
-        rulesPage.fillNameField(ruleTitle);
-        //RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
-        WhenSelectorImpl whenSelectorEnter = rulesPage.getWhenOptionObj();
-        whenSelectorEnter.selectUpdate();
         rulesPage.selectRmAction(ruleAction.getValue());
         if (applytosubfolders)
         {
@@ -311,7 +236,6 @@ public class RmAbstractTest extends AbstractIntegrationTest
             rulesPage = manageRulesPage.clickNewRuleButton().render();
         }
         rulesPage.fillNameField(ruleTitle);
-        //RmActionSelectorEnterpImpl actionSelectorEnter = rulesPage.getActionOptionsObj();
         WhenSelectorImpl whenSelectorEnter = rulesPage.getWhenOptionObj();
         whenSelectorEnter.selectInbound();
         rulesPage.selectRmAction(PerformActions.SET_PROPERTY_VALUE.getValue());
@@ -340,31 +264,9 @@ public class RmAbstractTest extends AbstractIntegrationTest
      * @param ruleTitle rule title
      * @param ruleAction rule action
      */
-    protected void createInboundRule(String ruleTitle, PerformActions ruleAction)
+    protected void createRule(String ruleTitle, PerformActions ruleAction, WhenOption whenOption)
     {
-        createInboundRule(ruleTitle, ruleAction, true, true);
-    }
-
-    /**
-     * Action Creates Outbound rule, With no Rules and applyed to subfolders
-     *
-     * @param ruleTitle rule title
-     * @param ruleAction rule action
-     */
-    protected void createOutboundRule(String ruleTitle, PerformActions ruleAction)
-    {
-        createOutboundRule(ruleTitle, ruleAction, true, true);
-    }
-
-    /**
-     * Action Creates Outbound rule, With no Rules and applyed to subfolders
-     *
-     * @param ruleTitle rule title
-     * @param ruleAction rule action
-     */
-    protected void createUpdateRule(String ruleTitle, PerformActions ruleAction)
-    {
-        createUpdateRule(ruleTitle, ruleAction, true, true);
+        createRule(ruleTitle, ruleAction, whenOption, true, true);
     }
 
     /**
@@ -476,22 +378,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * Create alfresco enterprise user with password 'password'
-     *
-     * @param userName username
-     */
-    // FIXME: Why do we need this method? Why can't we directly call "createEnterpriseUser" in our code?
-    protected void CreateUser(String userName){
-        try {
-            createEnterpriseUser(userName);
-        } catch (Exception e) {
-            // FIXME: Log the information properly
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Action waits undel created/deleted alert disappears
+     * Action waits until created/deleted alert disappears
      */
     public void waitUntilCreatedAlert()
     {
@@ -547,7 +434,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
     {
         checkMandotaryParam("siteName", siteName);
         checkMandotaryParam("contentName", contentName);
-        drone.navigateTo(shareUrl + "/page/site/"+siteName+"/documentlibrary");
+        drone.navigateTo(shareUrl + "/page/site/" + siteName + "/documentlibrary");
         WebElement createFileAction = drone.findAndWait(By.xpath("//div[@class='create-content']/descendant::button[.='Create...']"), MAX_WAIT_TIME);
         createFileAction.click();
         WebElement createPlainTextFileAction = drone.findAndWait(By.xpath("//div[@class='create-content']/descendant::span[.='Plain Text...']"), MAX_WAIT_TIME);
@@ -712,14 +599,21 @@ public class RmAbstractTest extends AbstractIntegrationTest
     protected void createRmAdminUser(String userName)
     {
         logger.info("Trying to create user - " + userName);
+        try
+        {
         ShareUtil.logout(drone);
 
-        // FIXME: Java convention. Method name does not start with a capital letter.
-        CreateUser(userName);
+        createEnterpriseUser(userName);
+
         login();
         assignUserToRole(userName, SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
 
         ShareUtil.logout(drone);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -754,7 +648,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            logger.debug(e.getMessage());
         }
         return filePlan.render(fileName);
     }

@@ -90,7 +90,7 @@ public class ManageRules extends RmAbstractTest {
     @Test
     public void RMA_1193()
     {
-        String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
+        String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
         String ruleName = testName + RmPageObjectUtils.getRandomString(3);
         String categoryName = testName + RmPageObjectUtils.getRandomString(3);
@@ -105,7 +105,7 @@ public class ManageRules extends RmAbstractTest {
             FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             filePlan.navigateToFolder(categoryName);
-            createInboundRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER);
+            createRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, WhenOption.INBOUND);
             rmSiteDashBoard.selectFilePlan();
             filePlan.navigateToFolder(categoryName);
             filePlan.createFolder(folderName);
@@ -121,7 +121,7 @@ public class ManageRules extends RmAbstractTest {
     @Test
     public void RMA_1393()
     {
-        String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
+        String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
         String userName1 = testName + RmPageObjectUtils.getRandomString(3);
         String ruleName1 = testName + RmPageObjectUtils.getRandomString(3);
@@ -132,6 +132,7 @@ public class ManageRules extends RmAbstractTest {
 
         try
         {
+            deleteRMSite();
             createRMSite();
             createRmAdminUser(userName);
             createRmAdminUser(userName1);
@@ -147,7 +148,7 @@ public class ManageRules extends RmAbstractTest {
             login(userName, DEFAULT_USER_PASSWORD);
             filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
-            createUpdateRule(ruleName2, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, true, false);
+            createRule(ruleName2, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, WhenOption.UPDATE, true, false);
             rmSiteDashBoard.selectFilePlan();
             filePlan.navigateToFolder(categoryName);
             filePlan.createFolder(folderName);
@@ -200,8 +201,7 @@ public class ManageRules extends RmAbstractTest {
     @Test
     public void RMA_1190()
     {
-        // FIXME: Why do you get the test name from the current thread? Is "this.testName" not working?
-        String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
+        String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
         String ruleName = testName + RmPageObjectUtils.getRandomString(3);
         String folderName = testName + RmPageObjectUtils.getRandomString(3);
@@ -219,8 +219,7 @@ public class ManageRules extends RmAbstractTest {
 
             filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
-            // FIXME: Use isRenderComplete instead of waitForPageLoad as this might be deprecated in the future (see WEBDRONE-518)
-            drone.waitForPageLoad(MAX_WAIT_TIME);
+            drone.isRenderComplete(MAX_WAIT_TIME);
             //Apply rule
             RmFolderRulesWithRules rulesPage = filePlan.selectManageRulesWithRules().render();
             RmCreateRulePage manageRulesPage = rulesPage.clickEditButton().render();
@@ -279,7 +278,7 @@ public class ManageRules extends RmAbstractTest {
     @Test
     public void RMA_1192()
     {
-        String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
+        String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
         String ruleName = testName + RmPageObjectUtils.getRandomString(3);
         String categoryName = testName + RmPageObjectUtils.getRandomString(3);
@@ -294,7 +293,7 @@ public class ManageRules extends RmAbstractTest {
             FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             filePlan.navigateToFolder(categoryName);
-            createInboundRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER);
+            createRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, WhenOption.INBOUND);
 
             rmSiteDashBoard.selectFilePlan();
             filePlan.navigateToFolder(categoryName);
@@ -336,7 +335,7 @@ public class ManageRules extends RmAbstractTest {
     @Test(groups = {"rmBugs"})
     public void RMA_1368()
     {
-        String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
+        String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
         String ruleName = testName + RmPageObjectUtils.getRandomString(3);
         String ruleName1 = testName + RmPageObjectUtils.getRandomString(3);
@@ -352,7 +351,7 @@ public class ManageRules extends RmAbstractTest {
             login();
             deleteRMSite();
             ShareUtil.logout(drone);
-            CreateUser(userName);
+            createEnterpriseUser(userName);
             login(userName, DEFAULT_USER_PASSWORD);
             createRMSite();
             FilePlanPage filePlan = openRmSite();
@@ -361,7 +360,7 @@ public class ManageRules extends RmAbstractTest {
             filePlan.createCategory(categoryName1, true);
             //Any rule is created for Category2
             filePlan.navigateToFolder(categoryName1);
-            createInboundRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER);
+            createRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, WhenOption.INBOUND);
             //Any Collaboration (public) site is created
 
             createCollaborationSite(siteName);
@@ -417,7 +416,7 @@ public class ManageRules extends RmAbstractTest {
     @Test
     public void RMA_1369()
     {
-        String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
+        String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
         String ruleName = testName + RmPageObjectUtils.getRandomString(3);
         String categoryName = testName + RmPageObjectUtils.getRandomString(3);
@@ -430,6 +429,7 @@ public class ManageRules extends RmAbstractTest {
         {
             ShareUtil.logout(drone);
             login();
+            deleteRMSite();
             createRMSite();
             createRmAdminUser(userName);
 
@@ -445,7 +445,7 @@ public class ManageRules extends RmAbstractTest {
             filePlan.createFolder(folderName);
             filePlan.navigateToFolder(folderName);
             //Create Record
-            drone.waitForPageLoad(MAX_WAIT_TIME);
+            drone.isRenderComplete(MAX_WAIT_TIME);
             filePlan.createRecord(recordName);
 
             //Any rule is created for Category1
@@ -500,7 +500,7 @@ public class ManageRules extends RmAbstractTest {
     @Test
     public void RMA_1370()
     {
-        String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
+        String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
         String ruleName = testName + RmPageObjectUtils.getRandomString(3);
         String categoryName = testName + RmPageObjectUtils.getRandomString(3);
@@ -525,7 +525,7 @@ public class ManageRules extends RmAbstractTest {
             //Create Folder
             filePlan.createFolder(folderName);
             filePlan.navigateToFolder(folderName);
-            drone.waitForPageLoad(MAX_WAIT_TIME);
+            drone.isRenderComplete(MAX_WAIT_TIME);
             //Create Record
             filePlan.createRecord(recordName);
 
@@ -547,7 +547,7 @@ public class ManageRules extends RmAbstractTest {
                 "Failed To Present Run Rules For FolderAnd Subfolders Button");
             click(RUN_RULES_FOR_FOLDER);
             Assert.assertFalse(isFailureMessageAppears(), "Failed to run rule for SubCategory");
-            drone.waitForPageLoad(MAX_WAIT_TIME);
+            drone.isRenderComplete(MAX_WAIT_TIME);
             filePlan = openRmSite();
             //Verify that Rule applied for Category
             filePlan.openDetailsPage(categoryName);
@@ -582,7 +582,7 @@ public class ManageRules extends RmAbstractTest {
     @Test
     public void RMA_1371()
     {
-        String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
+        String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
         String ruleName = testName + RmPageObjectUtils.getRandomString(3);
         String categoryName = testName + RmPageObjectUtils.getRandomString(3);
@@ -608,7 +608,7 @@ public class ManageRules extends RmAbstractTest {
             filePlan.createFolder(folderName);
             filePlan.navigateToFolder(folderName);
             //Create Record
-            drone.waitForPageLoad(MAX_WAIT_TIME);
+            drone.isRenderComplete(MAX_WAIT_TIME);
             filePlan.createRecord(recordName);
 
             //Any rule is created for Category1
@@ -630,7 +630,7 @@ public class ManageRules extends RmAbstractTest {
                 "Failed To Present Run Rules For FolderAnd Subfolders Button");
             click(RUN_RULES_FOR_FOLDER);
             Assert.assertFalse(isFailureMessageAppears(), "Failed to run rule for Folder");
-            drone.waitForPageLoad(MAX_WAIT_TIME);
+            drone.isRenderComplete(MAX_WAIT_TIME);
             filePlan = openRmSite();
             //Verify that Rule applied for Category
             filePlan.openDetailsPage(categoryName);
@@ -666,7 +666,7 @@ public class ManageRules extends RmAbstractTest {
     @Test(groups = {"rmBugs"})
     public void RMA_1372()
     {
-        String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
+        String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
         String ruleName = testName + RmPageObjectUtils.getRandomString(3);
         String categoryName = testName + RmPageObjectUtils.getRandomString(3);

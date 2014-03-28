@@ -84,7 +84,7 @@ public class SanityTests extends RmAbstractTest
             login();
             deleteRMSite();
             ShareUtil.logout(drone);
-            CreateUser(userName);
+            createEnterpriseUser(userName);
             login(userName, DEFAULT_USER_PASSWORD);
             createRMSite();
             FilePlanPage filePlan = openRmSite();
@@ -139,7 +139,7 @@ public class SanityTests extends RmAbstractTest
             login();
             deleteRMSite();
             ShareUtil.logout(drone);
-            CreateUser(userName);
+            createEnterpriseUser(userName);
             login(userName, DEFAULT_USER_PASSWORD);
             createRMSite();
             FilePlanPage filePlan = openRmSite();
