@@ -50,6 +50,9 @@
 
       this.sortby = [{"field": "rma:identifier", "order": "asc"}, {"field": "", "order": "asc"}, {"field": "", "order": "asc"}];
 
+      YAHOO.Bubbling.on("dataTableHeaderCheckboxChange", this.onDataTableHeaderCheckboxChange, this);
+      YAHOO.Bubbling.on("dataTableCheckboxChange", this.onDataTableCheckboxChange, this);
+
       return this;
    };
 
@@ -252,17 +255,17 @@
             "properties.rma_recordSearchDispositionPeriod", "properties.rma_recordSearchDispositionEventsEligible",
             "properties.rma_recordSearchVitalRecordReviewPeriod", "properties.rma_recordSearchHoldReason"
          ];
-         
+
          // add the custom groups of properties
          for (var l=0, k=this.options.groups.length; l<k; l++)
          {
-        	 var group = this.options.groups[l];
-        	 
-	         for (var i=0, j=group.properties.length; i<j; i++)
-	         {
-	        	var property = group.properties[i];
-	            fields.push("properties." + property.prefix + "_" + property.name);
-	         }
+            var group = this.options.groups[l];
+
+            for (var i=0, j=group.properties.length; i<j; i++)
+            {
+               var property = group.properties[i];
+               fields.push("properties." + property.prefix + "_" + property.name);
+            }
          }
 
          // DataSource definition
@@ -283,6 +286,33 @@
 
          // Finally show the component body here to prevent UI artifacts on YUI button decoration
          Dom.setStyle(this.id + "-body", "visibility", "visible");
+      },
+
+      /**
+       * Data table header check box selection change handler
+       *
+       * @param {e} Event
+       * @param {args} Object Event arguments
+       */
+      onDataTableHeaderCheckboxChange: function RecordsResults_onDataTableHeaderCheckboxChange(e, args)
+      {
+         this.widgets.addToHold.set("disabled", !args[1].headerCheckBoxChecked);
+      },
+
+      /**
+       * Data table check box selection change handler
+       *
+       * @param {e} Event
+       * @param {args} Object Event arguments
+       */
+      onDataTableCheckboxChange: function RecordsResults_onDataTableCheckboxChange(e, args)
+      {
+         var activate = false;
+         if (args[1].headerCheckBoxChecked || args[1].checkBoxChecked || args[1].atLeastOneChecked)
+         {
+            activate = true;
+         }
+         this.widgets.addToHold.set("disabled", !activate);
       },
 
       _setupDataTable: function RecordsResults_setupDataTable()
@@ -431,6 +461,7 @@
          // DataTable column defintions
          var columnDefinitions =
          [
+            { key: "check", label: "<input type='checkbox'>", sortable: false, formatter: "checkbox" },
             { key: "image", label: me._msg("label.type"), sortable: false, field: "type", sortable: true, formatter: renderCellImage, width: "64px" },
             { key: "identifier", label: me._msg("label.identifier"), sortable: true, sortOptions: {sortFunction: sortCellURI}, resizeable: true, formatter: renderCellURI },
 
@@ -465,25 +496,27 @@
          // add the custom groups of properties
          for (var l=0, k=this.options.groups.length; l<k; l++)
          {
-        	 var group = this.options.groups[l];
-        	 
-	         for (var i=0, j=group.properties.length; i<j; i++)
-	         {
-	        	var prop = group.properties[i];
-	        	columnDefinitions.push(
-	                    { key: prop.name, label: prop.label, field: "properties." + prop.prefix + "_" + prop.name, sortable: true, resizeable: true, hidden: true }
-	                 );	        	
-	         }
-         }        
+          var group = this.options.groups[l];
+
+            for (var i=0, j=group.properties.length; i<j; i++)
+            {
+            var prop = group.properties[i];
+            columnDefinitions.push(
+                       { key: prop.name, label: prop.label, field: "properties." + prop.prefix + "_" + prop.name, sortable: true, resizeable: true, hidden: true }
+                    );
+            }
+         }
 
          // DataTable definition
          this.widgets.dataTable = new YAHOO.widget.DataTable(this.id + "-results", columnDefinitions, this.widgets.dataSource,
          {
             renderLoopSize: 32,
-            draggableColumns: true,
             initialLoad: false,
             MSG_EMPTY: me._msg("message.empty")
          });
+
+         this.widgets.dataTable.on('theadCellClickEvent', Alfresco.rm.dataTableHeaderCheckboxClick);
+         this.widgets.dataTable.on('checkboxClickEvent', Alfresco.rm.dataTableCheckboxClick);
 
          // show initial message
          this._setDefaultDataTableErrors(this.widgets.dataTable);

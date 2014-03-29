@@ -9,3 +9,7 @@
 <!-- Save Search -->
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/rm/modules/search/save-search.css" />
 <@script type="text/javascript" src="${url.context}/res/rm/modules/search/save-search.js"></@script>
+<!-- Add to Hold -->
+<@link rel="stylesheet" type="text/css" href="${url.context}/res/rm/modules/documentlibrary/hold/hold.css" />
+<@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/hold/hold.js"></@script>
+<@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/hold/add-to-hold.js"></@script>

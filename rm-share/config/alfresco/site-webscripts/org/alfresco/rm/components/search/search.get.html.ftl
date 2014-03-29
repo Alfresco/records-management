@@ -87,6 +87,11 @@
                   <span id="${el}-itemcount"></span>
                </div>
                <div class="yui-u alignright">
+                  <span class="add-to-hold-button">
+                     <span class="yui-button yui-push-button" id="${el}-add-to-hold-button">
+                        <span class="first-child"><button>${msg("button.add-to-hold")}</button></span>
+                     </span>
+                  </span>
                   <span class="print-button">
                      <span class="yui-button yui-push-button" id="${el}-print-button">
                         <span class="first-child"><button>${msg("button.print")}</button></span>

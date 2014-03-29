@@ -98,10 +98,10 @@
             disabled: true
          });
          this.widgets.newButton = Alfresco.util.createYUIButton(this, "newsearch-button", this.onNewSearch);
-         this.widgets.printButton = Alfresco.util.createYUIButton(this, "print-button", this.onPrint);
-         this.widgets.printButton.set("disabled", true);
-         this.widgets.exportButton = Alfresco.util.createYUIButton(this, "export-button", this.onExport);
-         this.widgets.exportButton.set("disabled", true);
+         var btnDisabled = { disabled: true };
+         this.widgets.addToHold = Alfresco.util.createYUIButton(this, "add-to-hold-button", this.onAddToHold, btnDisabled);
+         this.widgets.printButton = Alfresco.util.createYUIButton(this, "print-button", this.onPrint, btnDisabled);
+         this.widgets.exportButton = Alfresco.util.createYUIButton(this, "export-button", this.onExport, btnDisabled);
 
          // retrieve the public saved searches
          // TODO: user specific searches?
@@ -232,7 +232,7 @@
          var query = this._getSearchQuery();
          if (query != null)
          {
-        	var filters = this._getSearchFilters();
+            var filters = this._getSearchFilters();
             this._performSearch(query, filters);
          }
       },
@@ -452,6 +452,36 @@
       },
 
       /**
+       * Add to hold click event handler
+       *
+       * @method onAddToHold
+       * @param e {object} DomEvent
+       * @param args {array} Event parameters (depends on event type)
+       */
+      onAddToHold: function RecordsSearch_onAddToHold(e, args)
+      {
+         var records = this.widgets.dataTable.getRecordSet().getRecords();
+            selectedNodeRefs = [];
+         for (var i = 0; i < records.length; i++)
+         {
+            var record = this.widgets.dataTable.getRecordSet().getRecords()[i];
+            if (record.getData('check'))
+            {
+               selectedNodeRefs.push(record.getData('nodeRef'));
+            }
+         }
+
+         if (!this.modules.addToHold)
+         {
+            this.modules.addToHold = new Alfresco.rm.module.AddToHold(this.id + "-listofholds");
+         }
+
+         this.modules.addToHold.setOptions({
+            itemNodeRef: selectedNodeRefs.join()
+         }).show();
+      },
+
+      /**
        * Print button click event handler
        *
        * @method onPrint
@@ -529,78 +559,78 @@
 
       _getSearchFilters: function RecordsSearch__getSearchFilters()
       {
-    	  var filters = "";
+        var filters = "";
 
-    	  filters += "records/";
-    	  if (Dom.get(this.id + "-records").checked)
-    	  {
-    		  filters += "true";
-    	  }
-    	  else
-    	  {
-    		  filters += "false";
-    	  }
+        filters += "records/";
+        if (Dom.get(this.id + "-records").checked)
+        {
+           filters += "true";
+        }
+        else
+        {
+           filters += "false";
+        }
 
-    	  filters += ",undeclared/";
-    	  if (Dom.get(this.id + "-undeclared").checked)
-    	  {
-    		  filters += "true";
-    	  }
-    	  else
-    	  {
-    		  filters += "false";
-    	  }
+        filters += ",undeclared/";
+        if (Dom.get(this.id + "-undeclared").checked)
+        {
+           filters += "true";
+        }
+        else
+        {
+           filters += "false";
+        }
 
-    	  filters += ",vital/";
-    	  if (Dom.get(this.id + "-vital").checked)
-    	  {
-			  filters += "true";
-		  }
-		  else
-		  {
-			  filters += "false";
-		  }
+        filters += ",vital/";
+        if (Dom.get(this.id + "-vital").checked)
+        {
+           filters += "true";
+        }
+        else
+        {
+           filters += "false";
+        }
 
-    	  filters += ",folders/";
-    	  if (Dom.get(this.id + "-folders").checked)
-    	  {
-    		  filters += "true";
-    	  }
-    	  else
-    	  {
-    		  filters += "false";
-    	  }
+        filters += ",folders/";
+        if (Dom.get(this.id + "-folders").checked)
+        {
+           filters += "true";
+        }
+        else
+        {
+           filters += "false";
+        }
 
-    	  filters += ",categories/";
-    	  if (Dom.get(this.id + "-categories").checked)
-    	  {
-    		  filters += "true";
-    	  }
-    	  else
-    	  {
-    		  filters += "false";
-    	  }
-    	  filters += ",frozen/";
-    	  if (Dom.get(this.id + "-frozen").checked)
-    	  {
-    		  filters += "true";
-    	  }
-    	  else
-    	  {
-    		  filters += "false";
-    	  }
+        filters += ",categories/";
+        if (Dom.get(this.id + "-categories").checked)
+        {
+           filters += "true";
+        }
+        else
+        {
+           filters += "false";
+        }
+        filters += ",frozen/";
+        if (Dom.get(this.id + "-frozen").checked)
+        {
+           filters += "true";
+        }
+        else
+        {
+           filters += "false";
+        }
 
-    	  filters += ",cutoff/";
-    	  if ( Dom.get(this.id + "-cutoff").checked)
-    	  {
-    		  filters += "true";
-    	  }
-    	  else
-    	  {
-    		  filters += "false";
-    	  }
+        filters += ",cutoff/";
+        if ( Dom.get(this.id + "-cutoff").checked)
+        {
+           filters += "true";
+        }
+        else
+        {
+           filters += "false";
+        }
 
-    	  return filters;
+        return filters;
       },
 
       /**

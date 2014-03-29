@@ -29,3 +29,90 @@ Alfresco.rm.getParamValueFromUrl = function(param)
    }
    return result;
 };
+
+/**
+ * Header check box click handler for a YUI data table.
+ *
+ * This functions expects that the check box column
+ * is the first column in the table and the table
+ * does not allow column dragging.
+ *
+ * If the header check box is ticked/unticked all check
+ * boxes in the same column will be ticked/unticked.
+ *
+ * @method dataTableHeaderCheckboxClick
+ */
+Alfresco.rm.dataTableHeaderCheckboxClick = function(oArgs)
+{
+   var key = this.getColumnSet().headers[0][0];
+   if (this.getColumn(oArgs.target).key == key)
+   {
+      var rs = this.getRecordSet(),
+         checked = YAHOO.util.Event.getTarget(oArgs.event).checked;
+      for (var i = 0; i < rs.getLength(); i++)
+      {
+         if (checked !== undefined)
+         {
+            rs.getRecord(i).setData(key, checked);
+            this.getRow(i).cells[0].children[0].firstChild.checked = checked;
+         }
+      }
+      YAHOO.Bubbling.fire("dataTableHeaderCheckboxChange",
+      {
+         headerCheckBoxChecked: checked
+      });
+   }
+};
+
+/**
+ * Cell check box click handler for a YUI data table.
+ *
+ * This functions expects that the check box column
+ * is the first column in the table and the table
+ * does not allow column dragging.
+ *
+ * If a check box in the column is ticked/unticked
+ * it will be check if all other check boxes have the
+ * same state. If they are all ticked/unticked the
+ * header checkbox will also be ticked/unticked.
+ *
+ * @method dataTableCheckboxClick
+ */
+Alfresco.rm.dataTableCheckboxClick = function(oArgs)
+{
+   var key = this.getColumnSet().headers[0][0],
+      target = oArgs.target,
+      column = this.getColumn(target);
+   if (column.key == key)
+   {
+      var checked = target.checked,
+         headerChecked = true,
+         atLeastOneChecked = false,
+         rs = this.getRecordSet();
+      this.getRecord(target).setData(key, checked);
+      for (var i = 0; i < rs.getLength(); i++)
+      {
+         var checkedData = rs.getRecord(i).getData(key);
+         if (headerChecked && !checkedData)
+         {
+            headerChecked = false;
+         }
+         if (!atLeastOneChecked && checkedData)
+         {
+            atLeastOneChecked = true;
+         }
+         if (!headerChecked && atLeastOneChecked)
+         {
+            break;
+         }
+      }
+      column.getThLinerEl().children[0].firstChild.checked = headerChecked;
+
+      YAHOO.Bubbling.fire("dataTableCheckboxChange",
+      {
+         checkBoxChecked: checked,
+         headerCheckBoxChecked: headerChecked,
+         atLeastOneChecked: atLeastOneChecked
+      });
+   }
+};
