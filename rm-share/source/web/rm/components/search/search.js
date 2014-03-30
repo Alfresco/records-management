@@ -477,7 +477,7 @@
          }
 
          this.modules.addToHold.setOptions({
-            itemNodeRef: selectedNodeRefs.join()
+            itemNodeRef: selectedNodeRefs
          }).show();
       },
 

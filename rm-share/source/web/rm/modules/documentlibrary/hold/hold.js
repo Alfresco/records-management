@@ -137,13 +137,22 @@
        */
       _setupDataSource: function Hold__setupDataSource()
       {
-         // DataSource definition
-         var uriHolds = encodeURI(YAHOO.lang.substitute(Alfresco.constants.PROXY_URI + "api/rma/holds?itemNodeRef={itemNodeRef}&includedInHold={includedInHold}",
+         var itemNodeRef = "";
+         if (!YAHOO.lang.isArray(this.options.itemNodeRef))
+         {
+            itemNodeRef = YAHOO.lang.substitute("itemNodeRef={itemNodeRef}&",
             {
-               itemNodeRef: this.options.itemNodeRef,
-               includedInHold: (this.includedInHold).toString()
-            }
-         ));
+               itemNodeRef: this.options.itemNodeRef
+            });
+         }
+
+         var includedInHold = YAHOO.lang.substitute("includedInHold={includedInHold}",
+         {
+            includedInHold: (this.includedInHold).toString()
+         });
+
+         // DataSource definition
+         var uriHolds = encodeURI(Alfresco.constants.PROXY_URI + "api/rma/holds?" + itemNodeRef + includedInHold);
          this.widgets.listDataSource = new YAHOO.util.DataSource(uriHolds,
          {
             responseType: YAHOO.util.DataSource.TYPE_JSON,
@@ -218,7 +227,7 @@
                method: this.onOKAjaxRequestMethodType,
                dataObj:
                {
-                  "nodeRef": this.options.itemNodeRef,
+                  "nodeRefs": !YAHOO.lang.isArray(this.options.itemNodeRef) ? [this.options.itemNodeRef] : this.options.itemNodeRef,
                   "holds": this.selectedHolds
                },
                requestContentType: Alfresco.util.Ajax.JSON,
