@@ -58,7 +58,8 @@ public class RmCreateRulePage extends CreateRulePage
     public static By POSITION_SELECT                        = By.cssSelector("select[title$='position']");
     public static By DISPOSITION_STEP_SELECT                = By.cssSelector("select[title$='action']");
 
-    public static enum RuleCriterias{
+    public static enum RuleCriterias
+    {
         ALL_ITEMS(0, "All Items"),
         PUBLICATION_DATE(1, "Publication Date"),
         DISPOSITION_AUTHORITY(2, "Disposition Authority"),
@@ -98,7 +99,8 @@ public class RmCreateRulePage extends CreateRulePage
         }
     }
 
-    public static enum WhenExecute{
+    public static enum WhenExecute
+    {
         ANY(0, "Any", "ANY"),
         NEXT(1, "Next", "NEXT"),
         PREVIOUS(2, "Previous", "PREVIOUS");

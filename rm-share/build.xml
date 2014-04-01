@@ -16,4 +16,8 @@
          </fileset>
       </copy>
    </target>
+		   
+   <target name="unitTest" depends="install">
+   </target>
+	
 </project>
