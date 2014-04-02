@@ -18,14 +18,19 @@
  */
 package org.alfresco.po.rm.util;
 
-import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
-
-import java.util.Random;
-
 import org.alfresco.webdrone.WebDrone;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.Random;
+
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Utility methods for the page objects
@@ -35,6 +40,8 @@ import org.openqa.selenium.WebElement;
  */
 public class RmPageObjectUtils
 {
+    private static Log logger = LogFactory.getLog(RmPageObjectUtils.class);
+    private Properties prop = new Properties();
     /**
      * Helper method to check if a {@link WebElement} is displayed
      *
@@ -92,5 +99,40 @@ public class RmPageObjectUtils
         for (int i = 0; i < length; i++)
             rv.append(from[rnd.nextInt((from.length - 1))]);
         return rv.toString();
+    }
+
+    /**
+     * Load properties file by file name
+     *
+     * @param propertiesFile properties file name
+     */
+    public void loadProperties(String propertiesFile)
+    {
+        checkMandotaryParam("propertiesFile", propertiesFile);
+
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        InputStream in = loader.getResourceAsStream(propertiesFile);
+        try
+        {
+            prop.load(in);
+            in.close();
+        }
+        catch (IOException e)
+        {
+            logger.debug(e.getMessage());
+        }
+    }
+
+    /**
+     * Function returns property value by name
+     *
+     * @param name Name of property
+     * @return String property value
+     */
+    public String getPropertyValue(String name)
+    {
+        checkMandotaryParam("name", name);
+
+        return prop.getProperty(name);
     }
 }

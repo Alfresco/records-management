@@ -35,7 +35,8 @@ import org.openqa.selenium.WebElement;
  */
 public class RmConsolePage extends RmSitePage
 {
-    protected enum RmConsoleMenu{
+    public static enum RmConsoleMenu
+    {
         DEFINE_ROLES(By.xpath("//a[@title = 'Create and edit roles']")),
         USERS_AND_GROUPS(By.xpath("//a[@title = 'Users and groups']")),
         RECORDS_MANAGEMENT_RECVORDS_MANAGER(By.xpath("//a[@title = 'Create and edit roles']")),
@@ -47,6 +48,11 @@ public class RmConsolePage extends RmSitePage
         RmConsoleMenu(By locator)
         {
             this.locator = locator;
+        }
+
+        public By getLocator ()
+        {
+            return locator;
         }
 }
     /**

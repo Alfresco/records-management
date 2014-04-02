@@ -33,7 +33,11 @@ import org.openqa.selenium.WebElement;
  */
 public class RmConsoleNewRolePage extends RmSitePage {
 
-    public static enum RoleValue{
+    /**
+     * Values of roles on new Role page
+     */
+    public static enum RoleValue
+    {
         MANAGE_RULES("input[id$='ManageRules']"),
         VIEW_RECORDS("input[id$='ViewRecords']");
 
@@ -50,8 +54,7 @@ public class RmConsoleNewRolePage extends RmSitePage {
         }
     }
 
-    public static final By CREATE_BUTTON = By.xpath("//button[.='Create']");
-    public static final By ROLE_NAME_INPUT = By.cssSelector("#roleName");
+    public static final By ROLE_NAME_INPUT = By.cssSelector("div.#roleName");
 
     /**
      * Constructor.
@@ -117,8 +120,16 @@ public class RmConsoleNewRolePage extends RmSitePage {
         return render(timer);
     }
 
+    /**
+     * Method select Role on new role page
+     *
+     * @param drone {@link org.alfresco.webdrone.WebDrone}
+     * @param value Role value
+     */
     public static void checkRole(WebDrone drone, String value)
     {
+        WebDroneUtil.checkMandotaryParam("drone", drone);
+        WebDroneUtil.checkMandotaryParam("value", value);
         try
         {
             WebElement selectRole = drone.find(By.cssSelector(value));

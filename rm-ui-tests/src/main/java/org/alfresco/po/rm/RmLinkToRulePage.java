@@ -18,11 +18,11 @@
  */
 package org.alfresco.po.rm;
 
-import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
-
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
+
+import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 /**
  * Records management Link To Rule page.
@@ -32,9 +32,9 @@ import org.openqa.selenium.By;
  */
 public class RmLinkToRulePage extends RmFolderRulesWithRules {
 
-    private static final By UNLINK_RULE_BUTTON = By.cssSelector("button[id$='unlink-button-button']");
-    private static final By VIEW_RULE_SET_BUTTON = By.cssSelector("button[id$='view-button-button']");
-    private static final By CHANGE_BUTTON = By.cssSelector("button[id$='change-button-button']");
+    public static final By UNLINK_RULE_BUTTON = By.cssSelector("button[id$='unlink-button-button']");
+    public static final By VIEW_RULE_SET_BUTTON = By.cssSelector("button[id$='view-button-button']");
+    public static final By CHANGE_BUTTON = By.cssSelector("button[id$='change-button-button']");
     public static final By RULE_ITEMS = By.cssSelector("div[class$='rules-linked']");
 
     public RmLinkToRulePage(WebDrone drone) {

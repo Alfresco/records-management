@@ -18,9 +18,6 @@
  */
 package org.alfresco.po.rm;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.alfresco.po.share.site.contentrule.createrules.CreateRulePage;
 import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.WhenSelectorImpl;
 import org.alfresco.webdrone.RenderTime;
@@ -28,6 +25,11 @@ import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Extends the {@link CreateRulePage} to add RM specific methods
@@ -37,15 +39,17 @@ import org.openqa.selenium.support.ui.Select;
  */
 public class RmCreateRulePage extends CreateRulePage
 {
-    private static final By ACTION_OPTIONS_SELECT     = By
+    public static final By ACTION_OPTIONS_SELECT            = By
             .cssSelector("ul[id$=ruleConfigAction-configs]>li select[class$='config-name']");
-    private static final By SAVE_BUTTON                    = By
+    public static final By SAVE_BUTTON                      = By
             .cssSelector("span[id*='save-button'] button[id*='save-button']");
+    public static final By CANCEL_BUTTON                     = By
+        .cssSelector("span[id*='cancel-button'] button[id*='cancel-button']");
     public static final By SELECT_PROPERTY_BUTTON           = By.xpath("//button[text()='Select...']");
     //private static final By CREATED_ALERT                   = By.xpath(".//*[@id='message']/div/span");
-    public static final By SELECT_PROPERTY_DIALOG          = By
+    public static final By SELECT_PROPERTY_DIALOG           = By
             .cssSelector("div[id$='ruleConfigAction-selectSetPropertyDialog-dialog']");
-    public static final By SELECT_CRITERIA_DIALOG          = By
+    public static final By SELECT_CRITERIA_DIALOG           = By
             .cssSelector("div[id$='ruleConfigIfCondition-showMoreDialog-dialog']");
     private static final By SHOW_ALL_LABEL                  = By.xpath("//span[text()='All']");
     private static final By OK_PROPERTY                     = By
@@ -60,36 +64,34 @@ public class RmCreateRulePage extends CreateRulePage
 
     public static enum RuleCriterias
     {
-        ALL_ITEMS(0, "All Items"),
-        PUBLICATION_DATE(1, "Publication Date"),
-        DISPOSITION_AUTHORITY(2, "Disposition Authority"),
-        DISPOSITION_INSTRUCTIONS(3, "Disposition Instructions"),
-        NAME(4, "Name"),
-        ORIGINATING_ORGANIZATION(5, "Originating Organization"),
-        ORIGINATOR(6, "Originator"),
-        TITLE(7, "Title"),
-        HAS_TAG(8, "Has tag"),
-        HAS_CATEGORY(9, "Has category"),
-        CONTENT_OF_TYPE(10, "Content of type or sub-type"),
-        HAS_ASPECT(11, "Has aspect"),
-        TYPE_OF_RECORDS(12, "Type of records management item"),
-        HAS_RECORD_TYPE(13, "Has record type"),
-        RECORD_COMPLETED(14, "Record completed"),
-        RECORD_FILED(15, "Record filed"),
-        RECORD_FOLDER_CLOSED(16, "Record folder closed."),
-        VITAL_RECORD(17, "Vital record"),
-        HAS_DISPOSITION_ACTION(18, "Has disposition action"),
-        CLASSIFIED_BY_DISPOSITION(19, "Classified by disposition schedule"),
-        CUTOFF(20, "Cutoff"),
-        FROZEN(21, "Frozen"),
-        SHOW_MORE(22, "Show more...");
+        ALL_ITEMS("All Items"),
+        PUBLICATION_DATE("Publication Date"),
+        DISPOSITION_AUTHORITY("Disposition Authority"),
+        DISPOSITION_INSTRUCTIONS("Disposition Instructions"),
+        NAME("Name"),
+        ORIGINATING_ORGANIZATION("Originating Organization"),
+        ORIGINATOR("Originator"),
+        TITLE("Title"),
+        HAS_TAG("Has tag"),
+        HAS_CATEGORY("Has category"),
+        CONTENT_OF_TYPE("Content of type or sub-type"),
+        HAS_ASPECT("Has aspect"),
+        TYPE_OF_RECORDS("Type of records management item"),
+        HAS_RECORD_TYPE("Has record type"),
+        RECORD_COMPLETED("Record completed"),
+        RECORD_FILED("Record filed"),
+        RECORD_FOLDER_CLOSED("Record folder closed."),
+        VITAL_RECORD("Vital record"),
+        HAS_DISPOSITION_ACTION("Has disposition action"),
+        CLASSIFIED_BY_DISPOSITION("Classified by disposition schedule"),
+        CUTOFF("Cutoff"),
+        FROZEN("Frozen"),
+        SHOW_MORE("Show more...");
 
-        public final int numberPosition;
         private final String value;
 
-        RuleCriterias(int numberPosition, String value)
+        RuleCriterias(String value)
         {
-            this.numberPosition = numberPosition;
             this.value = value;
         }
 
@@ -101,25 +103,17 @@ public class RmCreateRulePage extends CreateRulePage
 
     public static enum WhenExecute
     {
-        ANY(0, "Any", "ANY"),
-        NEXT(1, "Next", "NEXT"),
-        PREVIOUS(2, "Previous", "PREVIOUS");
+        ANY("ANY"),
+        NEXT("NEXT"),
+        PREVIOUS("PREVIOUS");
 
-        public final int numberPosition;
-        private final String name;
         private final String value;
 
-        WhenExecute(int numberPosition, String name, String value)
+        WhenExecute(String value)
         {
-            this.numberPosition = numberPosition;
-            this.name = name;
             this.value = value;
         }
 
-        public String getName()
-        {
-            return name;
-        }
         public String getValue()
         {
             return value;
@@ -191,7 +185,9 @@ public class RmCreateRulePage extends CreateRulePage
      * @param propertyValue value of property
      * @return  {@link RmCreateRulePage} page response
      */
-    public RmCreateRulePage selectSetProperty(String propertyValue){
+    public RmCreateRulePage selectSetProperty(String propertyValue)
+    {
+        checkMandotaryParam("propertyValue", propertyValue);
         drone.findAndWait(SELECT_PROPERTY_BUTTON).isDisplayed();
         click(SELECT_PROPERTY_BUTTON);
         drone.findAndWait(SELECT_PROPERTY_DIALOG).isDisplayed();
@@ -209,6 +205,7 @@ public class RmCreateRulePage extends CreateRulePage
      */
     public void selectCriteriaOption(String criteriaOptionValue)
     {
+        checkMandotaryParam("criteriaOptionValue", criteriaOptionValue);
         List<WebElement> criteriaOptions = drone.findAndWaitForElements(CRITERIAS_SELECT);
         List<Select> criteriaSelects = new ArrayList<Select>();
         for (WebElement whenOption : criteriaOptions)
@@ -225,6 +222,7 @@ public class RmCreateRulePage extends CreateRulePage
      */
     public void selectWhenDispositionOption(String whenOptionValue)
     {
+        checkMandotaryParam("whenOptionValue", whenOptionValue);
         List<WebElement> criteriaOptions = drone.findAndWaitForElements(POSITION_SELECT);
         List<Select> criteriaSelects = new ArrayList<Select>();
         for (WebElement whenOption : criteriaOptions)
@@ -241,6 +239,7 @@ public class RmCreateRulePage extends CreateRulePage
      */
     public void selectDispositionStep(String dispositionStepValue)
     {
+        checkMandotaryParam("dispositionStepValue", dispositionStepValue);
         List<WebElement> criteriaOptions = drone.findAndWaitForElements(DISPOSITION_STEP_SELECT);
         List<Select> criteriaSelects = new ArrayList<Select>();
         for (WebElement whenOption : criteriaOptions)
@@ -259,6 +258,7 @@ public class RmCreateRulePage extends CreateRulePage
      */
     public void selectRmAction(String actionOptionValue)
     {
+        checkMandotaryParam("actionOptionValue", actionOptionValue);
         List<WebElement> actionOptions = drone.findAndWaitForElements(ACTION_OPTIONS_SELECT);
         List<Select> actionSelects = new ArrayList<Select>();
         for (WebElement actionOption : actionOptions)

@@ -100,7 +100,7 @@ public class RmCreateRecordPageTest extends AbstractIntegrationTest
     @Test (dependsOnMethods="cancelCreateRecord")
     public void createSaveRecord()
     {
-        FilePlanPage filePlanPage = drone.getCurrentPage().render();
+        FilePlanPage filePlanPage = (FilePlanPage) drone.getCurrentPage();
         CreateNewRecordDialog recordDialog = filePlanPage.selectNewNonElectronicRecord();
         recordDialog.enterName(NAME);
         recordDialog.enterTitle(TITLE);

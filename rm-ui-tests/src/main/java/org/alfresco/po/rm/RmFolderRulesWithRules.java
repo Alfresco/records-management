@@ -18,10 +18,6 @@
  */
 package org.alfresco.po.rm;
 
-import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
-
-import java.util.List;
-
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.contentrule.FolderRulesPage;
 import org.alfresco.webdrone.RenderTime;
@@ -30,6 +26,10 @@ import org.alfresco.webdrone.WebDroneUtil;
 import org.alfresco.webdrone.exception.PageOperationException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import java.util.List;
+
+import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 /**
  * Records management rules page with existing rules.
@@ -53,7 +53,6 @@ public class RmFolderRulesWithRules extends FolderRulesPage
     private static final By ALERT_DELETE_BLOCK      = By.cssSelector("div[id='prompt']");
     //Delete and Cancel button has same css.
     private static final By ALERT_DELETE_OK         = By.xpath("//button[text()='Delete']");
-    //private static final By SAVE_BUTTON             = By.xpath("//button[text()='Save']");
 
     /**
      * Constructor

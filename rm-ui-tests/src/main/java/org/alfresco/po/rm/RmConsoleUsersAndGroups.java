@@ -18,8 +18,6 @@
  */
 package org.alfresco.po.rm;
 
-import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
-
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.apache.commons.logging.Log;
@@ -28,6 +26,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
+
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Records management users and groups page.
@@ -41,8 +41,7 @@ public class RmConsoleUsersAndGroups extends RmSitePage
     public static final By ADD_BUTTON = By.xpath("//button[@id='addUser-button']");
     public static final By ADD_USER_FORM = By.cssSelector("div[id$='peoplepicker']");
     public static final By SEARCH_USER_INPUT = By.cssSelector("input[id$='rm-search-peoplefinder-search-text']");
-    // FIXME: Extract the string
-    public static final By SEARCH_USER_BUTTON = By.xpath("//button[contains(@id, 'search-button') and (text()='Search')]");
+    public static final By SEARCH_USER_BUTTON = By.xpath("//button[contains(@id, 'search-button')]");
     private static final By CREATED_ALERT  = By.xpath(".//*[@id='message']/div/span");
     private static Log logger = LogFactory.getLog(RmConsoleUsersAndGroups.class);
 
@@ -185,8 +184,7 @@ public class RmConsoleUsersAndGroups extends RmSitePage
     {
         checkMandotaryParam("userName", userName);
 
-        // FIXME: Extract text
-        return By.xpath("//span[contains(text(), '" + userName + "')]/ancestor::tr//button[contains(text(), 'Add')]");
+        return By.xpath("//span[contains(text(), '" + userName + "')]/ancestor::tr//button");
     }
 
     /**

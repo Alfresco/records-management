@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Properties;
 
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl.PerformActions;
 import org.alfresco.po.rm.RmConsolePage;
@@ -60,6 +59,7 @@ import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.SiteUtil;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -85,7 +85,14 @@ public class RmAbstractTest extends AbstractIntegrationTest
     private static String RESULTS_FOLDER = System.getProperty("user.dir") +
             System.getProperty("file.separator") + "test-output" + System.getProperty("file.separator");
     protected static final String DEFAULT_USER_PASSWORD = "password";
-    private Properties prop = new Properties();
+
+    /** Audit Log Page */
+    public static final By AUDIT_SECTIONS = By.xpath("//div[@class='audit-entry']");
+    public static final By FREEZE_REASON_WINDOW = By.cssSelector("div#userInput");
+    public static final By INFORMATION_WINDOW = By.cssSelector("div#prompt");
+    public static final By FREEZE_REASON_INPUT = By.cssSelector("div#userInput >*> textarea");
+    public static final By EXPORT_AUDIT_BUTTON = By.cssSelector("button[id$='default-audit-export-button']");
+    public static final By FILE_RECORD_AUDIT_BUTTON = By.cssSelector("button[id$='button[id$='file-record-button']']");
 
     /**
      * Method returns element locator by visible text
@@ -96,6 +103,28 @@ public class RmAbstractTest extends AbstractIntegrationTest
     public By commonLine(String elementName){
         checkMandotaryParam("elementName", elementName);
         return By.xpath("//a[contains(text(), '" + elementName + "')]");
+    }
+
+    /**
+     * Method returns button xpath by Name
+     *
+     * @param name button Name
+     * @return xpath
+     */
+    public static By buttonByText(String name){
+        WebDroneUtil.checkMandotaryParam("name", name);
+        return By.xpath("//button[text()='"+name+"']");
+    }
+
+    /**
+     * Method returns element locator by visible text
+     *
+     * @param elementName visible element text
+     * @return  element locator
+     */
+    public By commonLink(String elementName){
+        checkMandotaryParam("elementName", elementName);
+        return By.xpath("//span[contains(text(), '" + elementName + "')]");
     }
 
     /**
@@ -115,41 +144,6 @@ public class RmAbstractTest extends AbstractIntegrationTest
         // FIXME: Instead of putting a hard coded link please click on the file plan menu item like you would when you are using the browser
         drone.navigateTo(shareUrl + "/page/site/rm/documentlibrary");
         return (FilePlanPage) rmSiteDashBoard.selectFilePlan();
-    }
-
-    /**
-     * Load properties file by file name
-     *
-     * @param propertiesFile properties file name
-     */
-    public void loadProperties(String propertiesFile)
-    {
-        checkMandotaryParam("propertiesFile", propertiesFile);
-
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        InputStream in = loader.getResourceAsStream(propertiesFile);
-        try
-        {
-            prop.load(in);
-            in.close();
-        }
-        catch (IOException e)
-        {
-            logger.debug(e.getMessage());
-        }
-    }
-
-    /**
-     * Function returns property value by name
-     *
-     * @param name Name of property
-     * @return String property value
-     */
-    public String getPropertyValue(String name)
-    {
-        checkMandotaryParam("name", name);
-
-        return prop.getProperty(name);
     }
 
     public enum WhenOption{
@@ -612,7 +606,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            logger.debug(e.getMessage());
         }
     }
 
@@ -651,5 +645,33 @@ public class RmAbstractTest extends AbstractIntegrationTest
             logger.debug(e.getMessage());
         }
         return filePlan.render(fileName);
+    }
+
+    /**
+     * Indicates does element editable or not
+     *
+     * @param locator element locator
+     * @return enable tol edit or not
+     */
+    public boolean isEditable(By locator)
+    {
+        if (isElementPresent(locator)){
+            return drone.findAndWait(locator).isEnabled();
+        } else {
+            Assert.fail("Element is not presented on page. Cannot verify activity for the element");
+        }
+        return false;
+    }
+
+    /**
+     * Action Type Freeze reason and click freeze record button
+     * @param reason reason for freeze
+     */
+    public void freezeRecord(String reason){
+        WebDroneUtil.checkMandotaryParam("reason", reason);
+        drone.findAndWait(FREEZE_REASON_WINDOW);
+        type(FREEZE_REASON_INPUT, reason);
+        click(buttonByText(pageObjectUtils.getPropertyValue("freeze.record.button")));
+        waitUntilCreatedAlert();
     }
 }

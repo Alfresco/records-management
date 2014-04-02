@@ -30,6 +30,7 @@ import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
+import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.SiteFinderPage;
 import org.alfresco.po.share.util.SiteUtil;
 import org.alfresco.webdrone.HtmlPage;
@@ -57,7 +58,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
     protected static final By PROMPT_PANEL_ID = By.id("prompt");
     protected static final By BUTTON_TAG_NAME = By.tagName("button");
     protected static final String ELECTRONIC = "Electronic";
-
+    protected RmPageObjectUtils pageObjectUtils = new RmPageObjectUtils();
     /**
      * Indicates whether an existing RM site should be delete on
      * test startup
@@ -94,6 +95,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      */
     protected void setup()
     {
+        pageObjectUtils.loadProperties("rm_en.properties");
         // log into Share
         login(username, password);
 

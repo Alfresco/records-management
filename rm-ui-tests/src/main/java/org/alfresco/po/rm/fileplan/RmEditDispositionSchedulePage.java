@@ -18,17 +18,19 @@
  */
 package org.alfresco.po.rm.fileplan;
 
-import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Records management edit disposition page.
@@ -53,6 +55,13 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     public static By CANCEL_BUTTON              = By.cssSelector("div[style*='block'] span[class*='cancel']>*>button");
     public static By DONE_BUTTON                = By.xpath("span[class*='done']>*>button");
 
+    /**
+     * Load properties
+     */
+    protected RmPageObjectUtils pageObjectUtils = new RmPageObjectUtils();
+    {
+        pageObjectUtils.loadProperties("rm_en.properties");
+    }
     /**
      * After Period Of time values
      */
@@ -110,7 +119,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     /**
      * Constructor
      *
-     * @param drone FIXME: Description!!!
+     * @param drone {@link WebDrone}
      */
     public RmEditDispositionSchedulePage(WebDrone drone)
     {
@@ -241,10 +250,27 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
         WebDroneUtil.checkMandotaryParam("step", step);
 
         click(ADD_STEP_BUTTON);
-        click(step.getXpath());
+        selectMenu(step);
         drone.findAndWait(DISPOSITION_FORM);
     }
 
+    public String getUiText(DispositionAction dispositionAction)
+    {
+        return pageObjectUtils.getPropertyValue(dispositionAction.name);
+    }
+
+    public void selectMenu(DispositionAction dispositionAction)
+    {
+        checkMandotaryParam("dispositionAction", dispositionAction);
+        String selectText =  getUiText(dispositionAction);
+        List<WebElement> selects = drone.findAndWaitForElements(By.cssSelector(".yuimenuitemlabel.yuimenuitemlabel"));
+        for(WebElement select: selects){
+            if(select.getText().equals(selectText)){
+                select.click();
+                return;
+            }
+        }
+    }
     /**
      * Action Click save button
      */
@@ -317,7 +343,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     }
 
     /**
-     * FIXME: Description
+     * Select After Period Check Box
      */
     private void checkAfterPeriodChkBox()
     {

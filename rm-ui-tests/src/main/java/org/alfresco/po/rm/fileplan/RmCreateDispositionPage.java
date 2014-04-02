@@ -18,14 +18,14 @@
  */
 package org.alfresco.po.rm.fileplan;
 
-import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
-import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
-
 import org.alfresco.po.share.site.document.FolderDetailsPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Records management create disposition page.
@@ -58,25 +58,19 @@ public class RmCreateDispositionPage extends FolderDetailsPage
          * No hard coded text in the code please.
          * And please delete numberPosition and xpath
          */
-        ACCESSION(By.xpath("//a[text()='Accession']"), "accession"),
-        DESTROY(By.xpath("//a[text()='Destroy']"), "destroy"),
-        RETAIN(By.xpath("//a[text()='Retain']"), "retain"),
-        TRANSFER(By.xpath("//a[text()='Transfer']"), "transfer"),
-        CUTOFF( By.xpath("//a[text()='Cut off']"), "cutoff");
+        ACCESSION("accession.step", "accession"),
+        DESTROY("destroy.step", "destroy"),
+        RETAIN("retain.step", "retain"),
+        TRANSFER("transfer.step", "transfer"),
+        CUTOFF("cutoff.step", "cutoff");
 
-        private final By xpath;
+        public final String name;
         private final String value;
 
-        DispositionAction(By xpath, String value)
+        DispositionAction(String name, String value)
         {
-            this.xpath = xpath;
+            this.name = name;
             this.value = value;
-        }
-
-
-        public By getXpath()
-        {
-            return xpath;
         }
 
         public String getValue()
@@ -85,10 +79,12 @@ public class RmCreateDispositionPage extends FolderDetailsPage
         }
     }
 
+
+
     /**
      * Constructor
      *
-     * @param drone FIXME: Description!!!
+     * @param drone {@link WebDrone}
      */
     public RmCreateDispositionPage(WebDrone drone)
     {

@@ -4,7 +4,6 @@ import static org.alfresco.po.rm.RmCreateRulePage.CRITERIAS_SELECT;
 import static org.alfresco.po.rm.RmCreateRulePage.SELECT_CRITERIA_DIALOG;
 import static org.alfresco.po.rm.RmFolderRulesWithRules.EDIT_BUTTON;
 import static org.alfresco.po.rm.RmFolderRulesWithRules.RULE_ITEMS;
-import static org.testng.AssertJUnit.assertFalse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +27,7 @@ import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Listeners;
+import org.testng.Assert;
 
 /**
  * Records management edit disposition page.
@@ -91,7 +91,7 @@ public class CriteriasTests1 extends RmAbstractTest
                     }
                 }
             }
-            org.testng.Assert.assertEquals(suggestionToSelect, RuleCriterias.values().length,
+            Assert.assertEquals(suggestionToSelect, RuleCriterias.values().length,
                     "Failed to present all Actions");
 
             rulesPage.selectCriteriaOption(RuleCriterias.SHOW_MORE.getValue());
@@ -277,7 +277,7 @@ public class CriteriasTests1 extends RmAbstractTest
             rmSiteDashBoard.selectFilePlan();
             filePlan.navigateToFolder(categoryName);
             //TODO Verify if record is freeze
-            assertFalse(filePlan.isFolderClosed(folderName));
+            Assert.assertFalse(filePlan.isFolderClosed(folderName));
 
         }
         catch (Throwable e)

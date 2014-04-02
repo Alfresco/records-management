@@ -18,18 +18,7 @@
  */
 package org.alfresco.po.rm.fileplan;
 
-import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.CREATE_DISPOSITION_BUTTON;
-import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.NON_ELECTRONIC_BUTTON;
-import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import org.alfresco.po.rm.RmConsolePage;
-import org.alfresco.po.rm.RmFolderRulesPage;
-import org.alfresco.po.rm.RmFolderRulesWithRules;
-import org.alfresco.po.rm.RmSiteDashBoardPage;
-import org.alfresco.po.rm.RmUploadFilePage;
+import org.alfresco.po.rm.*;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog;
@@ -45,6 +34,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.CREATE_DISPOSITION_BUTTON;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.NON_ELECTRONIC_BUTTON;
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Records management file plan page, based on the document library
@@ -74,7 +70,6 @@ public class FilePlanPage extends DocumentLibraryPage
     protected final static long MAX_WAIT_TIME = 60000;
 
     /** actions */
-    protected static final By EDIT_RECORD_METADATA_ACTION = By.cssSelector("");
 
     protected boolean inFilePlanRoot;
     protected boolean inRecordCategory;
@@ -465,7 +460,7 @@ public class FilePlanPage extends DocumentLibraryPage
     }
 
     /**
-     * Actyion verifies if folder is closed
+     * Action verifies if folder is closed
      *
      * @param folderName Name of verified folder
      * @return true/false Is Folder closed or Not
@@ -479,6 +474,20 @@ public class FilePlanPage extends DocumentLibraryPage
         return RmPageObjectUtils.isDisplayed(drone, closeIcon);
     }
 
+    /**
+     * Action verifies if record is linked
+     *
+     * @param recordName Name of verified record
+     * @return
+     */
+    public boolean isRecordLinked(String recordName)
+    {
+        WebDroneUtil.checkMandotaryParam("recordName", recordName);
+
+        By linkedIcon = By.xpath("//a[contains(text(), '"+recordName+"')]" +
+            "/ancestor::tr//div[@class='status']//img[@alt='rm-multi-parent']");
+        return RmPageObjectUtils.isDisplayed(drone, linkedIcon);
+    }
     /**
      * Action of click on RmConsolePage button.
      *
@@ -549,14 +558,14 @@ public class FilePlanPage extends DocumentLibraryPage
      * @param itemValue value of created folder/category/record
      * @return  {@link FolderDetailsPage} page response
      */
-    public FolderDetailsPage openRecordDetailsPage(String itemValue)
+    public RecordDetailsPage openRecordDetailsPage(String itemValue)
     {
         WebDroneUtil.checkMandotaryParam("itemValue", itemValue);
 
         drone.getCurrentPage().render();
         WebElement record = drone.findAndWait(By.xpath("//span//a[contains(text(), '" + itemValue + "')]"));
         record.click();
-        return new FolderDetailsPage(drone).render();
+        return new RecordDetailsPage(drone).render();
     }
 
     /**
@@ -682,5 +691,23 @@ public class FilePlanPage extends DocumentLibraryPage
         drone.waitForElement(By.xpath("//div[contains(@class,'documentDroppable')]//a[contains(text(), '" + folderName + "')]"), MAX_WAIT_TIME);
         filePlan.setInRecordCategory(true);
         return new FilePlanPage(drone).render();
+    }
+
+    /**
+     * Indicates if banner message for record/folder exists
+     *
+     * @param contentName name of verified content
+     * @param bannerMessage banner message
+     * @return exists banner or not for pointed content
+     */
+    public boolean isInfoBannerExists(String contentName, String bannerMessage)
+    {
+        WebDroneUtil.checkMandotaryParam("contentName", contentName);
+        WebDroneUtil.checkMandotaryParam("bannerMessage", bannerMessage);
+
+        By banner = By.xpath("//a[contains(text(), '"+contentName+"')]" +
+            "/ancestor::tr//div[@class='info-banner' and text() = '"+bannerMessage+"']");
+        return RmPageObjectUtils.isDisplayed(drone, banner);
+
     }
 }

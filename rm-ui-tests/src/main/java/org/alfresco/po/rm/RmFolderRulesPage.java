@@ -21,6 +21,7 @@ package org.alfresco.po.rm;
 import org.alfresco.po.share.site.contentrule.FolderRulesPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
@@ -71,15 +72,24 @@ public class RmFolderRulesPage extends FolderRulesPage
         return drone.getCurrentPage().render();
     }
 
+    /**
+     * Action opens Link To Dialog
+     */
     public void openLinkToDialog()
     {
         WebElement element = drone.findAndWait(LINK_TO_RULE_DIALOG_SELECTOR);
         element.click();
-        isDisplay(drone, LINK_TO_RULE_DIALOG);
+        isDisplay(LINK_TO_RULE_DIALOG);
     }
 
-    public static boolean isDisplay(final WebDrone drone, By locator)
+    /**
+     * Verifies if element Displayed
+     * @param locator element By locator
+     * @return  Displays or not (true/false)
+     */
+    public boolean isDisplay(By locator)
     {
+        WebDroneUtil.checkMandotaryParam("locator", locator);
         try
         {
             return drone.findAndWait(locator, 2000).isDisplayed();
@@ -90,11 +100,22 @@ public class RmFolderRulesPage extends FolderRulesPage
         }
     }
 
-    public RmLinkToRulePage clickLink(){
+    /**
+     * Action select Link To Rule from Create Rule Page
+     *
+     * @return {@link org.alfresco.po.rm.RmLinkToRulePage}
+     */
+    public RmLinkToRulePage clickLink()
+    {
         click(LINK_BUTTON);
         return new RmLinkToRulePage(drone).render();
     }
 
+    /**
+     * Helper method that clicks by element
+     *
+     * @param locator element By locator
+     */
     public void click(By locator)
     {
         WebElement element = drone.findAndWait(locator);

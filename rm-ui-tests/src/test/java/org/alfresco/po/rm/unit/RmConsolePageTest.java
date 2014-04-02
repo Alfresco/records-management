@@ -19,11 +19,20 @@
 package org.alfresco.po.rm.unit;
 
 import org.alfresco.po.rm.RmConsolePage;
+import org.alfresco.po.rm.RmConsoleUsersAndGroups;
+import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.rm.functional.RmAbstractTest;
 import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.share.util.FailedTestListener;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+
+import static org.alfresco.po.rm.RmConsolePage.RmConsoleMenu;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.*;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.ADD_BUTTON;
 
 /**
  * Tests record management console page.
@@ -33,12 +42,33 @@ import org.testng.annotations.Test;
  * @since 2.2
  */
 @Listeners(FailedTestListener.class)
-public class RmConsolePageTest extends AbstractTest
+public class RmConsolePageTest extends RmAbstractTest
 {
     @Test
     public void createPage()
     {
-        RmConsolePage page = new RmConsolePage(drone);
-        Assert.assertNotNull(page);
+        FilePlanPage filePlanPage = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+        filePlanPage.openRmConsolePage();
     }
+
+    @Test (dependsOnMethods="createPage")
+    public void verifyRmConsole()
+    {
+        RmConsolePage consolePage = new RmConsolePage(drone);
+        for (RmConsoleMenu link : RmConsoleMenu.values()){
+            Assert.assertTrue(isElementPresent(link.getLocator()));
+        }
+    }
+
+    @Test (dependsOnMethods="verifyRmConsole")
+    public void openUserAndRolesPage()
+    {
+        RmConsolePage consolePage = new RmConsolePage(drone).render();
+        consolePage.openUsersAndGroupsPage();
+        Assert.assertTrue(isElementPresent(ADD_BUTTON));
+        for (SystemRoles link : SystemRoles.values()){
+            Assert.assertTrue(isElementPresent(By.cssSelector("#role-" + link.getValue())));
+        }
+    }
+
 }
