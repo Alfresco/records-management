@@ -20,9 +20,10 @@ package org.alfresco.po.rm.unit;
 
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.RecordDetailsPage;
+import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
+import org.alfresco.po.rm.fileplan.filter.hold.HoldsContainer;
 import org.alfresco.po.rm.functional.RmAbstractTest;
 import org.openqa.selenium.By;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -38,6 +39,7 @@ public class RmRecordDetailsPageTest extends RmAbstractTest
     private static final String TEST_CATEGORY = "Test Category";
     private static final String TEST_FOLDER = "Test Folder";
     private static final String NAME = "Name";
+    private static final String HOLD_NAME = "Hold Name";
 
     @Override
     @BeforeClass(groups={"RM"})
@@ -45,6 +47,10 @@ public class RmRecordDetailsPageTest extends RmAbstractTest
     {
         setup();
         FilePlanPage filePlanPage = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+        FilePlanFilter filePlanFilter = filePlanPage.getFilePlanFilter();
+        filePlanFilter.selectHoldsContainer().render();
+        HoldsContainer.createNewHold(drone, HOLD_NAME, HOLD_NAME);
+        filePlanPage = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
         filePlanPage.createCategory(TEST_CATEGORY, true);
         filePlanPage.navigateToFolder(TEST_CATEGORY);
         filePlanPage.createFolder(TEST_FOLDER);
@@ -57,14 +63,13 @@ public class RmRecordDetailsPageTest extends RmAbstractTest
     {
         FilePlanPage filePlan = new FilePlanPage(drone);
         filePlan.openRecordDetailsPage(NAME);
-        assertTrue(isElementPresent(RecordDetailsPage.RM_ADD_META_DATA_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.RM_EDIT_META_DATA_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.RM_COPY_TO_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.RM_MOVE_TO_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.RM_LINK_TO_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.RM_DELETE_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.RM_VIEW_AUDIT_LOG_LINK));
-        assertTrue(isElementPresent(RecordDetailsPage.RM_FREEZE_LINK));
+        assertTrue(isElementPresent(RecordDetailsPage.RM_ADD_TO_HOLD_LINK));
 
         assertTrue(isElementPresent(RecordDetailsPage.RM_REQUEST_INFORMATION_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.PROPERTY_SET_HEADER));
@@ -104,33 +109,38 @@ public class RmRecordDetailsPageTest extends RmAbstractTest
             "Failed to present Save button");
         assertTrue(isElementPresent(CANCEL_BUTTON),
             "Failed to present Cancel button");
+        click(CANCEL_BUTTON);
     }
 
     @Test (dependsOnMethods = "openEditMetadataPage")
-    public void freezeRecordAction()
+    public void holdRecordAction()
     {
         RecordDetailsPage detailsPage = new RecordDetailsPage(drone);
-        click(RM_FREEZE_LINK);
-        assertTrue(isElementPresent(FREEZE_REASON_WINDOW));
-        assertTrue(isElementPresent(FREEZE_REASON_INPUT));
-        freezeRecord("Freeze reason");
-        assertTrue(isElementPresent(RM_UNFREEZE_LINK));
+        click(RM_ADD_TO_HOLD_LINK);
+        assertTrue(isElementPresent(ADD_TO_HOLD_DIALOG));
+        click(By.xpath(" //div[text()='" + HOLD_NAME + "']//ancestor::tr//input[contains(@class, 'checkbox')]"));
+        assertTrue(isElementPresent(ADD_TO_HOLD_OK_BUTTON));
+        click(RecordDetailsPage.ADD_TO_HOLD_OK_BUTTON);
+        drone.isRenderComplete(MAX_WAIT_TIME);
+        assertTrue(isElementPresent(RM_REMOVE_FROM_HOLD_LINK));
     }
 
-    @Test (dependsOnMethods = "freezeRecordAction")
+    @Test (dependsOnMethods = "holdRecordAction")
     public void unfreezeRecord()
     {
         RecordDetailsPage detailsPage = new RecordDetailsPage(drone);
-        click(RM_UNFREEZE_LINK);
+        click(RM_REMOVE_FROM_HOLD_LINK);
+        click(By.xpath(" //div[text()='" + HOLD_NAME + "']//ancestor::tr//input[contains(@class, 'checkbox')]"));
+        assertTrue(isElementPresent(REMOVE_FROM_HOLD_OK_BUTTON));
+        click(RecordDetailsPage.REMOVE_FROM_HOLD_OK_BUTTON);
         drone.isRenderComplete(MAX_WAIT_TIME);
-        assertTrue(isElementPresent(RecordDetailsPage.RM_ADD_META_DATA_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.RM_EDIT_META_DATA_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.RM_COPY_TO_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.RM_MOVE_TO_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.RM_LINK_TO_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.RM_DELETE_LINK));
         assertTrue(isElementPresent(RecordDetailsPage.RM_VIEW_AUDIT_LOG_LINK));
-        assertTrue(isElementPresent(RecordDetailsPage.RM_FREEZE_LINK));
+        assertTrue(isElementPresent(RecordDetailsPage.RM_ADD_TO_HOLD_LINK));
 
     }
 }

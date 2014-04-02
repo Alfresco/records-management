@@ -53,10 +53,12 @@ public class RecordDetailsPage extends DocumentDetailsPage
     public static final By RM_LINK_TO_LINK = By.cssSelector("div#onActionLinkTo.rm-link-to a");
     public static final By RM_DELETE_LINK = By.cssSelector("div#onActionDelete.rm-delete a");
     public static final By RM_VIEW_AUDIT_LOG_LINK = By.cssSelector("div#onActionViewAuditLog.rm-view-audit-log a");
-    public static final By RM_FREEZE_LINK = By.cssSelector("div#onActionFreeze.rm-freeze a");
-    public static final By RM_UNFREEZE_LINK = By.cssSelector("div#onActionRecordsManagementRepoAction.rm-unfreeze a");
+    public static final By RM_ADD_TO_HOLD_LINK = By.cssSelector("div#onActionAddToHold.rm-add-to-hold a");
+    public static final By RM_REMOVE_FROM_HOLD_LINK = By.cssSelector("div#onActionRemoveFromHold.rm-remove-from-hold a");
     public static final By RM_REQUEST_INFORMATION_LINK = By.cssSelector("div#onActionRequestInfo.rm-request-info a");
     public static final By PROPERTY_SET_HEADER = By.cssSelector("div.set-panel-heading");
+    public static final By ADD_TO_HOLD_OK_BUTTON = By.cssSelector("button[id$='AddToHold-ok-button']");
+    public static final By REMOVE_FROM_HOLD_OK_BUTTON = By.cssSelector("button[id$='RemoveFromHold-ok-button']");
     
     /** key rm areas on the record details page that need to be rendered */
     public static final By PROPERTIES = By.cssSelector("div.form-fields");

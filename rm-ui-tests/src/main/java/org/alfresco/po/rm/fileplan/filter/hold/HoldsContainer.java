@@ -18,9 +18,6 @@
  */
 package org.alfresco.po.rm.fileplan.filter.hold;
 
-import java.util.NoSuchElementException;
-import java.util.concurrent.TimeUnit;
-
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewHoldDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
@@ -30,6 +27,9 @@ import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
+
+import java.util.NoSuchElementException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * File plan filter for holds container
@@ -198,5 +198,25 @@ public class HoldsContainer extends FilePlanPage
     {
         RmPageObjectUtils.select(drone, NEW_HOLD_BTN);
         return new CreateNewHoldDialog(drone);
+    }
+
+    /**
+     * Method creates new Hold container
+     *
+     * @param holdName Name of hold container
+     * @param holdReason  Reason to Hold
+     * @return {@link org.alfresco.po.rm.fileplan.filter.hold.HoldsContainer}
+     */
+    public static HoldsContainer createNewHold(WebDrone drone, String holdName, String holdReason)
+    {
+        WebDroneUtil.checkMandotaryParam("drone", drone);
+        WebDroneUtil.checkMandotaryParam("holdName", holdName);
+        WebDroneUtil.checkMandotaryParam("holdReason", holdReason);
+        HoldsContainer holdsContainer = new HoldsContainer(drone).render();
+        CreateNewHoldDialog newHoldDialog = holdsContainer.selectCreateNewHold().render();
+        newHoldDialog.enterName(holdName);
+        newHoldDialog.enterReason(holdReason);
+        holdsContainer = ((HoldsContainer) newHoldDialog.selectSave()).render(holdName);
+        return holdsContainer;
     }
 }

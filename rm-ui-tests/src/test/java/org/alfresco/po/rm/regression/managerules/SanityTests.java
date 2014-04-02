@@ -32,6 +32,7 @@ import org.alfresco.po.rm.RmConsoleUsersAndGroups.SystemRoles;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.RecordDetailsPage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
+import org.alfresco.po.rm.fileplan.filter.hold.HoldsContainer;
 import org.alfresco.po.rm.functional.RmAbstractTest;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.ShareUtil;
@@ -138,6 +139,7 @@ public class SanityTests extends RmAbstractTest
         String electronicRecord = testName + RmPageObjectUtils.getRandomString(3);
         String nonElectronicRecord = testName + RmPageObjectUtils.getRandomString(3);
         String fileName = testName + RmPageObjectUtils.getRandomString(3);
+        String holdName = testName + RmPageObjectUtils.getRandomString(3);
 
         try
         {
@@ -182,6 +184,11 @@ public class SanityTests extends RmAbstractTest
             filePlanFilter.selectUnfiledRecordsContainer().render();
             Assert.assertTrue(isElementPresent(commonLine(fileName)),
                 "Failed to present Unfiled Record in UnFiled filter");
+
+            filePlanFilter.selectHoldsContainer().render();
+            HoldsContainer.createNewHold(drone, holdName, holdName);
+            Assert.assertTrue(isElementPresent(commonLine(holdName)),
+                "Failed to create hold container");
         }
         catch (Throwable e)
         {
@@ -208,6 +215,7 @@ public class SanityTests extends RmAbstractTest
         String folderName1 = testName + RmPageObjectUtils.getRandomString(3);
         String electronicRecord = testName + RmPageObjectUtils.getRandomString(3);
         String nonElectronicRecord = testName + RmPageObjectUtils.getRandomString(3);
+        String holdName = testName + RmPageObjectUtils.getRandomString(3);
 
         try
         {
@@ -225,6 +233,10 @@ public class SanityTests extends RmAbstractTest
             filePlan.navigateToFolder(folderName1);
             fileElectronicToRecordFolder(electronicRecord);
             Assert.assertTrue(isElementPresent(commonLine(electronicRecord)), "Failed to present Electronic Record in File plan");
+
+            FilePlanFilter filePlanFilter = filePlan.getFilePlanFilter();
+            filePlanFilter.selectHoldsContainer().render();
+            HoldsContainer.createNewHold(drone, holdName, holdName);
 
             filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
             //filePlan.Navigate(categoryName, folderName);
@@ -250,7 +262,7 @@ public class SanityTests extends RmAbstractTest
                 "Failed to present Edit Metadata link on Records Details Page");
             Assert.assertTrue(getText(RM_VIEW_AUDIT_LOG_LINK).contains(pageObjectUtils.getPropertyValue("record.view.audit.log.link")),
                 "Failed to present Edit Metadata link on Records Details Page");
-            Assert.assertTrue(getText(RM_FREEZE_LINK).contains(pageObjectUtils.getPropertyValue("record.add.to.hold.link")),
+            Assert.assertTrue(getText(RM_ADD_TO_HOLD_LINK).contains(pageObjectUtils.getPropertyValue("record.add.to.hold.link")),
                 "Failed to present Edit Metadata link on Records Details Page");
             Assert.assertTrue(getText(RM_REQUEST_INFORMATION_LINK).contains(pageObjectUtils.getPropertyValue("record.request.information.link")),
                 "Failed to present Edit Metadata link on Records Details Page");
@@ -261,6 +273,7 @@ public class SanityTests extends RmAbstractTest
             Assert.assertTrue(isElementPresent(REFERENCES));
             Assert.assertTrue(isElementPresent(EVENTS));
 
+            //Verify Metadata Page
             detailsPage.openEditMetadataPage();
 
             Assert.assertTrue(isElementPresent(EDIT_METADATA_FORM),  "Failed to Present Edit Metadata form");
@@ -284,6 +297,7 @@ public class SanityTests extends RmAbstractTest
             Assert.assertTrue(isEditable(EDIT_METADATA_BOX_INPUT));
             Assert.assertTrue(isEditable(EDIT_METADATA_FILE_INPUT));
 
+            type(EDIT_METADATA_DESCRIPTION_INPUT, testName);
             click(SAVE_BUTTON);
             detailsPage = (RecordDetailsPage) drone.getCurrentPage();
             drone.isRenderComplete(MAX_WAIT_TIME);
@@ -309,13 +323,15 @@ public class SanityTests extends RmAbstractTest
 //            Assert.assertEquals(auditLines, 3, "RM-979: Incorrect audit events when creation non-electronic records");
             drone.closeWindow();
             switchToDetailsPage(drone);
-            click(RM_FREEZE_LINK);
-            freezeRecord(testName);
+            addToHold(holdName);
+            drone.isRenderComplete(MAX_WAIT_TIME);
             Assert.assertTrue(getText(RM_VIEW_AUDIT_LOG_LINK).contains(pageObjectUtils.getPropertyValue("record.view.audit.log.link")),
                 "Failed to present Edit Metadata link on Records Details Page");
-            Assert.assertTrue(getText(RM_UNFREEZE_LINK).contains(pageObjectUtils.getPropertyValue("record.unfreeze.link")),
+            Assert.assertTrue(getText(RM_REMOVE_FROM_HOLD_LINK).contains(pageObjectUtils.getPropertyValue("record.remove.from.hold.link")),
                 "Failed to present Edit Metadata link on Records Details Page");
-            click(RM_UNFREEZE_LINK);
+             Assert.assertTrue(getText(RM_ADD_TO_HOLD_LINK).contains(pageObjectUtils.getPropertyValue("record.add.to.hold.link")),
+                "Failed to present Edit Metadata link on Records Details Page");
+            click(RM_REMOVE_FROM_HOLD_LINK);
             drone.isRenderComplete(MAX_WAIT_TIME);
             Assert.assertTrue(getText(RM_EDIT_META_DATA_LINK).contains(pageObjectUtils.getPropertyValue("record.edit.metadata.link")),
                 "Failed to present Edit Metadata link on Records Details Page");
@@ -331,7 +347,7 @@ public class SanityTests extends RmAbstractTest
                 "Failed to present Edit Metadata link on Records Details Page");
             Assert.assertTrue(getText(RM_VIEW_AUDIT_LOG_LINK).contains(pageObjectUtils.getPropertyValue("record.view.audit.log.link")),
                 "Failed to present Edit Metadata link on Records Details Page");
-            Assert.assertTrue(getText(RM_FREEZE_LINK).contains(pageObjectUtils.getPropertyValue("record.add.to.hold.link")),
+            Assert.assertTrue(getText(RM_ADD_TO_HOLD_LINK).contains(pageObjectUtils.getPropertyValue("record.add.to.hold.link")),
                 "Failed to present Edit Metadata link on Records Details Page");
             Assert.assertTrue(getText(RM_REQUEST_INFORMATION_LINK).contains(pageObjectUtils.getPropertyValue("record.request.information.link")),
                 "Failed to present Edit Metadata link on Records Details Page");
@@ -389,6 +405,7 @@ public class SanityTests extends RmAbstractTest
             filePlan.openRecordDetailsPage(nonElectronicRecord);
             click(RM_COMPLETE_RECORD);
             waitUntilCreatedAlert();
+            drone.isRenderComplete(MAX_WAIT_TIME);
             filePlan = openRmSite();
             Assert.assertTrue(isElementPresent(commonLine(categoryName)),  "Failed to present category in File plan");
             filePlan.navigateToFolder(categoryName);

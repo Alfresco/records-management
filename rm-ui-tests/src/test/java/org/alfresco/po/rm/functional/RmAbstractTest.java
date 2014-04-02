@@ -45,6 +45,7 @@ import org.alfresco.po.rm.RmFolderRulesWithRules;
 import org.alfresco.po.rm.RmLinkToRulePage;
 import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
+import org.alfresco.po.rm.fileplan.RecordDetailsPage;
 import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.site.CreateSitePage;
 import org.alfresco.po.share.site.NewFolderPage;
@@ -88,7 +89,8 @@ public class RmAbstractTest extends AbstractIntegrationTest
 
     /** Audit Log Page */
     public static final By AUDIT_SECTIONS = By.xpath("//div[@class='audit-entry']");
-    public static final By FREEZE_REASON_WINDOW = By.cssSelector("div#userInput");
+    public static final By ADD_TO_HOLD_DIALOG = By.cssSelector("div[id$='AddToHold-dialog']");
+    public static final By REMOVE_FROM_HOLD_DIALOG = By.cssSelector("div[id$='RemoveFromHold-dialog']");
     public static final By INFORMATION_WINDOW = By.cssSelector("div#prompt");
     public static final By FREEZE_REASON_INPUT = By.cssSelector("div#userInput >*> textarea");
     public static final By EXPORT_AUDIT_BUTTON = By.cssSelector("button[id$='default-audit-export-button']");
@@ -664,14 +666,28 @@ public class RmAbstractTest extends AbstractIntegrationTest
     }
 
     /**
-     * Action Type Freeze reason and click freeze record button
-     * @param reason reason for freeze
+     * Method adds to hold from Record Details Page
+     *
+     * @param holdName Name of hold
      */
-    public void freezeRecord(String reason){
-        WebDroneUtil.checkMandotaryParam("reason", reason);
-        drone.findAndWait(FREEZE_REASON_WINDOW);
-        type(FREEZE_REASON_INPUT, reason);
-        click(buttonByText(pageObjectUtils.getPropertyValue("freeze.record.button")));
-        waitUntilCreatedAlert();
+    public void addToHold(String holdName){
+        WebDroneUtil.checkMandotaryParam("holdName", holdName);
+        drone.findAndWait(ADD_TO_HOLD_DIALOG);
+        click(By.xpath(" //div[text()='" + holdName + "']//ancestor::tr//input[contains(@class, 'checkbox')]"));
+        click(RecordDetailsPage.ADD_TO_HOLD_OK_BUTTON);
+        drone.isRenderComplete(MAX_WAIT_TIME);
+    }
+
+    /**
+     * Method removes from hold from Record Details Page
+     *
+     * @param holdName Name of hold
+     */
+    public void removeFromHold(String holdName){
+        WebDroneUtil.checkMandotaryParam("holdName", holdName);
+        drone.findAndWait(REMOVE_FROM_HOLD_DIALOG);
+        click(By.xpath(" //div[text()='" + holdName + "']//ancestor::tr//input[contains(@class, 'checkbox')]"));
+        click(RecordDetailsPage.REMOVE_FROM_HOLD_OK_BUTTON);
+        drone.isRenderComplete(MAX_WAIT_TIME);
     }
 }
