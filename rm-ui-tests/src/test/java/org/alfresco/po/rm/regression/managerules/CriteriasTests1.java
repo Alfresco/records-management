@@ -28,6 +28,7 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Listeners;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * Records management edit disposition page.
@@ -52,8 +53,7 @@ public class CriteriasTests1 extends RmAbstractTest
         deleteRMSite();
     }
 
-    //FIXME Need to verify Text values
-    //@Test
+    @Test
     public void RMA_1221()
     {
         String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
@@ -85,7 +85,7 @@ public class CriteriasTests1 extends RmAbstractTest
                 for (WebElement listItem : getAllSelectOptions(CRITERIAS_SELECT, MAX_WAIT_TIME))
                 {
                     suggestions.add(listItem.getText());
-                    if (listItem.getText().equals(value.getValue()))
+                    if (listItem.getText().equals(pageObjectUtils.getPropertyValue(value.value)))
                     {
                         suggestionToSelect++;
                     }
@@ -94,7 +94,7 @@ public class CriteriasTests1 extends RmAbstractTest
             Assert.assertEquals(suggestionToSelect, RuleCriterias.values().length,
                     "Failed to present all Actions");
 
-            rulesPage.selectCriteriaOption(RuleCriterias.SHOW_MORE.getValue());
+            rulesPage.selectCriteriaOption(RuleCriterias.SHOW_MORE);
             org.testng.Assert.assertTrue(isElementPresent(SELECT_CRITERIA_DIALOG),
                     "Failed to Present Select Criteria Dialog");
         }
@@ -158,7 +158,7 @@ public class CriteriasTests1 extends RmAbstractTest
             //TODO Set Hold Action
             actionSelectorEnter.selectAction(RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER);
             rulesPage.selectApplyToSubfolderCheckbox();
-            rulesPage.selectCriteriaOption(RuleCriterias.HAS_DISPOSITION_ACTION.getValue());
+            rulesPage.selectCriteriaOption(RuleCriterias.HAS_DISPOSITION_ACTION);
             rulesPage.selectWhenDispositionOption(WhenExecute.NEXT.getValue());
             rulesPage.selectDispositionStep(DispositionAction.DESTROY.getValue());
             rulesPage.clickCreate().render();
@@ -254,7 +254,7 @@ public class CriteriasTests1 extends RmAbstractTest
             //TODO Set Hold Action
             actionSelectorEnter.selectAction(RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER);
             rulesPage.selectApplyToSubfolderCheckbox();
-            rulesPage.selectCriteriaOption(RuleCriterias.HAS_DISPOSITION_ACTION.getValue());
+            rulesPage.selectCriteriaOption(RuleCriterias.HAS_DISPOSITION_ACTION);
             rulesPage.selectWhenDispositionOption(WhenExecute.NEXT.getValue());
             rulesPage.selectDispositionStep(DispositionAction.DESTROY.getValue());
             rulesPage.clickCreate().render();

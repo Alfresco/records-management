@@ -18,6 +18,7 @@
  */
 package org.alfresco.po.rm;
 
+import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.contentrule.createrules.CreateRulePage;
 import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.WhenSelectorImpl;
 import org.alfresco.webdrone.RenderTime;
@@ -62,42 +63,45 @@ public class RmCreateRulePage extends CreateRulePage
     public static By POSITION_SELECT                        = By.cssSelector("select[title$='position']");
     public static By DISPOSITION_STEP_SELECT                = By.cssSelector("select[title$='action']");
 
+    /**
+     * Load properties
+     */
+    protected RmPageObjectUtils pageObjectUtils = new RmPageObjectUtils();
+    {
+        pageObjectUtils.loadProperties("rm_en.properties");
+    }
+
     public static enum RuleCriterias
     {
-        ALL_ITEMS("All Items"),
-        PUBLICATION_DATE("Publication Date"),
-        DISPOSITION_AUTHORITY("Disposition Authority"),
-        DISPOSITION_INSTRUCTIONS("Disposition Instructions"),
-        NAME("Name"),
-        ORIGINATING_ORGANIZATION("Originating Organization"),
-        ORIGINATOR("Originator"),
-        TITLE("Title"),
-        HAS_TAG("Has tag"),
-        HAS_CATEGORY("Has category"),
-        CONTENT_OF_TYPE("Content of type or sub-type"),
-        HAS_ASPECT("Has aspect"),
-        TYPE_OF_RECORDS("Type of records management item"),
-        HAS_RECORD_TYPE("Has record type"),
-        RECORD_COMPLETED("Record completed"),
-        RECORD_FILED("Record filed"),
-        RECORD_FOLDER_CLOSED("Record folder closed."),
-        VITAL_RECORD("Vital record"),
-        HAS_DISPOSITION_ACTION("Has disposition action"),
-        CLASSIFIED_BY_DISPOSITION("Classified by disposition schedule"),
-        CUTOFF("Cutoff"),
-        FROZEN("Frozen"),
-        SHOW_MORE("Show more...");
+        ALL_ITEMS("all.items.criteria"),
+        PUBLICATION_DATE("publication.date.criteria"),
+        DISPOSITION_AUTHORITY("disposition.authority.criteria"),
+        DISPOSITION_INSTRUCTIONS("disposition.instruction.criteria"),
+        NAME("name.criteria"),
+        ORIGINATING_ORGANIZATION("originating.organization.criteria"),
+        ORIGINATOR("originator.criteria"),
+        TITLE("title.criteria"),
+        HAS_TAG("has.tag.criteria"),
+        HAS_CATEGORY("has.category.criteria"),
+        CONTENT_OF_TYPE("content.type.criteria"),
+        HAS_ASPECT("has.aspect.criteria"),
+        TYPE_OF_RECORDS("type.records.criteria"),
+        HAS_RECORD_TYPE("has.record.criteria"),
+        RECORD_COMPLETED("record.completed.criteria"),
+        RECORD_FILED("record.filed.criteria"),
+        RECORD_FOLDER_CLOSED("record.folder.closed.criteria"),
+        VITAL_RECORD("all.record.criteria"),
+        HAS_DISPOSITION_ACTION("has.disposition.criteria"),
+        CLASSIFIED_BY_DISPOSITION("classified.disposition.criteria"),
+        CUTOFF("cutoff.criteria"),
+        FROZEN("frozen.criteria"),
+        SHOW_MORE("show.more.criteria");
 
-        private final String value;
+        public final String value;
 
         RuleCriterias(String value)
         {
             this.value = value;
-        }
-
-        public String getValue()
-        {
-            return value;
         }
     }
 
@@ -201,18 +205,18 @@ public class RmCreateRulePage extends CreateRulePage
     /**
      * Action select criteria by value tag
      *
-     * @param criteriaOptionValue  criteria name
+     * @param rulesCriteria  criteria name
      */
-    public void selectCriteriaOption(String criteriaOptionValue)
+    public void selectCriteriaOption(RuleCriterias rulesCriteria)
     {
-        checkMandotaryParam("criteriaOptionValue", criteriaOptionValue);
+        checkMandotaryParam("criteriaOptionValue", rulesCriteria);
         List<WebElement> criteriaOptions = drone.findAndWaitForElements(CRITERIAS_SELECT);
         List<Select> criteriaSelects = new ArrayList<Select>();
         for (WebElement whenOption : criteriaOptions)
         {
             criteriaSelects.add(new Select(whenOption));
         }
-        criteriaSelects.get(criteriaSelects.size()-1).selectByValue(criteriaOptionValue);
+        criteriaSelects.get(criteriaSelects.size()-1).selectByVisibleText(pageObjectUtils.getPropertyValue(rulesCriteria.value));
     }
 
     /**
