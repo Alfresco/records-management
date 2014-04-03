@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 import static org.alfresco.po.rm.RmCreateRulePage.ACTION_OPTIONS_SELECT;
 import static org.alfresco.po.rm.RmCreateRulePage.CANCEL_BUTTON;
 import static org.alfresco.po.rm.RmFolderRulesPage.LINK_BUTTON;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Polina Lushchinskaya
@@ -41,6 +41,16 @@ public class RmCreateRulesPageTests extends RmAbstractTest
     private static final String FOLDER_1 = "Folder 1";
     private static final String FOLDER_2 = "Folder 2";
     private static final String RULE_NAME = "Rule Name";
+    private static final By SITE_RM_PICKER = By.xpath("//div[contains(@id, 'sitePicker')]//span[contains(text(), 'Records Management')]");
+
+    /**
+     * Return Locator of Rule on Link to rule Page
+     * @param ruleName  Name of Rule
+     * @return String locator
+     */
+    private static String ruleLinkLocator(String ruleName){
+        return "//div[contains(@id, 'rulePicker')]//span[contains(text(), '"+ruleName+"')]";
+    }
 
     @Override
     @BeforeClass(groups={"RM"})
@@ -88,13 +98,13 @@ public class RmCreateRulesPageTests extends RmAbstractTest
         RmFolderRulesPage manageRulesPage = filePlan.selectManageRules().render();
 
         manageRulesPage.openLinkToDialog();
-        WebElement siteLink = drone.findAndWait(By.xpath("//div[contains(@id, 'sitePicker')]//span[contains(text(), 'Records Management')]"), MAX_WAIT_TIME);
+        WebElement siteLink = drone.findAndWait(SITE_RM_PICKER,  MAX_WAIT_TIME);
         siteLink.click();
-        WebElement categoryLink = drone.findAndWait(By.xpath("//span[contains(text(), '"+TEST_CATEGORY+"')]"), MAX_WAIT_TIME);
+        WebElement categoryLink = drone.findAndWait(commonLink(TEST_CATEGORY), MAX_WAIT_TIME);
         categoryLink.click();
-        WebElement folderLink = drone.findAndWait(By.xpath("//span[contains(text(), '"+FOLDER_1+"')]"), MAX_WAIT_TIME);
+        WebElement folderLink = drone.findAndWait(commonLink(FOLDER_1), MAX_WAIT_TIME);
         folderLink.click();
-        WebElement ruleLink = drone.findAndWait(By.xpath("//div[contains(@id, 'rulePicker')]//span[contains(text(), '"+RULE_NAME+"')]"), MAX_WAIT_TIME);
+        WebElement ruleLink = drone.findAndWait(By.xpath(ruleLinkLocator(RULE_NAME)), MAX_WAIT_TIME);
         ruleLink.click();
         drone.waitUntilElementClickable(LINK_BUTTON, MAX_WAIT_TIME);
         manageRulesPage.clickLink();

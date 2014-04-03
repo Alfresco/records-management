@@ -18,9 +18,6 @@
  */
 package org.alfresco.po.rm.unit;
 
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
-
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog;
 import org.alfresco.po.rm.functional.AbstractIntegrationTest;
@@ -28,6 +25,9 @@ import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.openqa.selenium.By;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Tests RM create record page

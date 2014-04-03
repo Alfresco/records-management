@@ -18,10 +18,6 @@
  */
 package org.alfresco.po.rm.fileplan.filter.unfiledrecords;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.concurrent.TimeUnit;
-
 import org.alfresco.po.rm.RmFolderRulesPage;
 import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
@@ -34,6 +30,10 @@ import org.alfresco.webdrone.WebDroneUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * File plan filter for unfiled records container

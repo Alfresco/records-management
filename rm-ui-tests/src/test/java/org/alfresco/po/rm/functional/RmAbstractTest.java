@@ -32,7 +32,6 @@ import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl.PerformActions;

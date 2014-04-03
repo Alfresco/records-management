@@ -19,11 +19,7 @@
 package org.alfresco.po.rm.fileplan.toolbar;
 
 import org.alfresco.po.share.SharePage;
-import org.alfresco.webdrone.HtmlPage;
-import org.alfresco.webdrone.RenderElement;
-import org.alfresco.webdrone.RenderTime;
-import org.alfresco.webdrone.WebDrone;
-import org.alfresco.webdrone.WebDroneUtil;
+import org.alfresco.webdrone.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 

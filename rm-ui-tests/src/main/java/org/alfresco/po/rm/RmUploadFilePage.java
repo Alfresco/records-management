@@ -18,21 +18,17 @@
  */
 package org.alfresco.po.rm;
 
-import java.util.List;
-
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.UploadFilePage;
-import org.alfresco.webdrone.HtmlElement;
-import org.alfresco.webdrone.HtmlPage;
-import org.alfresco.webdrone.RenderTime;
-import org.alfresco.webdrone.WebDrone;
-import org.alfresco.webdrone.WebDroneUtil;
+import org.alfresco.webdrone.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 /**
  * This class extends the {@link UploadFilePage} in order to make filing records possible.

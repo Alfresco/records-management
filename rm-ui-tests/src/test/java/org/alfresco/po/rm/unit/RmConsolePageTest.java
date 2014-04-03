@@ -19,20 +19,17 @@
 package org.alfresco.po.rm.unit;
 
 import org.alfresco.po.rm.RmConsolePage;
-import org.alfresco.po.rm.RmConsoleUsersAndGroups;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.functional.RmAbstractTest;
-import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import static org.alfresco.po.rm.RmConsolePage.RmConsoleMenu;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.*;
 import static org.alfresco.po.rm.RmConsoleUsersAndGroups.ADD_BUTTON;
+import static org.alfresco.po.rm.RmConsoleUsersAndGroups.SystemRoles;
 
 /**
  * Tests record management console page.
