@@ -18,22 +18,23 @@
  */
 package org.alfresco.po.rm.fileplan.filter.unfiledrecords;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.alfresco.po.rm.RmFolderRulesPage;
 import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
+import org.alfresco.webdrone.ElementState;
+import org.alfresco.webdrone.RenderElement;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * File plan filter for unfiled records container
@@ -120,80 +121,52 @@ public class UnfiledRecordsContainer extends FilePlanPage
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
         // "expectedName" can be blank
-
-        while (true)
-        {
-            timer.start();
-            try
+        
+        timer.start();
+        try
+        {        
+            RenderElement filePlan = RenderElement.getVisibleRenderElement(FILEPLAN);
+            RenderElement filePlanNav = RenderElement.getVisibleRenderElement(FILEPLAN_NAV);
+            RenderElement unfiledRecordsFolderButton = new RenderElement(NEW_UNFILED_RECORDS_FOLDER_BTN, ElementState.CLICKABLE);
+            RenderElement newDeclareRecordButton = new RenderElement(NEW_DECLARE_RECORD_BTN, ElementState.CLICKABLE);
+            
+            elementRender(timer, filePlan, filePlanNav, unfiledRecordsFolderButton, newDeclareRecordButton);
+            setViewType(getNavigation().getViewType());
+            
+            if (StringUtils.isNotBlank(expectedName))
             {
-                if (RmPageObjectUtils.isDisplayed(drone, FILEPLAN) &&
-                    RmPageObjectUtils.isDisplayed(drone, FILEPLAN_NAV) && 
-                    !isJSMessageDisplayed() && 
-                    toolbarButtonsDisplayed())
-                {
-                    setViewType(getNavigation().getViewType());
-                    
-                    waitUntilToolbarButtonsClickable();
-                    if (StringUtils.isNotBlank(expectedName))
+                while (true)
+                {                    
+                    boolean found = false;
+                    for (FileDirectoryInfo fileDirectoryInfo : getFiles())
                     {
-                        boolean found = false;
-                        for (FileDirectoryInfo fileDirectoryInfo : getFiles())
+                        if (fileDirectoryInfo.getName().contains(expectedName))
                         {
-                            if (fileDirectoryInfo.getName().contains(expectedName))
-                            {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (found)
-                        {
+                            found = true;
                             break;
                         }
-                        else
-                        {
-                            continue;
-                        }
                     }
-                    else
+                    if (found)
                     {
                         break;
                     }
-                }
-                else
-                {
-                    continue;
-                }
+                    else
+                    {
+                        continue;
+                    }
+                }                
             }
-            catch (NoSuchElementException e)
-            {
-            }
-            finally
-            {
-                timer.end();
-            }
+        
         }
-
+        catch (NoSuchElementException e)
+        {
+            // todo  .. lets output the error somewhere!
+        }
+        finally
+        {
+            timer.end();
+        }
         return this;
-    }
-
-    /**
-     * Checks if the toolbar buttons are displayed.
-     *
-     * @return <code>true</code> if the toolbar buttons are displayed <code>false</code> otherwise
-     */
-    private boolean toolbarButtonsDisplayed()
-    {
-        return RmPageObjectUtils.isDisplayed(drone, NEW_UNFILED_RECORDS_FOLDER_BTN);
-    }
-
-    /**
-     * Waits until the toolbar buttons are clickable
-     */
-    private void waitUntilToolbarButtonsClickable()
-    {
-        long timeOut = TimeUnit.SECONDS.convert(maxPageLoadingTime, TimeUnit.MILLISECONDS);
-        drone.waitUntilElementClickable(NEW_UNFILED_RECORDS_FOLDER_BTN, timeOut);
-        drone.waitUntilElementClickable(NEW_DECLARE_RECORD_BTN, timeOut);
     }
 
     /**
