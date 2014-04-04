@@ -34,7 +34,7 @@ public class UnfiledRecordFolderCopyToRuleIntTest extends AbstractUnfiledCopyMov
 {
     private final static String RULE_TITLE = "Copy to test rule";
     private final static String TARGET_FOLDER_NAME = "target";
-    private final static String TARGET_FOLDER_PATH = "/target";
+    private final static String TARGET_FOLDER_PATH = "/Unfiled Records/target";
     private final static String TEST_FOLDER_NAME = "testFolder";
 
     /**
@@ -49,8 +49,8 @@ public class UnfiledRecordFolderCopyToRuleIntTest extends AbstractUnfiledCopyMov
         navigateToUnfiledRecords();
         createUnfiledFolder(TEST_FOLDER_NAME);
         navigateToUnfiledRecords();
-        Assert.assertEquals(2, unfiledRecordsContainer.getFiles().size());
+        Assert.assertEquals(unfiledRecordsContainer.getFiles().size(), 2);
         navigateToPath("/target");
-        Assert.assertEquals(1, unfiledRecordsContainer.getFiles().size());
+        Assert.assertEquals(unfiledRecordsContainer.getFiles().size(), 1);
     }
 }

@@ -115,6 +115,7 @@ abstract class AbstractUnfiledCopyMoveRuleIntTestBase extends AbstractIntegratio
         createNewFolderDialog.enterName(name);
         createNewFolderDialog.enterTitle(name);
         createNewFolderDialog.selectSave();
+        try{wait(1000);}catch(Exception e){};
     }
 
     /**

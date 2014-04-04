@@ -48,8 +48,8 @@ public class UnfiledRecordMoveToRuleIntTest extends AbstractUnfiledCopyMoveRuleI
         createRule(RULE_TITLE, RuleType.MOVE_TO, TARGET_FOLDER_PATH, true);
         createContentAndDeclareAsRecord(TEST_RECORD_NAME);
         navigateToUnfiledRecords();
-        Assert.assertEquals(1, unfiledRecordsContainer.getFiles().size());
+        Assert.assertEquals(unfiledRecordsContainer.getFiles().size(), 1);
         navigateToPath("/target");
-        Assert.assertEquals(1, unfiledRecordsContainer.getFiles().size());
+        Assert.assertEquals(unfiledRecordsContainer.getFiles().size(), 1);
     }
 }

@@ -25,9 +25,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Extends the {@link ActionSelectorEnterpImpl} in order to add the RM specific actions
  *
@@ -36,10 +33,14 @@ import java.util.List;
  */
 public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
 {
+    // FIXME web drone should be protected in share-po class
+    private WebDrone drone;
+    
     /**
      * Select locator
      */
-    private static final By ACTION_OPTIONS_SELECT = By.cssSelector("ul[id$=ruleConfigAction-configs]>li select[class$='config-name']");
+    private static final By ACTION_OPTIONS_SELECT = By.cssSelector("div.action select");
+    private static final By CREATE_RECORD_CHECKBOX = By.cssSelector("span[class*='createRecordPath']");
 
     /**
      * Wait Time variable
@@ -79,9 +80,15 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
         }
     }
 
+    /**
+     * Constructor
+     * 
+     * @param drone web drone
+     */
     public RmActionSelectorEnterpImpl(WebDrone drone)
     {
         super(drone);
+        this.drone = drone;
     }
 
     /**
@@ -93,13 +100,8 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
     {
         WebDroneUtil.checkMandotaryParam("action", action);
 
-        List<WebElement> actionOptions = getDrone().findAndWaitForElements(ACTION_OPTIONS_SELECT);
-        List<Select> actionSelects = new ArrayList<Select>();
-        for (WebElement actionOption : actionOptions)
-        {
-            actionSelects.add(new Select(actionOption));
-        }
-        actionSelects.get(actionSelects.size() - 1).selectByValue(action.getValue());
+        Select dropdown = new Select(drone.findAndWait(ACTION_OPTIONS_SELECT));
+        dropdown.selectByValue(action.getValue());        
     }
 
     /**
@@ -147,8 +149,7 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
     public void selectCopyMoveFileTo(String path, boolean createRecordPath)
     {
         WebDroneUtil.checkMandotaryParam("createRecordPath", createRecordPath);
-
-        selectAction(PerformActions.FILE_TO);
+        
         setFileToPath(path, MAX_WAIT_TIME);
         if (createRecordPath)
         {
@@ -160,7 +161,7 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
      * Input File to path
      *
      * @param path File To path
-     * @param timeout
+     * @param timeout   time out
      */
     private void setFileToPath(String path, long timeout)
     {
@@ -174,10 +175,14 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
         try { Thread.sleep(2000); } catch(InterruptedException e) { }
     }
 
-    // FIXME: Description
+    /**
+     * Helper method to toogle the create path check box
+     * 
+     * @param timeout   time out 
+     */
     private void toggleCreateRecordPath(long timeout)
     {
-        WebElement checkBox = getDrone().findAndWait(By.xpath("//span[@class='menutype_action menuname_fileTo paramtype_d_boolean paramname_createRecordPath']/child::input"), timeout);
+        WebElement checkBox = getDrone().findAndWait(CREATE_RECORD_CHECKBOX, timeout);
         checkBox.click();
     }
 }
