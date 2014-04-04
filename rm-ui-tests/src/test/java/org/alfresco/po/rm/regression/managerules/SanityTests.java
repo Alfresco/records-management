@@ -25,7 +25,38 @@ import static org.alfresco.po.rm.RmSiteDashBoardPage.NAVIGATION_MENU_RECORDS_SEA
 import static org.alfresco.po.rm.RmSiteDashBoardPage.NAVIGATION_MENU_RM_CONSOLE;
 import static org.alfresco.po.rm.RmSiteDashBoardPage.NAVIGATION_MENU_SITE_DASHBOARD;
 import static org.alfresco.po.rm.RmSiteDashBoardPage.NAVIGATION_MENU_SITE_MEMBERS;
-import static org.alfresco.po.rm.fileplan.RecordDetailsPage.*;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.ACTIONS;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.COPY_MOVE_TO_BUTTON;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_BOX_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_DESCRIPTION_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_FILE_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_FORM;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_NAME_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_SHELF_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_STORAGE_LOCATION;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_TITLE_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_NUMBER_OF_COPIES_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_PHYSICAL_SIZE_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EVENTS;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.PROPERTIES;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.PROPERTY_SET_HEADER;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.REFERENCES;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.RM_ADD_TO_HOLD_LINK;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.RM_COMPLETE_RECORD;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.RM_COPY_TO_LINK;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.RM_DELETE_LINK;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.RM_EDIT_META_DATA_LINK;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.RM_LINK_TO_LINK;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.RM_MOVE_TO_LINK;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.RM_REMOVE_FROM_HOLD_LINK;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.RM_REQUEST_INFORMATION_LINK;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.RM_VIEW_AUDIT_LOG_LINK;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.SAVE_BUTTON;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.auditLabelsValue;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.switchToAuditLog;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.switchToDetailsPage;
+
+import java.util.Arrays;
 
 import org.alfresco.po.rm.RmConsolePage;
 import org.alfresco.po.rm.RmConsoleUsersAndGroups.SystemRoles;
@@ -37,7 +68,6 @@ import org.alfresco.po.rm.functional.RmAbstractTest;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.util.FailedTestListener;
-import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.testng.Assert;
@@ -45,9 +75,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.Set;
 
 /**
  * Sanity Tests
@@ -319,7 +346,7 @@ public class SanityTests extends RmAbstractTest
             Assert.assertTrue(isElementPresent(auditLabelsValue(pageObjectUtils.getPropertyValue("audit.event.label"),
                 pageObjectUtils.getPropertyValue("audit.created.object.label"))));
             //Verify that audit does not contains unusefull information
-            int auditLines = drone.findAndWaitForElements(AUDIT_SECTIONS).size();
+//            int auditLines = drone.findAndWaitForElements(AUDIT_SECTIONS).size();
 //            Assert.assertEquals(auditLines, 3, "RM-979: Incorrect audit events when creation non-electronic records");
             drone.closeWindow();
             switchToDetailsPage(drone);

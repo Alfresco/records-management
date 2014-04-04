@@ -49,6 +49,9 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
     private static final String NAME = "name";
     private static final String DESC = "description";
 
+    /**
+     * Setup tests
+     */
     @Override
     public void setup()
     {
@@ -56,6 +59,11 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         login(username, password);
     }
 
+    /**
+     * Load test data 
+     * 
+     * @return  {@link FilePlanPage} File plan page object
+     */
     private FilePlanPage loadTestData() throws IOException
     {
         // get file plan root
@@ -78,6 +86,9 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
 
     }
 
+    /**
+     * Test creation of a DoD RM site
+     */
     @Test
     public void testDODSite() throws Exception
     {
@@ -85,8 +96,6 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         deleteRMSite();
         createRMSite(RMSiteCompliance.DOD5015);
         FilePlanPage filePlan = loadTestData();
-
-        //FileDirectoryInfo fileDirectoryInfo = filePlan.getFileDirectoryInfo(1);
 
         List<FileDirectoryInfo> files = filePlan.getFiles();
         Assert.assertEquals(1, files.size());
@@ -116,6 +125,11 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         deleteRMSite();
     }
 
+    /**
+     * Helper method to check whether the DoD record meta data is correctly shown.
+     * 
+     * @param addRecordMetadata the add record metadata action page object
+     */
     private HtmlPage checkDoDAddRecordMetadata(AddRecordMetadataAction addRecordMetadata)
     {
         // check that all the DoD aspects are showing
@@ -128,6 +142,9 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         return addRecordMetadata.clickCancel();
     }
 
+    /**
+     * Test a 'vanilla' RM site creation
+     */
     @Test
     public void testVanillaSite() throws Exception
     {
@@ -153,6 +170,12 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         deleteRMSite();
     }
 
+    /**
+     * Helper method to file an electronic record to a record folder
+     * 
+     * @param filePlan  file plan page object
+     * @return {@link FilePlanPage} file plan page object
+     */
     private FilePlanPage fileElectronicToRecordFolder(FilePlanPage filePlan) throws IOException
     {
         // generate random file name

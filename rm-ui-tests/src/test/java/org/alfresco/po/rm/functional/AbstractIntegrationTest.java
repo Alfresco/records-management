@@ -206,7 +206,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      * @param fileName {@link String} The name of the file
      * @throws IOException Can throw an {@link IOException} whilst getting the canonical path
      */
-    private static HtmlPage fileElectronicRecord(final WebDrone drone, final RmUploadFilePage rmRecordFileDialog, String fileName) throws IOException
+    private HtmlPage fileElectronicRecord(final WebDrone drone, final RmUploadFilePage rmRecordFileDialog, String fileName) throws IOException
     {
         // select to upload electronic record
         rmRecordFileDialog.selectElectronic(drone);
@@ -225,7 +225,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      * @param fileName {@link String} The name of the file
      * @throws IOException Can throw an {@link IOException} whilst getting the canonical path
      */
-    protected static void fileElectronicRecordToFilePlan(final WebDrone drone, final RmUploadFilePage rmRecordFileDialog, String fileName) throws IOException
+    protected void fileElectronicRecordToFilePlan(final WebDrone drone, final RmUploadFilePage rmRecordFileDialog, String fileName) throws IOException
     {
         WebDroneUtil.checkMandotaryParam("drone", drone);
         WebDroneUtil.checkMandotaryParam("rmRecordFileDialog", rmRecordFileDialog);
@@ -243,7 +243,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      * @param fileName {@link String} The name of the file
      * @throws IOException Can throw an {@link IOException} whilst getting the canonical path
      */
-    protected static void fileElectronicRecordToUnfiledRecordsContainer(final WebDrone drone, final RmUploadFilePage rmRecordFileDialog, String fileName) throws IOException
+    protected void fileElectronicRecordToUnfiledRecordsContainer(final WebDrone drone, final RmUploadFilePage rmRecordFileDialog, String fileName) throws IOException
     {
         WebDroneUtil.checkMandotaryParam("drone", drone);
         WebDroneUtil.checkMandotaryParam("rmRecordFileDialog", rmRecordFileDialog);
@@ -262,7 +262,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      * @param description   description
      * @return {@link FilePlanPage} file plan page showing the parent record category with the new category in the list
      */
-    protected static FilePlanPage createNewCategory(FilePlanPage filePlan, String name, String title, String description)
+    protected FilePlanPage createNewCategory(FilePlanPage filePlan, String name, String title, String description)
     {
         WebDroneUtil.checkMandotaryParam("filePlan", filePlan);
         WebDroneUtil.checkMandotaryParam("name", name);
@@ -291,7 +291,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      * @param description   description
      * @return {@link FilePlanPage} file plan page showing the parent record record category with the new record folder in the list
      */
-    protected static FilePlanPage createNewRecordFolder(FilePlanPage filePlan, String name, String title, String description)
+    protected FilePlanPage createNewRecordFolder(FilePlanPage filePlan, String name, String title, String description)
     {
         WebDroneUtil.checkMandotaryParam("filePlan", filePlan);
         WebDroneUtil.checkMandotaryParam("name", name);

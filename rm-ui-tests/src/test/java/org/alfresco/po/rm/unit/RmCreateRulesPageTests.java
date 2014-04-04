@@ -65,10 +65,11 @@ public class RmCreateRulesPageTests extends RmAbstractTest
     }
 
     @Test
-    public void createRulePage(){
+    public void createRulePage()
+    {
         FilePlanPage filePlan = new FilePlanPage(drone);
         RmFolderRulesPage manageRulesPage = filePlan.selectManageRules().render();
-        RmCreateRulePage rulesPage = manageRulesPage.openCreateRulePage().render();
+        manageRulesPage.openCreateRulePage().render();
         assertTrue(isElementPresent(ACTION_OPTIONS_SELECT));
         assertTrue(isElementPresent(CANCEL_BUTTON));
         click(CANCEL_BUTTON);
@@ -76,7 +77,8 @@ public class RmCreateRulesPageTests extends RmAbstractTest
     }
 
     @Test (dependsOnMethods = "createRulePage")
-    public void verifyPageWithRule(){
+    public void verifyPageWithRule()
+    {
         FilePlanPage filePlan = new FilePlanPage(drone);
         filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
         filePlan.navigateToFolder(TEST_CATEGORY);
@@ -91,7 +93,8 @@ public class RmCreateRulesPageTests extends RmAbstractTest
     }
 
     @Test (dependsOnMethods = "verifyPageWithRule")
-    public void verifyLinkToRule(){
+    public void verifyLinkToRule()
+    {
         FilePlanPage filePlan = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
         filePlan.navigateToFolder(TEST_CATEGORY);
         filePlan.navigateToFolder(FOLDER_2);
@@ -108,7 +111,7 @@ public class RmCreateRulesPageTests extends RmAbstractTest
         ruleLink.click();
         drone.waitUntilElementClickable(LINK_BUTTON, MAX_WAIT_TIME);
         manageRulesPage.clickLink();
-        RmLinkToRulePage linkToRulePage  = new RmLinkToRulePage(drone).render();
+        new RmLinkToRulePage(drone).render();
         assertTrue(isElementPresent(RmLinkToRulePage.UNLINK_RULE_BUTTON));
         assertTrue(isElementPresent(RmLinkToRulePage.VIEW_RULE_SET_BUTTON));
         assertTrue(isElementPresent(RmLinkToRulePage.CHANGE_BUTTON));

@@ -115,7 +115,7 @@ public class RmRecordDetailsPageTest extends RmAbstractTest
     @Test (dependsOnMethods = "openEditMetadataPage")
     public void holdRecordAction()
     {
-        RecordDetailsPage detailsPage = new RecordDetailsPage(drone);
+        new RecordDetailsPage(drone);
         click(RM_ADD_TO_HOLD_LINK);
         assertTrue(isElementPresent(ADD_TO_HOLD_DIALOG));
         click(By.xpath(" //div[text()='" + HOLD_NAME + "']//ancestor::tr//input[contains(@class, 'checkbox')]"));
@@ -128,7 +128,7 @@ public class RmRecordDetailsPageTest extends RmAbstractTest
     @Test (dependsOnMethods = "holdRecordAction")
     public void unfreezeRecord()
     {
-        RecordDetailsPage detailsPage = new RecordDetailsPage(drone);
+        new RecordDetailsPage(drone);
         click(RM_REMOVE_FROM_HOLD_LINK);
         click(By.xpath(" //div[text()='" + HOLD_NAME + "']//ancestor::tr//input[contains(@class, 'checkbox')]"));
         assertTrue(isElementPresent(REMOVE_FROM_HOLD_OK_BUTTON));

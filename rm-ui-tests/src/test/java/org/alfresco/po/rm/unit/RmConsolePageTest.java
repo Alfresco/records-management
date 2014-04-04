@@ -51,8 +51,8 @@ public class RmConsolePageTest extends RmAbstractTest
     @Test (dependsOnMethods="createPage")
     public void verifyRmConsole()
     {
-        RmConsolePage consolePage = new RmConsolePage(drone);
-        for (RmConsoleMenu link : RmConsoleMenu.values()){
+        for (RmConsoleMenu link : RmConsoleMenu.values())
+        {
             Assert.assertTrue(isElementPresent(link.getLocator()));
         }
     }

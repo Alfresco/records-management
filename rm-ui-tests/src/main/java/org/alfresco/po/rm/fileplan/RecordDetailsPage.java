@@ -278,7 +278,7 @@ public class RecordDetailsPage extends DocumentDetailsPage
      */
     public void openEditMetadataPage()
     {
-        RecordDetailsPage detailsPage =  new RecordDetailsPage(drone);
+        new RecordDetailsPage(drone);
         click(RM_EDIT_META_DATA_LINK);
         drone.waitForElement(EDIT_METADATA_FORM, MAX_WAIT_TIME);
     }

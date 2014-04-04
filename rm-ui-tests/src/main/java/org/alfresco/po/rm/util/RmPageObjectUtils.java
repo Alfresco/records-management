@@ -18,6 +18,8 @@
  */
 package org.alfresco.po.rm.util;
 
+import org.alfresco.webdrone.ElementState;
+import org.alfresco.webdrone.RenderElement;
 import org.alfresco.webdrone.WebDrone;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -77,7 +79,13 @@ public class RmPageObjectUtils
         checkMandotaryParam("webDrone", webDrone);
         checkMandotaryParam("selector", selector);
 
-        WebElement webElement = webDrone.findAndWait(selector);
+        // use the render element helper to ensure the item is not only visible, but also
+        // clickable
+        RenderElement clickable = new RenderElement(selector, ElementState.CLICKABLE);
+        clickable.render(webDrone, webDrone.getDefaultWaitTime());
+        
+        // we know the web element is there and ready now, so find and click
+        WebElement webElement = webDrone.find(selector);
         webElement.click();
     }
 

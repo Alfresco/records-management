@@ -101,7 +101,8 @@ public class RmAbstractTest extends AbstractIntegrationTest
      * @param elementName visible element text
      * @return  element locator
      */
-    public By commonLine(String elementName){
+    public By commonLine(String elementName)
+    {
         checkMandotaryParam("elementName", elementName);
         return By.xpath("//a[contains(text(), '" + elementName + "')]");
     }
@@ -112,7 +113,8 @@ public class RmAbstractTest extends AbstractIntegrationTest
      * @param name button Name
      * @return xpath
      */
-    public static By buttonByText(String name){
+    public static By buttonByText(String name)
+    {
         WebDroneUtil.checkMandotaryParam("name", name);
         return By.xpath("//button[text()='"+name+"']");
     }
@@ -123,7 +125,8 @@ public class RmAbstractTest extends AbstractIntegrationTest
      * @param elementName visible element text
      * @return  element locator
      */
-    public By commonLink(String elementName){
+    public By commonLink(String elementName)
+    {
         checkMandotaryParam("elementName", elementName);
         return By.xpath("//span[contains(text(), '" + elementName + "')]");
     }
@@ -133,7 +136,8 @@ public class RmAbstractTest extends AbstractIntegrationTest
      *
      * @return String Text
      */
-    public String getText(By locator){
+    public String getText(By locator)
+    {
         return drone.findAndWait(locator).getText();
     }
 
@@ -147,9 +151,11 @@ public class RmAbstractTest extends AbstractIntegrationTest
         return (FilePlanPage) rmSiteDashBoard.selectFilePlan();
     }
 
-    public enum WhenOption{
+    public enum WhenOption
+    {
         INBOUND, OUTBOUND, UPDATE
     }
+    
     /**
      * Action creates Inbound Rule
      *
@@ -596,14 +602,14 @@ public class RmAbstractTest extends AbstractIntegrationTest
         logger.info("Trying to create user - " + userName);
         try
         {
-        ShareUtil.logout(drone);
-
-        createEnterpriseUser(userName);
-
-        login();
-        assignUserToRole(userName, SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
-
-        ShareUtil.logout(drone);
+            ShareUtil.logout(drone);
+    
+            createEnterpriseUser(userName);
+    
+            login();
+            assignUserToRole(userName, SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
+    
+            ShareUtil.logout(drone);
         }
         catch (Exception e)
         {
@@ -622,24 +628,22 @@ public class RmAbstractTest extends AbstractIntegrationTest
         FilePlanPage filePlan = (FilePlanPage) drone.getCurrentPage();
         try
         {
-
-
-        // open file dialog
-        RmUploadFilePage rmRecordFileDialog = filePlan.selectFile();
-
-        // select to upload electronic record
-        rmRecordFileDialog.selectElectronic(drone);
-
-        // upload file
-        File file = SiteUtil.prepareFile(fileName);
-        String filePath = null;
-
-            filePath = file.getCanonicalPath();
-
-        filePlan = (FilePlanPage)rmRecordFileDialog.uploadFile(filePath);
-
-        // render file plan
-        filePlan.setInRecordFolder(true);
+            // open file dialog
+            RmUploadFilePage rmRecordFileDialog = filePlan.selectFile();
+    
+            // select to upload electronic record
+            rmRecordFileDialog.selectElectronic(drone);
+    
+            // upload file
+            File file = SiteUtil.prepareFile(fileName);
+            String filePath = null;
+    
+                filePath = file.getCanonicalPath();
+    
+            filePlan = (FilePlanPage)rmRecordFileDialog.uploadFile(filePath);
+    
+            // render file plan
+            filePlan.setInRecordFolder(true);
         }
         catch (IOException e)
         {
@@ -656,9 +660,12 @@ public class RmAbstractTest extends AbstractIntegrationTest
      */
     public boolean isEditable(By locator)
     {
-        if (isElementPresent(locator)){
+        if (isElementPresent(locator))
+        {
             return drone.findAndWait(locator).isEnabled();
-        } else {
+        } 
+        else 
+        {
             Assert.fail("Element is not presented on page. Cannot verify activity for the element");
         }
         return false;
@@ -669,7 +676,8 @@ public class RmAbstractTest extends AbstractIntegrationTest
      *
      * @param holdName Name of hold
      */
-    public void addToHold(String holdName){
+    public void addToHold(String holdName)
+    {
         WebDroneUtil.checkMandotaryParam("holdName", holdName);
         drone.findAndWait(ADD_TO_HOLD_DIALOG);
         click(By.xpath(" //div[text()='" + holdName + "']//ancestor::tr//input[contains(@class, 'checkbox')]"));
@@ -682,7 +690,8 @@ public class RmAbstractTest extends AbstractIntegrationTest
      *
      * @param holdName Name of hold
      */
-    public void removeFromHold(String holdName){
+    public void removeFromHold(String holdName)
+    {
         WebDroneUtil.checkMandotaryParam("holdName", holdName);
         drone.findAndWait(REMOVE_FROM_HOLD_DIALOG);
         click(By.xpath(" //div[text()='" + holdName + "']//ancestor::tr//input[contains(@class, 'checkbox')]"));
