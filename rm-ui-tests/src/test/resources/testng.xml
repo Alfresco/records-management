@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="TestNG AllTestSuite" verbose="1" >
+<suite name="TestNG AllTestSuite" verbose="1" time-out="300000">
    <test name="AllTests">
       <groups>
          <run>
