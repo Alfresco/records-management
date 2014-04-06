@@ -306,11 +306,15 @@
          // Description
          Dom.getElementsByClassName("description", "textarea", actionEl)[0].value = action.description ? action.description : "";
 
+         // Ghost on destroy
+         Dom.getElementsByClassName("ghostOnDestroy", "input", actionEl)[0].checked = (action.ghostOnDestroy == "ghost");
+
          // Action name & location
          var actionName = action.name,
             actionNameEl = Dom.getElementsByClassName("action-name", "input", actionEl)[0],
             actionLocationEl = Dom.getElementsByClassName("action-location", "select", actionEl)[0],
             actionLocationSpan = Dom.getElementsByClassName("action-location-section", "span", actionEl)[0],
+            actionGhostSpan = Dom.getElementsByClassName("action-ghost-section", "span", actionEl)[0],
             actionLocationRestrictedSpan = Dom.getElementsByClassName("action-location-restricted-section", "span", actionEl)[0];
          if (actionName == "transfer")
          {
@@ -334,6 +338,14 @@
          {
             Alfresco.util.setSelectedIndex(actionLocationEl, "");
             Dom.addClass(actionLocationSpan, "hidden");
+         }
+         if(actionName == "destroy")
+         {
+            Dom.removeClass(actionGhostSpan, "hidden");
+         }
+         else
+         {
+            Dom.addClass(actionGhostSpan, "hidden");
          }
          // Display the actions label and set it in the form
          actionNameEl.value = actionName;
@@ -385,7 +397,6 @@
                me._addSelectedEventItem(p_aArgs[1].value, actionEl, addEventButton);
             }
          });
-
 
          // Enable/Disable period & events section
          var periodEnabledCheckBox = Dom.getElementsByClassName("period-enabled", "input", actionEl)[0];
@@ -1183,6 +1194,7 @@
             index: noOfActions,
             title: this.msg("label.title.new"),
             name: actionName,
+            ghostOnDestroy: false,
             period : null,
             periodProperty: (noOfActions == 0 ? "rma:dateFiled": "rma:cutOffDate"),
             description: "",

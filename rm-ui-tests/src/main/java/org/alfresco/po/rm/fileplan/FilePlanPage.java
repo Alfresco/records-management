@@ -548,6 +548,30 @@ public class FilePlanPage extends DocumentLibraryPage
         selectMoreAction.click();
         WebElement viewDetails = folder.findElement(By.cssSelector("div[class$='rm-cutoff']>a"));
         viewDetails.click();
+        canResume();
+        filePlan.setInRecordCategory(true);
+        return new FilePlanPage(drone).render();
+    }
+
+    /**
+     * Action click Destroy for element
+     *
+     * @param itemValue Value of Item that should be Destroyed
+     * @return {@link FilePlanPage} page response
+     */
+    public FilePlanPage destroyAction(String itemValue)
+    {
+        WebDroneUtil.checkMandotaryParam("itemValue", itemValue);
+
+        FilePlanPage filePlan = drone.getCurrentPage().render();
+        FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
+        WebElement selectMoreAction = folder.selectMoreAction();
+        WebElement viewDetails = folder.findElement(By.cssSelector("div[class$='rm-destroy']>a"));
+        viewDetails.click();
+        WebElement okButton = folder.findElement(By.xpath("//button[contains(text(),'OK')]"));
+        okButton.click();
+        WebElement secondOkButton = folder.findElement(By.xpath("//button[contains(text(),'OK')]"));
+        secondOkButton.click();
         filePlan.setInRecordCategory(true);
         return new FilePlanPage(drone).render();
     }
@@ -556,7 +580,7 @@ public class FilePlanPage extends DocumentLibraryPage
      * Action open Record Details page using MouseOver
      *
      * @param itemValue value of created folder/category/record
-     * @return  {@link FolderDetailsPage} page response
+     * @return {@link FolderDetailsPage} page response
      */
     public RecordDetailsPage openRecordDetailsPage(String itemValue)
     {
@@ -670,7 +694,7 @@ public class FilePlanPage extends DocumentLibraryPage
         createNewRecord.enterTitle(recordName);
         createNewRecord.enterDescription(recordName);
 
-        filePlan = ((FilePlanPage) createNewRecord.selectSave());
+        filePlan = (createNewRecord.selectSave());
         filePlan.setInRecordFolder(true);
         return filePlan.render(recordName);
     }

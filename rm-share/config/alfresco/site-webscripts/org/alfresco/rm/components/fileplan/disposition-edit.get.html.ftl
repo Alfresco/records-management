@@ -134,7 +134,7 @@
                         <#-- double html encoding required here due to YUI bug -->
                         <#list events as event>
                            <option value="${event.value?html}">${event.label?html?html}</option>
-                        </#list>                           
+                        </#list>
                         </select>
                         <hr />
                      </div>
@@ -142,6 +142,12 @@
                         <option value="false">${msg("relation.option.and")}</option>
                         <option value="true">${msg("relation.option.or")}</option>
                      </select>
+                  </div>
+                  <div class="section">
+                     <span class="action-ghost-section">
+                        <input type="checkbox" name="ghostOnDestroy" class="ghostOnDestroy"/>
+                        ${msg("label.ghostondestroy")}
+                     </span>
                   </div>
                   <div class="section">
                      <hr />

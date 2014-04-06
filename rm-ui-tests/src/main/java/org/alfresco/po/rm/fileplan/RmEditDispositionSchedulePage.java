@@ -18,6 +18,12 @@
  */
 package org.alfresco.po.rm.fileplan;
 
+import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
@@ -25,12 +31,6 @@ import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
-import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Records management edit disposition page.
@@ -46,6 +46,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     public static By ADD_STEP_BUTTON            = By.cssSelector("button[id$='createaction-button-button']");
     public static By DISPOSITION_FORM           = By.cssSelector("div[class$='disposition-form']");
     public static By AFTER_PERIOD_CHKBOX        = By.cssSelector("div[style*='block'] input[class$='period-enabled']");
+    public static By GHOST_CHKBOX = By.cssSelector("div[style*='block'] input[class$='ghostOnDestroy']");
     public static By WHEN_EVENT_OCCURS_CHKBOX   = By.cssSelector("div[style*='block'] input[class$='events-enabled']");
     public static By DESCRIPTION_AREA           = By.cssSelector("div[style*='block'] textarea[id$='description']");
     public static By PERIOD_INPUT               = By.cssSelector("div[style*='block'] input[class$='period-amount']");
@@ -53,7 +54,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     public static By PERIOD_ACTION_SELECT       = By.cssSelector("div[style*='block'] select[class$='period-action']");
     public static By SAVE_BUTTON                = By.cssSelector("div[style*='block'] span[class*='saveaction']>*>button");
     public static By CANCEL_BUTTON              = By.cssSelector("div[style*='block'] span[class*='cancel']>*>button");
-    public static By DONE_BUTTON                = By.xpath("span[class*='done']>*>button");
+    public static By DONE_BUTTON = By.xpath("//button[contains(@id,'done')]");
 
     /**
      * Load properties
@@ -172,13 +173,17 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
      * @param fromOptionNumber from select value
      * @return {@link RmEditDispositionSchedulePage}
      */
-    public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description, String intValue, AfterPeriodOfFrom fromOptionNumber)
+    public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description, String intValue, AfterPeriodOfFrom fromOptionNumber, boolean ghost)
     {
         WebDroneUtil.checkMandotaryParam("period", period);
         WebDroneUtil.checkMandotaryParam("description", description);
         // intValue can be null
         // fromOptionNumber can be null
 
+        if (ghost)
+        {
+            checkGhostOnDestroyChkBox();
+        }
         checkAfterPeriodChkBox();
         if (intValue != null)
         {
@@ -234,10 +239,23 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
      */
     public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description)
     {
+        return selectAfterPeriodOf(period, description, false);
+    }
+
+    /**
+     * Select After Period of value
+     *
+     * @param period After Period of value
+     * @param description disposition description
+     * @return {@link RmEditDispositionSchedulePage}
+     */
+    public RmEditDispositionSchedulePage selectAfterPeriodOf(AfterPeriodOf period, String description,
+            boolean ghostOnDestroy)
+    {
         WebDroneUtil.checkMandotaryParam("period", period);
         WebDroneUtil.checkMandotaryParam("description", description);
 
-        return selectAfterPeriodOf(period, description, null, null);
+        return selectAfterPeriodOf(period, description, null, null, ghostOnDestroy);
     }
 
     /**
@@ -263,13 +281,7 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     {
         checkMandotaryParam("dispositionAction", dispositionAction);
         String selectText =  getUiText(dispositionAction);
-        List<WebElement> selects = drone.findAndWaitForElements(By.cssSelector(".yuimenuitemlabel.yuimenuitemlabel"));
-        for(WebElement select: selects){
-            if(select.getText().equals(selectText)){
-                select.click();
-                return;
-            }
-        }
+        click(By.xpath("//a[contains(text(),'" + selectText + "')]"));
     }
     /**
      * Action Click save button
@@ -361,6 +373,24 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     }
 
     /**
+     * Check the ghost on destroy check box if it is displayed
+     */
+    private void checkGhostOnDestroyChkBox()
+    {
+        List<WebElement> fromOption = drone.findAndWaitForElements(GHOST_CHKBOX);
+        for (WebElement ghost : fromOption)
+        {
+            if (ghost.isDisplayed())
+            {
+                if (!ghost.isSelected())
+                {
+                    ghost.click();
+                }
+            }
+        }
+    }
+
+    /**
      * Type the period value to input
      *
      * @param value integer period value
@@ -385,14 +415,8 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
      */
     public RmCreateDispositionPage clickDoneButton()
     {
-        List<WebElement> saveElements = drone.findAndWaitForElements(DONE_BUTTON);
-        for (WebElement button : saveElements)
-        {
-            if (button.isDisplayed())
-            {
-                button.click();
-            }
-        }
+        WebElement done = drone.findAndWait(DONE_BUTTON);
+        done.click();
         return new RmCreateDispositionPage(drone).render();
     }
 }
