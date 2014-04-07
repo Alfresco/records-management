@@ -42,7 +42,7 @@ public class RmCreateSitePageTest extends AbstractRecordsManagementTest
     RmCreateSitePage page;
 
     @BeforeClass(groups={"RM","nonCloud"})
-    public void doSetup() throws Exception
+    public void doSetup() 
     {
         // log into share
         login(username, password);

@@ -16,34 +16,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.rm.functional;
+package org.alfresco.po.rm.common;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.alfresco.po.rm.RmCreateSitePage;
-import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
-import org.alfresco.po.rm.RmSiteDashBoardPage;
 import org.alfresco.po.rm.RmUploadFilePage;
-import org.alfresco.po.rm.common.AbstractRecordsManagementTest;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
-import org.alfresco.po.share.site.SiteFinderPage;
 import org.alfresco.po.share.util.SiteUtil;
 import org.alfresco.webdrone.HtmlPage;
-import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 
 /**
  * Abstract Records Management integration test.
@@ -53,80 +43,29 @@ import org.testng.annotations.BeforeClass;
  */
 public abstract class AbstractIntegrationTest extends AbstractRecordsManagementTest
 {
-    protected final static long MAX_WAIT_TIME = 60000;
+    
+    // TODO need to move these out of here!!
     /** File record dialog constants */
     protected static final By PROMPT_PANEL_ID = By.id("prompt");
     protected static final By BUTTON_TAG_NAME = By.tagName("button");
     protected static final String ELECTRONIC = "Electronic";
+    
+    /** RM page object utils */
     protected RmPageObjectUtils pageObjectUtils = new RmPageObjectUtils();
-    /**
-     * Indicates whether an existing RM site should be delete on
-     * test startup
-     *
-     * @return  boolean true if site should be deleted, false otherwise
-     */
-    protected boolean isExisitingRMSiteDeletedOnStartup()
-    {
-        return true;
-    }
-
-    /**
-     * Indicates whether an existing RM site should be deleted on
-     * test tear down.
-     *
-     * @return  boolean true if site should be deleted, false otherwise
-     */
-    protected boolean isRMSiteDeletedOnTearDown()
-    {
-        return true;
-    }
-
-    /**
-     * Executed before class
-     */
-    @BeforeClass(groups={"RM","nonCloud"})
-    public void doSetup()
-    {
-        setup();
-    }
-
+    
     /**
      * Test setup
      */
     protected void setup()
     {
+        // TODO not sure if this is the right way to do this!
         pageObjectUtils.loadProperties("rm_en.properties");
+        
         // log into Share
         login(username, password);
 
-        // find the RM site
-        SiteFinderPage siteFinderPage = SiteUtil.searchSite(drone, RmCreateSitePage.RM_SITE_NAME).render();
-        if (siteFinderPage.hasResults())
-        {
-            if (isExisitingRMSiteDeletedOnStartup())
-            {
-                deleteRMSite();
-                createRMSite();
-            }
-            else
-            {
-                siteFinderPage.selectSite(RmCreateSitePage.RM_SITE_NAME);
-            }
-        }
-        else
-        {
-            // create a new RM site
-            createRMSite();
-        }
-    }
-
-    /**
-     * Executed after class
-     */
-    @AfterClass(groups={"RM","nonCloud"})
-    public void doTeardown()
-    {
-        teardown();
+        // open the RM site
+        openRMSite(isExisitingRMSiteDeletedOnStartup());
     }
 
     /**
@@ -138,63 +77,6 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
         {
             // delete RM site
             deleteRMSite();
-        }
-    }
-
-    /**
-     * Helper method to create a 'vanilla' RM site
-     */
-    public void createRMSite()
-    {
-        createRMSite(RMSiteCompliance.STANDARD);
-    }
-
-    /**
-     * Helper method to create RM site
-     */
-    public void createRMSite(RMSiteCompliance compliance)
-    {
-        // Click create site dialog
-        RmCreateSitePage createSite = rmSiteDashBoard.getRMNavigation().selectCreateSite().render();
-        Assert.assertTrue(createSite.isCreateSiteDialogDisplayed());
-
-        // Create RM Site
-        RmSiteDashBoardPage site = ((RmSiteDashBoardPage) createSite.createRMSite(compliance)).rmRender();
-        Assert.assertNotNull(site);
-        Assert.assertTrue(RmCreateSitePage.RM_SITE_NAME.equalsIgnoreCase(site.getPageTitle()));
-        Assert.assertTrue(site.getRMSiteNavigation().isDashboardActive());
-        Assert.assertFalse(site.getRMSiteNavigation().isFilePlanActive());
-    }
-
-    /**
-     * Helper method to delete RM site
-     */
-    public void deleteRMSite()
-    {
-        // Check if the RM Site already exists, if so delete it
-        SiteFinderPage siteFinderPage = SiteUtil.searchSite(drone, RmCreateSitePage.RM_SITE_NAME).render();
-        if (siteFinderPage.hasResults())
-        {
-            siteFinderPage = siteFinderPage.deleteSite(RmCreateSitePage.RM_SITE_NAME).render();
-
-            while (siteFinderPage.hasResults())
-            {
-                RenderTime timer = new RenderTime(5000);
-                timer.start();
-                try
-                {
-                    siteFinderPage = siteFinderPage.render();
-                }
-                catch (NoSuchElementException nse)
-                {
-                }
-                finally
-                {
-                    timer.end();
-                }
-            }
-
-            Assert.assertFalse(siteFinderPage.hasResults());
         }
     }
 

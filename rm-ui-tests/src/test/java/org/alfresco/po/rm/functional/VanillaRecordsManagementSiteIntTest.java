@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
 import org.alfresco.po.rm.RmUploadFilePage;
+import org.alfresco.po.rm.common.AbstractIntegrationTest;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.RecordDetailsPage;
 import org.alfresco.po.rm.fileplan.RecordInfo;

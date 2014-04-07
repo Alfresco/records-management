@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.rm.regression.managerules;
+package org.alfresco.po.rm.regression.managerules.v1;
 
 import static org.alfresco.po.rm.RmConsoleUsersAndGroups.selectGroup;
 import static org.alfresco.po.rm.RmConsoleUsersAndGroups.userLinkRmConsole;
@@ -64,17 +64,13 @@ import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.RecordDetailsPage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.filter.hold.HoldsContainer;
-import org.alfresco.po.rm.functional.RmAbstractTest;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
 
 /**
  * Sanity Tests
@@ -89,7 +85,7 @@ public class SanityTests extends RmAbstractTest
     /**
      * Executed before class
      */
-    @BeforeClass
+  // @BeforeClass
     public void doSetup()
     {
         pageObjectUtils.loadProperties("rm_en.properties");
@@ -102,7 +98,7 @@ public class SanityTests extends RmAbstractTest
      * Executed after class
      */
     @Override
-    @AfterClass
+ //   @AfterClass
     public void doTeardown()
     {
         ShareUtil.logout(drone);
@@ -110,8 +106,8 @@ public class SanityTests extends RmAbstractTest
         deleteRMSite();
     }
 
-    @Test
-    public void RMA_2664()
+  //  @Test
+    public void RMA_2664() throws Throwable
     {
         String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -144,17 +140,18 @@ public class SanityTests extends RmAbstractTest
         }
         catch (Throwable e)
         {
-            reportError(drone, testName, e);
+            reportError(testName, e);
         }
-        finally {
+        finally 
+        {
             ShareUtil.logout(drone);
             login(userName, DEFAULT_USER_PASSWORD);
             deleteRMSite();
         }
     }
 
-    @Test
-    public void RMA_2665()
+  //  @Test
+    public void RMA_2665() throws Throwable
     {
         String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -219,9 +216,10 @@ public class SanityTests extends RmAbstractTest
         }
         catch (Throwable e)
         {
-            reportError(drone, testName, e);
+            reportError(testName, e);
         }
-        finally {
+        finally 
+        {
             ShareUtil.logout(drone);
             login(userName, DEFAULT_USER_PASSWORD);
             deleteRMSite();
@@ -233,7 +231,7 @@ public class SanityTests extends RmAbstractTest
      */
     //TODO Refactor
     //@Test
-    public void RMA_2666()
+    public void RMA_2666() throws Throwable
     {
         String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -469,9 +467,10 @@ public class SanityTests extends RmAbstractTest
         }
         catch (Throwable e)
         {
-            reportError(drone, testName, e);
+            reportError(testName, e);
         }
-        finally {
+        finally 
+        {
             ShareUtil.logout(drone);
             login(userName, DEFAULT_USER_PASSWORD);
             deleteRMSite();
@@ -481,7 +480,8 @@ public class SanityTests extends RmAbstractTest
     public void Navigate(String...path)
     {
         WebDroneUtil.checkMandotaryParam("path", path);
-        while(path != null){
+        while(path != null)
+        {
             //navigateToFolder(path[0]);
             String[] temp = Arrays.copyOfRange(path, 0, path.length - 1);
             Navigate(temp);

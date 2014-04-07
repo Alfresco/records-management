@@ -24,6 +24,7 @@ import java.util.List;
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
 import org.alfresco.po.rm.RmCreateRulePage;
 import org.alfresco.po.rm.RmFolderRulesPage;
+import org.alfresco.po.rm.common.AbstractIntegrationTest;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;

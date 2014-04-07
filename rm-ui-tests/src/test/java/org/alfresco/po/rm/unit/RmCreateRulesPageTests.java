@@ -20,7 +20,7 @@ package org.alfresco.po.rm.unit;
 
 import org.alfresco.po.rm.*;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
-import org.alfresco.po.rm.functional.RmAbstractTest;
+import org.alfresco.po.rm.regression.managerules.v1.RmAbstractTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeClass;

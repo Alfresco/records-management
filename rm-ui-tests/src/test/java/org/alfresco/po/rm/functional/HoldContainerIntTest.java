@@ -18,6 +18,7 @@
  */
 package org.alfresco.po.rm.functional;
 
+import org.alfresco.po.rm.common.AbstractIntegrationTest;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.filter.hold.HoldsContainer;

@@ -22,7 +22,7 @@ import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.RmCreateDispositionPage;
 import org.alfresco.po.rm.fileplan.RmCreateDispositionPage.*;
 import org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage;
-import org.alfresco.po.rm.functional.RmAbstractTest;
+import org.alfresco.po.rm.regression.managerules.v1.RmAbstractTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

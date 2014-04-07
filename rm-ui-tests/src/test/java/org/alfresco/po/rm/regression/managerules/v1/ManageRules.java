@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.rm.regression.managerules;
+package org.alfresco.po.rm.regression.managerules.v1;
 
 import static org.alfresco.po.rm.RmFolderRulesWithRules.DELETE_BUTTON;
 import static org.alfresco.po.rm.RmFolderRulesWithRules.EDIT_BUTTON;
@@ -30,7 +30,6 @@ import org.alfresco.po.rm.RmCreateRulePage;
 import org.alfresco.po.rm.RmFolderRulesPage;
 import org.alfresco.po.rm.RmFolderRulesWithRules;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
-import org.alfresco.po.rm.functional.RmAbstractTest;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.WhenSelectorImpl;
@@ -39,24 +38,23 @@ import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
 
 /**
  * Records management manage rules page.
  *
  * @author Polina Lushchinskaya
- * @version 1.1
  * @since 2.2
  */
 @Listeners(FailedTestListener.class)
-public class ManageRules extends RmAbstractTest {
-
+public class ManageRules extends RmAbstractTest 
+{
+    /** selectors */
     private static final By INPUT_TITLE_SELECTOR = By.name("prop_cm_title");
     private static final By INPUT_DESCRIPTION_SELECTOR = By.name("prop_cm_description");
 
-    private By descriptionProperty(String description){
+    private By descriptionProperty(String description)
+    {
         return By.xpath("//span[text()='Description:']/following-sibling::span[text()='" + description + "']");
     }
 
@@ -64,7 +62,7 @@ public class ManageRules extends RmAbstractTest {
      * Executed after class
      */
     @Override
-    @AfterClass
+    //@AfterClass
     public void doTeardown()
     {
         ShareUtil.logout(drone);
@@ -87,101 +85,101 @@ public class ManageRules extends RmAbstractTest {
     * Click Create Rules and create any rule
     * Verify that the created rule actually works
      */
-    @Test
-    public void RMA_1193()
-    {
-        String testName = this.testName.replace("_", "-");
-        String userName = testName + RmPageObjectUtils.getRandomString(3);
-        String ruleName = testName + RmPageObjectUtils.getRandomString(3);
-        String categoryName = testName + RmPageObjectUtils.getRandomString(3);
-        String folderName = testName + RmPageObjectUtils.getRandomString(3);
+//    @Test
+//    public void rma_1193()
+//    {
+//        String testName = this.testName.replace("_", "-");
+//        String userName = testName + RmPageObjectUtils.getRandomString(3);
+//        String ruleName = testName + RmPageObjectUtils.getRandomString(3);
+//        String categoryName = testName + RmPageObjectUtils.getRandomString(3);
+//        String folderName = testName + RmPageObjectUtils.getRandomString(3);
+//
+//        try
+//        {
+//            createRmAdminUser(userName);
+//
+//            //login as user
+//            login(userName, DEFAULT_USER_PASSWORD);
+//            FilePlanPage filePlan = openRmSite();
+//            filePlan.createCategory(categoryName, true);
+//            filePlan.navigateToFolder(categoryName);
+//            createRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, WhenOption.INBOUND);
+//            rmSiteDashBoard.selectFilePlan();
+//            filePlan.navigateToFolder(categoryName);
+//            filePlan.createFolder(folderName);
+//            //Verify that rule applied
+//            Assert.assertTrue(filePlan.isFolderClosed(folderName), "Failed to apply rule");
+//        }
+//        catch (Throwable e)
+//        {
+//            reportError(drone, testName, e);
+//        }
+//    }
 
-        try
-        {
-            createRmAdminUser(userName);
-
-            //login as user
-            login(userName, DEFAULT_USER_PASSWORD);
-            FilePlanPage filePlan = openRmSite();
-            filePlan.createCategory(categoryName, true);
-            filePlan.navigateToFolder(categoryName);
-            createRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, WhenOption.INBOUND);
-            rmSiteDashBoard.selectFilePlan();
-            filePlan.navigateToFolder(categoryName);
-            filePlan.createFolder(folderName);
-            //Verify that rule applied
-            Assert.assertTrue(filePlan.isFolderClosed(folderName), "Failed to apply rule");
-        }
-        catch (Throwable e)
-        {
-            reportError(drone, testName, e);
-        }
-    }
-
-    @Test
-    public void RMA_1393()
-    {
-        String testName = this.testName.replace("_", "-");
-        String userName = testName + RmPageObjectUtils.getRandomString(3);
-        String userName1 = testName + RmPageObjectUtils.getRandomString(3);
-        String ruleName1 = testName + RmPageObjectUtils.getRandomString(3);
-        String ruleName2 = testName + RmPageObjectUtils.getRandomString(3);
-        String folderName = testName + RmPageObjectUtils.getRandomString(3);
-        String categoryName = testName + RmPageObjectUtils.getRandomString(3);
-        String propertyValue = testName + RmPageObjectUtils.getRandomString(3);
-
-        try
-        {
-            deleteRMSite();
-            createRMSite();
-            createRmAdminUser(userName);
-            createRmAdminUser(userName1);
-
-            //login as user1 and create  rule
-            login(userName, DEFAULT_USER_PASSWORD);
-            FilePlanPage filePlan = openRmSite();
-            filePlan.createCategory(categoryName, true);
-            filePlan.navigateToFolder(categoryName);
-            createSetPropertyValueRule(ruleName1, "cm:description", propertyValue, true, true);
-            ShareUtil.logout(drone);
-            //login as user2 and try to create a rule. Verify that rule applied
-            login(userName, DEFAULT_USER_PASSWORD);
-            filePlan = openRmSite();
-            filePlan.navigateToFolder(categoryName);
-            createRule(ruleName2, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, WhenOption.UPDATE, true, false);
-            rmSiteDashBoard.selectFilePlan();
-            filePlan.navigateToFolder(categoryName);
-            filePlan.createFolder(folderName);
-            //Verify that Inbound rule applied
-            filePlan.openDetailsPage(folderName);
-            Assert.assertTrue(isElementPresent(descriptionProperty(propertyValue)),
-                    "Failed to present Description for Category");
-
-            filePlan = openRmSite();
-            filePlan.navigateToFolder(categoryName);
-            //Make some upgrades and verify that Upgrade rule applied
-            FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(folderName);
-            WebElement selectMoreAction = folder.selectMoreAction();
-            selectMoreAction.click();
-            WebElement editProperties = folder.findElement(By.cssSelector("div.rm-edit-details>a"));
-            editProperties.click();
-
-            drone.waitForElement(INPUT_TITLE_SELECTOR, 5);
-            type(INPUT_TITLE_SELECTOR, "updated" + folderName);
-            type(INPUT_DESCRIPTION_SELECTOR, "updated" + folderName);
-
-            WebElement saveButton = drone.find(By.cssSelector("button[id$='form-submit-button']"));
-            saveButton.click();
-            rmSiteDashBoard.selectFilePlan();
-            filePlan.navigateToFolder(categoryName);
-            Assert.assertTrue(filePlan.isFolderClosed(folderName), "Failed to apply rule");
-
-        }
-        catch (Throwable e)
-        {
-            reportError(drone, testName, e);
-        }
-    }
+//    @Test
+//    public void rma_1393()
+//    {
+//        String testName = this.testName.replace("_", "-");
+//        String userName = testName + RmPageObjectUtils.getRandomString(3);
+//        String userName1 = testName + RmPageObjectUtils.getRandomString(3);
+//        String ruleName1 = testName + RmPageObjectUtils.getRandomString(3);
+//        String ruleName2 = testName + RmPageObjectUtils.getRandomString(3);
+//        String folderName = testName + RmPageObjectUtils.getRandomString(3);
+//        String categoryName = testName + RmPageObjectUtils.getRandomString(3);
+//        String propertyValue = testName + RmPageObjectUtils.getRandomString(3);
+//
+//        try
+//        {
+//            deleteRMSite();
+//            createRMSite();
+//            createRmAdminUser(userName);
+//            createRmAdminUser(userName1);
+//
+//            //login as user1 and create  rule
+//            login(userName, DEFAULT_USER_PASSWORD);
+//            FilePlanPage filePlan = openRmSite();
+//            filePlan.createCategory(categoryName, true);
+//            filePlan.navigateToFolder(categoryName);
+//            createSetPropertyValueRule(ruleName1, "cm:description", propertyValue, true, true);
+//            ShareUtil.logout(drone);
+//            //login as user2 and try to create a rule. Verify that rule applied
+//            login(userName, DEFAULT_USER_PASSWORD);
+//            filePlan = openRmSite();
+//            filePlan.navigateToFolder(categoryName);
+//            createRule(ruleName2, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, WhenOption.UPDATE, true, false);
+//            rmSiteDashBoard.selectFilePlan();
+//            filePlan.navigateToFolder(categoryName);
+//            filePlan.createFolder(folderName);
+//            //Verify that Inbound rule applied
+//            filePlan.openDetailsPage(folderName);
+//            Assert.assertTrue(isElementPresent(descriptionProperty(propertyValue)),
+//                    "Failed to present Description for Category");
+//
+//            filePlan = openRmSite();
+//            filePlan.navigateToFolder(categoryName);
+//            //Make some upgrades and verify that Upgrade rule applied
+//            FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(folderName);
+//            WebElement selectMoreAction = folder.selectMoreAction();
+//            selectMoreAction.click();
+//            WebElement editProperties = folder.findElement(By.cssSelector("div.rm-edit-details>a"));
+//            editProperties.click();
+//
+//            drone.waitForElement(INPUT_TITLE_SELECTOR, 5);
+//            type(INPUT_TITLE_SELECTOR, "updated" + folderName);
+//            type(INPUT_DESCRIPTION_SELECTOR, "updated" + folderName);
+//
+//            WebElement saveButton = drone.find(By.cssSelector("button[id$='form-submit-button']"));
+//            saveButton.click();
+//            rmSiteDashBoard.selectFilePlan();
+//            filePlan.navigateToFolder(categoryName);
+//            Assert.assertTrue(filePlan.isFolderClosed(folderName), "Failed to apply rule");
+//
+//        }
+//        catch (Throwable e)
+//        {
+//            reportError(drone, testName, e);
+//        }
+//    }
 
     /*
     * RMA-1190: Edit rule
@@ -198,8 +196,8 @@ public class ManageRules extends RmAbstractTest {
     * 2 Edit the rule. Change the action or condition (e.g. updated, has tag "tag1", execute script)
     * 3 Verify that the changes to rule are applied. Execute the rule (create the folder, edit it and add a tag "tag1")
     */
-    @Test
-    public void RMA_1190()
+   // @Test
+    public void rma_1190() throws Throwable
     {
         String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -220,6 +218,7 @@ public class ManageRules extends RmAbstractTest {
             filePlan = openRmSite();
             filePlan.navigateToFolder(categoryName);
             drone.isRenderComplete(MAX_WAIT_TIME);
+            
             //Apply rule
             RmFolderRulesWithRules rulesPage = filePlan.selectManageRulesWithRules().render();
             RmCreateRulePage manageRulesPage = rulesPage.clickEditButton().render();
@@ -227,9 +226,11 @@ public class ManageRules extends RmAbstractTest {
             whenSelectorEnter.selectUpdate();
             manageRulesPage.clickSave();
             drone.findAndWait(EDIT_BUTTON, MAX_WAIT_TIME);
+            
             rmSiteDashBoard.selectFilePlan();
             filePlan.navigateToFolder(categoryName);
             filePlan.createFolder(folderName);
+            
             //Verify that rule applied
             filePlan.openDetailsPage(folderName);
             Assert.assertFalse(isElementPresent(descriptionProperty(propertyValue)),
@@ -258,7 +259,7 @@ public class ManageRules extends RmAbstractTest {
         }
         catch (Throwable e)
         {
-           reportError(drone, testName, e);
+           reportError(testName, e);
         }
     }
 
@@ -275,8 +276,8 @@ public class ManageRules extends RmAbstractTest {
      * 2. Delete the rule
      * 3. Verify that the rule is deleted. Try to execute the rule (create the folder)
      */
-    @Test
-    public void RMA_1192()
+   // @Test
+    public void rma_1192() throws Throwable
     {
         String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -309,7 +310,7 @@ public class ManageRules extends RmAbstractTest {
         }
         catch (Throwable e)
         {
-            reportError(drone, testName, e);
+            reportError(testName, e);
         }
     }
 
@@ -332,8 +333,8 @@ public class ManageRules extends RmAbstractTest {
      * 5. Verify that the linked rules actually work for Category1
      */
     //BUG RM-684: https://issues.alfresco.com/jira/browse/RM-684
-    @Test(groups = {"rmBugs"})
-    public void RMA_1368()
+   // @Test(groups = {"rmBugs"})
+    public void rma_1368() throws Throwable
     {
         String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -390,7 +391,7 @@ public class ManageRules extends RmAbstractTest {
         }
         catch (Throwable e)
         {
-            reportError(drone, testName, e);
+            reportError(testName, e);
         }
         finally {
             ShareUtil.logout(drone);
@@ -413,8 +414,8 @@ public class ManageRules extends RmAbstractTest {
      * 2. Verify the available actions
      * 3. Click Run rules for this folder
      */
-    @Test
-    public void RMA_1369()
+   // @Test
+    public void rma_1369() throws Throwable
     {
         String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -493,12 +494,12 @@ public class ManageRules extends RmAbstractTest {
         }
         catch (Throwable e)
         {
-            reportError(drone, testName, e);
+            reportError(testName, e);
         }
     }
 
-    @Test
-    public void RMA_1370()
+  ///  @Test
+    public void rma_1370() throws Throwable
     {
         String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -575,12 +576,12 @@ public class ManageRules extends RmAbstractTest {
         }
         catch (Throwable e)
         {
-            reportError(drone, testName, e);
+            reportError(testName, e);
         }
     }
 
-    @Test
-    public void RMA_1371()
+  //  @Test
+    public void rma_1371() throws Throwable
     {
         String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -658,13 +659,13 @@ public class ManageRules extends RmAbstractTest {
         }
         catch (Throwable e)
         {
-            reportError(drone, testName, e);
+            reportError(testName, e);
         }
     }
 
     //BUG RM-1273 https://issues.alfresco.com/jira/browse/RM-1273
-    @Test(groups = {"rmBugs"})
-    public void RMA_1372()
+  //  @Test(groups = {"rmBugs"})
+    public void rma_1372() throws Throwable
     {
         String testName = this.testName.replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -741,7 +742,7 @@ public class ManageRules extends RmAbstractTest {
         }
         catch (Throwable e)
         {
-            reportError(drone, testName, e);
+            reportError(testName, e);
         }
         finally {
             ShareUtil.logout(drone);

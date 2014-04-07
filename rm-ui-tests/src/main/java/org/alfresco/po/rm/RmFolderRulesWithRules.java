@@ -18,18 +18,23 @@
  */
 package org.alfresco.po.rm;
 
+import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
+
+import java.util.List;
+
+import junit.framework.Assert;
+
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.contentrule.FolderRulesPage;
+import org.alfresco.webdrone.ElementState;
+import org.alfresco.webdrone.HtmlPage;
+import org.alfresco.webdrone.RenderElement;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.alfresco.webdrone.exception.PageOperationException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
-import java.util.List;
-
-import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 /**
  * Records management rules page with existing rules.
@@ -43,7 +48,7 @@ public class RmFolderRulesWithRules extends FolderRulesPage
     /** Constants for the selectors */
     public static final By EDIT_BUTTON              = By.cssSelector("button[id*='edit-button-button']");
     public static final By DELETE_BUTTON            = By.cssSelector("button[id*='delete-button-button']");
-    public static final By NEW_RULE_BUTTON          = By.cssSelector("button[id*='default-newRule-button-button']");
+    public static final By NEW_RULE_BUTTON          = By.cssSelector("button[id$='default-newRule-button-button']");
     public static final By RULE_DETAILS_BLOCK       = By.cssSelector("div[id*='default-body']>div[id*='rule-details']");
     public static final By RUN_RULES_BUTTON         = By.cssSelector("button[id$='default-runRules-menu-button']");
     public static final By RUN_RULES_FOR_FOLDER     = By.xpath("//a[text()='Run rules for this folder']");
@@ -150,7 +155,12 @@ public class RmFolderRulesWithRules extends FolderRulesPage
     public RmCreateRulePage clickNewRuleButton()
     {
         click(NEW_RULE_BUTTON);
-        return drone.getCurrentPage().render();
+        
+        // get the current page and check it's what we expected
+        HtmlPage page = drone.getCurrentPage();
+        Assert.assertEquals(RmCreateRulePage.class.getSimpleName(), page.getClass().getSimpleName());
+        
+        return page.render();        
     }
 
     /**
@@ -160,7 +170,12 @@ public class RmFolderRulesWithRules extends FolderRulesPage
     public RmCreateRulePage clickEditButton()
     {
         click(EDIT_BUTTON);
-        return drone.getCurrentPage().render();
+        
+        // get the current page and check it's what we expected
+        HtmlPage page = drone.getCurrentPage();
+        Assert.assertEquals(RmCreateRulePage.class.getSimpleName(), page.getClass().getSimpleName());
+        
+        return page.render();
     }
 
     /**
@@ -172,9 +187,10 @@ public class RmFolderRulesWithRules extends FolderRulesPage
     {
         WebDroneUtil.checkMandotaryParam("locator", locator);
 
-        WebElement element = drone.findAndWait(locator);
-        drone.mouseOverOnElement(element);
-        element.click();
+        RenderElement element = new RenderElement(locator, ElementState.CLICKABLE);
+        elementRender(new RenderTime(drone.getDefaultWaitTime()), element);
+        
+        drone.find(locator).click();
     }
 
     /**

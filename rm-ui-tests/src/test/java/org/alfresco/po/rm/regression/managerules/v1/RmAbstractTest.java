@@ -16,14 +16,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.po.rm.functional;
+package org.alfresco.po.rm.regression.managerules.v1;
 
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.ADD_BUTTON;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.ADD_USER_FORM;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.SEARCH_USER_BUTTON;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.SEARCH_USER_INPUT;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.addUserButton;
-import static org.alfresco.po.rm.RmConsoleUsersAndGroups.selectGroup;
 import static org.alfresco.po.rm.RmCreateRulePage.PROPERTY_VALUE_INPUT;
 import static org.alfresco.po.rm.RmFolderRulesPage.LINK_BUTTON;
 import static org.alfresco.po.rm.RmFolderRulesWithRules.EDIT_BUTTON;
@@ -43,6 +37,7 @@ import org.alfresco.po.rm.RmFolderRulesPage;
 import org.alfresco.po.rm.RmFolderRulesWithRules;
 import org.alfresco.po.rm.RmLinkToRulePage;
 import org.alfresco.po.rm.RmUploadFilePage;
+import org.alfresco.po.rm.common.AbstractIntegrationTest;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.RecordDetailsPage;
 import org.alfresco.po.share.ShareUtil;
@@ -58,9 +53,7 @@ import org.alfresco.po.share.site.document.DocumentAspect;
 import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.SiteUtil;
-import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -82,8 +75,6 @@ public class RmAbstractTest extends AbstractIntegrationTest
     private static final By CREATED_ALERT  = By.xpath(".//*[@id='message']/div/span");
     protected static final String SITE_VISIBILITY_PUBLIC = "public";
     protected static final String SITE_VISIBILITY_PRIVATE = "private";
-    private static String RESULTS_FOLDER = System.getProperty("user.dir") +
-            System.getProperty("file.separator") + "test-output" + System.getProperty("file.separator");
     protected static final String DEFAULT_USER_PASSWORD = "password";
 
     /** Audit Log Page */
@@ -292,91 +283,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
         drone.waitUntilElementClickable(LINK_BUTTON, MAX_WAIT_TIME);
         manageRulesPage.clickLink();
         return new RmLinkToRulePage(drone).render();
-    }
-
-    /**
-     * login with default username/password
-     */
-    protected void login()
-    {
-        login(username, password);
-    }
-
-
-    /**
-     * Helper to report error details for a test.
-     *
-     * @param driver
-     *            WebDrone Instance
-     * @param testName
-     *            String test case ID
-     * @param t
-     *            t Throwable Error & Exception to include testng assert
-     *            failures being reported as Errors
-     */
-
-    /**
-     * FIXME: Is this method (and so other methods in this class) copied from some other class? If so
-     * we should think if it makes sense to use that class (by adding the dependency for example?)
-     */
-    protected void reportError(WebDrone driver, String testName, Throwable t)
-    {
-        logger.error("Error in Test: " + testName, t);
-        try
-        {
-            saveScreenShot(driver, testName);
-            savePageSource(testName);
-
-        }
-        catch (IOException e)
-        {
-            Assert.fail("Unable to save screen shot of Test: " + testName + " : " + getCustomStackTrace(t));
-        }
-        Assert.fail("Error in Test: " + testName + " : " + getCustomStackTrace(t));
-    }
-
-    /**
-     * Helper to Take a ScreenShot. Saves a screenshot in target folder
-     * <RESULTS_FOLDER>
-     *
-     * @param methodName
-     *            String This is the Test Name / ID
-     * @return void
-     * @throws Exception
-     *             if error
-     */
-    public static void saveScreenShot(WebDrone drone, String methodName) throws IOException
-    {
-        if (drone != null)
-        {
-            File file = drone.getScreenShot();
-            File tmp = new File(RESULTS_FOLDER + methodName + ".png");
-            FileUtils.copyFile(file, tmp);
-        }
-    }
-
-    /**
-     * Helper to return the stack trace as a string for reporting purposes.
-     *
-     * @param ex
-     *            exception / error
-     * @return String: stack trace
-     */
-    protected static String getCustomStackTrace(Throwable ex)
-    {
-
-        final StringBuilder result = new StringBuilder();
-        result.append(ex.toString());
-        final String newline = System.getProperty("line.separator");
-        result.append(newline);
-
-        for (StackTraceElement element : ex.getStackTrace())
-        {
-            result.append(element);
-            result.append(newline);
-        }
-        return result.toString();
-    }
+    }    
 
     /**
      * Action waits until created/deleted alert disappears
@@ -551,31 +458,7 @@ public class RmAbstractTest extends AbstractIntegrationTest
         FilePlanPage filePlan = openRmSite();
         RmConsolePage consolePage= filePlan.openRmConsolePage();
         RmConsoleUsersAndGroups newRole = consolePage.openUsersAndGroupsPage();
-        selectGroup(drone, roleName);
-
-        // Add user
-        click(ADD_BUTTON);
-        drone.findAndWait(ADD_USER_FORM).isDisplayed();
-
-        // Search for user
-        WebElement searchInput = drone.findAndWait(SEARCH_USER_INPUT, MAX_WAIT_TIME);
-        searchInput.clear();
-        searchInput.sendKeys(userName);
-        click(SEARCH_USER_BUTTON);
-        for (int i=0; i<3; i++)
-        {
-            if (!isElementPresent(addUserButton(userName)))
-            {
-                click(SEARCH_USER_BUTTON);
-            }
-            else
-            {
-                break;
-            }
-        }
-        click(addUserButton(userName));
-        newRole.waitUntilCreatedAlert();
-        return new RmConsoleUsersAndGroups(drone).render();
+        return newRole.assignUserToRole(userName, roleName);
     }
 
     /**

@@ -18,9 +18,9 @@
  */
 package org.alfresco.po.rm.unit;
 
+import org.alfresco.po.rm.common.AbstractIntegrationTest;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog;
-import org.alfresco.po.rm.functional.AbstractIntegrationTest;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.openqa.selenium.By;
 import org.testng.annotations.BeforeClass;

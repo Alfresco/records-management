@@ -23,7 +23,7 @@ import org.alfresco.po.rm.fileplan.RmCreateDispositionPage;
 import org.alfresco.po.rm.fileplan.RmCreateDispositionPage.DispositionAction;
 import org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage;
 import org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.AfterPeriodOf;
-import org.alfresco.po.rm.functional.AbstractIntegrationTest;
+import org.alfresco.po.rm.common.AbstractIntegrationTest;
 import org.testng.Assert;
 
 /**

@@ -559,6 +559,7 @@ public class FilePlanPage extends DocumentLibraryPage
      * @param itemValue Value of Item that should be Destroyed
      * @return {@link FilePlanPage} page response
      */
+    @SuppressWarnings("unused")
     public FilePlanPage destroyAction(String itemValue)
     {
         WebDroneUtil.checkMandotaryParam("itemValue", itemValue);

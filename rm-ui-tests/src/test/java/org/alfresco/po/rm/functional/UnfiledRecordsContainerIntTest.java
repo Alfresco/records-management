@@ -21,6 +21,7 @@ package org.alfresco.po.rm.functional;
 import java.io.IOException;
 
 import org.alfresco.po.rm.RmUploadFilePage;
+import org.alfresco.po.rm.common.AbstractIntegrationTest;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer;

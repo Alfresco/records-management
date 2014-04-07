@@ -22,7 +22,7 @@ import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.RecordDetailsPage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.filter.hold.HoldsContainer;
-import org.alfresco.po.rm.functional.RmAbstractTest;
+import org.alfresco.po.rm.regression.managerules.v1.RmAbstractTest;
 import org.openqa.selenium.By;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

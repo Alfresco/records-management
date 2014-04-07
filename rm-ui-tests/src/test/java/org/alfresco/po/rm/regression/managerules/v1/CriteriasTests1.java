@@ -1,4 +1,4 @@
-package org.alfresco.po.rm.regression.managerules;
+package org.alfresco.po.rm.regression.managerules.v1;
 
 import static org.alfresco.po.rm.RmCreateRulePage.CRITERIAS_SELECT;
 import static org.alfresco.po.rm.RmCreateRulePage.SELECT_CRITERIA_DIALOG;
@@ -19,16 +19,13 @@ import org.alfresco.po.rm.fileplan.RmCreateDispositionPage;
 import org.alfresco.po.rm.fileplan.RmCreateDispositionPage.DispositionAction;
 import org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage;
 import org.alfresco.po.rm.fileplan.RmEditDispositionSchedulePage.AfterPeriodOf;
-import org.alfresco.po.rm.functional.RmAbstractTest;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.WhenSelectorImpl;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.WebElement;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.Listeners;
 import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.testng.annotations.Listeners;
 
 /**
  * Records management edit disposition page.
@@ -45,7 +42,7 @@ public class CriteriasTests1 extends RmAbstractTest
      * Executed after class
      */
     @Override
-    @AfterClass(groups={"RM","nonCloud"})
+   // @AfterClass(groups={"RM","nonCloud"})
     public void doTeardown()
     {
         ShareUtil.logout(drone);
@@ -53,8 +50,8 @@ public class CriteriasTests1 extends RmAbstractTest
         deleteRMSite();
     }
 
-    @Test
-    public void RMA_1221()
+    //@Test
+    public void RMA_1221() throws Throwable
     {
         String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -100,14 +97,14 @@ public class CriteriasTests1 extends RmAbstractTest
         }
         catch (Throwable e)
         {
-            reportError(drone, testName, e);
+            reportError(testName, e);
         }
     }
 
     //TODO Freeze action depricated, so wait until hold action appears
     //RMA-1992:Next - Destroy - Updated
     //@Test
-    public void RMA_1992()
+    public void RMA_1992() throws Throwable
     {
         String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -186,13 +183,13 @@ public class CriteriasTests1 extends RmAbstractTest
         }
         catch (Throwable e)
         {
-            reportError(drone, testName, e);
+            reportError(testName, e);
         }
     }
 
     //RMA-1993:Next - Transfer - Outbound(move)
 //    @Test
-    public void RMA_1993()
+    public void RMA_1993() throws Throwable
     {
         String testName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", "-");
         String userName = testName + RmPageObjectUtils.getRandomString(3);
@@ -282,7 +279,7 @@ public class CriteriasTests1 extends RmAbstractTest
         }
         catch (Throwable e)
         {
-            reportError(drone, testName, e);
+            reportError(testName, e);
         }
     }
 }

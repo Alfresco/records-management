@@ -18,6 +18,10 @@
  */
 package org.alfresco.po.rm;
 
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
+
+import org.alfresco.webdrone.ElementState;
+import org.alfresco.webdrone.RenderElement;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.apache.commons.logging.Log;
@@ -26,8 +30,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
-
-import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Records management users and groups page.
@@ -38,11 +40,13 @@ import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
  */
 public class RmConsoleUsersAndGroups extends RmSitePage
 {
-    public static final By ADD_BUTTON = By.xpath("//button[@id='addUser-button']");
-    public static final By ADD_USER_FORM = By.cssSelector("div[id$='peoplepicker']");
-    public static final By SEARCH_USER_INPUT = By.cssSelector("input[id$='rm-search-peoplefinder-search-text']");
-    public static final By SEARCH_USER_BUTTON = By.xpath("//button[contains(@id, 'search-button')]");
-    private static final By CREATED_ALERT  = By.xpath(".//*[@id='message']/div/span");
+    protected static final By ADD_BUTTON = By.xpath("//button[@id='addUser-button']");
+    protected static final By ADD_USER_FORM = By.cssSelector("div[id$='peoplepicker']");
+    protected static final By SEARCH_USER_INPUT = By.cssSelector("input[id$='rm-search-peoplefinder-search-text']");
+    protected static final By SEARCH_USER_BUTTON = By.xpath("//button[contains(@id, 'search-button')]");
+    protected static final By CREATED_ALERT  = By.xpath(".//*[@id='message']/div/span");
+    
+    /** logger */
     private static Log logger = LogFactory.getLog(RmConsoleUsersAndGroups.class);
 
     public enum SystemRoles
@@ -159,7 +163,7 @@ public class RmConsoleUsersAndGroups extends RmSitePage
      * @param locator locator link
      * @return true/false is element displayed on page
      */
-    public static boolean isDisplay(final WebDrone drone, By locator)
+    protected boolean isDisplay(final WebDrone drone, By locator)
     {
         checkMandotaryParam("drone", drone);
         checkMandotaryParam("locator", locator);
@@ -180,7 +184,7 @@ public class RmConsoleUsersAndGroups extends RmSitePage
      * @param userName Name of Created user
      * @return By locator add button locator by xpath
      */
-    public static By addUserButton(String userName)
+    protected By addUserButton(String userName)
     {
         checkMandotaryParam("userName", userName);
 
@@ -207,5 +211,74 @@ public class RmConsoleUsersAndGroups extends RmSitePage
         checkMandotaryParam("userName", userName);
 
         return By.cssSelector("div[id$='roleUsers'] a[id$='user-" + userName + "']");
+    }
+    
+    /**
+     * Click the add user button
+     */
+    public void clickAdd()
+    {
+        WebElement element = drone.findAndWait(ADD_BUTTON);
+        drone.mouseOverOnElement(element);
+        element.click();        
+    }
+    
+    /**
+     * Click the search user button
+     */
+    public void clickSearchUser()
+    {
+        WebElement element = drone.findAndWait(SEARCH_USER_BUTTON);
+        drone.mouseOverOnElement(element);
+        element.click();     
+    }
+    
+    /**
+     * Action assigned user to role
+     *
+     * @param userName Name of assigbed user
+     * @param roleName Role name applied to user
+     * @return {@link RmConsoleUsersAndGroups}
+     */
+    public RmConsoleUsersAndGroups assignUserToRole(String userName, String roleName)
+    {
+        checkMandotaryParam("userName", userName);
+        checkMandotaryParam("roleName", roleName);
+
+        selectGroup(drone, roleName);
+
+        // Add user
+        clickAdd();
+        drone.findAndWait(ADD_USER_FORM).isDisplayed();
+
+        // Search for user
+        WebElement searchInput = drone.findAndWait(SEARCH_USER_INPUT);
+        searchInput.clear();
+        searchInput.sendKeys(userName);
+        clickSearchUser();
+        
+        // wait until the user is shown
+        RenderElement addUserButton = new RenderElement(addUserButton(userName), ElementState.CLICKABLE);
+        elementRender(new RenderTime(drone.getDefaultWaitTime()), addUserButton);
+        
+        // click the add user button
+        drone.find(addUserButton(userName)).click();
+        
+//        for (int i=0; i<3; i++)
+//        {
+//            if (!isElementPresent(addUserButton(userName)))
+//            {
+//                clickSearchUser();
+//            }
+//            else
+//            {
+//                break;
+//            }
+//        }
+        
+ //       click(addUserButton(userName));
+        
+        waitUntilCreatedAlert();
+        return new RmConsoleUsersAndGroups(drone).render();
     }
 }
