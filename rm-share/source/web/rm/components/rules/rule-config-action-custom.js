@@ -312,12 +312,12 @@
                            if (selectedFolder !== null)
                            {
                               var ctx = this.renderers["arca:rm-destination-dialog-button"].currentCtx;
-                              this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "path", selectedFolder.path);
                               var path = selectedFolder.path;
                               if(unfiled)
                               {
                                  path = path.replace(/^\/.*?\//, '/');
                               }
+                              this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "path", path);
                               Dom.get(this.id + "-recordFolderPath").value = path;
                               this._updateSubmitElements(ctx.configDef);
                               this.widgets.destinationDialog.setOptions({

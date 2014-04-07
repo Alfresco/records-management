@@ -22,14 +22,14 @@ import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
 import org.alfresco.po.rm.RmConsoleUsersAndGroups.SystemRoles;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.util.FailedTestListener;
-import org.junit.Assert;
+import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 
 /**
  * RMA-1373 - Create rule - some rules defined
- * 
+ *
  * @author Roy Wetherall
  * @since 2.2
  */
@@ -43,38 +43,39 @@ public class RMA_1373 extends AbstractManageRulesRegressionTest
     protected String user2 = generateNameFromClass();
     protected String categoryName = generateNameFromClass();
     protected String folderName = generateNameFromClass();
-    
+
     /**
      * Marking as a bug.
-     * 
+     *
      * Currently the "new rule" button doesn't work when there is an existing rule.
      */
+    @Override
     @Test(groups = {"rmRegression", "rmBug"})
     public void regressionTest() throws Throwable
     {
         super.regressionTest();
     }
-    
+
     /**
      * @see org.alfresco.po.rm.common.AbstractRegressionTest#preConditions()
      */
     @Override
     protected void preConditions() throws Exception
-    {        
+    {
         // create the user
         createEnterpriseUser(user1);
         createEnterpriseUser(user2);
-        
+
         login();
         try
         {
             // open the file plan
             openRMSite(false);
             FilePlanPage filePlan = (FilePlanPage)rmSiteDashBoard.selectFilePlan().render();
-    
+
             // add test user to RM admin role
             assignUsersToRole(filePlan, SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue(), user1, user2);
-            
+
             // create category
             openRMSite(false);
             filePlan = (FilePlanPage)rmSiteDashBoard.selectFilePlan().render();
@@ -84,18 +85,18 @@ public class RMA_1373 extends AbstractManageRulesRegressionTest
         {
             logout();
         }
-        
+
         // as user1
         login(user1, PASSWORD);
         try
-        {          
+        {
             // navigate to the file plan
             openRMSite(false);
             FilePlanPage filePlan = (FilePlanPage)rmSiteDashBoard.selectFilePlan().render();
-            
+
             // navigate to created category
             filePlan.navigateToFolder(categoryName);
-            
+
             // create rule
             createRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.COMPLETE_EVENT, WhenOption.INBOUND);
         }
@@ -104,7 +105,7 @@ public class RMA_1373 extends AbstractManageRulesRegressionTest
             logout();
         }
     }
-    
+
     /**
      * @see org.alfresco.po.rm.common.AbstractRegressionTest#testExecution()
      */
@@ -114,29 +115,29 @@ public class RMA_1373 extends AbstractManageRulesRegressionTest
         // as user2
         login(user2, PASSWORD);
         try
-        {          
+        {
             // navigate to the file plan
             openRMSite(false);
             FilePlanPage filePlan = (FilePlanPage)rmSiteDashBoard.selectFilePlan().render();
-            
+
             // navigate to created category
             filePlan.navigateToFolder(categoryName);
-            
+
             // create rule
             createRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, WhenOption.INBOUND, true, false);
             filePlan = rmSiteDashBoard.selectFilePlan().render();
-            
+
             // create a record folder
             filePlan.navigateToFolder(categoryName);
             filePlan.createFolder(folderName);
-            
+
             // ensure the rule was applied
-            Assert.assertTrue("Failed to apply rule", filePlan.isFolderClosed(folderName));
+            Assert.assertTrue(filePlan.isFolderClosed(folderName), "Failed to apply rule");
         }
         finally
         {
             logout();
         }
-             
+
     }
 }

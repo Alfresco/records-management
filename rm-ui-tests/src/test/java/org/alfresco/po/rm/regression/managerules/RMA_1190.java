@@ -23,8 +23,6 @@ import static org.alfresco.po.rm.RmCreateRulePage.PROPERTY_VALUE_INPUT;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Assert;
-
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl.PerformActions;
 import org.alfresco.po.rm.RmConsoleUsersAndGroups.SystemRoles;
@@ -34,6 +32,7 @@ import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.site.document.FolderDetailsPage;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 

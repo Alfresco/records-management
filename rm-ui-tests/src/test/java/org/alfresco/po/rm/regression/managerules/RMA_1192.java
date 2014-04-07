@@ -23,14 +23,14 @@ import org.alfresco.po.rm.RmConsoleUsersAndGroups.SystemRoles;
 import org.alfresco.po.rm.RmFolderRulesWithRules;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.util.FailedTestListener;
-import org.junit.Assert;
+import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 
 /**
  * RMA-1192 - Delete Rule
- * 
+ *
  * @author Roy Wetherall
  * @since 2.2
  */
@@ -44,34 +44,34 @@ public class RMA_1192 extends AbstractManageRulesRegressionTest
     protected String categoryName = generateNameFromClass();
     protected String folderName1 = generateNameFromClass();
     protected String folderName2 = generateNameFromClass();
-   
+
     /**
      * @see org.alfresco.po.rm.common.AbstractRegressionTest#preConditions()
      */
     @Override
     protected void preConditions() throws Exception
-    {        
+    {
         // create the user
         createEnterpriseUser(user);
-        
+
         login();
         try
         {
             // open the file plan
             openRMSite(false);
             FilePlanPage filePlan = (FilePlanPage)rmSiteDashBoard.selectFilePlan().render();
-    
+
             // add test user to RM admin role
             assignUsersToRole(filePlan, SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue(), user);
-            
+
             // create category
             openRMSite(false);
             filePlan = (FilePlanPage)rmSiteDashBoard.selectFilePlan().render();
             filePlan.createCategory(categoryName, true);
-            
+
             // navigate to created category
             filePlan.navigateToFolder(categoryName);
-            
+
             // create rule
             createRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, WhenOption.INBOUND);
         }
@@ -80,7 +80,7 @@ public class RMA_1192 extends AbstractManageRulesRegressionTest
             logout();
         }
     }
-    
+
     /**
      * @see org.alfresco.po.rm.common.AbstractRegressionTest#testExecution()
      */
@@ -90,23 +90,23 @@ public class RMA_1192 extends AbstractManageRulesRegressionTest
         // as user
         login(user, PASSWORD);
         try
-        {          
+        {
             // navigate to the file plan
             openRMSite(false);
             FilePlanPage filePlan = (FilePlanPage)rmSiteDashBoard.selectFilePlan().render();
-            
+
             // navigate to created category
             filePlan.navigateToFolder(categoryName);
-            
+
             // create a folder and show the rule is running
             filePlan.createFolder(folderName1);
             Assert.assertTrue(filePlan.isFolderClosed(folderName1));
-            
+
             // delete the rule
             RmFolderRulesWithRules manageRulesPage = filePlan.selectManageRulesWithRules();
             manageRulesPage.deleteRule(ruleName);
-            
-            // create a folder and show the rule isn't running 
+
+            // create a folder and show the rule isn't running
             filePlan = rmSiteDashBoard.selectFilePlan().render();
             filePlan.navigateToFolder(categoryName);
             filePlan.createFolder(folderName2);
@@ -117,6 +117,6 @@ public class RMA_1192 extends AbstractManageRulesRegressionTest
         {
             logout();
         }
-             
+
     }
 }

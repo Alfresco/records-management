@@ -34,7 +34,7 @@ public class UnfiledRecordFolderMoveToRuleIntTest extends AbstractUnfiledCopyMov
 {
     private final static String RULE_TITLE = "Move to test rule";
     private final static String TARGET_FOLDER_NAME = "target";
-    private final static String TARGET_FOLDER_PATH = "/Unfiled Records/target";
+    private final static String TARGET_FOLDER_PATH = "/target";
     private final static String TEST_FOLDER_NAME = "testFolder";
 
     /**
