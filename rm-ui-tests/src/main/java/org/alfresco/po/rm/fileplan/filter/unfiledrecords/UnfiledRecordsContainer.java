@@ -32,6 +32,7 @@ import org.alfresco.webdrone.RenderElement;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
+import org.alfresco.webdrone.exception.PageRenderTimeException;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -121,22 +122,26 @@ public class UnfiledRecordsContainer extends FilePlanPage
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
         // "expectedName" can be blank
-        
+
         timer.start();
         try
-        {        
+        {
             RenderElement filePlan = RenderElement.getVisibleRenderElement(FILEPLAN);
             RenderElement filePlanNav = RenderElement.getVisibleRenderElement(FILEPLAN_NAV);
             RenderElement unfiledRecordsFolderButton = new RenderElement(NEW_UNFILED_RECORDS_FOLDER_BTN, ElementState.CLICKABLE);
             RenderElement newDeclareRecordButton = new RenderElement(NEW_DECLARE_RECORD_BTN, ElementState.CLICKABLE);
-            
+
             elementRender(timer, filePlan, filePlanNav, unfiledRecordsFolderButton, newDeclareRecordButton);
             setViewType(getNavigation().getViewType());
-            
+
             if (StringUtils.isNotBlank(expectedName))
             {
                 while (true)
-                {                    
+                {
+                    if (timer.timeLeft() <= 0)
+                    {
+                        throw new PageRenderTimeException("'" + this.getClass().getName() + "' failed to render in time.");
+                    }
                     boolean found = false;
                     for (FileDirectoryInfo fileDirectoryInfo : getFiles())
                     {
@@ -154,9 +159,9 @@ public class UnfiledRecordsContainer extends FilePlanPage
                     {
                         continue;
                     }
-                }                
+                }
             }
-        
+
         }
         catch (NoSuchElementException e)
         {
