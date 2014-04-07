@@ -26,17 +26,12 @@ import static org.alfresco.po.rm.RmFolderRulesWithRules.RUN_RULES_FOR_FOLDER;
 import static org.alfresco.po.rm.RmFolderRulesWithRules.RUN_RULES_FOR_SUBFOLDER;
 
 import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
-import org.alfresco.po.rm.RmCreateRulePage;
 import org.alfresco.po.rm.RmFolderRulesPage;
-import org.alfresco.po.rm.RmFolderRulesWithRules;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.ShareUtil;
-import org.alfresco.po.share.site.contentrule.createrules.selectors.impl.WhenSelectorImpl;
-import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 
@@ -50,8 +45,8 @@ import org.testng.annotations.Listeners;
 public class ManageRules extends RmAbstractTest 
 {
     /** selectors */
-    private static final By INPUT_TITLE_SELECTOR = By.name("prop_cm_title");
-    private static final By INPUT_DESCRIPTION_SELECTOR = By.name("prop_cm_description");
+    //private static final By INPUT_TITLE_SELECTOR = By.name("prop_cm_title");
+    //private static final By INPUT_DESCRIPTION_SELECTOR = By.name("prop_cm_description");
 
     private By descriptionProperty(String description)
     {
@@ -197,71 +192,71 @@ public class ManageRules extends RmAbstractTest
     * 3 Verify that the changes to rule are applied. Execute the rule (create the folder, edit it and add a tag "tag1")
     */
    // @Test
-    public void rma_1190() throws Throwable
-    {
-        String testName = this.testName.replace("_", "-");
-        String userName = testName + RmPageObjectUtils.getRandomString(3);
-        String ruleName = testName + RmPageObjectUtils.getRandomString(3);
-        String folderName = testName + RmPageObjectUtils.getRandomString(3);
-        String categoryName = testName + RmPageObjectUtils.getRandomString(3);
-        String propertyValue = testName + RmPageObjectUtils.getRandomString(3);
-
-        try
-        {
-            createRmAdminUser(userName);
-            login(userName, DEFAULT_USER_PASSWORD);
-            FilePlanPage filePlan = openRmSite();
-            filePlan.createCategory(categoryName, true);
-            filePlan.navigateToFolder(categoryName);
-            createSetPropertyValueRule(ruleName, "cm:description", propertyValue, false, true);
-
-            filePlan = openRmSite();
-            filePlan.navigateToFolder(categoryName);
-            drone.isRenderComplete(MAX_WAIT_TIME);
-            
-            //Apply rule
-            RmFolderRulesWithRules rulesPage = filePlan.selectManageRulesWithRules().render();
-            RmCreateRulePage manageRulesPage = rulesPage.clickEditButton().render();
-            WhenSelectorImpl whenSelectorEnter = manageRulesPage.getWhenOptionObj();
-            whenSelectorEnter.selectUpdate();
-            manageRulesPage.clickSave();
-            drone.findAndWait(EDIT_BUTTON, MAX_WAIT_TIME);
-            
-            rmSiteDashBoard.selectFilePlan();
-            filePlan.navigateToFolder(categoryName);
-            filePlan.createFolder(folderName);
-            
-            //Verify that rule applied
-            filePlan.openDetailsPage(folderName);
-            Assert.assertFalse(isElementPresent(descriptionProperty(propertyValue)),
-                    "The Description is present for Folder");
-
-            //Edit Metadata
-            filePlan = openRmSite();
-            filePlan.navigateToFolder(categoryName);
-            FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(folderName);
-            WebElement selectMoreAction = folder.selectMoreAction();
-            selectMoreAction.click();
-            WebElement editProperties = folder.findElement(By.cssSelector("div.rm-edit-details>a"));
-            editProperties.click();
-
-            drone.waitForElement(INPUT_TITLE_SELECTOR, 5);
-            type(INPUT_TITLE_SELECTOR, "updated" + folderName);
-            type(INPUT_DESCRIPTION_SELECTOR, "updated" + folderName);
-
-            WebElement saveButton = drone.find(By.cssSelector("button[id$='form-submit-button']"));
-            saveButton.click();
-            rmSiteDashBoard.selectFilePlan();
-            filePlan.navigateToFolder(categoryName);
-            filePlan.openDetailsPage(folderName);
-            Assert.assertTrue(isElementPresent(descriptionProperty(propertyValue)),
-                    "Failed to present Description for Updated Folder");
-        }
-        catch (Throwable e)
-        {
-           reportError(testName, e);
-        }
-    }
+//    public void rma_1190() throws Throwable
+//    {
+//        String testName = this.testName.replace("_", "-");
+//        String userName = testName + RmPageObjectUtils.getRandomString(3);
+//        String ruleName = testName + RmPageObjectUtils.getRandomString(3);
+//        String folderName = testName + RmPageObjectUtils.getRandomString(3);
+//        String categoryName = testName + RmPageObjectUtils.getRandomString(3);
+//        String propertyValue = testName + RmPageObjectUtils.getRandomString(3);
+//
+//        try
+//        {
+//            createRmAdminUser(userName);
+//            login(userName, DEFAULT_USER_PASSWORD);
+//            FilePlanPage filePlan = openRmSite();
+//            filePlan.createCategory(categoryName, true);
+//            filePlan.navigateToFolder(categoryName);
+//            createSetPropertyValueRule(ruleName, "cm:description", propertyValue, false, true);
+//
+//            filePlan = openRmSite();
+//            filePlan.navigateToFolder(categoryName);
+//            drone.isRenderComplete(MAX_WAIT_TIME);
+//            
+//            //Apply rule
+//            RmFolderRulesWithRules rulesPage = filePlan.selectManageRulesWithRules().render();
+//            RmCreateRulePage manageRulesPage = rulesPage.clickEditButton().render();
+//            WhenSelectorImpl whenSelectorEnter = manageRulesPage.getWhenOptionObj();
+//            whenSelectorEnter.selectUpdate();
+//            manageRulesPage.clickSave();
+//            drone.findAndWait(EDIT_BUTTON, MAX_WAIT_TIME);
+//            
+//            rmSiteDashBoard.selectFilePlan();
+//            filePlan.navigateToFolder(categoryName);
+//            filePlan.createFolder(folderName);
+//            
+//            //Verify that rule applied
+//            filePlan.openDetailsPage(folderName);
+//            Assert.assertFalse(isElementPresent(descriptionProperty(propertyValue)),
+//                    "The Description is present for Folder");
+//
+//            //Edit Metadata
+//            filePlan = openRmSite();
+//            filePlan.navigateToFolder(categoryName);
+//            FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(folderName);
+//            WebElement selectMoreAction = folder.selectMoreAction();
+//            selectMoreAction.click();
+//            WebElement editProperties = folder.findElement(By.cssSelector("div.rm-edit-details>a"));
+//            editProperties.click();
+//
+//            drone.waitForElement(INPUT_TITLE_SELECTOR, 5);
+//            type(INPUT_TITLE_SELECTOR, "updated" + folderName);
+//            type(INPUT_DESCRIPTION_SELECTOR, "updated" + folderName);
+//
+//            WebElement saveButton = drone.find(By.cssSelector("button[id$='form-submit-button']"));
+//            saveButton.click();
+//            rmSiteDashBoard.selectFilePlan();
+//            filePlan.navigateToFolder(categoryName);
+//            filePlan.openDetailsPage(folderName);
+//            Assert.assertTrue(isElementPresent(descriptionProperty(propertyValue)),
+//                    "Failed to present Description for Updated Folder");
+//        }
+//        catch (Throwable e)
+//        {
+//           reportError(testName, e);
+//        }
+//    }
 
     /*
      * RMA-1192:Delete rule
@@ -277,42 +272,42 @@ public class ManageRules extends RmAbstractTest
      * 3. Verify that the rule is deleted. Try to execute the rule (create the folder)
      */
    // @Test
-    public void rma_1192() throws Throwable
-    {
-        String testName = this.testName.replace("_", "-");
-        String userName = testName + RmPageObjectUtils.getRandomString(3);
-        String ruleName = testName + RmPageObjectUtils.getRandomString(3);
-        String categoryName = testName + RmPageObjectUtils.getRandomString(3);
-        String folderName = testName + RmPageObjectUtils.getRandomString(3);
-
-        try
-        {
-            createRmAdminUser(userName);
-
-            //login as user1 and create  rule
-            login(userName, DEFAULT_USER_PASSWORD);
-            FilePlanPage filePlan = openRmSite();
-            filePlan.createCategory(categoryName, true);
-            filePlan.navigateToFolder(categoryName);
-            createRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, WhenOption.INBOUND);
-
-            rmSiteDashBoard.selectFilePlan();
-            filePlan.navigateToFolder(categoryName);
-            //Delete rule
-            RmFolderRulesWithRules rulesPage = filePlan.selectManageRulesWithRules();
-            rulesPage.deleteRule(ruleName);
-
-            //Verify that rule does not executed
-            rmSiteDashBoard.selectFilePlan();
-            filePlan.navigateToFolder(categoryName);
-            filePlan.createFolder(folderName);
-            Assert.assertFalse(filePlan.isFolderClosed(folderName), "Failed to apply rule");
-        }
-        catch (Throwable e)
-        {
-            reportError(testName, e);
-        }
-    }
+//    public void rma_1192() throws Throwable
+//    {
+//        String testName = this.testName.replace("_", "-");
+//        String userName = testName + RmPageObjectUtils.getRandomString(3);
+//        String ruleName = testName + RmPageObjectUtils.getRandomString(3);
+//        String categoryName = testName + RmPageObjectUtils.getRandomString(3);
+//        String folderName = testName + RmPageObjectUtils.getRandomString(3);
+//
+//        try
+//        {
+//            createRmAdminUser(userName);
+//
+//            //login as user1 and create  rule
+//            login(userName, DEFAULT_USER_PASSWORD);
+//            FilePlanPage filePlan = openRmSite();
+//            filePlan.createCategory(categoryName, true);
+//            filePlan.navigateToFolder(categoryName);
+//            createRule(ruleName, RmActionSelectorEnterpImpl.PerformActions.CLOSE_RECORD_FOLDER, WhenOption.INBOUND);
+//
+//            rmSiteDashBoard.selectFilePlan();
+//            filePlan.navigateToFolder(categoryName);
+//            //Delete rule
+//            RmFolderRulesWithRules rulesPage = filePlan.selectManageRulesWithRules();
+//            rulesPage.deleteRule(ruleName);
+//
+//            //Verify that rule does not executed
+//            rmSiteDashBoard.selectFilePlan();
+//            filePlan.navigateToFolder(categoryName);
+//            filePlan.createFolder(folderName);
+//            Assert.assertFalse(filePlan.isFolderClosed(folderName), "Failed to apply rule");
+//        }
+//        catch (Throwable e)
+//        {
+//            reportError(testName, e);
+//        }
+//    }
 
     /*
      * RMA-1368: Link to rule set
