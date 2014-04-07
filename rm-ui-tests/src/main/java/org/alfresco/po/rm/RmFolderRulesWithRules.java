@@ -22,8 +22,6 @@ import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.contentrule.FolderRulesPage;
 import org.alfresco.webdrone.ElementState;
@@ -109,7 +107,7 @@ public class RmFolderRulesWithRules extends FolderRulesPage
 
     /**
      * Method verifies if rules details block is displayed
-     * 
+     *
      * @return true/false Rule Details sector is Displayed
      */
     private boolean isRuleDetailsDisplay()
@@ -155,12 +153,13 @@ public class RmFolderRulesWithRules extends FolderRulesPage
     public RmCreateRulePage clickNewRuleButton()
     {
         click(NEW_RULE_BUTTON);
-        
+
         // get the current page and check it's what we expected
         HtmlPage page = drone.getCurrentPage();
-        Assert.assertEquals(RmCreateRulePage.class.getSimpleName(), page.getClass().getSimpleName());
-        
-        return page.render();        
+        // FIXME: The compilation on local machine fails. We should not use any assertions in src/main/java.The dependency (testng/junit) is only available at runtime.
+        //Assert.assertEquals(RmCreateRulePage.class.getSimpleName(), page.getClass().getSimpleName());
+
+        return page.render();
     }
 
     /**
@@ -170,11 +169,12 @@ public class RmFolderRulesWithRules extends FolderRulesPage
     public RmCreateRulePage clickEditButton()
     {
         click(EDIT_BUTTON);
-        
+
         // get the current page and check it's what we expected
         HtmlPage page = drone.getCurrentPage();
-        Assert.assertEquals(RmCreateRulePage.class.getSimpleName(), page.getClass().getSimpleName());
-        
+        // FIXME: The compilation on local machine fails. We should not use any assertions in src/main/java.The dependency (testng/junit) is only available at runtime.
+        //Assert.assertEquals(RmCreateRulePage.class.getSimpleName(), page.getClass().getSimpleName());
+
         return page.render();
     }
 
@@ -189,13 +189,13 @@ public class RmFolderRulesWithRules extends FolderRulesPage
 
         RenderElement element = new RenderElement(locator, ElementState.CLICKABLE);
         elementRender(new RenderTime(drone.getDefaultWaitTime()), element);
-        
+
         drone.find(locator).click();
     }
 
     /**
      * Helper method verifies if folder rule page is correct
-     * 
+     *
      * @param folderName Folder Name
      * @return correct or incorrect page
      */
