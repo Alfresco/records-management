@@ -18,6 +18,9 @@
  */
 package org.alfresco.po.rm.fileplan.filter.hold;
 
+import java.util.NoSuchElementException;
+import java.util.concurrent.TimeUnit;
+
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewHoldDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
@@ -27,9 +30,6 @@ import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
-
-import java.util.NoSuchElementException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * File plan filter for holds container

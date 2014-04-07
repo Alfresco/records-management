@@ -18,6 +18,8 @@
  */
 package org.alfresco.po.rm.fileplan.toolbar;
 
+import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
+
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.SharePage;
 import org.alfresco.webdrone.RenderTime;
@@ -25,8 +27,6 @@ import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
-import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 /**
  * Records management create new record dialog.

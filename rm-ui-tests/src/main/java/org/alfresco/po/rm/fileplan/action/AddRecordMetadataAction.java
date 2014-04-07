@@ -18,14 +18,18 @@
  */
 package org.alfresco.po.rm.fileplan.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.alfresco.po.share.SharePage;
-import org.alfresco.webdrone.*;
+import org.alfresco.webdrone.HtmlPage;
+import org.alfresco.webdrone.RenderElement;
+import org.alfresco.webdrone.RenderTime;
+import org.alfresco.webdrone.WebDrone;
+import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Page object for 'Add Record Metadata' action

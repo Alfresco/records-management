@@ -18,6 +18,11 @@
  */
 package org.alfresco.po.rm.fileplan;
 
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
+
+import java.util.List;
+import java.util.Set;
+
 import org.alfresco.po.rm.fileplan.action.AddRecordMetadataAction;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.document.DocumentDetailsPage;
@@ -26,12 +31,11 @@ import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.alfresco.webdrone.exception.PageException;
 import org.apache.commons.lang3.StringUtils;
-import org.openqa.selenium.*;
-
-import java.util.List;
-import java.util.Set;
-
-import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebElement;
 
 /**
  * Extends {@link DocumentDetailsPage} to add RM specific methods for records

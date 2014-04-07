@@ -40,7 +40,7 @@ import org.testng.annotations.Test;
 
 /**
  * RMA-1193 - Edit Rule
- * 
+ *
  * @author Roy Wetherall
  * @since 2.2
  */
@@ -53,34 +53,34 @@ public class RMA_1190 extends AbstractManageRulesRegressionTest
     protected String user = generateNameFromClass();
     protected String categoryName = generateNameFromClass();
     protected String folderName = generateNameFromClass();
-    
+
     /**
      * @see org.alfresco.po.rm.common.AbstractRegressionTest#preConditions()
      */
     @Override
     protected void preConditions() throws Exception
-    {        
+    {
         // create the user
         createEnterpriseUser(user);
-        
+
         login();
         try
         {
             // open the file plan
             openRMSite(false);
             FilePlanPage filePlan = (FilePlanPage)rmSiteDashBoard.selectFilePlan().render();
-    
+
             // add test user to RM admin role
             assignUsersToRole(filePlan, SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue(), user);
-            
+
             // create category
             openRMSite(false);
             filePlan = (FilePlanPage)rmSiteDashBoard.selectFilePlan().render();
             filePlan.createCategory(categoryName, true);
-            
+
             // navigate to created category
             filePlan.navigateToFolder(categoryName);
-            
+
             // create rule
             Map<String, String> properties = new HashMap<String, String>(2);
             properties.put("propertyName", "cm:description");
@@ -92,7 +92,7 @@ public class RMA_1190 extends AbstractManageRulesRegressionTest
             logout();
         }
     }
-    
+
     /**
      * @see org.alfresco.po.rm.common.AbstractRegressionTest#testExecution()
      */
@@ -103,39 +103,39 @@ public class RMA_1190 extends AbstractManageRulesRegressionTest
         try
         {
             // TODO make sure file plan has correct state set and render include expected folders
-            
+
             openRMSite(false);
             FilePlanPage filePlan = (FilePlanPage)rmSiteDashBoard.selectFilePlan().render();
-            
+
             // navigate to created category
             filePlan.navigateToFolder(categoryName);
-            
+
             // edit the rule
             RmFolderRulesWithRules manageRulesPage = filePlan.selectManageRulesWithRules();
             RmCreateRulePage rulesPage = manageRulesPage.clickEditButton();
-            
+
             // select the action
             rulesPage.selectRmAction(PerformActions.SET_PROPERTY_VALUE.getValue());
-            
+
             // set property and value on the action
-            rulesPage.selectSetProperty("cm:title");            
+            rulesPage.selectSetProperty("cm:title");
             WebElement title = drone.find(PROPERTY_VALUE_INPUT);
             title.clear();
-            title.sendKeys("testing");     
-            
+            title.sendKeys("testing");
+
             // save the changes
             rulesPage.clickSave();
-            
+
             // create a record folder
             openRMSite(false);
             filePlan = (FilePlanPage)rmSiteDashBoard.selectFilePlan().render();
             filePlan.navigateToFolder(categoryName);
             filePlan.createFolder(folderName);
-            
+
             // get the folder details
             FolderDetailsPage detailsPage = filePlan.openDetailsPage(folderName);
             Map<String, Object> properties = detailsPage.getProperties();
-           
+
             // check it was the modified rule that was executed
             Assert.assertNotNull(properties);
             Assert.assertEquals("testing", properties.get("Title"));

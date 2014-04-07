@@ -18,7 +18,18 @@
  */
 package org.alfresco.po.rm.fileplan;
 
-import org.alfresco.po.rm.*;
+import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.CREATE_DISPOSITION_BUTTON;
+import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.NON_ELECTRONIC_BUTTON;
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.alfresco.po.rm.RmConsolePage;
+import org.alfresco.po.rm.RmFolderRulesPage;
+import org.alfresco.po.rm.RmFolderRulesWithRules;
+import org.alfresco.po.rm.RmSiteDashBoardPage;
+import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog;
@@ -34,13 +45,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static org.alfresco.po.rm.fileplan.RmCreateDispositionPage.CREATE_DISPOSITION_BUTTON;
-import static org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog.NON_ELECTRONIC_BUTTON;
-import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Records management file plan page, based on the document library

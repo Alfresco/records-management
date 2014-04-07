@@ -18,18 +18,21 @@
  */
 package org.alfresco.po.rm.unit;
 
-import org.alfresco.po.rm.*;
+import static org.alfresco.po.rm.RmCreateRulePage.ACTION_OPTIONS_SELECT;
+import static org.alfresco.po.rm.RmCreateRulePage.CANCEL_BUTTON;
+import static org.alfresco.po.rm.RmFolderRulesPage.LINK_BUTTON;
+import static org.testng.Assert.assertTrue;
+
+import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
+import org.alfresco.po.rm.RmFolderRulesPage;
+import org.alfresco.po.rm.RmFolderRulesWithRules;
+import org.alfresco.po.rm.RmLinkToRulePage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.regression.managerules.v1.RmAbstractTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.alfresco.po.rm.RmCreateRulePage.ACTION_OPTIONS_SELECT;
-import static org.alfresco.po.rm.RmCreateRulePage.CANCEL_BUTTON;
-import static org.alfresco.po.rm.RmFolderRulesPage.LINK_BUTTON;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @author Polina Lushchinskaya

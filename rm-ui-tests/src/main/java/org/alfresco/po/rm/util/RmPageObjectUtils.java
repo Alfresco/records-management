@@ -18,6 +18,13 @@
  */
 package org.alfresco.po.rm.util;
 
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.Random;
+
 import org.alfresco.webdrone.ElementState;
 import org.alfresco.webdrone.RenderElement;
 import org.alfresco.webdrone.WebDrone;
@@ -26,13 +33,6 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-import java.util.Random;
-
-import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Utility methods for the page objects

@@ -18,14 +18,14 @@
  */
 package org.alfresco.po.rm.fileplan;
 
+import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
+import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
+
 import org.alfresco.po.share.site.document.FolderDetailsPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
-import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
-import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 
 /**
  * Records management create disposition page.

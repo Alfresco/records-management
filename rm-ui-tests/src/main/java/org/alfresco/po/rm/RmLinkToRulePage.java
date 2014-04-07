@@ -18,11 +18,11 @@
  */
 package org.alfresco.po.rm;
 
+import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
+
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
-
-import static org.alfresco.webdrone.RenderElement.getVisibleRenderElement;
 
 /**
  * Records management Link To Rule page.

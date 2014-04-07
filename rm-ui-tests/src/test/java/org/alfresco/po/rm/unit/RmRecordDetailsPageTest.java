@@ -18,6 +18,24 @@
  */
 package org.alfresco.po.rm.unit;
 
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.ADD_TO_HOLD_OK_BUTTON;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.CANCEL_BUTTON;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_BOX_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_DESCRIPTION_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_FILE_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_FORM;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_NAME_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_SHELF_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_STORAGE_LOCATION;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_METADATA_TITLE_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_NUMBER_OF_COPIES_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.EDIT_PHYSICAL_SIZE_INPUT;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.REMOVE_FROM_HOLD_OK_BUTTON;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.RM_ADD_TO_HOLD_LINK;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.RM_REMOVE_FROM_HOLD_LINK;
+import static org.alfresco.po.rm.fileplan.RecordDetailsPage.SAVE_BUTTON;
+import static org.testng.Assert.assertTrue;
+
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.RecordDetailsPage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
@@ -26,9 +44,6 @@ import org.alfresco.po.rm.regression.managerules.v1.RmAbstractTest;
 import org.openqa.selenium.By;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.alfresco.po.rm.fileplan.RecordDetailsPage.*;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @author Polina Lushchinskaya
