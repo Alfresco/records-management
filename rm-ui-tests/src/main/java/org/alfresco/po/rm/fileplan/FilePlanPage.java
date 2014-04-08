@@ -31,6 +31,7 @@ import org.alfresco.po.rm.RmFolderRulesWithRules;
 import org.alfresco.po.rm.RmSiteDashBoardPage;
 import org.alfresco.po.rm.RmUploadFilePage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
+import org.alfresco.po.rm.fileplan.filter.FilePlanNavigation;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
@@ -41,6 +42,7 @@ import org.alfresco.po.share.site.document.FolderDetailsPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
+import org.alfresco.webdrone.exception.PageOperationException;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -284,6 +286,16 @@ public class FilePlanPage extends DocumentLibraryPage
     }
 
     /**
+     * Selects the file plan tree root node in the file plan navigation.
+     *
+     * @return {@link FilePlanPage} Returns the file plan page
+     */
+    public FilePlanPage selectFilePlanNavigation()
+    {
+        return new FilePlanNavigation(drone).selectFilePlanTreeRootNode();
+    }
+
+    /**
      * Checks visibility of create new category button
      * on the file plan page header.
      *
@@ -445,6 +457,34 @@ public class FilePlanPage extends DocumentLibraryPage
     {
         List<FileDirectoryInfo> list = getFiles();
         return new RecordInfo(drone, list.get(index));
+    }
+
+    /**
+     * Gets the record information for a given record name.
+     *
+     * @param name {@link String} The name of the record
+     * @return The record information for the given record name
+     */
+    public RecordInfo getRecordInfo(String name)
+    {
+        WebDroneUtil.checkMandotaryParam("name", name);
+
+        FileDirectoryInfo result = null;
+        for (FileDirectoryInfo fileDirectoryInfo : getFiles())
+        {
+            if (fileDirectoryInfo.getName().contains(name))
+            {
+                result = fileDirectoryInfo;
+                break;
+            }
+        }
+
+        if (result == null)
+        {
+            throw new PageOperationException("The record '" + name + "' could not be found!");
+        }
+
+        return new RecordInfo(drone, result);
     }
 
     // FIXME: This method will be deleted after the original method has been fixed

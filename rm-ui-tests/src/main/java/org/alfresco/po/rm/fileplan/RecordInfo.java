@@ -19,6 +19,7 @@
 package org.alfresco.po.rm.fileplan;
 
 import org.alfresco.po.rm.fileplan.action.AddRecordMetadataAction;
+import org.alfresco.po.rm.fileplan.filter.hold.HoldDialog;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.site.document.FileDirectoryInfoImpl;
 import org.alfresco.webdrone.WebDrone;
@@ -39,6 +40,9 @@ public class RecordInfo
 {
     /** record actions */
     private static final By EDIT_RECORD_METADATA_ACTION = By.cssSelector("div.rm-add-record-metadata a");
+    private static final By ADD_TO_HOLD = By.cssSelector("div.rm-add-to-hold a");
+    private static final By REMOVE_FROM_HOLD = By.cssSelector("div.rm-remove-from-hold a");
+    private static final String NODE_NAME_SELECTOR_EXPRESSION = "//a[text() = '%s']";
 
     /** web drone */
     private WebDrone drone;
@@ -124,5 +128,34 @@ public class RecordInfo
     {
         clickAction(EDIT_RECORD_METADATA_ACTION);
         return new AddRecordMetadataAction(drone).render();
+    }
+
+    /**
+     * Click on the add to hold action and renders the page
+     *
+     * @return Returns the hold dialog
+     */
+    public HoldDialog clickAddToHold()
+    {
+        clickAction(ADD_TO_HOLD);
+        return new HoldDialog(drone).render();
+    }
+
+    /**
+     * Click on the remove from hold action and renders the page
+     *
+     * @return Returns the hold dialog
+     */
+    public HoldDialog clickRemoveFromHold()
+    {
+        // FIXME
+        // clickAction method will not work here as there are a limited number of action for a record in a hold,
+        // so the selectMore action will not appear as an option. It's worth having a better approach in the core
+        // and not worrying about how many actions there will be. 
+        By nodeNameSelector = By.xpath(String.format(NODE_NAME_SELECTOR_EXPRESSION, fileDirectoryInfo.getName()));
+        WebElement actions = fileDirectoryInfo.findElement(nodeNameSelector);
+        drone.mouseOverOnElement(actions);
+        fileDirectoryInfo.findElement(REMOVE_FROM_HOLD).click();
+        return new HoldDialog(drone).render();
     }
 }
