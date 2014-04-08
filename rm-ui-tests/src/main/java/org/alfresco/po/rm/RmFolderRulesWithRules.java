@@ -156,9 +156,11 @@ public class RmFolderRulesWithRules extends FolderRulesPage
 
         // get the current page and check it's what we expected
         HtmlPage page = drone.getCurrentPage();
-        // FIXME: The compilation on local machine fails. We should not use any assertions in src/main/java.The dependency (testng/junit) is only available at runtime.
-        //Assert.assertEquals(RmCreateRulePage.class.getSimpleName(), page.getClass().getSimpleName());
-
+        if (!RmCreateRulePage.class.equals(page.getClass()))
+        {
+            // throw exception
+            throw new PageOperationException("Expecting RmCreateRulePage, but have " + page.getClass().getSimpleName() + " instead.");
+        }
         return page.render();
     }
 
@@ -172,9 +174,11 @@ public class RmFolderRulesWithRules extends FolderRulesPage
 
         // get the current page and check it's what we expected
         HtmlPage page = drone.getCurrentPage();
-        // FIXME: The compilation on local machine fails. We should not use any assertions in src/main/java.The dependency (testng/junit) is only available at runtime.
-        //Assert.assertEquals(RmCreateRulePage.class.getSimpleName(), page.getClass().getSimpleName());
-
+        if (!RmCreateRulePage.class.equals(page.getClass()))
+        {
+            // throw exception
+            throw new PageOperationException("Expecting RmCreateRulePage, but have " + page.getClass().getSimpleName() + " instead.");
+        }
         return page.render();
     }
 
