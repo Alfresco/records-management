@@ -320,9 +320,15 @@
             <evaluator>evaluator.rm.action.manage-permissions</evaluator>
          </action>
 
-         <!-- Manage rules -->
-         <action id="rm-manage-rules" type="pagelink" label="actions.folder.rules" icon="../../../rm/components/documentlibrary/actions/folder-manage-rules">
-            <param name="page">folder-rules?nodeRef={node.nodeRef}</param>
+         <!-- Manage rules (filed) -->
+         <action id="rm-manage-rules-filed" type="pagelink" label="actions.folder.rules" icon="../../../rm/components/documentlibrary/actions/folder-manage-rules">
+            <param name="page">folder-rules?nodeRef={node.nodeRef}&amp;unfiled=false</param>
+            <evaluator>evaluator.rm.action.manage-rules</evaluator>
+         </action>
+
+         <!-- Manage rules (unfiled) -->
+         <action id="rm-manage-rules-unfiled" type="pagelink" label="actions.folder.rules" icon="../../../rm/components/documentlibrary/actions/folder-manage-rules">
+            <param name="page">folder-rules?nodeRef={node.nodeRef}&amp;unfiled=true</param>
             <evaluator>evaluator.rm.action.manage-rules</evaluator>
          </action>
 
@@ -576,7 +582,7 @@
             <action index="140" id="rm-move-recordcategory-to" />
             <action index="150" id="rm-delete" label="actions.delete" />
             <action index="160" id="rm-view-audit-log" />
-            <action index="170" id="rm-manage-rules" />
+            <action index="170" id="rm-manage-rules-filed" />
          </actionGroup>
          <actionGroup id="rm-record-category-details">
             <action index="110" id="rm-edit-details" />
@@ -585,7 +591,7 @@
             <action index="140" id="rm-move-recordcategory-to" />
             <action index="150" id="rm-delete" label="actions.delete" />
             <action index="160" id="rm-view-audit-log" />
-            <action index="170" id="rm-manage-rules" />
+            <action index="170" id="rm-manage-rules-filed" />
          </actionGroup>
 
          <actionGroup id="rm-record-folder-browse">
@@ -610,7 +616,7 @@
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
-            <action index="290" id="rm-manage-rules" />
+            <action index="290" id="rm-manage-rules-filed" />
          </actionGroup>
          <actionGroup id="rm-record-folder-details">
             <action index="110" id="rm-edit-details" />
@@ -633,7 +639,7 @@
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
-            <action index="290" id="rm-manage-rules" />
+            <action index="290" id="rm-manage-rules-filed" />
          </actionGroup>
 
          <actionGroup id="rm-record-browse">
@@ -813,7 +819,7 @@
             <action index="126" id="rm-move-unfiledrecordfolder-to" />
             <action index="130" id="rm-delete" label="actions.delete" />
             <action index="140" id="rm-view-audit-log" />
-            <action index="150" id="rm-manage-rules" />
+            <action index="150" id="rm-manage-rules-unfiled" />
          </actionGroup>
          <actionGroup id="rm-unfiled-record-folder-details">
             <action index="100" id="rm-edit-details" />
@@ -822,7 +828,7 @@
             <action index="115" id="rm-move-unfiledrecordfolder-to" />
             <action index="120" id="rm-delete" label="actions.delete" />
             <action index="130" id="rm-view-audit-log" />
-            <action index="140" id="rm-manage-rules" />
+            <action index="140" id="rm-manage-rules-unfiled" />
          </actionGroup>
 
          <!--  Extensions to the standard DM UI actions -->
