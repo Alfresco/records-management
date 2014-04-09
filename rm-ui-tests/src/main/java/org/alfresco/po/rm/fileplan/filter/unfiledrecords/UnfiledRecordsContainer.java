@@ -138,10 +138,7 @@ public class UnfiledRecordsContainer extends FilePlanPage
             {
                 while (true)
                 {
-                    if (timer.timeLeft() <= 0)
-                    {
-                        throw new PageRenderTimeException("'" + this.getClass().getName() + "' failed to render in time.");
-                    }
+                    checkTimeLeft(timer);
                     boolean found = false;
                     for (FileDirectoryInfo fileDirectoryInfo : getFiles())
                     {
@@ -172,6 +169,21 @@ public class UnfiledRecordsContainer extends FilePlanPage
             timer.end();
         }
         return this;
+    }
+
+    /**
+     * Checks the left time and throws an exception if there is no time left
+     * 
+     * @param timer {@link RenderTime}
+     */
+    private void checkTimeLeft(RenderTime timer)
+    {
+        timer.end();
+        if (timer.timeLeft() <= 0)
+        {
+            throw new PageRenderTimeException("'" + this.getClass().getName() + "' failed to render in time.");
+        }
+        timer.start();
     }
 
     /**
