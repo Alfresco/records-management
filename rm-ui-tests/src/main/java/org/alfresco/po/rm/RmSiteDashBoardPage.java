@@ -26,6 +26,7 @@ import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.alfresco.webdrone.exception.PageException;
+import org.alfresco.webdrone.exception.PageOperationException;
 import org.openqa.selenium.By;
 
 /**
@@ -132,9 +133,20 @@ public class RmSiteDashBoardPage extends DashBoardPage
      * @return {@link HtmlPage} Returns the currently displayed page,
      * which is the {@link FilePlanPage} in this case
      */
-    public HtmlPage selectFilePlan()
+    public FilePlanPage selectFilePlan()
     {
         RmPageObjectUtils.select(drone, NAVIGATION_MENU_FILE_PLAN);
-        return drone.getCurrentPage().render();
+        
+        // get the current page
+        HtmlPage page = drone.getCurrentPage().render();
+        
+        // check that the page returned is in face a file plan page
+        if (!(page instanceof FilePlanPage))
+        {
+            throw new PageOperationException("FilePlanPage object expected, but found " + page.getClass().getCanonicalName() + " instead.");
+        }
+        
+        return (FilePlanPage)page;
+        
     }
 }

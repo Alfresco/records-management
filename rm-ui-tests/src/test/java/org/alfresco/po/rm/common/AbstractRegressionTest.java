@@ -23,7 +23,6 @@ import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 import org.alfresco.po.rm.RmConsolePage;
 import org.alfresco.po.rm.RmConsoleUsersAndGroups;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
-import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.testng.annotations.Test;
 
 /**
@@ -95,16 +94,6 @@ public abstract class AbstractRegressionTest extends AbstractRecordsManagementTe
      * Test execution
      */
     abstract protected void testExecution() throws Exception;   
-
-    /**
-     * Helper method to generate a name from the class name
-     * 
-     * @return  {@link String}  random name incorporating class name
-     */
-    protected String generateNameFromClass()
-    {
-        return getClass().getSimpleName().replace("_", "-") + RmPageObjectUtils.getRandomString(3);
-    }
     
     /**
      * Helper method to assign users to role

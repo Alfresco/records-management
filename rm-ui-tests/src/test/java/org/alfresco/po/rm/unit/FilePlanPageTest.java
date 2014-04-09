@@ -36,53 +36,55 @@ import org.testng.annotations.Test;
 @Listeners(FailedTestListener.class)
 public class FilePlanPageTest extends AbstractIntegrationTest
 {
-    /** Constants */
-    private static final String NEW_CATEGORY = "New Category";
-    private static final String NEW_FOLDER_NAME = "New FolderName";
-    private static final String NEW_RECORD_NAME = "New RecordName";
-
-    @Test
-    public void selectFilePlan()
+    /** Generate names */
+    private String categoryName = generateNameFromClass();
+    private String folderName = generateNameFromClass();
+    private String recordName = generateNameFromClass();
+    
+    /**
+     * Use the existing RM site if one exists.
+     * 
+     * @see org.alfresco.po.rm.common.AbstractRecordsManagementTest#isExisitingRMSiteDeletedOnStartup()
+     */
+    @Override
+    protected boolean isExisitingRMSiteDeletedOnStartup()
     {
-        rmSiteDashBoard.selectFilePlan();
+        return false;
     }
-
-    @Test (dependsOnMethods="selectFilePlan")
-    public void verifyFilePlanPage()
+    
+    /**
+     * Do not delete the site on tear down.
+     * 
+     * @see org.alfresco.po.rm.common.AbstractRecordsManagementTest#isRMSiteDeletedOnTearDown()
+     */
+    @Override
+    protected boolean isRMSiteDeletedOnTearDown()
     {
-        FilePlanPage filePlan = drone.getCurrentPage().render();
+        return false;
+    }
+    
+    /**
+     * Test the creation and navigation of the file plan hierarchy via the page object
+     */
+    @Test
+    public void createAndNavigateFilePlanHierarchy()
+    {
+        FilePlanPage filePlan = rmSiteDashBoard.selectFilePlan();
         assertTrue(filePlan.isCreateNewCategoryDisplayed());
         assertTrue(filePlan.isCreateNewFolderDisplayed());
-    }
 
-    @Test (dependsOnMethods="verifyFilePlanPage")
-    public void createRootCategory()
-    {
-        FilePlanPage filePlan = drone.getCurrentPage().render();
-        filePlan.createCategory(NEW_CATEGORY, true);
-        assertTrue(filePlan.isCategoryCreated(NEW_CATEGORY));
-    }
+        // create root category
+        filePlan.createCategory(categoryName, true);
+        assertTrue(filePlan.isCategoryCreated(categoryName));
+        filePlan.navigateToFolder(categoryName);
 
-    @Test (dependsOnMethods="createRootCategory")
-    public void navigateToCategory()
-    {
-        FilePlanPage filePlan = drone.getCurrentPage().render();
-        filePlan.navigateToFolder(NEW_CATEGORY);
-    }
-
-    @Test (dependsOnMethods="navigateToCategory")
-    public void createFolder()
-    {
-        FilePlanPage filePlan = drone.getCurrentPage().render();
-        filePlan.createFolder(NEW_FOLDER_NAME);
-        filePlan.navigateToFolder(NEW_FOLDER_NAME);
+        // create record folder
+        filePlan.createFolder(folderName);
+        filePlan.navigateToFolder(folderName);
         assertTrue(filePlan.isCreateNewFileDisplayed());
-    }
 
-    @Test (dependsOnMethods="createFolder")
-    public void createRecord()
-    {
-        FilePlanPage filePlan = drone.getCurrentPage().render();
-        filePlan.createRecord(NEW_RECORD_NAME);
+        // file record
+        // FIXME this creates a non-electronic record .. rename method and allow values to be sent
+        filePlan.createRecord(recordName);
     }
 }

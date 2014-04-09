@@ -44,7 +44,7 @@ import org.openqa.selenium.WebElement;
 public abstract class AbstractIntegrationTest extends AbstractRecordsManagementTest
 {
     
-    // TODO need to move these out of here!!
+    // FIXME need to move these out of here!!
     /** File record dialog constants */
     protected static final By PROMPT_PANEL_ID = By.id("prompt");
     protected static final By BUTTON_TAG_NAME = By.tagName("button");
@@ -58,7 +58,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      */
     protected void setup()
     {
-        // TODO not sure if this is the right way to do this!
+        // FIXME not sure if this is the right way to do this!
         pageObjectUtils.loadProperties("rm_en.properties");
         
         // log into Share
@@ -144,6 +144,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      * @param description   description
      * @return {@link FilePlanPage} file plan page showing the parent record category with the new category in the list
      */
+    // FIXME duplicated on file plan page object
     protected FilePlanPage createNewCategory(FilePlanPage filePlan, String name, String title, String description)
     {
         WebDroneUtil.checkMandotaryParam("filePlan", filePlan);
@@ -173,6 +174,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      * @param description   description
      * @return {@link FilePlanPage} file plan page showing the parent record record category with the new record folder in the list
      */
+    // FIXME duplicated on file plan page object
     protected FilePlanPage createNewRecordFolder(FilePlanPage filePlan, String name, String title, String description)
     {
         WebDroneUtil.checkMandotaryParam("filePlan", filePlan);
@@ -198,6 +200,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      *
      * @param locator element By locator
      */
+    // FIXME place on base RM test?
     public void click(By locator)
     {
         WebElement element = drone.findAndWait(locator);
@@ -210,6 +213,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
      *
      * @param locator element By locator
      */
+    // FIXME place on base RM test?
     public void type(By locator, String text)
     {
         WebElement title = drone.find(locator);

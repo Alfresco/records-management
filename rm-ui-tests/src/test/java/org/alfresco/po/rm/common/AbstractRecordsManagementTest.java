@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import org.alfresco.po.rm.RmCreateSitePage;
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
+import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.rm.RmSiteDashBoardPage;
 import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.share.LoginPage;
@@ -242,14 +243,15 @@ public abstract class AbstractRecordsManagementTest extends AbstractTest
             logger.error("Unable to save screen shot of Test: " + testName + " : " + getCustomStackTrace(exception));
         }
 
-        // rethrow exception
+        // rethrow exception so that the correct stack trace is displayed in Eclipse
         throw exception;
     }
 
     /**
+     * Get custom stack trace for display in log.
      * 
-     * @param exception
-     * @return
+     * @param exception exception
+     * @return String   custom stack trace
      */
     protected String getCustomStackTrace(Throwable exception)
     {
@@ -264,5 +266,24 @@ public abstract class AbstractRecordsManagementTest extends AbstractTest
             result.append(newline);
         }
         return result.toString();
+    }
+
+    /**
+     * Helper method to generate a name from the class name
+     * 
+     * @return  {@link String}  random name incorporating class name
+     */
+    protected String generateNameFromClass()
+    {
+        return getClass().getSimpleName().replace("_", "-") + RmPageObjectUtils.getRandomString(3);
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    protected String genearateNameFromTest()
+    {
+        return testName.replace("_", "-") + RmPageObjectUtils.getRandomString(3);
     }
 }
