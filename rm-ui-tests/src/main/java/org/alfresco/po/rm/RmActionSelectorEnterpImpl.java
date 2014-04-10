@@ -83,7 +83,7 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
 
     /**
      * Constructor
-     * 
+     *
      * @param drone web drone
      */
     public RmActionSelectorEnterpImpl(WebDrone drone)
@@ -151,11 +151,11 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
     {
         WebDroneUtil.checkMandotaryParam("createRecordPath", createRecordPath);
 
-        setFileToPath(path, MAX_WAIT_TIME);
         if (createRecordPath)
         {
             toggleCreateRecordPath(MAX_WAIT_TIME);
         }
+        setFileToPath(path, MAX_WAIT_TIME);
     }
 
     /**
@@ -178,7 +178,7 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
 
     /**
      * Helper method to toogle the create path check box
-     * 
+     *
      * @param timeout time out
      */
     private void toggleCreateRecordPath(long timeout)
