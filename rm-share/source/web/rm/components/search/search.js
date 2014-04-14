@@ -460,24 +460,13 @@
        */
       onAddToHold: function RecordsSearch_onAddToHold(e, args)
       {
-         var records = this.widgets.dataTable.getRecordSet().getRecords();
-            selectedNodeRefs = [];
-         for (var i = 0; i < records.length; i++)
-         {
-            var record = this.widgets.dataTable.getRecordSet().getRecords()[i];
-            if (record.getData('check'))
-            {
-               selectedNodeRefs.push(record.getData('nodeRef'));
-            }
-         }
-
          if (!this.modules.addToHold)
          {
             this.modules.addToHold = new Alfresco.rm.module.AddToHold(this.id + "-listofholds");
          }
 
          this.modules.addToHold.setOptions({
-            itemNodeRef: selectedNodeRefs
+            itemNodeRef: Alfresco.rm.dataTableSelectedItems(this.widgets.dataTable)
          }).show();
       },
 

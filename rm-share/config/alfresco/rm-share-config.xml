@@ -206,6 +206,7 @@
          <action type="action-link" id="onActionDeleteRecordFolder" permission="Delete" label="menu.selected-items.delete" asset="record-folder,unfiled-record-folder" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
          <action type="action-link" id="onActionDeleteRecordCategory" permission="Delete" label="menu.selected-items.delete" asset="record-category" notAspect="rma:frozen" notProperty="rma:isClosed,rma:holdReason" rmaction="true" />
          <action type="action-link" id="onActionExport" permission="" notAspect="rma:cutOff" label="menu.selected-items.export" asset="record,undeclared-record,record-folder,record-category" rmaction="true" />
+         <action type="action-link" id="onActionAddToHold" permission="addToHold" label="actions.add-to-hold" asset="record,undeclared-record,record-folder" rmaction="true" />
       </multi-select>
 
    </config>

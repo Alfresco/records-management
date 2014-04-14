@@ -60,15 +60,6 @@
       },
 
       /**
-       * Selected holds.
-       *
-       * @property selectedHolds
-       * @type array
-       * @default []
-       */
-      selectedHolds: [],
-
-      /**
        * Shows the from hold dialog to the user.
        *
        * @method show
@@ -175,7 +166,7 @@
          // Data table column definitions
          var columnDefinitions =
             [{
-               key: "check", label: " ", sortable: false, formatter: "checkbox"
+               key: "check", label: "<input type='checkbox'>", sortable: false, formatter: "checkbox"
             },
             {
                key: "name", label: this.msg("name.column.header"), sortable: true, width: 450
@@ -190,24 +181,8 @@
             MSG_EMPTY: this.msg("message.empty.holds")
          });
 
-         this.selectedHolds = [];
-
-         var me = this;
-         this.widgets.listDataTable.on('checkboxClickEvent', function (oArgs)
-         {
-            var checkbox = oArgs.target,
-               checked = checkbox.checked,
-               record = this.getRecord(checkbox),
-               nodeRef = record.getData("nodeRef");
-            if (checked)
-            {
-               me.selectedHolds.push(nodeRef);
-            }
-            else
-            {
-               Alfresco.util.arrayRemove(me.selectedHolds, nodeRef);
-            }
-         });
+         this.widgets.listDataTable.on('theadCellClickEvent', Alfresco.rm.dataTableHeaderCheckboxClick);
+         this.widgets.listDataTable.on('checkboxClickEvent', Alfresco.rm.dataTableCheckboxClick);
       },
 
       /**
@@ -219,7 +194,8 @@
        */
       onOK: function Hold_onOK(e, p_obj)
       {
-         if (this.selectedHolds.length > 0)
+         var selectedHolds = Alfresco.rm.dataTableSelectedItems(this.widgets.listDataTable);
+         if (selectedHolds.length > 0)
          {
             Alfresco.util.Ajax.request(
             {
@@ -228,7 +204,7 @@
                dataObj:
                {
                   "nodeRefs": !YAHOO.lang.isArray(this.options.itemNodeRef) ? [this.options.itemNodeRef] : this.options.itemNodeRef,
-                  "holds": this.selectedHolds
+                  "holds": selectedHolds
                },
                requestContentType: Alfresco.util.Ajax.JSON,
                successCallback:

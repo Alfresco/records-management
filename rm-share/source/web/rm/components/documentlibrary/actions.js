@@ -1620,8 +1620,21 @@
          {
             this.modules.addToHold = new Alfresco.rm.module.AddToHold(this.id + "-listofholds");
          }
+         var itemNodeRef;
+         if (YAHOO.lang.isArray(assets))
+         {
+            itemNodeRef = [];
+            for (var i = 0, l = assets.length; i < l; i++)
+            {
+               itemNodeRef.push(assets[i].nodeRef);
+            }
+         }
+         else
+         {
+            itemNodeRef = assets.nodeRef;
+         }
          this.modules.addToHold.setOptions({
-            itemNodeRef: assets.nodeRef
+            itemNodeRef: itemNodeRef
          }).show();
       },
 

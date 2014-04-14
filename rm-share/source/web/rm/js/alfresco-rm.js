@@ -116,3 +116,25 @@ Alfresco.rm.dataTableCheckboxClick = function(oArgs)
       });
    }
 };
+
+/**
+ * Gets the nodeRefs of selected items in a data table.
+ * This helper method is specific for a table with
+ * check box column, which has the key 'check'.
+ *
+ * @method dataTableSelectedItems
+ */
+Alfresco.rm.dataTableSelectedItems = function(dataTable)
+{
+   var records = dataTable.getRecordSet().getRecords();
+      selectedHolds = [];
+   for (var i = 0; i < records.length; i++)
+   {
+      var record = records[i];
+      if (record.getData('check'))
+      {
+         selectedHolds.push(record.getData('nodeRef'));
+      }
+   }
+   return selectedHolds;
+};
