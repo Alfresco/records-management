@@ -61,10 +61,10 @@
          {
             var dataWebScripts =
             {
-               copy: "copy-to",
-               move: "move-to",
-               link: "add-child",
-               file: "move-to"
+               copy: "rm-copy-to",
+               move: "rm-move-to",
+               link: "rm-link",
+               file: "rm-move-to"
             };
 
             if (typeof dataWebScripts[obj.mode] == "undefined")
@@ -134,9 +134,22 @@
             // Did the operation succeed?
             if (!p_data.json.overallSuccess)
             {
-               Alfresco.util.PopupManager.displayMessage(
+               // generate a detailed error message
+               var errorMessage = this.msg("message.failure") + ":";
+               for (var i = 0, j = p_data.json.totalResults; i < j; i++)
                {
-                  text: this.msg("message.failure")
+                  result = p_data.json.results[i];
+                  if (!result.success)
+                  {
+                     errorMessage += "<br>" + result.name + "&nbsp;-&nbsp;" + result.error;
+                  }
+               }
+            
+               Alfresco.util.PopupManager.displayPrompt(
+               {
+                  title: "Error",
+                  noEscape: true,
+                  text: errorMessage
                });
                return;
             }
