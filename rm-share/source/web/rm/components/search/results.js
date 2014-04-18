@@ -296,7 +296,7 @@
        */
       onDataTableHeaderCheckboxChange: function RecordsResults_onDataTableHeaderCheckboxChange(e, args)
       {
-         this.widgets.addToHold.set("disabled", !args[1].headerCheckBoxChecked);
+         this.widgets.addToHold.set("disabled", !args[1].headerCheckBoxChecked || this.resultsCount == 0);
       },
 
       /**
