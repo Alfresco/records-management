@@ -302,8 +302,10 @@
             </field-visibility>
             <create-form template="/org/alfresco/rm/components/form/create-container.ftl" />
             <appearance>
-               <field id="cm:title" mandatory="true">
-                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+               <field id="cm:name" mandatory="true">
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl">
+                     <control-param name="maxLength">255</control-param>
+                  </control>
                </field>
                <field id="cm:description">
                   <control>
@@ -328,7 +330,9 @@
             </field-visibility>
             <appearance>
                <field id="cm:name" mandatory="true">
-                  <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                  <control template="/org/alfresco/components/form/controls/textfield.ftl">
+                     <control-param name="maxLength">255</control-param>
+                  </control>
                </field>
                <field id="cm:description">
                   <control>
