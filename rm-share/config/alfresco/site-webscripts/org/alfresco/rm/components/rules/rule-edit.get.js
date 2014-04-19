@@ -2,16 +2,20 @@
 
 function rm_main()
 {
-	   var scripts;
-
-	   if (model.constraints != null) {
-	      scripts = model.constraints["rm-ac-scripts"];
-
-		  if (scripts != null) {
-	         return scripts;
-		  }
-	   }
-	   return model.scripts;
+   var result = [];
+   if (model.scripts != null)
+   {
+      result = model.scripts;
+   }
+   if (model.constraints != null)
+   {
+      var scripts = model.constraints["rm-ac-scripts"];
+      if (scripts != null)
+      {
+         result = scripts;
+      }
+   }
+   return result;
 }
 model.scripts = rm_main();
 
