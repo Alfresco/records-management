@@ -714,25 +714,6 @@
                </sub-components>
             </component>
 
-            <!-- Add RM Events -->
-            <component>
-               <scope>template</scope>
-               <region-id>web-preview</region-id>
-               <source-id>document-details</source-id>
-               <sub-components>
-                  <sub-component id="rm-events">
-                     <evaluations>
-                        <evaluation id="rm-events">
-                           <url>/rm/components/fileplan/events</url>
-                           <properties>
-                              <nodeRef>{nodeRef}</nodeRef>
-                           </properties>
-                        </evaluation>
-                     </evaluations>
-                  </sub-component>
-               </sub-components>
-            </component>
-
             <!-- Hide Comments -->
             <component id="template.comments.document-details">
                <scope>template</scope>
@@ -797,38 +778,6 @@
                      <evaluations>
                         <evaluation id="rm-hide">
                            <render>false</render>
-                        </evaluation>
-                     </evaluations>
-                  </sub-component>
-               </sub-components>
-            </component>
-
-            <!--
-               Replace with RM specific view form,
-               Add RM references
-             -->
-            <component>
-               <scope>template</scope>
-               <region-id>document-metadata</region-id>
-               <source-id>document-details</source-id>
-               <sub-components>
-                  <!-- Replace with RM specific metadata -->
-                  <sub-component id="default">
-                     <evaluations>
-                        <evaluation id="rm-documentMetadata">
-                           <url>/components/document-details/document-metadata</url>
-                           <properties>
-                              <nodeRef>{nodeRef}</nodeRef>
-                              <formId>rm</formId>
-                           </properties>
-                        </evaluation>
-                     </evaluations>
-                  </sub-component>
-                  <!-- Add RM references -->
-                  <sub-component id="rm-references">
-                     <evaluations>
-                        <evaluation id="rm-references">
-                           <url>/rm/components/document-details/document-references</url>
                         </evaluation>
                      </evaluations>
                   </sub-component>
@@ -1170,6 +1119,57 @@
                <sourcePackageRoot>org.alfresco.config</sourcePackageRoot>
             </customization>
          </customizations>
+         <components>
+            <!-- Add RM Events -->
+            <component>
+               <scope>template</scope>
+               <region-id>web-preview</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="rm-events">
+                     <evaluations>
+                        <evaluation id="rm-events">
+                           <url>/config/components/document-details/events</url>
+                           <properties>
+                              <nodeRef>{nodeRef}</nodeRef>
+                           </properties>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+            <!--
+               Replace with RM specific view form,
+               Add RM references
+            -->
+            <component>
+               <scope>template</scope>
+               <region-id>document-metadata</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <!-- Replace with RM specific metadata -->
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="rm-documentMetadata">
+                           <url>/components/document-details/document-metadata</url>
+                           <properties>
+                              <nodeRef>{nodeRef}</nodeRef>
+                              <formId>rm</formId>
+                           </properties>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+                  <!-- Add RM references -->
+                  <sub-component id="rm-references">
+                     <evaluations>
+                        <evaluation id="rm-references">
+                           <url>/config/components/document-details/document-references</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+         </components>
       </module>
 
    </modules>

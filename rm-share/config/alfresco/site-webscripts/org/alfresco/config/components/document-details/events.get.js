@@ -5,7 +5,7 @@ function main()
    AlfrescoUtil.param('nodeRef');
    AlfrescoUtil.param('site', null);
    var nodeDetails = AlfrescoUtil.getNodeDetails(model.nodeRef, model.site);
-   if (nodeDetails)
+   if (nodeDetails && nodeDetails.item.node.isRmNode)
    {
       model.allowCompleteEvent = false;
       model.allowUndoEvent = false;

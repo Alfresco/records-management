@@ -127,16 +127,16 @@ function main()
    AlfrescoUtil.param("site");
    AlfrescoUtil.param("container", "documentLibrary");
 
-   model.references = getDocReferences(model.nodeRef);
-   model.docNames = {};
-   model.docNames.to = getDocNames(namesToGet.to);
-   model.docNames.from = getDocNames(namesToGet.from);
-
    var nodeDetails = AlfrescoUtil.getNodeDetails(model.nodeRef, model.site, null);
-   if (nodeDetails)
+   if (nodeDetails && nodeDetails.item.node.isRmNode)
    {
+      model.references = getDocReferences(model.nodeRef);
+      model.docNames = {};
+      model.docNames.to = getDocNames(namesToGet.to);
+      model.docNames.from = getDocNames(namesToGet.from);
+
       //model.parentNodeRef = nodeDetails.item.location.container.nodeRef;
-	  model.parentNodeRef = nodeDetails.item.node.rmNode.filePlan;
+      model.parentNodeRef = nodeDetails.item.node.rmNode.filePlan;
       model.docName = nodeDetails.item.displayName;
       model.allowEditReferences = false;
       var actions = nodeDetails.item.node.rmNode.actions;
@@ -147,6 +147,10 @@ function main()
             model.allowEditReferences = true;
          }
       }
+   }
+   else
+   {
+      model.docName = null;
    }
 }
 
