@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * Document actions component - RM extensions.
- * 
+ *
  * @namespace Alfresco
  * @class Alfresco.rm.component.DocumentReferences
  */
@@ -34,7 +34,7 @@
 
    /**
     * RecordsDocumentReferences constructor.
-    * 
+    *
     * @param {String} htmlId The HTML id of the parent element
     * @return {Alfresco.rm.component.DocumentReferences} The new RecordsDocumentReferences instance
     * @constructor
@@ -45,7 +45,7 @@
       YAHOO.Bubbling.on("metadataRefresh", this.doRefresh, this);
       return this;
    };
-   
+
    /**
     * Extend from Alfresco.DocumentActions
     */
@@ -88,7 +88,7 @@
       {
          YAHOO.Bubbling.unsubscribe("metadataRefresh", this.doRefresh, this);
 
-         var url = 'rm/components/document-details/document-references?nodeRef={nodeRef}&container={containerId}';
+         var url = 'config/components/document-details/document-references?nodeRef={nodeRef}&container={containerId}';
          url += this.options.siteId ? '&site={siteId}' :  '';
 
          this.refresh(url);
