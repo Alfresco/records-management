@@ -1194,7 +1194,7 @@
             index: noOfActions,
             title: this.msg("label.title.new"),
             name: actionName,
-            ghostOnDestroy: false,
+            ghostOnDestroy: "ghost",
             period : null,
             periodProperty: (noOfActions == 0 ? "rma:dateFiled": "rma:cutOffDate"),
             description: "",
