@@ -147,6 +147,37 @@
                return configDef;
             }
          },
+         LinkTo:
+         {
+            edit: function(configDef, ruleConfig, configEl)
+            {
+               this._hideParameters(configDef.parameterDefinitions);
+
+               configDef.parameterDefinitions.splice(0, 0,
+               {
+                  type: "arca:rm-destination-dialog-button",
+                  _buttonLabel: this.msg("button.select-folder"),
+                  _destinationParam: "destination-folder"
+               });
+
+               configDef.parameterDefinitions.splice(1, 0,
+               {
+                  type: "arca:record-path-help-icon"
+               });
+
+               var path = this._getParamDef(configDef, "path");
+               path._type = "hidden";
+               path._displayLabelToRight = false;
+               path._hideColon = true;
+
+               var createRecordPath = this._getParamDef(configDef, "createRecordPath");
+               createRecordPath._type = null;
+               createRecordPath._displayLabelToRight = false;
+               createRecordPath._hideColon = true;
+
+               return configDef;
+            }
+         },
          AddRecordTypes:
          {
             edit: function(configDef, ruleConfig, configEl)
