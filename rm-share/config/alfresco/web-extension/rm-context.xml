@@ -282,6 +282,9 @@
    <bean id="evaluator.rm.action.removeFromHold" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="removeFromHold" />
    </bean>
+   <bean id="evaluator.rm.action.fileHoldReport" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="fileHoldReport" />
+   </bean>
 
    <!--                          -->
    <!-- DocLib Common Evaluators -->

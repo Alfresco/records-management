@@ -988,6 +988,18 @@
       {
          this.onActionFileReport(assets, owner, "rmr:destructionReport");
       },
+      
+      /**
+       * File hold report action.
+       *
+       * @method onActionFileHoldReport
+       * @param assets {object} Object literal representing one or more hold(s) to be actioned
+       * @param owner {HTMLElement} The action html element
+       */
+      onActionFileHoldReport: function RDLA_onActionFileHoldReport(assets, owner)
+      {
+         this.onActionFileReport(assets, owner, "rmr:holdReport");
+      },
 
       /**
        * Set Record Type
