@@ -72,7 +72,8 @@
          var node = this.widgets.treeview.getNodeByProperty("path", this.currentPath);
          YAHOO.Bubbling.fire("AuditRecordLocationSelected",
          {
-            nodeRef: node.data.nodeRef
+            nodeRef: node.data.nodeRef,
+            isFolder: node.isLeaf
          });
          this.widgets.dialog.hide();
       },
