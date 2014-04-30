@@ -306,6 +306,14 @@
             {
                var unfiledParameter = YAHOO.util.History.getQueryStringParameter("unfiled");
                var unfiled = (configDef.name != "fileTo") && (unfiledParameter == "true");
+               var mode;
+               switch(configDef.name)
+               {
+                  case "moveTo": mode = "move"; break;
+                  case "copyTo": mode = "copy"; break;
+                  case "linkTo": mode = "link"; break;
+                  default: mode = "file"; break;
+               }
                if (this.widgets.destinationDialog)
                {
                   this.widgets.destinationDialog.setOptions(
@@ -322,42 +330,39 @@
                      ruleConfig: obj.ruleConfig,
                      paramDef: obj.paramDef
                   };
-                  if (!this.widgets.destinationDialog)
+                  this.widgets.destinationDialog = new Alfresco.rm.module.CopyMoveLinkFileTo(this.id + "-destinationDialog");
+                  this.widgets.destinationDialog.setOptions(
                   {
-                     this.widgets.destinationDialog = new Alfresco.rm.module.CopyMoveLinkFileTo(this.id + "-destinationDialog");
-                     this.widgets.destinationDialog.setOptions(
-                     {
-                        title: this.msg("dialog.destination.title"),
-                        mode: "file",
-                        files: "",
-                        siteId: this.options.siteId,
-                        path: selectedPath,
-                        unfiled: unfiled
-                     });
+                     title: this.msg("dialog.destination.title"),
+                     mode: mode,
+                     files: "",
+                     siteId: this.options.siteId,
+                     path: selectedPath,
+                     unfiled: unfiled
+                  });
 
-                     YAHOO.Bubbling.on("folderSelected", function (layer, args)
+                  YAHOO.Bubbling.on("folderSelected", function (layer, args)
+                  {
+                     if ($hasEventInterest(this.widgets.destinationDialog, args))
                      {
-                        if ($hasEventInterest(this.widgets.destinationDialog, args))
+                        var selectedFolder = args[1].selectedFolder;
+                        if (selectedFolder !== null)
                         {
-                           var selectedFolder = args[1].selectedFolder;
-                           if (selectedFolder !== null)
+                           var ctx = this.renderers["arca:rm-destination-dialog-button"].currentCtx;
+                           var path = selectedFolder.path;
+                           if(unfiled)
                            {
-                              var ctx = this.renderers["arca:rm-destination-dialog-button"].currentCtx;
-                              var path = selectedFolder.path;
-                              if(unfiled)
-                              {
-                                 path = path.replace(/^\/.*?\//, '/');
-                              }
-                              this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "path", path);
-                              Dom.get(this.id + "-recordFolderPath").value = path;
-                              this._updateSubmitElements(ctx.configDef);
-                              this.widgets.destinationDialog.setOptions({
-                                 path: selectedFolder.path
-                              });
+                              path = path.replace(/^\/.*?\//, '/');
                            }
+                           this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "path", path);
+                           Dom.get(this.id + "-recordFolderPath").value = path;
+                           this._updateSubmitElements(ctx.configDef);
+                           this.widgets.destinationDialog.setOptions({
+                              path: selectedFolder.path
+                           });
                         }
-                     }, this);
-                  }
+                     }
+                  }, this);
                   var pathNodeRef = this._getParameters(obj.configDef)["destination-folder"],
                      allowedViewModes =
                      [
