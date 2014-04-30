@@ -1129,7 +1129,7 @@
                   <sub-component id="rm-events">
                      <evaluations>
                         <evaluation id="rm-events">
-                           <url>/config/components/document-details/events</url>
+                           <url>/config/components/fileplan/events</url>
                            <properties>
                               <nodeRef>{nodeRef}</nodeRef>
                            </properties>

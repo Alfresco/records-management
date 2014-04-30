@@ -92,7 +92,7 @@
       <!-- Events -->
       <component>
          <region-id>events</region-id>
-         <url>/rm/components/fileplan/events</url>
+         <url>/config/components/fileplan/events</url>
       </component>
 
       <!-- Folder Actions (incl commons) -->
