@@ -916,8 +916,8 @@
        */
       onUnfiledManageRules: function DLTB_onUnfiledManageRules(e, p_obj)
       {
-         var nodeRef = this.modules.docList.doclistMetadata.parent.rmNode.unfiledRecordContainer,
-            page = "folder-rules?nodeRef=" + nodeRef + "&unfiled=true";
+         var nodeRef = this.currentFilter.filterData != undefined ? this.currentFilter.filterData : this.modules.docList.doclistMetadata.parent.rmNode.unfiledRecordContainer,
+             page = "folder-rules?nodeRef=" + nodeRef + "&unfiled=true";
 
          window.location.href = $siteURL(page);
       },
