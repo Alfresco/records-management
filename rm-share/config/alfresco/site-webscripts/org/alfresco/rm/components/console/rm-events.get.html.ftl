@@ -55,7 +55,7 @@
                <span class="crud-label">${msg("label.label")}: *</span>
             </div>
             <div>
-               <input class="crud-input" id="${el}-eventDisplayLabel" name="eventDisplayLabel" type="text"/>
+               <input class="crud-input" id="${el}-eventDisplayLabel" name="eventDisplayLabel" type="text" maxlength="255"/>
             </div>
 
             <!-- Type -->
