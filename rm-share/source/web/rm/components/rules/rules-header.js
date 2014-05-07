@@ -30,7 +30,8 @@
    /**
     * Alfresco Slingshot aliases
     */
-   var $html = Alfresco.util.encodeHTML;
+   var $html = Alfresco.util.encodeHTML,
+         $siteURL = Alfresco.util.siteURL;
 
    /**
     * RM RulesHeader constructor.
