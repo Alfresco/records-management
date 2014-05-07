@@ -73,6 +73,7 @@
    width: 60em;
    height: 4em;
    border: 1px solid #AAAAAA;
+   resize: none;
 }
 
 .rm-search .query
@@ -110,8 +111,8 @@
 
 .rm-search .datepicker
 {
-   display: none; 
-   position: absolute; 
+   display: none;
+   position: absolute;
    z-index: 1;
    margin: -5em 0 0 20em;
 }
@@ -121,7 +122,7 @@
    cursor: pointer;
 }
 
-.rm-search .yuimenubaritemlabel, 
+.rm-search .yuimenubaritemlabel,
 .rm-search .yuimenuitemlabel
 {
    color: #000 !important;
