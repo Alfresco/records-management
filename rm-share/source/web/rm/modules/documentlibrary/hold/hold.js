@@ -235,7 +235,7 @@
                      Alfresco.util.PopupManager.displayPrompt(
                      {
                         title: this.msg("message.failure"),
-                        text: this.msg("message.hold-failure", failureMsg)
+                        text: failureMsg
                      });
                      this._reset();
                   },
