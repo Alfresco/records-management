@@ -96,7 +96,12 @@
           */
          actions: {},
 
-         recordLevelDisposition: false
+         recordLevelDisposition: false,
+
+         /**
+          * Local copy of the defined action used to undo cancelled edits
+          */
+         actionMap: {}
       },
 
       /**
@@ -189,6 +194,7 @@
                            actionEl = this._createAction(action);
                            actionEl = this.widgets.actionListEl.appendChild(actionEl);
                            this._setupActionForm(action, actionEl);
+                           this.options.actionMap[action.id] = action;
                         }
                      }
                   }
@@ -640,6 +646,9 @@
                      actionForm.setAjaxSubmitMethod(Alfresco.util.Ajax.PUT);
                      formEl.attributes.action.nodeValue = Alfresco.constants.PROXY_URI_RELATIVE + "api/node/" + this.options.nodeRef.replace(":/", "") + "/dispositionschedule/dispositionactiondefinitions/" + newActionId;
                   }
+
+                  // Update action map
+                  this.options.actionMap[action.id] = action;
 
                   // Refresh the title from the choices
                   this._refreshTitle(obj.actionEl);
@@ -1165,10 +1174,11 @@
              * from the dom and insert a new fresh one by using the template and
              * the original data.
              */
-            var newActionEl = this._createAction(obj.action);
+            var action = (actionId in this.options.actionMap ? this.options.actionMap[actionId] : obj.action);
+            var newActionEl = this._createAction(action);
             obj.actionEl.parentNode.insertBefore(newActionEl, obj.actionEl);
             obj.actionEl.parentNode.removeChild(obj.actionEl);
-            this._setupActionForm(obj.action, newActionEl);
+            this._setupActionForm(action, newActionEl);
             this._refreshActionList();
          }
          else
