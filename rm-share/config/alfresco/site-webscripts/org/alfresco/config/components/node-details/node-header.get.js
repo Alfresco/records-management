@@ -1,4 +1,4 @@
-if (model.site != model.item.location.site.name && model.node.isRmNode)
+if (model.site != (model.item.location.site != null ? model.item.location.site.name : null) && model.node.isRmNode)
 {
    model.paths = getPaths();
    model.widgets = getWidgets();

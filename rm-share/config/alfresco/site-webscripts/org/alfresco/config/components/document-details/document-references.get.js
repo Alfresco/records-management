@@ -124,7 +124,7 @@ function getDocReferences(nodeRef)
 function main()
 {
    AlfrescoUtil.param("nodeRef");
-   AlfrescoUtil.param("site");
+   AlfrescoUtil.param("site", null);
    AlfrescoUtil.param("container", "documentLibrary");
 
    var nodeDetails = AlfrescoUtil.getNodeDetails(model.nodeRef, model.site, null);
