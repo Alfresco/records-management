@@ -38,7 +38,8 @@
    /**
     * Alfresco Slingshot aliases
     */
-   var $html = Alfresco.util.encodeHTML;
+   var $encodeHtml = Alfresco.util.encodeHTML;
+      $decodeHtml = Alfresco.util.decodeHTML;
 
    /**
     * DispositionEdit constructor.
@@ -359,7 +360,7 @@
          // Period Amount
          var periodAmount = (period && period.length > 1) ? period[1] : null,
             periodAmountEl = Dom.getElementsByClassName("period-amount", "input", actionEl)[0];
-         periodAmountEl.value = periodAmount ? periodAmount : "";
+         periodAmountEl.value = periodAmount ? $decodeHtml(periodAmount) : "";
          periodAmountEl.setAttribute("id", elId + "-periodAmount");
          Event.addListener(periodAmountEl, "keyup", this.onPeriodAmountTextKeyUp,
          {
@@ -574,7 +575,7 @@
                var pa = "", pu = "";
                if (!paEl.disabled)
                {
-                  pa = paEl.value;
+                  pa = $encodeHtml(paEl.value);
                }
                if (!puEl.disabled)
                {
