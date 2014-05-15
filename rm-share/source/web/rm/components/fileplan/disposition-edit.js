@@ -951,6 +951,12 @@
             {
                usedActionNames[actionNames[i].value] = true;
             }
+
+            // can't use cutoff after transfer or accession
+            if (!usedActionNames["cutoff"] && ((actionNames[i].value == "transfer") || (actionNames[i].value == "accession")))
+            {
+               usedActionNames["cutoff"] = true;
+            }
          }
 
          // Clear event menu and disable/enable events in the menu
