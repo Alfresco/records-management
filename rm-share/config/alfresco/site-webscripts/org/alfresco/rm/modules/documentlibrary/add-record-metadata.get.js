@@ -17,7 +17,12 @@ function sortById(obj1, obj2)
 function main()
 {
    // Load rm specific record types
-   var result = remote.call("/api/rma/recordmetadataaspects?noderef=" + args.nodeRef);
+   var callUri = "/api/rma/recordmetadataaspects";
+   if(args.nodeRef != null)
+   {
+      callUri += "?noderef=" + args.nodeRef;
+   }
+   var result = remote.call(callUri);
    if (result.status == 200)
    {
       var rmAspects = eval('(' + result + ')').data.recordMetaDataAspects;
@@ -54,11 +59,6 @@ function main()
       // Add and set in model
       recordTypes.sort(sortById);
       model.recordTypes = recordTypes;
-   }
-   else if (repoJSON.status.code)
-   {
-      status.setCode(repoJSON.status.code, repoJSON.message);
-      return;
    }
 }
 
