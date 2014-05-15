@@ -617,12 +617,19 @@
                      }
                      else
                      {
-                        Alfresco.util.PopupManager.displayMessage({
-                           text: this.msg('message.file-log-fail'),
-                           spanClass: 'message',
-                           modal: true,
-                           noEscape: true,
-                           displayTime: 1
+                        Alfresco.util.PopupManager.displayPrompt(
+                        {
+                           title: me.msg('label.file-record'),
+                           text: data.message,
+                           buttons: [
+                           {
+                              text: me.msg('button.ok'),
+                              handler: function()
+                              {
+                                 this.destroy();
+                              },
+                              isDefault: false
+                           }]
                         });
                      }
                   }
