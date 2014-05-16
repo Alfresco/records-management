@@ -28,7 +28,8 @@
    YAHOO.Bubbling.fire("registerAction",
    {
       actionName: "onHideRecordAction",
-      fn: function DLTB_onHideRecordAction(record, owner) {
+      fn: function DLTB_onHideRecordAction(record, owner)
+      {
          var me = this;
          Alfresco.util.PopupManager.displayPrompt(
          {
@@ -52,6 +53,18 @@
                isDefault: true
             }]
          });
+      }
+   });
+
+   YAHOO.Bubbling.fire("registerAction",
+   {
+      actionName: "onCreateRecordSuccess",
+      fn: function DLTB_onCreateRecordSuccess(record, owner)
+      {
+         if (this.actionsView === "details")
+         {
+            window.location.reload(true);
+         }
       }
    });
 })();

@@ -513,6 +513,7 @@
          <action id="rm-create-record" type="javascript" label="actions.create-record" icon="../../../rm/components/documentlibrary/actions/rm-create-record">
             <param name="function">onActionSimpleRepoAction</param>
             <param name="action">create-record</param>
+            <param name="success">onCreateRecordSuccess</param>
             <param name="successMessage">message.create-record.success</param>
             <param name="failureMessage">message.create-record.failure</param>
             <permissions>
@@ -564,7 +565,7 @@
             <param name="function">onActionRemoveFromHold</param>
             <evaluator>evaluator.rm.action.removeFromHold</evaluator>
          </action>
-         
+
          <!--  File hold report -->
          <action id="rm-file-hold-report" type="javascript" label="actions.file-hold-report" icon="../../../rm/components/documentlibrary/actions/rm-destruction-report">
             <param name="function">onActionFileHoldReport</param>
@@ -573,7 +574,7 @@
             <param name="failure">fileReportFailure</param>
             <evaluator>evaluator.rm.action.fileHoldReport</evaluator>
          </action>
-         
+
       </actions>
 
       <!--
