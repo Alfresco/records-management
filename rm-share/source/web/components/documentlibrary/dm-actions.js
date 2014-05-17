@@ -67,4 +67,16 @@
          }
       }
    });
+
+   YAHOO.Bubbling.fire("registerAction",
+   {
+      actionName: "onHideRecordSuccess",
+      fn: function DLTB_onHideRecordSuccessSuccess(record, owner)
+      {
+         if (this.actionsView === "details")
+         {
+            window.location.href = window.location.href.split("document-details")[0] + "documentlibrary";
+         }
+      }
+   });
 })();

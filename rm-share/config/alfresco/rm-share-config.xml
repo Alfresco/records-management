@@ -532,6 +532,7 @@
          <action id="rm-hide-record" type="javascript" label="actions.hide-record" icon="../../../rm/components/documentlibrary/actions/rm-hide-record">
             <param name="function">onHideRecordAction</param>
             <param name="action">hide-record</param>
+            <param name="success">onHideRecordSuccess</param>
             <param name="successMessage">message.hide-record.success</param>
             <param name="failureMessage">message.hide-record.failure</param>
             <evaluator>evaluator.rm.action.hide</evaluator>

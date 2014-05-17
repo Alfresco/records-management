@@ -17,27 +17,39 @@ function getPaths()
       pathUrl = "",
       x, y;
 
-   paths.push(
+   if (path)
    {
-      href: targetPage + (path.length < 2 ? "?file=" + encodeURIComponent(item.fileName) : ""),
-      label: msg.get(targetPageLabel),
-      cssClass: "folder-link"
-   });
-
-   if (path.length > 1)
-   {
-      folders = path.substring(1, path.length).split("/");
-
-      for (x = 0, y = folders.length; x < y; x++)
+      paths.push(
       {
-         pathUrl += "/" + folders[x];
-         paths.push(
+         href: targetPage + (path.length < 2 ? "?file=" + encodeURIComponent(item.fileName) : ""),
+         label: msg.get(targetPageLabel),
+         cssClass: "folder-link"
+      });
+
+      if (path.length > 1)
+      {
+         folders = path.substring(1, path.length).split("/");
+
+         for (x = 0, y = folders.length; x < y; x++)
          {
-            href: targetPage + (y - x < 2 ? "?file=" + encodeURIComponent(item.fileName) + "&path=" : "?path=") + encodeURIComponent(pathUrl).replace(/%25/g,"%2525"),
-            label: folders[x],
-            cssClass: "folder-link folder-open"
-         });
+            pathUrl += "/" + folders[x];
+            paths.push(
+            {
+               href: targetPage + (y - x < 2 ? "?file=" + encodeURIComponent(item.fileName) + "&path=" : "?path=") + encodeURIComponent(pathUrl).replace(/%25/g,"%2525"),
+               label: folders[x],
+               cssClass: "folder-link folder-open"
+            });
+         }
       }
+   }
+   else
+   {
+      paths.push(
+      {
+         href: targetPage,
+         label: msg.get(targetPageLabel),
+         cssClass: "folder-link"
+      });
    }
 
    return paths;
