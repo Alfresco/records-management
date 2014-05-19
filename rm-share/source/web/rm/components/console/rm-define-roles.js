@@ -670,8 +670,18 @@
          }
 
          // update button state
-         this.widgets.editRole.set("disabled", (roleId === null));
-         this.widgets.deleteRole.set("disabled", (roleId === null));
+         this.widgets.editRole.set("disabled", roleId === null);
+         this.widgets.deleteRole.set("disabled", roleId === null || this._isSystemRole(roleId));
+      },
+
+      /**
+       * Helper method to determine if the passed roleId belongs to reserved role
+       * @method _isReservedRole
+       * @param roleId The id of the role to check if it is reserved or not
+       */
+      _isSystemRole: function RMViewRoles__isSystemRole(roleId)
+      {
+         return roleId === "ExtendedReaders" || roleId === "ExtendedWriters";
       },
 
       /**
