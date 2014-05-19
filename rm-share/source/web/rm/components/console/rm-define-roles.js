@@ -681,7 +681,9 @@
        */
       _isSystemRole: function RMViewRoles__isSystemRole(roleId)
       {
-         return roleId === "ExtendedReaders" || roleId === "ExtendedWriters";
+         return roleId === "ExtendedReaders" ||
+            roleId === "ExtendedWriters" ||
+            roleId === "Administrator";
       },
 
       /**
