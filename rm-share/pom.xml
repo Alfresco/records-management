@@ -92,20 +92,9 @@
    <dependencies>
       <dependency>
          <groupId>org.alfresco</groupId>
-         <artifactId>alfresco-web-framework-commons</artifactId>
-         <version>${alfresco.base.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.alfresco</groupId>
          <artifactId>share</artifactId>
          <version>${alfresco.base.version}</version>
          <classifier>classes</classifier>
-         <exclusions>
-            <exclusion>
-               <groupId>org.alfresco</groupId>
-               <artifactId>alfresco-web-framework-commons</artifactId>
-            </exclusion>
-         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.alfresco</groupId>
