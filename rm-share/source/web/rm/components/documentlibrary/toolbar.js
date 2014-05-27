@@ -138,7 +138,7 @@
          // Manage Rules button:
          this.widgets.manageRules = $createYUIButton(this, "manageRules-button", this.onManageRules,
          {
-            disabled: false,
+            disabled: true,
             value: "manageRules"
          });
 
@@ -152,7 +152,7 @@
          // Manage Rules button:
          this.widgets.unfiledManageRules = $createYUIButton(this, "unfiledManageRules-button", this.onUnfiledManageRules,
          {
-            disabled: false,
+            disabled: true,
             value: "manageRules"
          });
 
