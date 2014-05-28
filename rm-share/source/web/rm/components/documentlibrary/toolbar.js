@@ -150,14 +150,14 @@
          });
 
          // Manage Rules button:
-         this.widgets.unfiledManageRules = $createYUIButton(this, "unfiledManageRules-button", this.onUnfiledManageRules,
+         this.widgets.unfiledManageRules = $createYUIButton(this, "unfiledManageRules-button", this.onManageRules,
          {
             disabled: true,
             value: "manageRules"
          });
 
          // Manage permissions button for unfiled records toolbar: user needs "file" permissions and the capability to modify permissions
-         this.widgets.unfiledManagePermissionsButton = $createYUIButton(this, "unfiledManagePermissions-button", this.onUnfiledManagePermissions,
+         this.widgets.unfiledManagePermissionsButton = $createYUIButton(this, "unfiledManagePermissions-button", this.onManagePermissions,
          {
             disabled: true,
             value: "managePermissions"
@@ -914,25 +914,12 @@
        * @param e {object} DomEvent
        * @param p_obj {object} Object passed back from addListener method
        */
-      onUnfiledManageRules: function DLTB_onUnfiledManageRules(e, p_obj)
-      {
-         var nodeRef = this.currentFilter.filterData != undefined ? this.currentFilter.filterData : this.modules.docList.doclistMetadata.parent.rmNode.unfiledRecordContainer,
-             page = "folder-rules?nodeRef=" + nodeRef + "&unfiled=true";
-
-         window.location.href = $siteURL(page);
-      },
-
-      /**
-       * Manage rules button click handler
-       *
-       * @method onManageRules
-       * @param e {object} DomEvent
-       * @param p_obj {object} Object passed back from addListener method
-       */
       onManageRules: function DLTB_onManageRules(e, p_obj)
       {
-         var nodeRef = this.modules.docList.doclistMetadata.parent.nodeRef,
-             page = "folder-rules?nodeRef=" + nodeRef + "&unfiled=false";
+         var parent = this.modules.docList.doclistMetadata.parent,
+            nodeRef = parent.nodeRef,
+            unfiled = (parent.type === "rma:unfiledRecordContainer" || parent.type === "rma:unfiledRecordFolder") ? true : false,
+            page = "folder-rules?nodeRef=" + nodeRef + "&unfiled=" + unfiled;
 
          window.location.href = $siteURL(page);
       },
@@ -952,24 +939,6 @@
             nodeType = parent.type,
             filePlanId = new Alfresco.util.NodeRef(parent.rmNode.filePlan).id,
             page = "rm-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType + "&filePlanId=" + filePlanId;
-
-         window.location.href = $siteURL(page);
-      },
-
-      /**
-       * Manage permissions button click handler for unfiled records
-       *
-       * @method onUnfiledManagePermissions
-       * @param e {object} DomEvent
-       * @param p_obj {object} Object passed back from addListener method
-       */
-      onUnfiledManagePermissions: function DLTB_onUnfiledManagePermissions(e, p_obj)
-      {
-         var rmNode = this.modules.docList.doclistMetadata.parent.rmNode,
-            nodeRef = rmNode.unfiledRecordContainer,
-            itemName = encodeURIComponent(rmNode.properties["cm:name"]),
-            nodeType = rmNode.type,
-            page = "rm-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType;
 
          window.location.href = $siteURL(page);
       }
