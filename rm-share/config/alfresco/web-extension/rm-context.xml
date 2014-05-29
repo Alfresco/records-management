@@ -285,6 +285,9 @@
    <bean id="evaluator.rm.action.fileHoldReport" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="fileHoldReport" />
    </bean>
+   <bean id="evaluator.rm.action.deleteHold" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="deleteHold" />
+   </bean>
 
    <!--                          -->
    <!-- DocLib Common Evaluators -->

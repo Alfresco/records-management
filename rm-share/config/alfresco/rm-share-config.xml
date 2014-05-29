@@ -576,6 +576,16 @@
             <evaluator>evaluator.rm.action.fileHoldReport</evaluator>
          </action>
 
+         <!-- Delete Hold -->
+         <action id="rm-delete-hold" type="javascript" label="actions.delete.hold" icon="../../../components/documentlibrary/actions/folder-delete">
+            <param name="function">onHoldDelete</param>
+            <param name="action">deleteHold</param>
+            <param name="successMessage">message.delete-hold.success</param>
+            <param name="failureMessage">message.delete-hold.failure</param>
+            <param name="failure">deleteHoldFailure</param>
+            <evaluator>evaluator.rm.action.deleteHold</evaluator>
+         </action>
+
       </actions>
 
       <!--
@@ -814,14 +824,14 @@
          <actionGroup id="rm-hold-browse">
             <action index="100" id="rm-edit-details" label="action.edit.hold"/>
             <action index="110" id="rm-manage-permissions" />
-            <action index="120" id="rm-delete" label="actions.delete.hold" />
+            <action index="120" id="rm-delete-hold" />
             <action index="125" id="rm-file-hold-report"/>
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
          <actionGroup id="rm-hold-details">
             <action index="100" id="rm-edit-details" label="action.edit.hold"/>
             <action index="110" id="rm-manage-permissions" />
-            <action index="120" id="rm-delete" label="actions.delete.hold" />
+            <action index="120" id="rm-delete-hold" />
             <action index="125" id="rm-file-hold-report"/>
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
