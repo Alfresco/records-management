@@ -1686,7 +1686,29 @@
                text: this.msg("button.ok"),
                handler: function RDLA_onHideRecordAction_confirm_ok()
                {
-                  me.onActionSimpleRepoAction(assets, owner);
+                  me._rmAction("message.delete-hold", assets, "deleteHold", null,
+                  {
+                     failure:
+                     {
+                        callback:
+                        {
+                           fn: function RDLA_onHideRecordAction_failure(data)
+                           {
+                              var text = me.msg("message.delete-hold.failure");
+                              if(data.json && data.json.message)
+                              {
+                                 text = data.json.message;
+                              }
+                              Alfresco.util.PopupManager.displayPrompt(
+                              {
+                                 title: Alfresco.util.message("message.failure"),
+                                 text: text
+                              });
+                           },
+                           scope: this
+                        }
+                     }
+                  });
                   this.destroy();
                }
             },
@@ -1698,31 +1720,6 @@
                },
                isDefault: true
             }]
-         });
-      },
-
-      /**
-       * Failure callback for deleting a hold.
-       *
-       * @method deleteHoldFailure
-       * @param data {object} Object literal containing ajax request and response
-       * @param obj {object} Caller-supplied object
-       *    <pre>
-       *       obj.displayName {string} Filename or number of files submitted to the action.
-       *    </pre>
-       */
-      deleteHoldFailure: function RDLA_deleteHoldFailure(data, obj)
-      {
-         // Display error
-         var text = this.msg("message.delete-hold.failure");
-         if(data.json && data.json.message)
-         {
-            text = data.json.message;
-         }
-         Alfresco.util.PopupManager.displayPrompt(
-         {
-            title: Alfresco.util.message("message.failure"),
-            text: text
          });
       }
    };

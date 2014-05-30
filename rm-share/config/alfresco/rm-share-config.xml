@@ -579,10 +579,6 @@
          <!-- Delete Hold -->
          <action id="rm-delete-hold" type="javascript" label="actions.delete.hold" icon="../../../components/documentlibrary/actions/folder-delete">
             <param name="function">onHoldDelete</param>
-            <param name="action">deleteHold</param>
-            <param name="successMessage">message.delete-hold.success</param>
-            <param name="failureMessage">message.delete-hold.failure</param>
-            <param name="failure">deleteHoldFailure</param>
             <evaluator>evaluator.rm.action.deleteHold</evaluator>
          </action>
 
