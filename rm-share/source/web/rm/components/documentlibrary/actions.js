@@ -428,7 +428,33 @@
                            this.destroy();
 
                            // Call the destroy action
-                           me._rmAction("message.destroy", assets, "destroy");
+                           me._rmAction("message.destroy", assets, "destroy", null,
+                           {
+                              success:
+                              {
+                                 callback:
+                                 {
+                                    fn: function()
+                                    {
+                                       Alfresco.util.PopupManager.displayMessage(
+                                       {
+                                          text: me.msg("message.destroy.success", $html(assets.displayName))
+                                       });
+
+                                       if (me.actionsView === "details")
+                                       {
+                                          var encodedPath = me.currentPath.length > 1 ? "?path=" + encodeURIComponent(me.currentPath) : "";
+                                          window.location = Alfresco.util.siteURL("documentlibrary" + encodedPath);
+                                       }
+                                       else
+                                       {
+                                          YAHOO.Bubbling.fire("metadataRefresh");
+                                       }
+                                    },
+                                    scope: this
+                                 }
+                              }
+                           });
                         },
                         isDefault: true
                      },
