@@ -1562,6 +1562,31 @@
                   this._rmAction("message.reject", assets, "reject",
                   {
                      "reason": value
+                  },
+                  {
+                     success:
+                     {
+                        callback:
+                        {
+                           fn: function()
+                           {
+                              Alfresco.util.PopupManager.displayMessage(
+                              {
+                                 text: this.msg("message.reject.success", $html(assets.displayName))
+                              });
+
+                              if (this.actionsView === "details")
+                              {
+                                 window.location = Alfresco.util.siteURL("documentlibrary#filter=unfiledRecords")
+                              }
+                              else
+                              {
+                                 YAHOO.Bubbling.fire("metadataRefresh");
+                              }
+                           },
+                           scope: this
+                        }
+                     }
                   });
                },
                scope: this
