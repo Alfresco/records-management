@@ -415,6 +415,7 @@
                <!--  Record fields -->
                <show id="rma:identifier" for-mode="view"/>
                <show id="rma:dateFiled" for-mode="view"/>
+               <show id="rma:location" />
                <show id="rmc:supplementalMarkingList" />
 
                <!--  Vital Record fields -->
