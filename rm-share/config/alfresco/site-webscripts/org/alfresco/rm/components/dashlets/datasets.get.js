@@ -5,14 +5,14 @@ function main()
    var site = url.templateArgs.site;
 
    model.data = {};
-   model.isRmAdmin = false;
+   model.isAdmin = false;
 
    // Check if the user is an RM Admin
    var conn = remote.connect("alfresco");
-   if (isRmAdmin(conn))
+   if (isAdmin(conn))
    {
       model.data = getDataSets(conn, site);
-      model.isRmAdmin = true;
+      model.isAdmin = true;
    }
 
    // Check if the site is an RM site

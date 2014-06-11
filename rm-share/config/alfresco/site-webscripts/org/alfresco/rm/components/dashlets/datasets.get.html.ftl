@@ -5,7 +5,7 @@
 <div class="dashlet">
    <div class="title">${msg("dataSet.header.title")}</div>
    <#if isRmSite>
-      <#if isRmAdmin>
+      <#if isAdmin>
          <div class="body dataset-body">
             <label class="dataset-label">${msg("dataSet.label")}:</label>
             <span class="align-left yui-button yui-menu-button" id="${el}-dataSets">

@@ -1,4 +1,4 @@
-function isRmAdmin(conn)
+function isAdmin(conn)
 {
    var roles = conn.get("/api/rma/admin/rmroles?user=" + encodeURIComponent(user.id));
    var rolesData = eval('(' + roles + ')').data;
