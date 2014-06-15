@@ -248,6 +248,7 @@
                      attributes.contentType = fileInfo.contentType.options[fileInfo.contentType.selectedIndex].value;
                      attributes.aspects = aspects.join(",");
                      attributes.overwrite = this.showConfig.overwrite;
+                     attributes.destination = this.showConfig.destination;
                      if (this.showConfig.thumbnails)
                      {
                         attributes.thumbnails = this.showConfig.thumbnails;
