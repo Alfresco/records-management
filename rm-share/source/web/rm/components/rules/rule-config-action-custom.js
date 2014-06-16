@@ -352,7 +352,14 @@
                            var path = selectedFolder.path;
                            if(unfiled)
                            {
-                              path = path.replace(/^\/.*?\//, '/');
+                              if((path.match(/\//g)||[]).length < 2)
+                              {
+                                  path = '/';
+                        	  }
+                              else
+                              {
+                                  path = path.replace(/^\/.*?\//, '/');
+                              }
                            }
                            this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "path", path);
                            Dom.get(this.id + "-recordFolderPath").value = path;
