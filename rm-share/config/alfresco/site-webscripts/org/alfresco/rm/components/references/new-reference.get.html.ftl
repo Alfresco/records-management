@@ -22,7 +22,6 @@
 
 <div class="form-container">
    <div class="caption"><span class="mandatory-indicator">*</span>${msg('label.required')}</div>
-   <form action="action" method="post">
    <div class="form-fields" id="template_x002e_dod5015-edit-metadata_x002e_edit-metadata-form-fields">
       <div class="form-field">
          <label for="new-ref-name">${msg("label.name")}:<span class="mandatory-indicator">*</span></label>
@@ -61,5 +60,5 @@
       </span>
    </div>
    <input type="hidden" name="${controlId}" value="" id="${controlId}" />
-   </form>   
+   </form>
 </div>
