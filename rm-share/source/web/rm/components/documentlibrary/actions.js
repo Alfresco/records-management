@@ -923,10 +923,19 @@
          var me = this;
          this.modules.fileReport.onOK = function RDLA_onActionFileReport_onOK()
          {
-            var destination = me.doclistMetadata.container;
+            var destination;
+
             if (Dom.get(this.id + "-unfiled-records").checked == false)
             {
                destination = this.selectedNode.data.nodeRef;
+            }
+            else if (me.actionsView === "details")
+            {
+               destination = me.recordData.node.rmNode.unfiledRecordContainer;
+            }
+            else
+            {
+               destination = me.doclistMetadata.parent.rmNode.unfiledRecordContainer;
             }
 
             me.onActionRecordsManagementRepoAction(this.options.assets, this.options.owner,
