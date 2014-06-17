@@ -200,13 +200,13 @@
          // Date Filed
          this.registerRenderer("RM_dateFiled", function(record, label)
          {
-        	 var dateFiled = record.jsNode.properties["rma:dateFiled"],
+          var dateFiled = record.jsNode.properties["rma:dateFiled"],
              html = "";
-        	 if (dateFiled !== undefined)
+          if (dateFiled !== undefined)
              {
                 html = '<span class="item">' + label + Alfresco.util.formatDate(record.jsNode.properties.rma_dateFiled.iso8601) + '</span>';
              }
-        	 return html;
+          return html;
          });
 
          // Publication Date
@@ -275,10 +275,37 @@
                   case "record-category":
                   case "record-folder":
                   case "metadata-stub-folder":
-                  case "transfer-container":
-                  case "hold":
-                  case "unfiled-record-folder":
                      elCell.innerHTML = '<span class="folder-small">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generatePathMarkup(locn) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-32.png" /></a>';
+                     break;
+
+                  case "transfer-container":
+                     var filterObj =
+                     {
+                        filterId: "transfers",
+                        filterData: record.nodeRef,
+                        filterDisplay: $html(record.displayName)
+                     };
+                     elCell.innerHTML = '<span class="folder-small">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-32.png" /></a>';
+                     break;
+
+                  case "hold":
+                     var filterObj =
+                     {
+                        filterId: "holds",
+                        filterData: record.nodeRef,
+                        filterDisplay: $html(record.displayName)
+                     };
+                     elCell.innerHTML = '<span class="folder-small">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-32.png" /></a>';
+                     break;
+
+                  case "unfiled-record-folder":
+                     var filterObj =
+                     {
+                        filterId: "unfiledRecords",
+                        filterData: record.nodeRef,
+                        filterDisplay: $html(record.displayName)
+                     };
+                     elCell.innerHTML = '<span class="folder-small">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-32.png" /></a>';
                      break;
 
                   case "record-nonelec":
@@ -320,10 +347,37 @@
                   case "record-category":
                   case "record-folder":
                   case "metadata-stub-folder":
-                  case "transfer-container":
-                  case "hold":
-                  case "unfiled-record-folder":
                      elCell.innerHTML = '<span class="folder">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generatePathMarkup(locn) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-48.png" /></a>';
+                     break;
+
+                  case "transfer-container":
+                     var filterObj =
+                     {
+                        filterId: "transfers",
+                        filterData: record.nodeRef,
+                        filterDisplay: $html(record.displayName)
+                     };
+                     elCell.innerHTML = '<span class="folder">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-48.png" /></a>';
+                     break;
+
+                  case "hold":
+                     var filterObj =
+                     {
+                        filterId: "holds",
+                        filterData: record.nodeRef,
+                        filterDisplay: $html(record.displayName)
+                     };
+                     elCell.innerHTML = '<span class="folder">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-48.png" /></a>';
+                     break;
+
+                  case "unfiled-record-folder":
+                     var filterObj =
+                     {
+                        filterId: "unfiledRecords",
+                        filterData: record.nodeRef,
+                        filterDisplay: $html(record.displayName)
+                     };
+                     elCell.innerHTML = '<span class="folder">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-48.png" /></a>';
                      break;
 
                   case "record-nonelec":
