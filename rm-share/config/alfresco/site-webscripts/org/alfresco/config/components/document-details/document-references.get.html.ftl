@@ -29,7 +29,7 @@
       <#if (references.toThisNode?size > 0)>
          <ul>
          <#list references.toThisNode as ref>
-            <li>${ref.label?html} <a href="${siteURL("document-details?nodeRef="+ref.targetRef)}"><span>${docNames.to[ref_index]}</span></a></li>
+            <li>${ref.label?html} <a href="${url.context}/page/site/rm/document-details?nodeRef=${ref.targetRef}"><span>${docNames.to[ref_index]}</span></a></li>
          </#list>
          </ul>
       <#else>
@@ -40,7 +40,7 @@
       <#if (references.fromThisNode?size > 0)>
          <ul>
          <#list references.fromThisNode as ref>
-            <li>${ref.label?html} <a href="${siteURL("document-details?nodeRef="+ref.targetRef)}"><span>${docNames.from[ref_index]}</span></a></li>
+            <li>${ref.label?html} <a href="${url.context}/page/site/rm/document-details?nodeRef=${ref.targetRef}"><span>${docNames.from[ref_index]}</span></a></li>
          </#list>
          </ul>
       <#else>
