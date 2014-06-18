@@ -283,7 +283,7 @@
                      {
                         filterId: "transfers",
                         filterData: record.nodeRef,
-                        filterDisplay: $html(record.displayName)
+                        filterDisplay: scope.msg("details.transfer-container.title", $html(record.displayName))
                      };
                      elCell.innerHTML = '<span class="folder-small">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-32.png" /></a>';
                      break;
@@ -355,7 +355,7 @@
                      {
                         filterId: "transfers",
                         filterData: record.nodeRef,
-                        filterDisplay: $html(record.displayName)
+                        filterDisplay: scope.msg("details.transfer-container.title", $html(record.displayName))
                      };
                      elCell.innerHTML = '<span class="folder">' + (isLink ? '<span class="link"></span>' : '') + '<a href="#" class="filter-change" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '"><img src="' + Alfresco.constants.URL_RESCONTEXT + 'rm/components/documentlibrary/images/' + type + '-48.png" /></a>';
                      break;
