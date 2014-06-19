@@ -115,21 +115,6 @@
                $html(transferTitle) + '</a>' + titleHTML + '</h3>';
          });
 
-         // Hold Container title
-         //this.registerRenderer("RM_holdContainer", function rma_holdContainer(record, label)
-         //{
-         //   var createdOn = $date(record.jsNode.properties.created.iso8601, this.msg("details.hold-container.title.date-format")),
-         //      holdTitle = this.msg("details.hold-container.title",  createdOn),
-         //      filterObj =
-         //      {
-         //         filterId: "holds",
-         //         filterData: record.nodeRef,
-         //         filterDisplay: holdTitle
-         //      };
-
-         //   return '<h3 class="filename"><a class="filter-change" href="#" rel="' + Alfresco.DocumentList.generateFilterMarkup(filterObj) + '">' + $html(holdTitle) + '</a></h3>';
-         //});
-
          // Hold title
          this.registerRenderer("RM_hold", function rma_hold(record, label)
          {
