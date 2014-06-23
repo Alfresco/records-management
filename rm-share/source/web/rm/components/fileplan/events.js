@@ -160,12 +160,7 @@
                   fn: function(response)
                   {
                      var nextDispositionAction = response.json.data;
-                     if (nextDispositionAction.notFound)
-                     {
-                        // Could not find file plan for node (record) try parent's (folder's)
-                        this._getParentsDispositionSchedule();
-                     }
-                     else
+                     if (!nextDispositionAction.notFound)
                      {
                         if (nextDispositionAction && nextDispositionAction.events.length === 0 && nextDispositionAction.label)
                         {
@@ -185,79 +180,6 @@
                   fn: function(response)
                   {
                      this._displayMessage(this.msg("label.loadFailure"));
-                  },
-                  scope: this
-               }
-            });
-         }
-      },
-
-      /**
-       * Called if the nodeRef has no disposition schedule.
-       * Will locate parents disposition schedule and display
-       * the asOf date for the next action and a link to the parents events.
-       *
-       * @method _getParentsDispositionSchedule
-       * @private
-       */
-      _getParentsDispositionSchedule: function Events__getParentsDispositionSchedule()
-      {
-         if (this._lookForParentsDispositionSchedule)
-         {
-            // Only look once
-            this._lookForParentsDispositionSchedule = false;
-
-            // First get the parent nodeRef
-            Alfresco.util.Ajax.jsonGet(
-            {
-               url: Alfresco.constants.PROXY_URI + "slingshot/doclib2/node/" + this.options.nodeRef.uri,
-               successCallback:
-               {
-                  fn: function (response)
-                  {
-                     if (response.json.item && response.json.item.parent)
-                     {
-                        // Get the parent nodeRef from the reponse and try to find its fileplan
-                        var parentNodeRef = new Alfresco.util.NodeRef(response.json.item.parent.properties["rma:rootNodeRef"]);
-                        Alfresco.util.Ajax.jsonGet(
-                        {
-                           url: Alfresco.constants.PROXY_URI_RELATIVE + "api/node/" + parentNodeRef.uri + "/nextdispositionaction",
-                           successCallback:
-                           {
-                              fn: function(response)
-                              {
-                                 var nextDispositionAction = response.json.data;
-                                 if (nextDispositionAction.notFound)
-                                 {
-                                    this._displayMessage(this.msg("label.noDispositionSchedule"));
-                                 }
-                                 else
-                                 {
-                                    // File plan found
-                                    this._dispositionScheduleAppliedToParent = true;
-                                    
-                                    // Retreive its as of date
-                                    var asOf = Alfresco.util.fromISO8601(response.json.data.asOf);
-                                    asOf = asOf ? Alfresco.util.formatDate(asOf) : this.msg("label.none");
-                                    
-                                    // Display a link to the fileplan's events
-                                    var msgHTML = "<div>" + this.msg("label.dispositionScheduleAppliedToFolder", asOf) + "</div><br />";
-                                    msgHTML += "<a href='" + Alfresco.constants.URL_PAGECONTEXT + "site/" + this.options.siteId + "/rm-record-folder-details?nodeRef=" + parentNodeRef.nodeRef + "'>" + this.msg("label.linkToFoldersDispositionSchedule") + "</a>";
-                                    this._displayMessage(msgHTML);
-                                 }
-                              },
-                              scope: this
-                           },
-                           failureCallback:
-                           {
-                              fn: function(response)
-                              {
-                                 this._displayMessage(this.msg("label.loadFailure"));
-                              },
-                              scope: this
-                           }
-                        });
-                     }
                   },
                   scope: this
                }
