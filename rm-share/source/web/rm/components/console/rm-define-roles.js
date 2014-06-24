@@ -176,9 +176,12 @@
             {
                // checkbox representing each capabilities ID has that ID in the DOM
                var checkBox = Dom.get(i);
-               checkBox.checked = true;
-               var checkBoxParent = checkBox.parentElement.parentElement;
-               parent[checkBoxParent.id] = checkBoxParent;
+               if (checkBox)
+               {
+                  checkBox.checked = true;
+                  var checkBoxParent = checkBox.parentElement.parentElement;
+                  parent[checkBoxParent.id] = checkBoxParent;
+               }
             }
          }
 
