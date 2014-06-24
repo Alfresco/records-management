@@ -249,12 +249,6 @@
    <bean id="evaluator.rm.action.accession-complete" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="accessionComplete" />
    </bean>
-   <bean id="evaluator.rm.action.relinquish" parent="evaluator.rm.common.actionEvaluator">
-      <property name="action" value="relinquish" />
-   </bean>
-   <bean id="evaluator.rm.action.edit-reason" parent="evaluator.rm.common.actionEvaluator">
-      <property name="action" value="editReason" />
-   </bean>
    <bean id="evaluator.rm.action.download-record" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="downloadRecord" />
    </bean>
@@ -287,6 +281,9 @@
    </bean>
    <bean id="evaluator.rm.action.deleteHold" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="deleteHold" />
+   </bean>
+   <bean id="evaluator.rm.action.editHold" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="editHold" />
    </bean>
 
    <!--                          -->

@@ -479,20 +479,6 @@
             <evaluator>evaluator.rm.action.accession-complete</evaluator>
          </action>
 
-         <!-- Relinquish -->
-         <action id="rm-relinquish" type="javascript" label="actions.relinquish" icon="../../../rm/components/documentlibrary/actions/rm-relinquish">
-            <param name="function">onActionRecordsManagementRepoAction</param>
-            <param name="action">relinquishHold</param>
-            <param name="message">message.relinquish</param>
-            <evaluator>evaluator.rm.action.relinquish</evaluator>
-         </action>
-
-         <!-- Edit Hold Details -->
-         <action id="rm-edit-reason" type="javascript" label="actions.edit-reason" icon="../../../rm/components/documentlibrary/actions/rm-edit-reason">
-            <param name="function">onActionEditHoldDetails</param>
-            <evaluator>evaluator.rm.action.edit-reason</evaluator>
-         </action>
-
          <!-- Reject record -->
          <action id="rm-reject" type="javascript" label="actions.reject" icon="../../../rm/components/documentlibrary/actions/rm-reject">
             <param name="function">onActionReject</param>
@@ -578,6 +564,12 @@
          <action id="rm-delete-hold" type="javascript" label="actions.delete.hold" icon="../../../components/documentlibrary/actions/folder-delete">
             <param name="function">onHoldDelete</param>
             <evaluator>evaluator.rm.action.deleteHold</evaluator>
+         </action>
+         
+         <!--  Edit Hold -->
+         <action id="rm-edit-hold" type="pagelink" label="action.edit.hold" icon="folder-edit-metadata">
+            <param name="page">edit-metadata?nodeRef={node.nodeRef}</param>
+            <evaluator>evaluator.rm.action.editHold</evaluator>
          </action>
 
       </actions>
@@ -816,14 +808,14 @@
          </actionGroup>
 
          <actionGroup id="rm-hold-browse">
-            <action index="100" id="rm-edit-details" label="action.edit.hold"/>
+            <action index="100" id="rm-edit-hold"/>
             <action index="110" id="rm-manage-permissions" />
             <action index="120" id="rm-delete-hold" />
             <action index="125" id="rm-file-hold-report"/>
             <action index="130" id="rm-view-audit-log" />
          </actionGroup>
          <actionGroup id="rm-hold-details">
-            <action index="100" id="rm-edit-details" label="action.edit.hold"/>
+            <action index="100" id="rm-edit-hold"/>
             <action index="110" id="rm-manage-permissions" />
             <action index="120" id="rm-delete-hold" />
             <action index="125" id="rm-file-hold-report"/>
