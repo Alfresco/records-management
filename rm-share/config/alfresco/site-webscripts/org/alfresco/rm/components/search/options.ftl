@@ -104,10 +104,6 @@
                      <label for="${el}-metadata-dispositionAuthority">${msg("label.dispositionAuthority")}</label>
                   </li>
                   <li>
-                     <input type="checkbox" id="${el}-metadata-holdReason" />
-                     <label for="${el}-metadata-holdReason">${msg("label.holdReason")}</label>
-                  </li>
-                  <li>
                      <input type="checkbox" id="${el}-metadata-vitalRecordReviewPeriod" />
                      <label for="${el}-metadata-vitalRecordReviewPeriod">${msg("label.vitalRecordReviewPeriod")}</label>
                   </li>                  

@@ -258,7 +258,6 @@
                      { text: this.msg("label.hasDispositionSchedule"), value: "hasDispositionSchedule" },
                      { text: this.msg("label.dispositionInstructions"), value: "dispositionInstructions" },
                      { text: this.msg("label.dispositionAuthority"), value: "dispositionAuthority" },
-                     { text: this.msg("label.holdReason"), value: "holdReason" },
                      { text: this.msg("label.vitalRecordReviewPeriod"), value: "vitalRecordReviewPeriod" }
                   ]
                }

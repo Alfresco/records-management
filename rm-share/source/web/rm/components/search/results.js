@@ -253,7 +253,7 @@
             "properties.rma_recordSearchDispositionActionName", "properties.rma_recordSearchDispositionActionAsOf",
             "properties.rma_recordSearchDispositionInstructions", "properties.rma_recordSearchDispositionAuthority",
             "properties.rma_recordSearchDispositionPeriod", "properties.rma_recordSearchDispositionEventsEligible",
-            "properties.rma_recordSearchVitalRecordReviewPeriod", "properties.rma_recordSearchHoldReason"
+            "properties.rma_recordSearchVitalRecordReviewPeriod"
          ];
 
          // add the custom groups of properties
@@ -489,7 +489,6 @@
             { key: "hasDispositionSchedule", label: me._msg("label.hasDispositionSchedule"), field: "properties.rma_recordSearchHasDispositionSchedule", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
             { key: "dispositionInstructions", label: me._msg("label.dispositionInstructions"), field: "properties.rma_recordSearchDispositionInstructions", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
             { key: "dispositionAuthority", label: me._msg("label.dispositionAuthority"), field: "properties.rma_recordSearchDispositionAuthority", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
-            { key: "holdReason", label: me._msg("label.holdReason"), field: "properties.rma_recordSearchHoldReason", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
             { key: "vitalRecordReviewPeriod", label: me._msg("label.vitalRecordReviewPeriod"), field: "properties.rma_recordSearchVitalRecordReviewPeriod", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true }
          ];
 
