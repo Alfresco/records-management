@@ -143,7 +143,7 @@
          });
 
          // DataSource definition
-         var uriHolds = encodeURI(Alfresco.constants.PROXY_URI + "api/rma/holds?" + itemNodeRef + includedInHold);
+         var uriHolds = encodeURI(Alfresco.constants.PROXY_URI + "api/rma/holds?" + itemNodeRef + includedInHold + "&fileOnly=true");
          this.widgets.listDataSource = new YAHOO.util.DataSource(uriHolds,
          {
             responseType: YAHOO.util.DataSource.TYPE_JSON,
