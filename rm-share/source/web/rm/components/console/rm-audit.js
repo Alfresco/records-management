@@ -539,25 +539,6 @@
 
       onAuditRecordLocationSelected : function RM_Audit_AuditRecordLocationSelected(e, args)
       {
-         if (!args[1].isFolder)
-         {
-            Alfresco.util.PopupManager.displayPrompt(
-            {
-               title: this.msg("label.select.recordfolder.title"),
-               text: this.msg("label.select.recordfolder.text"),
-               buttons: [
-               {
-                  text: this.msg("button.ok"),
-                  handler: function RM_Audit_FileRecord_confirm_ok()
-                  {
-                     this.destroy();
-                  },
-                  isDefault: true
-               }]
-            });
-            return;
-         }
-
          var me = this;
          var dataObj = {
             destination: args[1].nodeRef,
