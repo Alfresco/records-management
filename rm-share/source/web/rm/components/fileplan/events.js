@@ -160,12 +160,7 @@
                   fn: function(response)
                   {
                      var nextDispositionAction = response.json.data;
-                     if (nextDispositionAction.notFound)
-                     {
-                        // Could not find file plan for node (record) try parent's (folder's)
-                        this._getParentsDispositionSchedule();
-                     }
-                     else
+                     if (!nextDispositionAction.notFound)
                      {
                         if (nextDispositionAction && nextDispositionAction.events.length === 0 && nextDispositionAction.label)
                         {
