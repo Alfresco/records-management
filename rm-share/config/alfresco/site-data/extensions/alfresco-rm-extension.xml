@@ -3,6 +3,7 @@
 
      <module>
          <id>Alfresco :: Records Management Global (1)</id>
+         <auto-deploy-index>10</auto-deploy-index>
          <auto-deploy>true</auto-deploy>
 
          <!-- Base evaluator that decides if any of the component bindings should be used at all -->
@@ -25,6 +26,7 @@
 
       <module>
          <id>Alfresco :: Records Management Site (2)</id>
+         <auto-deploy-index>20</auto-deploy-index>
          <auto-deploy>true</auto-deploy>
 
          <!-- Base evaluator that decides if any of the component bindings should be used at all -->
@@ -1112,6 +1114,7 @@
 
       <module>
          <id>Alfresco :: Records Management Config (3)</id>
+         <auto-deploy-index>30</auto-deploy-index>
          <auto-deploy>true</auto-deploy>
          <customizations>
             <customization>
