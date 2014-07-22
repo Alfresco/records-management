@@ -31,7 +31,7 @@
          </span>
          <div id="email-menu-container"></div>
          <span>${msg('label.to')}</span>
-         <button id="${htmlid}-rmproperty-button">${msg("message.select")}</button>
+         <button id="${htmlid}-rmproperty-button">${msg("message.select")}&nbsp;&#9662;</button>
          <span id="${htmlid}-add-mapping-button" class="align-left yui-button yui-push-button">
             <span class="first-child">
                <button id="${htmlid}-add-mapping-button" type="button">${msg('label.add')}</button>

@@ -22,7 +22,7 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
 
 /**
  * Dashboard DataSet component.
- * 
+ *
  * @namespace Alfresco
  * @class Alfresco.rm.dashlet.DataSet
  */
@@ -30,7 +30,7 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
 {
    /**
     * Dashboard DataSet constructor.
-    * 
+    *
     * @param {String} htmlId The HTML id of the parent element
     * @return {Alfresco.rm.dashlet.DataSet} The new component instance
     * @constructor
@@ -53,7 +53,7 @@ Alfresco.rm.dashlet = Alfresco.rm.dashlet || {};
             type: "menu",
             menu: "dataSets-menu",
             title: this.msg("dataSet.select.title"),
-            label: this.msg("dataSet.select.label"),
+            label: this.msg("dataSet.select.label") + " " + Alfresco.constants.MENU_ARROW_SYMBOL,
             lazyloadmenu: false
          });
 

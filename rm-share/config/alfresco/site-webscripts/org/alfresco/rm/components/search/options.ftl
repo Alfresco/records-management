@@ -106,20 +106,20 @@
                   <li>
                      <input type="checkbox" id="${el}-metadata-vitalRecordReviewPeriod" />
                      <label for="${el}-metadata-vitalRecordReviewPeriod">${msg("label.vitalRecordReviewPeriod")}</label>
-                  </li>                  
-                  
+                  </li>
+
                   <#list groups as group>
-                  
+
                      <li class="metadata-header">${group.label?html}</li>
                      <#list group.properties as property>
-                     	<li>                     		
+                     	<li>
                      		<input type="checkbox" id="${el}-metadata-${property.name}" />
-                     		<label for="${el}-metadata-${property.name}">${property.label?html}</label>	
+                     		<label for="${el}-metadata-${property.name}">${property.label?html}</label>
                      	</li>
-                     </#list>	
-                  
+                     </#list>
+
                   </#list>
-                  
+
                </ul>
             </div>
          </div>
@@ -130,7 +130,7 @@
                <div>
                   <span class="sortlabel"><#if i=1>${msg("label.sortFirst")}<#else>${msg("label.sortNext")}</#if></span>
                   <span>
-                     <input id="${el}-sort${i}" type="button" name="sort${i}" value="<#if i=1>${msg("label.identifier")}<#else>${msg("label.sortNone")}</#if>" />
+                     <input id="${el}-sort${i}" type="button" name="sort${i}" value="<#if i=1>${msg("label.identifier")}&nbsp;&#9662;<#else>${msg("label.sortNone")}&nbsp;&#9662;</#if>" />
                      <select id="${el}-sort${i}-menu">
                         <#if i!=1><option value="">${msg("label.sortNone")}</option></#if>
                         <option value="rma:identifier">${msg("label.identifier")}</option>
@@ -143,7 +143,7 @@
                         <option value="cm:modified">${msg("label.modified")}</option>
                         <option value="cm:author">${msg("label.author")}</option>
                         <option value="rma:dateFiled">${msg("label.dateFiled")}</option>
-                        <option value="rma:reviewAsOf">${msg("label.reviewDate")}</option>                        
+                        <option value="rma:reviewAsOf">${msg("label.reviewDate")}</option>
                         <option value="rma:location">${msg("label.location")}</option>
                         <option value="rmc:supplementalMarkingList">${msg("label.supplementalMarkingList")}</option>
                         <!-- double ?html encoding required here due to YUI bug -->
@@ -155,7 +155,7 @@
                      </select>
                   </span>
                   <span>
-                     <input id="${el}-sort${i}-order" type="button" name="sort${i}-order" value="${msg("label.sortAscending")}" />
+                     <input id="${el}-sort${i}-order" type="button" name="sort${i}-order" value="${msg("label.sortAscending")}&nbsp;&#9662;" />
                      <select id="${el}-sort${i}-order-menu">
                         <option value="asc">${msg("label.sortAscending")}</option>
                         <option value="dsc">${msg("label.sortDescending")}</option>

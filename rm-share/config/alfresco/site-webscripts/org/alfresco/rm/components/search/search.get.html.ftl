@@ -44,7 +44,7 @@
          <!-- Saved Searches menu button -->
          <div class="right-button">
             <span class="yui-button yui-push-button" id="${el}-savedsearches-button">
-               <span class="first-child"><button>${msg("button.savedsearches")}</button></span>
+               <span class="first-child"><button>${msg("button.savedsearches")}&nbsp;&#9662;</button></span>
             </span>
          </div>
       </div>
@@ -61,7 +61,7 @@
             <div>
                <span class="insertLabel">${msg("label.insertfield")}:</span>
                <span>
-                  <input id="${el}-insertfield" type="button" name="insertfield" value="${msg("label.select")}" />
+                  <input id="${el}-insertfield" type="button" name="insertfield" value="${msg("label.select")}&nbsp;&#9662;" />
                </span>
                <span class="insertDate">${msg("label.insertdate")}:</span>
                <div id="${el}-date" class="datepicker"></div>

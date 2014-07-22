@@ -618,7 +618,7 @@
                var menuItem = p_aArgs[1];
                if (menuItem)
                {
-                  me.widgets.sortMenus[index].set("label", menuItem.cfg.getProperty("text"));
+                  me.widgets.sortMenus[index].set("label", menuItem.cfg.getProperty("text")  + " " + Alfresco.constants.MENU_ARROW_SYMBOL);
                   me.sortby[index].field = menuItem.value;
                }
             }, i);
@@ -633,7 +633,7 @@
                var menuItem = p_aArgs[1];
                if (menuItem)
                {
-                  me.widgets.sortOrderMenus[index].set("label", menuItem.cfg.getProperty("text"));
+                  me.widgets.sortOrderMenus[index].set("label", menuItem.cfg.getProperty("text") + " " + Alfresco.constants.MENU_ARROW_SYMBOL);
                   me.sortby[index].order = menuItem.value;
                }
             }, i);

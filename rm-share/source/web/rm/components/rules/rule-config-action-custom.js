@@ -304,7 +304,7 @@
             currentCtx: {},
             edit: function (containerEl, configDef, paramDef, ruleConfig, value)
             {
-               var unfiledParameter = YAHOO.util.History.getQueryStringParameter("unfiled");
+               var unfiledParameter = Alfresco.util.getQueryStringParameter("unfiled");
                var unfiled = (configDef.name != "fileTo") && (unfiledParameter == "true");
                var mode;
                switch(configDef.name)

@@ -103,7 +103,7 @@
               <label for="${htmlid}-events-menu">${msg('label.header-event')}:</label>
            </div>
            <div class="bd">
-              <input id="${htmlid}-audit-events" name="${htmlid}-audit-events" value="${msg("label.all")}" />
+              <input id="${htmlid}-audit-events" name="${htmlid}-audit-events" value="${msg("label.all")}&nbsp;&#9662;" />
               <select name="${htmlid}-audit-events-menu" id="${htmlid}-audit-events-menu" onchange="" size="1">
                  <option value="ALL">${msg("label.all")}</option>
                  <#list events as e>

@@ -59,7 +59,7 @@
          this.widgets.editButton.set("disabled", true);
 
          // Send the user to edit rule page
-         var unfiled = YAHOO.util.History.getQueryStringParameter("unfiled");
+         var unfiled = Alfresco.util.getQueryStringParameter("unfiled");
          if(unfiled != "true")
          {
             unfiled = "false";

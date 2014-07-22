@@ -326,7 +326,7 @@
             ]
          });
          // set menu button text on current permission
-         this.modifyMenus[i].set("label", (permission.id === "Filing" ? msgReadFile : msgReadOnly));
+         this.modifyMenus[i].set("label", (permission.id === "Filing" ? msgReadFile : msgReadOnly) + " " + Alfresco.constants.MENU_ARROW_SYMBOL);
          // subscribe to the menu click event
          this.modifyMenus[i].getMenu().subscribe("click", function(p_sType, p_aArgs, index)
          {

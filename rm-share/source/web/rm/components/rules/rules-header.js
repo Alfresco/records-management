@@ -75,7 +75,7 @@
        */
       onNewRuleButtonClick: function RulesHeader_onNewRuleButtonClick(type, args)
       {
-         var unfiled = YAHOO.util.History.getQueryStringParameter("unfiled");
+         var unfiled = Alfresco.util.getQueryStringParameter("unfiled");
          if(unfiled != "true")
          {
             unfiled = "false";
