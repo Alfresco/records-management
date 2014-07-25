@@ -15,6 +15,10 @@ function disableRecordDetailsComponent(value)
       if (model.site != (item.location.site != null ? item.location.site.name : null) && item.node.isRmNode)
       {
          model[value] = null;
+         if (value == "allowNewVersionUpload")
+         {
+            model.exist = false;
+         }
       }
    }
 }
