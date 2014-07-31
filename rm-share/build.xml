@@ -7,7 +7,7 @@
    <property file="build.local.properties" />
    <property file="build.properties" />
 
-   <target name="assembleIconPackage" description="">
+   <target name="assembleIconPackage">
       <delete dir="${ant.build.directory}/icons" failonerror="true" />
       <copy todir="${ant.build.directory}/icons/${ant.project.name}" failonerror="true">
          <fileset dir=".">
@@ -16,8 +16,7 @@
          </fileset>
       </copy>
    </target>
-		   
-   <target name="unitTest" depends="install">
-   </target>
-	
+
+   <target name="unitTest"/>
+
 </project>
