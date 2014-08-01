@@ -56,6 +56,12 @@
          },
          FileTo:
          {
+            text: function(configDef, ruleConfig, configEl)
+            {
+               this._getParamDef(configDef, "createRecordPath").displayLabel = this.msg("fileTo.createRecordPath.label");
+               this._getParamDef(configDef, "path").displayLabel = this.msg("fileTo.path.label");
+               return configDef;
+            },
             edit: function(configDef, ruleConfig, configEl)
             {
                this._hideParameters(configDef.parameterDefinitions);
@@ -74,11 +80,13 @@
 
                var path = this._getParamDef(configDef, "path");
                path._type = "hidden";
+               path.displayLabel = this.msg("fileTo.path.label"),
                path._displayLabelToRight = false;
                path._hideColon = true;
 
                var createRecordPath = this._getParamDef(configDef, "createRecordPath");
                createRecordPath._type = null;
+               createRecordPath.displayLabel = this.msg("fileTo.createRecordPath.label"),
                createRecordPath._displayLabelToRight = false;
                createRecordPath._hideColon = true;
 
@@ -87,6 +95,12 @@
          },
          CopyTo:
          {
+            text: function(configDef, ruleConfig, configEl)
+            {
+               this._getParamDef(configDef, "createRecordPath").displayLabel = this.msg("fileTo.createRecordPath.label");
+               this._getParamDef(configDef, "path").displayLabel = this.msg("fileTo.path.label");
+               return configDef;
+            },
             edit: function(configDef, ruleConfig, configEl)
             {
                this._hideParameters(configDef.parameterDefinitions);
@@ -105,11 +119,13 @@
 
                var path = this._getParamDef(configDef, "path");
                path._type = "hidden";
+               path.displayLabel = this.msg("fileTo.path.label"),
                path._displayLabelToRight = false;
                path._hideColon = true;
 
                var createRecordPath = this._getParamDef(configDef, "createRecordPath");
                createRecordPath._type = null;
+               createRecordPath.displayLabel = this.msg("fileTo.createRecordPath.label"),
                createRecordPath._displayLabelToRight = false;
                createRecordPath._hideColon = true;
 
@@ -118,6 +134,12 @@
          },
          MoveTo:
          {
+            text: function(configDef, ruleConfig, configEl)
+            {
+               this._getParamDef(configDef, "createRecordPath").displayLabel = this.msg("fileTo.createRecordPath.label");
+               this._getParamDef(configDef, "path").displayLabel = this.msg("fileTo.path.label");
+               return configDef;
+            },
             edit: function(configDef, ruleConfig, configEl)
             {
                this._hideParameters(configDef.parameterDefinitions);
@@ -136,11 +158,13 @@
 
                var path = this._getParamDef(configDef, "path");
                path._type = "hidden";
+               path.displayLabel = this.msg("fileTo.path.label"),
                path._displayLabelToRight = false;
                path._hideColon = true;
 
                var createRecordPath = this._getParamDef(configDef, "createRecordPath");
                createRecordPath._type = null;
+               createRecordPath.displayLabel = this.msg("fileTo.createRecordPath.label"),
                createRecordPath._displayLabelToRight = false;
                createRecordPath._hideColon = true;
 
@@ -149,6 +173,12 @@
          },
          LinkTo:
          {
+            text: function(configDef, ruleConfig, configEl)
+            {
+               this._getParamDef(configDef, "createRecordPath").displayLabel = this.msg("fileTo.createRecordPath.label");
+               this._getParamDef(configDef, "path").displayLabel = this.msg("fileTo.path.label");
+               return configDef;
+            },
             edit: function(configDef, ruleConfig, configEl)
             {
                this._hideParameters(configDef.parameterDefinitions);
@@ -167,11 +197,13 @@
 
                var path = this._getParamDef(configDef, "path");
                path._type = "hidden";
+               path.displayLabel = this.msg("fileTo.path.label"),
                path._displayLabelToRight = false;
                path._hideColon = true;
 
                var createRecordPath = this._getParamDef(configDef, "createRecordPath");
                createRecordPath._type = null;
+               createRecordPath.displayLabel = this.msg("fileTo.createRecordPath.label"),
                createRecordPath._displayLabelToRight = false;
                createRecordPath._hideColon = true;
 
