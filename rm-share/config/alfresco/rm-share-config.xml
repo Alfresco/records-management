@@ -522,6 +522,16 @@
             <evaluator>evaluator.rm.action.hide</evaluator>
          </action>
 
+         <!-- Move record in a collab site -->
+         <action id="dm-move-record" type="javascript" label="actions.move-dm-record" icon="../../../components/documentlibrary/actions/document-move-to">
+            <param name="function">onActionDmMoveTo</param>
+            <param name="action">move-dm-record</param>
+            <param name="successMessage">message.moveDmRecord.success</param>
+            <param name="failureMessage">message.moveDmRecord.failure</param>
+            <param name="targetNodeRef">{targetNodeRef}</param>
+            <evaluator>evaluator.rm.action.moveDmRecord</evaluator>
+         </action>
+
          <!--  File destruction report -->
          <action id="rm-file-destruction-report" type="javascript" label="actions.file-destruction-report" icon="../../../rm/components/documentlibrary/actions/rm-destruction-report">
             <param name="function">onActionFileDestructionReport</param>
@@ -565,7 +575,7 @@
             <param name="function">onHoldDelete</param>
             <evaluator>evaluator.rm.action.deleteHold</evaluator>
          </action>
-         
+
          <!--  Edit Hold -->
          <action id="rm-edit-hold" type="pagelink" label="action.edit.hold" icon="folder-edit-metadata">
             <param name="page">edit-metadata?nodeRef={node.nodeRef}</param>
@@ -681,6 +691,7 @@
             <action index="100" id="rm-document-download" />
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
+            <action index="130" id="dm-move-record" />
          </actionGroup>
 
          <actionGroup id="rm-record-details">
@@ -709,8 +720,10 @@
          </actionGroup>
 
          <actionGroup id="rm-doclib-record-details">
+            <action index="100" id="rm-document-download" />
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
+            <action index="130" id="dm-move-record" />
          </actionGroup>
 
          <actionGroup id="rm-undeclared-record-browse">
@@ -739,6 +752,7 @@
             <action index="100" id="rm-document-download" />
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
+            <action index="130" id="dm-move-record" />
          </actionGroup>
 
          <actionGroup id="rm-undeclared-record-details">
@@ -763,8 +777,10 @@
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-details">
+            <action index="100" id="rm-document-download" />
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
+            <action index="130" id="dm-move-record" />
          </actionGroup>
 
          <actionGroup id="rm-metadata-stub-folder-browse">

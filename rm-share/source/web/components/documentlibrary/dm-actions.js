@@ -71,11 +71,53 @@
    YAHOO.Bubbling.fire("registerAction",
    {
       actionName: "onHideRecordSuccess",
-      fn: function DLTB_onHideRecordSuccessSuccess(record, owner)
+      fn: function DLTB_onHideRecordSuccess(record, owner)
       {
          if (this.actionsView === "details")
          {
             window.location.href = window.location.href.split("document-details")[0] + "documentlibrary";
+         }
+      }
+   });
+
+   YAHOO.Bubbling.fire("registerAction",
+   {
+      actionName: "onActionDmMoveTo",
+      fn: function DLTB_onActionDmMoveTo(record, owner)
+      {
+         this.modules.dmMoveTo = new Alfresco.module.DoclibCopyMoveTo(this.id + "-dmMoveTo");
+
+         this.modules.dmMoveTo.setOptions(
+         {
+            mode: "move",
+            siteId: this.options.siteId,
+            containerId: this.options.containerId,
+            path: this.currentPath,
+            files: record,
+            rootNode: this.options.rootNode,
+            parentId: this.getParentNodeRef(record),
+            width: "10em"
+         }).showDialog();
+
+         this.modules.dmMoveTo._showDialog = function DLTB__showDialog()
+         {
+            this.widgets.okButton.set("label", this.msg("button"));
+
+            Dom.getPreviousSibling(this.id + "-modeGroup").setAttribute("style", "display:none");
+            Dom.get(this.id + "-modeGroup").setAttribute("style", "display:none");
+            Dom.getPreviousSibling(this.id + "-sitePicker").setAttribute("style", "display:none");
+            Dom.get(this.id + "-sitePicker").setAttribute("style", "display:none");
+            Dom.get(this.id + "-treeview").setAttribute("style", "width:35em !important");
+
+            return Alfresco.module.DoclibCopyMoveTo.superclass._showDialog.apply(this, arguments);
+         }
+
+         var me = this;
+         this.modules.dmMoveTo.onOK = function DLTB_onOK(e, p_obj)
+         {
+            record.targetNodeRef = this.selectedNode.data.nodeRef;
+            me.onActionSimpleRepoAction(record, owner);
+            this.widgets.dialog.hide();
          }
       }
    });

@@ -1734,7 +1734,7 @@
        * @param assets {object} Object literal representing one or more record(s) to be actioned
        * @param owner {HTMLElement} The action html element
        */
-      onHoldDelete: function RDLA_onHideRecordAction(assets, owner)
+      onHoldDelete: function RDLA_onHoldDelete(assets, owner)
       {
          var me = this;
          Alfresco.util.PopupManager.displayPrompt(
@@ -1744,7 +1744,7 @@
             buttons: [
             {
                text: this.msg("button.ok"),
-               handler: function RDLA_onHideRecordAction_confirm_ok()
+               handler: function RDLA_onHoldDelete_confirm_ok()
                {
                   me._rmAction("message.delete-hold", assets, "deleteHold", null,
                   {
@@ -1752,7 +1752,7 @@
                      {
                         callback:
                         {
-                           fn: function RDLA_onHideRecordAction_failure(data)
+                           fn: function RDLA_onHoldDelete_failure(data)
                            {
                               var text = me.msg("message.delete-hold.failure");
                               if(data.json && data.json.message)
@@ -1774,7 +1774,7 @@
             },
             {
                text: this.msg("button.cancel"),
-               handler: function RDLA_onHideRecordAction_confirm_cancel()
+               handler: function RDLA_onHoldDelete_confirm_cancel()
                {
                   this.destroy();
                },
