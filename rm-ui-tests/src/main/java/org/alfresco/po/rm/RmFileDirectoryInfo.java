@@ -59,7 +59,7 @@ public class RmFileDirectoryInfo extends FileDirectoryInfoImpl
      */
     public HtmlPage declareRecord()
     {
-        selectMoreAction().click();
+        ((FileDirectoryInfoImpl) this).selectMoreLink();
         try
         {
             WebElement createRecord = drone.find(CREATE_RECORD);
@@ -93,5 +93,23 @@ public class RmFileDirectoryInfo extends FileDirectoryInfoImpl
         {
         }
         return false;
+    }
+
+    /**
+     * @see org.alfresco.po.share.site.document.FileDirectoryInfo#selectDownloadFolderAsZip()
+     */
+    @Override
+    public void selectDownloadFolderAsZip()
+    {
+        // FIXME!!!
+    }
+
+    /**
+     * @see org.alfresco.po.share.site.document.FileDirectoryInfo#selectMoreLink()
+     */
+    @Override
+    public void selectMoreLink()
+    {
+        // FIXME!!!
     }
 }

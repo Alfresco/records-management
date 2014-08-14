@@ -38,6 +38,7 @@ import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
+import org.alfresco.po.share.site.document.FileDirectoryInfoImpl;
 import org.alfresco.po.share.site.document.FolderDetailsPage;
 import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
@@ -569,10 +570,8 @@ public class FilePlanPage extends DocumentLibraryPage
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
-        WebElement selectMoreAction = folder.selectMoreAction();
-        selectMoreAction.click();
-        WebElement viewDetails = folder.findElement(By.cssSelector("div[class$='view-details']>a"));
-        viewDetails.click();
+        folder.selectMoreLink();
+        folder.selectViewFolderDetails();
         return new FolderDetailsPage(drone).render();
     }
 
@@ -588,10 +587,8 @@ public class FilePlanPage extends DocumentLibraryPage
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
-        WebElement selectMoreAction = folder.selectMoreAction();
-        selectMoreAction.click();
-        WebElement viewDetails = folder.findElement(By.cssSelector("div[class$='rm-cutoff']>a"));
-        viewDetails.click();
+        folder.selectMoreLink();
+        ((FileDirectoryInfoImpl) folder).findElement(By.cssSelector("div[class$='rm-cutoff']>a")).click();
         canResume();
         filePlan.setInRecordCategory(true);
         return new FilePlanPage(drone).render();
@@ -603,19 +600,19 @@ public class FilePlanPage extends DocumentLibraryPage
      * @param itemValue Value of Item that should be Destroyed
      * @return {@link FilePlanPage} page response
      */
-    @SuppressWarnings("unused")
     public FilePlanPage destroyAction(String itemValue)
     {
         WebDroneUtil.checkMandotaryParam("itemValue", itemValue);
 
         FilePlanPage filePlan = drone.getCurrentPage().render();
         FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
-        WebElement selectMoreAction = folder.selectMoreAction();
-        WebElement viewDetails = folder.findElement(By.cssSelector("div[class$='rm-destroy']>a"));
-        viewDetails.click();
-        WebElement okButton = folder.findElement(By.xpath("//button[contains(text(),'OK')]"));
+        folder.selectMoreLink();
+        FileDirectoryInfoImpl folderImpl = ((FileDirectoryInfoImpl) folder);
+        WebElement destroy = folderImpl.findElement(By.cssSelector("div[class$='rm-destroy']>a"));
+        destroy.click();
+        WebElement okButton = folderImpl.findElement(By.xpath("//button[contains(text(),'OK')]"));
         okButton.click();
-        WebElement secondOkButton = folder.findElement(By.xpath("//button[contains(text(),'OK')]"));
+        WebElement secondOkButton = folderImpl.findElement(By.xpath("//button[contains(text(),'OK')]"));
         secondOkButton.click();
         filePlan.setInRecordCategory(true);
         return new FilePlanPage(drone).render();

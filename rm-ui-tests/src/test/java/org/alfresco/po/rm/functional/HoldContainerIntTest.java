@@ -29,6 +29,7 @@ import org.alfresco.po.rm.fileplan.filter.hold.HoldsContainer;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewHoldDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
+import org.alfresco.po.share.site.document.FileDirectoryInfoImpl;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -113,7 +114,7 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     private void clickAction(HoldsContainer holdsContainer, String selector, String name)
     {
         FileDirectoryInfo hold = holdsContainer.getFileDirectoryInfo(name);
-        WebElement actions = hold.findElement(By.cssSelector(ACTIONS));
+        WebElement actions = ((FileDirectoryInfoImpl) hold).findElement(By.cssSelector(ACTIONS));
         drone.mouseOverOnElement(actions);
         RmPageObjectUtils.select(drone, By.cssSelector(selector));
     }

@@ -162,17 +162,6 @@ public class RmCreateRulePage extends CreateRulePage
     }
 
     /**
-     * Action Click on save button
-     *
-     * @return  {@link RmFolderRulesWithRules} page response
-     */
-    public RmFolderRulesWithRules clickSave()
-    {
-        click(SAVE_BUTTON);
-        return new RmFolderRulesWithRules(drone).render();
-    }
-
-    /**
      * Helper method that clicks by element
      *
      * @param locator element By locator

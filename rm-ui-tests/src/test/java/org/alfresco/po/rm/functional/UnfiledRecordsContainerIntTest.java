@@ -28,6 +28,7 @@ import org.alfresco.po.rm.fileplan.filter.unfiledrecords.UnfiledRecordsContainer
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
+import org.alfresco.po.share.site.document.FileDirectoryInfoImpl;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -133,9 +134,8 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
     {
         selectFilePlan();
         selectUnfiledRecordsContainer(RM_UNFILED_RECORDS_CONTAINER_NAME);
-        FileDirectoryInfo folder = unfiledRecordsContainer.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
-        WebElement selectMoreAction = folder.selectMoreAction();
-        selectMoreAction.click();
+        FileDirectoryInfoImpl folder = (FileDirectoryInfoImpl) unfiledRecordsContainer.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
+        folder.selectMoreLink();
         WebElement editProperties = folder.findElement(By.cssSelector("div.rm-edit-details>a"));
         editProperties.click();
 
@@ -157,9 +157,8 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
     {
         selectFilePlan();
         selectUnfiledRecordsContainer(RM_UNFILED_RECORDS_CONTAINER_NAME);
-        FileDirectoryInfo folder = unfiledRecordsContainer.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
-        WebElement selectMoreAction = folder.selectMoreAction();
-        selectMoreAction.click();
+        FileDirectoryInfoImpl folder = (FileDirectoryInfoImpl) unfiledRecordsContainer.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
+        folder.selectMoreLink();
         WebElement folderDetails = folder.findElement(By.cssSelector("div.rm-record-folder-view-details>a"));
         folderDetails.click();
     }
@@ -169,9 +168,8 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
     {
         selectFilePlan();
         selectUnfiledRecordsContainer(RM_UNFILED_RECORDS_CONTAINER_NAME);
-        FileDirectoryInfo folder = unfiledRecordsContainer.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
-        WebElement selectMoreAction = folder.selectMoreAction();
-        selectMoreAction.click();
+        FileDirectoryInfoImpl folder = (FileDirectoryInfoImpl) unfiledRecordsContainer.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
+        folder.selectMoreLink();
         WebElement folderPermissions = folder.findElement(By.cssSelector("div.rm-manage-permissions>a"));
         folderPermissions.click();
 
@@ -187,9 +185,8 @@ public class UnfiledRecordsContainerIntTest extends AbstractIntegrationTest
     {
         selectFilePlan();
         selectUnfiledRecordsContainer(RM_UNFILED_RECORDS_CONTAINER_NAME);
-        FileDirectoryInfo folder = unfiledRecordsContainer.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
-        WebElement selectMoreAction = folder.selectMoreAction();
-        selectMoreAction.click();
+        FileDirectoryInfoImpl folder = (FileDirectoryInfoImpl) unfiledRecordsContainer.getFileDirectoryInfo(RM_UNFILED_RECORDS_CONTAINER_NAME);
+        folder.selectMoreLink();
 
         WebElement showMore = folder.findElement(By.cssSelector("div.internal-show-more>a"));
         showMore.click();

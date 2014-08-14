@@ -81,7 +81,7 @@ public class RecordInfo
      */
     private boolean isVisibleAction(By action)
     {
-        fileDirectoryInfo.selectMoreAction().click();
+        ((FileDirectoryInfoImpl) fileDirectoryInfo).selectMoreLink();
         try
         {
             WebElement link = drone.find(action);
@@ -104,7 +104,7 @@ public class RecordInfo
      */
     private void clickAction(By action)
     {
-        fileDirectoryInfo.selectMoreAction().click();
+        ((FileDirectoryInfoImpl) fileDirectoryInfo).selectMoreLink();
         WebElement link = ((FileDirectoryInfoImpl)fileDirectoryInfo).findAndWait(action);
         link.click();
     }
@@ -153,9 +153,10 @@ public class RecordInfo
         // so the selectMore action will not appear as an option. It's worth having a better approach in the core
         // and not worrying about how many actions there will be. 
         By nodeNameSelector = By.xpath(String.format(NODE_NAME_SELECTOR_EXPRESSION, fileDirectoryInfo.getName()));
-        WebElement actions = fileDirectoryInfo.findElement(nodeNameSelector);
+        FileDirectoryInfoImpl fileDirectoryInfoImpl = (FileDirectoryInfoImpl) fileDirectoryInfo;
+        WebElement actions = fileDirectoryInfoImpl.findElement(nodeNameSelector);
         drone.mouseOverOnElement(actions);
-        fileDirectoryInfo.findElement(REMOVE_FROM_HOLD).click();
+        fileDirectoryInfoImpl.findElement(REMOVE_FROM_HOLD).click();
         return new HoldDialog(drone).render();
     }
 }
