@@ -18,11 +18,12 @@
  */
 package org.alfresco.po.rm.unit;
 
-import static org.testng.AssertJUnit.assertTrue;
 
-import org.alfresco.po.rm.common.AbstractIntegrationTest;
+import org.alfresco.po.rm.RmSiteDashBoardPage;
+import org.alfresco.po.rm.common.AbstractRecordsManagementTest;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.util.FailedTestListener;
+import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -34,34 +35,13 @@ import org.testng.annotations.Test;
  * @since 2.2
  */
 @Listeners(FailedTestListener.class)
-public class FilePlanPageTest extends AbstractIntegrationTest
+public class FilePlanPageTest extends AbstractRecordsManagementTest
 {
     /** Generate names */
     private String categoryName = generateNameFromClass();
     private String folderName = generateNameFromClass();
     private String recordName = generateNameFromClass();
     
-    /**
-     * Use the existing RM site if one exists.
-     * 
-     * @see org.alfresco.po.rm.common.AbstractRecordsManagementTest#isExisitingRMSiteDeletedOnStartup()
-     */
-    @Override
-    protected boolean isExisitingRMSiteDeletedOnStartup()
-    {
-        return false;
-    }
-    
-    /**
-     * Do not delete the site on tear down.
-     * 
-     * @see org.alfresco.po.rm.common.AbstractRecordsManagementTest#isRMSiteDeletedOnTearDown()
-     */
-    @Override
-    protected boolean isRMSiteDeletedOnTearDown()
-    {
-        return false;
-    }
     
     /**
      * Test the creation and navigation of the file plan hierarchy via the page object
@@ -69,19 +49,20 @@ public class FilePlanPageTest extends AbstractIntegrationTest
     @Test
     public void createAndNavigateFilePlanHierarchy()
     {
-        FilePlanPage filePlan = rmSiteDashBoard.selectFilePlan();
-        assertTrue(filePlan.isCreateNewCategoryDisplayed());
-        assertTrue(filePlan.isCreateNewFolderDisplayed());
+        RmSiteDashBoardPage rmSiteDashBoard = drone.getCurrentPage().render();
+        FilePlanPage filePlan = rmSiteDashBoard.selectFilePlan().render();
+        Assert.assertTrue(filePlan.isCreateNewCategoryDisplayed());
+        Assert.assertTrue(filePlan.isCreateNewFolderDisplayed());
 
         // create root category
         filePlan.createCategory(categoryName, true);
-        assertTrue(filePlan.isCategoryCreated(categoryName));
+        Assert.assertTrue(filePlan.isCategoryCreated(categoryName));
         filePlan.navigateToFolder(categoryName);
 
         // create record folder
         filePlan.createFolder(folderName);
         filePlan.navigateToFolder(folderName);
-        assertTrue(filePlan.isCreateNewFileDisplayed());
+        Assert.assertTrue(filePlan.isCreateNewFileDisplayed());
 
         // file record
         // FIXME this creates a non-electronic record .. rename method and allow values to be sent

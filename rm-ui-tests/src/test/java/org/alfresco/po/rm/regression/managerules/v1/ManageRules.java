@@ -29,7 +29,6 @@ import org.alfresco.po.rm.RmActionSelectorEnterpImpl;
 import org.alfresco.po.rm.RmFolderRulesPage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
-import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.openqa.selenium.By;
 import org.testng.Assert;
@@ -51,18 +50,6 @@ public class ManageRules extends RmAbstractTest
     private By descriptionProperty(String description)
     {
         return By.xpath("//span[text()='Description:']/following-sibling::span[text()='" + description + "']");
-    }
-
-    /**
-     * Executed after class
-     */
-    @Override
-    //@AfterClass
-    public void doTeardown()
-    {
-        ShareUtil.logout(drone);
-        login();
-        deleteRMSite();
     }
 
     /*
@@ -343,13 +330,8 @@ public class ManageRules extends RmAbstractTest
 
         try
         {
-            ShareUtil.logout(drone);
-            login();
-            deleteRMSite();
-            ShareUtil.logout(drone);
             createEnterpriseUser(userName);
             login(userName, DEFAULT_USER_PASSWORD);
-            createRMSite();
             FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             filePlan = openRmSite();
@@ -388,11 +370,6 @@ public class ManageRules extends RmAbstractTest
         {
             reportError(testName, e);
         }
-        finally {
-            ShareUtil.logout(drone);
-            login(userName, DEFAULT_USER_PASSWORD);
-            deleteRMSite();
-        }
     }
 
     /* RMA-1369:
@@ -423,12 +400,7 @@ public class ManageRules extends RmAbstractTest
 
         try
         {
-            ShareUtil.logout(drone);
-            login();
-            deleteRMSite();
-            createRMSite();
             createRmAdminUser(userName);
-
             //login as user
             login(userName, DEFAULT_USER_PASSWORD);
             FilePlanPage filePlan = openRmSite();
@@ -738,11 +710,6 @@ public class ManageRules extends RmAbstractTest
         catch (Throwable e)
         {
             reportError(testName, e);
-        }
-        finally {
-            ShareUtil.logout(drone);
-            login();
-            deleteRMSite();
         }
     }
 }

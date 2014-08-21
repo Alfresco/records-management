@@ -65,7 +65,6 @@ import org.alfresco.po.rm.fileplan.RecordDetailsPage;
 import org.alfresco.po.rm.fileplan.filter.FilePlanFilter;
 import org.alfresco.po.rm.fileplan.filter.hold.HoldsContainer;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
-import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
@@ -81,31 +80,6 @@ import org.testng.annotations.Listeners;
 @Listeners(FailedTestListener.class)
 public class SanityTests extends RmAbstractTest
 {
-
-    /**
-     * Executed before class
-     */
-  // @BeforeClass
-    public void doSetup()
-    {
-        pageObjectUtils.loadProperties("rm_en.properties");
-        login();
-        deleteRMSite();
-        ShareUtil.logout(drone);
-    }
-
-    /**
-     * Executed after class
-     */
-    @Override
- //   @AfterClass
-    public void doTeardown()
-    {
-        ShareUtil.logout(drone);
-        login();
-        deleteRMSite();
-    }
-
   //  @Test
     public void RMA_2664() throws Throwable
     {
@@ -116,7 +90,6 @@ public class SanityTests extends RmAbstractTest
         {
             createEnterpriseUser(userName);
             login(userName, DEFAULT_USER_PASSWORD);
-            createRMSite();
             FilePlanPage filePlan = openRmSite();
             Assert.assertTrue(getText(NAVIGATION_MENU_FILE_PLAN).contains(pageObjectUtils.getPropertyValue("rm.file.plan.link")),
                 "Failed to present File Plan link on RM Site Dashboard Page");
@@ -142,12 +115,6 @@ public class SanityTests extends RmAbstractTest
         {
             reportError(testName, e);
         }
-        finally 
-        {
-            ShareUtil.logout(drone);
-            login(userName, DEFAULT_USER_PASSWORD);
-            deleteRMSite();
-        }
     }
 
   //  @Test
@@ -169,7 +136,6 @@ public class SanityTests extends RmAbstractTest
         {
             createEnterpriseUser(userName);
             login(userName, DEFAULT_USER_PASSWORD);
-            createRMSite();
             FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             Assert.assertTrue(isElementPresent(commonLine(categoryName)),
@@ -218,12 +184,6 @@ public class SanityTests extends RmAbstractTest
         {
             reportError(testName, e);
         }
-        finally 
-        {
-            ShareUtil.logout(drone);
-            login(userName, DEFAULT_USER_PASSWORD);
-            deleteRMSite();
-        }
     }
 
     /**
@@ -246,7 +206,6 @@ public class SanityTests extends RmAbstractTest
         {
             createEnterpriseUser(userName);
             login(userName, DEFAULT_USER_PASSWORD);
-            createRMSite();
             FilePlanPage filePlan = openRmSite();
             filePlan.createCategory(categoryName, true);
             Assert.assertTrue(isElementPresent(commonLine(categoryName)), "Failed to present category in File plan");
@@ -468,12 +427,6 @@ public class SanityTests extends RmAbstractTest
         catch (Throwable e)
         {
             reportError(testName, e);
-        }
-        finally 
-        {
-            ShareUtil.logout(drone);
-            login(userName, DEFAULT_USER_PASSWORD);
-            deleteRMSite();
         }
     }
 

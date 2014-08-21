@@ -44,9 +44,6 @@ public class RmCreateSitePageTest extends AbstractRecordsManagementTest
     @BeforeClass(groups={"RM","nonCloud"})
     public void doSetup() 
     {
-        // log into share
-        login(username, password);
-
         // render create site page
         page = rmSiteDashBoard.getRMNavigation().selectCreateSite().render();
         Assert.assertTrue(page.isCreateSiteDialogDisplayed());

@@ -62,8 +62,17 @@ public class RmSiteDashBoardPage extends DashBoardPage
     public RmSiteDashBoardPage render(RenderTime timer)
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
-
-        return (RmSiteDashBoardPage) super.render(timer);
+        try
+        {
+            getDashlet("site-members").render(timer);
+            getDashlet("site-contents").render(timer);
+            getDashlet("site-activities").render(timer);
+        }
+        catch (PageException pe)
+        {
+            throw new PageException(this.getClass().getName() + " failed to render in time", pe);
+        }
+        return this;
     }
 
     /**
@@ -73,7 +82,8 @@ public class RmSiteDashBoardPage extends DashBoardPage
     @Override
     public RmSiteDashBoardPage render(long time)
     {
-        return (RmSiteDashBoardPage) super.render(time);
+        RenderTime timer = new RenderTime(time);
+        return render(timer);
     }
 
     /**
@@ -83,7 +93,7 @@ public class RmSiteDashBoardPage extends DashBoardPage
     @Override
     public RmSiteDashBoardPage render()
     {
-        return (RmSiteDashBoardPage) super.render();
+        return render(maxPageLoadingTime);
     }
 
     /**
@@ -133,7 +143,7 @@ public class RmSiteDashBoardPage extends DashBoardPage
      * @return {@link HtmlPage} Returns the currently displayed page,
      * which is the {@link FilePlanPage} in this case
      */
-    public FilePlanPage selectFilePlan()
+    public HtmlPage selectFilePlan()
     {
         RmPageObjectUtils.select(drone, NAVIGATION_MENU_FILE_PLAN);
         
@@ -146,7 +156,7 @@ public class RmSiteDashBoardPage extends DashBoardPage
             throw new PageOperationException("FilePlanPage object expected, but found " + page.getClass().getCanonicalName() + " instead.");
         }
         
-        return (FilePlanPage)page;
+        return page;
         
     }
 }

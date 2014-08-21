@@ -28,7 +28,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -99,8 +98,8 @@ public class RmConsoleUsersAndGroups extends RmSitePage
             try
             {
                 // if search body is found we are rendered
-                By rmConsole = By.cssSelector("div[id$='_rm-console']");
-                WebElement rmConsoleElement = drone.find(rmConsole);
+                By roles = By.cssSelector("#roleSelection");
+                WebElement rmConsoleElement = drone.find(roles);
                 if (rmConsoleElement.isDisplayed())
                 {
                     break;
@@ -158,27 +157,6 @@ public class RmConsoleUsersAndGroups extends RmSitePage
     }
 
     /**
-     * Helper method verifies if element exists on page
-     * @param drone {@link org.alfresco.webdrone.WebDrone}
-     * @param locator locator link
-     * @return true/false is element displayed on page
-     */
-    protected boolean isDisplay(final WebDrone drone, By locator)
-    {
-        checkMandotaryParam("drone", drone);
-        checkMandotaryParam("locator", locator);
-
-        try
-        {
-            return drone.findAndWait(locator, 2000).isDisplayed();
-        }
-        catch (TimeoutException e)
-        {
-            return false;
-        }
-    }
-
-    /**
      * Helper method find Add button by xpath according username
      *
      * @param userName Name of Created user
@@ -218,9 +196,23 @@ public class RmConsoleUsersAndGroups extends RmSitePage
      */
     public void clickAdd()
     {
-        WebElement element = drone.findAndWait(ADD_BUTTON);
+        WebElement element = drone.find(ADD_BUTTON);
         drone.mouseOverOnElement(element);
         element.click();        
+    }
+    /**
+     * Check is add button is visible.
+     * @author Michael Suzuki
+     * @return true if visible
+     */
+    public boolean isAddButtonDisplayed()
+    {
+        try
+        {
+            return drone.find(ADD_BUTTON).isDisplayed();
+        }
+        catch(NoSuchElementException e) {}
+        return false;
     }
     
     /**

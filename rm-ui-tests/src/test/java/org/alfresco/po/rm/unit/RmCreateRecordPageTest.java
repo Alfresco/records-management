@@ -21,7 +21,7 @@ package org.alfresco.po.rm.unit;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
-import org.alfresco.po.rm.common.AbstractIntegrationTest;
+import org.alfresco.po.rm.common.AbstractRecordsManagementTest;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
@@ -36,7 +36,7 @@ import org.testng.annotations.Test;
  * @version 1.1
  * @since 2.2
  */
-public class RmCreateRecordPageTest extends AbstractIntegrationTest
+public class RmCreateRecordPageTest extends AbstractRecordsManagementTest
 {
     private static final String TEST_CATEGORY = "Test Category";
     private static final String TEST_FOLDER = "Test Folder";
@@ -45,15 +45,13 @@ public class RmCreateRecordPageTest extends AbstractIntegrationTest
     private static final String DESCRIPTION = "Description";
     private static final By RECORD_NAME = By.xpath("//span//a[contains(text(), '" + NAME + "')]");
 
-    @Override
-    @BeforeClass(groups={"RM"})
-    public void doSetup()
+    @BeforeClass
+    public void navigateToConsole()
     {
-        setup();
-        FilePlanPage filePlanPage = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
-        filePlanPage.createCategory(TEST_CATEGORY, true);
-        filePlanPage.navigateToFolder(TEST_CATEGORY);
-        filePlanPage.createFolder(TEST_FOLDER);
+        FilePlanPage filePlanPage = rmSiteDashBoard.selectFilePlan().render();
+        filePlanPage = filePlanPage.createCategory(TEST_CATEGORY, true).render();
+        filePlanPage = filePlanPage.navigateToFolder(TEST_CATEGORY).render();
+        filePlanPage = filePlanPage.createFolder(TEST_FOLDER).render();
         filePlanPage.navigateToFolder(TEST_FOLDER);
     }
 
@@ -65,7 +63,8 @@ public class RmCreateRecordPageTest extends AbstractIntegrationTest
         assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.ELECTRONIC_BUTTON));
         assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.NON_ELECTRONIC_BUTTON));
         assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.CANCEL_FILE_BUTTON));
-        click(CreateNewRecordDialog.NON_ELECTRONIC_BUTTON);
+        //TODO FIXME move below into page object!
+        drone.find(CreateNewRecordDialog.NON_ELECTRONIC_BUTTON).click();
         new CreateNewRecordDialog(drone).render();
     }
 
@@ -106,8 +105,7 @@ public class RmCreateRecordPageTest extends AbstractIntegrationTest
         recordDialog.enterTitle(TITLE);
         recordDialog.enterDescription(DESCRIPTION);
 
-        filePlanPage = ((FilePlanPage) recordDialog.selectSave());
-        filePlanPage.setInRecordFolder(true);
+        filePlanPage = recordDialog.selectSave().render();
         assertTrue(RmPageObjectUtils.isDisplayed(drone, RECORD_NAME));
     }
 }

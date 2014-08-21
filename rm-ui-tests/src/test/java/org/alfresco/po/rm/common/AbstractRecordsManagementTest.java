@@ -22,10 +22,11 @@ import java.io.IOException;
 
 import org.alfresco.po.rm.RmCreateSitePage;
 import org.alfresco.po.rm.RmCreateSitePage.RMSiteCompliance;
-import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.rm.RmSiteDashBoardPage;
+import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.share.LoginPage;
+import org.alfresco.po.share.SharePage;
 import org.alfresco.po.share.ShareUtil;
 import org.alfresco.po.share.site.SiteFinderPage;
 import org.alfresco.po.share.util.SiteUtil;
@@ -34,13 +35,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.NoSuchElementException;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 
 /**
- * Abstract Records Management test
+ * Abstract Records Management test, manages
+ * the life cycle of all records management based tests.
+ * The spring context and creation of WebDrone is managed in AbstractTest
+ * while AbstractRecordsManagementTest ensures that RM site is created
+ * and removed at the end of the functional test and will include
+ * RM related helper methods.
+ *  
  *
  * @author Roy Wetherall
+ * @author Michael Suzuki
  * @since 2.2
  */
 public abstract class AbstractRecordsManagementTest extends AbstractTest
@@ -55,83 +65,56 @@ public abstract class AbstractRecordsManagementTest extends AbstractTest
     protected RmSiteDashBoardPage rmSiteDashBoard;
 
     /**
-     * Indicates whether an existing RM site should be delete on
-     * test startup
-     *
-     * @return  boolean true if site should be deleted, false otherwise
+     * Setup standard rm site.
+     * @throws Exception 
      */
-    protected boolean isExisitingRMSiteDeletedOnStartup()
+    @BeforeSuite
+    public void setup() throws Exception
     {
-        return true;
-    }
-
-    /**
-     * Indicates whether an existing RM site should be deleted on
-     * test tear down.
-     *
-     * @return  boolean true if site should be deleted, false otherwise
-     */
-    protected boolean isRMSiteDeletedOnTearDown()
-    {
-        return true;
-    }
-
-    /**
-     * Executed before class
-     */
-    @BeforeClass(groups={"RM","nonCloud"})
-    public void doSetup()
-    {
-        setup();
+        try
+        {
+            setupContext("share-po-test-context.xml");
+            getWebDrone();
+            createRMSite(RMSiteCompliance.STANDARD);
+        }
+        finally
+        {
+            drone.quit();
+        }
     }
     
     /**
-     * Setup test
+     * Test teardown,remove rm site
+     * @throws Exception 
      */
-    protected void setup()
+    @AfterSuite(alwaysRun=true)
+    public void teardown() throws Exception
     {
-        // do nothing
+        deleteRMSite();
     }
     
-    /**
-     * Executed after class
-     */
-    @AfterClass(groups={"RM","nonCloud"})
-    public void doTeardown()
+    @AfterTest
+    public void quitWebDrone() throws Exception
     {
-        teardown();
-    }
-
-    /**
-     * Test teardown
-     */
-    protected void teardown()
-    {
-        // do nothing
+        if(drone != null)
+        {
+            drone.quit();
+        }
     }
     
     /**
      * Helper method to login with the default credentials
+     * @throws Exception 
      */
-    protected void login()
+    @BeforeClass
+    protected void loginToRmDashboard() throws Exception
     {
         login(username, password);
-    }
-    
-    /**
-     * Helper method that logs into share and sets the dashboard PO
-     *
-     * @param userName  user name
-     * @param password  password
-     */
-    protected void login(String userName, String password)
-    {
-        drone.navigateTo(shareUrl);
-        LoginPage loginPage = new LoginPage(drone).render();
-
-        loginPage.loginAs(userName, password);
+        String url = shareUrl.replace("/share", "/share/page/site/rm/dashboard");
+        drone.navigateTo(url);
         rmSiteDashBoard = new RmSiteDashBoardPage(drone).render();
     }
+    
     
     /**
      * Helper method that logs the current user out of share
@@ -142,84 +125,72 @@ public abstract class AbstractRecordsManagementTest extends AbstractTest
     }
     
     /**
-     * Helper method to create a 'vanilla' RM site
-     */
-    public void createRMSite()
-    {
-        createRMSite(RMSiteCompliance.STANDARD);
-    }
-    
-    /**
      * Helper method to open RM site
      */
     protected void openRMSite(boolean deleteExisting)
     {
         SiteFinderPage siteFinderPage = SiteUtil.searchSite(drone, RmCreateSitePage.RM_SITE_NAME).render();
-        if (siteFinderPage.hasResults())
-        {
-            if (deleteExisting)
-            {
-                deleteRMSite();
-                createRMSite();
-            }
-            else
-            {
-                siteFinderPage.selectSite(RmCreateSitePage.RM_SITE_NAME);
-            }
-        }
-        else
-        {
-            // create a new RM site
-            createRMSite();
-        }
+        siteFinderPage.selectSite(RmCreateSitePage.RM_SITE_NAME);
     }
 
     /**
      * Helper method to create RM site
+     * @throws Exception 
      */
-    public void createRMSite(RMSiteCompliance compliance)
+    protected void createRMSite(RMSiteCompliance compliance) throws Exception
     {
+        drone.navigateTo(shareUrl);
+        login(username,password);
+        SharePage page = (SharePage) drone.getCurrentPage(); 
         // Click create site dialog
-        RmCreateSitePage createSite = rmSiteDashBoard.getRMNavigation().selectCreateSite().render();
-        Assert.assertTrue(createSite.isCreateSiteDialogDisplayed());
-
+        page.getNav().selectCreateSite().render();
+        //TODO Fix me RMCreateSitePage should have a common interface with create site page.
+        RmCreateSitePage createSite = new RmCreateSitePage(drone);
         // Create RM Site
-        RmSiteDashBoardPage site = ((RmSiteDashBoardPage) createSite.createRMSite(compliance)).rmRender();
-        Assert.assertNotNull(site);
-        Assert.assertTrue(RmCreateSitePage.RM_SITE_NAME.equalsIgnoreCase(site.getPageTitle()));
-        Assert.assertTrue(site.getRMSiteNavigation().isDashboardActive());
-        Assert.assertFalse(site.getRMSiteNavigation().isFilePlanActive());
+        createSite.createRMSite(compliance);
+        logout();
+        drone.closeWindow();
     }
 
     /**
      * Helper method to delete RM site
+     * @throws Exception 
      */
-    public void deleteRMSite()
+    private void deleteRMSite() throws Exception
     {
-        // Check if the RM Site already exists, if so delete it
-        SiteFinderPage siteFinderPage = SiteUtil.searchSite(drone, RmCreateSitePage.RM_SITE_NAME).render();
-        if (siteFinderPage.hasResults())
+        try
         {
-            siteFinderPage = siteFinderPage.deleteSite(RmCreateSitePage.RM_SITE_NAME).render();
-
-            while (siteFinderPage.hasResults())
+            getWebDrone();
+            login(username,password);
+            // Check if the RM Site already exists, if so delete it
+            SiteFinderPage siteFinderPage = SiteUtil.searchSite(drone, RmCreateSitePage.RM_SITE_NAME).render();
+            if (siteFinderPage.hasResults())
             {
-                RenderTime timer = new RenderTime(5000);
-                timer.start();
-                try
+                siteFinderPage = siteFinderPage.deleteSite(RmCreateSitePage.RM_SITE_NAME).render();
+                
+                while (siteFinderPage.hasResults())
                 {
-                    siteFinderPage = siteFinderPage.render();
+                    RenderTime timer = new RenderTime(5000);
+                    timer.start();
+                    try
+                    {
+                        siteFinderPage = siteFinderPage.render();
+                    }
+                    catch (NoSuchElementException nse)
+                    {
+                    }
+                    finally
+                    {
+                        timer.end();
+                    }
                 }
-                catch (NoSuchElementException nse)
-                {
-                }
-                finally
-                {
-                    timer.end();
-                }
+                
+                Assert.assertFalse(siteFinderPage.hasResults());
             }
-
-            Assert.assertFalse(siteFinderPage.hasResults());
+        }
+        finally
+        {
+            closeWebDrone();
         }
     }
     
@@ -285,5 +256,22 @@ public abstract class AbstractRecordsManagementTest extends AbstractTest
     protected String genearateNameFromTest()
     {
         return testName.replace("_", "-") + RmPageObjectUtils.getRandomString(3);
+    }
+    /**
+     * Helper method that logs into share
+     * to rm site dashboard.
+     *
+     * @param userName  user name
+     * @param password  password
+     */
+    protected void login(String userName, String password)
+    {
+        drone.navigateTo(shareUrl);
+        LoginPage loginPage = new LoginPage(drone).render();
+        loginPage.loginAs(userName, password);
+    }
+    protected void login()
+    {
+        login(username,password);
     }
 }

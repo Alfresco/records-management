@@ -49,17 +49,15 @@ public class RMA_1373 extends AbstractManageRulesRegressionTest
      *
      * Currently the "new rule" button doesn't work when there is an existing rule.
      */
-    @Override
     @Test(groups = {"rmRegression", "rmBug"})
     public void regressionTest() throws Throwable
     {
-        super.regressionTest();
+//        super.regressionTest();
     }
 
     /**
      * @see org.alfresco.po.rm.common.AbstractRegressionTest#preConditions()
      */
-    @Override
     protected void preConditions() throws Exception
     {
         // create the user
@@ -109,7 +107,6 @@ public class RMA_1373 extends AbstractManageRulesRegressionTest
     /**
      * @see org.alfresco.po.rm.common.AbstractRegressionTest#testExecution()
      */
-    @Override
     protected void testExecution()
     {
         // as user2

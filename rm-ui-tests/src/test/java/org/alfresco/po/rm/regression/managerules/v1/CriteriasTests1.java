@@ -38,17 +38,6 @@ import org.testng.annotations.Listeners;
 @Listeners(FailedTestListener.class)
 public class CriteriasTests1 extends RmAbstractTest
 {
-    /**
-     * Executed after class
-     */
-    @Override
-   // @AfterClass(groups={"RM","nonCloud"})
-    public void doTeardown()
-    {
-        ShareUtil.logout(drone);
-        login();
-        deleteRMSite();
-    }
 
     //@Test
     public void RMA_1221() throws Throwable
@@ -58,12 +47,9 @@ public class CriteriasTests1 extends RmAbstractTest
 
         try
         {
-            ShareUtil.logout(drone);
-
             createEnterpriseUser(userName);
-            login();
+            login(userName,password);
             assignUserToRole(userName, RmConsoleUsersAndGroups.SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
-
             ShareUtil.logout(drone);
 
             //login as user
@@ -117,7 +103,7 @@ public class CriteriasTests1 extends RmAbstractTest
             ShareUtil.logout(drone);
 
             createEnterpriseUser(userName);
-            login();
+            login(username,password);
             assignUserToRole(userName, RmConsoleUsersAndGroups.SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
 
             ShareUtil.logout(drone);
@@ -203,7 +189,7 @@ public class CriteriasTests1 extends RmAbstractTest
             ShareUtil.logout(drone);
 
             createEnterpriseUser(userName);
-            login();
+            login(username,password);
             assignUserToRole(userName, RmConsoleUsersAndGroups.SystemRoles.RECORDS_MANAGEMENT_ADMINISTRATOR.getValue());
 
             ShareUtil.logout(drone);

@@ -56,7 +56,7 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
     /**
      * Test setup
      */
-    protected void setup()
+    public void setup()
     {
         // FIXME not sure if this is the right way to do this!
         pageObjectUtils.loadProperties("rm_en.properties");
@@ -64,20 +64,6 @@ public abstract class AbstractIntegrationTest extends AbstractRecordsManagementT
         // log into Share
         login(username, password);
 
-        // open the RM site
-        openRMSite(isExisitingRMSiteDeletedOnStartup());
-    }
-
-    /**
-     * Test teardown
-     */
-    protected void teardown()
-    {
-        if (isRMSiteDeletedOnTearDown())
-        {
-            // delete RM site
-            deleteRMSite();
-        }
     }
 
     /**

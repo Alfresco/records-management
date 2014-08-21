@@ -19,13 +19,12 @@
 package org.alfresco.po.rm.unit;
 
 import org.alfresco.po.rm.RmConsolePage;
-import org.alfresco.po.rm.RmConsolePage.RmConsoleMenu;
-import org.alfresco.po.rm.RmConsoleUsersAndGroups.SystemRoles;
+import org.alfresco.po.rm.RmConsoleUsersAndGroups;
+import org.alfresco.po.rm.common.AbstractRecordsManagementTest;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
-import org.alfresco.po.rm.regression.managerules.v1.RmAbstractTest;
 import org.alfresco.po.share.util.FailedTestListener;
-import org.openqa.selenium.By;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -37,34 +36,29 @@ import org.testng.annotations.Test;
  * @since 2.2
  */
 @Listeners(FailedTestListener.class)
-public class RmConsolePageTest extends RmAbstractTest
+public class RmConsolePageTest extends AbstractRecordsManagementTest
 {
-    @Test
-    public void createPage()
+    @BeforeClass
+    public void navigateToConsole()
     {
-        FilePlanPage filePlanPage = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
-        filePlanPage.openRmConsolePage();
+        FilePlanPage filePlanPage = rmSiteDashBoard.selectFilePlan().render();
+        filePlanPage.openRmConsolePage().render();
     }
 
-    @Test (dependsOnMethods="createPage")
+    @Test
     public void verifyRmConsole()
     {
-        for (RmConsoleMenu link : RmConsoleMenu.values())
-        {
-            Assert.assertTrue(isElementPresent(link.getLocator()));
-        }
+        RmConsolePage consolePage = drone.getCurrentPage().render();
+        Assert.assertNotNull(consolePage);
     }
 
     @Test (dependsOnMethods="verifyRmConsole")
     public void openUserAndRolesPage()
     {
-        RmConsolePage consolePage = new RmConsolePage(drone).render();
-        consolePage.openUsersAndGroupsPage();
-      //  Assert.assertTrue(isElementPresent(ADD_BUTTON));
-        for (SystemRoles link : SystemRoles.values())
-        {
-            Assert.assertTrue(isElementPresent(By.cssSelector("#role-" + link.getValue())));
-        }
+        RmConsolePage consolePage = drone.getCurrentPage().render();
+        RmConsoleUsersAndGroups page = consolePage.openUsersAndGroupsPage().render();
+        Assert.assertNotNull(page);
+        Assert.assertTrue(page.isAddButtonDisplayed());
     }
 
 }

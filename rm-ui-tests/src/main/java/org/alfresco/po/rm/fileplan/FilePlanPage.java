@@ -568,8 +568,7 @@ public class FilePlanPage extends DocumentLibraryPage
     {
         WebDroneUtil.checkMandotaryParam("itemValue", itemValue);
 
-        FilePlanPage filePlan = drone.getCurrentPage().render();
-        FileDirectoryInfo folder = filePlan.getFileDirectoryInfo(itemValue);
+        FileDirectoryInfo folder = this.getFileDirectoryInfo(itemValue);
         folder.selectMoreLink();
         folder.selectViewFolderDetails();
         return new FolderDetailsPage(drone).render();

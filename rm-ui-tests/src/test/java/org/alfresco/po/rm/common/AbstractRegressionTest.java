@@ -23,7 +23,6 @@ import static org.alfresco.webdrone.WebDroneUtil.checkMandotaryParam;
 import org.alfresco.po.rm.RmConsolePage;
 import org.alfresco.po.rm.RmConsoleUsersAndGroups;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
-import org.testng.annotations.Test;
 
 /**
  * Abstract regression test
@@ -34,67 +33,6 @@ public abstract class AbstractRegressionTest extends AbstractRecordsManagementTe
 {    
     /** default user password */
     protected static final String PASSWORD = "password";
-    
-    /**
-     * Execute regression test
-     */
-    @Test(groups = {"rmRegression"})
-    public void regressionTest() throws Throwable
-    {
-        try
-        {
-             // login as admin user
-            login();
-            try
-            {
-                // navigate to RM site
-                openRMSite(isExisitingRMSiteDeletedOnStartup());               
-            }
-            finally
-            {
-                // logout
-                logout();
-            }
-            
-            // preconditions
-            preConditions();
-        
-            
-            // test execution
-            testExecution();
-                        
-            // clean up site if required to
-            login();
-            try
-            {
-                if (isRMSiteDeletedOnTearDown())
-                {
-                    deleteRMSite();
-                }
-            }
-            finally
-            {
-                // logout
-                logout();
-            }
-        }
-        catch (Throwable e)
-        {
-            // report error
-            reportError(getClass().getCanonicalName(), e);
-        }
-    }
-
-    /**
-     * Test's preconditions
-     */
-    abstract protected void preConditions() throws Exception;
-    
-    /**
-     * Test execution
-     */
-    abstract protected void testExecution() throws Exception;   
-    
     /**
      * Helper method to assign users to role
      * 

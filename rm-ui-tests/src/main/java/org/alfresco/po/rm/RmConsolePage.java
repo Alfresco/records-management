@@ -82,7 +82,9 @@ public class RmConsolePage extends RmSitePage
                 // if search body is found we are rendered
                 By rmConsole = By.cssSelector("div[id$='_rm-console']");
                 WebElement rmConsoleElement = drone.find(rmConsole);
-                if (rmConsoleElement.isDisplayed())
+                
+                WebElement consoleElement = drone.find(By.cssSelector("#alfresco-console"));
+                if (rmConsoleElement.isDisplayed() && consoleElement.isDisplayed())
                 {
                     break;
                 }

@@ -24,27 +24,27 @@ import org.openqa.selenium.WebElement;
  */
 public abstract class AbstractManageRulesRegressionTest extends AbstractRegressionTest
 {    
-    /**
-     * Use the exiting RM site
-     * 
-     * @see org.alfresco.po.rm.common.AbstractRecordsManagementTest#isExisitingRMSiteDeletedOnStartup()
-     */
-    @Override
-    protected boolean isExisitingRMSiteDeletedOnStartup()
-    {
-        return false;
-    }
-    
-    /**
-     * Don't delete the RM site at the end of the test
-     * 
-     * @see org.alfresco.po.rm.common.AbstractRecordsManagementTest#isRMSiteDeletedOnTearDown()
-     */
-    @Override
-    protected boolean isRMSiteDeletedOnTearDown()
-    {
-        return false;
-    }
+//    /**
+//     * Use the exiting RM site
+//     * 
+//     * @see org.alfresco.po.rm.common.AbstractRecordsManagementTest#isExisitingRMSiteDeletedOnStartup()
+//     */
+//    @Override
+//    protected boolean isExisitingRMSiteDeletedOnStartup()
+//    {
+//        return false;
+//    }
+//    
+//    /**
+//     * Don't delete the RM site at the end of the test
+//     * 
+//     * @see org.alfresco.po.rm.common.AbstractRecordsManagementTest#isRMSiteDeletedOnTearDown()
+//     */
+//    @Override
+//    protected boolean isRMSiteDeletedOnTearDown()
+//    {
+//        return false;
+//    }
     
     // TODO move to the page object
     public enum WhenOption

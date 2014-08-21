@@ -56,12 +56,10 @@ public class RmRecordDetailsPageTest extends RmAbstractTest
     private static final String NAME = "Name";
     private static final String HOLD_NAME = "Hold Name";
 
-    @Override
-    @BeforeClass(groups={"RM"})
-    public void doSetup()
+    @BeforeClass
+    public void navigateToConsole()
     {
-        setup();
-        FilePlanPage filePlanPage = (FilePlanPage) rmSiteDashBoard.selectFilePlan();
+        FilePlanPage filePlanPage = rmSiteDashBoard.selectFilePlan().render();
         FilePlanFilter filePlanFilter = filePlanPage.getFilePlanFilter();
         filePlanFilter.selectHoldsContainer().render();
         HoldsContainer.createNewHold(drone, HOLD_NAME, HOLD_NAME);
@@ -130,7 +128,6 @@ public class RmRecordDetailsPageTest extends RmAbstractTest
     @Test (dependsOnMethods = "openEditMetadataPage")
     public void holdRecordAction()
     {
-        new RecordDetailsPage(drone);
         click(RM_ADD_TO_HOLD_LINK);
         assertTrue(isElementPresent(ADD_TO_HOLD_DIALOG));
         click(By.xpath(" //div[text()='" + HOLD_NAME + "']//ancestor::tr//input[contains(@class, 'checkbox')]"));

@@ -81,13 +81,7 @@ public class HoldContainerIntTest extends AbstractIntegrationTest
     private static final By INPUT_REASON_SELECTOR = By.name("prop_rma_holdReason");
 
     @Override
-    protected boolean isRMSiteDeletedOnTearDown()
-    {
-        return false;
-    }
-
-    @Override
-    protected void setup()
+    public void setup()
     {
         super.setup();
         goToHoldsContainer(null);

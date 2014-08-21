@@ -56,13 +56,12 @@ public class RMA_1190 extends AbstractManageRulesRegressionTest
     /**
      * @see org.alfresco.po.rm.common.AbstractRegressionTest#preConditions()
      */
-    @Override
     protected void preConditions() throws Exception
     {
         // create the user
         createEnterpriseUser(user);
 
-        login();
+        login(username,password);
         try
         {
             // open the file plan
@@ -95,7 +94,6 @@ public class RMA_1190 extends AbstractManageRulesRegressionTest
     /**
      * @see org.alfresco.po.rm.common.AbstractRegressionTest#testExecution()
      */
-    @Override
     protected void testExecution()
     {
         login(user, PASSWORD);

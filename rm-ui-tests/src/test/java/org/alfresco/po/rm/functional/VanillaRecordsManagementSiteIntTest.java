@@ -34,6 +34,7 @@ import org.alfresco.po.share.util.FailedTestListener;
 import org.alfresco.po.share.util.SiteUtil;
 import org.alfresco.webdrone.HtmlPage;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -50,16 +51,12 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
     private static final String NAME = "name";
     private static final String DESC = "description";
 
-    /**
-     * Setup tests
-     */
-    @Override
-    public void setup()
-    {
-        // log into Share
-        login(username, password);
-    }
 
+    @BeforeClass
+    public void setupDODRMSite() throws Exception
+    {
+        createRMSite(RMSiteCompliance.DOD5015);
+    }
     /**
      * Load test data 
      * 
@@ -69,19 +66,14 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
     {
         // get file plan root
         FilePlanPage filePlan = FilePlanPage.getFilePlanRoot(rmSiteDashBoard);
-
         // create new category
         filePlan = createNewCategory(filePlan, NAME, TITLE, DESC);
-
         // click on category
         filePlan = filePlan.selectCategory(NAME, drone.getDefaultWaitTime()).render();
-
         // create record folder
         filePlan = createNewRecordFolder(filePlan, NAME, TITLE, DESC);
-
         // click on record folder
         filePlan = filePlan.selectFolder(NAME, drone.getDefaultWaitTime()).render();
-
         // file a record
         return fileElectronicToRecordFolder(filePlan);
 
@@ -93,11 +85,7 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
     @Test
     public void testDODSite() throws Exception
     {
-        // create DOD site
-        deleteRMSite();
-        createRMSite(RMSiteCompliance.DOD5015);
         FilePlanPage filePlan = loadTestData();
-
         List<FileDirectoryInfo> files = filePlan.getFiles();
         Assert.assertEquals(1, files.size());
 
@@ -121,9 +109,6 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
         // select the add record metadata action and check the expected aspects are present
         addRecordMetadata = recordDetails.selectAddRecordMetadata().render();
         checkDoDAddRecordMetadata(addRecordMetadata);
-
-        // delete DOD site
-        deleteRMSite();
     }
 
     /**
@@ -150,8 +135,6 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
     public void testVanillaSite() throws Exception
     {
         // create vanilla site
-        deleteRMSite();
-        createRMSite();
         FilePlanPage filePlan = loadTestData();
 
         // check the add record metadata action on the record
@@ -166,9 +149,6 @@ public class VanillaRecordsManagementSiteIntTest extends AbstractIntegrationTest
 
         // check that the add record metadata action is not visible (since there are not aspects out of the box for vanilla)
         Assert.assertFalse(recordDetails.isAddRecordMetaDataVisible());
-
-        // delete RM vanilla site
-        deleteRMSite();
     }
 
     /**

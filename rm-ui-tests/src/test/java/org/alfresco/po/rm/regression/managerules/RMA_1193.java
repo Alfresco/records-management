@@ -46,7 +46,6 @@ public class RMA_1193 extends AbstractManageRulesRegressionTest
     /**
      * @see org.alfresco.po.rm.common.AbstractRegressionTest#preConditions()
      */
-    @Override
     protected void preConditions() throws Exception
     {
         // create the user
@@ -76,7 +75,6 @@ public class RMA_1193 extends AbstractManageRulesRegressionTest
     /**
      * @see org.alfresco.po.rm.common.AbstractRegressionTest#testExecution()
      */
-    @Override
     protected void testExecution()
     {
         login(user, PASSWORD);
