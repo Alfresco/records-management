@@ -679,7 +679,7 @@ public class FilePlanPage extends DocumentLibraryPage
         createNewCategory.enterTitle(categoryName);
         createNewCategory.enterDescription(categoryName);
 
-        filePlan = ((FilePlanPage) createNewCategory.selectSave());
+        filePlan = createNewCategory.selectSave().render();
         filePlan.setInFilePlanRoot(isRootFolder);
         return filePlan.render(categoryName);
     }

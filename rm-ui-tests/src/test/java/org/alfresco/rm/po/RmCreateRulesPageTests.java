@@ -22,7 +22,7 @@ import org.alfresco.po.rm.RmCreateRulePage;
 import org.alfresco.po.rm.RmFolderRulesPage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.rm.common.AbstractRecordsManagementTest;
-import org.testng.AssertJUnit;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -52,7 +52,7 @@ public class RmCreateRulesPageTests extends AbstractRecordsManagementTest
         FilePlanPage filePlan = new FilePlanPage(drone);
         RmFolderRulesPage manageRulesPage = filePlan.selectManageRules().render();
         RmCreateRulePage rulePage = manageRulesPage.openCreateRulePage().render();
-        AssertJUnit.assertNotNull(rulePage);
+        Assert.assertNotNull(rulePage);
         //TODO FIXME create a rule and assert it was created.
     }
 //TODO fix me, i should be in a page object.

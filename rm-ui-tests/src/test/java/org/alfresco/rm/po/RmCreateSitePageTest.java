@@ -24,7 +24,7 @@ import org.alfresco.po.rm.RmSiteType;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.alfresco.rm.common.AbstractRecordsManagementTest;
 import org.openqa.selenium.By;
-import org.testng.AssertJUnit;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -46,23 +46,23 @@ public class RmCreateSitePageTest extends AbstractRecordsManagementTest
     {
         // render create site page
         page = rmSiteDashBoard.getRMNavigation().selectCreateSite().render();
-        AssertJUnit.assertTrue(page.isCreateSiteDialogDisplayed());
+        Assert.assertTrue(page.isCreateSiteDialogDisplayed());
     }
 
     @Test
     public void testInitialState()
     {
         // check the initial states of the controls
-        AssertJUnit.assertTrue(page.getSiteName().isEmpty());
-        AssertJUnit.assertTrue(page.getSiteUrl().isEmpty());
-        AssertJUnit.assertTrue(page.getDescription().isEmpty());
+        Assert.assertTrue(page.getSiteName().isEmpty());
+        Assert.assertTrue(page.getSiteUrl().isEmpty());
+        Assert.assertTrue(page.getDescription().isEmpty());
 
-        AssertJUnit.assertEquals(RmSiteType.COLLABORATION, page.getSiteType());
+        Assert.assertEquals(RmSiteType.COLLABORATION, page.getSiteType());
         // TODO check contents of drop down
 
         // TODO check site visibility
 
-        AssertJUnit.assertFalse(drone.find(RmCreateSitePage.SELECT_COMPLIANCE).isDisplayed());
+        Assert.assertFalse(drone.find(RmCreateSitePage.SELECT_COMPLIANCE).isDisplayed());
     }
 
     @Test(dependsOnMethods="testInitialState")
@@ -70,47 +70,47 @@ public class RmCreateSitePageTest extends AbstractRecordsManagementTest
     {
         // select RM type
         page.selectSiteType(RmSiteType.RECORDS_MANAGEMENT);
-        AssertJUnit.assertTrue(drone.find(RmCreateSitePage.SELECT_COMPLIANCE).isDisplayed());
+        Assert.assertTrue(drone.find(RmCreateSitePage.SELECT_COMPLIANCE).isDisplayed());
 
         // cancel page
         page.cancel();
 
         // reopen page
         page = rmSiteDashBoard.getRMNavigation().selectCreateSite().render();
-        AssertJUnit.assertTrue(page.isCreateSiteDialogDisplayed());
+        Assert.assertTrue(page.isCreateSiteDialogDisplayed());
 
         // check the initial states of the controls
-        AssertJUnit.assertTrue(page.getSiteName().isEmpty());
-        AssertJUnit.assertTrue(page.getSiteUrl().isEmpty());
-        AssertJUnit.assertTrue(page.getDescription().isEmpty());
+        Assert.assertTrue(page.getSiteName().isEmpty());
+        Assert.assertTrue(page.getSiteUrl().isEmpty());
+        Assert.assertTrue(page.getDescription().isEmpty());
 
-        AssertJUnit.assertEquals(RmSiteType.COLLABORATION, page.getSiteType());
+        Assert.assertEquals(RmSiteType.COLLABORATION, page.getSiteType());
         // TODO check contents of drop down
 
         // TODO check site visibility
 
-        AssertJUnit.assertFalse(drone.find(RmCreateSitePage.SELECT_COMPLIANCE).isDisplayed());
+        Assert.assertFalse(drone.find(RmCreateSitePage.SELECT_COMPLIANCE).isDisplayed());
     }
 
     @Test
     public void testSetName()
     {
-        AssertJUnit.assertTrue(page.getSiteName().isEmpty());
-        AssertJUnit.assertTrue(page.getSiteUrl().isEmpty());
+        Assert.assertTrue(page.getSiteName().isEmpty());
+        Assert.assertTrue(page.getSiteUrl().isEmpty());
 
         // set the site name
         drone.find(By.name("title")).sendKeys("testing");
 
         // check the url
-        AssertJUnit.assertEquals(page.getSiteName(), "testing");
-        AssertJUnit.assertEquals(page.getSiteUrl(), "testing");
+        Assert.assertEquals(page.getSiteName(), "testing");
+        Assert.assertEquals(page.getSiteUrl(), "testing");
 
         // set the site name
         drone.find(By.name("title")).sendKeys(" with space");
 
         // check the url
-        AssertJUnit.assertEquals(page.getSiteName(), "testing with space");
-        AssertJUnit.assertEquals(page.getSiteUrl(), "testing-with-space");
+        Assert.assertEquals(page.getSiteName(), "testing with space");
+        Assert.assertEquals(page.getSiteUrl(), "testing-with-space");
     }
 
     @Test
@@ -120,16 +120,16 @@ public class RmCreateSitePageTest extends AbstractRecordsManagementTest
         page.selectSiteType(RmSiteType.RECORDS_MANAGEMENT);
 
         // check the controls after selecting RM site type
-        AssertJUnit.assertEquals(page.getSiteName(), RmCreateSitePage.RM_SITE_NAME);
-        AssertJUnit.assertEquals(page.getDescription(), RmCreateSitePage.RM_SITE_DESC);
-        AssertJUnit.assertEquals(page.getSiteUrl(), RmCreateSitePage.RM_SITE_URL);
+        Assert.assertEquals(page.getSiteName(), RmCreateSitePage.RM_SITE_NAME);
+        Assert.assertEquals(page.getDescription(), RmCreateSitePage.RM_SITE_DESC);
+        Assert.assertEquals(page.getSiteUrl(), RmCreateSitePage.RM_SITE_URL);
 
-        AssertJUnit.assertEquals(RmSiteType.RECORDS_MANAGEMENT, page.getSiteType());
+        Assert.assertEquals(RmSiteType.RECORDS_MANAGEMENT, page.getSiteType());
 
         // TODO check site visibility
 
         // check the compliance drop down
-        AssertJUnit.assertTrue(drone.find(RmCreateSitePage.SELECT_COMPLIANCE).isDisplayed());
+        Assert.assertTrue(drone.find(RmCreateSitePage.SELECT_COMPLIANCE).isDisplayed());
         // TODO check whats in the compliance drop down
 
         // select DOD compliance
@@ -139,14 +139,14 @@ public class RmCreateSitePageTest extends AbstractRecordsManagementTest
         page.selectSiteType(RmSiteType.COLLABORATION);
 
         // check the controls
-        AssertJUnit.assertTrue(page.getSiteName().isEmpty());
-        AssertJUnit.assertTrue(page.getSiteUrl().isEmpty());
-        AssertJUnit.assertTrue(page.getDescription().isEmpty());
-        AssertJUnit.assertEquals(page.getSiteType(), RmSiteType.COLLABORATION);
+        Assert.assertTrue(page.getSiteName().isEmpty());
+        Assert.assertTrue(page.getSiteUrl().isEmpty());
+        Assert.assertTrue(page.getDescription().isEmpty());
+        Assert.assertEquals(page.getSiteType(), RmSiteType.COLLABORATION);
 
         // TODO check site visibility
 
-        AssertJUnit.assertFalse(drone.find(RmCreateSitePage.SELECT_COMPLIANCE).isDisplayed());
+        Assert.assertFalse(drone.find(RmCreateSitePage.SELECT_COMPLIANCE).isDisplayed());
 
     }
 }

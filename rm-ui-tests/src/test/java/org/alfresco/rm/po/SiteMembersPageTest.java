@@ -21,7 +21,7 @@ package org.alfresco.rm.po;
 import org.alfresco.po.rm.RmSiteMembersPage;
 import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.share.util.FailedTestListener;
-import org.testng.AssertJUnit;
+import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -38,6 +38,6 @@ public class SiteMembersPageTest extends AbstractTest
     public void createPage()
     {
         RmSiteMembersPage page = new RmSiteMembersPage(drone);
-        AssertJUnit.assertNotNull(page);
+        Assert.assertNotNull(page);
     }
 }

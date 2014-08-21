@@ -18,12 +18,12 @@
  */
 package org.alfresco.rm.po;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
 import org.alfresco.po.rm.RecordSearchPage;
 import org.alfresco.po.share.AbstractTest;
 import org.alfresco.po.share.util.FailedTestListener;
-import org.testng.AssertJUnit;
 import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
 
 /**
  * Tests record search page.
@@ -39,6 +39,6 @@ public class RecordSearchPageTest extends AbstractTest
     public void createPage()
     {
         RecordSearchPage page = new RecordSearchPage(drone);
-        AssertJUnit.assertNotNull(page);
+        Assert.assertNotNull(page);
     }
 }

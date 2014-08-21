@@ -23,7 +23,7 @@ import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
 import org.alfresco.rm.common.AbstractRecordsManagementTest;
 import org.openqa.selenium.By;
-import org.testng.AssertJUnit;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -36,8 +36,11 @@ import org.testng.annotations.Test;
  */
 public class RmCreateRecordPageTest extends AbstractRecordsManagementTest
 {
-    private static final String TEST_CATEGORY = "Test Category";
-    private static final String TEST_FOLDER = "Test Folder";
+    
+    /** Generate names */
+    private String categoryName = generateNameFromClass();
+    private String folderName = generateNameFromClass();
+    
     private static final String NAME = "Name";
     private static final String TITLE = "Title";
     private static final String DESCRIPTION = "Description";
@@ -47,20 +50,20 @@ public class RmCreateRecordPageTest extends AbstractRecordsManagementTest
     public void navigateToConsole()
     {
         FilePlanPage filePlanPage = rmSiteDashBoard.selectFilePlan().render();
-        filePlanPage = filePlanPage.createCategory(TEST_CATEGORY, true).render();
-        filePlanPage = filePlanPage.navigateToFolder(TEST_CATEGORY).render();
-        filePlanPage = filePlanPage.createFolder(TEST_FOLDER).render();
-        filePlanPage.navigateToFolder(TEST_FOLDER);
+        filePlanPage = filePlanPage.createCategory(categoryName, true).render();
+        filePlanPage = filePlanPage.navigateToFolder(categoryName).render();
+        filePlanPage = filePlanPage.createFolder(folderName).render();
+        filePlanPage.navigateToFolder(folderName);
     }
 
     @Test
     public void createNonElectronicRecord()
     {
         RmPageObjectUtils.select(drone, FilePlanPage.NEW_FILE_BTN);
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.PANEL_CONTAINER));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.ELECTRONIC_BUTTON));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.NON_ELECTRONIC_BUTTON));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.CANCEL_FILE_BUTTON));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.PANEL_CONTAINER));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.ELECTRONIC_BUTTON));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.NON_ELECTRONIC_BUTTON));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.CANCEL_FILE_BUTTON));
         //TODO FIXME move below into page object!
         drone.find(CreateNewRecordDialog.NON_ELECTRONIC_BUTTON).click();
         new CreateNewRecordDialog(drone).render();
@@ -69,17 +72,17 @@ public class RmCreateRecordPageTest extends AbstractRecordsManagementTest
     @Test (dependsOnMethods="createNonElectronicRecord")
     public void verifyCreateRecordDialog()
     {
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.NAME_INPUT));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.TITLE_INPUT));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.PHYSICAL_SIZE_INPUT));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.NUMBER_OF_COPIES_INPUT));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.STORAGE_LOCATION_INPUT));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.SHELF_INPUT));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.BOX_INPUT));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.FILE_INPUT));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.DESCRIPTION_INPUT));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.CANCEL_BUTTON));
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.SAVE_BUTTON));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.NAME_INPUT));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.TITLE_INPUT));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.PHYSICAL_SIZE_INPUT));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.NUMBER_OF_COPIES_INPUT));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.STORAGE_LOCATION_INPUT));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.SHELF_INPUT));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.BOX_INPUT));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.FILE_INPUT));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.DESCRIPTION_INPUT));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.CANCEL_BUTTON));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, CreateNewRecordDialog.SAVE_BUTTON));
     }
 
     @Test (dependsOnMethods="verifyCreateRecordDialog")
@@ -91,7 +94,7 @@ public class RmCreateRecordPageTest extends AbstractRecordsManagementTest
         recordDialog.enterDescription(DESCRIPTION);
         FilePlanPage filePlanPage = recordDialog.selectCancel();
         filePlanPage.setInRecordFolder(true);
-        AssertJUnit.assertFalse(RmPageObjectUtils.isDisplayed(drone, RECORD_NAME));
+        Assert.assertFalse(RmPageObjectUtils.isDisplayed(drone, RECORD_NAME));
     }
 
     @Test (dependsOnMethods="cancelCreateRecord")
@@ -104,6 +107,6 @@ public class RmCreateRecordPageTest extends AbstractRecordsManagementTest
         recordDialog.enterDescription(DESCRIPTION);
 
         filePlanPage = recordDialog.selectSave().render();
-        AssertJUnit.assertTrue(RmPageObjectUtils.isDisplayed(drone, RECORD_NAME));
+        Assert.assertTrue(RmPageObjectUtils.isDisplayed(drone, RECORD_NAME));
     }
 }

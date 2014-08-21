@@ -26,7 +26,7 @@
                   </property>
                </properties>
                <suiteXmlFiles>
-                  <suiteXmlFile>${project.build.testOutputDirectory}/testng.xml</suiteXmlFile>
+                  <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                </suiteXmlFiles>
             </configuration>
          </plugin>

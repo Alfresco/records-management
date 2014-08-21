@@ -23,7 +23,7 @@ import org.alfresco.po.rm.RmSiteDashBoardPage;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.alfresco.rm.common.AbstractRecordsManagementTest;
-import org.testng.AssertJUnit;
+import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -51,18 +51,18 @@ public class FilePlanPageTest extends AbstractRecordsManagementTest
     {
         RmSiteDashBoardPage rmSiteDashBoard = drone.getCurrentPage().render();
         FilePlanPage filePlan = rmSiteDashBoard.selectFilePlan().render();
-        AssertJUnit.assertTrue(filePlan.isCreateNewCategoryDisplayed());
-        AssertJUnit.assertTrue(filePlan.isCreateNewFolderDisplayed());
+        Assert.assertTrue(filePlan.isCreateNewCategoryDisplayed());
+        Assert.assertTrue(filePlan.isCreateNewFolderDisplayed());
 
         // create root category
         filePlan.createCategory(categoryName, true);
-        AssertJUnit.assertTrue(filePlan.isCategoryCreated(categoryName));
+        Assert.assertTrue(filePlan.isCategoryCreated(categoryName));
         filePlan.navigateToFolder(categoryName);
 
         // create record folder
         filePlan.createFolder(folderName);
         filePlan.navigateToFolder(folderName);
-        AssertJUnit.assertTrue(filePlan.isCreateNewFileDisplayed());
+        Assert.assertTrue(filePlan.isCreateNewFileDisplayed());
 
         // file record
         // FIXME this creates a non-electronic record .. rename method and allow values to be sent

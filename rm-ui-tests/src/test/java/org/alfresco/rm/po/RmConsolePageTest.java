@@ -23,7 +23,7 @@ import org.alfresco.po.rm.RmConsoleUsersAndGroups;
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.share.util.FailedTestListener;
 import org.alfresco.rm.common.AbstractRecordsManagementTest;
-import org.testng.AssertJUnit;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -49,7 +49,7 @@ public class RmConsolePageTest extends AbstractRecordsManagementTest
     public void verifyRmConsole()
     {
         RmConsolePage consolePage = drone.getCurrentPage().render();
-        AssertJUnit.assertNotNull(consolePage);
+        Assert.assertNotNull(consolePage);
     }
 
     @Test (dependsOnMethods="verifyRmConsole")
@@ -57,8 +57,8 @@ public class RmConsolePageTest extends AbstractRecordsManagementTest
     {
         RmConsolePage consolePage = drone.getCurrentPage().render();
         RmConsoleUsersAndGroups page = consolePage.openUsersAndGroupsPage().render();
-        AssertJUnit.assertNotNull(page);
-        AssertJUnit.assertTrue(page.isAddButtonDisplayed());
+        Assert.assertNotNull(page);
+        Assert.assertTrue(page.isAddButtonDisplayed());
     }
 
 }
