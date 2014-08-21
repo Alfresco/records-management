@@ -98,7 +98,7 @@
                               <!--
                               <sshexec username="tomcat" host="pbld01.alfresco.com" keyfile="${user.home}/.ssh/id_rsa" outputproperty="installerPath" command="ls -rt /data/nightlybuilds/Enterprise?${enterprise.installer.version}/build*/ALL/alfresco-enterprise-*-installer-linux-x64.??? | tail -1 | tr ' ' '?' " />
                               -->
-                              <sshexec username="tomcat" host="pbld01.alfresco.com" keyfile="${user.home}/.ssh/id_rsa" outputproperty="installerPath" command="ls -rt /data/releases/Community/Community?${community.installer.version}/build*/alfresco-community-*-installer-linux-x64.??? | tail -1 | tr ' ' '?' " />
+                              <sshexec username="tomcat" host="pbld01.alfresco.com" keyfile="${user.home}/.ssh/id_rsa" outputproperty="installerPath" command="ls -rt /data/releases/Community/Community*/${community.installer.version}/build*/alfresco-community-*-installer-linux-x64.??? | tail -1 | tr ' ' '?' " />
                               <scp remoteFile="tomcat@pbld01.alfresco.com:${installerPath}" localTofile="target/alf-installer.bin" keyfile="${user.home}/.ssh/id_rsa" />
                               <chmod file="target/alf-installer.bin" perm="a+x" verbose="true" />
                               <echo>Installing Alfresco...</echo>
