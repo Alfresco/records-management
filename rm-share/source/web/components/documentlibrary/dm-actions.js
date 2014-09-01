@@ -121,4 +121,28 @@
          }
       }
    });
+
+   YAHOO.Bubbling.fire("registerAction",
+   {
+      actionName: "onRecordedVersionConfig",
+      fn: function DLTB_onRecordedVersionConfig(record, owner)
+      {
+         var nodeRef = record.nodeRef.replace(":/", "");
+         this.modules.recordedVersionConfig = new Alfresco.module.SimpleDialog(this.id + "-recordedVersionConfig").setOptions(
+         {
+            width: "40em",
+            templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/recorded-version-config?nodeRef=" + nodeRef,
+            actionUrl: Alfresco.constants.PROXY_URI + "slingshot/doclib/action/recorded-version-config/node/" + nodeRef,
+            onSuccess:
+            {
+               fn: function RDLA_onRecordedVersionConfig_SimpleDialog_success(response)
+               {
+                  // Fire event so compnents on page are refreshed
+                  YAHOO.Bubbling.fire("metadataRefresh");
+               }
+            }
+         });
+         this.modules.recordedVersionConfig.show();
+      }
+   });
 })();
