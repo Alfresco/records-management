@@ -127,7 +127,8 @@
       actionName: "onRecordedVersionConfig",
       fn: function DLTB_onRecordedVersionConfig(record, owner)
       {
-         var nodeRef = record.nodeRef.replace(":/", "");
+         var nodeRef = record.nodeRef.replace(":/", ""),
+            me = this;
          this.modules.recordedVersionConfig = new Alfresco.module.SimpleDialog(this.id + "-recordedVersionConfig").setOptions(
          {
             width: "40em",
@@ -137,9 +138,26 @@
             {
                fn: function RDLA_onRecordedVersionConfig_SimpleDialog_success(response)
                {
+                  Alfresco.util.PopupManager.displayMessage(
+                  {
+                     text: me.msg("message.recordedVersionConfig.success")
+                  });
+
                   // Fire event so compnents on page are refreshed
                   YAHOO.Bubbling.fire("metadataRefresh");
-               }
+               },
+               scope: this
+            },
+            onFailure:
+            {
+               fn: function RDLA_onRecordedVersionConfig_SimpleDialog_failure(response)
+               {
+                  Alfresco.util.PopupManager.displayMessage(
+                  {
+                     text: me.msg("message.recordedVersionConfig.failure")
+                  });
+               },
+               scope: this
             }
          });
          this.modules.recordedVersionConfig.show();

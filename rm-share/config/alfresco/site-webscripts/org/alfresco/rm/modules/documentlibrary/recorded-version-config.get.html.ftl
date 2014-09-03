@@ -8,7 +8,7 @@
             <div class="yui-u">
                <select id="${el}-recordedVersions" name="recordedVersion">
                   <#list recordableVersions as recordableVersion>
-                     <option value="${recordableVersion.policy?js_string}" <#if recordableVersion.selected>selected</#if>>${msg("option." + recordableVersion.policy?js_string?lower_case + ".displayValue")}</option>
+                     <option value="${recordableVersion.policy?js_string}" <#if recordableVersion.selected == "true">selected</#if>>${msg("option." + recordableVersion.policy?js_string?lower_case + ".displayValue")}</option>
                   </#list>
                </select>
             </div>

@@ -588,8 +588,6 @@
          <action id="dm-recorded-version-config" type="javascript" label="actions.recorded-version-config" icon="../../../rm/components/documentlibrary/actions/rm-add-record-metadata">
             <param name="function">onRecordedVersionConfig</param>
             <param name="action">recorded-version-config</param>
-            <param name="successMessage">message.recordedVersionConfig.success</param>
-            <param name="failureMessage">message.recordedVersionConfig.failure</param>
             <permissions>
                <permission allow="true">Write</permission>
             </permissions>
