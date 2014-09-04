@@ -2,7 +2,7 @@
    <#include "./rm-console-access.ftl">
 <#else>
 <!--[if IE]>
-<iframe id="yui-history-iframe" src="${url.context}/res/yui/history/assets/blank.html"></iframe> 
+<iframe id="yui-history-iframe" src="${url.context}/res/yui/history/assets/blank.html"></iframe>
 <![endif]-->
 <input id="yui-history-field" type="hidden" />
 
@@ -16,7 +16,7 @@
    <!-- View panel -->
    <div id="${el}-view" class="hidden">
       <div class="title">${msg("label.custom-metadata-title")}</div>
-      
+
       <div class="view-main">
          <div class="yui-gf">
             <div class="yui-u first">
@@ -24,7 +24,7 @@
                <div class="object-list">
                   <ul id="${el}-object-list">
                     <#list customisable as custom>
-                       <li id="${el}-${custom.name}" class="customisable theme-bg-color-2" title="${custom.title}">${custom.title}</li>                    
+                       <li id="${el}-${custom.name}" class="customisable theme-bg-color-2" title="${custom.title}">${custom.title}</li>
                     </#list>
                   </ul>
                </div>
@@ -34,7 +34,7 @@
                   <!-- New Metadata Property button -->
                   <div class="newproperty-button">
                      <span class="yui-button yui-push-button" id="${el}-newproperty-button">
-                        <span class="first-child"><button>${msg("button.new")}</button></span>
+                        <span class="first-child"><button>${msg("button.new.custom-metadata")}</button></span>
                      </span>
                   </div>
                </div>
@@ -48,14 +48,14 @@
          </div>
       </div>
    </div>
-   
+
    <!-- Create panel -->
    <div id="${el}-create" class="hidden">
       <div class="title">
          <span>${msg("label.create-metadata-title")}:&nbsp;</span>
          <span id="${el}-create-metadata-item"></span>
       </div>
-      
+
       <form id="${el}-create-form" action="">
       <div class="create-main">
          <div class="label-row">
@@ -99,14 +99,14 @@
       </div>
       </form>
    </div>
-   
+
    <!-- Edit panel -->
    <div id="${el}-edit" class="hidden">
       <div class="title">
          <span>${msg("label.edit-metadata-title")}:&nbsp;</span>
          <span id="${el}-edit-metadata-item"></span>
       </div>
-      
+
       <form id="${el}-edit-form" action="">
       <div class="edit-main">
          <div class="label-row">
