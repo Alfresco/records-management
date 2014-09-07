@@ -95,6 +95,12 @@
             </plugins>
          </build>
       </profile>
+      <profile>
+         <id>enterprise</id>
+         <properties>
+            <webapp.id>share-enterprise</webapp.id>
+         </properties>
+      </profile>
    </profiles>
    <dependencies>
       <dependency>
@@ -105,7 +111,7 @@
       </dependency>
       <dependency>
          <groupId>org.alfresco</groupId>
-         <artifactId>share</artifactId>
+         <artifactId>${webapp.id}</artifactId>
          <version>${alfresco.base.version}</version>
          <type>war</type>
       </dependency>
