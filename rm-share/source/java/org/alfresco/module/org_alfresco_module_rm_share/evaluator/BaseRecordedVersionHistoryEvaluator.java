@@ -19,6 +19,7 @@
 package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 
 import org.alfresco.web.evaluator.BaseEvaluator;
+import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONObject;
 
 /**
@@ -41,6 +42,12 @@ public abstract class BaseRecordedVersionHistoryEvaluator extends BaseEvaluator
      */
     protected boolean evaluate(JSONObject jsonObject, String policy)
     {
-        return ((String) getProperty(jsonObject, PROP_RECORDABLE_VERSION_POLICY)).equalsIgnoreCase(policy);
+        boolean result = false;
+        String recordableVersionPolicy = (String) getProperty(jsonObject, PROP_RECORDABLE_VERSION_POLICY);
+        if (StringUtils.isNotBlank(recordableVersionPolicy) && recordableVersionPolicy.equalsIgnoreCase(policy))
+        {
+            result = true;
+        }
+        return result;
     }
 }
