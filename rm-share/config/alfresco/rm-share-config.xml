@@ -79,6 +79,16 @@
          <indicator id="rm-disposition-schedule" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-disposition-schedule-16.png">
             <evaluator>evaluator.rm.indicator.dispositionSchedule</evaluator>
          </indicator>
+         <!-- Recorded Version History All Revisions Indicator -->
+         <!-- FIXME: Change the indicator icon -->
+         <indicator id="rm-recorded-version-history-all-revisions" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-transfer-16.png">
+            <evaluator>evaluator.rm.doclib.recordedVersionHistoryAllRevisions</evaluator>
+         </indicator>
+         <!-- FIXME: Change the indicator icon -->
+         <!-- Recorded Version History Major Revisions Indicator -->
+         <indicator id="rm-recorded-version-history-major-revisions" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-transferred-16.png">
+            <evaluator>evaluator.rm.doclib.recordedVersionHistoryMajorRevisions</evaluator>
+         </indicator>
       </indicators>
 
       <!--
