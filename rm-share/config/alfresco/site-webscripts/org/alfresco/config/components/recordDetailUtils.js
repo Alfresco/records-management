@@ -8,6 +8,7 @@
 
 function disableRecordDetailsComponent(value)
 {
+   var disabled = false;
    var documentDetails = AlfrescoUtil.getNodeDetails(model.nodeRef, model.site);
    if (documentDetails != null)
    {
@@ -19,6 +20,8 @@ function disableRecordDetailsComponent(value)
          {
             model.exist = false;
          }
+         disabled = true;
       }
    }
+   return disabled;
 }
