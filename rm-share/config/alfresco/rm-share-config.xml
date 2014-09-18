@@ -184,7 +184,7 @@
          <!-- DocLib Rejected Record -->
          <template id="rmDocLibRejectedRecord">
             <evaluator>evaluator.rm.doclib.isRejectedRecord</evaluator>
-            <banner index="10" id="record">{i18nLabel details.rejected-record.info}</banner>
+            <banner index="10" id="record">{i18nLabel details.rejected-record.info}{RM_rejectedRecordClose}{RM_rejectedRecordInfo}</banner>
             <line index="10" id="description" view="detailed">{description}</line>
             <line index="20" id="tags" view="detailed">{tags}</line>
             <line index="30" id="categories" view="detailed" evaluator="evaluator.doclib.metadata.hasCategories">{categories}</line>
@@ -222,6 +222,7 @@
    <!-- Document Library Custom Code config section -->
    <config evaluator="string-compare" condition="DocLibCustom">
       <dependencies>
+         <css src="components/documentlibrary/dm-actions.css" />
          <js src="components/documentlibrary/dm-actions.js" />
       </dependencies>
       <dependencies />

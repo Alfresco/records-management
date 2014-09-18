@@ -163,4 +163,121 @@
          this.modules.recordedVersionConfig.show();
       }
    });
+
+   onRejectedRecordInfo = function RM_onRejectedRecordInfo(nodeRef, displayName, rejectReason, userId, date)
+   {
+      new Alfresco.module.SimpleDialog("rejectedRecordInfoDialog").setOptions(
+      {
+         templateUrl: Alfresco.constants.URL_SERVICECONTEXT + "rm/modules/documentlibrary/rejected-record-info",
+         actionUrl: null,
+         doBeforeDialogShow:
+         {
+            fn: function RM_onRejectedRecordInfo_doBeforeDialogShow(p_form, p_dialog)
+            {
+               var description = Dom.get("rejectedRecordInfoDialog-description");
+               description.innerHTML = YAHOO.lang.substitute(description.innerHTML, {'displayName' : displayName});
+               Dom.get("rejectedRecordInfoDialog-userId").setAttribute("value", userId);
+               Dom.get("rejectedRecordInfoDialog-date").setAttribute("value", date);
+               Dom.get("rejectedRecordInfoDialog-rejectReason").innerHTML = rejectReason;
+            },
+            scope: this
+         }
+      }).show();
+   };
+
+   onRejectedRecordClose = function RM_onRejectedRecordClose(nodeRef, title, text, buttonYes, buttonNo)
+   {
+      Alfresco.util.PopupManager.displayPrompt(
+      {
+         title: title,
+         text: text,
+         buttons: [
+         {
+            text: buttonYes,
+            handler: function DLTB_onRejectedRecordClose_confirm_yes()
+            {
+               Alfresco.util.Ajax.jsonPost(
+               {
+                  url: Alfresco.constants.PROXY_URI + 'slingshot/doclib/action/aspects/node/' + nodeRef.replace(":/", ""),
+                  dataObj:
+                  {
+                     added: [],
+                     removed: ["rma:recordRejectionDetails"]
+                  },
+                  successCallback:
+                  {
+                     fn: function DLTB_onRejectedRecordClose_confirm_success()
+                     {
+                        YAHOO.Bubbling.fire("metadataRefresh");
+                     },
+                     scope: this
+                  },
+                  failureCallback:
+                  {
+                     fn: function DLTB_onRejectedRecordClose_confirm_failure(response)
+                     {
+                        Alfresco.util.PopupManager.displayMessage(
+                        {
+                           text: Alfresco.util.Ajax.sanitizeMarkup(response.serverResponse.responseText)
+                        });
+                     }
+                  }
+               });
+
+               this.destroy();
+            }
+         },
+         {
+            text: buttonNo,
+            handler: function DLTB_onRejectedRecordClose_confirm_no()
+            {
+               this.destroy();
+            },
+            isDefault: true
+         }]
+      });
+   };
+
+   YAHOO.Bubbling.fire("registerRenderer",
+   {
+      propertyName: "RM_rejectedRecordInfo",
+      renderer: function RM_rejectedRecordInfo_renderer(record, label)
+      {
+         var funcArgs = "'",
+            properties = record.node.properties;
+         funcArgs += record.nodeRef;
+         funcArgs += "','";
+         funcArgs += record.displayName;
+         funcArgs += "','";
+         funcArgs += properties["rma:recordRejectionReason"];
+         funcArgs += "','";
+         funcArgs += properties["rma:recordRejectionUserId"];
+         funcArgs += "','";
+         funcArgs += Alfresco.util.formatDate(properties["rma:recordRejectionDate"].iso8601);
+         funcArgs += "'";
+
+         return '<a href="#" onclick="onRejectedRecordInfo(' + funcArgs + ');return false;" title="' + this.msg("banner.rejected-record.info") + '" class="item item-rejected-record-info">&nbsp;</a>';
+      }
+   });
+
+   YAHOO.Bubbling.fire("registerRenderer",
+   {
+      propertyName: "RM_rejectedRecordClose",
+      renderer: function RM_rejectedRecordClose_renderer(record, label)
+      {
+         var funcArgs = "'";
+         funcArgs += record.nodeRef;
+         funcArgs += "','";
+         funcArgs += this.msg("message.confirm.close-rejected-record.title");
+         funcArgs += "','";
+         funcArgs += this.msg("message.confirm.close-rejected-record");
+         funcArgs += "','";
+         funcArgs += this.msg("button.yes");
+         funcArgs += "','";
+         funcArgs += this.msg("button.no");
+         funcArgs += "'";
+
+         return '<a href="#" onclick="onRejectedRecordClose(' + funcArgs + ');return false;" title="' + this.msg("banner.rejected-record.close") + '" class="item item-rejected-record-close">&nbsp;</a>';
+      }
+   });
 })();
