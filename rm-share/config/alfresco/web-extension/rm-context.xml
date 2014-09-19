@@ -139,6 +139,7 @@
    <bean id="evaluator.rm.doclib.infoRequested" class="org.alfresco.web.evaluator.doclib.indicator.ActiveWorkflowsEvaluator"/>
    <bean id="evaluator.rm.doclib.recordedVersionHistoryAllRevisions" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.RecordedVersionHistoryAllRevisionsEvaluator" />
    <bean id="evaluator.rm.doclib.recordedVersionHistoryMajorRevisions" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.RecordedVersionHistoryMajorRevisionsEvaluator" />
+   <bean id="evaluator.rm.doclib.hasUserWritePermissions" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.HasUserWritePermissionsEvaluator" />
 
    <!--                             -->
    <!-- File Plan Action Evaluators -->
