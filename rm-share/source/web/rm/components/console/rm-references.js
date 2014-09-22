@@ -112,7 +112,7 @@
             this.widgets.dataSource = new YAHOO.util.DataSource(uriSearchResults,
             {
                responseType: YAHOO.util.DataSource.TYPE_JSON,
-               connXhrMode: "queueRequests",
+               connXhrMode: "cancelStaleRequests",
                responseSchema:
                {
                    resultsList: "data.customReferences"
@@ -363,6 +363,7 @@
           * @param e {object} DomEvent
           * @param oRecord {object} Object passed back from addListener method
           */
+         /*
          onDeleteReferenceClick: function ViewPanelHandler_onDeleteReferenceClick(e, oRecord)
          {
             var me = this;
@@ -389,6 +390,7 @@
                   }]
             });
          },
+         */
 
          /**
           * Remove the reference
@@ -396,6 +398,7 @@
           * @mthod _removeReference
           * @param oRecord {object} The reference
           */
+         /*
          _removeReference: function ViewPanelHandler__removeReference(oRecord)
          {
             Alfresco.util.Ajax.jsonDelete(
@@ -419,6 +422,7 @@
                failureMessage: parent.msg("message.removereference-failure")
             });
          },
+         */
 
          /**
           * onUpdate ConsolePanel event handler
@@ -593,7 +597,7 @@
                            // Hide the type that isn't used for this reference
                            Dom.addClass(parent.id + "-bidirectional-section", "hidden");
                            Dom.addClass(parent.id + "-parentchild-section", "hidden");
-                           Dom.removeClass(parent.id + "-" + ref.referenceType + "-section", "hidden");                           
+                           Dom.removeClass(parent.id + "-" + ref.referenceType + "-section", "hidden");
                         }
                      },
                      scope: this
@@ -686,7 +690,7 @@
                if (clearAndFocus)
                {
                   Dom.get(parent.id + "-parentchild-source").focus();
-               }               
+               }
             }
             this.widgets.editForm.updateSubmitElements();
          }
