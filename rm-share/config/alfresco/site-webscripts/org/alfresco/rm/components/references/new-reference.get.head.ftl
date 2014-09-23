@@ -1,6 +1,5 @@
 <#include "/org/alfresco/components/component.head.inc">
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/components/form/form.css" />
-<@link rel="stylesheet" type="text/css" href="${url.context}/res/templates/edit-metadata/edit-metadata.css" />
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/rm/components/references/new-reference.css" />
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/yui/datatable/assets/datatable.css" />
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/modules/document-picker/document-picker.css" />
