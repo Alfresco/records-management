@@ -222,6 +222,92 @@
       },
 
       /**
+       * Overrides the existing function to change the URL for the post request
+       *
+       * Called when user clicks on the save button.
+       *
+       * @method onSaveButtonClick
+       * @param type
+       * @param args
+       */
+      onSaveButton: function Permissions_onSaveButton(type, args)
+      {
+         this.widgets.saveButton.set("disabled", true);
+
+         var permissions = [],
+            perm;
+
+         for (var i = 0, ii = this.permissions.current.length; i < ii; i++)
+         {
+            perm = this.permissions.current[i];
+            // Newly created, or existing and removed or modified
+            if ((perm.created && !perm.removed) || (!perm.created && (perm.removed || perm.modified)))
+            {
+               // Modified existing
+               // First add a new one, see MNT-11725
+               permissions.push(
+               {
+                  authority: perm.authority.name,
+                  role: perm.role,
+                  remove: perm.removed
+               });
+
+               // Remove old permission
+               if (perm.modified && !perm.created)
+               {
+                  permissions.push(
+                  {
+                     authority: perm.authority.name,
+                     role: this.permissions.original[i].role,
+                     remove: true
+                  });
+               }
+            }
+         }
+
+         if (permissions.length > 0 || this.permissions.isInherited !== this.permissions.originalIsInherited)
+         {
+            Alfresco.util.Ajax.jsonPost(
+            {
+               url: Alfresco.constants.PROXY_URI + "api/node/" + this.options.nodeRef.replace(":/", "") + "/rmpermissions",
+               dataObj:
+               {
+                  permissions: permissions,
+                  isInherited: this.permissions.isInherited
+               },
+               successCallback:
+               {
+                  fn: function(res)
+                  {
+                     // Return to appropriate location
+                     this._navigateForward();
+                  },
+                  scope: this
+               },
+               failureCallback:
+               {
+                  fn: function(response)
+                  {
+                     var json = Alfresco.util.parseJSON(response.serverResponse.responseText);
+                     Alfresco.util.PopupManager.displayPrompt(
+                     {
+                        title: this.msg("message.failure"),
+                        text: this.msg("message.permissionsSaveFail", json.message)
+                     });
+                     this.widgets.saveButton.set("disabled", false);
+                  },
+                  scope: this
+               }
+            });
+         }
+         else
+         {
+            // Nothing to save
+            this._navigateForward();
+         }
+      },
+
+      /**
        * Overrides the existing function to add RM specific behaviour.
        *
        * Success handler called when the AJAX call to the doclist permissions web script returns successfully
