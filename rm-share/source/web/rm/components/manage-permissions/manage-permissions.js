@@ -310,6 +310,52 @@
       /**
        * Overrides the existing function to add RM specific behaviour.
        *
+       * Authority selected event handler. This event is fired from Authority picker.
+       *
+       * @method onAuthoritySelected
+       * @param e DomEvent
+       * @param args Event parameters (depends on event type)
+       */
+      onAuthoritySelected: function Permissions_onAuthoritySelected(e, args)
+      {
+         var role,
+            name = args[1].itemName;
+
+         if (name === "GROUP_Administrator" + YAHOO.util.History.getQueryStringParameter("filePlanId"))
+         {
+            role = this.settableRoles[0];
+         }
+         else
+         {
+            role = this.settableRoles[1];
+         }
+
+         // Construct permission descriptor and add permission row.
+         this.permissions.current.push(
+         {
+            authority:
+            {
+               name: name,
+               displayName: args[1].displayName,
+               iconUrl: args[1].iconUrl
+            },
+            role: role,
+            created: true
+         });
+
+         // Remove authority selector popup
+         this.widgets.addUserGroup.set("checked", false);
+         Dom.removeClass(this.widgets.authorityFinder, "active");
+         Dom.removeClass(this.id + "-inheritedContainer", "table-mask");
+         Dom.removeClass(this.id + "-directContainer", "table-mask");
+         this.showingAuthorityFinder = false;
+
+         this.render();
+      },
+
+      /**
+       * Overrides the existing function to add RM specific behaviour.
+       *
        * Success handler called when the AJAX call to the doclist permissions web script returns successfully
        *
        * @method onPermissionsLoaded
