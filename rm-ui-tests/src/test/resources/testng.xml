@@ -7,23 +7,13 @@
             <exclude name="rmBugs"/>
          </run>
       </groups>
-      <!--packages>
-         <package name="org.alfresco.po.rm.unit.*" />
-         <package name="org.alfresco.po.rm.regression.*" />
-         <package name="org.alfresco.po.rm.functional.*" />
-      </packages-->
       <classes>
-        <class name="org.alfresco.rm.po.SiteMembersPageTest"/>
         <class name="org.alfresco.rm.po.RmCreateRulesPageTests"/>
         <class name="org.alfresco.rm.po.RmConsolePageTest"/>
-        <class name="org.alfresco.rm.po.RmRecordDetailsPageTest"/>
         <class name="org.alfresco.rm.po.FilePlanPageTest"/>
         <class name="org.alfresco.rm.po.RecordSearchPageTest"/>
         <class name="org.alfresco.rm.po.RmCreateSitePageTest"/>
         <class name="org.alfresco.rm.po.RmCreateRecordPageTest"/>
-        <class name="org.alfresco.rm.sanity.AbstractSanityTest.java"/>
-        
       </classes>
     </test> <!-- Test -->
 </suite> <!-- Suite -->
-      
