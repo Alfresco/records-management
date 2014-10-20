@@ -18,11 +18,8 @@
  */
 package org.alfresco.po.rm;
 
-import org.alfresco.po.share.FactorySharePage;
 import org.alfresco.po.share.site.document.FileDirectoryInfoImpl;
-import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.WebDrone;
-import org.alfresco.webdrone.exception.PageOperationException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -36,7 +33,6 @@ import org.openqa.selenium.WebElement;
 public class RmFileDirectoryInfo extends FileDirectoryInfoImpl
 {
     private static final By BANNER = By.cssSelector("div.info-banner");
-    private static final By CREATE_RECORD = By.cssSelector("div#onActionSimpleRepoAction.rm-create-record a");
 
     /**
      * Constructor.
@@ -51,31 +47,7 @@ public class RmFileDirectoryInfo extends FileDirectoryInfoImpl
         super(nodeRef, webElement, drone);
     }
 
-    /**
-     * Action of selecting the declare records button
-     * that appear in the action drop down.
-     *
-     * @return {@link HtmlPage}
-     */
-    public HtmlPage declareRecord()
-    {
-        ((FileDirectoryInfoImpl) this).selectMoreLink();
-        try
-        {
-            WebElement createRecord = drone.find(CREATE_RECORD);
-            createRecord.click();
-        }
-        catch (NoSuchElementException nse)
-        {
-            throw new PageOperationException("Unable to find declare record button from the drop down", nse);
-        }
-        // FIXME: canResume has been removed from HtmlElement in WebDrone
-        // That's why the code has been commented out. If this breaks any tests
-        // we need to find a solution.
-        //canResume();
-        return FactorySharePage.resolvePage(drone);
-    }
-
+   
     /**
      * Verify if item is a record.
      * Part of Records management module, when a document is a record
