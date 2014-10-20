@@ -8,7 +8,7 @@
    <modelVersion>4.0.0</modelVersion>
    <artifactId>alfresco-rm-ui-tests</artifactId>
    <properties>
-      <dependency.share.po.version>5.0-BF-SNAPSHOT</dependency.share.po.version>
+      <dependency.share.po.version>5.0.1-SNAPSHOT</dependency.share.po.version>
    </properties>
    <build>
       <plugins>

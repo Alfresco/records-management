@@ -2,18 +2,18 @@
  * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of Alfresco
- *
- * Alfresco is free software: you can redistribute it and/or modify
+ * A *
+lfresco is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
- * Alfresco is distributed in the hope that it will be useful,
+ * Alfre *
+sco is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
+ * MERCHANTA * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+r General Public License for more details.
+ * You should *
+ have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.alfresco.po.rm;
@@ -35,6 +35,7 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.URLCodec;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -48,7 +49,7 @@ public class RmFactoryPage extends FactorySharePage
 {
     private static final String RM_S = "rm-%s";
     private static final String SITE_RM = "site/rm";
-    private static final String DASHBOARD = "dashboard";
+    private static final String RM_DASH = "rm/dashboard";
     private static final String DOCUMENT_DETAILS = "rm-document-details";
     private static final String LOGIN = "login";
     private static final String RM_FILE_PLAN = "rm-documentlibrary";
@@ -58,12 +59,11 @@ public class RmFactoryPage extends FactorySharePage
     private static final String RM_DASHBOARD = "rm-dashboard";
     private static final String RM_RMSEARCH = "rm-rmsearch";
     private static final String RM_CONSOLE = "rm-console";
-    private static final String RM_SITE_MEMBERS = "rm-site-members";
     private static final String RM_RULE_EDIT = "rm-rule-edit";
     private static final String RM_FOLDER_FULES = "rm-folder-rules";
     private static final String RM_CONSOLE_DEFINE_ROLES = RM_CONSOLE + "/rm-define-roles";
     private static final String RM_CONSOLE_NEW_ROLE = RM_CONSOLE_DEFINE_ROLES + "?action=new";
-    private static final String Rm_CONSOLE_USERS_AND_GROUPS = RM_CONSOLE + "rm-users-and-groups";
+    private static final String Rm_CONSOLE_USERS_AND_GROUPS = RM_CONSOLE + "/rm-users-and-groups";
 
     /**
      * Constructor.
@@ -72,10 +72,8 @@ public class RmFactoryPage extends FactorySharePage
     {
         super();
         // Extend the pages in share
-        pages.put(DASHBOARD, RmSiteDashBoardPage.class);
         pages.put(DOCUMENT_DETAILS, RecordDetailsPage.class);
         // RM related pages
-        pages.put(RM_SITE_MEMBERS, RmSiteMembersPage.class);
         pages.put(RM_CONSOLE, RmConsolePage.class);
         pages.put(RM_RMSEARCH, RecordSearchPage.class);
         pages.put(RM_DASHBOARD, RmSiteDashBoardPage.class);
@@ -101,8 +99,7 @@ public class RmFactoryPage extends FactorySharePage
     }
 
     /**
-     * Creates the appropriate page object based on the current page the
-     * {@link WebDrone} is on.
+     * Creates the appropriate page object based on the current page the {@link WebDrone} is on.
      *
      * @param drone {@link WebDrone} Alfresco unmanned web browser client
      * @return {@link SharePage} The page object response
@@ -132,6 +129,24 @@ public class RmFactoryPage extends FactorySharePage
             {
             }
 
+            // Check for Share Dialogue
+            try
+            {
+                WebElement shareDialogue = drone.findFirstDisplayedElement(By.cssSelector(SHARE_DIALOGUE));
+                if (shareDialogue.isDisplayed())
+                {
+                    return resolveShareDialoguePage(drone);
+                }
+            }
+            catch (NoSuchElementException nse)
+            {
+
+            }
+            catch (StaleElementReferenceException ste)
+            {
+
+            }
+
             // Determine what page we're on based on url
             return RmFactoryPage.getPage(drone.getCurrentUrl(), drone);
         }
@@ -151,7 +166,7 @@ public class RmFactoryPage extends FactorySharePage
         WebDroneUtil.checkMandotaryParam("url", url);
         WebDroneUtil.checkMandotaryParam("drone", drone);
 
-        String pageName = RmFactoryPage.resolvePage(url);        
+        String pageName = RmFactoryPage.resolvePage(url);
         return instantiatePage(drone, pages.get(pageName));
     }
 
@@ -165,9 +180,13 @@ public class RmFactoryPage extends FactorySharePage
     {
         WebDroneUtil.checkMandotaryParam("url", url);
 
-        if (url.endsWith(DASHBOARD) && url.contains(SITE_RM))
+        if (url.endsWith(RM_DASH) && url.contains(SITE_RM))
         {
             return RM_DASHBOARD;
+        }
+        else if (url.endsWith(Rm_CONSOLE_USERS_AND_GROUPS))
+        {
+            return Rm_CONSOLE_USERS_AND_GROUPS;
         }
 
         // Check if rm based url
@@ -204,4 +223,32 @@ public class RmFactoryPage extends FactorySharePage
         }
         return decodedUrl;
     }
+
+    /**
+     * Helper method to return right Page for Share Dialogue displayed
+     *
+     * @return HtmlPage
+     */
+    private static HtmlPage resolveShareDialoguePage(WebDrone drone)
+    {
+        SharePage sharePage = null;
+        try
+        {
+            WebElement dialogue = drone.findFirstDisplayedElement(SHARE_DIALOGUE_HEADER);
+            if (dialogue != null && dialogue.isDisplayed())
+            {
+                String dialogueID = dialogue.getAttribute("id");
+                if (dialogueID.contains("rm-createSite"))
+                {
+                    sharePage = new RmCreateSitePage(drone);
+                }
+            }
+        }
+        catch (NoSuchElementException nse)
+        {
+        }
+
+        return sharePage;
+    }
+
 }

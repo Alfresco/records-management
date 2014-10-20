@@ -18,6 +18,9 @@
  */
 package org.alfresco.po.rm;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.alfresco.po.share.site.CreateSitePage;
 import org.alfresco.webdrone.HtmlPage;
 import org.alfresco.webdrone.RenderTime;
@@ -46,9 +49,36 @@ public class RmCreateSitePage extends CreateSitePage
     /** RM site compliance */
     public enum RMSiteCompliance
     {
-        STANDARD,
-        DOD5015
+        STANDARD("Standard"),
+        DOD5015("DoD 5015.2-STD");
+        
+        private String complainceName;
+        private RMSiteCompliance(String ComplainceType)
+            {
+            this.complainceName = ComplainceType;
+            }
+        public String getComplainceName()
+            {
+            return complainceName;
+            }   
+        
+        public static RMSiteCompliance getRMSiteComplainceforName(String complainceName)
+            {
+            
+               for(RMSiteCompliance complainceType:RMSiteCompliance.values())
+               {
+                   if(complainceType.getComplainceName().equals(complainceName))
+                   {
+                       return complainceType;
+                       
+                   }
+               }
+               throw new NoSuchElementException("No Role for value - " + complainceName);
+            }
+        
     }
+    
+   
 
     private static final By SITE_PRESET = By.id("alfresco-rm-createSite-instance-sitePreset");
 
@@ -211,7 +241,28 @@ public class RmCreateSitePage extends CreateSitePage
 
         return result;
     }
+    
+    /*This method is to return all the 
+     * RMsitecreatePage 
+     * compliances 
+     */    
+    
+    public List<RMSiteCompliance> getallRmsiteComplainces()
+    {
 
+        Select dropdown = new Select(drone.findAndWait(SELECT_COMPLIANCE));   
+        List<RMSiteCompliance> compliances = new ArrayList<RmCreateSitePage.RMSiteCompliance>(); 
+        List<WebElement> options = dropdown.getOptions(); 
+        for (WebElement webElement : options)
+        {
+            compliances.add(RMSiteCompliance.getRMSiteComplainceforName(webElement.getText()));
+     
+        }
+        return compliances;
+        
+     }
+    
+    
     /**
      * Checks if drop down contains option for records management.
      * This can be confirmed by checking the dropdown id.

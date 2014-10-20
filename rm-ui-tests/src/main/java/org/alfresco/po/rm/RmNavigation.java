@@ -32,8 +32,6 @@ import org.openqa.selenium.WebElement;
  */
 public class RmNavigation extends Navigation
 {
-    private static final String CREATE_SITE = "ul.create-site-menuitem>li>a";
-    private static final String CREATE_SITE_DOJO_SUPPORT = "td#HEADER_SITES_MENU_CREATE_SITE_text";
 
     private static final By FILE_PLAN_LINK = By.cssSelector("a[href$='rm/documentlibrary']");
 
@@ -48,22 +46,6 @@ public class RmNavigation extends Navigation
     }
 
     /**
-     * Mimics the action of selecting create site link.
-     *
-     * @return {@link RmCreateSitePage} Returns records management create site page
-     */
-    public RmCreateSitePage selectCreateSite()
-    {
-        selectSitesDropdown();
-        String selectorText = isDojoSupport() ? CREATE_SITE_DOJO_SUPPORT : CREATE_SITE;
-        By selector = By.cssSelector(selectorText);
-        WebElement selectorElement = drone.find(selector);
-        selectorElement.click();
-        return new RmCreateSitePage(drone);
-    }
-
-    /**
-     *
      * @return
      */
     public FilePlanPage selectFilePlan()
@@ -72,4 +54,5 @@ public class RmNavigation extends Navigation
         filePlanLink.click();
         return new FilePlanPage(drone);
     }
+    
 }

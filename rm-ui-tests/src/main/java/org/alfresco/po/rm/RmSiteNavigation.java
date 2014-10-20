@@ -19,7 +19,7 @@
 package org.alfresco.po.rm;
 
 import org.alfresco.po.rm.fileplan.FilePlanPage;
-import org.alfresco.po.share.site.AbstractSiteNavigation;
+import org.alfresco.po.share.site.SiteNavigation;
 import org.alfresco.webdrone.WebDrone;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
@@ -33,12 +33,9 @@ import org.openqa.selenium.WebElement;
  * @author Tuna Aksoy
  * @version 1.7.1
  */
-public class RmSiteNavigation extends AbstractSiteNavigation
+public class RmSiteNavigation extends SiteNavigation
 {
-    private static final By MENU_BAR = By.cssSelector("div.alf-menu-bar");
-    private static final By MORE_BTN = By.cssSelector("span#HEADER_SITE_MORE_PAGES_text");
-    private static final By SITE_MEMBERS = By.cssSelector("div#HEADER_SITE_MEMBERS");
-    private static final By SITE_MEMBERS_TXT = By.cssSelector("span#HEADER_SITE_MEMBERS_text");
+    private static final By MENU_BAR = By.cssSelector("#HEADER_NAVIGATION_MENU_BAR");
     private static final By RECORD_SEARCH = By.cssSelector("div#HEADER_SITE_RMSEARCH");
     private static final By RECORD_SEARCH_TXT = By.cssSelector("span#HEADER_SITE_RMSEARCH_text");
     private static final By FILE_PLAN = By.cssSelector("div#HEADER_SITE_DOCUMENTLIBRARY");
@@ -92,27 +89,6 @@ public class RmSiteNavigation extends AbstractSiteNavigation
     }
 
     /**
-     * Checks if More drop down is displayed.
-     *
-     * @return <code>true</code> if displayed <code>false</code> otherwise
-     */
-    public boolean isMoreDisplayed()
-    {
-        return isLinkDisplayed(MORE_BTN);
-    }
-
-    /**
-     * Checks if More drop down is displayed.
-     *
-     * @return <code>true</code> if displayed <code>false</code> otherwise
-     */
-    public void selectMore()
-    {
-        WebElement moreButton = drone.find(MORE_BTN);
-        moreButton.click();
-    }
-
-    /**
      * Mimics selecting the file plan link on site navigation bar.
      *
      * @return {@link FilePlanPage} Returns the file plan page object
@@ -132,9 +108,8 @@ public class RmSiteNavigation extends AbstractSiteNavigation
     {
         if (!isRecordSearchDisplayed())
         {
-            selectMore();
+            clickMoreIfExist();
         }
-
         select(RECORD_SEARCH_TXT);
         return new RecordSearchPage(drone);
     }
@@ -160,32 +135,6 @@ public class RmSiteNavigation extends AbstractSiteNavigation
     }
 
     /**
-     * Mimics selecting the site members link on site navigation bar.
-     *
-     * @return {@link RmSiteMembersPage} Return the records management site member page
-     */
-    public RmSiteMembersPage selectSiteMembers()
-    {
-        if (!isSelectSiteMembersDisplayed())
-        {
-            selectMore();
-        }
-
-        select(SITE_MEMBERS_TXT);
-        return new RmSiteMembersPage(drone);
-    }
-
-    /**
-     * Checks if site members is displayed.
-     *
-     * @return <code>true</code> if displayed <code>false</code> otherwise
-     */
-    public boolean isSelectSiteMembersDisplayed()
-    {
-        return isLinkDisplayed(SITE_MEMBERS);
-    }
-
-    /**
      * Checks if site members link is active.
      *
      * @return <code>true</code> if high lighted <code>false</code> otherwise
@@ -202,8 +151,20 @@ public class RmSiteNavigation extends AbstractSiteNavigation
      */
     public RmConsolePage selectRMConsole()
     {
-        selectMore();
+        if(isMoreDisplayed())
+        {
+            clickMoreIfExist();
+        }
         select(RM_CONSOLE_TXT);
         return new RmConsolePage(drone);
+    }
+    
+    /**
+     * Checks if RmconsolePage is displayed.
+     * @return<code>true</code> if displayed<code>false</code>otherwise
+     */
+    public boolean isRmConsolePageDisplayed()
+    {
+        return isLinkDisplayed(RM_CONSOLE_TXT);
     }
 }

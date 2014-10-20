@@ -21,6 +21,8 @@
         <class name="org.alfresco.rm.po.RecordSearchPageTest"/>
         <class name="org.alfresco.rm.po.RmCreateSitePageTest"/>
         <class name="org.alfresco.rm.po.RmCreateRecordPageTest"/>
+        <class name="org.alfresco.rm.sanity.AbstractSanityTest.java"/>
+        
       </classes>
     </test> <!-- Test -->
 </suite> <!-- Suite -->
