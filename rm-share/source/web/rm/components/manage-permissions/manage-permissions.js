@@ -109,119 +109,6 @@
       },
 
       /**
-       * Overrides the existing function to disable the permissions button for the RM administrator
-       *
-       * Returns role custom datacell formatter
-       *
-       * @method fnRenderCellRole
-       */
-      fnRenderCellRole: function RM_Permissions_fnRenderCellRole()
-      {
-         var scope = this;
-
-         /**
-          * Role custom datacell formatter
-          *
-          * @method renderCellRole
-          * @param elCell {object}
-          * @param oRecord {object}
-          * @param oColumn {object}
-          * @param oData {object|string}
-          */
-         return function RM_Permissions_renderCellRole(elCell, oRecord, oColumn, oData)
-         {
-            Dom.setStyle(elCell, "width", oColumn.width + "px");
-            Dom.setStyle(elCell.parentNode, "width", oColumn.width + "px");
-
-            var role = oRecord.getData("role"),
-               index = oRecord.getData("index"),
-               menuId = "roles-" + oRecord.getId(),
-               menuData = [];
-
-            // Special case handling for non-settable roles
-            if (!scope._isRoleEditable(role) || !scope.settableRoles.hasOwnProperty(role))
-            {
-               elCell.innerHTML = '<span>' + $html(scope._i18nRole(oRecord.getData("role"))) + '</span>';
-            }
-            else
-            {
-               menuData = menuData.concat(scope.settableRolesMenuData);
-
-               // Internationalise the roles strings displayed:
-               for (var j = 0, jj = menuData.length; j < jj; j++)
-               {
-                  menuData[j].text = scope._i18nRole(menuData[j].value);
-               }
-
-               elCell.innerHTML = '<span id="' + menuId + '"></span>';
-
-               // Roles
-               var rolesButton = new YAHOO.widget.Button(
-               {
-                  container: menuId,
-                  type: "menu",
-                  menu: menuData
-               });
-               rolesButton.getMenu().subscribe("click", function(p_sType, p_aArgs)
-               {
-                  return function Permissions_rolesButtonClicked(p_button, p_index)
-                  {
-                     var menuItem = p_aArgs[1];
-                     if (menuItem)
-                     {
-                        p_button.set("label", scope._i18nRole(menuItem.value));
-                        scope.onRoleChanged.call(scope, p_aArgs[1], p_index);
-                     }
-                  }(rolesButton, index);
-               });
-               rolesButton.set("label", $html(scope._i18nRole(oRecord.getData("role"))));
-
-               if (oRecord.getData("authority").name === "GROUP_Administrator" + YAHOO.util.History.getQueryStringParameter("filePlanId"))
-               {
-                  Alfresco.util.disableYUIButton(rolesButton);
-               }
-            }
-         };
-      },
-
-      /**
-       * Overrides the existing function to remove the delete button for the RM administrator
-       *
-       * Returns actions custom datacell formatter
-       *
-       * @method fnRenderCellActions
-       */
-      fnRenderCellActions: function Permissions_fnRenderCellActions()
-      {
-         var scope = this;
-
-         /**
-          * Actions custom datacell formatter
-          *
-          * @method renderCellActions
-          * @param elCell {object}
-          * @param oRecord {object}
-          * @param oColumn {object}
-          * @param oData {object|string}
-          */
-         return function Permissions_renderCellActions(elCell, oRecord, oColumn, oData)
-         {
-            var role = oRecord.getData("role");
-
-            Dom.setStyle(elCell, "width", oColumn.width + "px");
-            Dom.setStyle(elCell.parentNode, "width", oColumn.width + "px");
-
-            var html = '<div id="' + scope.id + '-actions-' + oRecord.getId() + '" class="hidden action-set">';
-            if (scope._isRoleEditable(role) && oRecord.getData("authority").name !== "GROUP_Administrator" + YAHOO.util.History.getQueryStringParameter("filePlanId"))
-            {
-               html += '<div class="onActionDelete"><a class="action-link" title="' + scope.msg("button.delete") + '"><span>' + scope.msg("button.delete") + '</span></a></div>';
-            }
-            html += '</div>';
-            elCell.innerHTML = html;
-         };
-      },
-
-      /**
        * Overrides the existing function to change the URL for the post request
        *
        * Called when user clicks on the save button.
@@ -318,28 +205,16 @@
        */
       onAuthoritySelected: function Permissions_onAuthoritySelected(e, args)
       {
-         var role,
-            name = args[1].itemName;
-
-         if (name === "GROUP_Administrator" + YAHOO.util.History.getQueryStringParameter("filePlanId"))
-         {
-            role = this.settableRoles[0];
-         }
-         else
-         {
-            role = this.settableRoles[1];
-         }
-
          // Construct permission descriptor and add permission row.
          this.permissions.current.push(
          {
             authority:
             {
-               name: name,
+               name: args[1].itemName,
                displayName: args[1].displayName,
                iconUrl: args[1].iconUrl
             },
-            role: role,
+            role: this.settableRoles[1],
             created: true
          });
 
@@ -419,7 +294,7 @@
          for (var i = 0; i < roles.length; i++)
          {
             var name = roles[i].authority.name;
-            if (name === "ROLE_EXTENDED_READER" || name === "ROLE_EXTENDED_WRITER")
+            if (name === "ROLE_EXTENDED_READER" || name === "ROLE_EXTENDED_WRITER" || name === "GROUP_Administrator" + YAHOO.util.History.getQueryStringParameter("filePlanId"))
             {
                continue;
             }
