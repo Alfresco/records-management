@@ -121,7 +121,7 @@ public class RmSiteNavigation extends SiteNavigation
      */
     public boolean isRecordSearchDisplayed()
     {
-        return isLinkDisplayed(RECORD_SEARCH);
+        return isLinkDisplayed(RECORD_SEARCH_TXT);
     }
 
     /**
