@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="TestNG AllTestSuite" verbose="1" time-out="300000" parallel="none">
+<suite name="TestNG AllTestSuite" verbose="1" time-out="300000">
    <test name="AllTests">
       <groups>
          <run>
@@ -8,12 +8,7 @@
          </run>
       </groups>
       <classes>
-        <class name="org.alfresco.rm.po.RmCreateRulesPageTests"/>
-        <class name="org.alfresco.rm.po.RmConsolePageTest"/>
-        <class name="org.alfresco.rm.po.FilePlanPageTest"/>
-        <class name="org.alfresco.rm.po.RecordSearchPageTest"/>
-        <class name="org.alfresco.rm.po.RmCreateSitePageTest"/>
-        <class name="org.alfresco.rm.po.RmCreateRecordPageTest"/>
+        <class name="org.alfresco.rm.sanity.CreateRMSiteTest"/>
       </classes>
     </test> <!-- Test -->
 </suite> <!-- Suite -->
