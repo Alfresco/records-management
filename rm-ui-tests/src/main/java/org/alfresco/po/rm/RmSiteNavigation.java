@@ -24,7 +24,6 @@ import org.alfresco.webdrone.WebDrone;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -37,7 +36,7 @@ import org.openqa.selenium.WebElement;
 public class RmSiteNavigation extends SiteNavigation
 {
     private static final By MENU_BAR = By.cssSelector("#HEADER_NAVIGATION_MENU_BAR");
-    private static final By RECORD_SEARCH = By.cssSelector("div#HEADER_SITE_RM-SEARCH");
+    private static final By RECORD_SEARCH = By.cssSelector("div#HEADER_SITE_RMSEARCH");
     private static final By RECORD_SEARCH_TXT = By.cssSelector("span#HEADER_SITE_RMSEARCH_text");
     private static final By FILE_PLAN = By.cssSelector("div#HEADER_SITE_DOCUMENTLIBRARY");
     private static final By FILE_PLAN_TXT = By.cssSelector("span#HEADER_SITE_DOCUMENTLIBRARY_text");
@@ -167,26 +166,5 @@ public class RmSiteNavigation extends SiteNavigation
     public boolean isRmConsolePageDisplayed()
     {
         return isLinkDisplayed(RM_CONSOLE_TXT);
-    }
-    
-    /**
-     * Checks if item is displayed.
-     *
-     * @return true if displayed
-     */
-    @Override
-    public boolean isLinkDisplayed(final By by)
-    {
-        if (by != null)
-        {
-            try
-            {
-                return drone.findAndWait(by).isDisplayed();
-            }
-            catch (TimeoutException exception)
-            {
-            }
-        }
-        return false;
     }
 }
