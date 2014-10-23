@@ -24,6 +24,7 @@ import org.alfresco.webdrone.WebDrone;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -166,5 +167,25 @@ public class RmSiteNavigation extends SiteNavigation
     public boolean isRmConsolePageDisplayed()
     {
         return isLinkDisplayed(RM_CONSOLE_TXT);
+    }
+    
+    /**
+     * Checks if item is displayed.
+     *
+     * @return true if displayed
+     */
+    public boolean isLinkDisplayed(final By by)
+    {
+        if (by != null)
+        {
+            try
+            {
+                return drone.findAndWait(by).isDisplayed();
+            }
+            catch (TimeoutException te)
+            {
+            }
+        }
+        return false;
     }
 }
