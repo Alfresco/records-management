@@ -4,7 +4,9 @@ function shouldFilter(callResult)
 {
    var result = false;
 
-   if (new RegExp("ExtendedReaders").test(callResult.shortName) || new RegExp("ExtendedWriters").test(callResult.shortName))
+   if (new RegExp("ExtendedReaders").test(callResult.shortName) ||
+         new RegExp("ExtendedWriters").test(callResult.shortName) ||
+         new RegExp("GROUP_Administrator").test(callResult.fullName))
    {
       result = true;
    }

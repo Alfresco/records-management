@@ -565,7 +565,7 @@
             <param name="function">onHoldDelete</param>
             <evaluator>evaluator.rm.action.deleteHold</evaluator>
          </action>
-         
+
          <!--  Edit Hold -->
          <action id="rm-edit-hold" type="pagelink" label="action.edit.hold" icon="folder-edit-metadata">
             <param name="page">edit-metadata?nodeRef={node.nodeRef}</param>
@@ -675,14 +675,8 @@
             <action index="260" id="rm-file-to" />
             <action index="270" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="280" id="rm-view-audit-log" />
+            <action index="290" id="rm-manage-permissions" />
          </actionGroup>
-
-         <actionGroup id="rm-doclib-record-browse">
-            <action index="100" id="rm-document-download" />
-            <action index="110" id="rm-edit-details" />
-            <action index="120" id="rm-hide-record" />
-         </actionGroup>
-
          <actionGroup id="rm-record-details">
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-reviewed" />
@@ -706,8 +700,14 @@
             <action index="260" id="rm-file-to" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
+            <action index="290" id="rm-manage-permissions" />
          </actionGroup>
 
+         <actionGroup id="rm-doclib-record-browse">
+            <action index="100" id="rm-document-download" />
+            <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-hide-record" />
+         </actionGroup>
          <actionGroup id="rm-doclib-record-details">
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
@@ -733,14 +733,8 @@
             <action index="200" id="rm-view-audit-log" />
             <action index="210" id="rm-reject" />
             <action index="220" id="rm-request-info" />
+            <action index="230" id="rm-manage-permissions" />
          </actionGroup>
-
-         <actionGroup id="rm-doclib-undeclared-record-browse">
-            <action index="100" id="rm-document-download" />
-            <action index="110" id="rm-edit-details" />
-            <action index="120" id="rm-hide-record" />
-         </actionGroup>
-
          <actionGroup id="rm-undeclared-record-details">
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-declare" />
@@ -760,8 +754,14 @@
             <action index="200" id="rm-view-audit-log" />
             <action index="210" id="rm-reject" />
             <action index="220" id="rm-request-info" />
+            <action index="230" id="rm-manage-permissions" />
          </actionGroup>
 
+         <actionGroup id="rm-doclib-undeclared-record-browse">
+            <action index="100" id="rm-document-download" />
+            <action index="110" id="rm-edit-details" />
+            <action index="120" id="rm-hide-record" />
+         </actionGroup>
          <actionGroup id="rm-doclib-undeclared-record-details">
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />

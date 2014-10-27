@@ -1,0 +1,1 @@
+model.widgets[0].name = "Alfresco.rm.component.ManagePermissions";
