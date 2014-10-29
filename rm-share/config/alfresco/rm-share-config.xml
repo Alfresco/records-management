@@ -723,6 +723,7 @@
             <action index="260" id="rm-file-to" />
             <action index="270" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="280" id="rm-view-audit-log" />
+            <action index="290" id="rm-manage-permissions" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-record-browse">
@@ -755,6 +756,7 @@
             <action index="260" id="rm-file-to" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
+            <action index="290" id="rm-manage-permissions" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-record-details">
@@ -784,6 +786,7 @@
             <action index="200" id="rm-view-audit-log" />
             <action index="210" id="rm-reject" />
             <action index="220" id="rm-request-info" />
+            <action index="230" id="rm-manage-permissions" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-browse">
@@ -812,6 +815,7 @@
             <action index="200" id="rm-view-audit-log" />
             <action index="210" id="rm-reject" />
             <action index="220" id="rm-request-info" />
+            <action index="230" id="rm-manage-permissions" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-details">

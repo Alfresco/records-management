@@ -81,7 +81,7 @@
             recordCategoryDetailsUrl: fnPageURL("rm-record-category-details?nodeRef=" + nodeRef),
             recordFolderDetailsUrl: fnPageURL("rm-record-folder-details?nodeRef=" + nodeRef),
             transfersZipUrl: $combine(Alfresco.constants.PROXY_URI, "api/node", filePlanUri, "transfers", nodeRef.id),
-            managePermissionsUrl: fnPageURL("rm-permissions?nodeRef=" + nodeRef + "&itemName=" + encodeURIComponent(record.displayName) + "&nodeType=" + jsNode.type + "&filePlanId=" + filePlanId)
+            managePermissionsUrl: fnPageURL("manage-permissions?nodeRef=" + nodeRef + "&itemName=" + encodeURIComponent(record.displayName) + "&nodeType=" + jsNode.type + "&filePlanId=" + filePlanId)
          });
       },
 
