@@ -603,14 +603,14 @@
 
          <!-- Recorded version configuration -->
          <!-- FIXME: Change icon -->
+         <!--  Can only configure recorded version if editable by current user, is not locked, is not a working copy, is not synced,
+               is not reject as record, rm site exists and has the versionable aspect -->
          <action id="dm-recorded-version-config" type="javascript" label="actions.recorded-version-config" icon="../../../rm/components/documentlibrary/actions/rm-add-record-metadata">
             <param name="function">onRecordedVersionConfig</param>
             <param name="action">recorded-version-config</param>
             <permissions>
                <permission allow="true">Write</permission>
             </permissions>
-            <!--  Can only configure recorded version if editable by current user, is not locked, is not a working copy, is not synced,
-                  is not reject as record, rm site exists and has the versionable aspect -->
             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
@@ -899,11 +899,13 @@
          <!--  Extensions to the standard DM UI actions -->
          <actionGroup id="document-browse">
             <action index="400" id="rm-create-record" />
-            <action index="410" id="dm-recorded-version-config" />
+            <!--  action exclued from 2.3.b release because it is incomplete
+            <action index="410" id="dm-recorded-version-config" /> -->
          </actionGroup>
          <actionGroup id="document-details">
             <action index="400" id="rm-create-record" />
-            <action index="410" id="dm-recorded-version-config" />
+            <!--  action exclued from 2.3.b release because it is incomplete
+            <action index="410" id="dm-recorded-version-config" /> -->
          </actionGroup>
 
       </actionGroups>
