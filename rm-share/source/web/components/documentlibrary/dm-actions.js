@@ -25,6 +25,8 @@
  */
 (function()
 {
+   var $html = Alfresco.util.encodeHTML;
+
    YAHOO.Bubbling.fire("registerAction",
    {
       actionName: "onHideRecordAction",
@@ -178,7 +180,7 @@
                description.innerHTML = YAHOO.lang.substitute(description.innerHTML, {'displayName' : displayName});
                Dom.get("rejectedRecordInfoDialog-userId").setAttribute("value", userId);
                Dom.get("rejectedRecordInfoDialog-date").setAttribute("value", date);
-               Dom.get("rejectedRecordInfoDialog-rejectReason").innerHTML = rejectReason;
+               Dom.get("rejectedRecordInfoDialog-rejectReason").innerHTML = decodeURI(rejectReason);
             },
             scope: this
          }
@@ -243,20 +245,20 @@
       propertyName: "RM_rejectedRecordInfo",
       renderer: function RM_rejectedRecordInfo_renderer(record, label)
       {
-         var funcArgs = "'",
+         var funcArgs = "\"",
             properties = record.node.properties;
          funcArgs += record.nodeRef;
-         funcArgs += "','";
+         funcArgs += "\",\"";
          funcArgs += record.displayName;
-         funcArgs += "','";
-         funcArgs += properties["rma:recordRejectionReason"];
-         funcArgs += "','";
+         funcArgs += "\",\"";
+         funcArgs += encodeURI(properties["rma:recordRejectionReason"]);
+         funcArgs += "\",\"";
          funcArgs += properties["rma:recordRejectionUserId"];
-         funcArgs += "','";
+         funcArgs += "\",\"";
          funcArgs += Alfresco.util.formatDate(properties["rma:recordRejectionDate"].iso8601);
-         funcArgs += "'";
+         funcArgs += "\"";
 
-         return '<a href="#" onclick="onRejectedRecordInfo(' + funcArgs + ');return false;" title="' + this.msg("banner.rejected-record.info") + '" class="item item-rejected-record-info">&nbsp;</a>';
+         return '<a href="#" onclick="onRejectedRecordInfo(' + $html(funcArgs) + ');return false;" title="' + this.msg("banner.rejected-record.info") + '" class="item item-rejected-record-info">&nbsp;</a>';
       }
    });
 
@@ -265,19 +267,19 @@
       propertyName: "RM_rejectedRecordClose",
       renderer: function RM_rejectedRecordClose_renderer(record, label)
       {
-         var funcArgs = "'";
+         var funcArgs = "\"";
          funcArgs += record.nodeRef;
-         funcArgs += "','";
+         funcArgs += "\",\"";
          funcArgs += this.msg("message.confirm.close-rejected-record.title");
-         funcArgs += "','";
+         funcArgs += "\",\"";
          funcArgs += this.msg("message.confirm.close-rejected-record");
-         funcArgs += "','";
+         funcArgs += "\",\"";
          funcArgs += this.msg("button.yes");
-         funcArgs += "','";
+         funcArgs += "\",\"";
          funcArgs += this.msg("button.no");
-         funcArgs += "'";
+         funcArgs += "\"";
 
-         return '<a href="#" onclick="onRejectedRecordClose(' + funcArgs + ');return false;" title="' + this.msg("banner.rejected-record.close") + '" class="item item-rejected-record-close">&nbsp;</a>';
+         return '<a href="#" onclick="onRejectedRecordClose(' + $html(funcArgs) + ');return false;" title="' + this.msg("banner.rejected-record.close") + '" class="item item-rejected-record-close">&nbsp;</a>';
       }
    });
 })();
