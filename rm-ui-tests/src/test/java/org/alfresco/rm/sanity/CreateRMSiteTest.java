@@ -107,8 +107,6 @@ public class CreateRMSiteTest extends AbstractSanityTest
         // verify fileplage,sitemembers,recordsearch and recordsmanagement cosnole visibility
         assertTrue(rmSiteNavigation.isDashboardDisplayed());
         assertTrue(rmSiteNavigation.isFilePlanDisplayed());
-        saveScreenShot("RMA_2664_Before_isRecordSearchDisplayed");
-        savePageSource("RMA_2664_Before_isRecordSearchDisplayed_Source");
         assertTrue(rmSiteNavigation.isRecordSearchDisplayed());
         assertTrue(rmSiteNavigation.isRmConsolePageDisplayed());
         assertTrue(rmSiteNavigation.isSelectSiteMembersDisplayed());

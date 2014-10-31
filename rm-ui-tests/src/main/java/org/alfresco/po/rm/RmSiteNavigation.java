@@ -37,8 +37,8 @@ import org.openqa.selenium.WebElement;
 public class RmSiteNavigation extends SiteNavigation
 {
     private static final By MENU_BAR = By.cssSelector("#HEADER_NAVIGATION_MENU_BAR");
-    private static final By RECORD_SEARCH = By.cssSelector("div#HEADER_SITE_RM-SEARCH");
-    private static final By RECORD_SEARCH_TXT = By.cssSelector("span#HEADER_SITE_RM-SEARCH_text");
+    private static final By RECORD_SEARCH = By.xpath("//div[starts-with(@id, 'HEADER_SITE_RM') and contains(@id, 'SEARCH')]");
+    private static final By RECORD_SEARCH_TXT = By.xpath("//span[starts-with(@id, 'HEADER_SITE_RM') and contains(@id, 'SEARCH_text')]/a");
     private static final By FILE_PLAN = By.cssSelector("div#HEADER_SITE_DOCUMENTLIBRARY");
     private static final By FILE_PLAN_TXT = By.cssSelector("span#HEADER_SITE_DOCUMENTLIBRARY_text");
     private static final By RM_CONSOLE_TXT = By.cssSelector("span#HEADER_SITE_RM_MANAGEMENT_CONSOLE_text");
