@@ -289,9 +289,7 @@
    <!--                          -->
    <!-- DocLib Common Evaluators -->
    <!--                          -->
-   <bean id="evaluator.rm.doclib.rmSiteExists" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.DocLibRmSiteExistsEvaluator">
-      <property name="serviceRegistry" ref="webframework.service.registry" />
-   </bean>
+   <bean id="evaluator.rm.doclib.rmSiteExists" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.DocLibRmSiteExistsEvaluator"/>
 
    <!-- DOD 5015 context import -->
    <import resource="classpath:alfresco/dod5015/dod5015-context.xml"/>
