@@ -302,9 +302,7 @@
    <!--                          -->
    <!-- DocLib Common Evaluators -->
    <!--                          -->
-   <bean id="evaluator.rm.doclib.action.rmSiteExists" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.DocLibRmSiteExistsEvaluator">
-      <property name="serviceRegistry" ref="webframework.service.registry" />
-   </bean>
+   <bean id="evaluator.rm.doclib.action.rmSiteExists" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.DocLibRmSiteExistsEvaluator"/>
    <bean id="evaluator.rm.doclib.action.hasVersionableAspect" class="org.alfresco.web.evaluator.HasAspectEvaluator">
       <property name="aspects">
          <list>

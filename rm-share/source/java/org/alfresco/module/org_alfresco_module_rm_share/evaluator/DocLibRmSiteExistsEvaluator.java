@@ -18,14 +18,7 @@
  */
 package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.simple.JSONObject;
-import org.springframework.extensions.surf.WebFrameworkServiceRegistry;
-import org.springframework.extensions.webscripts.ScriptRemote;
-import org.springframework.extensions.webscripts.connector.Response;
 
 /**
  * Checks if an RM site exists or not
@@ -35,20 +28,6 @@ import org.springframework.extensions.webscripts.connector.Response;
  */
 public class DocLibRmSiteExistsEvaluator extends BaseRMEvaluator
 {
-    /** Logger */
-    private static Log logger = LogFactory.getLog(DocLibRmSiteExistsEvaluator.class);
-
-    /** Web Framework Service Registry */
-    private WebFrameworkServiceRegistry serviceRegistry = null;
-
-    /**
-     * @param serviceRegistry   web framework service registry
-     */
-    public void setServiceRegistry(WebFrameworkServiceRegistry serviceRegistry)
-    {
-        this.serviceRegistry = serviceRegistry;
-    }
-
     /**
      * @see org.alfresco.web.evaluator.BaseEvaluator#evaluate(org.json.simple.JSONObject)
      */
@@ -56,27 +35,10 @@ public class DocLibRmSiteExistsEvaluator extends BaseRMEvaluator
     public boolean evaluate(JSONObject jsonObject)
     {
         boolean result = false;
-        ScriptRemote scriptRemote = serviceRegistry.getScriptRemote();
-        Response response = scriptRemote.connect().get("/api/sites");
-        if (response.getStatus().getCode() == 200)
+        Object isRMSiteCreated = ((JSONObject)jsonObject.get("node")).get("isRmSiteCreated");
+        if (isRMSiteCreated != null && ((Boolean) isRMSiteCreated).booleanValue())
         {
-            try
-            {
-                JSONArray responseAsJsonArray = new JSONArray(response.getResponse());
-                for (int i = 0; i < responseAsJsonArray.length(); i++)
-                {
-                    org.json.JSONObject site = responseAsJsonArray.getJSONObject(i);
-                    if (site != null && site.getString("sitePreset").equals("rm-site-dashboard"))
-                    {
-                        result = true;
-                        break;
-                    }
-                }
-            }
-            catch (JSONException e)
-            {
-                logger.error("An error occurred while checking the site presets: '" + e.getMessage() + "'.");
-            }
+            result = true;
         }
         return result;
     }
