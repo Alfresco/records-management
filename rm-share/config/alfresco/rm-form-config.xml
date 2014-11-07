@@ -428,6 +428,9 @@
                <show id="rma:cutOffDate" for-mode="view"/>
                <show id="rma:recordSearchDispositionActionAsOf" for-mode="view"/>
 
+               <!-- Record Version -->
+               <show id="rmv:versionDescription" for-mode="view"/>
+               <show id="rmv:versionLabel" for-mode="view"/>
             </field-visibility>
 
             <appearance>
@@ -435,6 +438,7 @@
                <set id="rm-record" label-id="label.set.record" appearance="panel" />
                <set id="rm-vital-record" label-id="label.set.vitalRecord" appearance="panel" />
                <set id="rm-disposition" label-id="label.set.disposition" appearance="panel" />
+               <set id="rm-record-version" label-id="label.set.recordVersion" appearance="panel" />
                <set id="rm-custom" label-id="label.set.customMetadata" appearance="panel" />
 
                <!--  Record fields -->
@@ -442,7 +446,6 @@
                <field id="rma:dateFiled" set="rm-record" read-only="true"/>
                <field id="rma:location" set="rm-record"/>
                <field id="rmc:supplementalMarkingList" set="rm-record"/>
-
                <!--  Vital Record fields -->
                <field id="rma:reviewAsOf" set="rm-vital-record" read-only="true" />
 
@@ -457,6 +460,9 @@
                <field id="rma:cutOffDate" read-only="true" set="rm-disposition"/>
                <field id="rma:recordSearchDispositionActionAsOf" label-id="label.dispositionAsOfDate" read-only="true" set="rm-disposition" />
 
+               <!-- Record Version -->
+               <field id="rmv:versionDescription" label-id="label.versionDescription" read-only="true" set="rm-record-version"/>
+               <field id="rmv:versionLabel" label-id="label.VersionLabel" read-only="true" set="rm-record-version"/>
             </appearance>
 
          </form>
