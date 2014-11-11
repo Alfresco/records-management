@@ -234,7 +234,7 @@ public class RmFactoryPage extends FactorySharePage
         SharePage sharePage = null;
         try
         {
-            WebElement dialogue = drone.findFirstDisplayedElement(SHARE_DIALOGUE_HEADER);
+            WebElement dialogue = drone.findFirstDisplayedElement(By.cssSelector(SHARE_DIALOGUE));
             if (dialogue != null && dialogue.isDisplayed())
             {
                 String dialogueID = dialogue.getAttribute("id");
