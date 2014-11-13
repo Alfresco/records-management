@@ -140,13 +140,7 @@
    <bean id="evaluator.rm.doclib.recordedVersionHistoryAllRevisions" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.RecordedVersionHistoryAllRevisionsEvaluator" />
    <bean id="evaluator.rm.doclib.recordedVersionHistoryMajorRevisions" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.RecordedVersionHistoryMajorRevisionsEvaluator" />
    <bean id="evaluator.rm.doclib.hasUserWritePermissions" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.HasUserWritePermissionsEvaluator" />
-   <bean id="evaluator.rm.doclib.versionRecord" class="org.alfresco.web.evaluator.HasAspectEvaluator">
-      <property name="aspects">
-         <list>
-            <value>rmv:versionRecord</value>
-         </list>
-      </property>
-   </bean>
+   <bean id="evaluator.rm.doclib.versionRecord" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.VersionRecordEvaluator"/>
 
    <!--                             -->
    <!-- File Plan Action Evaluators -->
