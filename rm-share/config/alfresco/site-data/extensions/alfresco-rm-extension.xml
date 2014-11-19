@@ -1123,10 +1123,25 @@
             </customization>
          </customizations>
          <components>
-            <!-- Add RM Events -->
+            <!-- Add RM Relationships -->
             <component>
                <scope>template</scope>
                <region-id>web-preview</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="rm-relationships">
+                     <evaluations>
+                        <evaluation id="rm-relationships">
+                           <url>/relationships</url>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+            <!-- Add RM Events -->
+            <component>
+               <scope>template</scope>
+               <region-id>comments</region-id>
                <source-id>document-details</source-id>
                <sub-components>
                   <sub-component id="rm-events">
