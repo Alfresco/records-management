@@ -43,7 +43,6 @@ public class CreateNewRecordFolderDialog extends Dialog
     /**
      * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render(org.alfresco.webdrone.RenderTime)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public CreateNewRecordFolderDialog render(RenderTime timer)
     {
@@ -55,7 +54,6 @@ public class CreateNewRecordFolderDialog extends Dialog
     /**
      * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render(long)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public CreateNewRecordFolderDialog render(long time)
     {
@@ -67,7 +65,6 @@ public class CreateNewRecordFolderDialog extends Dialog
     /**
      * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render()
      */
-    @SuppressWarnings("unchecked")
     @Override
     public CreateNewRecordFolderDialog render()
     {

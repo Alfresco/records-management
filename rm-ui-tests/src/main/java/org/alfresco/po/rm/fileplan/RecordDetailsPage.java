@@ -1,18 +1,14 @@
 /*
  * Copyright (C) 2005-2014 Alfresco Software Limited.
- *
  * This file is part of Alfresco
- *
  * Alfresco is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
  * Alfresco is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -45,7 +41,7 @@ import org.openqa.selenium.WebElement;
  */
 public class RecordDetailsPage extends DocumentDetailsPage
 {
-    private static  int MAX_WAIT_TIME = 6000;
+    private static int MAX_WAIT_TIME = 6000;
     private static final By HIDE_RECORD = By.cssSelector("div#onHideRecordAction.rm-hide-record");
     private static final By POP_UP = By.cssSelector("div.bd");
     public static final By RM_ADD_META_DATA_LINK = By.cssSelector("div#onActionAddRecordMetadata a");
@@ -63,28 +59,31 @@ public class RecordDetailsPage extends DocumentDetailsPage
     public static final By PROPERTY_SET_HEADER = By.cssSelector("div.set-panel-heading");
     public static final By ADD_TO_HOLD_OK_BUTTON = By.cssSelector("button[id$='AddToHold-ok-button']");
     public static final By REMOVE_FROM_HOLD_OK_BUTTON = By.cssSelector("button[id$='RemoveFromHold-ok-button']");
-    
+
     /** key rm areas on the record details page that need to be rendered */
     public static final By PROPERTIES = By.cssSelector("div.form-fields");
     public static final By ACTIONS = By.cssSelector("div.action-set");
     public static final By REFERENCES = By.cssSelector("div[id$='rm-references']");
     public static final By EVENTS = By.cssSelector("div[id$='rm-events']");
 
-    /** edit metadata page locators*/
-    public static final By EDIT_METADATA_FORM               = By.cssSelector("div[id*=edit-metadata].form-fields");
-    public static final By EDIT_METADATA_NAME_INPUT         = By.cssSelector("input[id$='default_prop_cm_name']");
-    public static final By EDIT_METADATA_TITLE_INPUT        = By.cssSelector("input[id$='default_prop_cm_title']");
-    public static final By EDIT_METADATA_DESCRIPTION_INPUT  = By.cssSelector("textarea[id$='default_prop_cm_description']");
-    public static final By EDIT_PHYSICAL_SIZE_INPUT         = By.cssSelector("input[id$='default_prop_rma_physicalSize']");
-    public static final By EDIT_NUMBER_OF_COPIES_INPUT      = By.cssSelector("input[id$='default_prop_rma_numberOfCopies']");
-    public static final By EDIT_METADATA_STORAGE_LOCATION   = By.cssSelector("input[id$='default_prop_rma_storageLocation']");
-    public static final By EDIT_METADATA_SHELF_INPUT        = By.cssSelector("input[id$='default_prop_rma_shelf']");
-    public static final By EDIT_METADATA_BOX_INPUT          = By.cssSelector("input[id$='default_prop_rma_box']");
-    public static final By EDIT_METADATA_FILE_INPUT         = By.cssSelector("input[id$='default_prop_rma_file']");
-    public static final By SAVE_BUTTON                      = By.cssSelector("button[id$='submit-button']");
-    public static final By CANCEL_BUTTON                    = By.cssSelector("button[id$='cancel-button']");
-    public static final By COPY_MOVE_TO_BUTTON              = By.cssSelector("button[id$='ok-button']");
-
+    /** edit metadata page locators */
+    public static final By EDIT_METADATA_FORM = By.cssSelector("div[id*=edit-metadata].form-fields");
+    public static final By EDIT_METADATA_NAME_INPUT = By.cssSelector("input[id$='default_prop_cm_name']");
+    public static final By EDIT_METADATA_TITLE_INPUT = By.cssSelector("input[id$='default_prop_cm_title']");
+    public static final By EDIT_METADATA_DESCRIPTION_INPUT = By.cssSelector("textarea[id$='default_prop_cm_description']");
+    public static final By EDIT_PHYSICAL_SIZE_INPUT = By.cssSelector("input[id$='default_prop_rma_physicalSize']");
+    public static final By EDIT_NUMBER_OF_COPIES_INPUT = By.cssSelector("input[id$='default_prop_rma_numberOfCopies']");
+    public static final By EDIT_METADATA_STORAGE_LOCATION = By.cssSelector("input[id$='default_prop_rma_storageLocation']");
+    public static final By EDIT_METADATA_SHELF_INPUT = By.cssSelector("input[id$='default_prop_rma_shelf']");
+    public static final By EDIT_METADATA_BOX_INPUT = By.cssSelector("input[id$='default_prop_rma_box']");
+    public static final By EDIT_METADATA_FILE_INPUT = By.cssSelector("input[id$='default_prop_rma_file']");
+    public static final By SAVE_BUTTON = By.cssSelector("button[id$='submit-button']");
+    public static final By CANCEL_BUTTON = By.cssSelector("button[id$='cancel-button']");
+    public static final By COPY_MOVE_TO_BUTTON = By.cssSelector("button[id$='ok-button']");
+    public static final By ACTIONS_BUTTON = By.cssSelector("div.document-actions.document-details-panel h2");
+    public static final By REFERENCES_BUTTON = By.cssSelector("div.document-references.document-details-panel h2");
+    public static final By PROPERTIES_SUBSECTIONS = By.cssSelector("div.set-panel-heading");
+    protected static final By FILEPLAN = By.cssSelector("#HEADER_SITE_DOCUMENTLIBRARY");
 
     /**
      * Constructor.
@@ -103,7 +102,6 @@ public class RecordDetailsPage extends DocumentDetailsPage
      * @param timer Max time to wait
      * @return {@link DocumentDetailsPage}
      */
-    @SuppressWarnings("unchecked")
     @Override
     public synchronized RecordDetailsPage render(RenderTime timer)
     {
@@ -124,7 +122,7 @@ public class RecordDetailsPage extends DocumentDetailsPage
             }
             try
             {
-                //If popup is not displayed start render check
+                // If popup is not displayed start render check
                 WebElement popUp = drone.find(POP_UP);
                 if (!popUp.isDisplayed())
                 {
@@ -140,19 +138,19 @@ public class RecordDetailsPage extends DocumentDetailsPage
 
                     // Populate the doc version
                     this.documentVersion = docVersionOnScreen;
-                    
+
                     // make sure the key RM areas are ready
                     drone.findAndWait(ACTIONS);
                     drone.findAndWait(PROPERTIES);
                     drone.findAndWait(REFERENCES);
                     drone.findAndWait(EVENTS);
-                    
+
                     break;
                 }
             }
             catch (TimeoutException te)
             {
-                throw new PageException("Document version not rendered in time",te);
+                throw new PageException("Document version not rendered in time", te);
             }
             catch (NoSuchElementException te)
             {
@@ -173,7 +171,6 @@ public class RecordDetailsPage extends DocumentDetailsPage
     /**
      * @see org.alfresco.po.share.site.document.DocumentDetailsPage#render()
      */
-    @SuppressWarnings("unchecked")
     @Override
     public RecordDetailsPage render()
     {
@@ -183,7 +180,6 @@ public class RecordDetailsPage extends DocumentDetailsPage
     /**
      * @see org.alfresco.po.share.site.document.DocumentDetailsPage#render(long)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public RecordDetailsPage render(final long time)
     {
@@ -221,10 +217,10 @@ public class RecordDetailsPage extends DocumentDetailsPage
         }
         return false;
     }
-    
+
     /**
-     * Select 'Add Record Metadata' action 
-     *  
+     * Select 'Add Record Metadata' action
+     * 
      * @return {@link AddRecordMetadataAction} page object
      */
     public AddRecordMetadataAction selectAddRecordMetadata()
@@ -238,9 +234,10 @@ public class RecordDetailsPage extends DocumentDetailsPage
      * This will only be visible under the following
      * condition:
      * <ul>
-     *  <li> Record management module enabled</li>
-     *  <li> When the document has been declared as record</li>
+     * <li>Record management module enabled</li>
+     * <li>When the document has been declared as record</li>
      * </ul>
+     * 
      * @return <code>true</code> if link is displayed <code>false</code> otherwise
      */
     public boolean isHideRecordLinkDisplayed()
@@ -255,12 +252,12 @@ public class RecordDetailsPage extends DocumentDetailsPage
         }
         return false;
     }
-    
+
     /**
      * Indicates whether a property set is visible in the record details view.
      * 
      * @param title title of the property set
-     * @return boolean  true if present, false otherwise
+     * @return boolean true if present, false otherwise
      */
     public boolean isPropertySetVisible(String title)
     {
@@ -301,11 +298,12 @@ public class RecordDetailsPage extends DocumentDetailsPage
         element.click();
     }
 
-    public static By auditLabelsValue(String label, String value){
+    public static By auditLabelsValue(String label, String value)
+    {
         WebDroneUtil.checkMandotaryParam("label", label);
         WebDroneUtil.checkMandotaryParam("value", value);
-        return By.xpath("//div[@class='audit-entry']//div[@class='audit-entry-header']" +
-            "//span[contains(text(), '"+label+"')]/following-sibling::span[text()='"+value+"']");
+        return By.xpath("//div[@class='audit-entry']//div[@class='audit-entry-header']" + "//span[contains(text(), '" + label
+                + "')]/following-sibling::span[text()='" + value + "']");
     }
 
     /**
@@ -340,5 +338,89 @@ public class RecordDetailsPage extends DocumentDetailsPage
                 break;
             }
         }
+    }
+
+    /**
+     * This is to verify whether the Action Present
+     * 
+     * @return Returns True/fase
+     */
+    public boolean istActionPresent()
+    {
+
+        try
+        {
+            WebElement actions_button = drone.find(ACTIONS_BUTTON);
+            return actions_button.isDisplayed();
+        }
+        catch (NoSuchElementException nse)
+        {
+        }
+        return false;
+
+    }
+
+    /**
+     * This is to verify whether
+     * the References section is there
+     * 
+     * @return Returns True/fase
+     */
+    public boolean isReferencesPresent()
+    {
+
+        try
+        {
+            WebElement actions_button = drone.find(REFERENCES_BUTTON);
+            return actions_button.isDisplayed();
+        }
+        catch (NoSuchElementException nse)
+        {
+        }
+        return false;
+
+    }
+
+    /**
+     * This is to verify whether the
+     * subsections in proeprties are Present
+     * 
+     * @return Returns True/fase
+     */
+
+    public boolean isPropertySectionVisible(String title)
+    {
+        boolean result = false;
+        List<WebElement> webElements = drone.findAll(PROPERTIES_SUBSECTIONS);
+        for (WebElement webElement : webElements)
+        {
+            if (webElement.getText().contains(title))
+            {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * This is to connect to Fileplan
+     * after the RecordDetails page
+     * operations.
+     */
+
+    public FilePlanPage getFilePlan()
+    {
+        try
+        {
+
+            drone.findAndWait(FILEPLAN).click();
+
+        }
+        catch (NoSuchElementException e)
+        {
+
+        }
+        return new FilePlanPage(drone);
     }
 }

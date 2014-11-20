@@ -69,7 +69,7 @@ public class RmUploadFilePage extends UploadFilePage
      * @see org.alfresco.po.share.site.UploadFilePage#render(org.alfresco.webdrone.RenderTime)
      */
     @SuppressWarnings("unchecked")
-    @Override
+	@Override
     public RmUploadFilePage render(RenderTime timer)
     {
         WebDroneUtil.checkMandotaryParam("timer", timer);
@@ -100,7 +100,7 @@ public class RmUploadFilePage extends UploadFilePage
      * @see org.alfresco.po.share.site.UploadFilePage#render()
      */
     @SuppressWarnings("unchecked")
-    @Override
+	@Override
     public RmUploadFilePage render()
     {
         RenderTime timer = new RenderTime(maxPageLoadingTime);
@@ -111,7 +111,7 @@ public class RmUploadFilePage extends UploadFilePage
      * @see org.alfresco.po.share.site.UploadFilePage#render(long)
      */
     @SuppressWarnings("unchecked")
-    @Override
+	@Override
     public RmUploadFilePage render(final long time)
     {
         RenderTime timer = new RenderTime(time);
@@ -123,12 +123,13 @@ public class RmUploadFilePage extends UploadFilePage
      * 
      * @param drone web drone
      */
-    public void selectElectronic(WebDrone drone)
+    public UploadFilePage selectElectronic(WebDrone drone)
     {
         WebElement prompt = drone.findAndWait(PROMPT_PANEL_ID);
         List<WebElement> elements = prompt.findElements(BUTTON_TAG_NAME);
         WebElement electronicRecordButton = findButton(ELECTRONIC, elements);
         electronicRecordButton.click();
+        return new UploadFilePage(drone);
     }
     
     /**

@@ -44,7 +44,6 @@ public class CreateNewRecordCategoryDialog extends Dialog
     /**
      * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render(org.alfresco.webdrone.RenderTime)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public CreateNewRecordCategoryDialog render(RenderTime timer)
     {
@@ -56,7 +55,6 @@ public class CreateNewRecordCategoryDialog extends Dialog
     /**
      * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render(long)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public CreateNewRecordCategoryDialog render(long time)
     {
@@ -68,7 +66,6 @@ public class CreateNewRecordCategoryDialog extends Dialog
     /**
      * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render()
      */
-    @SuppressWarnings("unchecked")
     @Override
     public CreateNewRecordCategoryDialog render()
     {

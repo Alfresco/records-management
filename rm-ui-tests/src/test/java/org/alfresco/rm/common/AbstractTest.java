@@ -1,8 +1,11 @@
 package org.alfresco.rm.common;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +42,10 @@ public class AbstractTest
     protected static String shareUrl;
     protected WebDrone drone;
     private String testName;
-
+    public static final String SLASH = File.separator;
+    private static final String SRC_ROOT = System.getProperty("user.dir") + SLASH;
+    protected static final String DATA_FOLDER = SRC_ROOT + "testdata" + SLASH;
+    
     public AbstractTest()
     {
         super();
@@ -68,6 +74,24 @@ public class AbstractTest
         password = t.getPassword();
     }
 
+    /**
+     * Helper to log admin user into dashboard.
+     * 
+     * @return DashBoardPage page object.
+     * @throws Exception if error
+     */
+    public DashBoardPage loginAs(final String... userInfo) throws Exception
+    {
+        if(shareUrl == null)
+        {
+            if(logger.isTraceEnabled())
+            {
+                logger.trace("null shareUrl");
+            }
+        }
+        return ShareUtil.loginAs(drone, shareUrl, userInfo).render();
+    }
+    
     /**
      * Helper method to create RM site.  
      * @throws Exception 
@@ -195,8 +219,9 @@ public class AbstractTest
         String userinfo = uname + "@test.com";
         UserSearchPage userCreated = newPage.createEnterpriseUserWithGroup(uname, userinfo, userinfo, userinfo, "password", "ALFRESCO_ADMINISTRATORS").render();
         userCreated.searchFor(userinfo).render();
+        boolean userFound = userCreated.hasResults();
         ShareUtil.logout(drone);
-        return userCreated.hasResults();
+        return userFound;
     }
     
     /**
@@ -239,5 +264,51 @@ public class AbstractTest
         File file = new File("target/webdrone-" + methodName + ".html");
         FileUtils.writeStringToFile(file, htmlSource);
     }
+    
+    public File getFileFromTestData(String fileName, String fileContents)
+    {
+        String fileLocation = DATA_FOLDER + fileName;
+        return newFile(fileLocation, fileContents);
+    }
+    
+    /**
+     * Helper to create a new file, empty or with specified contents if one does
+     * not exist. Logs if File already exists
+     * 
+     * @param filename String Complete path of the file to be created
+     * @param contents String Contents for text file
+     * @return File
+     */
+    public static File newFile(String filename, String contents)
+    {
+        File file = new File(filename);
 
+        try
+        {
+            if (!file.exists())
+            {
+
+                if (!contents.isEmpty())
+                {
+                    OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8").newEncoder());
+                    writer.write(contents);
+                    writer.close();
+                }
+                else
+                {
+                    file.createNewFile();
+                }
+            }
+            else
+            {
+                logger.debug("Filename already exists: " + filename);
+            }
+        }
+        catch (IOException ex)
+        {
+            logger.error("Unable to create sample file", ex);
+        }
+        return file;
+    }
+    
 }

@@ -94,7 +94,6 @@ public class RmCreateDispositionPage extends FolderDetailsPage
     /**
      * @see org.alfresco.po.share.site.document.FolderDetailsPage#render(org.alfresco.webdrone.RenderTime)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public RmCreateDispositionPage render(RenderTime timer)
     {
@@ -110,7 +109,6 @@ public class RmCreateDispositionPage extends FolderDetailsPage
     /**
      * @see org.alfresco.po.share.site.document.FolderDetailsPage#render()
      */
-    @SuppressWarnings("unchecked")
     @Override
     public RmCreateDispositionPage render()
     {
@@ -120,7 +118,6 @@ public class RmCreateDispositionPage extends FolderDetailsPage
     /**
      * @see org.alfresco.po.share.site.document.FolderDetailsPage#render(long)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public RmCreateDispositionPage render(final long time)
     {

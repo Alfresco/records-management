@@ -66,7 +66,8 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
         ADD_RECORD_TYPES("addRecordTypes"),
         EXECUTE_SCRIPT("executeScript"),
         SEND_EMAIL("sendEmail"),
-        SET_PROPERTY_VALUE("setPropertyValue");
+        SET_PROPERTY_VALUE("setPropertyValue"),
+        VIEW_AUDIT_LOG_LINK("viewAuditLog");
 
         private final String value;
 
@@ -185,5 +186,20 @@ public class RmActionSelectorEnterpImpl extends ActionSelectorEnterpImpl
     {
         WebElement checkBox = getDrone().findAndWait(CREATE_RECORD_CHECKBOX, timeout);
         checkBox.click();
+    }
+    
+    /**
+     *Helper method to view audit log
+     * 
+     */
+    
+    public void selectViewAuditLog(String path, boolean createRecordPath)
+    {
+        selectAction(PerformActions.VIEW_AUDIT_LOG_LINK);
+        verifyViewAuditLog();
+    }
+    public void verifyViewAuditLog(){
+        WebElement linkVerifyViewAuditLog = getDrone().findAndWait(By.cssSelector("div.rm-view-audit-log"));
+        linkVerifyViewAuditLog.click();
     }
 }

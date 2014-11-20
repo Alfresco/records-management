@@ -36,6 +36,7 @@ import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordCategoryDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordDialog;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewRecordFolderDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
+import org.alfresco.po.share.site.UploadFilePage;
 import org.alfresco.po.share.site.document.DocumentLibraryPage;
 import org.alfresco.po.share.site.document.FileDirectoryInfo;
 import org.alfresco.po.share.site.document.FileDirectoryInfoImpl;
@@ -68,11 +69,12 @@ public class FilePlanPage extends DocumentLibraryPage
     protected static final By NEW_CATEGORY_BTN = By.cssSelector("button[id$='default-newCategory-button-button']");
     protected static final By NEW_FOLDER_BTN = By.cssSelector("button[id$='default-newFolder-button-button']");
     protected static final By FILE_BTN = By.cssSelector("button[id$='default-fileUpload-button-button']");
-
+    protected static final By SELECT_FILE_BTN = By.cssSelector(".dnd-file-selection-button");
     protected static final By RECORD = By.cssSelector("tbody.yui-dt-data > tr");
     protected static final By DESCRIPTION = By.cssSelector("div[id$='_default-description'] div");
     protected static final By FILEPLAN = By.id("template_x002e_tree_x002e_documentlibrary_x0023_default");
     protected static final By FILEPLAN_NAV = By.cssSelector("div[id$='navBar']");
+    protected static final By FILE_PLAN_CAT_NAV = By.cssSelector("div.treeview div[id*='treeview']");
 
     protected final static long MAX_WAIT_TIME = 60000;
 
@@ -81,7 +83,7 @@ public class FilePlanPage extends DocumentLibraryPage
     protected boolean inFilePlanRoot;
     protected boolean inRecordCategory;
     protected boolean inRecordFolder;
-
+    
     /**
      * Indicates that the user is in the file plan root
      *
@@ -140,13 +142,12 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * @see org.alfresco.webdrone.Render#render(org.alfresco.webdrone.RenderTime)
      */
-    @SuppressWarnings("unchecked")
-    @Override
+	@Override
     public FilePlanPage render(RenderTime timer)
     {
         checkMandotaryParam("timer", timer);
 
-        return render(timer, null);
+        return (FilePlanPage)render(timer, StringUtils.EMPTY);
     }
 
     /**
@@ -185,6 +186,7 @@ public class FilePlanPage extends DocumentLibraryPage
             {
                 if (RmPageObjectUtils.isDisplayed(drone, FILEPLAN) &&
                     RmPageObjectUtils.isDisplayed(drone, FILEPLAN_NAV) &&
+                    RmPageObjectUtils.isDisplayed(drone, FILE_PLAN_CAT_NAV) &&
                     !isJSMessageDisplayed())
                 {
                     setViewType(getNavigation().getViewType());
@@ -256,8 +258,7 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * @see org.alfresco.webdrone.Render#render(long)
      */
-    @SuppressWarnings("unchecked")
-    @Override
+	@Override
     public FilePlanPage render(long time)
     {
         RenderTime timer = new RenderTime(time);
@@ -267,8 +268,7 @@ public class FilePlanPage extends DocumentLibraryPage
     /**
      * @see org.alfresco.webdrone.Render#render()
      */
-    @SuppressWarnings("unchecked")
-    @Override
+	@Override
     public FilePlanPage render()
     {
         RenderTime timer = new RenderTime(maxPageLoadingTime);
@@ -457,6 +457,10 @@ public class FilePlanPage extends DocumentLibraryPage
     public RecordInfo getRecordInfo(final int index)
     {
         List<FileDirectoryInfo> list = getFiles();
+        if(list == null || list.isEmpty())
+        {
+            throw new PageOperationException("There is File on this page or number of files one pages less than the index : " + index);
+        }
         return new RecordInfo(drone, list.get(index));
     }
 
@@ -557,6 +561,24 @@ public class FilePlanPage extends DocumentLibraryPage
         nonElectronic.click();
         return new CreateNewRecordDialog(drone).render();
     }
+    
+
+    /**
+     * Action of click on Create Electronic Record button.
+     *
+     * @return {@link CreateNewRecordDialog} page response
+     */
+    
+    public UploadFilePage selectNewElectronicRecord()
+    {
+        RmPageObjectUtils.select(drone, NEW_FILE_BTN);
+        drone.findAndWait(By.xpath("//div[contains(@class, 'panel-container')]")).isDisplayed();
+        WebElement Electronic = drone.findAndWait(CreateNewRecordDialog.ELECTRONIC_BUTTON);
+        Electronic.click();
+        //return new CreateNewRecordDialog(drone).render();
+        return new UploadFilePage(drone);
+    }
+    
 
     /**
      * Action open Folder/Category Details page using MouseOver
@@ -714,9 +736,10 @@ public class FilePlanPage extends DocumentLibraryPage
         createNewFolder.enterTitle(folderName);
         createNewFolder.enterDescription(folderName);
 
-        filePlan = ((FilePlanPage) createNewFolder.selectSave());
+        filePlan = createNewFolder.selectSave().render();
         filePlan.setInRecordCategory(true);
-        return filePlan.render(folderName);
+        filePlan.renderItem(maxPageLoadingTime, folderName);
+        return this;
     }
 
     /**

@@ -20,7 +20,6 @@ package org.alfresco.po.rm.fileplan.filter.hold;
 
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
-
 import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.po.rm.fileplan.toolbar.CreateNewHoldDialog;
 import org.alfresco.po.rm.util.RmPageObjectUtils;
@@ -54,7 +53,6 @@ public class HoldsContainer extends FilePlanPage
     /**
      * @see org.alfresco.webdrone.Render#render(org.alfresco.webdrone.RenderTime)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public HoldsContainer render(RenderTime timer)
     {
@@ -66,7 +64,6 @@ public class HoldsContainer extends FilePlanPage
     /**
      * @see org.alfresco.webdrone.Render#render(long)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public HoldsContainer render(long time)
     {
@@ -79,7 +76,6 @@ public class HoldsContainer extends FilePlanPage
     /**
      * @see org.alfresco.webdrone.Render#render()
      */
-    @SuppressWarnings("unchecked")
     @Override
     public HoldsContainer render()
     {

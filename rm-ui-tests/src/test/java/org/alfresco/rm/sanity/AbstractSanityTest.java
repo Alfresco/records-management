@@ -1,9 +1,9 @@
 package org.alfresco.rm.sanity;
 
-import org.alfresco.rm.common.AbstractTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Parameters;
+import org.alfresco.rm.common.AbstractTest;
 
 /**
  * This Abstractclass provides the
@@ -39,5 +39,4 @@ public class AbstractSanityTest extends AbstractTest
     {
         super.getWebDrone();
     }
-
 }

@@ -24,13 +24,12 @@ import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
 public class RmCopyOrMoveUnfiledContentPage extends SharePage
 {
-
-    private final static long PATH_EXPAND_MAX_WAIT = 30000;
 
     public RmCopyOrMoveUnfiledContentPage(WebDrone drone)
     {
@@ -66,7 +65,36 @@ public class RmCopyOrMoveUnfiledContentPage extends SharePage
         }
         return this;
     }
+      
+  
+    public RmCopyOrMoveUnfiledContentPage render(RenderTime timer, String typePage)
+    {
+        WebDroneUtil.checkMandotaryParam("timer", timer);
 
+        while (true)
+        {
+            timer.start();
+            try
+            {
+                // if search body is found we are rendered
+                 By rmSearch = By.xpath("//span[contains(@class,'ygtvlabel') and text()= '" + typePage + "']");
+
+                WebElement rmSearchElement = drone.find(rmSearch);
+                if (rmSearchElement.isDisplayed())
+                {
+                    break;
+                }
+            }
+            catch (NoSuchElementException e)
+            {
+            }
+            finally
+            {
+                timer.end();
+            }
+        }
+        return this;
+    }
     @SuppressWarnings("unchecked")
     @Override
     public RmCopyOrMoveUnfiledContentPage render(long time)
@@ -86,20 +114,59 @@ public class RmCopyOrMoveUnfiledContentPage extends SharePage
         try
         {
             String[] pathElements = path.split("/");
-            int depth = 1;
             for(String element : pathElements)
             {
                 if((element != null) && !"".equals(element))
                 {
-                    WebElement pathElementSpan = drone.findAndWait(By.xpath("//table[contains(@class,'ygtvdepth" + depth + "')]//span[text()='" + element + "']"), PATH_EXPAND_MAX_WAIT);
-                    pathElementSpan.click();
-                    drone.findAndWait(By.xpath("//table[contains(@class,'ygtvdepth" + depth + "') and contains(@class,'ygtv-expanded')]//span[text()='" + element + "']"), PATH_EXPAND_MAX_WAIT);
-                    depth++;
+                    By xpath = By.xpath("//td[contains(@class,' ygtvcontent')]/span[text()='" + element + "']");
+                    drone.waitUntilElementClickable(xpath, 10);
+                    try
+                    {
+                        drone.find(xpath).click();
+                    }
+                    catch (StaleElementReferenceException e)
+                    {
+                        drone.find(xpath).click();   
+                    }
                 }
             }
-            WebElement okButton = drone.findAndWait(By.xpath("//button[contains(@id,'ok-button')]"), PATH_EXPAND_MAX_WAIT);
+            By OK_BUTTON = By.xpath("//div[contains(@id, 'treeview')]/../div[@class='bdft']/span[contains(@id, 'ok')]/span/button[contains(@id, 'ok-button')]");
+            drone.waitForElement(OK_BUTTON, 10);
+            WebElement okButton = drone.findFirstDisplayedElement(OK_BUTTON);
+            okButton.click();
+            drone.waitUntilVisible(By.cssSelector("div.bd"), "Successfully", 10);
+            drone.waitUntilNotVisibleWithParitalText(By.cssSelector("div.bd"), "Successfully", 10);
+        }
+        catch(TimeoutException e) 
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+    //Remove after closing the Jira
+   /* public void moveSelectPath(String path)
+    {
+        try
+        {
+            String[] pathElements = path.split("/");
+            for(String element : pathElements)
+            {
+                if((element != null) && !"".equals(element))
+                {
+                    By xpath = By.xpath("//td[contains(@class,' ygtvcontent')]/span[text()='" + element + "']");
+                    drone.waitUntilElementClickable(xpath, 10);
+                    try
+                    {
+                        drone.find(xpath).click();
+                    }
+                    catch (StaleElementReferenceException e)
+                    {
+                        drone.find(xpath).click();   
+                    }
+                }
+            }
+            WebElement okButton = drone.findAndWait(By.xpath("//button[contains(@id,'ok-button')]"));
             okButton.click();
         }
         catch(TimeoutException e) { }
-    }
+    }*/
 }

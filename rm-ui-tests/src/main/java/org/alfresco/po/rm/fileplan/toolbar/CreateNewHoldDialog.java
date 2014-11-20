@@ -49,7 +49,6 @@ public class CreateNewHoldDialog extends Dialog
     /**
      * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render(org.alfresco.webdrone.RenderTime)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public CreateNewHoldDialog render(RenderTime timer)
     {
@@ -66,7 +65,6 @@ public class CreateNewHoldDialog extends Dialog
     /**
      * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render(long)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public CreateNewHoldDialog render(long time)
     {
@@ -79,7 +77,6 @@ public class CreateNewHoldDialog extends Dialog
     /**
      * @see org.alfresco.po.rm.fileplan.toolbar.Dialog#render()
      */
-    @SuppressWarnings("unchecked")
     @Override
     public CreateNewHoldDialog render()
     {

@@ -130,7 +130,6 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     /**
      * @see org.alfresco.po.rm.fileplan.RmCreateDispositionPage#render(org.alfresco.webdrone.RenderTime)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public RmEditDispositionSchedulePage render(RenderTime timer)
     {
@@ -145,7 +144,6 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     /**
      * @see org.alfresco.po.rm.fileplan.RmCreateDispositionPage#render()
      */
-    @SuppressWarnings("unchecked")
     @Override
     public RmEditDispositionSchedulePage render()
     {
@@ -155,7 +153,6 @@ public class RmEditDispositionSchedulePage extends RmCreateDispositionPage
     /**
      * @see org.alfresco.po.rm.fileplan.RmCreateDispositionPage#render(long)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public RmEditDispositionSchedulePage render(final long time)
     {

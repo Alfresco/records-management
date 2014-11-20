@@ -62,7 +62,6 @@ public class UnfiledRecordsContainer extends FilePlanPage
     /**
      * @see org.alfresco.webdrone.Render#render(org.alfresco.webdrone.RenderTime)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public UnfiledRecordsContainer render(RenderTime timer)
     {
@@ -74,7 +73,6 @@ public class UnfiledRecordsContainer extends FilePlanPage
     /**
      * @see org.alfresco.webdrone.Render#render(long)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public UnfiledRecordsContainer render(long time)
     {
@@ -87,7 +85,6 @@ public class UnfiledRecordsContainer extends FilePlanPage
     /**
      * @see org.alfresco.webdrone.Render#render()
      */
-    @SuppressWarnings("unchecked")
     @Override
     public UnfiledRecordsContainer render()
     {

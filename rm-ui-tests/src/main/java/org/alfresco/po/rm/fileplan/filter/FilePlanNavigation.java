@@ -24,6 +24,7 @@ import org.alfresco.po.rm.fileplan.FilePlanPage;
 import org.alfresco.webdrone.HtmlElement;
 import org.alfresco.webdrone.WebDrone;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -57,22 +58,27 @@ public class FilePlanNavigation extends HtmlElement
      */
     public FilePlanPage selectFilePlanTreeRootNode()
     {
-        WebElement root = null;
-        List<WebElement> elements = drone.findAll(TREE_NODES);
-        for (WebElement webElement : elements)
+        WebElement root;
+        try
         {
-            // FIXME: The hard coded string will be fixed. Loading properties values from language files needs to be refactored first!
-            if (webElement.getText().equals("File Plan"))
+            root = null;
+            List<WebElement> elements = drone.findAndWaitForElements(TREE_NODES);
+            for (WebElement webElement : elements)
             {
-                root = webElement;
-                break;
+                // FIXME: The hard coded string will be fixed. Loading properties values from language files needs to be refactored first!
+                if (webElement.getText().equals("File Plan"))
+                {
+                    root = webElement;
+                    break;
+                }
             }
+            root.click();
         }
-        if (root == null)
+        catch (TimeoutException e)
         {
-            throw new IllegalStateException("The root of the file plan tree could not be found!");
-        }
-        root.click();
+            e.printStackTrace();
+        }       
+        
         return drone.getCurrentPage().render();
     }
 }

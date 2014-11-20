@@ -57,7 +57,7 @@ public class RmCreateSitePageTest extends AbstractRecordsManagementTest
         Assert.assertTrue(page.getSiteUrl().isEmpty());
         Assert.assertTrue(page.getDescription().isEmpty());
 
-        Assert.assertEquals(RmSiteType.COLLABORATION, page.getSiteType());
+        Assert.assertEquals(RmSiteType.COLLABORATION, page.rmGetSiteType());
         // TODO check contents of drop down
 
         // TODO check site visibility
@@ -84,7 +84,7 @@ public class RmCreateSitePageTest extends AbstractRecordsManagementTest
         Assert.assertTrue(page.getSiteUrl().isEmpty());
         Assert.assertTrue(page.getDescription().isEmpty());
 
-        Assert.assertEquals(RmSiteType.COLLABORATION, page.getSiteType());
+        Assert.assertEquals(RmSiteType.COLLABORATION, page.rmGetSiteType());
         // TODO check contents of drop down
 
         // TODO check site visibility
@@ -124,7 +124,7 @@ public class RmCreateSitePageTest extends AbstractRecordsManagementTest
         Assert.assertEquals(page.getDescription(), RmCreateSitePage.RM_SITE_DESC);
         Assert.assertEquals(page.getSiteUrl(), RmCreateSitePage.RM_SITE_URL);
 
-        Assert.assertEquals(RmSiteType.RECORDS_MANAGEMENT, page.getSiteType());
+        Assert.assertEquals(RmSiteType.RECORDS_MANAGEMENT, page.rmGetSiteType());
 
         // TODO check site visibility
 

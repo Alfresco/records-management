@@ -32,6 +32,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
+
 /**
  * Extends {@link CreateSitePage} in order to add RM specific methods
  *
@@ -180,6 +181,24 @@ public class RmCreateSitePage extends CreateSitePage
             default:
                 throw new PageOperationException("No suitable site type was found");
         }
+    }
+
+    /**
+     * @return  site type
+     */
+    public String rmGetSiteType()
+    {
+        String result = RmSiteType.COLLABORATION;
+
+        Select select = new Select(drone.findAndWait(SITE_PRESET));
+        String selectedValue = select.getFirstSelectedOption().getAttribute("value");
+
+        if (selectedValue.contains("rm-site-dashboard") == true)
+        {
+            result = RmSiteType.RECORDS_MANAGEMENT;
+        }
+
+        return result;
     }
 
     /**

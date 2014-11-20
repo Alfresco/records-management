@@ -1,18 +1,14 @@
 /*
  * Copyright (C) 2005-2014 Alfresco Software Limited.
- *
  * This file is part of Alfresco
- *
  * Alfresco is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
  * Alfresco is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,6 +21,7 @@ import org.alfresco.webdrone.RenderTime;
 import org.alfresco.webdrone.WebDrone;
 import org.alfresco.webdrone.WebDroneUtil;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 
 /**
  * Represents the hold dialogs (add to a hold and remove from hold).
@@ -40,6 +37,7 @@ public class HoldDialog extends SharePage
     private static final By OK_BUTTON = By.cssSelector("button[id^='Alfresco.rm.module.'][id*='-ok-button']");
     private static final By CANCEL_BUTTON = By.cssSelector("button[id^='Alfresco.rm.module.'][id*='-cancel-button']");
     private static final String HOLD_CHECHBOX_EXPRESSION = "//div[text()='%s']/ancestor::tr/td[contains(@class, 'check')]/div/input";
+    private long timeOutInSeconds = 10;
 
     /**
      * Constructor.
@@ -99,6 +97,8 @@ public class HoldDialog extends SharePage
     public void clickOK()
     {
         RmPageObjectUtils.select(drone, OK_BUTTON);
+        drone.waitUntilVisible(By.cssSelector("div.bd"), "The selected node", timeOutInSeconds);
+        drone.waitUntilNotVisibleWithParitalText(By.cssSelector("div.bd"), "The selected node", timeOutInSeconds);
     }
 
     /**
