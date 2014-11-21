@@ -22,7 +22,7 @@
 			<class name="org.alfresco.rm.sanity.ManageIncompleteRecordsTest" />
 		</classes>
 	</test>
-	<!-- <test name="Create FilePlan Test" time-out="600000">
+	<test name="Create FilePlan Test" time-out="600000">
 		<groups>
 			<run>
 				<exclude name="rmBugs" />
@@ -32,7 +32,7 @@
 			<class name="org.alfresco.rm.sanity.CreateFilePlanTest" />
 		</classes>
 	</test>
-	<test name="Manage Complete Records Test" time-out="600000">
+	<!-- <test name="Manage Complete Records Test" time-out="600000">
 		<groups>
 			<run>
 				<exclude name="rmBugs" />
