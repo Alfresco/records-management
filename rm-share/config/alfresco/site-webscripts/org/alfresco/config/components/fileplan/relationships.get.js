@@ -13,8 +13,37 @@ function main()
             "alfresco/services/CrudService"
          ],
          widgets: [{
+            name: "alfresco/layout/VerticalWidgets",
+            config: {
+               additionalCssClasses: "relationshipToolbar",
+               widgets: [{
+                  name: "alfresco/documentlibrary/AlfToolbar",
+                  config: {
+                     widgets: [{
+                        name: "alfresco/html/Label",
+                        align: "left",
+                        config: {
+                           label: msg.get("label.toolbar.relationships"),
+                           additionalCssClasses: "relationshipToolbarLabel"
+                        }
+                     },{
+                        name: "alfresco/buttons/AlfButton",
+                        align: "right",
+                        config: {
+                           label: msg.get("label.button.new-relationship"),
+                           additionalCssClasses: "relationship-button",
+                           publishTopic: "ALF_CREATE_FORM_DIALOG_REQUEST",
+                           publishPayloadType: "PROCESS",
+                           publishPayloadModifiers: ["processCurrentItemTokens"]
+                        }
+                     }]
+                  }
+               }]
+            }
+         },{
             name: "alfresco/lists/AlfList",
             config: {
+               noDataMessage: msg.get("label.list.no.data.message"),
                loadDataPublishTopic: "ALF_CRUD_GET_ALL",
                loadDataPublishPayload: {
                   url: "api/node/" + nodeDetails.item.node.nodeRef.replace("://", "/") + "/relationships"
@@ -23,7 +52,6 @@ function main()
                widgets: [{
                   name: "alfresco/documentlibrary/views/AlfDocumentListView",
                   config: {
-                     additionalCssClasses: "bordered",
                      widgets: [{
                         name: "alfresco/documentlibrary/views/layouts/Row",
                         config: {
@@ -34,7 +62,7 @@ function main()
                                     name: "alfresco/renderers/Property",
                                     config: {
                                        propertyToRender: "node.relationshipLabel",
-                                       renderSize: "large"
+                                       additionalCssClasses: "relationshipLabel"
                                     }
                                  }]
                               }
@@ -48,12 +76,11 @@ function main()
                                           name: "alfresco/renderers/PropertyLink",
                                           config: {
                                              propertyToRender: "node.properties.cm:name",
-                                             renderSize: "large",
                                              publishGlobal: true,
                                              publishTopic: "ALF_NAVIGATE_TO_PAGE",
                                              useCurrentItemAsPayload: false,
                                              publishPayloadType: "PROCESS",
-                                             publishPayloadModifiers: ["processCurrentItemTokens", "setCurrentItem"],
+                                             publishPayloadModifiers: ["processCurrentItemTokens"],
                                              publishPayload: {
                                                 url: "site/" + model.site + "/document-details?nodeRef={node.nodeRef}",
                                                 type: "SHARE_PAGE_RELATIVE"

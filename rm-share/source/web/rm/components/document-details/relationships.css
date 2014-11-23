@@ -1,0 +1,39 @@
+#relationships.alfresco-core-ProcessWidgets.alfresco-core-Page.allWidgetsProcessed
+{
+   background-color: rgba(250, 250, 250, 1);
+   border-bottom: 1px solid lightgray;
+   border-left: 0 solid lightgray;
+   border-top: 1px solid lightgray;
+   border-width: 1px 0;
+   margin-top: 20px;
+}
+
+.alfresco-buttons-AlfButton.relationship-button
+{
+   background-color: transparent;
+   border-color: transparent;
+}
+
+.alfresco-buttons-AlfButton.relationship-button.dijitButtonFocused,
+.alfresco-buttons-AlfButton.relationship-button.dijitButtonHover
+{
+   border: 1px solid #ccc;
+}
+
+.alfresco-core-ProcessWidgets .relationshipToolbar
+{
+   border-bottom: 1px solid #d3d3d3;
+   padding-bottom: 0.35em;
+   padding-top: 0.35em;
+}
+
+.alfresco-core-ProcessWidgets .relationshipToolbarLabel
+{
+   font-size: large;
+   margin-left: 1em;
+}
+
+.alfresco-renderers-Property .relationshipLabel
+{
+   margin-left: 0.35em
+}
