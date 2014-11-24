@@ -7,6 +7,7 @@ function main()
    var nodeDetails = AlfrescoUtil.getNodeDetails(model.nodeRef, model.site);
    if (nodeDetails && nodeDetails.item.node.isRmNode)
    {
+      var nodeReference = nodeDetails.item.node.nodeRef.replace("://", "/");
       model.jsonModel = {
          rootNodeId: "relationships",
          services: [
@@ -46,7 +47,7 @@ function main()
                noDataMessage: msg.get("label.list.no.data.message"),
                loadDataPublishTopic: "ALF_CRUD_GET_ALL",
                loadDataPublishPayload: {
-                  url: "api/node/" + nodeDetails.item.node.nodeRef.replace("://", "/") + "/relationships"
+                  url: "api/node/" + nodeReference + "/relationships"
                },
                itemsProperty: "data.items",
                widgets: [{
@@ -144,6 +145,29 @@ function main()
                                              }]
                                           }
                                        }]
+                                    }
+                                 }]
+                              }
+                           },{
+                              name: "alfresco/documentlibrary/views/layouts/Cell",
+                              config: {
+                                 widgets: [{
+                                    name: "alfresco/renderers/PublishAction",
+                                    config: {
+                                       iconClass: "delete-16",
+                                       // TODO: altText does not work when dot notation is used for propertyToRender
+                                       //propertyToRender: "node.properties.cm:name",
+                                       //altText: msg.get("label.alt.text.delete-relationship"),
+                                       publishTopic: "ALF_CRUD_DELETE",
+                                       publishPayloadType: "PROCESS",
+                                       publishPayload: {
+                                          requiresConfirmation: true,
+                                          url: "api/node/" + nodeReference + "/targetnode/{node.nodeRef}/uniqueName/{node.relationshipUniqueName}",
+                                          confirmationTitle: msg.get("label.confirmation.title.delete-relationship"),
+                                          confirmationPrompt: msg.get("label.confirmationPrompt.delete-relationship"),
+                                          successMessage: msg.get("label.delete-relationship.successMessage")
+                                       },
+                                       publishPayloadModifiers: ["processCurrentItemTokens", "convertNodeRefToUrl"]
                                     }
                                  }]
                               }
