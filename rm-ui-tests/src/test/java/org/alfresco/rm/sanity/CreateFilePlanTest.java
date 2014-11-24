@@ -225,7 +225,6 @@ public class CreateFilePlanTest extends AbstractSanityTest
     {
         ShareUtil.loginAs(drone, shareUrl, USER_NAME, password).render();
         SiteUtil.deleteSite(drone, RM_SITE_NAME);
-        SiteUtil.deleteSite(drone, siteName);
         ShareUtil.logout(drone);
         deleteUser(USER_NAME);
     }
