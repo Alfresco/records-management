@@ -59,6 +59,9 @@
                               <move todir="${project.build.directory}/${project.build.finalName}/web/rm">
                                  <fileset dir="${project.build.outputDirectory}/rm"/>
                               </move>
+                              <move todir="${project.build.directory}/${project.build.finalName}/web/js">
+                                 <fileset dir="${project.build.outputDirectory}/js"/>
+                              </move>
                               <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/file-mapping.properties"
                                  todir="${project.build.directory}/${project.build.finalName}"/>
                               <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/module.properties"
