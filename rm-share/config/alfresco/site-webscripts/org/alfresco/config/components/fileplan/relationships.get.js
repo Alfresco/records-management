@@ -165,7 +165,33 @@ function main()
                                              handleOverflow: false,
                                              keepDialog: true,
                                              widgetsContent: [{
-                                                name: "alfresco/pickers/Picker"
+                                                name: "alfresco/pickers/Picker",
+                                                config: {
+                                                   widgetsForRootPicker: [{
+                                                      name: "alfresco/menus/AlfVerticalMenuBar",
+                                                      config: {
+                                                         visibilityConfig: {
+                                                            initialValue: false
+                                                         },
+                                                         widgets: [{
+                                                            name: "alfresco/menus/AlfMenuBarItem",
+                                                            config: {
+                                                               publishTopic: "ALF_ADD_PICKER",
+                                                               publishOnRender: true,
+                                                               publishPayload: {
+                                                                  currentPickerDepth: 1,
+                                                                  picker: [{
+                                                                     name: "alfresco/pickers/DocumentListPicker",
+                                                                     config: {
+                                                                        nodeRef: nodeDetails.item.node.rmNode.filePlan
+                                                                     }
+                                                                  }]
+                                                               }
+                                                            }
+                                                         }]
+                                                      }
+                                                   }]
+                                                }
                                              }],
                                              widgetsButtons: [{
                                                 name: "alfresco/buttons/AlfButton",
@@ -308,8 +334,17 @@ function main()
                                  widgets: [{
                                     name: "alfresco/renderers/Property",
                                     config: {
-                                       propertyToRender: "node.relationshipLabel",
-                                       additionalCssClasses: "relationshipLabel"
+                                       propertyToRender: "node.relationshipLabel"
+                                    }
+                                 }]
+                              }
+                           },{
+                              name: "alfresco/documentlibrary/views/layouts/Cell",
+                              config: {
+                                 widgets: [{
+                                    name: "alfresco/renderers/FileType",
+                                    config: {
+                                       size: "medium"
                                     }
                                  }]
                               }
