@@ -41,6 +41,7 @@ function main()
                            publishPayloadType: "PROCESS",
                            publishPayloadModifiers: ["processCurrentItemTokens"],
                            publishPayload: {
+                              keepDialog: true,
                               dialogTitle: msg.get("label.title.new-relationship"),
                               dialogConfirmationButtonTitle: msg.get("label.button.create"),
                               dialogCancellationButtonTitle: msg.get("label.button.cancel"),

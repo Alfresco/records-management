@@ -18,14 +18,15 @@
  */
 
 define(["dojo/_base/declare",
-        "alfresco/dialogs/AlfDialog",
+        "dojo/_base/lang",
+        "alfresco/dialogs/RmAlfDialog",
         "alfresco/dialogs/AlfDialogService"],
-        function(declare, AlfDialog, AlfDialogService) {
+        function(declare, lang, RmAlfDialog, AlfDialogService) {
 
    return declare([AlfDialogService], {
 
       onCreateDialogRequest: function alfresco_dialogs_RmAlfDialogService__onCreateDialogRequest(payload) {
-         if (this.dialog != null && !payload.keepDialog)
+         if (this.dialog != null && !this.dialog.keepDialog)
          {
             this.dialog.destroyRecursive();
          }
@@ -41,7 +42,7 @@ define(["dojo/_base/declare",
             handleOverflow: (payload.handleOverflow != null) ? payload.handleOverflow: true,
             fixedWidth: (payload.fixedWidth != null) ? payload.fixedWidth: false
          };
-         this.dialog = new AlfDialog(dialogConfig);
+         this.dialog = new RmAlfDialog(dialogConfig);
 
          if (payload.publishOnShow)
          {
@@ -53,6 +54,91 @@ define(["dojo/_base/declare",
          {
             this.alfSubscribe(payload.hideTopic, lang.hitch(this.dialog, this.dialog.hide));
          }
+      },
+
+      onCreateFormDialogRequest: function alfresco_dialogs_RmAlfDialogService__onCreateFormDialogRequest(payload) {
+         // Destroy any previously created dialog...
+         if (this.dialog != null && !this.dialog.keepDialog)
+         {
+            this.dialog.destroyRecursive();
+         }
+
+         if (payload.widgets == null)
+         {
+            this.alfLog("warn", "A request was made to display a dialog but no 'widgets' attribute has been defined", payload, this);
+         }
+         else if (payload.formSubmissionTopic == null)
+         {
+            this.alfLog("warn", "A request was made to display a dialog but no 'formSubmissionTopic' attribute has been defined", payload, this);
+         }
+         else
+         {
+            try
+            {
+               // Create a new pubSubScope just for this request (to allow multiple dialogs to behave independently)...
+               var pubSubScope = this.generateUuid();
+               var subcriptionTopic =  pubSubScope + this._formConfirmationTopic;
+               this.alfSubscribe(subcriptionTopic, lang.hitch(this, this.onFormDialogConfirmation));
+
+               // Take a copy of the default configuration and mixin in the supplied config to override defaults
+               // as appropriate...
+               var config = lang.clone(this.defaultFormDialogConfig);
+               // NOTE: Ideally we'd like to avoid cloning the payload here in case it contains native code, however
+               //       we need to ensure that pubSubScopes do not get baked into the payload object that will be re-used
+               //       the next time the dialog is opened. We will need to explore alternative solutions in the 5.1 timeframe
+               var clonedPayload = lang.clone(payload);
+               lang.mixin(config, clonedPayload);
+               config.pubSubScope = pubSubScope;
+               config.parentPubSubScope = this.parentPubSubScope;
+               config.subcriptionTopic = subcriptionTopic; // Include the subscriptionTopic in the configuration the subscription can be cleaned up
+
+               // Construct the form widgets and then construct the dialog using that configuration...
+               var formValue = (config.formValue != null) ? config.formValue: {};
+               var formConfig = this.createFormConfig(config.widgets, formValue);
+               var dialogConfig = this.createDialogConfig(config, formConfig);
+               this.dialog = new RmAlfDialog(dialogConfig);
+               this.dialog.show();
+            }
+            catch (e)
+            {
+               this.alfLog("error", "The following error occurred creating a dialog for defined configuration", e, this.dialogConfig, this);
+            }
+         }
+      },
+
+      createDialogConfig: function alfresco_dialogs_RmAlfDialogService__createDialogConfig(config, formConfig) {
+         var dialogConfig = {
+            title: this.message(config.dialogTitle),
+            pubSubScope: config.pubSubScope, // Scope the dialog content so that it doesn't pollute any other widgets,,
+            handleOverflow: (config.handleOverflow != null) ? config.handleOverflow: true,
+            fixedWidth: (config.fixedWidth != null) ? config.fixedWidth: false,
+            parentPubSubScope: config.parentPubSubScope,
+            additionalCssClasses: config.additionalCssClasses ? config.additionalCssClasses : "",
+            keepDialog: (config.keepDialog != null) ? config.keepDialog : false,
+            widgetsContent: [formConfig],
+            widgetsButtons: [
+                  {
+                     name: "alfresco/buttons/AlfButton",
+                     config: {
+                        label: config.dialogConfirmationButtonTitle,
+                        disableOnInvalidControls: true,
+                        publishTopic: this._formConfirmationTopic,
+                        publishPayload: {
+                           formSubmissionTopic: config.formSubmissionTopic,
+                           formSubmissionPayloadMixin: config.formSubmissionPayloadMixin
+                        }
+                     }
+                  },
+                  {
+                     name: "alfresco/buttons/AlfButton",
+                     config: {
+                        label: config.dialogCancellationButtonTitle,
+                        publishTopic: "ALF_CLOSE_DIALOG"
+                     }
+                  }
+               ]
+         };
+         return dialogConfig;
       }
    });
 });
