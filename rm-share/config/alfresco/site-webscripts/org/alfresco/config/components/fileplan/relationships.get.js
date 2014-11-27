@@ -59,6 +59,16 @@ function main()
                                              name: "alfresco/documentlibrary/views/layouts/Cell",
                                              config: {
                                                 widgets: [{
+                                                   name: "alfresco/renderers/FileType",
+                                                   config: {
+                                                      size: "medium"
+                                                   }
+                                                }]
+                                             }
+                                          },{
+                                             name: "alfresco/documentlibrary/views/layouts/Cell",
+                                             config: {
+                                                widgets: [{
                                                    name: "alfresco/documentlibrary/views/layouts/Row",
                                                    config: {
                                                       widgets:[{
@@ -226,6 +236,16 @@ function main()
                                              name: "alfresco/documentlibrary/views/layouts/Cell",
                                              config: {
                                                 widgets: [{
+                                                   name: "alfresco/renderers/FileType",
+                                                   config: {
+                                                      size: "medium"
+                                                   }
+                                                }]
+                                             }
+                                          },{
+                                             name: "alfresco/documentlibrary/views/layouts/Cell",
+                                             config: {
+                                                widgets: [{
                                                    name: "alfresco/documentlibrary/views/layouts/Row",
                                                    config: {
                                                       widgets:[{
@@ -300,6 +320,18 @@ function main()
                                                             }]
                                                          }
                                                       }]
+                                                   }
+                                                }]
+                                             }
+                                          },{
+                                             name: "alfresco/documentlibrary/views/layouts/Cell",
+                                             config: {
+                                                widgets: [{
+                                                   name: "alfresco/renderers/PublishAction",
+                                                   config: {
+                                                      iconClass: "delete-16",
+                                                      publishTopic: "ALF_ITEM_REMOVED",
+                                                      publishPayloadType: "CURRENT_ITEM"
                                                    }
                                                 }]
                                              }
