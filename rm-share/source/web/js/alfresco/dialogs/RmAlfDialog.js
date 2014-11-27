@@ -22,6 +22,7 @@ define(["dojo/_base/declare",
         function(declare, AlfDialog) {
 
    return declare([AlfDialog], {
+
       keepDialog: false
    });
 });
