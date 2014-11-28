@@ -14,7 +14,7 @@ function main()
          rootNodeId: "relationships",
          services: [
             "alfresco/services/CrudService",
-            "alfresco/services/RmAlfDialogService",
+            "alfresco/rm/services/RmAlfDialogService",
             "alfresco/services/OptionsService",
             "alfresco/services/DocumentService",
             "alfresco/services/SiteService"
@@ -49,7 +49,7 @@ function main()
                               dialogCancellationButtonTitle: msg.get("label.button.cancel"),
                               formSubmissionTopic: "ALF_CRUD_CREATE",
                               widgets: [{
-                                 name: "alfresco/relationship/RmRelationshipItem",
+                                 name: "alfresco/rm/relationship/RmRelationshipItem",
                                  config: {
                                     showDeleteAction: false,
                                     site: site,

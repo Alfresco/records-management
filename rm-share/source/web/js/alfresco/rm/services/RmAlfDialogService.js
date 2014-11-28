@@ -19,7 +19,7 @@
 
 define(["dojo/_base/declare",
         "dojo/_base/lang",
-        "alfresco/dialogs/RmAlfDialog",
+        "alfresco/rm/dialogs/RmAlfDialog",
         "alfresco/dialogs/AlfDialogService"],
         function(declare, lang, RmAlfDialog, AlfDialogService) {
 

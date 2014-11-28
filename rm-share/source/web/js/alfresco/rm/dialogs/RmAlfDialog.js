@@ -41,7 +41,7 @@ define(["dojo/_base/declare",
 
       onRecordSelected: function alfresco_dialogs_RmAlfDialog__onRecordSelected(payload) {
          var config = [{
-            name: "alfresco/relationship/RmRelationshipItem",
+            name: "alfresco/rm/relationship/RmRelationshipItem",
             config: {
                showDeleteAction: true,
                site: payload.site,
