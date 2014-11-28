@@ -82,10 +82,15 @@ function main()
                                           publishPayload: {
                                              dialogTitle: "picker.select.title",
                                              handleOverflow: false,
-                                             keepDialog: true,
                                              widgetsContent: [{
                                                 name: "alfresco/pickers/Picker",
                                                 config: {
+                                                   widgetsForPickedItems: [{
+                                                      name: "alfresco/pickers/PickedItems",
+                                                      config: {
+                                                         singleItemMode: true,
+                                                      }
+                                                   }],
                                                    widgetsForRootPicker: [{
                                                       name: "alfresco/menus/AlfVerticalMenuBar",
                                                       config: {
