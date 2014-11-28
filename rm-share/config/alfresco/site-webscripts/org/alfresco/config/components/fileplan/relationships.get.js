@@ -52,7 +52,6 @@ function main()
                                  name: "alfresco/relationship/RmRelationshipItem",
                                  config: {
                                     showDeleteAction: false,
-                                    itemVisible: true,
                                     site: site,
                                     currentData: {
                                        items: [nodeDetails.item]
@@ -121,8 +120,10 @@ function main()
                                                 name: "alfresco/buttons/AlfButton",
                                                 config: {
                                                    label: "picker.ok.label",
-                                                   publishTopic: "ALF_ITEMS_SELECTED",
-                                                   pubSubScope: "{itemSelectionPubSubScope}"
+                                                   publishTopic: "ALF_RECORD_SELECTED",
+                                                   publishPayload: {
+                                                      site: site
+                                                   }
                                                 }
                                              },{
                                                 name: "alfresco/buttons/AlfButton",
@@ -135,16 +136,6 @@ function main()
                                           publishGlobal: true
                                        }
                                     }]
-                                 }
-                              },{
-                                 name: "alfresco/relationship/RmRelationshipItem",
-                                 config: {
-                                    showDeleteAction: true,
-                                    itemVisible: false,
-                                    site: site,
-                                    currentData: {
-                                       items: [nodeDetails.item]
-                                    }
                                  }
                               }]
                            }
@@ -204,7 +195,7 @@ function main()
                                              publishPayloadType: "PROCESS",
                                              publishPayloadModifiers: ["processCurrentItemTokens"],
                                              publishPayload: {
-                                                url: "site/" + model.site + "/document-details?nodeRef={node.nodeRef}",
+                                                url: "site/" + site + "/document-details?nodeRef={node.nodeRef}",
                                                 type: "SHARE_PAGE_RELATIVE"
                                              }
                                           }

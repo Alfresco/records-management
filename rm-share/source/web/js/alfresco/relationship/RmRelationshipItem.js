@@ -29,15 +29,10 @@ define(["dojo/_base/declare",
 
       showDeleteAction: null,
 
-      itemVisible: null,
-
       postCreate: function alfresco_relationship_RmRelationshipItem__postCreate(payload) {
          var config = [{
             name: "alfresco/documentlibrary/views/AlfDocumentListView",
             config: {
-               visibilityConfig: {
-                  initialValue: this.itemVisible
-               },
                currentData: this.currentData,
                widgets: [{
                   name: "alfresco/documentlibrary/views/layouts/Row",
@@ -140,8 +135,8 @@ define(["dojo/_base/declare",
                               name: "alfresco/renderers/PublishAction",
                               config: {
                                  iconClass: "delete-16",
-                                 publishTopic: "ALF_ITEM_REMOVED",
-                                 publishPayloadType: "CURRENT_ITEM",
+                                 publishTopic: "ALF_RECORD_REMOVED",
+                                 publishGlobal: true,
                                  visibilityConfig: {
                                     initialValue: this.showDeleteAction
                                  }

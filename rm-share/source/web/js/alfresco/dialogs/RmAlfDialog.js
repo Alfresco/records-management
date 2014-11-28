@@ -18,11 +18,45 @@
  */
 
 define(["dojo/_base/declare",
+        "dojo/_base/lang",
         "alfresco/dialogs/AlfDialog"],
-        function(declare, AlfDialog) {
+        function(declare, lang, AlfDialog) {
 
    return declare([AlfDialog], {
 
-      keepDialog: false
+      keepDialog: false,
+
+      selectedItem: null,
+
+      postCreate: function alfresco_dialogs_RmAlfDialog__postCreate() {
+         this.inherited(arguments);
+         this.alfSubscribe("ALF_ITEMS_SELECTED", lang.hitch(this, "onItemsSelected"), true);
+         this.alfSubscribe("ALF_RECORD_SELECTED", lang.hitch(this, "onRecordSelected"), true);
+         this.alfSubscribe("ALF_RECORD_REMOVED", lang.hitch(this, "onRecordRemoved"), true);
+      },
+
+      onItemsSelected: function alfresco_dialogs_RmAlfDialog__onItemsSelected(payload) {
+         this.selectedItem = payload.pickedItems;
+      },
+
+      onRecordSelected: function alfresco_dialogs_RmAlfDialog__onRecordSelected(payload) {
+         var config = [{
+            name: "alfresco/relationship/RmRelationshipItem",
+            config: {
+               showDeleteAction: true,
+               site: payload.site,
+               currentData: {
+                  items: this.selectedItem
+               }
+            }
+         }];
+         this.processWidgets(config, this.domNode.lastElementChild.firstElementChild);
+      },
+
+      onRecordRemoved: function alfresco_dialogs_RmAlfDialog__onRecordRemoved(payload)
+      {
+         this.bodyNode.lastElementChild.innerHTML = "";
+         this.selectedItem = null;
+      }
    });
 });
