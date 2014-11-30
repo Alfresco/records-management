@@ -52,6 +52,18 @@ function main()
                                  url: "api/node/" + nodeReference + "/customreferences",
                               },
                               widgets: [{
+                                 name: "alfresco/forms/controls/DojoValidationTextBox",
+                                 config: {
+                                    id: "hiddenToNodeTextBox",
+                                    name: "toNode",
+                                    requirementConfig: {
+                                       initialValue: true
+                                    },
+                                    visibilityConfig: {
+                                       initialValue: false
+                                    }
+                                 }
+                              },{
                                  name: "alfresco/rm/lists/AlfRmRelationshipList",
                                  config: {
                                     showDeleteAction: false,
@@ -90,6 +102,7 @@ function main()
                                                 config: {
                                                    widgetsForPickedItems: [{
                                                       name: "alfresco/pickers/PickedItems",
+                                                      assignTo: "pickedItemsWidget",
                                                       config: {
                                                          singleItemMode: true,
                                                       }

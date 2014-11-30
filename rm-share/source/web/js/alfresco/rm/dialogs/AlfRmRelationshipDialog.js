@@ -20,8 +20,9 @@
 define(["dojo/_base/declare",
         "dojo/_base/lang",
         "dojo/dom-construct",
+        "dijit/registry",
         "alfresco/dialogs/AlfDialog"],
-        function(declare, lang, domConstruct, AlfDialog) {
+        function(declare, lang, domConstruct, registry, AlfDialog) {
 
    return declare([AlfDialog], {
 
@@ -44,6 +45,8 @@ define(["dojo/_base/declare",
 
       onRecordSelected: function alfresco_rm_dialogs_AlfRmRelationshipDialog__onRecordSelected(payload)
       {
+         registry.byId("hiddenToNodeTextBox").setValue(this.selectedItem[0].nodeRef);
+
          this.processWidgets([{
             name: "alfresco/rm/lists/AlfRmRelationshipList",
             config: {
@@ -53,15 +56,6 @@ define(["dojo/_base/declare",
                   items: this.selectedItem
                }
             }
-         },{
-            name: "alfresco/forms/controls/DojoValidationTextBox",
-            config: {
-               name: "toNode",
-               value: this.selectedItem[0].nodeRef,
-               visibilityConfig: {
-                  initialValue: false
-               }
-            }
          }], domConstruct.create("div", {id: "alfresco_rm_dialogs_AlfRmRelationshipDialog"}, this.bodyNode, "last"));
       },
 
@@ -69,6 +63,7 @@ define(["dojo/_base/declare",
       {
          domConstruct.destroy("alfresco_rm_dialogs_AlfRmRelationshipDialog");
          this.selectedItem = null;
+         registry.byId("hiddenToNodeTextBox").setValue(null);
       }
    });
 });
