@@ -19,8 +19,9 @@
 
 define(["dojo/_base/declare",
         "dojo/_base/lang",
+        "dojo/dom-construct",
         "alfresco/dialogs/AlfDialog"],
-        function(declare, lang, AlfDialog) {
+        function(declare, lang, domConstruct, AlfDialog) {
 
    return declare([AlfDialog], {
 
@@ -40,7 +41,7 @@ define(["dojo/_base/declare",
       },
 
       onRecordSelected: function alfresco_dialogs_RmAlfDialog__onRecordSelected(payload) {
-         var config = [{
+         this.processWidgets([{
             name: "alfresco/rm/relationship/RmRelationshipItem",
             config: {
                showDeleteAction: true,
@@ -49,8 +50,16 @@ define(["dojo/_base/declare",
                   items: this.selectedItem
                }
             }
-         }];
-         this.processWidgets(config, this.domNode.lastElementChild.firstElementChild);
+         },{
+            name: "alfresco/forms/controls/DojoValidationTextBox",
+            config: {
+               name: "toNode",
+               value: this.selectedItem[0].nodeRef,
+               visibilityConfig: {
+                  initialValue: false
+               }
+            }
+         }], domConstruct.create("div", {}, this.bodyNode, "last"));
       },
 
       onRecordRemoved: function alfresco_dialogs_RmAlfDialog__onRecordRemoved(payload)

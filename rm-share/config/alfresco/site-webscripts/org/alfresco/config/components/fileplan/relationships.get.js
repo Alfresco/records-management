@@ -48,6 +48,9 @@ function main()
                               dialogConfirmationButtonTitle: msg.get("label.button.create"),
                               dialogCancellationButtonTitle: msg.get("label.button.cancel"),
                               formSubmissionTopic: "ALF_CRUD_CREATE",
+                              formSubmissionPayloadMixin: {
+                                 url: "api/node/" + nodeReference + "/customreferences",
+                              },
                               widgets: [{
                                  name: "alfresco/rm/relationship/RmRelationshipItem",
                                  config: {
@@ -58,11 +61,12 @@ function main()
                                     }
                                  }
                               },{
-                                 name: "alfresco/layout/HorizontalWidgets",
+                                 /*name: "alfresco/layout/HorizontalWidgets",
                                  config: {
-                                    widgets: [{
+                                    widgets: [{*/
                                        name: "alfresco/forms/controls/DojoSelect",
                                        config: {
+                                          name: "refId",
                                           optionsConfig: {
                                              publishTopic: "ALF_GET_FORM_CONTROL_OPTIONS",
                                              publishPayload: {
@@ -136,8 +140,8 @@ function main()
                                           publishGlobal: true
                                        }
                                     }]
-                                 }
-                              }]
+                                 /*}
+                              }]*/
                            }
                         }
                      }]
