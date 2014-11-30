@@ -29,8 +29,9 @@ define(["dojo/_base/declare",
 
       showDeleteAction: null,
 
-      postCreate: function alfresco_relationship_RmRelationshipItem__postCreate(payload) {
-         var config = [{
+      postCreate: function alfresco_rm_lists_AlfRmRelationshipList__postCreate(payload)
+      {
+         this.processWidgets([{
             name: "alfresco/documentlibrary/views/AlfDocumentListView",
             config: {
                currentData: this.currentData,
@@ -147,8 +148,7 @@ define(["dojo/_base/declare",
                   }
                }]
             }
-         }];
-         this.processWidgets(config, this.domNode);
+         }], this.domNode);
       }
    });
 });

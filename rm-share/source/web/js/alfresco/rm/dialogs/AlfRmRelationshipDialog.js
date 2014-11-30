@@ -29,20 +29,23 @@ define(["dojo/_base/declare",
 
       selectedItem: null,
 
-      postCreate: function alfresco_dialogs_RmAlfDialog__postCreate() {
+      postCreate: function alfresco_rm_dialogs_AlfRmRelationshipDialog__postCreate()
+      {
          this.inherited(arguments);
          this.alfSubscribe("ALF_ITEMS_SELECTED", lang.hitch(this, "onItemsSelected"), true);
          this.alfSubscribe("ALF_RECORD_SELECTED", lang.hitch(this, "onRecordSelected"), true);
          this.alfSubscribe("ALF_RECORD_REMOVED", lang.hitch(this, "onRecordRemoved"), true);
       },
 
-      onItemsSelected: function alfresco_dialogs_RmAlfDialog__onItemsSelected(payload) {
+      onItemsSelected: function alfresco_rm_dialogs_AlfRmRelationshipDialog__onItemsSelected(payload)
+      {
          this.selectedItem = payload.pickedItems;
       },
 
-      onRecordSelected: function alfresco_dialogs_RmAlfDialog__onRecordSelected(payload) {
+      onRecordSelected: function alfresco_rm_dialogs_AlfRmRelationshipDialog__onRecordSelected(payload)
+      {
          this.processWidgets([{
-            name: "alfresco/rm/relationship/RmRelationshipItem",
+            name: "alfresco/rm/lists/AlfRmRelationshipList",
             config: {
                showDeleteAction: true,
                site: payload.site,
@@ -59,12 +62,12 @@ define(["dojo/_base/declare",
                   initialValue: false
                }
             }
-         }], domConstruct.create("div", {}, this.bodyNode, "last"));
+         }], domConstruct.create("div", {id: "alfresco_rm_dialogs_AlfRmRelationshipDialog"}, this.bodyNode, "last"));
       },
 
-      onRecordRemoved: function alfresco_dialogs_RmAlfDialog__onRecordRemoved(payload)
+      onRecordRemoved: function alfresco_rm_dialogs_AlfRmRelationshipDialog__onRecordRemoved(payload)
       {
-         this.bodyNode.lastElementChild.innerHTML = "";
+         domConstruct.destroy("alfresco_rm_dialogs_AlfRmRelationshipDialog");
          this.selectedItem = null;
       }
    });

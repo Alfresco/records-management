@@ -19,13 +19,14 @@
 
 define(["dojo/_base/declare",
         "dojo/_base/lang",
-        "alfresco/rm/dialogs/RmAlfDialog",
-        "alfresco/dialogs/AlfDialogService"],
-        function(declare, lang, RmAlfDialog, AlfDialogService) {
+        "alfresco/dialogs/AlfDialogService",
+        "alfresco/rm/dialogs/AlfRmRelationshipDialog"],
+        function(declare, lang, AlfDialogService, AlfRmRelationshipDialog) {
 
    return declare([AlfDialogService], {
 
-      onCreateDialogRequest: function alfresco_dialogs_RmAlfDialogService__onCreateDialogRequest(payload) {
+      onCreateDialogRequest: function alfresco_rm_services_AlfRmRelationshipDialogService__onCreateDialogRequest(payload)
+      {
          if (this.dialog != null && !this.dialog.keepDialog)
          {
             this.dialog.destroyRecursive();
@@ -42,7 +43,7 @@ define(["dojo/_base/declare",
             handleOverflow: (payload.handleOverflow != null) ? payload.handleOverflow: true,
             fixedWidth: (payload.fixedWidth != null) ? payload.fixedWidth: false
          };
-         this.dialog = new RmAlfDialog(dialogConfig);
+         this.dialog = new AlfRmRelationshipDialog(dialogConfig);
 
          if (payload.publishOnShow)
          {
@@ -56,7 +57,8 @@ define(["dojo/_base/declare",
          }
       },
 
-      onCreateFormDialogRequest: function alfresco_dialogs_RmAlfDialogService__onCreateFormDialogRequest(payload) {
+      onCreateFormDialogRequest: function alfresco_rm_services_AlfRmRelationshipDialogService__onCreateFormDialogRequest(payload)
+      {
          // Destroy any previously created dialog...
          if (this.dialog != null && !this.dialog.keepDialog)
          {
@@ -96,7 +98,7 @@ define(["dojo/_base/declare",
                var formValue = (config.formValue != null) ? config.formValue: {};
                var formConfig = this.createFormConfig(config.widgets, formValue);
                var dialogConfig = this.createDialogConfig(config, formConfig);
-               this.dialog = new RmAlfDialog(dialogConfig);
+               this.dialog = new AlfRmRelationshipDialog(dialogConfig);
                this.dialog.show();
             }
             catch (e)
@@ -106,7 +108,8 @@ define(["dojo/_base/declare",
          }
       },
 
-      createDialogConfig: function alfresco_dialogs_RmAlfDialogService__createDialogConfig(config, formConfig) {
+      createDialogConfig: function alfresco_rm_services_AlfRmRelationshipDialogService__createDialogConfig(config, formConfig)
+      {
          var dialogConfig = {
             title: this.message(config.dialogTitle),
             pubSubScope: config.pubSubScope, // Scope the dialog content so that it doesn't pollute any other widgets,,
@@ -116,27 +119,24 @@ define(["dojo/_base/declare",
             additionalCssClasses: config.additionalCssClasses ? config.additionalCssClasses : "",
             keepDialog: (config.keepDialog != null) ? config.keepDialog : false,
             widgetsContent: [formConfig],
-            widgetsButtons: [
-                  {
-                     name: "alfresco/buttons/AlfButton",
-                     config: {
-                        label: config.dialogConfirmationButtonTitle,
-                        disableOnInvalidControls: true,
-                        publishTopic: this._formConfirmationTopic,
-                        publishPayload: {
-                           formSubmissionTopic: config.formSubmissionTopic,
-                           formSubmissionPayloadMixin: config.formSubmissionPayloadMixin
-                        }
-                     }
-                  },
-                  {
-                     name: "alfresco/buttons/AlfButton",
-                     config: {
-                        label: config.dialogCancellationButtonTitle,
-                        publishTopic: "ALF_CLOSE_DIALOG"
-                     }
+            widgetsButtons: [{
+               name: "alfresco/buttons/AlfButton",
+               config: {
+                  label: config.dialogConfirmationButtonTitle,
+                  disableOnInvalidControls: true,
+                  publishTopic: this._formConfirmationTopic,
+                  publishPayload: {
+                     formSubmissionTopic: config.formSubmissionTopic,
+                     formSubmissionPayloadMixin: config.formSubmissionPayloadMixin
                   }
-               ]
+               }
+            },{
+               name: "alfresco/buttons/AlfButton",
+               config: {
+                  label: config.dialogCancellationButtonTitle,
+                  publishTopic: "ALF_CLOSE_DIALOG"
+               }
+            }]
          };
          return dialogConfig;
       }

@@ -14,10 +14,10 @@ function main()
          rootNodeId: "relationships",
          services: [
             "alfresco/services/CrudService",
-            "alfresco/rm/services/RmAlfDialogService",
             "alfresco/services/OptionsService",
             "alfresco/services/DocumentService",
-            "alfresco/services/SiteService"
+            "alfresco/services/SiteService",
+            "alfresco/rm/services/AlfRmRelationshipDialogService"
          ],
          widgets: [{
             name: "alfresco/layout/VerticalWidgets",
@@ -52,7 +52,7 @@ function main()
                                  url: "api/node/" + nodeReference + "/customreferences",
                               },
                               widgets: [{
-                                 name: "alfresco/rm/relationship/RmRelationshipItem",
+                                 name: "alfresco/rm/lists/AlfRmRelationshipList",
                                  config: {
                                     showDeleteAction: false,
                                     site: site,
