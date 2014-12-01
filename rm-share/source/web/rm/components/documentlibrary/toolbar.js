@@ -613,6 +613,7 @@
                {
                   var folderName = response.config.dataObj["prop_cm_name"];
                   this._displayMessageByType(folderType, "failure", folderName);
+                  createFolder.widgets.cancelButton.set("disabled", false);
                },
                scope: this
             }
