@@ -57,7 +57,7 @@ define(["dojo/_base/declare",
                   items: this.selectedItem
                }
             }
-         }], domConstruct.create("div", {id: "alfresco_rm_dialogs_AlfRmRelationshipDialog"}, this.bodyNode, "last"));
+         }], domConstruct.create("div", {id: "alfresco_rm_dialogs_AlfRmRelationshipDialog"}, registry.byId(this.widgetsContent[0].config.id).domNode.children[1], "last"));
       },
 
       onRecordRemoved: function alfresco_rm_dialogs_AlfRmRelationshipDialog__onRecordRemoved(payload)

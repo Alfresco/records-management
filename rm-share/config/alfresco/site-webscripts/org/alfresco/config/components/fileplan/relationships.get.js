@@ -99,35 +99,50 @@ function main()
                                              dialogTitle: "picker.select.title",
                                              handleOverflow: false,
                                              widgetsContent: [{
-                                                name: "alfresco/pickers/Picker",
+                                                name: "alfresco/layout/VerticalWidgets",
                                                 config: {
-                                                   widgetsForPickedItems: [{
-                                                      name: "alfresco/pickers/PickedItems",
-                                                      assignTo: "pickedItemsWidget",
+                                                   widgets: [{
+                                                      name: "alfresco/buttons/AlfButton",
                                                       config: {
-                                                         singleItemMode: true,
+                                                         additionalCssClasses: "relationshipPickerParentNav",
+                                                         publishTopic: "ALF_DOCLIST_PARENT_NAV",
+                                                         showLabel: false,
+                                                         iconClass: "alf-folder-up-icon",
+                                                         disableOnInvalidControls: true
                                                       }
-                                                   }],
-                                                   widgetsForRootPicker: [{
-                                                      name: "alfresco/menus/AlfVerticalMenuBar",
+                                                   },{
+                                                      name: "alfresco/pickers/Picker",
                                                       config: {
-                                                         visibilityConfig: {
-                                                            initialValue: false
-                                                         },
-                                                         widgets: [{
-                                                            name: "alfresco/menus/AlfMenuBarItem",
+                                                         subPickersLabel: "",
+                                                         widgetsForPickedItems: [{
+                                                            name: "alfresco/pickers/PickedItems",
+                                                            assignTo: "pickedItemsWidget",
                                                             config: {
-                                                               publishTopic: "ALF_ADD_PICKER",
-                                                               publishOnRender: true,
-                                                               publishPayload: {
-                                                                  currentPickerDepth: 1,
-                                                                  picker: [{
-                                                                     name: "alfresco/pickers/DocumentListPicker",
-                                                                     config: {
-                                                                        nodeRef: nodeDetails.item.node.rmNode.filePlan
+                                                               singleItemMode: true,
+                                                            }
+                                                         }],
+                                                         widgetsForRootPicker: [{
+                                                            name: "alfresco/menus/AlfVerticalMenuBar",
+                                                            config: {
+                                                               visibilityConfig: {
+                                                                  initialValue: false
+                                                               },
+                                                               widgets: [{
+                                                                  name: "alfresco/menus/AlfMenuBarItem",
+                                                                  config: {
+                                                                     publishTopic: "ALF_ADD_PICKER",
+                                                                     publishOnRender: true,
+                                                                     publishPayload: {
+                                                                        currentPickerDepth: 1,
+                                                                        picker: [{
+                                                                           name: "alfresco/pickers/DocumentListPicker",
+                                                                           config: {
+                                                                              nodeRef: nodeDetails.item.node.rmNode.filePlan
+                                                                           }
+                                                                        }]
                                                                      }
-                                                                  }]
-                                                               }
+                                                                  }
+                                                               }]
                                                             }
                                                          }]
                                                       }

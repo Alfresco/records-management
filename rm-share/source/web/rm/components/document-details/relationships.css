@@ -32,3 +32,27 @@
    font-size: large;
    margin-left: 1em;
 }
+
+.alfresco-core-ProcessWidgets .relationshipPickerParentNav
+{
+   margin-left: 5px;
+   margin-bottom: -35px;
+}
+
+.alfresco-dialog-AlfDialog .dialog-body .alfresco-core-ProcessWidgets .alfresco-pickers-Picker .sub-pickers > .alfresco-lists-AlfList
+{
+   margin-top: 22px;
+   width: 400px;
+   max-width: 400px;
+}
+
+.alfresco-dialog-AlfDialog .dialog-body .alfresco-core-ProcessWidgets .alfresco-pickers-Picker .picked-items > .alfresco-documentlibrary-views-layouts-AlfDocumentListView
+{
+   width: 400px;
+   max-width: 400px;
+}
+
+.alfresco-dialog-AlfDialog .dialog-body .alfresco-core-ProcessWidgets.alfresco-layout-VerticalWidgets
+{
+   margin-top: -18px;
+}
