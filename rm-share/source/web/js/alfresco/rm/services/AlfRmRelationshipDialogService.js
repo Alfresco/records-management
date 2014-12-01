@@ -122,6 +122,7 @@ define(["dojo/_base/declare",
             widgetsButtons: [{
                name: "alfresco/buttons/AlfButton",
                config: {
+                  id: config.id,
                   label: config.dialogConfirmationButtonTitle,
                   disableOnInvalidControls: true,
                   publishTopic: this._formConfirmationTopic,

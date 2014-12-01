@@ -46,6 +46,7 @@ define(["dojo/_base/declare",
       onRecordSelected: function alfresco_rm_dialogs_AlfRmRelationshipDialog__onRecordSelected(payload)
       {
          registry.byId("hiddenToNodeTextBox").setValue(this.selectedItem[0].nodeRef);
+         registry.byId("createRelationshipButton").setDisabled(false);
 
          this.processWidgets([{
             name: "alfresco/rm/lists/AlfRmRelationshipList",
@@ -64,6 +65,7 @@ define(["dojo/_base/declare",
          domConstruct.destroy("alfresco_rm_dialogs_AlfRmRelationshipDialog");
          this.selectedItem = null;
          registry.byId("hiddenToNodeTextBox").setValue(null);
+         registry.byId("createRelationshipButton").setDisabled(true);
       }
    });
 });
