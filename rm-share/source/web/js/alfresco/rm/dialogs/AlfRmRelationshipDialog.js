@@ -18,54 +18,11 @@
  */
 
 define(["dojo/_base/declare",
-        "dojo/_base/lang",
-        "dojo/dom-construct",
-        "dijit/registry",
         "alfresco/dialogs/AlfDialog"],
-        function(declare, lang, domConstruct, registry, AlfDialog) {
+        function(declare, AlfDialog) {
 
    return declare([AlfDialog], {
 
-      keepDialog: false,
-
-      selectedItem: null,
-
-      postCreate: function alfresco_rm_dialogs_AlfRmRelationshipDialog__postCreate()
-      {
-         this.inherited(arguments);
-         this.alfSubscribe("ALF_ITEMS_SELECTED", lang.hitch(this, "onItemsSelected"), true);
-         this.alfSubscribe("ALF_RECORD_SELECTED", lang.hitch(this, "onRecordSelected"), true);
-         this.alfSubscribe("ALF_RECORD_REMOVED", lang.hitch(this, "onRecordRemoved"), true);
-      },
-
-      onItemsSelected: function alfresco_rm_dialogs_AlfRmRelationshipDialog__onItemsSelected(payload)
-      {
-         this.selectedItem = payload.pickedItems;
-      },
-
-      onRecordSelected: function alfresco_rm_dialogs_AlfRmRelationshipDialog__onRecordSelected(payload)
-      {
-         registry.byId("hiddenToNodeTextBox").setValue(this.selectedItem[0].nodeRef);
-         registry.byId("createRelationshipButton").setDisabled(false);
-
-         this.processWidgets([{
-            name: "alfresco/rm/lists/AlfRmRelationshipList",
-            config: {
-               showDeleteAction: true,
-               site: payload.site,
-               currentData: {
-                  items: this.selectedItem
-               }
-            }
-         }], domConstruct.create("div", {id: "alfresco_rm_dialogs_AlfRmRelationshipDialog"}, registry.byId(this.widgetsContent[0].config.id).domNode.children[1], "last"));
-      },
-
-      onRecordRemoved: function alfresco_rm_dialogs_AlfRmRelationshipDialog__onRecordRemoved(payload)
-      {
-         domConstruct.destroy("alfresco_rm_dialogs_AlfRmRelationshipDialog");
-         this.selectedItem = null;
-         registry.byId("hiddenToNodeTextBox").setValue(null);
-         registry.byId("createRelationshipButton").setDisabled(true);
-      }
+      keepDialog: false
    });
 });

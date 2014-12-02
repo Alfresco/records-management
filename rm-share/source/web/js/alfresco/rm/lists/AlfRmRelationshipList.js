@@ -27,9 +27,9 @@ define(["dojo/_base/declare",
 
       currentData: null,
 
-      showDeleteAction: null,
+      showDeleteAction: false,
 
-      postCreate: function alfresco_rm_lists_AlfRmRelationshipList__postCreate(payload)
+      postCreate: function alfresco_rm_lists_AlfRmRelationshipList__postCreate()
       {
          this.processWidgets([{
             name: "alfresco/documentlibrary/views/AlfDocumentListView",

@@ -16,7 +16,6 @@ function main()
             "alfresco/services/CrudService",
             "alfresco/services/OptionsService",
             "alfresco/services/DocumentService",
-            "alfresco/services/SiteService",
             "alfresco/rm/services/AlfRmRelationshipDialogService"
          ],
          widgets: [{
@@ -53,21 +52,8 @@ function main()
                                  url: "api/node/" + nodeReference + "/customreferences",
                               },
                               widgets: [{
-                                 name: "alfresco/forms/controls/DojoValidationTextBox",
-                                 config: {
-                                    id: "hiddenToNodeTextBox",
-                                    name: "toNode",
-                                    requirementConfig: {
-                                       initialValue: true
-                                    },
-                                    visibilityConfig: {
-                                       initialValue: false
-                                    }
-                                 }
-                              },{
                                  name: "alfresco/rm/lists/AlfRmRelationshipList",
                                  config: {
-                                    showDeleteAction: false,
                                     site: site,
                                     currentData: {
                                        items: [nodeDetails.item]
@@ -91,82 +77,15 @@ function main()
                                           }
                                        }
                                     },{
-                                       name: "alfresco/buttons/AlfButton",
-                                       config: {
-                                          label: msg.get("label.button.select-record"),
-                                          publishTopic: "ALF_CREATE_DIALOG_REQUEST",
-                                          publishPayload: {
-                                             dialogTitle: "picker.select.title",
-                                             handleOverflow: false,
-                                             widgetsContent: [{
-                                                name: "alfresco/layout/VerticalWidgets",
-                                                config: {
-                                                   widgets: [{
-                                                      name: "alfresco/buttons/AlfButton",
-                                                      config: {
-                                                         additionalCssClasses: "relationshipPickerParentNav",
-                                                         publishTopic: "ALF_DOCLIST_PARENT_NAV",
-                                                         showLabel: false,
-                                                         iconClass: "alf-folder-up-icon",
-                                                         disableOnInvalidControls: true
-                                                      }
-                                                   },{
-                                                      name: "alfresco/pickers/Picker",
-                                                      config: {
-                                                         subPickersLabel: "",
-                                                         widgetsForPickedItems: [{
-                                                            name: "alfresco/pickers/PickedItems",
-                                                            assignTo: "pickedItemsWidget",
-                                                            config: {
-                                                               singleItemMode: true,
-                                                            }
-                                                         }],
-                                                         widgetsForRootPicker: [{
-                                                            name: "alfresco/menus/AlfVerticalMenuBar",
-                                                            config: {
-                                                               visibilityConfig: {
-                                                                  initialValue: false
-                                                               },
-                                                               widgets: [{
-                                                                  name: "alfresco/menus/AlfMenuBarItem",
-                                                                  config: {
-                                                                     publishTopic: "ALF_ADD_PICKER",
-                                                                     publishOnRender: true,
-                                                                     publishPayload: {
-                                                                        currentPickerDepth: 1,
-                                                                        picker: [{
-                                                                           name: "alfresco/pickers/DocumentListPicker",
-                                                                           config: {
-                                                                              nodeRef: nodeDetails.item.node.rmNode.filePlan
-                                                                           }
-                                                                        }]
-                                                                     }
-                                                                  }
-                                                               }]
-                                                            }
-                                                         }]
-                                                      }
-                                                   }]
-                                                }
-                                             }],
-                                             widgetsButtons: [{
-                                                name: "alfresco/buttons/AlfButton",
-                                                config: {
-                                                   label: "picker.ok.label",
-                                                   publishTopic: "ALF_RECORD_SELECTED",
-                                                   publishPayload: {
-                                                      site: site
-                                                   }
-                                                }
-                                             },{
-                                                name: "alfresco/buttons/AlfButton",
-                                                config: {
-                                                   label: "picker.cancel.label",
-                                                   publishTopic: "NO_OP"
-                                                }
-                                             }]
-                                          },
-                                          publishGlobal: true
+                                       name: "alfresco/rm/forms/controls/AlfRmRecordPickerControl",
+                                       config:
+                                       {
+                                          name: "toNode",
+                                          site: site,
+                                          pickerRootNode: nodeDetails.item.node.rmNode.filePlan,
+                                          requirementConfig: {
+                                             initialValue: true
+                                          }
                                        }
                                     }]
                                  /*}
