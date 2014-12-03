@@ -56,3 +56,23 @@
 {
    margin-top: -18px;
 }
+
+div[id^="alfresco_rm_forms_controls_AlfRmRecordPickerControl"].alfresco-forms-controls-BaseFormControl
+{
+   margin-left: 20em;
+   margin-top: -40px;
+   margin-bottom: 20px;
+}
+
+.alfresco-forms-Form .alfresco-lists-AlfList .alfresco-documentlibrary-views-layouts-AlfDocumentListView
+{
+   background-color: rgba(250, 250, 250, 1);
+   border-color: lightgray;
+   border-style: solid;
+   border-width: 1px 0;
+}
+
+.alfresco-dialog-AlfDialog .dialog-body .alfresco-forms-Form .alfresco-forms-controls-DojoSelect
+{
+   margin-top: 17px;
+}

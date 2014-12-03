@@ -140,10 +140,13 @@ define(["dojo/_base/declare",
       },
 
       onItemsSelected: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__onItemsSelected(payload) {
-         this.selectedItem = payload.pickedItems[0];
-         this.value = lang.clone(this.selectedItem.nodeRef);
-         this.onValueChangeEvent(this.name, this.lastValue, this.value);
-         this.lastValue = this.value;
+         if (payload.pickedItems.length === 1)
+         {
+            this.selectedItem = payload.pickedItems[0];
+            this.value = lang.clone(this.selectedItem.nodeRef);
+            this.onValueChangeEvent(this.name, this.lastValue, this.value);
+            this.lastValue = this.value;
+         }
       },
 
       processValidationRules: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__processValidationRules() {
@@ -175,7 +178,7 @@ define(["dojo/_base/declare",
                   items: [this.selectedItem]
                }
             }
-         }], domConstruct.create("div", {id: "alfresco_rm_forms_controls_AlfRmRecordPickerControl"}, this.containerNode, "last"));
+         }], domConstruct.create("div", {id: "alfresco_rm_forms_controls_AlfRmRecordPickerControl"}, this.containerNode.parentElement, "last"));
       },
 
       onRecordRemoved: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__onRecordRemoved(payload)
