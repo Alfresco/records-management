@@ -71,4 +71,30 @@ public class ActionEvaluator extends BaseRMEvaluator
 
         return false;
     }
+    
+    /**
+     * Retrieve a JSONArray of applicable actions
+     *
+     * @param jsonObject JSONObject containing a "node" object as returned from the ApplicationScriptUtils class.
+     * @return JSONArray containing applicable actions the UI may choose to display
+     */
+    private JSONArray getRMActions(JSONObject jsonObject)
+    {
+        JSONArray actions = null;
+
+        try
+        {
+            JSONObject rmNode = getRMNode(jsonObject);
+            if (rmNode != null)
+            {
+                actions = (JSONArray) rmNode.get("actions");
+            }
+        }
+        catch (Exception err)
+        {
+            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err);
+        }
+
+        return actions;
+    }
 }

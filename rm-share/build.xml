@@ -17,6 +17,10 @@
       </copy>
    </target>
 
-   <target name="unitTest"/>
+   <target name="unitTest">
+      <exec executable="${mvn.exec}" failonerror="true">
+	     <arg value="test" />
+	  </exec>
+   </target>
 
 </project>

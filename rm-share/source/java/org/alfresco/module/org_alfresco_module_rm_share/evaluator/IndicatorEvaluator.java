@@ -73,4 +73,31 @@ public class IndicatorEvaluator extends BaseRMEvaluator
 
         return (result == expected);
     }
+    
+
+    /**
+     * Retrieve a JSONArray of applicable indicators
+     *
+     * @param jsonObject JSONObject containing a "node" object as returned from the ApplicationScriptUtils class.
+     * @return JSONArray containing applicable indicators the UI may choose to display
+     */
+    private JSONArray getRMIndicators(JSONObject jsonObject)
+    {
+        JSONArray indicators = null;
+
+        try
+        {
+            JSONObject rmNode = getRMNode(jsonObject);
+            if (rmNode != null)
+            {
+                indicators = (JSONArray) rmNode.get("indicators");
+            }
+        }
+        catch (Exception err)
+        {
+            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err);
+        }
+
+        return indicators;
+    }
 }
