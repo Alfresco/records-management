@@ -8,10 +8,26 @@
    margin-top: 20px;
 }
 
+#relationships .left-widgets .horizontal-widget
+{
+   margin-left: -1px;
+   margin-top: 4px;
+}
+
 .alfresco-buttons-AlfButton.relationship-button
 {
+   background: url("../../../js/alfresco/forms/controls/css/images/add-icon-16.png") no-repeat scroll 4px 4px transparent;
    background-color: transparent;
    border-color: transparent;
+   font-size: 12px;
+   margin-right: 3px;
+   padding-left: 9px;
+}
+
+.alfresco-buttons-AlfButton.relationship-button .dijitButtonContents
+{
+   padding-left: 7px;
+   padding-right: 0;
 }
 
 .alfresco-buttons-AlfButton.relationship-button.dijitButtonFocused,
@@ -23,13 +39,13 @@
 .alfresco-core-ProcessWidgets .relationshipToolbar
 {
    border-bottom: 1px solid #d3d3d3;
-   padding-bottom: 0.35em;
-   padding-top: 0.35em;
+   padding-bottom: 0.12em;
+   padding-top: 0.1em;
 }
 
 .alfresco-core-ProcessWidgets .relationshipToolbarLabel
 {
-   font-size: large;
+   font-size: 123.1%;
    margin-left: 1em;
 }
 
