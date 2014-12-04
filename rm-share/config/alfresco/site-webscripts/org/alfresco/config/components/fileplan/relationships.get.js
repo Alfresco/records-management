@@ -43,7 +43,6 @@ function main()
                            publishPayloadModifiers: ["processCurrentItemTokens"],
                            publishPayload: {
                               keepDialog: true,
-                              id: "createRelationshipButton",
                               dialogTitle: msg.get("label.title.new-relationship"),
                               dialogConfirmationButtonTitle: msg.get("label.button.create"),
                               dialogCancellationButtonTitle: msg.get("label.button.cancel"),
@@ -60,36 +59,31 @@ function main()
                                     }
                                  }
                               },{
-                                 /*name: "alfresco/layout/HorizontalWidgets",
+                                 name: "alfresco/forms/controls/DojoSelect",
                                  config: {
-                                    widgets: [{*/
-                                       name: "alfresco/forms/controls/DojoSelect",
-                                       config: {
-                                          name: "refId",
-                                          optionsConfig: {
-                                             publishTopic: "ALF_GET_FORM_CONTROL_OPTIONS",
-                                             publishPayload: {
-                                                url: url.context + "/proxy/alfresco/api/rma/admin/relationshiplabels",
-                                                itemsAttribute: "data.relationshipLabels",
-                                                labelAttribute: "label",
-                                                valueAttribute: "uniqueName"
-                                             }
-                                          }
+                                    name: "refId",
+                                    optionsConfig: {
+                                       publishTopic: "ALF_GET_FORM_CONTROL_OPTIONS",
+                                       publishPayload: {
+                                          url: url.context + "/proxy/alfresco/api/rma/admin/relationshiplabels",
+                                          itemsAttribute: "data.relationshipLabels",
+                                          labelAttribute: "label",
+                                          valueAttribute: "uniqueName"
                                        }
-                                    },{
-                                       name: "alfresco/rm/forms/controls/AlfRmRecordPickerControl",
-                                       config:
-                                       {
-                                          name: "toNode",
-                                          site: site,
-                                          pickerRootNode: nodeDetails.item.node.rmNode.filePlan,
-                                          requirementConfig: {
-                                             initialValue: true
-                                          }
-                                       }
-                                    }]
-                                 /*}
-                              }]*/
+                                    }
+                                 }
+                              },{
+                                 name: "alfresco/rm/forms/controls/AlfRmRecordPickerControl",
+                                 config:
+                                 {
+                                    name: "toNode",
+                                    site: site,
+                                    pickerRootNode: nodeDetails.item.node.rmNode.filePlan,
+                                    requirementConfig: {
+                                       initialValue: true
+                                    }
+                                 }
+                              }]
                            }
                         }
                      }]
@@ -125,7 +119,7 @@ function main()
                               name: "alfresco/documentlibrary/views/layouts/Cell",
                               config: {
                                  widgets: [{
-                                    name: "alfresco/renderers/FileType",
+                                    name: "alfresco/rm/renderers/AlfRmFileType",
                                     config: {
                                        size: "medium"
                                     }
