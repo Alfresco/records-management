@@ -216,6 +216,49 @@
       },
 
       /**
+       * Unlink record from current record folder
+       *
+       * @method onActionUnlinkFrom
+       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+       */
+      onActionUnlinkFrom: function RDLA_onActionUnlinkFrom(assets)
+      {
+    	  var me = this;
+    	  
+          // Show the first confirmation dialog
+          Alfresco.util.PopupManager.displayPrompt(
+          {
+             title: this.msg("message.confirm.unlink.title"),
+             text: this.msg("message.confirm.unlink.text"),
+             buttons: [
+             {
+                text: this.msg("button.ok"),
+                handler: function RDLA_onActionUnlinkFrom_confirm_ok()
+                {
+                   // Hide the confirmation dialog
+                   this.destroy();
+                   
+                   me._rmAction("message.unlink", assets, "unlinkFrom",
+                   {
+                      "recordFolder": me.doclistMetadata.parent.nodeRef   
+                   });
+                                      
+                },
+                isDefault: true
+             },
+             {
+                text: this.msg("button.cancel"),
+                handler: function RDLA_onActionUnlinkFrom_confirm_cancel()
+                {
+                   // Hide the confirmation dialog
+                   this.destroy();
+                }
+             }]
+          });
+    	  
+      },
+
+      /**
        * Move single document or folder.
        *
        * @method onActionMoveTo

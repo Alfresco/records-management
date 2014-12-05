@@ -23,47 +23,42 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
- * Check for the validity of Records Management indicators
+ * Evaluate whether the unlink action should be shown or not.
  *
- * @author: mikeh
+ * @author Roy Wetherall
+ * @since 2.3
  */
-public class IndicatorEvaluator extends BaseRMEvaluator
+public class UnlinkActionEvaluator extends BaseRMEvaluator
 {
-    private String indicator;
-
-    private boolean expected = true;
-
+    /** value constants */
+    private static final String INDICATOR = "multiParent";
+    private static final String NODE = "node";
+    private static final String RM_NODE = "rmNode";
+    private static final String PRIMARY_PARENT = "primaryParentNodeRef";
+    private static final String PARENT = "parent";
+    private static final String NODE_REF = "nodeRef";
+    
     /**
-     * The name of the indicator to check for
-     *
-     * @param indicator
+     * @see org.alfresco.web.evaluator.BaseEvaluator#evaluate(org.json.simple.JSONObject)
      */
-    public void setIndicator(String indicator)
-    {
-        this.indicator = indicator;
-    }
-
-    public void setExpected(boolean expected)
-    {
-        this.expected = expected;
-    }
-
     @Override
     public boolean evaluate(JSONObject jsonObject)
-    {
-        if (indicator == null)
-        {
-            return false;
-        }
-
+    {       
         boolean result = false;
 
         try
         {
+            // first check that the multi parent indicator is present
             JSONArray indicators = getRMIndicators(jsonObject);
-            if (indicators != null && indicators.contains(indicator))
+            if (indicators != null && indicators.contains(INDICATOR))
             {
-                result = true;
+                // now check that we are not in the primary location
+                String primaryParent = (String)((JSONObject)((JSONObject)jsonObject.get(NODE)).get(RM_NODE)).get(PRIMARY_PARENT);
+                String parent = (String)((JSONObject)jsonObject.get(PARENT)).get(NODE_REF);
+                if (!primaryParent.equals(parent))
+                {
+                    result = true;
+                }                
             }
         }
         catch (Exception err)
@@ -71,6 +66,6 @@ public class IndicatorEvaluator extends BaseRMEvaluator
             throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err);
         }
 
-        return (result == expected);
+        return result;
     }
 }

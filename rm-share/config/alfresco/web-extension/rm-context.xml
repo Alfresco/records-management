@@ -144,7 +144,7 @@
    <bean id="evaluator.rm.doclib.isUserRecordContributor" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.IsUserRecordContributor">
       <property name="slingshotEvaluatorUtil" ref="slingshot.evaluator.utility" />
    </bean>
-
+   
    <!--                             -->
    <!-- File Plan Action Evaluators -->
    <!--                             -->
@@ -188,6 +188,9 @@
    </bean>
    <bean id="evaluator.rm.action.link-to" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="linkTo" />
+   </bean>
+   <bean id="evaluator.rm.action.unlink-from" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="unlinkFrom" />
    </bean>
    <bean id="evaluator.rm.action.file-to" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="fileTo" />
@@ -295,7 +298,8 @@
    <bean id="evaluator.rm.action.moveDmRecord" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="moveDmRecord" />
    </bean>
-
+   <bean id="evaluator.rm.action.unlink-from-checkparents" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.UnlinkActionEvaluator"/>
+   
    <!--                          -->
    <!-- DocLib Common Evaluators -->
    <!--                          -->

@@ -18,8 +18,9 @@
  */
 package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import org.alfresco.test.BaseUnitTest;
 import org.json.simple.JSONObject;
@@ -69,6 +70,24 @@ public class ActionEvaluatorUnitTest extends BaseUnitTest
     public void actionNotInActionList() throws Exception
     {
         // set action 
+        actionEvaluator.setAction(generateText());
+        
+        // create json
+        JSONObject json = (JSONObject)new JSONParser().parse("{\"node\":{\"rmNode\":{\"actions\":[\"" + generateText() + "\"]}}}");
+        
+        // show evaluation true
+        assertFalse(actionEvaluator.evaluate(json));
+    }
+    
+    /**
+     * Given that the action is in the action list
+     * When evaluated
+     * Then the result it true
+     */
+    @Test
+    public void actionInActionList() throws Exception
+    {
+        // set action 
         String action = generateText();
         actionEvaluator.setAction(action);
         
@@ -78,11 +97,5 @@ public class ActionEvaluatorUnitTest extends BaseUnitTest
         // show evaluation true
         assertTrue(actionEvaluator.evaluate(json));
     }
-    
-    /**
-     * Given that the action is in the action list
-     * When evaluated
-     * Then the result it true
-     */
 
 }

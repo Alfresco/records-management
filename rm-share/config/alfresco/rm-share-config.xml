@@ -324,6 +324,13 @@
             <param name="function">onActionLinkTo</param>
             <evaluator>evaluator.rm.action.link-to</evaluator>
          </action>
+         
+         <!-- unlink from -->
+         <action id="rm-unlink-from" type="javascript" label="actions.unlink-from" icon="../../../rm/components/documentlibrary/actions/rm-link-to">
+            <param name="function">onActionUnlinkFrom</param>
+            <evaluator>evaluator.rm.action.unlink-from</evaluator>
+            <evaluator>evaluator.rm.action.unlink-from-checkparents</evaluator>
+         </action>
 
          <!-- File to -->
          <action id="rm-file-to" type="javascript" label="actions.file-to" icon="../../../rm/components/documentlibrary/actions/rm-file-to">
@@ -672,6 +679,7 @@
             <action index="230" id="rm-copy-recordfolder-to" />
             <action index="240" id="rm-move-recordfolder-to" />
             <action index="250" id="rm-link-to" />
+            <action index="255" id="rm-unlink-from" />
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
@@ -722,6 +730,7 @@
             <action index="240" id="rm-move-record-to" />
             <action index="245" id="rm-move-unfiledrecord-to" />
             <action index="250" id="rm-link-to" />
+            <action index="255" id="rm-unlink-from" />
             <action index="260" id="rm-file-to" />
             <action index="270" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="280" id="rm-view-audit-log" />
@@ -783,6 +792,7 @@
             <action index="160" id="rm-move-record-to" />
             <action index="160" id="rm-move-unfiledrecord-to" />
             <action index="170" id="rm-link-to" />
+            <action index="175" id="rm-unlink-from" />
             <action index="180" id="rm-file-to" />
             <action index="190" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="200" id="rm-view-audit-log" />
