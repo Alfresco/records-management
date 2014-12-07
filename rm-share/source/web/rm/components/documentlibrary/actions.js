@@ -224,7 +224,7 @@
       onActionUnlinkFrom: function RDLA_onActionUnlinkFrom(assets)
       {
     	  var me = this;
-
+    	  
           // Show the first confirmation dialog
           Alfresco.util.PopupManager.displayPrompt(
           {
@@ -237,12 +237,12 @@
                 {
                    // Hide the confirmation dialog
                    this.destroy();
-
+                   
                    me._rmAction("message.unlink", assets, "unlinkFrom",
                    {
-                      "recordFolder": me.doclistMetadata.parent.nodeRef
+                      "recordFolder": me.doclistMetadata.parent.nodeRef   
                    });
-
+                                      
                 },
                 isDefault: true
              },
@@ -255,7 +255,7 @@
                 }
              }]
           });
-
+    	  
       },
 
       /**
@@ -1824,11 +1824,6 @@
                isDefault: true
             }]
          });
-      },
-
-      onAddRelationship: function RDLA_onAddRelationship(assets, owner)
-      {
-
       }
    };
 })();

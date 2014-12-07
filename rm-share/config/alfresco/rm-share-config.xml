@@ -324,7 +324,7 @@
             <param name="function">onActionLinkTo</param>
             <evaluator>evaluator.rm.action.link-to</evaluator>
          </action>
-
+         
          <!-- unlink from -->
          <action id="rm-unlink-from" type="javascript" label="actions.unlink-from" icon="../../../rm/components/documentlibrary/actions/rm-link-to">
             <param name="function">onActionUnlinkFrom</param>
@@ -629,12 +629,6 @@
             <evaluator>evaluator.rm.doclib.isUserRecordContributor</evaluator>
          </action>
 
-         <!-- Add relationship -->
-         <!-- FIXME!!!: Label, icon -->
-         <action id="rm-add-relationship" type="javascript" label="Add relationship" icon="../../../rm/components/documentlibrary/actions/rm-download-zip">
-            <param name="function">onAddRelationship</param>
-         </action>
-
       </actions>
 
       <!--
@@ -716,8 +710,7 @@
          </actionGroup>
 
          <actionGroup id="rm-record-browse">
-            <action index="100" id="rm-add-relationship" />
-            <action index="105" id="rm-document-download" />
+            <action index="100" id="rm-document-download" />
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-reviewed" />
             <action index="130" id="rm-edit-review-as-of-date" />
