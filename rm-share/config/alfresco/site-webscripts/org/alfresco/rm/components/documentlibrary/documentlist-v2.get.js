@@ -1,3 +1,4 @@
+<import resource="classpath:/alfresco/templates/org/alfresco/import/alfresco-util.js">
 <import resource="classpath:/alfresco/site-webscripts/org/alfresco/rm/components/documentlibrary/documentlist-v2.lib.js">
 <import resource="classpath:/alfresco/site-webscripts/org/alfresco/components/upload/uploadable.lib.js">
 <import resource="classpath:/alfresco/site-webscripts/org/alfresco/components/documentlibrary/include/documentlist.lib.js">
@@ -51,6 +52,77 @@ function widgets()
    }
 
    model.widgets = [docListToolbar, documentList];
+
+   model.nodeRef = "workspace://SpacesStore/f6e231e6-0e6d-426c-a7aa-1ce1f0be450b";
+   AlfrescoUtil.param('site', null);
+   var nodeDetails = AlfrescoUtil.getNodeDetails(model.nodeRef, model.site);
+
+   model.jsonModel = {
+      rootNodeId: "onAddRelationship",
+      services: [
+                 "alfresco/services/CrudService",
+                 "alfresco/services/OptionsService",
+                 "alfresco/services/DocumentService",
+                 "alfresco/rm/services/AlfRmRelationshipDialogService"
+              ],
+      widgets: [{
+         name: "alfresco/buttons/AlfButton",
+         config: {
+            label: msg.get("label.button.new-relationship"),
+            additionalCssClasses: "relationship-button",
+            publishTopic: "ALF_CREATE_FORM_DIALOG_REQUEST",
+            publishPayloadType: "PROCESS",
+            publishPayloadModifiers: ["processCurrentItemTokens"],
+            publishPayload: {
+               keepDialog: true,
+               dialogTitle: msg.get("label.title.new-relationship"),
+               dialogConfirmationButtonTitle: msg.get("label.button.create"),
+               dialogCancellationButtonTitle: msg.get("label.button.cancel"),
+               formSubmissionTopic: "ALF_CRUD_CREATE",
+               formSubmissionPayloadMixin: {
+                  // FIXME!!!
+                  url: "api/node/" + "workspace/SpacesStore/f6e231e6-0e6d-426c-a7aa-1ce1f0be450b" + "/customreferences",
+               },
+               widgets: [{
+                  name: "alfresco/rm/lists/AlfRmRelationshipList",
+                  config: {
+                     // FIXME!!!
+                     site: "rm",
+                     currentData: {
+                        items: [nodeDetails.item]
+                     }
+                  }
+               },{
+                  name: "alfresco/forms/controls/DojoSelect",
+                  config: {
+                     name: "refId",
+                     optionsConfig: {
+                        publishTopic: "ALF_GET_FORM_CONTROL_OPTIONS",
+                        publishPayload: {
+                           url: url.context + "/proxy/alfresco/api/rma/admin/relationshiplabels",
+                           itemsAttribute: "data.relationshipLabels",
+                           labelAttribute: "label",
+                           valueAttribute: "uniqueName"
+                        }
+                     }
+                  }
+               },{
+                  name: "alfresco/rm/forms/controls/AlfRmRecordPickerControl",
+                  config:
+                  {
+                     name: "toNode",
+                     // FIXME!!!
+                     site: "rm",
+                     pickerRootNode: nodeDetails.item.node.rmNode.filePlan,
+                     requirementConfig: {
+                        initialValue: true
+                     }
+                  }
+               }]
+            }
+         }
+      }]
+   };
 }
 
 widgets();

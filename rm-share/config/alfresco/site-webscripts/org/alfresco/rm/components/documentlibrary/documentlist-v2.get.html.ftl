@@ -1,5 +1,6 @@
 <#include "documentlist-v2.lib.ftl" />
 <#include "/org/alfresco/components/form/form.dependencies.inc">
+<@processJsonModel group="share"/>
 
 <@markup id="css" >
    <#-- CSS Dependencies -->
@@ -26,5 +27,6 @@
 <@uniqueIdDiv>
    <@markup id="html">
       <@documentlistTemplate/>
+      <div id="onAddRelationship"></div>
    </@>
 </@>
