@@ -7,8 +7,7 @@ function main()
    var nodeDetails = AlfrescoUtil.getNodeDetails(model.nodeRef, model.site);
    if (nodeDetails && nodeDetails.item.node.isRmNode)
    {
-      var nodeReference = nodeDetails.item.node.nodeRef.replace("://", "/"),
-       site = model.site;
+      var nodeReference = nodeDetails.item.node.nodeRef.replace("://", "/");
 
       model.jsonModel = {
          rootNodeId: "relationships",
@@ -16,7 +15,8 @@ function main()
             "alfresco/services/CrudService",
             "alfresco/services/OptionsService",
             "alfresco/services/DocumentService",
-            "alfresco/rm/services/AlfRmRelationshipDialogService"
+            "alfresco/rm/services/AlfRmRelationshipDialogService",
+            "alfresco/rm/services/AlfRmActionService"
          ],
          widgets: [{
             name: "alfresco/layout/VerticalWidgets",
@@ -38,52 +38,9 @@ function main()
                         config: {
                            label: msg.get("label.button.new-relationship"),
                            additionalCssClasses: "relationship-button",
-                           publishTopic: "ALF_CREATE_FORM_DIALOG_REQUEST",
-                           publishPayloadType: "PROCESS",
-                           publishPayloadModifiers: ["processCurrentItemTokens"],
+                           publishTopic: "ALF_RM_ADD_RELATIONSHIP",
                            publishPayload: {
-                              keepDialog: true,
-                              dialogTitle: msg.get("label.title.new-relationship"),
-                              dialogConfirmationButtonTitle: msg.get("label.button.create"),
-                              dialogCancellationButtonTitle: msg.get("label.button.cancel"),
-                              formSubmissionTopic: "ALF_CRUD_CREATE",
-                              formSubmissionPayloadMixin: {
-                                 url: "api/node/" + nodeReference + "/customreferences",
-                              },
-                              widgets: [{
-                                 name: "alfresco/rm/lists/AlfRmRelationshipList",
-                                 config: {
-                                    site: site,
-                                    currentData: {
-                                       items: [nodeDetails.item]
-                                    }
-                                 }
-                              },{
-                                 name: "alfresco/forms/controls/DojoSelect",
-                                 config: {
-                                    name: "refId",
-                                    optionsConfig: {
-                                       publishTopic: "ALF_GET_FORM_CONTROL_OPTIONS",
-                                       publishPayload: {
-                                          url: url.context + "/proxy/alfresco/api/rma/admin/relationshiplabels",
-                                          itemsAttribute: "data.relationshipLabels",
-                                          labelAttribute: "label",
-                                          valueAttribute: "uniqueName"
-                                       }
-                                    }
-                                 }
-                              },{
-                                 name: "alfresco/rm/forms/controls/AlfRmRecordPickerControl",
-                                 config:
-                                 {
-                                    name: "toNode",
-                                    site: site,
-                                    pickerRootNode: nodeDetails.item.node.rmNode.filePlan,
-                                    requirementConfig: {
-                                       initialValue: true
-                                    }
-                                 }
-                              }]
+                              asset: nodeDetails.item
                            }
                         }
                      }]
@@ -141,7 +98,7 @@ function main()
                                              publishPayloadType: "PROCESS",
                                              publishPayloadModifiers: ["processCurrentItemTokens"],
                                              publishPayload: {
-                                                url: "site/" + site + "/document-details?nodeRef={node.nodeRef}",
+                                                url: "site/" + model.site + "/document-details?nodeRef={node.nodeRef}",
                                                 type: "SHARE_PAGE_RELATIVE"
                                              }
                                           }

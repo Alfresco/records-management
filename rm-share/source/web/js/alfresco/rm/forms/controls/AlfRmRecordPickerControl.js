@@ -33,6 +33,8 @@ define(["dojo/_base/declare",
 
       site: null,
 
+      i18nRequirements: [{i18nFile: "./i18n/AlfRmRecordPickerControl.properties"}],
+
       constructor: function alfresco_forms_controls_BaseFormControl__constructor(args) {
          declare.safeMixin(this, args);
 

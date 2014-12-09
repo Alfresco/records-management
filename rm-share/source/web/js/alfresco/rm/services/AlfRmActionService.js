@@ -26,6 +26,8 @@ define(["dojo/_base/declare",
 
    return declare(AlfCore, {
 
+      i18nRequirements: [{i18nFile: "./i18n/AlfRmActionService.properties"}],
+
       constructor: function alfresco_rm_services_AlfRmActionService__constructor(args) {
          lang.mixin(this, args);
          this.alfSubscribe("ALF_RM_ADD_RELATIONSHIP", lang.hitch(this, this.onAddRelationship));
@@ -33,9 +35,8 @@ define(["dojo/_base/declare",
 
       onAddRelationship: function alfresco_rm_services_AlfRmActionService__onAddRelationship(payload)
       {
-         var asset = payload.asset,
-           owner = payload.owner,
-           site = asset.location.site.name;
+         var item = payload.asset,
+           site = item.location.site.name;
 
          this.alfPublish("ALF_CREATE_FORM_DIALOG_REQUEST", {
             keepDialog: true,
@@ -44,14 +45,14 @@ define(["dojo/_base/declare",
             dialogCancellationButtonTitle: this.message("label.button.cancel"),
             formSubmissionTopic: "ALF_CRUD_CREATE",
             formSubmissionPayloadMixin: {
-               url: "api/node/" + asset.nodeRef.replace("://", "/") + "/customreferences",
+               url: "api/node/" + item.nodeRef.replace("://", "/") + "/customreferences",
             },
             widgets: [{
                name: "alfresco/rm/lists/AlfRmRelationshipList",
                config: {
                   site: site,
                   currentData: {
-                     items: [asset]
+                     items: [item]
                   }
                }
             },{
@@ -74,7 +75,7 @@ define(["dojo/_base/declare",
                {
                   name: "toNode",
                   site: site,
-                  pickerRootNode: asset.node.rmNode.filePlan,
+                  pickerRootNode: item.node.rmNode.filePlan,
                   requirementConfig: {
                      initialValue: true
                   }
