@@ -35,7 +35,7 @@ define(["dojo/_base/declare",
 
       onAddRelationship: function alfresco_rm_services_AlfRmActionService__onAddRelationship(payload)
       {
-         var item = payload.asset,
+         var item = payload.item,
            site = item.location.site.name;
 
          this.alfPublish("ALF_CREATE_FORM_DIALOG_REQUEST", {

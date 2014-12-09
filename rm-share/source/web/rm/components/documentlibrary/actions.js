@@ -1831,7 +1831,7 @@
          require(["alfresco/rm/services/AlfRmActionBridge"], function(Bridge) {
             var bridge = new Bridge();
             bridge.alfPublish("ALF_RM_ADD_RELATIONSHIP", {
-               "asset": assets,
+               "item": assets,
                "owner": owner
             });
          });

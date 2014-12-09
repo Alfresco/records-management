@@ -20,12 +20,12 @@
 define(["dojo/_base/declare",
         "dojo/_base/lang",
         "alfresco/dialogs/AlfDialogService",
-        "alfresco/rm/dialogs/AlfRmRelationshipDialog"],
-        function(declare, lang, AlfDialogService, AlfRmRelationshipDialog) {
+        "alfresco/rm/dialogs/AlfRmDialog"],
+        function(declare, lang, AlfDialogService, AlfRmDialog) {
 
    return declare([AlfDialogService], {
 
-      onCreateDialogRequest: function alfresco_rm_services_AlfRmRelationshipDialogService__onCreateDialogRequest(payload)
+      onCreateDialogRequest: function alfresco_rm_services_AlfRmDialogService__onCreateDialogRequest(payload)
       {
          if (this.dialog != null && !this.dialog.keepDialog)
          {
@@ -43,7 +43,7 @@ define(["dojo/_base/declare",
             handleOverflow: (payload.handleOverflow != null) ? payload.handleOverflow: true,
             fixedWidth: (payload.fixedWidth != null) ? payload.fixedWidth: false
          };
-         this.dialog = new AlfRmRelationshipDialog(dialogConfig);
+         this.dialog = new AlfRmDialog(dialogConfig);
 
          if (payload.publishOnShow)
          {
@@ -57,7 +57,7 @@ define(["dojo/_base/declare",
          }
       },
 
-      onCreateFormDialogRequest: function alfresco_rm_services_AlfRmRelationshipDialogService__onCreateFormDialogRequest(payload)
+      onCreateFormDialogRequest: function alfresco_rm_services_AlfRmDialogService__onCreateFormDialogRequest(payload)
       {
          // Destroy any previously created dialog...
          if (this.dialog != null && !this.dialog.keepDialog)
@@ -98,7 +98,7 @@ define(["dojo/_base/declare",
                var formValue = (config.formValue != null) ? config.formValue: {};
                var formConfig = this.createFormConfig(config.widgets, formValue);
                var dialogConfig = this.createDialogConfig(config, formConfig);
-               this.dialog = new AlfRmRelationshipDialog(dialogConfig);
+               this.dialog = new AlfRmDialog(dialogConfig);
                this.dialog.show();
             }
             catch (e)
@@ -108,7 +108,7 @@ define(["dojo/_base/declare",
          }
       },
 
-      createDialogConfig: function alfresco_rm_services_AlfRmRelationshipDialogService__createDialogConfig(config, formConfig)
+      createDialogConfig: function alfresco_rm_services_AlfRmDialogService__createDialogConfig(config, formConfig)
       {
          var dialogConfig = {
             title: this.message(config.dialogTitle),

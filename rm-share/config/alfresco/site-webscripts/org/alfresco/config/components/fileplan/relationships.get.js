@@ -15,7 +15,7 @@ function main()
             "alfresco/services/CrudService",
             "alfresco/services/OptionsService",
             "alfresco/services/DocumentService",
-            "alfresco/rm/services/AlfRmRelationshipDialogService",
+            "alfresco/rm/services/AlfRmDialogService",
             "alfresco/rm/services/AlfRmActionService"
          ],
          widgets: [{
@@ -40,7 +40,7 @@ function main()
                            additionalCssClasses: "relationship-button",
                            publishTopic: "ALF_RM_ADD_RELATIONSHIP",
                            publishPayload: {
-                              asset: nodeDetails.item
+                              item: nodeDetails.item
                            }
                         }
                      }]
