@@ -46,6 +46,7 @@ define(["dojo/_base/declare",
             formSubmissionTopic: "ALF_CRUD_CREATE",
             formSubmissionPayloadMixin: {
                url: "api/node/" + item.nodeRef.replace("://", "/") + "/customreferences",
+               successMessage: this.message("label.add.relationship.success")
             },
             widgets: [{
                name: "alfresco/rm/lists/AlfRmRelationshipList",

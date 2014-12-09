@@ -71,7 +71,7 @@ define(["dojo/_base/declare",
                            name: "alfresco/buttons/AlfButton",
                            config: {
                               additionalCssClasses: "relationshipPickerParentNav",
-                              publishTopic: "ALF_DOCLIST_PARENT_NAV",
+                              publishTopic: this.itemSelectionPubSubScope + "ALF_DOCLIST_PARENT_NAV",
                               showLabel: false,
                               iconClass: "alf-folder-up-icon",
                               disableOnInvalidControls: true

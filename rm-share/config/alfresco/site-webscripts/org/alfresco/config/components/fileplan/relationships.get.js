@@ -15,6 +15,7 @@ function main()
             "alfresco/services/CrudService",
             "alfresco/services/OptionsService",
             "alfresco/services/DocumentService",
+            "alfresco/services/NotificationService",
             "alfresco/rm/services/AlfRmDialogService",
             "alfresco/rm/services/AlfRmActionService"
          ],
