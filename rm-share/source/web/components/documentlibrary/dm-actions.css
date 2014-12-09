@@ -54,5 +54,6 @@
 
 .rm-recorded-version-config select[id$=-recordedVersions]
 {
-   margin-top: 6px;
+   margin-bottom: 9px;
+   margin-top: 9px;
 }
