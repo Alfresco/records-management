@@ -324,7 +324,7 @@
             <param name="function">onActionLinkTo</param>
             <evaluator>evaluator.rm.action.link-to</evaluator>
          </action>
-         
+
          <!-- unlink from -->
          <action id="rm-unlink-from" type="javascript" label="actions.unlink-from" icon="../../../rm/components/documentlibrary/actions/rm-link-to">
             <param name="function">onActionUnlinkFrom</param>
@@ -629,6 +629,12 @@
             <evaluator>evaluator.rm.doclib.isUserRecordContributor</evaluator>
          </action>
 
+         <!-- Add relationship -->
+         <!-- FIXME: Change icon -->
+         <action id="rm-add-relationship" type="javascript" label="actions.add-relationship" icon="../../../rm/components/documentlibrary/actions/rm-create-record">
+            <param name="function">onAddRelationship</param>
+         </action>
+
       </actions>
 
       <!--
@@ -735,6 +741,7 @@
             <action index="270" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="280" id="rm-view-audit-log" />
             <action index="290" id="rm-manage-permissions" />
+            <action index="300" id="rm-add-relationship" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-record-browse">
@@ -768,6 +775,7 @@
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
             <action index="290" id="rm-manage-permissions" />
+            <action index="300" id="rm-add-relationship" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-record-details">
@@ -799,6 +807,7 @@
             <action index="210" id="rm-reject" />
             <action index="220" id="rm-request-info" />
             <action index="230" id="rm-manage-permissions" />
+            <action index="240" id="rm-add-relationship" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-browse">
@@ -828,6 +837,7 @@
             <action index="210" id="rm-reject" />
             <action index="220" id="rm-request-info" />
             <action index="230" id="rm-manage-permissions" />
+            <action index="240" id="rm-add-relationship" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-details">

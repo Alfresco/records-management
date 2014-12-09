@@ -1,6 +1,8 @@
 <#include "documentlist-v2.lib.ftl" />
 <#include "/org/alfresco/components/form/form.dependencies.inc">
 
+<@processJsonModel group="share"/>
+
 <@markup id="css" >
    <#-- CSS Dependencies -->
    <@link rel="stylesheet" type="text/css" href="${url.context}/res/components/documentlibrary/toolbar.css" group="documentlibrary"/>

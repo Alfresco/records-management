@@ -54,3 +54,7 @@ function widgets()
 }
 
 widgets();
+
+model.jsonModel = {
+   services: ["alfresco/rm/services/AlfRmActionService"]
+};
