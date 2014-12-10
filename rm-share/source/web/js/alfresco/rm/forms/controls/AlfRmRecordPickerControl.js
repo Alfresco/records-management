@@ -59,6 +59,7 @@ define(["dojo/_base/declare",
          var widgetsForControl = [{
             name: "alfresco/buttons/AlfButton",
             config: {
+               id: "RM_RELATIONSHIP_SELECT_RECORD_BUTTON",
                label: this.message("label.button.select-record"),
                publishTopic: "ALF_CREATE_DIALOG_REQUEST",
                publishPayload: {
@@ -67,10 +68,11 @@ define(["dojo/_base/declare",
                   widgetsContent: [{
                      name: "alfresco/layout/VerticalWidgets",
                      config: {
+                        id: "RM_RELATIONSHIP_SELECT_RECORD_DIALOG_CONTAINER",
                         widgets: [{
                            name: "alfresco/buttons/AlfButton",
                            config: {
-                              additionalCssClasses: "relationshipPickerParentNav",
+                              id: "RM_RELATIONSHIP_SELECT_RECORD_DIALOG_UP_BUTTON",
                               publishTopic: this.itemSelectionPubSubScope + "ALF_DOCLIST_PARENT_NAV",
                               showLabel: false,
                               iconClass: "alf-folder-up-icon",
@@ -79,12 +81,14 @@ define(["dojo/_base/declare",
                         },{
                            name: "alfresco/pickers/Picker",
                            config: {
+                              id: "RM_RELATIONSHIP_SELECT_RECORD_DIALOG_CONTENT",
                               pubSubScope: this.itemSelectionPubSubScope,
                               subPickersLabel: "",
                               widgetsForPickedItems: [{
                                  name: "alfresco/pickers/PickedItems",
                                  assignTo: "pickedItemsWidget",
                                  config: {
+                                    id: "RM_RELATIONSHIP_SELECT_RECORD_DIALOG_PICKED_ITEM_CONTENT",
                                     singleItemMode: true
                                  }
                               }],
@@ -104,6 +108,7 @@ define(["dojo/_base/declare",
                                              picker: [{
                                                 name: "alfresco/pickers/DocumentListPicker",
                                                 config: {
+                                                   id: "RM_RELATIONSHIP_SELECT_RECORD_DIALOG_DOCUMENT_LIST_CONTENT",
                                                    nodeRef: this.pickerRootNode
                                                 }
                                              }]
@@ -119,14 +124,16 @@ define(["dojo/_base/declare",
                   widgetsButtons: [{
                      name: "alfresco/buttons/AlfButton",
                      config: {
+                        id: "RM_RELATIONSHIP_SELECT_RECORD_DIALOG_OK_BUTTON",
                         label: "picker.ok.label",
                         publishTopic: "ALF_RECORD_SELECTED"
                      }
                   },{
                      name: "alfresco/buttons/AlfButton",
                      config: {
+                        id: "RM_RELATIONSHIP_SELECT_RECORD_DIALOG_CANCEL_BUTTON",
                         label: "picker.cancel.label",
-                           publishTopic: "NO_OP"
+                        publishTopic: "NO_OP"
                      }
                   }]
                },
@@ -174,6 +181,7 @@ define(["dojo/_base/declare",
          this.processWidgets([{
             name: "alfresco/rm/lists/AlfRmRelationshipList",
             config: {
+               id: "RM_RELATIONSHIP_SELECT_RECORD_FORM_INFO_SELECTED",
                showDeleteAction: true,
                site: this.site,
                currentData: {
