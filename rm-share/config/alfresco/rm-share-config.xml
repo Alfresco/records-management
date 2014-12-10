@@ -633,6 +633,7 @@
          <!-- FIXME: Change icon -->
          <action id="rm-add-relationship" type="javascript" label="actions.add-relationship" icon="../../../rm/components/documentlibrary/actions/rm-create-record">
             <param name="function">onAddRelationship</param>
+            <evaluator>evaluator.rm.action.editReferences</evaluator>
          </action>
 
       </actions>
