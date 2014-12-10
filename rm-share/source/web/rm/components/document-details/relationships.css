@@ -92,3 +92,30 @@ div[id^="alfresco_rm_forms_controls_AlfRmRecordPickerControl"].alfresco-forms-co
 {
    margin-top: 17px;
 }
+
+.relationship-property-link-name
+{
+    font-size: 131%;
+    font-weight: normal;
+    color: #333;
+    word-wrap: break-word;
+    text-decoration:none;
+}
+
+.relationship-property-link-name:hover
+{
+	text-decoration:underline;
+}
+
+.relationship-property-detail-label .label
+{
+	color: #606060;
+}
+
+.relationship-name .value
+{
+    font-size: 131%;
+    font-weight: normal;
+    color: #333;
+    word-wrap: break-word;
+}

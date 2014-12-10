@@ -58,6 +58,7 @@ define(["dojo/_base/declare",
                                     name: "alfresco/renderers/PropertyLink",
                                     config: {
                                        propertyToRender: "node.properties.cm:name",
+                                       renderedValueClass : "relationship-property-link-name",
                                        publishGlobal: true,
                                        publishTopic: "ALF_NAVIGATE_TO_PAGE",
                                        useCurrentItemAsPayload: false,
@@ -80,16 +81,19 @@ define(["dojo/_base/declare",
                                           name: "alfresco/renderers/Property",
                                           config: {
                                              label: this.message("details.record.identifier"),
+                                             renderedValueClass : "relationship-property-detail-label",
                                              propertyToRender: "node.properties.rma:identifier"
                                           }
                                        },{
                                           name: "alfresco/renderers/Separator",
                                           align: "left"
                                        },{
-                                          name: "alfresco/renderers/Version",
-                                          config: {
-                                             propertyToRender: "node.properties.cm:versionLabel"
-                                          }
+                                           name: "alfresco/renderers/Property",
+                                           config: {
+                                              label: this.message("details.version.label"),
+                                              renderedValueClass : "relationship-property-detail-label",
+                                              propertyToRender: "node.properties.rmv:versionLabel"
+                                           }
                                        }]
                                     }
                                  }]
@@ -103,25 +107,7 @@ define(["dojo/_base/declare",
                                        widgets: [{
                                           name: "alfresco/renderers/Property",
                                           config: {
-                                             label: this.message("details.modified.by"),
-                                             propertyToRender: "node.properties.cm:modifier"
-                                          }
-                                       },{
-                                          name: "alfresco/renderers/Separator",
-                                          align: "left"
-                                       },{
-                                          name: "alfresco/renderers/Property",
-                                          config: {
-                                             label: this.message("details.modified.on"),
-                                             propertyToRender: "node.properties.cm:modified"
-                                          }
-                                       },{
-                                          name: "alfresco/renderers/Separator",
-                                          align: "left"
-                                       },{
-                                          name: "alfresco/renderers/Size",
-                                          config: {
-                                             propertyToRender: "node.size"
+                                             propertyToRender: "node.properties.cm:description"
                                           }
                                        }]
                                     }
