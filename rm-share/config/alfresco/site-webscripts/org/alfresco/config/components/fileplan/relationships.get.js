@@ -9,6 +9,17 @@ function main()
 
    if (nodeDetails && node.isRmNode)
    {
+      // Toolbar label
+      var toolbarLabel = {
+         id: "RM_RELATIONSHIP_TOOLBAR_LABEL",
+         name: "alfresco/html/Label",
+         align: "left",
+         config: {
+            label: msg.get("label.toolbar.relationships")
+         }
+      };
+
+      // Toolbar add relationship button
       var actions = node.rmNode.actions,
          showAddDeleteRelationshipButton = false;
       for (var i = 0; i < actions.length; i++)
@@ -26,8 +37,8 @@ function main()
             name: "alfresco/buttons/AlfButton",
             align: "right",
             config: {
+               id: "RM_RELATIONSHIP_TOOLBAR_ADD_BUTTON",
                label: msg.get("label.button.new-relationship"),
-               additionalCssClasses: "relationship-button",
                publishTopic: "ALF_RM_ADD_RELATIONSHIP",
                publishPayload: {
                   item: nodeDetails.item
@@ -36,47 +47,35 @@ function main()
          };
       }
 
-      var toolbarLabel = {
-         name: "alfresco/html/Label",
-         align: "left",
-         config: {
-            label: msg.get("label.toolbar.relationships"),
-            additionalCssClasses: "relationshipToolbarLabel"
-         }
-      };
-
+      // Toolbar
       var toolbar = {
-         name: "alfresco/layout/VerticalWidgets",
+         id: "RM_RELATIONSHIP_TOOLBAR",
+         name: "alfresco/documentlibrary/AlfToolbar",
          config: {
-            additionalCssClasses: "relationshipToolbar",
-            widgets: [{
-               name: "alfresco/documentlibrary/AlfToolbar",
-               config: {
-                  widgets: [toolbarLabel, addRelationshipButton]
-               }
-            }]
+            widgets: [toolbarLabel, addRelationshipButton]
          }
       };
 
-      var nodeReference = node.nodeRef.replace("://", "/");
-
+      // Relationship name
       var relationshipName = {
          name: "alfresco/documentlibrary/views/layouts/Cell",
          config: {
             widgets: [{
+               id: "RM_RELATIONSHIP_TABLE_RELATIONSHIP_NAME",
                name: "alfresco/renderers/Property",
                config: {
-                  propertyToRender: "node.relationshipLabel",
-                  renderedValueClass : "relationship-name"
+                  propertyToRender: "node.relationshipLabel"
                }
             }]
          }
       };
 
+      // Record icon
       var recordIcon = {
          name: "alfresco/documentlibrary/views/layouts/Cell",
          config: {
             widgets: [{
+               id: "RM_RELATIONSHIP_TABLE_RECORD_ICON",
                name: "alfresco/rm/renderers/AlfRmFileType",
                config: {
                   size: "medium"
@@ -85,6 +84,7 @@ function main()
          }
       };
 
+      // Record info
       var recordInfo = {
          name: "alfresco/documentlibrary/views/layouts/Cell",
          config: {
@@ -94,8 +94,8 @@ function main()
                   widgets:[{
                      name: "alfresco/renderers/PropertyLink",
                      config: {
+                        id: "RM_RELATIONSHIP_TABLE_RECORD_NAME",
                         propertyToRender: "node.properties.cm:name",
-                        renderedValueClass : "relationship-property-link-name",
                         publishGlobal: true,
                         publishTopic: "ALF_NAVIGATE_TO_PAGE",
                         useCurrentItemAsPayload: false,
@@ -117,8 +117,8 @@ function main()
                         widgets: [{
                            name: "alfresco/renderers/Property",
                            config: {
+                              id: "RM_RELATIONSHIP_TABLE_RECORD_IDENTIFIER",
                               label: msg.get("details.record.identifier"),
-                              renderedValueClass : "relationship-property-detail-label",
                               propertyToRender: "node.properties.rma:identifier"
                            }
                         },{
@@ -127,8 +127,8 @@ function main()
                         },{
                             name: "alfresco/renderers/Property",
                             config: {
+                               id: "RM_RELATIONSHIP_TABLE_RECORD_VERSION",
                                label: msg.get("details.version.label"),
-                               renderedValueClass : "relationship-property-detail-label",
                                propertyToRender: "node.properties.rmv:versionLabel"
                             }
                         }]
@@ -144,6 +144,7 @@ function main()
                         widgets: [{
                            name: "alfresco/renderers/Property",
                            config: {
+                              id: "RM_RELATIONSHIP_TABLE_RECORD_DESCRIPTION",
                               propertyToRender: "node.properties.cm:description"
                            }
                         }]
@@ -154,7 +155,9 @@ function main()
          }
       };
 
-      var deleteAction = {};
+      // Delete action
+      var nodeReference = node.nodeRef.replace("://", "/"),
+         deleteAction = {};
       if (showAddDeleteRelationshipButton)
       {
          deleteAction = {
@@ -163,6 +166,7 @@ function main()
                widgets: [{
                   name: "alfresco/renderers/PublishAction",
                   config: {
+                     id: "RM_RELATIONSHIP_TABLE_DELETE_ACTION",
                      iconClass: "delete-16",
                      altText: msg.get("label.delete-relationship"),
                      publishTopic: "ALF_CRUD_DELETE",
@@ -181,9 +185,11 @@ function main()
          };
       };
 
+      // Table
       var table = {
          name: "alfresco/lists/AlfList",
          config: {
+            id: "RM_RELATIONSHIP_TABLE",
             noDataMessage: msg.get("label.list.no.data.message"),
             loadDataPublishTopic: "ALF_CRUD_GET_ALL",
             loadDataPublishPayload: {
@@ -204,8 +210,9 @@ function main()
          }
       };
 
+      // Json model
       model.jsonModel = {
-         rootNodeId: "relationships",
+         rootNodeId: "rm-relationships-table",
          services: [
             "alfresco/services/CrudService",
             "alfresco/services/OptionsService",

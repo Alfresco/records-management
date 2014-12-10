@@ -5,5 +5,5 @@
 </@>
 
 <@markup id="html">
-   <div id="relationships"></div>
+   <div id="rm-relationships-table"></div>
 </@>

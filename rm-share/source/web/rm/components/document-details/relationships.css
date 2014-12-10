@@ -1,52 +1,78 @@
-#relationships.alfresco-core-ProcessWidgets.alfresco-core-Page.allWidgetsProcessed
+#rm-relationships-table
 {
    background-color: rgba(250, 250, 250, 1);
    border-bottom: 1px solid lightgray;
-   border-left: 0 solid lightgray;
    border-top: 1px solid lightgray;
-   border-width: 1px 0;
    margin-top: 20px;
 }
 
-#relationships .left-widgets .horizontal-widget
-{
-   margin-left: -1px;
-   margin-top: 4px;
-}
-
-.alfresco-buttons-AlfButton.relationship-button
-{
-   background: url("../../../js/alfresco/forms/controls/css/images/add-icon-16.png") no-repeat scroll 4px 4px transparent;
-   background-color: transparent;
-   border-color: transparent;
-   font-size: 12px;
-   margin-right: 3px;
-   padding-left: 9px;
-}
-
-.alfresco-buttons-AlfButton.relationship-button .dijitButtonContents
-{
-   padding-left: 7px;
-   padding-right: 0;
-}
-
-.alfresco-buttons-AlfButton.relationship-button.dijitButtonFocused,
-.alfresco-buttons-AlfButton.relationship-button.dijitButtonHover
-{
-   border: 1px solid #ccc;
-}
-
-.alfresco-core-ProcessWidgets .relationshipToolbar
+#RM_RELATIONSHIP_TOOLBAR
 {
    border-bottom: 1px solid #d3d3d3;
    padding-bottom: 0.12em;
    padding-top: 0.1em;
 }
 
-.alfresco-core-ProcessWidgets .relationshipToolbarLabel
+#RM_RELATIONSHIP_TOOLBAR_LABEL
 {
    font-size: 123.1%;
    margin-left: 1em;
+}
+
+#RM_RELATIONSHIP_TOOLBAR .left-widgets .horizontal-widget
+{
+   margin-left: -2px;
+   margin-top: 3px;
+}
+
+#RM_RELATIONSHIP_TOOLBAR_ADD_BUTTON
+{
+   background: url("../../../js/alfresco/forms/controls/css/images/add-icon-16.png") no-repeat scroll 1px 1px transparent;
+   font-size: 12px;
+   margin-left: -5px;
+   margin-right: -7px;
+   padding-left: 20px;
+}
+
+span[widgetid=RM_RELATIONSHIP_TOOLBAR_ADD_BUTTON]
+{
+   background-color: transparent;
+   border-color: transparent;
+   margin-right: 3px;
+}
+
+span[widgetid=RM_RELATIONSHIP_TOOLBAR_ADD_BUTTON].dijitButtonFocused,
+span[widgetid=RM_RELATIONSHIP_TOOLBAR_ADD_BUTTON].dijitButtonHover
+{
+   border: 1px solid #ccc;
+}
+
+#RM_RELATIONSHIP_TABLE_RELATIONSHIP_NAME .value
+{
+   font-size: 131%;
+   font-weight: normal;
+   color: #333;
+   word-wrap: break-word;
+}
+
+#RM_RELATIONSHIP_TABLE_RECORD_NAME
+{
+   font-size: 131%;
+   font-weight: normal;
+   color: #333;
+   word-wrap: break-word;
+   text-decoration: none;
+}
+
+#RM_RELATIONSHIP_TABLE_RECORD_NAME:hover
+{
+   text-decoration: underline;
+}
+
+#RM_RELATIONSHIP_TABLE_RECORD_IDENTIFIER .label,
+#RM_RELATIONSHIP_TABLE_RECORD_VERSION .label
+{
+   color: #606060;
 }
 
 .alfresco-core-ProcessWidgets .relationshipPickerParentNav
@@ -91,31 +117,4 @@ div[id^="alfresco_rm_forms_controls_AlfRmRecordPickerControl"].alfresco-forms-co
 .alfresco-dialog-AlfDialog .dialog-body .alfresco-forms-Form .alfresco-forms-controls-DojoSelect
 {
    margin-top: 17px;
-}
-
-.relationship-property-link-name
-{
-    font-size: 131%;
-    font-weight: normal;
-    color: #333;
-    word-wrap: break-word;
-    text-decoration:none;
-}
-
-.relationship-property-link-name:hover
-{
-	text-decoration:underline;
-}
-
-.relationship-property-detail-label .label
-{
-	color: #606060;
-}
-
-.relationship-name .value
-{
-    font-size: 131%;
-    font-weight: normal;
-    color: #333;
-    word-wrap: break-word;
 }
