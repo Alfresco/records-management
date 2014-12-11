@@ -18,10 +18,13 @@
  */
 
 define(["dojo/_base/declare",
+        "dojo/dom-class",
         "alfresco/lists/AlfList"],
-        function(declare, AlfList) {
+        function(declare, domClass, AlfList) {
 
    return declare([AlfList], {
+
+      additionalCssClasses: "",
 
       site: null,
 
@@ -31,6 +34,8 @@ define(["dojo/_base/declare",
 
       postCreate: function alfresco_rm_lists_AlfRmRelationshipList__postCreate()
       {
+         domClass.add(this.domNode, (this.additionalCssClasses != null ? this.additionalCssClasses : ""));
+
          this.processWidgets([{
             name: "alfresco/documentlibrary/views/AlfDocumentListView",
             config: {
@@ -57,8 +62,8 @@ define(["dojo/_base/declare",
                                  widgets:[{
                                     name: "alfresco/renderers/PropertyLink",
                                     config: {
+                                       renderedValueClass: "rm-relationship-table-record-name",
                                        propertyToRender: "node.properties.cm:name",
-                                       renderedValueClass : "relationship-property-link-name",
                                        publishGlobal: true,
                                        publishTopic: "ALF_NAVIGATE_TO_PAGE",
                                        useCurrentItemAsPayload: false,
@@ -80,8 +85,8 @@ define(["dojo/_base/declare",
                                        widgets: [{
                                           name: "alfresco/renderers/Property",
                                           config: {
+                                             renderedValueClass: "rm-relationship-table-record-identifier",
                                              label: this.message("details.record.identifier"),
-                                             renderedValueClass : "relationship-property-detail-label",
                                              propertyToRender: "node.properties.rma:identifier"
                                           }
                                        },{
@@ -90,8 +95,8 @@ define(["dojo/_base/declare",
                                        },{
                                            name: "alfresco/renderers/Property",
                                            config: {
+                                              renderedValueClass: "rm-relationship-table-record-version",
                                               label: this.message("details.version.label"),
-                                              renderedValueClass : "relationship-property-detail-label",
                                               propertyToRender: "node.properties.rmv:versionLabel"
                                            }
                                        }]

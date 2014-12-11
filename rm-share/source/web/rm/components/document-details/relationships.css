@@ -6,17 +6,17 @@
    margin-top: 20px;
 }
 
+.rm-relationship-toolbar-label
+{
+   font-size: 123.1%;
+   margin-left: 1em;
+}
+
 #RM_RELATIONSHIP_TOOLBAR
 {
    border-bottom: 1px solid #d3d3d3;
    padding-bottom: 0.12em;
    padding-top: 0.1em;
-}
-
-#RM_RELATIONSHIP_TOOLBAR_LABEL
-{
-   font-size: 123.1%;
-   margin-left: 1em;
 }
 
 #RM_RELATIONSHIP_TOOLBAR .left-widgets .horizontal-widget
@@ -25,7 +25,14 @@
    margin-top: 3px;
 }
 
-#RM_RELATIONSHIP_TOOLBAR_ADD_BUTTON
+.alfresco-buttons-AlfButton.rm-relationship-toolbar-add-button
+{
+   background-color: transparent;
+   border-color: transparent;
+   margin-right: 5px;
+}
+
+.rm-relationship-toolbar-add-button span[role=button]
 {
    background: url("../../../js/alfresco/forms/controls/css/images/add-icon-16.png") no-repeat scroll 1px 1px transparent;
    font-size: 12px;
@@ -34,48 +41,29 @@
    padding-left: 20px;
 }
 
-span[widgetid=RM_RELATIONSHIP_TOOLBAR_ADD_BUTTON]
+.rm-relationship-table-relationship-name .value
 {
-   background-color: transparent;
-   border-color: transparent;
-   margin-right: 3px;
+   font-size: 110.1%;
 }
 
-span[widgetid=RM_RELATIONSHIP_TOOLBAR_ADD_BUTTON].dijitButtonFocused,
-span[widgetid=RM_RELATIONSHIP_TOOLBAR_ADD_BUTTON].dijitButtonHover
+.rm-relationship-table-record-name
 {
-   border: 1px solid #ccc;
-}
-
-#RM_RELATIONSHIP_TABLE_RELATIONSHIP_NAME .value
-{
-   font-size: 131%;
-   font-weight: normal;
-   color: #333;
-   word-wrap: break-word;
-}
-
-#RM_RELATIONSHIP_TABLE_RECORD_NAME
-{
-   font-size: 131%;
-   font-weight: normal;
-   color: #333;
-   word-wrap: break-word;
+   font-size: 123.1%;
    text-decoration: none;
 }
 
-#RM_RELATIONSHIP_TABLE_RECORD_NAME:hover
+.rm-relationship-table-record-name:hover
 {
    text-decoration: underline;
 }
 
-#RM_RELATIONSHIP_TABLE_RECORD_IDENTIFIER .label,
-#RM_RELATIONSHIP_TABLE_RECORD_VERSION .label
+.rm-relationship-table-record-identifier .label,
+.rm-relationship-table-record-version .label
 {
    color: #606060;
 }
 
-span[widgetid=RM_RELATIONSHIP_SELECT_RECORD_DIALOG_UP_BUTTON]
+.alfresco-buttons-AlfButton.rm-relationship-select-record-dialog-up-button
 {
    margin-bottom: -25px;
    margin-left: 5px;
@@ -95,20 +83,20 @@ span[widgetid=RM_RELATIONSHIP_SELECT_RECORD_DIALOG_UP_BUTTON]
    max-width: 400px;
 }
 
-#RM_RELATIONSHIP_SELECT_RECORD_DIALOG_CONTAINER
+.rm-relationship-select-record-dialog-container
 {
    margin-top: -20px;
 }
 
-#RM_RELATIONSHIP_SELECT_RECORD_FORM_CONTROL
+.rm-relationship-select-record-form-control
 {
    margin-left: 20em;
    margin-top: -40px;
    margin-bottom: 20px;
 }
 
-#RM_RELATIONSHIP_SELECT_RECORD_FORM_INFO,
-#RM_RELATIONSHIP_SELECT_RECORD_FORM_INFO_SELECTED
+.rm-relationship-select-record-form-info,
+.rm-relationship-select-record-form-info-selected
 {
    background-color: rgba(250, 250, 250, 1);
    border-color: lightgray;
@@ -116,16 +104,21 @@ span[widgetid=RM_RELATIONSHIP_SELECT_RECORD_DIALOG_UP_BUTTON]
    border-width: 1px 0;
 }
 
-#RM_RELATIONSHIP_SELECT_RECORD_FORM_SELECT
+.rm-relationship-select-record-form-info-selected
+{
+   margin-top: 20px;
+}
+
+.rm-relationship-select-record-form-select
 {
    margin-top: 17px;
 }
 
-#RM_RELATIONSHIP_SELECT_RECORD_FORM_SELECT_CONTROL.dijitTextBoxFocused,
-#RM_RELATIONSHIP_SELECT_RECORD_FORM_SELECT_CONTROL.dijitActive,
-#RM_RELATIONSHIP_SELECT_RECORD_FORM_SELECT_CONTROL.dijitFocused,
-#RM_RELATIONSHIP_SELECT_RECORD_FORM_SELECT_CONTROL.dijitSelectHover,
-span[widgetid=RM_RELATIONSHIP_SELECT_RECORD_BUTTON].dijitButton.dijitButtonFocused.dijitFocused
+.alfresco-forms-controls-BaseFormControl.rm-relationship-select-record-form-select .control table.dijitTextBoxFocused,
+.alfresco-forms-controls-BaseFormControl.rm-relationship-select-record-form-select .control table.dijitActive,
+.alfresco-forms-controls-BaseFormControl.rm-relationship-select-record-form-select .control table.dijitFocused,
+.alfresco-forms-controls-BaseFormControl.rm-relationship-select-record-form-select .control table.dijitSelectHover,
+.alfresco-buttons-AlfButton.rm-relationship-select-record-button.dijitButton.dijitButtonFocused.dijitFocused
 {
    border-color: rgb(204, 204, 204);
 }

@@ -15,6 +15,7 @@ function main()
          name: "alfresco/html/Label",
          align: "left",
          config: {
+            additionalCssClasses: "rm-relationship-toolbar-label",
             label: msg.get("label.toolbar.relationships")
          }
       };
@@ -38,6 +39,7 @@ function main()
             align: "right",
             config: {
                id: "RM_RELATIONSHIP_TOOLBAR_ADD_BUTTON",
+               additionalCssClasses: "rm-relationship-toolbar-add-button",
                label: msg.get("label.button.new-relationship"),
                publishTopic: "ALF_RM_ADD_RELATIONSHIP",
                publishPayload: {
@@ -49,6 +51,7 @@ function main()
 
       // Toolbar
       var toolbar = {
+         // "AlfToolbar" does not extend "ProcessWidgets" so it's not possible to use "additionalCssClasses" hence we use an id for the css selector
          id: "RM_RELATIONSHIP_TOOLBAR",
          name: "alfresco/documentlibrary/AlfToolbar",
          config: {
@@ -61,9 +64,9 @@ function main()
          name: "alfresco/documentlibrary/views/layouts/Cell",
          config: {
             widgets: [{
-               id: "RM_RELATIONSHIP_TABLE_RELATIONSHIP_NAME",
                name: "alfresco/renderers/Property",
                config: {
+                  renderedValueClass: "rm-relationship-table-relationship-name",
                   propertyToRender: "node.relationshipLabel"
                }
             }]
@@ -75,7 +78,6 @@ function main()
          name: "alfresco/documentlibrary/views/layouts/Cell",
          config: {
             widgets: [{
-               id: "RM_RELATIONSHIP_TABLE_RECORD_ICON",
                name: "alfresco/rm/renderers/AlfRmFileType",
                config: {
                   size: "medium"
@@ -94,7 +96,7 @@ function main()
                   widgets:[{
                      name: "alfresco/renderers/PropertyLink",
                      config: {
-                        id: "RM_RELATIONSHIP_TABLE_RECORD_NAME",
+                        renderedValueClass: "rm-relationship-table-record-name",
                         propertyToRender: "node.properties.cm:name",
                         publishGlobal: true,
                         publishTopic: "ALF_NAVIGATE_TO_PAGE",
@@ -117,7 +119,7 @@ function main()
                         widgets: [{
                            name: "alfresco/renderers/Property",
                            config: {
-                              id: "RM_RELATIONSHIP_TABLE_RECORD_IDENTIFIER",
+                              renderedValueClass: "rm-relationship-table-record-identifier",
                               label: msg.get("details.record.identifier"),
                               propertyToRender: "node.properties.rma:identifier"
                            }
@@ -127,7 +129,7 @@ function main()
                         },{
                             name: "alfresco/renderers/Property",
                             config: {
-                               id: "RM_RELATIONSHIP_TABLE_RECORD_VERSION",
+                               renderedValueClass: "rm-relationship-table-record-version",
                                label: msg.get("details.version.label"),
                                propertyToRender: "node.properties.rmv:versionLabel"
                             }
@@ -144,7 +146,6 @@ function main()
                         widgets: [{
                            name: "alfresco/renderers/Property",
                            config: {
-                              id: "RM_RELATIONSHIP_TABLE_RECORD_DESCRIPTION",
                               propertyToRender: "node.properties.cm:description"
                            }
                         }]
@@ -166,7 +167,6 @@ function main()
                widgets: [{
                   name: "alfresco/renderers/PublishAction",
                   config: {
-                     id: "RM_RELATIONSHIP_TABLE_DELETE_ACTION",
                      iconClass: "delete-16",
                      altText: msg.get("label.delete-relationship"),
                      publishTopic: "ALF_CRUD_DELETE",
@@ -189,7 +189,6 @@ function main()
       var table = {
          name: "alfresco/lists/AlfList",
          config: {
-            id: "RM_RELATIONSHIP_TABLE",
             noDataMessage: msg.get("label.list.no.data.message"),
             loadDataPublishTopic: "ALF_CRUD_GET_ALL",
             loadDataPublishPayload: {

@@ -51,7 +51,7 @@ define(["dojo/_base/declare",
             widgets: [{
                name: "alfresco/rm/lists/AlfRmRelationshipList",
                config: {
-                  id: "RM_RELATIONSHIP_SELECT_RECORD_FORM_INFO",
+                  additionalCssClasses: "rm-relationship-select-record-form-info",
                   site: site,
                   currentData: {
                      items: [item]
@@ -60,7 +60,7 @@ define(["dojo/_base/declare",
             },{
                name: "alfresco/forms/controls/DojoSelect",
                config: {
-                  id: "RM_RELATIONSHIP_SELECT_RECORD_FORM_SELECT",
+                  additionalCssClasses: "rm-relationship-select-record-form-select",
                   name: "refId",
                   optionsConfig: {
                      publishTopic: "ALF_GET_FORM_CONTROL_OPTIONS",
@@ -76,7 +76,7 @@ define(["dojo/_base/declare",
                name: "alfresco/rm/forms/controls/AlfRmRecordPickerControl",
                config:
                {
-                  id: "RM_RELATIONSHIP_SELECT_RECORD_FORM_CONTROL",
+                  additionalCssClasses: "rm-relationship-select-record-form-control",
                   name: "toNode",
                   site: site,
                   pickerRootNode: item.node.rmNode.filePlan,
