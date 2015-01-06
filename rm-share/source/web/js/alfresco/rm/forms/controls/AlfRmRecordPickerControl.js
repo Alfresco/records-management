@@ -177,22 +177,25 @@ define(["dojo/_base/declare",
 
       onRecordSelected: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__onRecordSelected(payload)
       {
-         if (dom.byId("alfresco_rm_forms_controls_AlfRmRecordPickerControl"))
+         if (this.selectedItem)
          {
-            domConstruct.destroy("alfresco_rm_forms_controls_AlfRmRecordPickerControl");
-         }
-
-         this.processWidgets([{
-            name: "alfresco/rm/lists/AlfRmRelationshipList",
-            config: {
-               additionalCssClasses: "rm-relationship-select-record-form-info-selected",
-               showDeleteAction: true,
-               site: this.site,
-               currentData: {
-                  items: [this.selectedItem]
-               }
+            if (dom.byId("alfresco_rm_forms_controls_AlfRmRecordPickerControl"))
+            {
+               domConstruct.destroy("alfresco_rm_forms_controls_AlfRmRecordPickerControl");
             }
-         }], domConstruct.create("div", {id: "alfresco_rm_forms_controls_AlfRmRecordPickerControl"}, this.containerNode.parentElement, "last"));
+
+            this.processWidgets([{
+               name: "alfresco/rm/lists/AlfRmRelationshipList",
+               config: {
+                  additionalCssClasses: "rm-relationship-select-record-form-info-selected",
+                  showDeleteAction: true,
+                  site: this.site,
+                  currentData: {
+                     items: [this.selectedItem]
+                  }
+               }
+            }], domConstruct.create("div", {id: "alfresco_rm_forms_controls_AlfRmRecordPickerControl"}, this.containerNode.parentElement, "last"));
+         }
       },
 
       onRecordRemoved: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__onRecordRemoved(payload)
