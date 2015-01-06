@@ -157,14 +157,12 @@ define(["dojo/_base/declare",
          {
             this.selectedItem = null;
             this.value = null;
-            this.onValueChangeEvent(this.name, this.lastValue, this.value);
             this.lastValue = this.value;
          }
          if (payload.pickedItems.length === 1)
          {
             this.selectedItem = payload.pickedItems[0];
             this.value = lang.clone(this.selectedItem.nodeRef);
-            this.onValueChangeEvent(this.name, this.lastValue, this.value);
             this.lastValue = this.value;
          }
       },
@@ -184,6 +182,8 @@ define(["dojo/_base/declare",
 
       onRecordSelected: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__onRecordSelected(payload)
       {
+         this.onValueChangeEvent(this.name, this.lastValue, this.value);
+
          if (this.selectedItem)
          {
             if (dom.byId("alfresco_rm_forms_controls_AlfRmRecordPickerControl"))
