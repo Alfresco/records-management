@@ -153,6 +153,13 @@ define(["dojo/_base/declare",
       },
 
       onItemsSelected: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__onItemsSelected(payload) {
+         if (payload.pickedItems.length === 0)
+         {
+            this.selectedItem = null;
+            this.value = null;
+            this.onValueChangeEvent(this.name, this.lastValue, this.value);
+            this.lastValue = this.value;
+         }
          if (payload.pickedItems.length === 1)
          {
             this.selectedItem = payload.pickedItems[0];
