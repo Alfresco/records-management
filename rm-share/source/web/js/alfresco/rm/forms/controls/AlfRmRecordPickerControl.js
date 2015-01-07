@@ -153,11 +153,16 @@ define(["dojo/_base/declare",
       },
 
       onItemsSelected: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__onItemsSelected(payload) {
+         if (payload.pickedItems.length === 0)
+         {
+            this.selectedItem = null;
+            this.value = null;
+            this.lastValue = this.value;
+         }
          if (payload.pickedItems.length === 1)
          {
             this.selectedItem = payload.pickedItems[0];
             this.value = lang.clone(this.selectedItem.nodeRef);
-            this.onValueChangeEvent(this.name, this.lastValue, this.value);
             this.lastValue = this.value;
          }
       },
@@ -177,22 +182,27 @@ define(["dojo/_base/declare",
 
       onRecordSelected: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__onRecordSelected(payload)
       {
-         if (dom.byId("alfresco_rm_forms_controls_AlfRmRecordPickerControl"))
-         {
-            domConstruct.destroy("alfresco_rm_forms_controls_AlfRmRecordPickerControl");
-         }
+         this.onValueChangeEvent(this.name, this.lastValue, this.value);
 
-         this.processWidgets([{
-            name: "alfresco/rm/lists/AlfRmRelationshipList",
-            config: {
-               additionalCssClasses: "rm-relationship-select-record-form-info-selected",
-               showDeleteAction: true,
-               site: this.site,
-               currentData: {
-                  items: [this.selectedItem]
-               }
+         if (this.selectedItem)
+         {
+            if (dom.byId("alfresco_rm_forms_controls_AlfRmRecordPickerControl"))
+            {
+               domConstruct.destroy("alfresco_rm_forms_controls_AlfRmRecordPickerControl");
             }
-         }], domConstruct.create("div", {id: "alfresco_rm_forms_controls_AlfRmRecordPickerControl"}, this.containerNode.parentElement, "last"));
+
+            this.processWidgets([{
+               name: "alfresco/rm/lists/AlfRmRelationshipList",
+               config: {
+                  additionalCssClasses: "rm-relationship-select-record-form-info-selected",
+                  showDeleteAction: true,
+                  site: this.site,
+                  currentData: {
+                     items: [this.selectedItem]
+                  }
+               }
+            }], domConstruct.create("div", {id: "alfresco_rm_forms_controls_AlfRmRecordPickerControl"}, this.containerNode.parentElement, "last"));
+         }
       },
 
       onRecordRemoved: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__onRecordRemoved(payload)
