@@ -140,12 +140,9 @@
    <bean id="evaluator.rm.doclib.recordedVersionHistoryAllRevisions" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.RecordedVersionHistoryAllRevisionsEvaluator" />
    <bean id="evaluator.rm.doclib.recordedVersionHistoryMajorRevisions" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.RecordedVersionHistoryMajorRevisionsEvaluator" />
    <bean id="evaluator.rm.doclib.hasUserWritePermissions" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.HasUserWritePermissionsEvaluator" />
-   <bean id="evaluator.rm.doclib.versionRecord" class="org.alfresco.web.evaluator.HasAspectEvaluator">
-      <property name="aspects">
-         <list>
-            <value>rmv:versionRecord</value>
-         </list>
-      </property>
+   <bean id="evaluator.rm.doclib.versionRecord" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.VersionRecordEvaluator"/>
+   <bean id="evaluator.rm.doclib.isUserRecordContributor" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.IsUserRecordContributor">
+      <property name="slingshotEvaluatorUtil" ref="slingshot.evaluator.utility" />
    </bean>
 
    <!--                             -->
@@ -191,6 +188,9 @@
    </bean>
    <bean id="evaluator.rm.action.link-to" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="linkTo" />
+   </bean>
+   <bean id="evaluator.rm.action.unlink-from" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="unlinkFrom" />
    </bean>
    <bean id="evaluator.rm.action.file-to" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="fileTo" />
@@ -298,13 +298,15 @@
    <bean id="evaluator.rm.action.moveDmRecord" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="moveDmRecord" />
    </bean>
+   <bean id="evaluator.rm.action.editReferences" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="editReferences" />
+   </bean>
+   <bean id="evaluator.rm.action.unlink-from-checkparents" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.UnlinkActionEvaluator"/>
 
    <!--                          -->
    <!-- DocLib Common Evaluators -->
    <!--                          -->
-   <bean id="evaluator.rm.doclib.action.rmSiteExists" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.DocLibRmSiteExistsEvaluator">
-      <property name="serviceRegistry" ref="webframework.service.registry" />
-   </bean>
+   <bean id="evaluator.rm.doclib.action.rmSiteExists" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.DocLibRmSiteExistsEvaluator"/>
    <bean id="evaluator.rm.doclib.action.hasVersionableAspect" class="org.alfresco.web.evaluator.HasAspectEvaluator">
       <property name="aspects">
          <list>

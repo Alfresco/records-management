@@ -81,7 +81,7 @@
             recordCategoryDetailsUrl: fnPageURL("rm-record-category-details?nodeRef=" + nodeRef),
             recordFolderDetailsUrl: fnPageURL("rm-record-folder-details?nodeRef=" + nodeRef),
             transfersZipUrl: $combine(Alfresco.constants.PROXY_URI, "api/node", filePlanUri, "transfers", nodeRef.id),
-            managePermissionsUrl: fnPageURL("rm-permissions?nodeRef=" + nodeRef + "&itemName=" + encodeURIComponent(record.displayName) + "&nodeType=" + jsNode.type + "&filePlanId=" + filePlanId)
+            managePermissionsUrl: fnPageURL("manage-permissions?nodeRef=" + nodeRef + "&itemName=" + encodeURIComponent(record.displayName) + "&nodeType=" + jsNode.type + "&filePlanId=" + filePlanId)
          });
       },
 
@@ -213,6 +213,49 @@
       onActionLinkTo: function RDLA_onActionLinkTo(assets)
       {
          this._copyMoveLinkFileTo("link", assets);
+      },
+
+      /**
+       * Unlink record from current record folder
+       *
+       * @method onActionUnlinkFrom
+       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+       */
+      onActionUnlinkFrom: function RDLA_onActionUnlinkFrom(assets)
+      {
+        var me = this;
+
+          // Show the first confirmation dialog
+          Alfresco.util.PopupManager.displayPrompt(
+          {
+             title: this.msg("message.confirm.unlink.title"),
+             text: this.msg("message.confirm.unlink.text"),
+             buttons: [
+             {
+                text: this.msg("button.ok"),
+                handler: function RDLA_onActionUnlinkFrom_confirm_ok()
+                {
+                   // Hide the confirmation dialog
+                   this.destroy();
+
+                   me._rmAction("message.unlink", assets, "unlinkFrom",
+                   {
+                      "recordFolder": me.doclistMetadata.parent.nodeRef
+                   });
+
+                },
+                isDefault: true
+             },
+             {
+                text: this.msg("button.cancel"),
+                handler: function RDLA_onActionUnlinkFrom_confirm_cancel()
+                {
+                   // Hide the confirmation dialog
+                   this.destroy();
+                }
+             }]
+          });
+
       },
 
       /**
@@ -1780,6 +1823,17 @@
                },
                isDefault: true
             }]
+         });
+      },
+
+      onAddRelationship: function RDLA_onAddRelationship(assets, owner)
+      {
+         require(["alfresco/rm/services/AlfRmActionBridge"], function(Bridge) {
+            var bridge = new Bridge();
+            bridge.alfPublish("ALF_RM_ADD_RELATIONSHIP", {
+               "item": assets,
+               "owner": owner
+            });
          });
       }
    };

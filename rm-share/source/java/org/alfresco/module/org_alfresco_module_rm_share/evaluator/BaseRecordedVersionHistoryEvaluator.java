@@ -31,7 +31,7 @@ import org.json.simple.JSONObject;
 public abstract class BaseRecordedVersionHistoryEvaluator extends BaseEvaluator
 {
     /** Recordable version policy property */
-    private String PROP_RECORDABLE_VERSION_POLICY = "rmv:recordableVersionPolicy";
+    private static final String PROP_RECORDABLE_VERSION_POLICY = "rmv:recordableVersionPolicy";
 
     /**
      * Evaluation execution implementation.

@@ -51,3 +51,9 @@
    margin: 0.5em;
    width: 34em;
 }
+
+.rm-recorded-version-config select[id$=-recordedVersions]
+{
+   margin-bottom: 9px;
+   margin-top: 9px;
+}

@@ -30,7 +30,7 @@ import org.json.simple.JSONObject;
  */
 public abstract class BaseRMEvaluator extends BaseEvaluator
 {
-    public final boolean isDocLibRecord(JSONObject jsonObject)
+    protected final boolean isDocLibRecord(JSONObject jsonObject)
     {
         boolean result = false;
 
@@ -53,7 +53,7 @@ public abstract class BaseRMEvaluator extends BaseEvaluator
      * @param jsonObject JSONObject containing a "node" object as returned from the ApplicationScriptUtils class.
      * @return JSONArray containing aspects on the node
      */
-    public final JSONObject getRMNode(JSONObject jsonObject)
+    protected final JSONObject getRMNode(JSONObject jsonObject)
     {
         JSONObject rmNode = null;
 
@@ -73,14 +73,14 @@ public abstract class BaseRMEvaluator extends BaseEvaluator
 
         return rmNode;
     }
-
+    
     /**
      * Retrieve a JSONArray of applicable indicators
      *
      * @param jsonObject JSONObject containing a "node" object as returned from the ApplicationScriptUtils class.
      * @return JSONArray containing applicable indicators the UI may choose to display
      */
-    public final JSONArray getRMIndicators(JSONObject jsonObject)
+    protected JSONArray getRMIndicators(JSONObject jsonObject)
     {
         JSONArray indicators = null;
 
@@ -98,31 +98,5 @@ public abstract class BaseRMEvaluator extends BaseEvaluator
         }
 
         return indicators;
-    }
-
-    /**
-     * Retrieve a JSONArray of applicable actions
-     *
-     * @param jsonObject JSONObject containing a "node" object as returned from the ApplicationScriptUtils class.
-     * @return JSONArray containing applicable actions the UI may choose to display
-     */
-    public final JSONArray getRMActions(JSONObject jsonObject)
-    {
-        JSONArray actions = null;
-
-        try
-        {
-            JSONObject rmNode = getRMNode(jsonObject);
-            if (rmNode != null)
-            {
-                actions = (JSONArray) rmNode.get("actions");
-            }
-        }
-        catch (Exception err)
-        {
-            throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err);
-        }
-
-        return actions;
     }
 }

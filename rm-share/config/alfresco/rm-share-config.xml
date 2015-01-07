@@ -325,6 +325,13 @@
             <evaluator>evaluator.rm.action.link-to</evaluator>
          </action>
 
+         <!-- unlink from -->
+         <action id="rm-unlink-from" type="javascript" label="actions.unlink-from" icon="../../../rm/components/documentlibrary/actions/rm-link-to">
+            <param name="function">onActionUnlinkFrom</param>
+            <evaluator>evaluator.rm.action.unlink-from</evaluator>
+            <evaluator>evaluator.rm.action.unlink-from-checkparents</evaluator>
+         </action>
+
          <!-- File to -->
          <action id="rm-file-to" type="javascript" label="actions.file-to" icon="../../../rm/components/documentlibrary/actions/rm-file-to">
             <param name="function">onActionFileTo</param>
@@ -561,7 +568,7 @@
 
          <!--  DM Actions -->
 
-         <!--  Create Record -->
+         <!--  Declare As Record -->
          <action id="rm-create-record" type="javascript" label="actions.create-record" icon="../../../rm/components/documentlibrary/actions/rm-create-record">
             <param name="function">onActionSimpleRepoAction</param>
             <param name="action">create-record</param>
@@ -579,6 +586,28 @@
             <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
             <evaluator negate="true">evaluator.rm.doclib.isRejectedRecord</evaluator>
             <evaluator>evaluator.rm.doclib.action.rmSiteExists</evaluator>
+            <evaluator>evaluator.rm.doclib.isUserRecordContributor</evaluator>
+         </action>
+         
+         <!--  Declare As Version Record -->
+         <action id="rm-declare-as-version-record" type="javascript" label="actions.declare-as-version-record" icon="../../../rm/components/documentlibrary/actions/rm-create-record">
+            <param name="function">onActionSimpleRepoAction</param>
+            <param name="action">declare-as-version-record</param>
+            <param name="success">onCreateRecordSuccess</param>
+            <param name="successMessage">message.create-record.success</param>
+            <param name="failureMessage">message.create-record.failure</param>
+            <permissions>
+               <permission allow="true">Write</permission>
+            </permissions>
+            <!--  Can only create the record if editable by current user, is not locked, is not a working copy, is not synced,
+                  is not reject as record and the rm site exists -->
+            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
+            <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
+            <evaluator negate="true">evaluator.rm.doclib.isRejectedRecord</evaluator>
+            <evaluator>evaluator.rm.doclib.action.rmSiteExists</evaluator>
+            <evaluator>evaluator.rm.doclib.isUserRecordContributor</evaluator>
          </action>
 
          <!--  Hide Record -->
@@ -618,6 +647,14 @@
             <evaluator negate="true">evaluator.rm.doclib.isRejectedRecord</evaluator>
             <evaluator>evaluator.rm.doclib.action.hasVersionableAspect</evaluator>
             <evaluator>evaluator.rm.doclib.action.rmSiteExists</evaluator>
+            <evaluator>evaluator.rm.doclib.isUserRecordContributor</evaluator>
+         </action>
+
+         <!-- Add relationship -->
+         <!-- FIXME: Change icon -->
+         <action id="rm-add-relationship" type="javascript" label="actions.add-relationship" icon="../../../rm/components/documentlibrary/actions/rm-create-record">
+            <param name="function">onAddRelationship</param>
+            <evaluator>evaluator.rm.action.editReferences</evaluator>
          </action>
 
       </actions>
@@ -670,6 +707,7 @@
             <action index="230" id="rm-copy-recordfolder-to" />
             <action index="240" id="rm-move-recordfolder-to" />
             <action index="250" id="rm-link-to" />
+            <action index="255" id="rm-unlink-from" />
             <action index="260" id="rm-manage-permissions" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
@@ -720,9 +758,12 @@
             <action index="240" id="rm-move-record-to" />
             <action index="245" id="rm-move-unfiledrecord-to" />
             <action index="250" id="rm-link-to" />
+            <action index="255" id="rm-unlink-from" />
             <action index="260" id="rm-file-to" />
             <action index="270" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="280" id="rm-view-audit-log" />
+            <action index="290" id="rm-manage-permissions" />
+            <action index="300" id="rm-add-relationship" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-record-browse">
@@ -755,6 +796,8 @@
             <action index="260" id="rm-file-to" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
+            <action index="290" id="rm-manage-permissions" />
+            <action index="300" id="rm-add-relationship" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-record-details">
@@ -779,11 +822,14 @@
             <action index="160" id="rm-move-record-to" />
             <action index="160" id="rm-move-unfiledrecord-to" />
             <action index="170" id="rm-link-to" />
+            <action index="175" id="rm-unlink-from" />
             <action index="180" id="rm-file-to" />
             <action index="190" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="200" id="rm-view-audit-log" />
             <action index="210" id="rm-reject" />
             <action index="220" id="rm-request-info" />
+            <action index="230" id="rm-manage-permissions" />
+            <action index="240" id="rm-add-relationship" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-browse">
@@ -812,6 +858,8 @@
             <action index="200" id="rm-view-audit-log" />
             <action index="210" id="rm-reject" />
             <action index="220" id="rm-request-info" />
+            <action index="230" id="rm-manage-permissions" />
+            <action index="240" id="rm-add-relationship" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-details">
@@ -899,13 +947,13 @@
          <!--  Extensions to the standard DM UI actions -->
          <actionGroup id="document-browse">
             <action index="400" id="rm-create-record" />
-            <!--  action exclued from 2.3.b release because it is incomplete
-            <action index="410" id="dm-recorded-version-config" /> -->
+            <action index="410" id="rm-declare-as-version-record" />
+            <action index="420" id="dm-recorded-version-config" />
          </actionGroup>
          <actionGroup id="document-details">
             <action index="400" id="rm-create-record" />
-            <!--  action exclued from 2.3.b release because it is incomplete
-            <action index="410" id="dm-recorded-version-config" /> -->
+            <action index="410" id="rm-declare-as-version-record" />
+            <action index="420" id="dm-recorded-version-config" />
          </actionGroup>
 
       </actionGroups>

@@ -613,6 +613,7 @@
                {
                   var folderName = response.config.dataObj["prop_cm_name"];
                   this._displayMessageByType(folderType, "failure", folderName);
+                  createFolder.widgets.cancelButton.set("disabled", false);
                },
                scope: this
             }
@@ -938,7 +939,7 @@
             itemName = encodeURIComponent(parent.properties["cm:name"]),
             nodeType = parent.type,
             filePlanId = new Alfresco.util.NodeRef(parent.rmNode.filePlan).id,
-            page = "rm-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType + "&filePlanId=" + filePlanId;
+            page = "manage-permissions?nodeRef=" + nodeRef + "&itemName=" + itemName + "&nodeType=" + nodeType + "&filePlanId=" + filePlanId;
 
          window.location.href = $siteURL(page);
       }
