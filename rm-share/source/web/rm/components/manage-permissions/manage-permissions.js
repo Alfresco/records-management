@@ -54,7 +54,7 @@
        *
        * @method onReady
        */
-      onReady: function Permissions_onReady()
+      onReady: function RM_Permissions_onReady()
       {
          // YUI Buttons
          this.widgets.inherited = Alfresco.util.createYUIButton(this, "inheritedButton", this.onInheritedButton);
@@ -111,13 +111,69 @@
       /**
        * Overrides the existing function to change the URL for the post request
        *
+       * Called when the authority finder template has been loaded.
+       * Creates a dialog and inserts the authority finder for choosing groups and users to add.
+       *
+       * @method onAuthorityFinderLoaded
+       * @param response The server response
+       */
+      onAuthorityFinderLoaded: function RM_Permissions_onAuthorityFinderLoaded(response)
+      {
+         // Inject the component from the XHR request into it's placeholder DIV element
+         var finderDiv = Dom.get(this.id + "-authorityFinder");
+         if (finderDiv)
+         {
+            finderDiv.innerHTML = response.serverResponse.responseText;
+
+            this.widgets.authorityFinder = finderDiv;
+
+            // Find the Authority Finder by container ID
+            this.modules.authorityFinder = Alfresco.util.ComponentManager.get(this.id + "-authorityFinder");
+
+            // Set the correct options for our use
+            this.modules.authorityFinder.setOptions(
+            {
+               dataWebScript: Alfresco.constants.URL_SERVICECONTEXT + "components/people-finder/authority-query",
+               viewMode: Alfresco.AuthorityFinder.VIEW_MODE_COMPACT,
+               siteId: this.options.site,
+               singleSelectMode: true,
+               minSearchTermLength: 3,
+               authorityType: (this.options.showGroups) ? Alfresco.AuthorityFinder.AUTHORITY_TYPE_ALL : Alfresco.AuthorityFinder.AUTHORITY_TYPE_USERS
+            });
+
+            // Add User/Group button
+            this.widgets.addUserGroup = Alfresco.util.createYUIButton(this, "addUserGroupButton", this.onAddUserGroupButton,
+            {
+               label: (this.options.showGroups) ? this.msg("button.addUserGroup") : this.msg("button.addUser")
+            });
+
+            var btnRegion = Dom.getRegion(this.id + "-addUserGroupButton");
+            Dom.setStyle(this.widgets.authorityFinder, "top", (btnRegion.bottom + 4) + "px");
+         }
+
+         // Retrieve current permissions and settable roles for this node
+         Alfresco.util.Ajax.jsonGet(
+         {
+            url: Alfresco.constants.PROXY_URI + 'slingshot/doclib/rm/permissions/' + Alfresco.util.NodeRef(this.options.nodeRef).uri,
+            successCallback:
+            {
+               fn: this.onPermissionsLoaded,
+               scope: this
+            },
+            failureMessage: this.msg("message.permissionsGetFail")
+         });
+      },
+
+      /**
+       * Overrides the existing function to change the URL for the post request
+       *
        * Called when user clicks on the save button.
        *
        * @method onSaveButtonClick
        * @param type
        * @param args
        */
-      onSaveButton: function Permissions_onSaveButton(type, args)
+      onSaveButton: function RM_Permissions_onSaveButton(type, args)
       {
          this.widgets.saveButton.set("disabled", true);
 
@@ -203,7 +259,7 @@
        * @param e DomEvent
        * @param args Event parameters (depends on event type)
        */
-      onAuthoritySelected: function Permissions_onAuthoritySelected(e, args)
+      onAuthoritySelected: function RM_Permissions_onAuthoritySelected(e, args)
       {
          // Construct permission descriptor and add permission row.
          this.permissions.current.push(
