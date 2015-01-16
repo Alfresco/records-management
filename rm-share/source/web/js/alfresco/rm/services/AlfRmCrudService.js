@@ -23,6 +23,9 @@ define(["dojo/_base/declare",
 
    return declare([CrudService], {
 
+      nonAmdDependencies: ["/js/yui-common.js",
+                           "/js/alfresco.js"],
+
       onCreate: function alfresco_rm_services_AlfRmCrudService__onCreate(payload) {
          var url = this.getUrlFromPayload(payload);
          this.serviceXhr({url: url,
@@ -103,9 +106,28 @@ define(["dojo/_base/declare",
 
       failureCallback: function alfresco_rm_services_AlfRmCrudService__failureCallback(response, originalRequestConfig)
       {
+         /*
+          * FIXME: onDisplayPrompt function in NotificationService displays a message instead of a prompt.
+          * After fixing the issue in the core the code below can be used
+          */
+         /*
          this.alfPublish("ALF_DISPLAY_PROMPT", {
             message: JSON.parse(response.response.data).message
          });
+         */
+
+         var message = JSON.parse(response.response.data).message;
+         if (message != null)
+         {
+            var config = {
+               text: message
+            };
+            Alfresco.util.PopupManager.displayPrompt(config);
+         }
+         else
+         {
+            this.alfLog("warn", "It was not possible to prompt the message because no 'message' attribute was provided", response);
+         }
       }
    });
 });
