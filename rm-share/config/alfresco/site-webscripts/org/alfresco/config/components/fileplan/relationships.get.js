@@ -4,11 +4,12 @@ function main()
 {
    AlfrescoUtil.param('nodeRef');
    AlfrescoUtil.param('site', null);
-   var nodeDetails = AlfrescoUtil.getNodeDetails(model.nodeRef, model.site),
-      node = nodeDetails.item.node;
+   var nodeDetails = AlfrescoUtil.getNodeDetails(model.nodeRef, model.site);
 
-   if (nodeDetails && node.isRmNode)
+   if (nodeDetails && nodeDetails.item && nodeDetails.item.node && nodeDetails.item.node.isRmNode)
    {
+      var node = nodeDetails.item.node;
+
       // Toolbar label
       var toolbarLabel = {
          id: "RM_RELATIONSHIP_TOOLBAR_LABEL",
