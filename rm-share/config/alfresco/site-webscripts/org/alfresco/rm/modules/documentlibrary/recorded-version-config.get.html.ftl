@@ -4,9 +4,9 @@
    <div class="bd">
       <form id="${el}-form" action="" method="POST">
          <div class="yui-gd">
-            <div class="yui-u first" style="padding-right:0.4em;padding-top:0.6em"><label for="${el}-recordedVersions">${msg("label.recorded-versions")}:</label></div>
+            <div class="yui-u first rm-recorded-versions"><label for="${el}-recordedVersions">${msg("label.recorded-versions")}:</label></div>
             <div class="yui-u">
-               <select id="${el}-recordedVersions" name="recordedVersion">
+               <select id="${el}-recordedVersions" name="recordedVersion" class="rm-recorded-versions-select">
                   <#list recordableVersions as recordableVersion>
                      <option value="${recordableVersion.policy?js_string}" <#if recordableVersion.selected == "true">selected</#if>>${msg("option." + recordableVersion.policy?js_string?lower_case + ".displayValue")}</option>
                   </#list>
