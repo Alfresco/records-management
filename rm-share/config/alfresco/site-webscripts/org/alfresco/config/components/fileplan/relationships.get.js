@@ -214,12 +214,12 @@ function main()
       model.jsonModel = {
          rootNodeId: "rm-relationships-table",
          services: [
-            "alfresco/services/OptionsService",
             "alfresco/services/DocumentService",
             "alfresco/services/NotificationService",
             "alfresco/rm/services/AlfRmCrudService",
             "alfresco/rm/services/AlfRmDialogService",
-            "alfresco/rm/services/AlfRmActionService"
+            "alfresco/rm/services/AlfRmActionService",
+            "alfresco/rm/services/AlfRmOptionsService"
          ],
          widgets: [toolbar, table]
       };
