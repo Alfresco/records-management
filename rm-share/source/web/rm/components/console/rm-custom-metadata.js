@@ -615,7 +615,7 @@
 
             // Form definition
             var form = new Alfresco.forms.Form(parent.id + "-edit-form");
-            form.setSubmitElements(parent.widgets.editpropertyButton);
+            form.setSubmitElements(parent.widgets.savepropertyButton);
             form.setShowSubmitStateDynamically(true);
 
             // Form field validation
