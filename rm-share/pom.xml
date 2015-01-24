@@ -11,7 +11,8 @@
    <artifactId>alfresco-rm-share</artifactId>
    <name>Alfresco RM Share</name>
    <properties>
-      <webapp.id>share</webapp.id>
+      <webapp.id.name>share</webapp.id.name>
+      <webapp.id>${webapp.id.name}</webapp.id>
    </properties>
    <build>
       <sourceDirectory>source/java</sourceDirectory>
