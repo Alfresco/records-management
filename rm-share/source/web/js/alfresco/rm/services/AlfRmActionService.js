@@ -21,7 +21,7 @@ define(["dojo/_base/declare",
         "dojo/_base/lang",
         "service/constants/Default",
         "alfresco/core/Core",
-        "alfresco/rm/services/AlfRmActionBridge"],
+        "rm/services/AlfRmActionBridge"],
         function(declare, lang, AlfConstants, AlfCore, AlfRmActionBridge) {
 
    return declare(AlfCore, {
@@ -49,7 +49,7 @@ define(["dojo/_base/declare",
                successMessage: this.message("label.add.relationship.success")
             },
             widgets: [{
-               name: "alfresco/rm/lists/AlfRmRelationshipList",
+               name: "rm/lists/AlfRmRelationshipList",
                config: {
                   additionalCssClasses: "rm-relationship-select-record-form-info",
                   site: site,
@@ -73,7 +73,7 @@ define(["dojo/_base/declare",
                   }
                }
             },{
-               name: "alfresco/rm/forms/controls/AlfRmRecordPickerControl",
+               name: "rm/forms/controls/AlfRmRecordPickerControl",
                config:
                {
                   additionalCssClasses: "rm-relationship-select-record-form-control",

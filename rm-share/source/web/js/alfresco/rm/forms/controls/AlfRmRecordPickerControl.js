@@ -192,7 +192,7 @@ define(["dojo/_base/declare",
             }
 
             this.processWidgets([{
-               name: "alfresco/rm/lists/AlfRmRelationshipList",
+               name: "rm/lists/AlfRmRelationshipList",
                config: {
                   additionalCssClasses: "rm-relationship-select-record-form-info-selected",
                   showDeleteAction: true,

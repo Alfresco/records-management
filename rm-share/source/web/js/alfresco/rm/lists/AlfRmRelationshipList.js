@@ -47,7 +47,7 @@ define(["dojo/_base/declare",
                         name: "alfresco/documentlibrary/views/layouts/Cell",
                         config: {
                            widgets: [{
-                              name: "alfresco/rm/renderers/AlfRmFileType",
+                              name: "rm/renderers/AlfRmFileType",
                               config: {
                                  size: "medium"
                               }

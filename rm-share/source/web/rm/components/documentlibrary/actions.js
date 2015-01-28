@@ -1828,7 +1828,7 @@
 
       onAddRelationship: function RDLA_onAddRelationship(assets, owner)
       {
-         require(["alfresco/rm/services/AlfRmActionBridge"], function(Bridge) {
+         require(["rm/services/AlfRmActionBridge"], function(Bridge) {
             var bridge = new Bridge();
             bridge.alfPublish("ALF_RM_ADD_RELATIONSHIP", {
                "item": assets,

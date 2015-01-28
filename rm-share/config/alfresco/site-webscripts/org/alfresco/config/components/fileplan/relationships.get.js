@@ -79,7 +79,7 @@ function main()
          name: "alfresco/documentlibrary/views/layouts/Cell",
          config: {
             widgets: [{
-               name: "alfresco/rm/renderers/AlfRmFileType",
+               name: "rm/renderers/AlfRmFileType",
                config: {
                   size: "medium"
                }
@@ -216,10 +216,10 @@ function main()
          services: [
             "alfresco/services/DocumentService",
             "alfresco/services/NotificationService",
-            "alfresco/rm/services/AlfRmCrudService",
-            "alfresco/rm/services/AlfRmDialogService",
-            "alfresco/rm/services/AlfRmActionService",
-            "alfresco/rm/services/AlfRmOptionsService"
+            "rm/services/AlfRmCrudService",
+            "rm/services/AlfRmDialogService",
+            "rm/services/AlfRmActionService",
+            "rm/services/AlfRmOptionsService"
          ],
          widgets: [toolbar, table]
       };
