@@ -18,8 +18,10 @@
  */
 
 define(["dojo/_base/declare",
+        "dojo/_base/lang",
+        "alfresco/dialogs/AlfDialog",
         "alfresco/services/CrudService"],
-        function(declare, CrudService) {
+        function(declare, lang, AlfDialog, CrudService) {
 
    return declare([CrudService], {
 
