@@ -20,7 +20,7 @@
 define(["dojo/_base/declare",
         "dojo/_base/lang",
         "alfresco/dialogs/AlfDialogService",
-        "alfresco/rm/dialogs/AlfRmDialog"],
+        "rm/dialogs/AlfRmDialog"],
         function(declare, lang, AlfDialogService, AlfRmDialog) {
 
    return declare([AlfDialogService], {

@@ -11,6 +11,17 @@
 
    </config>
 
+   <!-- Define Aikau extension package, as used by the Dojo AMD loader-->
+   <config evaluator="string-compare" condition="WebFramework">
+      <web-framework>
+         <dojo-pages>
+            <packages>
+               <package name="rm" location = "js/alfresco/rm" />
+            </packages>
+         </dojo-pages>
+      </web-framework>
+   </config>
+
    <!-- Document Library config section -->
    <config evaluator="string-compare" condition="DocumentLibrary">
 
