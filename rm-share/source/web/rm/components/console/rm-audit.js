@@ -902,7 +902,7 @@
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.timestamp') + ':</th>'+
-               '<td>' + data.timestamp + '</td>'+
+               '<td>' + Alfresco.util.formatDate(Alfresco.util.fromISO8601(data.timestamp)) + '</td>'+
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.role') + ':</th>'+
