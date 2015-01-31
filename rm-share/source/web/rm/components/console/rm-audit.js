@@ -932,7 +932,7 @@
                '</tr>'+
                '<tr>'+
                   '<th>' + this.msg('label.location') + ':</th>'+
-                  '<td>' + data.path + '</td>'+
+                  '<td>' + data.path.replace('/documentLibrary','') + '</td>'+
                '</tr>'+
             '</table>';
          }
