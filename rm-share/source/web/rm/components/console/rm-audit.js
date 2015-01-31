@@ -325,7 +325,14 @@
                   {
                      if (oRecordData.nodeName != "")
                      {
-                        elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a href="' + Alfresco.constants.URL_PAGECONTEXT + 'site/' + me.options.siteId + '/document-details?nodeRef=' + oRecordData.nodeRef + '">' + oRecordData.nodeName + '</a>&nbsp;&nbsp;&nbsp;';
+                        if (oRecordData.nodeName != "documentLibrary")
+                        {
+                           elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a href="' + Alfresco.constants.URL_PAGECONTEXT + 'site/' + me.options.siteId + '/document-details?nodeRef=' + oRecordData.nodeRef + '">' + oRecordData.nodeName + '</a>&nbsp;&nbsp;&nbsp;';
+                        }
+                        else
+                        {
+                           elLiner.innerHTML = oRecordData.event + '&nbsp;&nbsp;&nbsp;';
+                        }
                      }
                      else
                      {
