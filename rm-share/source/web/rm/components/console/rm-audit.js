@@ -311,20 +311,34 @@
             YAHOO.widget.DataTable.Formatter.eventCellFormatter = function eventCellFormatter(elLiner, oRecord, oColumn, oData)
             {
                var oRecordData = oRecord._oData;
-               if (oData!='Delete Object')
+               if (oRecordData.createPerson === true)
                {
-            	   if (oRecordData.nodeName != "")
-            	   {
-                      elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a href="' + Alfresco.constants.URL_PAGECONTEXT + 'site/' + me.options.siteId + '/document-details?nodeRef=' + oRecordData.nodeRef + '">' + oRecordData.nodeName + '</a>&nbsp;&nbsp;&nbsp;';
-            	   }
-            	   else
-            	   {
-            		   elLiner.innerHTML = oRecordData.event + '&nbsp;&nbsp;&nbsp;';
-            	   }
+                  elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a class="theme-color-1 site-link" href="' + Alfresco.util.profileURL(oRecordData.nodeName) + '">' + $html(oRecordData.nodeName) + '</a>';
                }
                else
                {
-                  elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + oRecordData.path.replace('/documentLibrary','') + '&nbsp;&nbsp;&nbsp;';
+                  if (oRecordData.deleteObject === true)
+                  {
+                     elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + oRecordData.path.replace('/documentLibrary','') + '&nbsp;&nbsp;&nbsp;';
+                  }
+                  else
+                  {
+                     if (oRecordData.nodeName != "")
+                     {
+                        if (oRecordData.nodeName != "documentLibrary")
+                        {
+                           elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a href="' + Alfresco.constants.URL_PAGECONTEXT + 'site/' + me.options.siteId + '/document-details?nodeRef=' + oRecordData.nodeRef + '">' + oRecordData.nodeName + '</a>&nbsp;&nbsp;&nbsp;';
+                        }
+                        else
+                        {
+                           elLiner.innerHTML = oRecordData.event + '&nbsp;&nbsp;&nbsp;';
+                        }
+                     }
+                     else
+                     {
+                        elLiner.innerHTML = oRecordData.event + '&nbsp;&nbsp;&nbsp;';
+                     }
+                  }
                }
 
                //add details button
@@ -902,7 +916,7 @@
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.timestamp') + ':</th>'+
-               '<td>' + data.timestamp + '</td>'+
+               '<td>' + Alfresco.util.formatDate(Alfresco.util.fromISO8601(data.timestamp)) + '</td>'+
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.role') + ':</th>'+
@@ -925,7 +939,7 @@
                '</tr>'+
                '<tr>'+
                   '<th>' + this.msg('label.location') + ':</th>'+
-                  '<td>' + data.path + '</td>'+
+                  '<td>' + data.path.replace('/documentLibrary','') + '</td>'+
                '</tr>'+
             '</table>';
          }
