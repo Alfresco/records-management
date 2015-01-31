@@ -317,20 +317,20 @@
                }
                else
                {
-                  if (oData!='Delete Object')
+                  if (oRecordData.deleteObject === true)
+                  {
+                     elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + oRecordData.path.replace('/documentLibrary','') + '&nbsp;&nbsp;&nbsp;';
+                  }
+                  else
                   {
                      if (oRecordData.nodeName != "")
                      {
-                         elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a href="' + Alfresco.constants.URL_PAGECONTEXT + 'site/' + me.options.siteId + '/document-details?nodeRef=' + oRecordData.nodeRef + '">' + oRecordData.nodeName + '</a>&nbsp;&nbsp;&nbsp;';
+                        elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a href="' + Alfresco.constants.URL_PAGECONTEXT + 'site/' + me.options.siteId + '/document-details?nodeRef=' + oRecordData.nodeRef + '">' + oRecordData.nodeName + '</a>&nbsp;&nbsp;&nbsp;';
                      }
                      else
                      {
                         elLiner.innerHTML = oRecordData.event + '&nbsp;&nbsp;&nbsp;';
                      }
-                  }
-                  else
-                  {
-                     elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + oRecordData.path.replace('/documentLibrary','') + '&nbsp;&nbsp;&nbsp;';
                   }
                }
 
