@@ -80,18 +80,15 @@
             <evaluator>evaluator.rm.indicator.dispositionSchedule</evaluator>
          </indicator>
          <!-- Recorded Version History All Revisions Indicator -->
-         <!-- FIXME: Change the indicator icon -->
-         <indicator id="rm-recorded-version-history-all-revisions" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-transfer-16.png">
+         <indicator id="rm-recorded-version-history-all-revisions" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-all-revisions-16.png">
             <evaluator>evaluator.rm.doclib.recordedVersionHistoryAllRevisions</evaluator>
          </indicator>
-         <!-- FIXME: Change the indicator icon -->
          <!-- Recorded Version History Major Revisions Indicator -->
-         <indicator id="rm-recorded-version-history-major-revisions" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-transferred-16.png">
+         <indicator id="rm-recorded-version-history-major-revisions" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-major-revisions-16.png">
             <evaluator>evaluator.rm.doclib.recordedVersionHistoryMajorRevisions</evaluator>
          </indicator>
-         <!-- FIXME: Change the indicator icon -->
-         <!-- Recorded Version History Major Revisions Indicator -->
-         <indicator id="rm-version-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-vital-record-16.png">
+         <!-- Version Record Indicator -->
+         <indicator id="rm-version-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-version-record-16.png">
             <evaluator>evaluator.rm.doclib.versionRecord</evaluator>
          </indicator>
       </indicators>
@@ -326,7 +323,7 @@
          </action>
 
          <!-- unlink from -->
-         <action id="rm-unlink-from" type="javascript" label="actions.unlink-from" icon="../../../rm/components/documentlibrary/actions/rm-link-to">
+         <action id="rm-unlink-from" type="javascript" label="actions.unlink-from" icon="../../../rm/components/documentlibrary/actions/rm-unlink-from">
             <param name="function">onActionUnlinkFrom</param>
             <evaluator>evaluator.rm.action.unlink-from</evaluator>
             <evaluator>evaluator.rm.action.unlink-from-checkparents</evaluator>
@@ -588,9 +585,9 @@
             <evaluator>evaluator.rm.doclib.action.rmSiteExists</evaluator>
             <evaluator>evaluator.rm.doclib.isUserRecordContributor</evaluator>
          </action>
-         
+
          <!--  Declare As Version Record -->
-         <action id="rm-declare-as-version-record" type="javascript" label="actions.declare-as-version-record" icon="../../../rm/components/documentlibrary/actions/rm-create-record">
+         <action id="rm-declare-as-version-record" type="javascript" label="actions.declare-as-version-record" icon="../../../rm/components/documentlibrary/actions/rm-declare-version-record">
             <param name="function">onActionSimpleRepoAction</param>
             <param name="action">declare-as-version-record</param>
             <param name="success">onCreateRecordSuccess</param>
@@ -631,10 +628,9 @@
          </action>
 
          <!-- Recorded version configuration -->
-         <!-- FIXME: Change icon -->
          <!--  Can only configure recorded version if editable by current user, is not locked, is not a working copy, is not synced,
                is not reject as record, rm site exists and has the versionable aspect -->
-         <action id="dm-recorded-version-config" type="javascript" label="actions.recorded-version-config" icon="../../../rm/components/documentlibrary/actions/rm-add-record-metadata">
+         <action id="dm-recorded-version-config" type="javascript" label="actions.recorded-version-config" icon="../../../rm/components/documentlibrary/actions/rm-recorded-version-config">
             <param name="function">onRecordedVersionConfig</param>
             <param name="action">recorded-version-config</param>
             <permissions>
@@ -651,8 +647,7 @@
          </action>
 
          <!-- Add relationship -->
-         <!-- FIXME: Change icon -->
-         <action id="rm-add-relationship" type="javascript" label="actions.add-relationship" icon="../../../rm/components/documentlibrary/actions/rm-create-record">
+         <action id="rm-add-relationship" type="javascript" label="actions.add-relationship" icon="../../../rm/components/documentlibrary/actions/rm-add-relationship">
             <param name="function">onAddRelationship</param>
             <evaluator>evaluator.rm.action.editReferences</evaluator>
          </action>
