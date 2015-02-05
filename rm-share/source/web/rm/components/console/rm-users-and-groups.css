@@ -83,12 +83,14 @@
    display: block;
    padding: 0.333em;
    text-decoration: none;
+   color: inherit;
 }
 
 #roleGroups a,
 #roleUsers a
 {
    text-decoration: none;
+   color: inherit;
 }
 
 #roles ul,
