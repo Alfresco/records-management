@@ -188,7 +188,7 @@
        * @method onActionCopyUnfiledRecordFolderTo
        * @param assets {object} Object literal representing one or more record folder(s) to be actioned
        */
-      onActionCopyUnfiledRecordFolderTo: function RDLA_onActionCopyTo(assets)
+      onActionCopyUnfiledRecordFolderTo: function RDLA_onActionCopyUnfiledRecordFolderTo(assets)
       {
          this.onActionCopyUnfiledTo(assets);
       },
@@ -275,9 +275,31 @@
        * @method onActionMoveToUnfiled
        * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
        */
-      onActionMoveToUnfiled: function RDLA_onActionMoveTo(assets)
+      onActionMoveToUnfiled: function RDLA_onActionMoveToUnfiled(assets)
       {
          this._copyMoveLinkFileToUnfiled("move", assets);
+      },
+
+      /**
+       * Move unfiled document
+       *
+       * @method onActionMoveUnfiledRecordTo
+       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+       */
+      onActionMoveUnfiledRecordTo: function RDLA_onActionMoveUnfiledRecordTo(assets)
+      {
+         this.onActionMoveToUnfiled(assets);
+      },
+
+      /**
+       * Move unfiled record folder
+       *
+       * @method onActionMoveUnfiledRecordTo
+       * @param assets {object} Object literal representing one or more file(s) or folder(s) to be actioned
+       */
+      onActionMoveUnfiledRecordFolderTo: function RDLA_onActionMoveUnfiledRecordFolderTo(assets)
+      {
+         this.onActionMoveToUnfiled(assets);
       },
 
       /**
@@ -1751,6 +1773,28 @@
          this.modules.addToHold.setOptions({
             itemNodeRef: itemNodeRef
          }).show();
+      },
+
+      /**
+       * Add a record folder to the hold(s)
+       *
+       * @method onActionAddToHoldRecordFolder
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       */
+      onActionAddToHoldRecordFolder: function RDLA_onActionAddToHoldRecordFolder(assets)
+      {
+         this.onActionAddToHold(assets);
+      },
+
+      /**
+       * Add a record to the hold(s)
+       *
+       * @method onActionAddToHoldRecord
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       */
+      onActionAddToHoldRecord: function RDLA_onActionAddToHoldRecord(assets)
+      {
+         this.onActionAddToHold(assets);
       },
 
       /**
