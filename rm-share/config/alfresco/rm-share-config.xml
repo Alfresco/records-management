@@ -593,6 +593,7 @@
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
             <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
             <evaluator negate="true">evaluator.rm.doclib.isRejectedRecord</evaluator>
+            <evaluator>evaluator.doclib.action.siteBased</evaluator>
             <evaluator>evaluator.rm.doclib.action.rmSiteExists</evaluator>
             <evaluator>evaluator.rm.doclib.isUserRecordContributor</evaluator>
          </action>
@@ -615,6 +616,7 @@
             <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
             <evaluator negate="true">evaluator.rm.doclib.isRejectedRecord</evaluator>
             <evaluator>evaluator.rm.doclib.action.hasVersionableAspect</evaluator>
+            <evaluator>evaluator.doclib.action.siteBased</evaluator>
             <evaluator>evaluator.rm.doclib.action.rmSiteExists</evaluator>
             <evaluator>evaluator.rm.doclib.isUserRecordContributor</evaluator>
          </action>
@@ -654,6 +656,7 @@
             <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
             <evaluator negate="true">evaluator.rm.doclib.isRejectedRecord</evaluator>
             <evaluator>evaluator.rm.doclib.action.hasVersionableAspect</evaluator>
+            <evaluator>evaluator.doclib.action.siteBased</evaluator>
             <evaluator>evaluator.rm.doclib.action.rmSiteExists</evaluator>
             <evaluator>evaluator.rm.doclib.isUserRecordContributor</evaluator>
          </action>
