@@ -377,6 +377,8 @@
       {
          var nodeType = YAHOO.util.History.getQueryStringParameter("nodeType");
          if (nodeType === "rma:unfiledRecordContainer" ||
+               nodeType === "rma:holdContainer" ||
+               nodeType === "rma:transferContainer" ||
                nodeType === "rma:filePlan" ||
                (nodeType === "rma:recordCategory") && (new Alfresco.util.NodeRef(this.nodeData.location.parent.nodeRef)).id === YAHOO.util.History.getQueryStringParameter("filePlanId"))
          {

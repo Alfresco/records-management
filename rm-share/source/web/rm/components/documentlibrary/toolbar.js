@@ -170,6 +170,13 @@
             value: "managePermissions"
          });
 
+         // Manage permissions button for transfers toolbar: user needs "file" permissions and the capability to modify permissions
+         this.widgets.transferPermissionsButton = $createYUIButton(this, "transferPermissions-button", this.onManagePermissions,
+         {
+            disabled: true,
+            value: "managePermissions"
+         });
+
          // Selected Items menu button
          this.widgets.selectedItems = $createYUIButton(this, "selectedItems-button", this.onSelectedItems,
          {
