@@ -915,6 +915,7 @@
             <action index="120" id="rm-transfer-complete" />
             <action index="125" id="rm-accession-complete" />
             <action index="130" id="rm-view-audit-log" />
+            <action index="140" id="rm-manage-permissions" />
          </actionGroup>
          <actionGroup id="rm-transfer-container-details">
             <action index="100" id="rm-download-zip" />
@@ -922,6 +923,7 @@
             <action index="120" id="rm-transfer-complete" />
             <action index="125" id="rm-accession-complete" />
             <action index="130" id="rm-view-audit-log" />
+            <action index="140" id="rm-manage-permissions" />
          </actionGroup>
 
          <actionGroup id="rm-hold-browse">
