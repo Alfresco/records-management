@@ -112,8 +112,7 @@
                      ${msg("label.from")}
                      <select name="periodProperty" class="period-action">
                      </select>
-                     <span class="or-relation">${msg("label.or")}</span>
-                     <span class="and-relation">${msg("label.and")}</span>
+                     <span>${msg("label.or")}</span>
                   </div>
                   <div class="section">
                      <input type="checkbox" class="events-enabled" checked="true" />
