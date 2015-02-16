@@ -673,7 +673,7 @@
          var filterParam = Alfresco.rm.getParamValueFromUrl("filter");
          if (filterParam)
          {
-            var filter = decodeURIComponent(filterParam).split("|");
+            var filter = filterParam.split("|");
             if (filter[0] !== 'path' && filter[1])
             {
                destination = decodeURIComponent(filter[1]);
