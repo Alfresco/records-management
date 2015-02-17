@@ -91,7 +91,7 @@
          this.widgets.newUnfiledRecordsFolder = $createYUIButton(this, "newUnfiledRecordsFolder-button", this.onNewUnfiledRecordsFolder,
          {
             disabled: true,
-            value: "newFolder"
+            value: "newUnfiledRecordsFolder"
          });
 
          // New Hold button: user needs "newHold" access
