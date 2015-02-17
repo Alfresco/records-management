@@ -57,6 +57,9 @@
                         <goals>
                            <goal>amp</goal>
                         </goals>
+                        <configuration>
+                           <includeDependencies>true</includeDependencies>
+                        </configuration>
                      </execution>
                   </executions>
                </plugin>
@@ -131,13 +134,27 @@
          <artifactId>share</artifactId>
          <version>${alfresco.base.version}</version>
          <classifier>classes</classifier>
+         <scope>provided</scope>
       </dependency>
       <dependency>
          <groupId>org.alfresco</groupId>
          <artifactId>${webapp.id}</artifactId>
          <version>${alfresco.base.version}</version>
          <type>war</type>
+         <scope>provided</scope>
       </dependency>
+      <!--Uncomment this to upgrade Aikau dependency: (requires ${alfresco.base.version} >= 5.0.1 )
+      <dependency>
+         <groupId>org.alfresco</groupId>
+         <artifactId>aikau</artifactId>
+         <version>1.0.5-SNAPSHOT</version>
+         <exclusions>
+            <exclusion>
+               <groupId>*</groupId>
+               <artifactId>*</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>  -->
       <!--  Test Dependencies -->
       <dependency>
          <groupId>junit</groupId>
