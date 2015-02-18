@@ -273,6 +273,11 @@
          {
             // build a safe role id - replace spaces & remove anything that isn't a number, letter or -
             roleId = roleName.replace(/\s/g, "_").replace(/[^0-9a-zA-Z\-_]/g, "");
+            if (YAHOO.lang.trim(roleId).length == 0)
+            {
+               // If the roleId is empty then generate a uuid and use it
+               roleId = dojox.uuid.generateRandomUuid();
+            }
          }
 
          // collect up an array of capability id strings
