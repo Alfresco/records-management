@@ -63,7 +63,7 @@ define(["dojo/_base/declare",
                label: this.message("label.button.select-record"),
                publishTopic: "ALF_CREATE_DIALOG_REQUEST",
                publishPayload: {
-                  dialogTitle: "picker.select.title",
+                  dialogTitle: "picker.select.records.title",
                   handleOverflow: false,
                   widgetsContent: [{
                      name: "alfresco/layout/VerticalWidgets",
@@ -85,6 +85,7 @@ define(["dojo/_base/declare",
                            config: {
                               id: "RM_RELATIONSHIP_SELECT_RECORD_DIALOG_CONTENT",
                               pubSubScope: this.itemSelectionPubSubScope,
+                              pickedItemsLabel: "picker.pickedRecords.label",
                               subPickersLabel: "",
                               widgetsForPickedItems: [{
                                  name: "alfresco/pickers/PickedItems",
