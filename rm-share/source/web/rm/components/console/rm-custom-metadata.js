@@ -449,6 +449,10 @@
             // Form field validation
             form.addValidation(parent.id + "-create-label", Alfresco.forms.validation.mandatory, null, "keyup");
             form.addValidation(parent.id + "-create-label", Alfresco.forms.validation.nodeName, null, "keyup");
+            form.addValidation(parent.id + "-create-label", Alfresco.forms.validation.regexMatch,
+                    {
+                       pattern: /^[a-zA-Z0-9-_.]+$/
+                    }, "keyup");
 
             // Initialise the form
             form.init();
@@ -621,7 +625,11 @@
             // Form field validation
             form.addValidation(parent.id + "-edit-label", Alfresco.forms.validation.mandatory, null, "keyup");
             form.addValidation(parent.id + "-edit-label", Alfresco.forms.validation.nodeName, null, "keyup");
-
+            form.addValidation(parent.id + "-edit-label", Alfresco.forms.validation.regexMatch,
+                    {
+                       pattern: /^[a-zA-Z0-9-_.]+$/
+                    }, "keyup");
+            
             // Initialise the form
             form.init();
             this.editForm = form;
