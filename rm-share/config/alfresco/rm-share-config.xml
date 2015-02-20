@@ -608,8 +608,8 @@
             <param name="function">onActionSimpleRepoAction</param>
             <param name="action">declare-as-version-record</param>
             <param name="success">onCreateRecordSuccess</param>
-            <param name="successMessage">message.create-record.success</param>
-            <param name="failureMessage">message.create-record.failure</param>
+            <param name="successMessage">message.declare-version-as-record.success</param>
+            <param name="failureMessage">message.declare-version-as-record.failure</param>
             <permissions>
                <permission allow="true">Write</permission>
             </permissions>
