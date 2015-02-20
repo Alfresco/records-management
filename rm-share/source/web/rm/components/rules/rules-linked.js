@@ -46,6 +46,24 @@
    YAHOO.extend(Alfresco.rm.module.RulesLinked, Alfresco.RulesLinked,
    {
       /**
+       * Called when user clicks on the change link from button.
+       * Displays a rule folder dialog.
+       *
+       * @method onChangeLinkButtonClick
+       * @param type
+       * @param args
+       */
+      onChangeLinkButtonClick: function RulesLinked_onChangeLinkButtonClick(type, args)
+      {
+         if (!this.modules.rulesPicker)
+         {
+            this.modules.rulesPicker = new Alfresco.rm.module.RulesPicker(this.id + "-rulesPicker");
+         }
+
+         Alfresco.rm.module.RulesLinked.superclass.onChangeLinkButtonClick.call(this, type, args);
+      },
+
+      /**
        * Displays the corresponding details page for the current folder
        *
        * @method _navigateForward
