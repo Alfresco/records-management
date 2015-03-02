@@ -18,15 +18,10 @@
  */
 package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 
-import java.util.Collections;
-
 import org.alfresco.error.AlfrescoRuntimeException;
 import org.alfresco.util.ParameterCheck;
 import org.alfresco.web.evaluator.BaseEvaluator;
-import org.alfresco.web.extensibility.SlingshotEvaluatorUtil;
 import org.json.simple.JSONObject;
-import org.springframework.extensions.surf.RequestContext;
-import org.springframework.extensions.surf.support.ThreadLocalRequestContext;
 
 /**
  * Checks if the user is a record contributor
@@ -38,53 +33,37 @@ public class IsUserRecordContributor extends BaseEvaluator
 {
     /** json names */
     private static final String IS_RECORD_CONTRIBUTOR_GROUP_ENABLED = "isRecordContributorGroupEnabled";
-    private static final String RECORD_CONTRIBUTOR_GROUP_NAME = "recordContributorGroupName";    
-    
-    /** slingshot evaluator util */
-    protected SlingshotEvaluatorUtil util = null;
+    private static final String RM_SHOW_ACTIONS = "rmShowActions";
 
-    /**
-     * @param slingshotExtensibilityUtil    {@link SlingshotEvaluatorUtil}
-     */
-    public void setSlingshotEvaluatorUtil(SlingshotEvaluatorUtil slingshotExtensibilityUtil)
-    {
-        util = slingshotExtensibilityUtil;
-    }
-    
     /**
      * @see org.alfresco.web.evaluator.BaseEvaluator#evaluate(org.json.simple.JSONObject)
      */
     @Override
     public boolean evaluate(JSONObject jsonObject)
     {
-        boolean result = true;
         ParameterCheck.mandatory("jsonObject", jsonObject);
+
+        boolean result = true;
         try
         {
             JSONObject node = (JSONObject) jsonObject.get("node");
             if (node != null)
             {
-                boolean isEnabled = (Boolean)node.get(IS_RECORD_CONTRIBUTOR_GROUP_ENABLED);
-                if (isEnabled)
+                if ((Boolean) node.get(IS_RECORD_CONTRIBUTOR_GROUP_ENABLED))
                 {
-                    // get the name of the record contributor group
-                    String groupName = (String)node.get(RECORD_CONTRIBUTOR_GROUP_NAME);
-                    
-                    // check the record contributor group
-                    final RequestContext rc = ThreadLocalRequestContext.getRequestContext();
-                    result = util.isMemberOfGroups(rc, Collections.singletonList("GROUP_" + groupName), true);
+                    result = (Boolean) node.get(RM_SHOW_ACTIONS);
                 }
-                else
-                {
-                    // if group check is not enabled then allow 
-                    result = true;
-                }
+            }
+            else
+            {
+                result = false;
             }
         }
         catch (Exception err)
         {
             throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err.getMessage());
-        };
+        }
+
         return result;
     }
 }
