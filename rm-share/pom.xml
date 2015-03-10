@@ -10,7 +10,11 @@
    <modelVersion>4.0.0</modelVersion>
    <artifactId>alfresco-rm-share</artifactId>
    <name>Alfresco RM Share</name>
+   <packaging>amp</packaging>
    <properties>
+      <alfresco.client.war>${alfresco.share.artifactId}</alfresco.client.war>
+      <alfresco.client.contextPath>/share</alfresco.client.contextPath>
+      <maven.tomcat.port>8081</maven.tomcat.port>
       <webapp.id.name>share</webapp.id.name>
       <webapp.id>${webapp.id.name}</webapp.id>
    </properties>
@@ -49,20 +53,6 @@
          <id>fullBuild</id>
          <build>
             <plugins>
-               <plugin>
-                  <groupId>org.alfresco.maven.plugin</groupId>
-                  <artifactId>alfresco-maven-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <goals>
-                           <goal>amp</goal>
-                        </goals>
-                        <configuration>
-                           <includeDependencies>true</includeDependencies>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
                <plugin>
                   <artifactId>maven-antrun-plugin</artifactId>
                   <executions>
@@ -122,6 +112,12 @@
          </build>
       </profile>
       <profile>
+         <id>appWarLocationSetting</id>
+         <properties>
+            <app.war.location>${project.build.directory}/${project.build.finalName}-war</app.war.location>
+         </properties>
+      </profile>
+      <profile>
          <id>enterprise</id>
          <properties>
             <webapp.id>share-enterprise</webapp.id>
@@ -159,13 +155,11 @@
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
-         <version>4.11</version>
          <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.mockito</groupId>
          <artifactId>mockito-all</artifactId>
-         <version>1.9.5</version>
          <scope>test</scope>
       </dependency>
    </dependencies>
