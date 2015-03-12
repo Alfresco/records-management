@@ -10,7 +10,7 @@
    <modelVersion>4.0.0</modelVersion>
    <artifactId>alfresco-rm-share</artifactId>
    <name>Alfresco RM Share</name>
-   <packaging>amp</packaging>
+   <!-- <packaging>amp</packaging> -->
    <properties>
       <alfresco.client.war>${alfresco.share.artifactId}</alfresco.client.war>
       <alfresco.client.contextPath>/share</alfresco.client.contextPath>
