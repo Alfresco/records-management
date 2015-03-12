@@ -3,7 +3,7 @@
 function main()
 {
    // test user capabilities - can they access "Users and Groups"?
-   model.hasAccess = hasCapability(remote.connect("alfresco"), "CreateModifyDestroyUsersAndGroups");
+   model.hasAccess = hasCapability(remote.connect("alfresco"), "ManageAccessControls");
 }
 
 main();
