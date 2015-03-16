@@ -17,6 +17,7 @@
       <maven.tomcat.port>8081</maven.tomcat.port>
       <webapp.id.name>share</webapp.id.name>
       <webapp.id>${webapp.id.name}</webapp.id>
+      <alfresco.aikau.version>1.0.9-SNAPSHOT</alfresco.aikau.version>
    </properties>
    <build>
       <sourceDirectory>source/java</sourceDirectory>
@@ -29,7 +30,7 @@
          </resource>
       </resources>
       <plugins>
-      	<plugin>
+         <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
             <executions>
@@ -156,7 +157,7 @@
       <dependency>
          <groupId>org.alfresco</groupId>
          <artifactId>aikau</artifactId>
-         <version>1.0.5-SNAPSHOT</version>
+         <version>${alfresco.aikau.version}</version>
          <exclusions>
             <exclusion>
                <groupId>*</groupId>
