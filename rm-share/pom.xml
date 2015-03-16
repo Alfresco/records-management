@@ -84,6 +84,20 @@
                      </execution>
                   </executions>
                </plugin>
+            </plugins>
+         </build>
+      </profile>
+      <profile>
+         <id>minify-js</id>
+         <activation>
+            <activeByDefault>true</activeByDefault>
+            <property>
+               <name>minifyjs</name>
+               <value>true</value>
+            </property>
+         </activation>
+         <build>
+            <plugins>
                <plugin>
                   <groupId>net.alchim31.maven</groupId>
                   <artifactId>yuicompressor-maven-plugin</artifactId>
