@@ -90,7 +90,6 @@
       <profile>
          <id>minify-js</id>
          <activation>
-            <activeByDefault>true</activeByDefault>
             <property>
                <name>minifyjs</name>
                <value>true</value>
