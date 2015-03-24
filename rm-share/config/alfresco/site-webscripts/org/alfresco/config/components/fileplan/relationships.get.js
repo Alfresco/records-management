@@ -42,7 +42,7 @@ function main()
                id: "RM_RELATIONSHIP_TOOLBAR_ADD_BUTTON",
                additionalCssClasses: "rm-relationship-toolbar-add-button",
                label: msg.get("label.button.new-relationship"),
-               publishTopic: "ALF_RM_ADD_RELATIONSHIP",
+               publishTopic: "RM_RELATIONSHIP_ADD",
                publishPayload: {
                   item: nodeDetails.item
                }
@@ -79,9 +79,10 @@ function main()
          name: "alfresco/documentlibrary/views/layouts/Cell",
          config: {
             widgets: [{
-               name: "rm/renderers/AlfRmFileType",
+               name: "alfresco/renderers/FileType",
                config: {
-                  size: "medium"
+                  size: "medium",
+                  imageUrl: "rm/images/filetypes/record-{size}.png"
                }
             }]
          }
@@ -158,8 +159,7 @@ function main()
       };
 
       // Delete action
-      var nodeReference = node.nodeRef.replace("://", "/"),
-         deleteAction = {};
+      var deleteAction = {};
       if (showAddDeleteRelationshipButton)
       {
          deleteAction = {
@@ -170,16 +170,14 @@ function main()
                   config: {
                      iconClass: "delete-16",
                      altText: msg.get("label.delete-relationship"),
-                     publishTopic: "ALF_CRUD_DELETE",
-                     publishPayloadType: "PROCESS",
+                     publishTopic: "RM_RELATIONSHIP_DELETE",
                      publishPayload: {
-                        requiresConfirmation: true,
-                        url: "api/node/" + nodeReference + "/targetnode/{node.nodeRef}/uniqueName/{node.relationshipUniqueName}",
-                        confirmationTitle: msg.get("label.confirmation.title.delete-relationship"),
-                        confirmationPrompt: msg.get("label.confirmationPrompt.delete-relationship"),
-                        successMessage: msg.get("label.delete-relationship.successMessage")
+                        nodeRef: node.nodeRef,
+                        // This gets replaced with the current Item when the payload is processed.
+                        node: "{node}"
                      },
-                     publishPayloadModifiers: ["processCurrentItemTokens", "convertNodeRefToUrl"]
+                     publishPayloadType: "PROCESS",
+                     publishPayloadModifiers: ["processCurrentItemTokens"]
                   }
                }]
             }
@@ -191,9 +189,9 @@ function main()
          name: "alfresco/lists/AlfList",
          config: {
             noDataMessage: msg.get("label.list.no.data.message"),
-            loadDataPublishTopic: "ALF_CRUD_GET_ALL",
+            loadDataPublishTopic: "RM_RELATIONSHIP_GET_ALL",
             loadDataPublishPayload: {
-               url: "api/node/" + nodeReference + "/relationships"
+               nodeRef: node.nodeRef
             },
             itemsProperty: "data.items",
             widgets: [{
@@ -210,20 +208,36 @@ function main()
          }
       };
 
+      // TODO: WIP:
+      //var table = {
+      //   name: "rm/lists/AlfRmRelationshipList",
+      //   config: {
+      //      noDataMessage: msg.get("label.list.no.data.message"),
+      //      loadDataPublishTopic: "RM_RELATIONSHIP_GET_ALL",
+      //      loadDataPublishPayload: {
+      //         nodeRef: node.nodeRef
+      //      },
+      //      itemsProperty: "data.items",
+      //      showDeleteAction: true,
+      //      // Load data immediately:
+      //      waitForPageWidgets: true,
+      //      currentItem: node
+      //   }
+      //};
+
       // Json model
       model.jsonModel = {
          rootNodeId: "rm-relationships-table",
          services: [
             "alfresco/services/DocumentService",
             "alfresco/services/NotificationService",
-            "rm/services/AlfRmCrudService",
+            "rm/services/RelationshipService",
             "rm/services/AlfRmDialogService",
-            "rm/services/AlfRmActionService",
             "rm/services/AlfRmOptionsService"
          ],
          widgets: [toolbar, table]
       };
    }
-}
+};
 
 main();

@@ -47,9 +47,10 @@ define(["dojo/_base/declare",
                         name: "alfresco/documentlibrary/views/layouts/Cell",
                         config: {
                            widgets: [{
-                              name: "rm/renderers/AlfRmFileType",
+                              name: "alfresco/renderers/FileType",
                               config: {
-                                 size: "medium"
+                                 size: "medium",
+                                 imageUrl: "rm/images/filetypes/record-{size}.png"
                               }
                            }]
                         }
@@ -127,8 +128,14 @@ define(["dojo/_base/declare",
                               name: "alfresco/renderers/PublishAction",
                               config: {
                                  iconClass: "delete-16",
-                                 publishTopic: "ALF_RECORD_REMOVED",
-                                 publishGlobal: true,
+                                 publishTopic: "RM_RELATIONSHIP_DELETE",
+                                 publishPayload: {
+                                    nodeRef: this.currentItem.nodeRef,
+                                    // This gets replaced with the current Item when the payload is processed.
+                                    node: "{node}"
+                                 },
+                                 publishPayloadType: "PROCESS",
+                                 publishPayloadModifiers: ["processCurrentItemTokens"],
                                  visibilityConfig: {
                                     initialValue: this.showDeleteAction
                                  }
