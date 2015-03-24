@@ -16,7 +16,7 @@
       <web-framework>
          <dojo-pages>
             <packages>
-               <package name="rm" location = "js/alfresco/rm" />
+               <package name="rm" location="js/alfresco/rm" />
             </packages>
          </dojo-pages>
       </web-framework>

@@ -17,6 +17,18 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * The Record Picker for the relationship list.
+ *
+ * @module rm/forms/controls/AlfRmRecordPickerControl
+ * @extends alfresco/forms/controls/BaseFormControl
+ * @mixes alfresco/core/CoreWidgetProcessing
+ *
+ * @todo Refactor this to make it a more generic record picker (remove relationship specific stuff)
+ * @todo JSDoc
+ *
+ */
+
 define(["dojo/_base/declare",
         "dojo/_base/lang",
         "dojo/dom",
@@ -27,19 +39,54 @@ define(["dojo/_base/declare",
 
    return declare([CoreWidgetProcessing, BaseFormControl], {
 
+      /**
+       *
+       * NodeRef for root picker node
+       *
+       * @instance
+       * @type {string}
+       * @default null
+       */
       pickerRootNode: null,
 
+      /**
+       * Node selected
+       *
+       * @instance
+       * @type {nodeObject}
+       * @default null
+       */
       selectedItem: null,
 
+      /**
+       * The name of the site to pass to the view
+       *
+       * @instance
+       * @type {string}
+       * @default null
+       */
       site: null,
 
+      /**
+       *
+       * @instance
+       * @type {object[]}
+       * @default [{i18nFile: "./i18n/AlfRmRecordPickerControl.properties"}]
+       */
       i18nRequirements: [{i18nFile: "./i18n/AlfRmRecordPickerControl.properties"}],
 
-      constructor: function alfresco_forms_controls_BaseFormControl__constructor(args) {
+      /**
+       *
+       * @param args
+       *
+       * @listens ALF_RECORD_SELECTED
+       * @listens ALF_RECORD_REMOVED
+       */
+      constructor: function alfresco_forms_controls_AlfRmRecordPickerControl__constructor(args) {
          declare.safeMixin(this, args);
 
-         this.alfSubscribe("ALF_RECORD_SELECTED", lang.hitch(this, "onRecordSelected"), true);
-         this.alfSubscribe("ALF_RECORD_REMOVED", lang.hitch(this, "onRecordRemoved"), true);
+         this.alfSubscribe("ALF_RECORD_SELECTED", lang.hitch(this, this.onRecordSelected), true);
+         this.alfSubscribe("ALF_RECORD_REMOVED", lang.hitch(this, this.onRecordRemoved), true);
       },
 
       getWidgetConfig: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__getWidgetConfig() {
@@ -50,6 +97,16 @@ define(["dojo/_base/declare",
          };
       },
 
+      /**
+       *
+       * @param config
+       * @param domNode
+       * @returns {*}
+       *
+       * @fires ALF_ADD_PICKER
+       * @fires ALF_RECORD_SELECTED
+       * @fires
+       */
       createFormControl: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__createFormControl(config, domNode) {
 
          this.itemSelectionPubSubScope = this.generateUuid();
@@ -149,6 +206,10 @@ define(["dojo/_base/declare",
          return this.processWidgets(widgetsForControl, this._controlNode);
       },
 
+      /**
+       *
+       * @listens ALF_ITEMS_SELECTED
+       */
       setupChangeEvents: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__setupChangeEvents() {
          this.alfSubscribe(this.itemSelectionPubSubScope + "ALF_ITEMS_SELECTED", lang.hitch(this, this.onItemsSelected), true);
       },
