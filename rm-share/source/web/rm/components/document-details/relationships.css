@@ -34,7 +34,7 @@
 
 .rm-relationship-toolbar-add-button span[role=button]
 {
-   background: url("../../../js/alfresco/forms/controls/css/images/add-icon-16.png") no-repeat scroll 1px 1px transparent;
+   background: url("../../../../components/images/add-icon-16.png") no-repeat scroll 1px 1px transparent;
    font-size: 12px;
    margin-left: -5px;
    margin-right: -7px;
