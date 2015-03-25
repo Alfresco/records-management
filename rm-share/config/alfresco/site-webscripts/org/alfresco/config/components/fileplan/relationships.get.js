@@ -208,7 +208,7 @@ function main()
          }
       };
 
-      // TODO: WIP:
+      // TODO: WIP: See RM-2086
       //var table = {
       //   name: "rm/lists/AlfRmRelationshipList",
       //   config: {
