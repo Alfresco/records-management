@@ -198,7 +198,8 @@ define(["dojo/_base/declare",
                      site: site,
                      currentData: {
                         items: [item]
-                     }
+                     },
+                     currentItem: item
                   }
                },{
                   name: "alfresco/forms/controls/Select",
