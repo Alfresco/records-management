@@ -24,27 +24,83 @@ define(["dojo/_base/declare",
 
    return declare([AlfList], {
 
+      /**
+       * Extra css classes to add to the node.
+       *
+       * @instane
+       * @type {string}
+       * @default ""
+       */
       additionalCssClasses: "",
 
+      /**
+       * placeholder var for the site name
+       *
+       * @instance
+       * @type {string}
+       * @default null
+       */
       site: null,
 
+      /**
+       * placeholder var for the currentData
+       *
+       * @instance
+       * @type {object[]}
+       * @default null
+       */
       currentData: null,
 
+      /**
+       * Should the actions column be shown?
+       *
+       * @instance
+       * @type {boolean}
+       * @default false
+       */
       showDeleteAction: false,
 
+      /**
+       * Should the Relationship column be shown?
+       *
+       * @instance
+       * @type {boolean}
+       * @default false
+       */
+      showRelationship: false,
+
+      /**
+       * Instantiate the view widgets.
+       *
+       * @instance
+       */
       postCreate: function alfresco_rm_lists_AlfRmRelationshipList__postCreate()
       {
          domClass.add(this.domNode, (this.additionalCssClasses != null ? this.additionalCssClasses : ""));
 
          this.processWidgets([{
-            name: "alfresco/documentlibrary/views/AlfDocumentListView",
+            name: "alfresco/lists/views/AlfListView",
             config: {
                currentData: this.currentData,
                widgets: [{
-                  name: "alfresco/documentlibrary/views/layouts/Row",
+                  name: "alfresco/lists/views/layouts/Row",
                   config: {
                      widgets: [{
                         name: "alfresco/documentlibrary/views/layouts/Cell",
+                        config: {
+                           widgets: [{
+                              name: "alfresco/renderers/Property",
+                              config: {
+                                 renderedValueClass: "rm-relationship-table-relationship-name",
+                                 propertyToRender: "node.relationshipLabel"
+                              }
+                           }]
+                        },
+                        visibilityConfig: {
+                           initialValue: this.showRelationship
+                        }
+                     }, {
+                        name: "alfresco/lists/views/layouts/Cell",
                         config: {
                            widgets: [{
                               name: "alfresco/renderers/FileType",
@@ -54,13 +110,13 @@ define(["dojo/_base/declare",
                               }
                            }]
                         }
-                     },{
-                        name: "alfresco/documentlibrary/views/layouts/Cell",
+                     }, {
+                        name: "alfresco/lists/views/layouts/Cell",
                         config: {
                            widgets: [{
-                              name: "alfresco/documentlibrary/views/layouts/Row",
+                              name: "alfresco/lists/views/layouts/Row",
                               config: {
-                                 widgets:[{
+                                 widgets: [{
                                     name: "alfresco/renderers/PropertyLink",
                                     config: {
                                        renderedValueClass: "rm-relationship-table-record-name",
@@ -77,11 +133,11 @@ define(["dojo/_base/declare",
                                     }
                                  }]
                               }
-                           },{
-                              name: "alfresco/documentlibrary/views/layouts/Row",
+                           }, {
+                              name: "alfresco/lists/views/layouts/Row",
                               config: {
-                                 widgets:[{
-                                    name: "alfresco/documentlibrary/views/layouts/Cell",
+                                 widgets: [{
+                                    name: "alfresco/lists/views/layouts/Cell",
                                     config: {
                                        widgets: [{
                                           name: "alfresco/renderers/Property",
@@ -90,25 +146,25 @@ define(["dojo/_base/declare",
                                              label: this.message("details.record.identifier"),
                                              propertyToRender: "node.properties.rma:identifier"
                                           }
-                                       },{
+                                       }, {
                                           name: "alfresco/renderers/Separator",
                                           align: "left"
-                                       },{
-                                           name: "alfresco/renderers/Property",
-                                           config: {
-                                              renderedValueClass: "rm-relationship-table-record-version",
-                                              label: this.message("details.version.label"),
-                                              propertyToRender: "node.properties.rmv:versionLabel"
-                                           }
+                                       }, {
+                                          name: "alfresco/renderers/Property",
+                                          config: {
+                                             renderedValueClass: "rm-relationship-table-record-version",
+                                             label: this.message("details.version.label"),
+                                             propertyToRender: "node.properties.rmv:versionLabel"
+                                          }
                                        }]
                                     }
                                  }]
                               }
-                           },{
-                              name: "alfresco/documentlibrary/views/layouts/Row",
+                           }, {
+                              name: "alfresco/lists/views/layouts/Row",
                               config: {
-                                 widgets:[{
-                                    name: "alfresco/documentlibrary/views/layouts/Cell",
+                                 widgets: [{
+                                    name: "alfresco/lists/views/layouts/Cell",
                                     config: {
                                        widgets: [{
                                           name: "alfresco/renderers/Property",
@@ -121,8 +177,8 @@ define(["dojo/_base/declare",
                               }
                            }]
                         }
-                     },{
-                        name: "alfresco/documentlibrary/views/layouts/Cell",
+                     }, {
+                        name: "alfresco/lists/views/layouts/Cell",
                         config: {
                            widgets: [{
                               name: "alfresco/renderers/PublishAction",
@@ -146,7 +202,8 @@ define(["dojo/_base/declare",
                   }
                }]
             }
-         }], this.domNode);
+         // Render this to the viewNode, otherwise it becomes a child of the listnode and gets hidden by [hideChildren]{@link module:alfresco/lists/views/AlfListView#hideChildren}
+         }], this.viewNode);
       }
    });
 });
