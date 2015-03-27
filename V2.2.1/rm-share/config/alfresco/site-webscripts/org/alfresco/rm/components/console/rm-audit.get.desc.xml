@@ -1,0 +1,6 @@
+<webscript>
+  <shortname>Admin Console Audit</shortname>
+  <description>Administration Console - Audit</description>
+  <url>/rm/components/console/audit</url>
+  <family>rm-console</family>
+</webscript>

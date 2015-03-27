@@ -1,0 +1,62 @@
+.rm-options
+{
+   width: 80em;
+}
+
+.rm-options .metadata
+{
+   border: 1px solid #AAAAAA;
+   background-color: #FFFFFF;
+   line-height: 1.5em;
+   padding: 6px 6px 4px 8px;
+   height: 12.5em;
+   min-width: 20em;
+   overflow-y: auto;
+   overflow-x: hidden;
+}
+
+.rm-options .metadata-header
+{
+   border-bottom: 1px solid lightgrey;
+   font-weight: bold;
+   margin-bottom: 4px;
+}
+
+.rm-options label
+{
+   padding-left: 4px;
+   vertical-align: 5%;
+}
+
+.rm-options .sortlabel
+{
+   vertical-align: 15%;
+}
+
+.rm-options .separator
+{
+   background: transparent url(images/collapsed.png) no-repeat 4px 8px;
+   cursor: pointer;
+}
+
+.rm-options .options
+{
+   margin-left: 20px;
+   margin-right: 8px;
+   display: block;
+}
+
+.rm-options .options-hidden
+{
+   display: none;
+}
+
+.rm-options .components
+{
+   line-height: 1.75em;
+}
+
+.rm-options .indented
+{
+   margin-left: 20px;
+}

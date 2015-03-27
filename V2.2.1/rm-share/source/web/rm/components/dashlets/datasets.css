@@ -1,0 +1,19 @@
+.dataset-body
+{
+   padding: 10px;
+}
+
+.dataset-label
+{
+   float: left;
+   margin-top: 0.5em;
+   padding-left: 0.5em;
+}
+
+.dataset-not-rm-admin
+{
+   clear: both;
+   line-height: 1.4;
+   padding: 7px 9px;
+   color: red;
+}

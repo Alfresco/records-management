@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>rmaudit</shortname>
+  <description>Audit component</description>
+  <url>/rm/components/audit/audit</url>
+</webscript>

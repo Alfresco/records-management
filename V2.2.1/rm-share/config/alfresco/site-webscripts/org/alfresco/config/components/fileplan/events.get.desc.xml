@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Disposition Schedule Events</shortname>
+  <description>Component for viewing and completing events in the disposition schedule</description>
+  <url>/config/components/fileplan/events</url>
+</webscript>

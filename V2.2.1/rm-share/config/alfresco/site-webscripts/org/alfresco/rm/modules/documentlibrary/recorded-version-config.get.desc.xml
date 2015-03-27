@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Recorded version config dialog</shortname>
+  <description>Recorded version config module for the Document Library</description>
+  <url>/rm/modules/documentlibrary/recorded-version-config</url>
+</webscript>

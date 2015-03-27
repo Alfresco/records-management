@@ -1,0 +1,129 @@
+.rm-search
+{
+   color: #000;
+   visibility: hidden;
+}
+
+.rm-search .hidden
+{
+   display: none;
+}
+
+.rm-search .title
+{
+   margin: 16px 10px 4px;
+   font-size: 146.5%;
+   font-weight: bold;
+   color: #515D6B;
+   padding-bottom: 0.5em;
+}
+
+.rm-search .topmargin
+{
+   margin-top: 12px;
+}
+
+.rm-search .alignright
+{
+   text-align: right;
+}
+
+.rm-search .right-button
+{
+   float: right;
+}
+
+.rm-search .yui-nav
+{
+   border-color: #AAAAAA !important;
+}
+
+.rm-search .yui-navset .yui-content
+{
+   border-color: #808080;
+   margin: 0 -10px;
+   background-color: #DDDDDD;
+   padding: 10px 20px 14px;
+   line-height: 2em;
+}
+
+.rm-search .yui-navset .yui-nav .selected a,
+.rm-search .yui-navset .yui-nav .selected a em,
+.rm-search .yui-navset .yui-nav .selected a:hover,
+.rm-search .yui-navset .yui-nav .selected a:visited
+{
+   background: transparent;
+   border-color: #808080 !important;
+   background-color: #AAAAAA !important;
+}
+
+.yui-skin-default .yui-dt th,
+.yui-skin-default .yui-dt td
+{
+   border-style: none !important;
+}
+
+.yui-skin-default .yui-dt-liner
+{
+   padding: 2px 6px !important;
+}
+
+.rm-search textarea
+{
+   width: 60em;
+   height: 4em;
+   border: 1px solid #AAAAAA;
+   resize: none;
+}
+
+.rm-search .query
+{
+   height: 5em;
+}
+
+.rm-search .header
+{
+   font-weight: bold;
+   font-size: 108%;
+}
+
+.rm-search .terms
+{
+}
+
+.rm-search .insertLabel
+{
+   vertical-align: 15%;
+}
+
+.rm-search .insertDate
+{
+   vertical-align: 15%;
+   padding-left: 2em;
+}
+
+.rm-search .execute-search
+{
+   border-top: 1px solid #AAAAAA;
+   margin-top: 8px;
+   padding-top: 12px;
+}
+
+.rm-search .datepicker
+{
+   display: none;
+   position: absolute;
+   z-index: 1;
+   margin: -5em 0 0 20em;
+}
+
+.rm-search .datepicker-icon
+{
+   cursor: pointer;
+}
+
+.rm-search .yuimenubaritemlabel,
+.rm-search .yuimenuitemlabel
+{
+   color: #000 !important;
+}

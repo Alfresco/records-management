@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Rule Edit</shortname>
+  <description>Create or edit a rule</description>
+  <url>/rm/components/rules/rule-edit</url>
+</webscript>

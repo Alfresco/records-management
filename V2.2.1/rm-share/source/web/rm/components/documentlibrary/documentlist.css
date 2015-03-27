@@ -1,0 +1,59 @@
+/* DocList bar Select menu */
+
+.toolbar .file-select .selectRecords
+{
+   background-image: url(images/select-records-16.png);
+}
+
+.toolbar .file-select .selectUndeclaredRecords
+{
+   background-image: url(images/select-undeclared-16.png);
+}
+
+.toolbar .file-select .selectRecordFolders
+{
+   background-image: url(images/record-folder-16.png);
+}
+
+.toolbar .file-select .selectRecordCategories
+{
+   background-image: url(images/record-category-16.png);
+}
+
+.toolbar .file-select .selectAll
+{
+   background-image: url(images/select-all-rm-16.png);
+}
+
+.toolbar .file-select .selectNone
+{
+   background-image: url(images/select-none-rm-16.png);
+}
+
+/* File Plan Filter Styling */
+
+.fileplan-filter span.holds
+{
+   background-image: url(actions/rm-add-to-hold-16.png);
+   background-repeat: no-repeat;
+   padding-left: 20px;
+}
+
+.fileplan-filter span.transfers
+{
+   background-image: url(actions/rm-transfer-16.png);
+   background-repeat: no-repeat;
+   padding-left: 20px;
+}
+
+.fileplan-filter span.unfiledRecords
+{
+   background-image: url(actions/rm-add-record-metadata-16.png);
+   background-repeat: no-repeat;
+   padding-left: 20px;
+}
+
+.doclist .documents .yui-dt-highlighted .filename span.document-version
+{
+   visibility: hidden !important;
+}

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<template-instance>
+   <template-type>org/alfresco/rm/audit</template-type>
+   <components>
+      <component>
+         <region-id>rmaudit</region-id>
+         <url>/rm/components/audit/audit</url>
+      </component>
+   </components>
+</template-instance>

@@ -1,0 +1,168 @@
+.view-role-list
+{
+   clear: both;
+   border: 1px solid #444444;
+}
+
+#roleSelection .list-header,
+#roleContentGroups .list-header
+{
+   margin-right: -7%;
+   border-bottom: 1px solid #999999;
+}
+
+#roleContentUsers .list-header
+{
+   margin-right: -6%;
+   border-bottom: 1px solid #999999;
+}
+
+#usersAndGroups
+{
+   text-align: left;
+   padding: 1em;
+}
+
+#usersAndGroups h2
+{
+   font-size: 123.1%;
+   margin: 0.5em 0 0.5em 0;
+   color: #515D6B;
+   float: left;
+   font-weight: bold;
+}
+
+#usersAndGroups h3
+{
+   font-size: 118%;
+   margin: 0.5em 0;
+   color: #515D6B;
+   font-weight: bold;
+   padding: 0 0 0 0.5em;
+}
+
+#usersAndGroups div.groups-header,
+#usersAndGroups div.users-header
+{
+   font-size: 118%;
+   color: #515D6B;
+   font-weight: bold;
+   padding: 0.5em 0 0.5em 0.5em;
+}
+
+#usersAndGroups span.yui-button
+{
+   float: right;
+}
+
+#addGroup,
+#addUser
+{
+   margin-top: 0.25em;
+}
+
+#removeGroup
+{
+   margin-top: 0.25em;
+   margin-right: 9px;
+}
+
+#removeUser
+{
+   margin-top: 0.25em;
+   margin-right: 8px;
+}
+
+#roles
+{
+   width: 100%;
+}
+
+#roles a
+{
+   display: block;
+   padding: 0.333em;
+   text-decoration: none;
+   color: inherit;
+}
+
+#roleGroups a,
+#roleUsers a
+{
+   text-decoration: none;
+   color: inherit;
+}
+
+#roles ul,
+#roleGroups ul,
+#roleUsers ul
+{
+   margin: 0.5em;
+}
+
+#roles,
+.roleGroups
+{
+   overflow: auto;
+   height: 24em;
+}
+
+#roles,
+.roleUsers
+{
+   overflow: auto;
+   height: 24em;
+}
+
+#roleSelection
+{
+   width: 31%;
+}
+
+#roleContentGroups
+{
+   border-left: 1px solid #444444;
+   width: 31%;
+}
+
+#roleContentGroups *,
+#roleContentUsers *
+{
+   text-align: left;
+}
+
+#roleContentUsers
+{
+   border-left: 1px solid #444444;
+   width: 32%;
+}
+
+#roleContentGroups ul.groups-list li,
+#roleContentUsers ul.users-list li
+{
+   clear: both;
+   padding: 0.4em;
+}
+
+.bd.rm-search-body
+{
+   padding: 1px !important;
+}
+
+.groups.group-picker,
+.people-picker
+{
+   width: 51em;
+}
+
+.group-finder.compact .results,
+.people-finder.compact .results
+{
+   height: 300px !important;
+}
+
+.group-finder .search-text input,
+.people-finder .search-text input
+{
+   width: 20em !important;
+}

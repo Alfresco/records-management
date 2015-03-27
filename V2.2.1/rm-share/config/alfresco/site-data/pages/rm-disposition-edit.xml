@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<page>
+   <title>Edit Disposition Schedule</title>
+   <title-id>page.rmDispositionEdit.title</title-id>
+   <description>Page for editing the disposition schedule</description>
+   <description-id>page.rmDispositionEdit.description</description-id>
+   <template-instance>rm-disposition-edit</template-instance>
+   <authentication>user</authentication>
+</page>

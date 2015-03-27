@@ -1,0 +1,42 @@
+.rm-user-rights
+{
+   margin: 1em 10px;
+   width: 100%;
+}
+
+.rm-user-rights h1,
+.rm-user-rights h2
+{
+   font-weight: bold;
+}
+
+.rm-user-rights h2
+{
+   margin: 1em 0;
+}
+
+.rm-user-rights dl
+{
+   border: 1px solid #7F7F7F;
+}
+
+.rm-user-rights dt
+{
+   padding: 3px;
+}
+
+.rm-user-rights dd
+{
+   padding-left: 50%;
+}
+
+.rm-user-rights dt.odd,
+.rm-user-rights dd.odd
+{
+   background-color: #EDF5FF;
+}
+
+.rm-user-rights p
+{
+   padding-top: 0;
+}

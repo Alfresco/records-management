@@ -1,0 +1,74 @@
+.rm-report .report-property
+{
+   color: #515D6B;
+   padding: 0.25em 1em;
+}
+
+
+.rm-report .report-label
+{
+   color: #515D6B;
+}
+
+.rm-report .report-value
+{
+   color: #000000;
+   padding: 0.3em;
+}
+
+.rm-report .report-title
+{
+   color: #000000;
+   font-size: 116%;
+   font-weight: bold;
+   background-repeat: no-repeat;
+   height: 3em;
+   line-height: 3em;   
+}
+
+.rm-report .report-title div
+{
+   float: left;
+   height: 3em;
+   line-height: 3em;
+   padding-right: 0.75em;
+}
+
+.rm-report .report-title,
+.rm-report .report-section
+{
+   border-bottom: 1px solid #D7D7D7;
+   padding-top: 0.5em;
+   padding-bottom: 0.5em;
+   clear: both;
+}
+
+.rm-report .recordseries.report-title
+{
+   padding-left: 1em;
+}
+
+.rm-report .recordseries.report-section
+{
+   padding-left: 5em;
+}
+
+.rm-report .recordcategory.report-title
+{
+   padding-left: 5em;
+}
+
+.rm-report .recordcategory.report-section
+{
+   padding-left: 9.5em;
+}
+
+.rm-report .recordfolder.report-title
+{
+   padding-left: 9.5em;
+}
+
+.rm-report .recordfolder.report-section
+{
+   padding-left: 14.5em;
+}

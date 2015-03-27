@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<page>
+   <title>Audit Log</title>
+   <title-id>page.rmAudit.title</title-id>
+   <description>Audit Log page</description>
+   <description-id>page.rmAudit.description</description-id>
+   <template-instance>rm-audit</template-instance>
+   <authentication>user</authentication>
+</page>

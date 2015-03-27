@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Records Flash upload</shortname>
+  <description>File upload component that uses flash to select and upload multiple files</description>
+  <url>/rm/components/upload/flash-upload</url>
+</webscript>

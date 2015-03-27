@@ -1,0 +1,5 @@
+<webscript>
+   <shortname>Add to hold dialog</shortname>
+   <description>A dialog which displays the list of holds so that the item can be added to the hold(s)</description>
+   <url>/rm/modules/documentlibrary/hold/add-to-hold</url>
+</webscript>

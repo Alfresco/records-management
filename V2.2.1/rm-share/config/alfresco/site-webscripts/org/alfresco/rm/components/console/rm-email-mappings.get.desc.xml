@@ -1,0 +1,6 @@
+<webscript>
+  <shortname>Admin Console Email Mappings</shortname>
+  <description>Administration Console - Email Mappings</description>
+  <url>/rm/components/console/email-mappings</url>
+  <family>rm-console</family>
+</webscript>

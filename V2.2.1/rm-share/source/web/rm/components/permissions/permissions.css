@@ -1,0 +1,127 @@
+.rm-permissions .hidden
+{
+   display: none;
+}
+
+.rm-permissions .title
+{
+   margin: 16px 10px 4px;
+   font-size: 146.5%;
+   font-weight: bold;
+   color: #515D6B;
+   padding-bottom: 0.5em;
+}
+
+.rm-permissions .alignright
+{
+   text-align: right;
+}
+
+.rm-permissions .floatright
+{
+   float: right;
+}
+
+.rm-permissions .header
+{
+   font-weight: bold;
+   font-size: 108%;
+}
+
+.rm-permissions .permlist
+{
+   margin: 0.5em;
+   border: 1px solid #444;
+}
+
+.rm-permissions .permlist-border
+{
+   padding: 1px;
+}
+
+.rm-permissions .inherit
+{
+   padding: 0.5em 1em 0em 0em;
+}
+
+.rm-permissions .list-item-header
+{
+   padding: 0.7em 0.6em 0.5em 0.6em;
+}
+
+.rm-permissions .list-item
+{
+   padding: 0.7em 0.6em 0.5em 0.6em;
+   border-top: 1px dotted #999;
+}
+
+.rm-permissions .label
+{
+   color: #000;
+}
+
+.rm-permissions .readonly-label
+{
+   color: #000;
+   margin-top: 0.3em;
+}
+
+.rm-permissions .hint-label
+{
+   margin-left: 0.5em;
+   color: #444;
+}
+
+.rm-permissions .controls-header
+{
+   float: right;
+   min-width: 12em;
+}
+
+.rm-permissions .controls
+{
+   float: right;
+   margin-top: -0.5em;
+   min-width: 12em;
+}
+
+.rm-permissions .actions-header
+{
+   float: right;
+   min-width: 8em;
+}
+
+.rm-permissions .actions
+{
+   float: right;
+   margin-top: -0.5em;
+   min-width: 8em;
+}
+
+.rm-permissions .center
+{
+   padding-top: 1em;
+   text-align: center;
+   width: 100%;
+}
+
+.rm-permissions .authority-picker
+{
+   display: none;
+   position: absolute;
+   right: 1em;
+   top: 12em;
+   z-index: 100;
+   min-width: 30em;
+   *width: 30em;   
+}
+
+.rm-permissions .authority-picker.active
+{
+   display: inline;
+}
+
+.rm-permissions .authority-finder
+{
+   margin: 0;
+}

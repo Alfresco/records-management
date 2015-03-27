@@ -1,0 +1,109 @@
+.rm-references
+{
+   color:#000000;
+   margin:16px 10px 10px;
+}
+
+.rm-references .hidden
+{
+   display: none;
+}
+
+.rm-references .buttons,
+.rm-references .title
+{
+   margin-top: 0.5em;
+   line-height: 2em;
+}
+
+.rm-references .title
+{
+   color:#515D6B;
+   font-size:123.1%;
+   font-weight:bold;
+   padding-bottom:0.5em;
+}
+
+.rm-references .buttons
+{
+   text-align: right;
+}
+
+.rm-references .rm-references-list
+{
+   border: 1px solid #D7D7D7;
+}
+
+.rm-references .yui-dt table
+{
+   border: medium none;
+   width: 100%;
+}
+
+.rm-references .yui-dt table thead
+{
+   display: none;
+}
+
+.rm-references tr.yui-dt-odd 
+{
+   background-color:#FFFFFF;
+}
+
+.rm-references .yui-dt table .yui-dt-col-actions
+{
+   width: 17em;
+   text-align: right;
+}
+
+.rm-references .yui-dt table td
+{
+   border: medium none;
+   border-bottom: 1px dashed #D7D7D7;
+}
+
+.rm-references .yui-dt table .yui-dt-last td
+{
+   border-bottom: medium none;
+}
+
+.rm-references .reference-type-label
+{
+   color: #515D6B;
+   padding-right:0.5em;   
+}
+
+.rm-references .edit-main
+{
+   border: 1px solid #D7D7D7;
+   margin-bottom: 1.5em;
+   padding-bottom: 1em;
+}
+
+.rm-references .header-bar
+{
+   background-color: #E3EAEC;
+   border-bottom: 2px solid #F0F3F4;
+   font-size: 116%;
+   font-weight: bold;
+   height: 1.1em;
+   margin: 1em;
+   padding: 0.3em;   
+}
+
+.rm-references .field-row
+{
+   padding: 0.333em;
+   margin-left:1em;
+}
+
+.rm-references .crud-label
+{
+   line-height: 1.5em;
+   margin-left: 4em;
+}
+
+.rm-references .crud-input
+{
+   margin-left: 4em;
+}
