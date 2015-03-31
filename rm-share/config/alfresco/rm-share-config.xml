@@ -672,6 +672,17 @@
             <evaluator>evaluator.rm.action.editReferences</evaluator>
          </action>
 
+         <!-- Classification classify action used for both doclib and fileplan-->
+         <action id="rm-classify-document" type="javascript" label="actions.classify-document" icon="../../../rm/components/documentlibrary/actions/rm-classify-document">
+            <param name="function">onClassifyDocument</param>
+            <evaluator>evaluator.rm.user.canClassify</evaluator>
+            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
+            <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
+            <evaluator negate="true">evaluator.rm.doclib.action.hasClassifiedAspect</evaluator>
+         </action>
+
       </actions>
 
       <!--
@@ -779,6 +790,7 @@
             <action index="280" id="rm-view-audit-log" />
             <action index="290" id="rm-manage-permissions" />
             <action index="300" id="rm-add-relationship" />
+            <action index="310" id="rm-classify-document"/>
          </actionGroup>
 
          <actionGroup id="rm-doclib-record-browse">
@@ -786,6 +798,7 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
+            <action index="140" id="rm-classify-document"/>
          </actionGroup>
 
          <actionGroup id="rm-record-details">
@@ -813,6 +826,7 @@
             <action index="280" id="rm-view-audit-log" />
             <action index="290" id="rm-manage-permissions" />
             <action index="300" id="rm-add-relationship" />
+            <action index="310" id="rm-classify-document"/>
          </actionGroup>
 
          <actionGroup id="rm-doclib-record-details">
@@ -820,6 +834,7 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
+            <action index="140" id="rm-classify-document"/>
          </actionGroup>
 
          <actionGroup id="rm-undeclared-record-browse">
@@ -845,6 +860,7 @@
             <action index="220" id="rm-request-info" />
             <action index="230" id="rm-manage-permissions" />
             <action index="240" id="rm-add-relationship" />
+            <action index="250" id="rm-classify-document"/>
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-browse">
@@ -852,6 +868,7 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
+            <action index="140" id="rm-classify-document"/>
          </actionGroup>
 
          <actionGroup id="rm-undeclared-record-details">
@@ -875,6 +892,7 @@
             <action index="220" id="rm-request-info" />
             <action index="230" id="rm-manage-permissions" />
             <action index="240" id="rm-add-relationship" />
+            <action index="250" id="rm-classify-document"/>
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-details">
@@ -882,6 +900,7 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
+            <action index="140" id="rm-classify-document"/>
          </actionGroup>
 
          <actionGroup id="rm-metadata-stub-folder-browse">
@@ -966,11 +985,13 @@
             <action index="400" id="rm-create-record" />
             <action index="410" id="rm-declare-as-version-record" />
             <action index="420" id="dm-recorded-version-config" />
+            <action index="430" id="rm-classify-document" />
          </actionGroup>
          <actionGroup id="document-details">
             <action index="400" id="rm-create-record" />
             <action index="410" id="rm-declare-as-version-record" />
             <action index="420" id="dm-recorded-version-config" />
+            <action index="430" id="rm-classify-document"/>
          </actionGroup>
 
       </actionGroups>
