@@ -199,7 +199,8 @@ define(["dojo/_base/declare",
                      currentData: {
                         items: [item]
                      },
-                     currentItem: item
+                     currentItem: item,
+                     waitForPageWidgets: false
                   }
                },{
                   name: "alfresco/forms/controls/Select",

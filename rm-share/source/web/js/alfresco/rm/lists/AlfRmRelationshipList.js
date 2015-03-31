@@ -19,10 +19,12 @@
 
 define(["dojo/_base/declare",
         "dojo/dom-class",
-        "alfresco/lists/AlfList"],
-        function(declare, domClass, AlfList) {
+        "alfresco/lists/AlfList",
+        "alfresco/core/ObjectProcessingMixin",
+        "dojo/_base/lang"],
+        function(declare, domClass, AlfList, ObjectProcessingMixin, lang) {
 
-   return declare([AlfList], {
+   return declare([AlfList, ObjectProcessingMixin], {
 
       /**
        * Extra css classes to add to the node.
@@ -78,132 +80,136 @@ define(["dojo/_base/declare",
       {
          domClass.add(this.domNode, (this.additionalCssClasses != null ? this.additionalCssClasses : ""));
 
-         this.processWidgets([{
-            name: "alfresco/lists/views/AlfListView",
-            config: {
-               currentData: this.currentData,
-               widgets: [{
-                  name: "alfresco/lists/views/layouts/Row",
-                  config: {
-                     widgets: [{
-                        name: "alfresco/documentlibrary/views/layouts/Cell",
-                        config: {
-                           widgets: [{
-                              name: "alfresco/renderers/Property",
-                              config: {
-                                 renderedValueClass: "rm-relationship-table-relationship-name",
-                                 propertyToRender: "node.relationshipLabel"
-                              }
-                           }]
-                        },
-                        visibilityConfig: {
-                           initialValue: this.showRelationship
-                        }
-                     }, {
-                        name: "alfresco/lists/views/layouts/Cell",
-                        config: {
-                           widgets: [{
-                              name: "alfresco/renderers/FileType",
-                              config: {
-                                 size: "medium",
-                                 imageUrl: "rm/images/filetypes/record-{size}.png"
-                              }
-                           }]
-                        }
-                     }, {
-                        name: "alfresco/lists/views/layouts/Cell",
-                        config: {
-                           widgets: [{
-                              name: "alfresco/lists/views/layouts/Row",
-                              config: {
-                                 widgets: [{
-                                    name: "alfresco/renderers/PropertyLink",
-                                    config: {
-                                       renderedValueClass: "rm-relationship-table-record-name",
-                                       propertyToRender: "node.properties.cm:name",
-                                       publishGlobal: true,
-                                       publishTopic: "ALF_NAVIGATE_TO_PAGE",
-                                       useCurrentItemAsPayload: false,
-                                       publishPayloadType: "PROCESS",
-                                       publishPayloadModifiers: ["processCurrentItemTokens"],
-                                       publishPayload: {
-                                          url: "site/" + this.site + "/document-details?nodeRef={node.nodeRef}",
-                                          type: "SHARE_PAGE_RELATIVE"
-                                       }
+         var clonedWidgets = lang.clone(this.widgets);
+         this.processObject(["processInstanceTokens"], clonedWidgets);
+         this.processWidgets(clonedWidgets);
+      },
+
+
+      widgets: [{
+         name: "alfresco/lists/views/AlfListView",
+         config: {
+            currentData: "{currentData}",
+            widgets: [{
+               name: "alfresco/lists/views/layouts/Row",
+               config: {
+                  widgets: [{
+                     name: "alfresco/documentlibrary/views/layouts/Cell",
+                     config: {
+                        widgets: [{
+                           name: "alfresco/renderers/Property",
+                           config: {
+                              renderedValueClass: "rm-relationship-table-relationship-name",
+                              propertyToRender: "node.relationshipLabel"
+                           }
+                        }]
+                     },
+                     visibilityConfig: {
+                        initialValue: "{showRelationship}"
+                     }
+                  }, {
+                     name: "alfresco/lists/views/layouts/Cell",
+                     config: {
+                        widgets: [{
+                           name: "alfresco/renderers/FileType",
+                           config: {
+                              size: "medium",
+                              imageUrl: "rm/images/filetypes/record-{size}.png"
+                           }
+                        }]
+                     }
+                  }, {
+                     name: "alfresco/lists/views/layouts/Cell",
+                     config: {
+                        widgets: [{
+                           name: "alfresco/lists/views/layouts/Row",
+                           config: {
+                              widgets: [{
+                                 name: "alfresco/renderers/PropertyLink",
+                                 config: {
+                                    renderedValueClass: "rm-relationship-table-record-name",
+                                    propertyToRender: "node.properties.cm:name",
+                                    publishGlobal: true,
+                                    publishTopic: "ALF_NAVIGATE_TO_PAGE",
+                                    useCurrentItemAsPayload: false,
+                                    publishPayloadType: "PROCESS",
+                                    publishPayloadModifiers: ["processCurrentItemTokens"],
+                                    publishPayload: {
+                                       url: "site/" + "{site}" + "/document-details?nodeRef={node.nodeRef}",
+                                       type: "SHARE_PAGE_RELATIVE"
                                     }
-                                 }]
-                              }
-                           }, {
-                              name: "alfresco/lists/views/layouts/Row",
-                              config: {
-                                 widgets: [{
-                                    name: "alfresco/lists/views/layouts/Cell",
-                                    config: {
-                                       widgets: [{
-                                          name: "alfresco/renderers/Property",
-                                          config: {
-                                             renderedValueClass: "rm-relationship-table-record-identifier",
-                                             label: this.message("details.record.identifier"),
-                                             propertyToRender: "node.properties.rma:identifier"
-                                          }
-                                       }, {
-                                          name: "alfresco/renderers/Separator",
-                                          align: "left"
-                                       }, {
-                                          name: "alfresco/renderers/Property",
-                                          config: {
-                                             renderedValueClass: "rm-relationship-table-record-version",
-                                             label: this.message("details.version.label"),
-                                             propertyToRender: "node.properties.rmv:versionLabel"
-                                          }
-                                       }]
-                                    }
-                                 }]
-                              }
-                           }, {
-                              name: "alfresco/lists/views/layouts/Row",
-                              config: {
-                                 widgets: [{
-                                    name: "alfresco/lists/views/layouts/Cell",
-                                    config: {
-                                       widgets: [{
-                                          name: "alfresco/renderers/Property",
-                                          config: {
-                                             propertyToRender: "node.properties.cm:description"
-                                          }
-                                       }]
-                                    }
-                                 }]
-                              }
-                           }]
-                        }
-                     }, {
-                        name: "alfresco/lists/views/layouts/Cell",
-                        config: {
-                           widgets: [{
-                              name: "alfresco/renderers/PublishAction",
-                              config: {
-                                 iconClass: "delete-16",
-                                 publishTopic: "RM_RELATIONSHIP_DELETE",
-                                 publishPayload: {
-                                    nodeRef: this.currentItem.nodeRef,
-                                    // This gets replaced with the current Item when the payload is processed.
-                                    node: "{node}"
-                                 },
-                                 publishPayloadType: "PROCESS",
-                                 publishPayloadModifiers: ["processCurrentItemTokens"],
-                                 visibilityConfig: {
-                                    initialValue: this.showDeleteAction
                                  }
+                              }]
+                           }
+                        }, {
+                           name: "alfresco/lists/views/layouts/Row",
+                           config: {
+                              widgets: [{
+                                 name: "alfresco/lists/views/layouts/Cell",
+                                 config: {
+                                    widgets: [{
+                                       name: "alfresco/renderers/Property",
+                                       config: {
+                                          renderedValueClass: "rm-relationship-table-record-identifier",
+                                          label: "details.record.identifier",
+                                          propertyToRender: "node.properties.rma:identifier"
+                                       }
+                                    }, {
+                                       name: "alfresco/renderers/Separator",
+                                       align: "left"
+                                    }, {
+                                       name: "alfresco/renderers/Property",
+                                       config: {
+                                          renderedValueClass: "rm-relationship-table-record-version",
+                                          label: "details.version.label",
+                                          propertyToRender: "node.properties.rmv:versionLabel"
+                                       }
+                                    }]
+                                 }
+                              }]
+                           }
+                        }, {
+                           name: "alfresco/lists/views/layouts/Row",
+                           config: {
+                              widgets: [{
+                                 name: "alfresco/lists/views/layouts/Cell",
+                                 config: {
+                                    widgets: [{
+                                       name: "alfresco/renderers/Property",
+                                       config: {
+                                          propertyToRender: "node.properties.cm:description"
+                                       }
+                                    }]
+                                 }
+                              }]
+                           }
+                        }]
+                     }
+                  }, {
+                     name: "alfresco/lists/views/layouts/Cell",
+                     config: {
+                        widgets: [{
+                           name: "alfresco/renderers/PublishAction",
+                           config: {
+                              iconClass: "delete-16",
+                              publishTopic: "RM_RELATIONSHIP_DELETE",
+                              publishPayload: {
+                                 nodeRef: "{currentItem.nodeRef}",
+                                 // This gets replaced with the current Item when the payload is processed.
+                                 node: "{node}"
+                              },
+                              publishPayloadType: "PROCESS",
+                              publishPayloadModifiers: ["processCurrentItemTokens"],
+                              visibilityConfig: {
+                                 initialValue: "{showDeleteAction}"
                               }
-                           }]
-                        }
-                     }]
-                  }
-               }]
-            }
-         // Render this to the viewNode, otherwise it becomes a child of the listnode and gets hidden by [hideChildren]{@link module:alfresco/lists/views/AlfListView#hideChildren}
-         }], this.viewNode);
-      }
+                           }
+                        }]
+                     }
+                  }]
+               }
+            }]
+         }
+      }]
    });
 });

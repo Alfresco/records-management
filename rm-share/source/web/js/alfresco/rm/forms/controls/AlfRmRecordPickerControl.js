@@ -261,7 +261,8 @@ define(["dojo/_base/declare",
                   site: this.site,
                   currentData: {
                      items: [this.selectedItem]
-                  }
+                  },
+                  waitForPageWidgets: false
                }
             }], domConstruct.create("div", {id: "alfresco_rm_forms_controls_AlfRmRecordPickerControl"}, this.containerNode.parentElement, "last"));
          }
