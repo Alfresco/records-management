@@ -81,6 +81,7 @@
    margin-top: 22px;
    width: 400px;
    max-width: 400px;
+   position:relative;
 }
 
 .rm-relationship-select-record-dialog-container
