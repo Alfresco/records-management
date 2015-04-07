@@ -200,6 +200,7 @@ define(["dojo/_base/declare",
                               },
                               publishPayloadType: "PROCESS",
                               publishPayloadModifiers: ["processCurrentItemTokens"],
+                              publishGlobal: true,
                               visibilityConfig: {
                                  initialValue: "{showDeleteAction}"
                               }

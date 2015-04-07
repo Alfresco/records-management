@@ -257,7 +257,7 @@ define(["dojo/_base/declare",
                name: "rm/lists/AlfRmRelationshipList",
                config: {
                   additionalCssClasses: "rm-relationship-select-record-form-info-selected",
-                  showDeleteAction: true,
+                  showDeleteAction: false,
                   site: this.site,
                   currentData: {
                      items: [this.selectedItem]
