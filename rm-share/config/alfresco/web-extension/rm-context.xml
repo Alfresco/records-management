@@ -319,7 +319,7 @@
    <!--                           -->
    <!-- Classification Evaluators -->
    <!--                           -->
-   <bean id="evaluator.rm.user.canClassify" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.canUserClassify" />
+   <bean id="evaluator.rm.user.canClassify" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.CanUserClassify" />
    <bean id="evaluator.rm.doclib.action.hasClassifiedAspect" class="org.alfresco.web.evaluator.HasAspectEvaluator">
       <property name="aspects">
          <list>

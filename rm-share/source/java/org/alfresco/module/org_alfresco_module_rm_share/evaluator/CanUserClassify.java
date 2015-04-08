@@ -30,7 +30,7 @@ import org.json.simple.JSONObject;
  * @since 3.0
  * @todo Currently stubbed out. Needs completing.
  */
-public class canUserClassify extends BaseEvaluator {
+public class CanUserClassify extends BaseEvaluator {
     /**
      * json names
      */
