@@ -19,7 +19,6 @@
 package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 
 import org.alfresco.error.AlfrescoRuntimeException;
-import org.alfresco.util.ParameterCheck;
 import org.alfresco.web.evaluator.BaseEvaluator;
 import org.json.simple.JSONObject;
 
@@ -30,7 +29,8 @@ import org.json.simple.JSONObject;
  * @since 3.0
  * @todo Currently stubbed out. Needs completing.
  */
-public class CanUserClassify extends BaseEvaluator {
+public class CanUserClassify extends BaseEvaluator
+{
     /**
      * json names
      */
@@ -40,14 +40,19 @@ public class CanUserClassify extends BaseEvaluator {
      * @see org.alfresco.web.evaluator.BaseEvaluator#evaluate(org.json.simple.JSONObject)
      */
     @Override
-    public boolean evaluate(JSONObject jsonObject) {
+    public boolean evaluate(JSONObject jsonObject)
+    {
 
         boolean result = false;
 
-        try {
-            // TODO: This should retrieve the user's security clearance level and make sure that it is set and doesn't equal NO_CLEARANCE
+        try
+        {
+            // TODO: This should retrieve the user's security clearance level
+            // and make sure that it is set and doesn't equal NO_CLEARANCE
             result = true;
-        } catch (Exception err) {
+        }
+        catch (Exception err)
+        {
             throw new AlfrescoRuntimeException("Exception whilst running UI evaluator: " + err);
         }
 
