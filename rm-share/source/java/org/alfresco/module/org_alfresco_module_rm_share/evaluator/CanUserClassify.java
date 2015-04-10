@@ -34,7 +34,7 @@ public class CanUserClassify extends BaseEvaluator
     /**
      * json names
      */
-    private static final String NO_CLEARANCE = "no clearance";
+    //private static final String NO_CLEARANCE = "no clearance";
 
     /**
      * @see org.alfresco.web.evaluator.BaseEvaluator#evaluate(org.json.simple.JSONObject)
