@@ -34,7 +34,7 @@
 
 .rm-relationship-toolbar-add-button span[role=button]
 {
-   background: url("../../../js/alfresco/forms/controls/css/images/add-icon-16.png") no-repeat scroll 1px 1px transparent;
+   background: url("../../../../components/images/add-icon-16.png") no-repeat scroll 1px 1px transparent;
    font-size: 12px;
    margin-left: -5px;
    margin-right: -7px;
@@ -81,6 +81,7 @@
    margin-top: 22px;
    width: 400px;
    max-width: 400px;
+   position:relative;
 }
 
 .rm-relationship-select-record-dialog-container
@@ -93,6 +94,7 @@
    margin-left: 20em;
    margin-top: -40px;
    margin-bottom: 20px;
+   text-align: right;
 }
 
 .rm-relationship-select-record-form-info,
@@ -121,4 +123,8 @@
 .alfresco-buttons-AlfButton.rm-relationship-select-record-button.dijitButton.dijitButtonFocused.dijitFocused
 {
    border-color: rgb(204, 204, 204);
+}
+
+.alfresco-buttons-AlfButton.rm-relationship-select-record-button {
+   margin-right:-5px;
 }

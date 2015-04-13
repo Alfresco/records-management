@@ -1874,7 +1874,7 @@
       {
          require(["rm/services/AlfRmActionBridge"], function(Bridge) {
             var bridge = new Bridge();
-            bridge.alfPublish("ALF_RM_ADD_RELATIONSHIP", {
+            bridge.alfPublish("RM_RELATIONSHIP_ADD", {
                "item": assets,
                "owner": owner
             });

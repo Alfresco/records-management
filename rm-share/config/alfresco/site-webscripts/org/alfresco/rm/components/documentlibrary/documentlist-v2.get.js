@@ -59,9 +59,8 @@ model.jsonModel = {
    services: [
       "alfresco/services/DocumentService",
       "alfresco/services/NotificationService",
-      "rm/services/AlfRmCrudService",
+      "rm/services/RelationshipService",
       "rm/services/AlfRmDialogService",
-      "rm/services/AlfRmActionService",
       "rm/services/AlfRmOptionsService"
    ]
 };
