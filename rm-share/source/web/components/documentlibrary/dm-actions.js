@@ -282,4 +282,19 @@
          return '<a href="#" onclick="onRejectedRecordClose(' + $html(funcArgs) + ');return false;" title="' + this.msg("banner.rejected-record.close") + '" class="item item-rejected-record-close">&nbsp;</a>';
       }
    });
+
+   YAHOO.Bubbling.fire("registerAction",
+      {
+         actionName: "onClassifyDocument",
+         fn: function DLTB_onClassifyDocument(record, owner) {
+            require(["rm/services/AlfRmActionBridge"], function (Bridge) {
+               var bridge = new Bridge();
+               bridge.alfPublish("RM_CLASSIFY_CONTENT", {
+                  "item": record,
+                  "owner": owner
+               });
+            });
+         }
+      });
+
 })();
