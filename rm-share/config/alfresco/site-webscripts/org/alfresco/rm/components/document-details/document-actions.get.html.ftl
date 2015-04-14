@@ -1,4 +1,6 @@
 <#if documentDetailsJSON??>
+   <@processJsonModel group="share"/>
+
    <#assign el=args.htmlid?js_string>
    <script type="text/javascript">//<![CDATA[
       new Alfresco.rm.component.DocumentActions("${el}").setOptions(

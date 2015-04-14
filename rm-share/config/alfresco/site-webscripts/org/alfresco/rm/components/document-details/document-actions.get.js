@@ -16,6 +16,12 @@ function main()
       model.documentDetailsJSON = jsonUtils.toJSONString(documentDetails);
       doclibCommon();
    }
-}
+};
+
+model.jsonModel = {
+   services: [
+      "rm/services/ClassifyService"
+   ]
+};
 
 main();
