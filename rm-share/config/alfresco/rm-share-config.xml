@@ -103,8 +103,12 @@
             <evaluator>evaluator.rm.doclib.versionRecord</evaluator>
          </indicator>
          <!-- FIXME: Icon will be changed -->
-         <indicator id="rm-classified" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-version-record-16.png">
-            <evaluator>evaluator.rm.isClassified</evaluator>
+         <indicator id="rm-classified-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-classified-record-16.png">
+            <evaluator>evaluator.rm.classified.record</evaluator>
+         </indicator>
+         <!-- FIXME: Icon will be changed -->
+         <indicator id="rm-classified-document" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-classified-document-16.png">
+            <evaluator>evaluator.rm.classified.document</evaluator>
          </indicator>
       </indicators>
 
@@ -684,7 +688,7 @@
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
             <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
-            <evaluator negate="true">evaluator.rm.isClassified</evaluator>
+            <evaluator negate="true">evaluator.rm.doclib.action.hasClassifiedAspect</evaluator>
          </action>
 
       </actions>

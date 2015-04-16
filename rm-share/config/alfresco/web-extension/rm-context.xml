@@ -320,13 +320,15 @@
    <!-- Classification Evaluators -->
    <!--                           -->
    <bean id="evaluator.rm.user.canClassify" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.CanUserClassify" />
-   <bean id="evaluator.rm.isClassified" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+   <bean id="evaluator.rm.doclib.action.hasClassifiedAspect" class="org.alfresco.web.evaluator.HasAspectEvaluator">
       <property name="aspects">
          <list>
             <value>clf:classified</value>
          </list>
       </property>
    </bean>
+   <bean id="evaluator.rm.classified.record" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.ClassifiedRecordEvaluator" />
+   <bean id="evaluator.rm.classified.document" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.ClassifiedDocumentEvaluator" />
 
    <!-- DOD 5015 context import -->
    <import resource="classpath:alfresco/dod5015/dod5015-context.xml"/>
