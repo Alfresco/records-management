@@ -49,13 +49,23 @@ define(["dojo/_base/declare",
 
          /**
           *
-          * URL used to get reasons.
+          * URL used to get classification reasons.
           *
           * @instance
           * @type {string}
           * @default
           */
          reasonsAPIGet: "api/classification/reasons",
+
+         /**
+          *
+          * URL used to get classification levels.
+          *
+          * @instance
+          * @type {string}
+          * @default
+          */
+         levelsAPIGet: "api/classification/levels",
 
          /**
           *
@@ -70,7 +80,7 @@ define(["dojo/_base/declare",
          },
 
          /**
-          * Create a relationship between given nodes.
+          * Get all the classification reasons for the given node.
           *
           * @param payload
           */
@@ -82,9 +92,9 @@ define(["dojo/_base/declare",
                   method: "GET",
                   alfTopic: payload.alfResponseTopic
                });
-
             }
-            else {
+            else
+            {
                this.alfLog("error", "A request to get the classification reasons but the 'responseTopic' attributes was not provided in the payload", payload);
             }
          },
@@ -98,6 +108,7 @@ define(["dojo/_base/declare",
           * @fires ALF_CREATE_FORM_DIALOG_REQUEST
           * @fires RM_CLASSIFY
           * @fires RM_CLASSIFY_REASONS_GET
+          * @fires ALF_GET_FORM_CONTROL_OPTIONS
           */
          onClassifyContent: function rm_services_classifyService__onClassifyContent(payload) {
             var item = payload.item,
@@ -113,12 +124,44 @@ define(["dojo/_base/declare",
                },
                widgets: [
                   {
+                     id: "LEVELS",
+                     name: "alfresco/forms/controls/Select",
+                     config: {
+                        label: "label.classify.levels",
+                        name: "classificationLevel",
+                        requirementConfig: {
+                           initialValue: true
+                        },
+                        optionsConfig: {
+                           publishTopic: "ALF_GET_FORM_CONTROL_OPTIONS",
+                           publishPayload: {
+                              url: AlfConstants.PROXY_URI + this.levelsAPIGet,
+                              itemsAttribute: "data.items",
+                              labelAttribute: "id",
+                              valueAttribute: "id"
+                           }
+                        }
+                     }
+                  },{
+                     id: "AUTHORITY",
+                     name: "alfresco/forms/controls/DojoValidationTextBox",
+                     config: {
+                        label: "label.classify.authority",
+                        name: "classificationAuthority",
+                        requirementConfig: {
+                           initialValue: true
+                        }
+                     }
+                  },{
                      id: "REASONS",
                      name: "alfresco/forms/controls/MultiSelectInput",
                      config: {
                         label: "label.classify.reasons",
-                        name: "reasons",
+                        name: "classificationReasons",
                         width: "400px",
+                        requirementConfig: {
+                           initialValue: true
+                        },
                         optionsConfig: {
                            queryAttribute: "id",
                            valueAttribute: "id",
