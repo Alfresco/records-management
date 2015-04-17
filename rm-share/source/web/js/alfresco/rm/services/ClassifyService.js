@@ -22,6 +22,7 @@
  *
  * @module rm/service/ClassifyService
  * @extends module:alfresco/core/Core
+ * @extends module:alfresco/service/crudService
  * @mixes module:alfresco/core/CoreXhr
  * @author David Webster
  * @since RM 3.0
@@ -32,11 +33,13 @@
 define(["dojo/_base/declare",
       "alfresco/core/Core",
       "alfresco/core/CoreXhr",
+      "alfresco/services/CrudService",
       "service/constants/Default",
+      "alfresco/core/NodeUtils",
       "dojo/_base/lang"],
-   function (declare, AlfCore, AlfXhr, AlfConstants, lang) {
+   function (declare, AlfCore, AlfXhr, CrudService, AlfConstants, NodeUtils, lang) {
 
-      return declare([AlfCore, AlfXhr], {
+      return declare([AlfCore, AlfXhr, CrudService], {
 
          /**
           * An array of the i18n files to use with this service.
@@ -68,15 +71,27 @@ define(["dojo/_base/declare",
          levelsAPIGet: "api/classification/levels",
 
          /**
+          * URL used to classify content. Parse through lang.mixin for token substitution.
+          *
+          * @instance
+          * @type {string}
+          * @default
+          */
+         classifyAPICreate: "api/node/{nodeRefUrl}/classify",
+
+         /**
           *
           * @instance
           * @param {array} args Constructor arguments
           *
           * @listens RM_CLASSIFY_REASONS_GET
+          * @listens RM_CLASSIFY_CONTENT
+          * @listens RM_CLASSIFY
           */
          constructor: function rm_services_classifyService__constructor(args) {
             this.alfSubscribe("RM_CLASSIFY_REASONS_GET", lang.hitch(this, this.onGetReasons));
             this.alfSubscribe("RM_CLASSIFY_CONTENT", lang.hitch(this, this.onClassifyContent));
+            this.alfSubscribe("RM_CLASSIFY", lang.hitch(this, this.onCreate));
          },
 
          /**
@@ -137,7 +152,7 @@ define(["dojo/_base/declare",
                            publishPayload: {
                               url: AlfConstants.PROXY_URI + this.levelsAPIGet,
                               itemsAttribute: "data.items",
-                              labelAttribute: "id",
+                              labelAttribute: "displayLabel",
                               valueAttribute: "id"
                            }
                         }
@@ -165,7 +180,7 @@ define(["dojo/_base/declare",
                         optionsConfig: {
                            queryAttribute: "id",
                            valueAttribute: "id",
-                           labelAttribute: "id",
+                           labelAttribute: "displayLabel",
                            publishTopic: "RM_CLASSIFY_REASONS_GET",
                            publishPayload: {
                               resultsProperty: "response.data.items"
@@ -175,6 +190,28 @@ define(["dojo/_base/declare",
                   }
                ]
             }, true);
+         },
+
+         /**
+          * Classifies the given node.
+          *
+          * @param payload
+          */
+         onCreate: function rm_services_classifyService__onCreate(payload) {
+            if (!payload.nodeRef)
+            {
+               this.alfLog("error", "nodeRef required");
+            }
+
+            // Update the payload before calling the superclass method:
+            payload.nodeRefUrl = NodeUtils.processNodeRef(payload.nodeRef).uri;
+            payload = lang.mixin(payload, {
+               url: lang.replace(this.classifyAPICreate, payload),
+               successMessage: this.message("label.classify.content.success"),
+               failureMessage: this.message("label.classify.content.failure")
+            });
+
+            this.inherited(arguments);
          }
       });
    });
