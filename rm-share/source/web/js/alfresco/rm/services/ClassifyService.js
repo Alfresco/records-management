@@ -143,7 +143,7 @@ define(["dojo/_base/declare",
                      name: "alfresco/forms/controls/Select",
                      config: {
                         label: "label.classify.levels",
-                        name: "classificationLevel",
+                        name: "classificationLevelId",
                         requirementConfig: {
                            initialValue: true
                         },
