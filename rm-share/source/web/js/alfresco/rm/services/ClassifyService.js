@@ -20,7 +20,7 @@
 /**
  * This Aikau Service uses the classify REST APIs
  *
- * @module rm/service/ClassifyService
+ * @module rm/services/ClassifyService
  * @extends module:alfresco/core/Core
  * @extends module:alfresco/service/crudService
  * @mixes module:alfresco/core/CoreXhr
