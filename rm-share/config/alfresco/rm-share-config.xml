@@ -79,7 +79,7 @@
          </indicator>
          <!--  Is Record Indicator -->
          <indicator id="rm-is-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-record-16.png">
-            <evaluator>evaluator.rm.doclib.isRecord</evaluator>
+            <evaluator>evaluator.rm.doclib.isDocLibRecord</evaluator>
          </indicator>
          <!--  Info Requested Indicator -->
          <indicator id="rm-info-requested" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-info-requested-16.png">
@@ -195,7 +195,7 @@
 
          <!-- DocLib Record -->
          <template id="rmDocLibRecord">
-            <evaluator>evaluator.rm.doclib.isRecord</evaluator>
+            <evaluator>evaluator.rm.doclib.isDocLibRecord</evaluator>
             <line index="10" id="identifier" view="detailed">{rma_identifier details.record.identifier}</line>
             <line index="20" id="date">{cm_creator details.created.by}{size}</line>
             <line index="30" id="description" view="detailed">{description}</line>
@@ -688,7 +688,7 @@
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
             <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
-            <evaluator negate="true">evaluator.rm.doclib.action.hasClassifiedAspect</evaluator>
+            <evaluator negate="true">evaluator.rm.doclib.isClassified</evaluator>
          </action>
 
       </actions>
