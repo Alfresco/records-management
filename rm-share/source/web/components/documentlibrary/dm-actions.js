@@ -284,17 +284,16 @@
    });
 
    YAHOO.Bubbling.fire("registerAction",
-      {
-         actionName: "onClassifyDocument",
-         fn: function DLTB_onClassifyDocument(record, owner) {
-            require(["rm/services/AlfRmActionBridge"], function (Bridge) {
-               var bridge = new Bridge();
-               bridge.alfPublish("RM_CLASSIFY_CONTENT", {
-                  "item": record,
-                  "owner": owner
-               });
+   {
+      actionName: "onClassifyContent",
+      fn: function DLTB_onClassifyContent(record, owner) {
+         require(["rm/services/AlfRmActionBridge"], function (Bridge) {
+            var bridge = new Bridge();
+            bridge.alfPublish("RM_CLASSIFY_CONTENT", {
+               "item": record,
+               "owner": owner
             });
-         }
-      });
-
+         });
+      }
+   });
 })();

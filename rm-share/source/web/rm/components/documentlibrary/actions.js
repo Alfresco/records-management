@@ -1870,15 +1870,47 @@
          });
       },
 
-      onAddRelationship: function RDLA_onAddRelationship(assets, owner)
+      /**
+       * Helper method to publish aikau events
+       *
+       * @method _publishAikauEvent
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       * @param owner {HTMLElement} The action html element
+       * @param topic The aikau topic which will be published
+       */
+      _publishAikauEvent: function RDLA___publishAikauEvent(assets, owner, topic)
       {
          require(["rm/services/AlfRmActionBridge"], function(Bridge) {
             var bridge = new Bridge();
-            bridge.alfPublish("RM_RELATIONSHIP_ADD", {
+            bridge.alfPublish(topic, {
                "item": assets,
                "owner": owner
             });
          });
+      },
+
+      /**
+       * Add relatinship action
+       *
+       * @method onAddRelationship
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       * @param owner {HTMLElement} The action html element
+       */
+      onAddRelationship: function RDLA_onAddRelationship(assets, owner)
+      {
+         this._publishAikauEvent(assets, owner, "RM_RELATIONSHIP_ADD");
+      },
+
+      /**
+       * Classify document action
+       *
+       * @method onClassifyContent
+       * @param assets {object} Object literal representing one or more record(s) to be actioned
+       * @param owner {HTMLElement} The action html element
+       */
+      onClassifyContent: function RDLA_onClassifyContent(assets, owner)
+      {
+         this._publishAikauEvent(assets, owner, "RM_CLASSIFY_CONTENT");
       }
    };
 })();
