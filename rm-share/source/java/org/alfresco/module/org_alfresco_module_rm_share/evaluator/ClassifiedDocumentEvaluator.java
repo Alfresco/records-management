@@ -47,7 +47,8 @@ public class ClassifiedDocumentEvaluator extends BaseClassifiedEvaluator
         boolean hasClassifiedAspect = hasClassifiedAspect(jsonObject);
         boolean isInCollabSite = isInSite(jsonObject, COLLAB_SITE_PRESET);
         boolean isDocument = getNodeType(jsonObject).equals(TYPE_CONTENT);
+        boolean isNotRecord = !hasApect(jsonObject, ASPECT_RECORD);
 
-        return hasClassifiedAspect && isInCollabSite && isDocument;
+        return hasClassifiedAspect && isInCollabSite && isDocument && isNotRecord;
     }
 }

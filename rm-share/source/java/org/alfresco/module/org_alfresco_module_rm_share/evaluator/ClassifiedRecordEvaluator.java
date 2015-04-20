@@ -30,12 +30,6 @@ import org.json.simple.JSONObject;
  */
 public class ClassifiedRecordEvaluator extends BaseClassifiedEvaluator
 {
-    /** RM site preset */
-    private static final String RM_SITE_PRESET = "rm-site-dashboard";
-
-    /** Record aspect */
-    private static final String ASPECT_RECORD = "rma:record";
-
     /**
      * @see org.alfresco.web.evaluator.BaseEvaluator#evaluate(org.json.simple.JSONObject)
      */
@@ -45,9 +39,8 @@ public class ClassifiedRecordEvaluator extends BaseClassifiedEvaluator
         mandatory("jsonObject", jsonObject);
 
         boolean hasClassifiedAspect = hasClassifiedAspect(jsonObject);
-        boolean isInRmSite = isInSite(jsonObject, RM_SITE_PRESET);
         boolean isRecord = hasApect(jsonObject, ASPECT_RECORD);
 
-        return hasClassifiedAspect && isInRmSite && isRecord;
+        return hasClassifiedAspect && isRecord;
     }
 }

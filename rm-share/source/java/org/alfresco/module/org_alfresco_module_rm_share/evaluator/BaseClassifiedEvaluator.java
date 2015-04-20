@@ -34,6 +34,9 @@ public abstract class BaseClassifiedEvaluator extends BaseRMEvaluator
     /** Classified aspect */
     protected static final String ASPECT_CLASSIFIED = "clf:classified";
 
+    /** Record aspect */
+    protected static final String ASPECT_RECORD = "rma:record";
+
     /**
      * Helper method to check if a node has the classified aspect applied
      *
