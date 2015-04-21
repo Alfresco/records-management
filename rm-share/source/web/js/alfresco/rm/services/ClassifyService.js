@@ -178,7 +178,7 @@ define(["dojo/_base/declare",
                            initialValue: true
                         },
                         optionsConfig: {
-                           queryAttribute: "id",
+                           queryAttribute: "displayLabel",
                            valueAttribute: "id",
                            labelAttribute: "displayLabel",
                            publishTopic: "RM_CLASSIFY_REASONS_GET",
