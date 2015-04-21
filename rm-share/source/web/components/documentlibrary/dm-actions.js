@@ -296,4 +296,26 @@
          });
       }
    });
+   /**
+    *  Create a bridge between an Aikau data-update event and a YAHOO meta-data-refresh event.
+    */
+   require(["rm/services/AlfRmActionBridge"], function (Bridge) {
+      var bridge = new Bridge();
+      bridge.alfSubscribe("ALF_DOCLIST_RELOAD_DATA", function(){
+
+         // Are we on a Document List page (Collab site or RM File Plan)?
+         if (Alfresco.util.ComponentManager.findFirst("Alfresco.DocumentList"))
+         {
+            // If we are, trigger a data refresh to update:
+            YAHOO.Bubbling.fire("metadataRefresh");
+         }
+         else
+         {
+            // otherwise reload the page to update:
+            window.location.reload(true);
+         }
+
+      });
+   });
+
 })();
