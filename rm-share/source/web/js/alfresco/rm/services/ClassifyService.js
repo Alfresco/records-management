@@ -184,7 +184,8 @@ define(["dojo/_base/declare",
                            publishTopic: "RM_CLASSIFY_REASONS_GET",
                            publishPayload: {
                               resultsProperty: "response.data.items"
-                           }
+                           },
+                           searchStartsWith: false
                         }
                      }
                   }
