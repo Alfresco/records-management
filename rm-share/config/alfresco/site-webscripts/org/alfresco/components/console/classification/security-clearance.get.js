@@ -3,11 +3,12 @@ model.jsonModel = {
       "alfresco/services/CrudService"
    ],
    widgets: [{
-      name: "alfresco/lists/AlfList",
+      name: "alfresco/lists/AlfFilteredList",
       config: {
          pubSubScope: "SECURITY_CLEARANCE_",
          filteringTopics: ["_valueChangeof_FILTER"],
          useHash: true,
+         // TODO: API doesn't filter data yet.
          loadDataPublishTopic: "ALF_CRUD_GET_ALL",
          loadDataPublishPayload: {
             url: "api/classification/levels"
@@ -25,9 +26,8 @@ model.jsonModel = {
                }
             }
          ],
-         // FIXME: View doesn't render yet...
          widgets: [{
-            name: "alfresco/documentlibrary/views/AlfListView",
+            name: "alfresco/lists/views/AlfListView",
             config: {
                widgets: [{
                   name: "alfresco/documentlibrary/views/layouts/Row",
