@@ -1,0 +1,6 @@
+<webscript>
+  <shortname>Security Clearance Page</shortname>
+  <description>This WebScript defines the Security Clearance Page</description>
+  <family>admin-console</family>
+  <url>/components/console/security-clearance</url>
+</webscript>
