@@ -21,8 +21,8 @@ model.jsonModel = {
                config: {
                   fieldId: "TEXTBOX_FILTER",
                   name: "id",
-                  placeHolder: "Filter by id",
-                  label: "Id filter"
+                  placeHolder: "clearance.filter.placeholder",
+                  label: "clearance.filter.label"
                }
             }
          ],
@@ -36,11 +36,34 @@ model.jsonModel = {
                         name: "alfresco/documentlibrary/views/layouts/Cell",
                         config: {
                            widgets: [{
-                              name: "alfresco/renderers/Property",
+                              name: "alfresco/renderers/AvatarThumbnail",
                               config: {
-                                 propertyToRender: "id"
+                                 usernameProperty: "username",
+                                 imageTitleProperty: "displayName"
                               }
                            }]
+                        }
+                     }, {
+                        name: "alfresco/documentlibrary/views/layouts/Cell",
+                        config: {
+                           widgets: [
+                              {
+                                 name: "alfresco/renderers/PropertyLink",
+                                 config: {
+                                    propertyToRender: "id",
+                                    postParam: "id",
+                                    publishTopic: "ALF_NAVIGATE_TO_PAGE",
+                                    publishGlobal: true,
+                                    publishPayloadType: "PROCESS",
+                                    publishPayloadModifiers: ["processCurrentItemTokens"],
+                                    useCurrentItemAsPayload: false,
+                                    publishPayload: {
+                                       url: "user/{id}/profile",
+                                       type: "SHARE_PAGE_RELATIVE",
+                                       target: "CURRENT"
+                                    }
+                                 }
+                              }]
                         }
                      },{
                         name: "alfresco/documentlibrary/views/layouts/Cell",
