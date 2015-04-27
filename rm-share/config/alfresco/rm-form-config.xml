@@ -473,15 +473,15 @@
       <forms>
          <form>
             <field-visibility>
-               <show id="clf:initialClassification" for-mode="view"/>
-               <show id="clf:currentClassification" for-mode="view"/>
+               <show id="clfInitialClassification" for-mode="view"/>
+               <show id="clfCurrentClassification" for-mode="view"/>
                <show id="clf:classificationAuthority" for-mode="view"/>
                <show id="clf:classificationReasons" for-mode="view"/>
             </field-visibility>
             <appearance>
                <set id="rm-classification" label-id="label.set.classification" appearance="panel" />
-               <field id="clf:initialClassification" label-id="label.initialClassification" read-only="true" set="rm-classification"/>
-               <field id="clf:currentClassification" label-id="label.currentClassification" read-only="true" set="rm-classification"/>
+               <field id="clfInitialClassification" label-id="label.initialClassification" read-only="true" set="rm-classification"/>
+               <field id="clfCurrentClassification" label-id="label.currentClassification" read-only="true" set="rm-classification"/>
                <field id="clf:classificationAuthority" label-id="label.classificationAuthority" read-only="true" set="rm-classification"/>
                <field id="clf:classificationReasons" label-id="label.classificationReasons" read-only="true" set="rm-classification"/>
             </appearance>
