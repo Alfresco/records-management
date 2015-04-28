@@ -1,6 +1,0 @@
-<webscript>
-  <shortname>Classification Levels Page</shortname>
-  <description>This WebScript defines the Classification Levels Page</description>
-  <family>admin-console</family>
-  <url>/components/console/classification-levels</url>
-</webscript>
