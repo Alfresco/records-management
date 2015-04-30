@@ -51,7 +51,7 @@ model.jsonModel = {
                            widgets: [{
                               name: "alfresco/renderers/Property",
                               config: {
-                                 propertyToRender: "firstName",
+                                 propertyToRender: "completeName",
                                  renderedValueClass: "security-clearance-user-name"
                               }
                            }]
