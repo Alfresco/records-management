@@ -110,7 +110,7 @@
             <evaluator>evaluator.rm.common.isRecord</evaluator>
             <line index="10" id="identifier">{rma_identifier details.record.identifier}</line>
             <line index="20" id="dateFiled" view="detailed">{RM_dateFiled details.record.date-filed}</line>
-            <line index="30" id="recordOriginator" view="detailed">{rma_originator details.record.originator}{rma_originatingOrganization details.record.originating-organization}</line>
+            <line index="30" id="recordOriginator" view="detailed">{dod_originator details.record.originator}{dod_originatingOrganization details.record.originating-organization}</line>
          </template>
 
          <!-- Undeclared Record -->
@@ -127,7 +127,7 @@
             <evaluator>evaluator.rm.common.isMetadataStub</evaluator>
             <line index="10" id="identifier">{rma_identifier details.record.identifier}</line>
             <line index="20" id="dateFiled" view="detailed">{RM_dateFiled details.record.date-filed}</line>
-            <line index="30" id="recordOriginator" view="detailed">{rma_originator details.record.originator}{rma_originatingOrganization details.record.originating-organization}</line>
+            <line index="30" id="recordOriginator" view="detailed">{dod_originator details.record.originator}{dod_originatingOrganization details.record.originating-organization}</line>
          </template>
 
          <!-- Metadata Stub Folder -->
