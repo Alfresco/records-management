@@ -5,24 +5,25 @@ model.jsonModel = {
    widgets: [{
       name: "alfresco/lists/AlfFilteredList",
       config: {
+         noDataMessage: msg.get("clearance.list.no.data.message"),
          pubSubScope: "SECURITY_CLEARANCE_",
          filteringTopics: ["_valueChangeof_FILTER"],
          useHash: true,
-         // TODO: API doesn't filter data yet.
          loadDataPublishTopic: "ALF_CRUD_GET_ALL",
          loadDataPublishPayload: {
-            url: "api/classification/levels"
+            url: "api/classification/clearance"
          },
+         currentPageSize: -1,
          itemsProperty: "data.items",
-         widgetsForFilters: [
-            {
+         widgetsForFilters: [{
                id: "COMPOSITE_TEXTBOX",
                name: "alfresco/forms/controls/TextBox",
                config: {
                   fieldId: "TEXTBOX_FILTER",
-                  name: "id",
+                  name: "filter",
                   placeHolder: "clearance.filter.placeholder",
-                  label: "clearance.filter.label"
+                  label: "clearance.filter.label",
+                  additionalCssClasses: "security-clearance-filter"
                }
             }
          ],
@@ -39,31 +40,10 @@ model.jsonModel = {
                               name: "alfresco/renderers/AvatarThumbnail",
                               config: {
                                  usernameProperty: "username",
-                                 imageTitleProperty: "displayName"
+                                 imageTitleProperty: "displayName",
+                                 customClasses: "security-clearance-user-avatar",
                               }
                            }]
-                        }
-                     }, {
-                        name: "alfresco/documentlibrary/views/layouts/Cell",
-                        config: {
-                           widgets: [
-                              {
-                                 name: "alfresco/renderers/PropertyLink",
-                                 config: {
-                                    propertyToRender: "id",
-                                    postParam: "id",
-                                    publishTopic: "ALF_NAVIGATE_TO_PAGE",
-                                    publishGlobal: true,
-                                    publishPayloadType: "PROCESS",
-                                    publishPayloadModifiers: ["processCurrentItemTokens"],
-                                    useCurrentItemAsPayload: false,
-                                    publishPayload: {
-                                       url: "user/{id}/profile",
-                                       type: "SHARE_PAGE_RELATIVE",
-                                       target: "CURRENT"
-                                    }
-                                 }
-                              }]
                         }
                      },{
                         name: "alfresco/documentlibrary/views/layouts/Cell",
@@ -71,7 +51,19 @@ model.jsonModel = {
                            widgets: [{
                               name: "alfresco/renderers/Property",
                               config: {
-                                 propertyToRender: "displayLabel"
+                                 propertyToRender: "firstName",
+                                 renderedValueClass: "security-clearance-user-name"
+                              }
+                           }]
+                        }
+                     },{
+                        name: "alfresco/documentlibrary/views/layouts/Cell",
+                        config: {
+                           widgets: [{
+                              name: "alfresco/renderers/Property",
+                              config: {
+                                 propertyToRender: "classificationLabel",
+                                 renderedValueClass: "security-clearance-user-classification-level"
                               }
                            }]
                         }
