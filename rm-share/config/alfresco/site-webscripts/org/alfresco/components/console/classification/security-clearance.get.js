@@ -3,6 +3,12 @@ model.jsonModel = {
       "alfresco/services/CrudService"
    ],
    widgets: [{
+      id: "SET_PAGE_TITLE",
+      name: "alfresco/header/SetTitle",
+      config: {
+         title: msg.get("security-clearance.page.title")
+      }
+   },{
       name: "alfresco/lists/AlfFilteredList",
       config: {
          noDataMessage: msg.get("clearance.list.no.data.message"),
@@ -30,6 +36,29 @@ model.jsonModel = {
          widgets: [{
             name: "alfresco/lists/views/AlfListView",
             config: {
+               widgetsForHeader: [{
+                  name: "alfresco/documentlibrary/views/layouts/HeaderCell",
+                  config: {
+                     width: "50px",
+                     label: "",
+                     sortable: false,
+                     sortValue: ""
+                  }
+               },{
+                  name: "alfresco/documentlibrary/views/layouts/HeaderCell",
+                  config: {
+                     label: msg.get("header.cell.user.name"),
+                     sortable: false,
+                     sortValue: ""
+                  }
+               },{
+                  name: "alfresco/documentlibrary/views/layouts/HeaderCell",
+                  config: {
+                     label: msg.get("header.cell.security.clearance"),
+                     sortable: false,
+                     sortValue: ""
+                  }
+               }],
                widgets: [{
                   name: "alfresco/documentlibrary/views/layouts/Row",
                   config: {
@@ -41,7 +70,7 @@ model.jsonModel = {
                               config: {
                                  usernameProperty: "username",
                                  imageTitleProperty: "displayName",
-                                 customClasses: "security-clearance-user-avatar",
+                                 customClasses: "security-clearance-user-avatar"
                               }
                            }]
                         }

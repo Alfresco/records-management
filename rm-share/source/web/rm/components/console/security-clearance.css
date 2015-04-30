@@ -2,8 +2,7 @@
 {
    width: 40px;
    height: 40px;
-   margin-left: 10px;
-   margin-top: 5px;
+   margin-left: 13px;
    border-radius: 20px;
    box-shadow: 0.33px 2px 8px rgba(0, 0, 0, 0.3);
 }
@@ -18,10 +17,12 @@
 {
    display: block;
    padding-top: 10px;
+   padding-left: 10px;
 }
 
 .security-clearance-user-classification-level
 {
    display: block;
    padding-top: 10px;
+   padding-left: 10px;
 }
