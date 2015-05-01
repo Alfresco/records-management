@@ -105,6 +105,7 @@
          <!-- FIXME: Icon will be changed -->
          <indicator id="rm-classified-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-classified-record-16.png">
             <evaluator>evaluator.rm.classified.record</evaluator>
+            <override>rm-is-record</override>
          </indicator>
          <!-- FIXME: Icon will be changed -->
          <indicator id="rm-classified-document" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-classified-document-16.png">
