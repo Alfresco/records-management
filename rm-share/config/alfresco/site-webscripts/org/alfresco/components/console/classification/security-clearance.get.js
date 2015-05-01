@@ -1,3 +1,5 @@
+var pageSize = 25;
+
 model.jsonModel = {
    services: [
       "alfresco/services/CrudService"
@@ -19,14 +21,16 @@ model.jsonModel = {
          loadDataPublishPayload: {
             url: "api/classification/clearance"
          },
-         currentPageSize: -1,
          itemsProperty: "data.items",
+         currentPageSize: this.pageSize,
+         startIndexProperty: "data.startIndex",
+         totalResultsProperty: "data.total",
          widgetsForFilters: [{
                id: "COMPOSITE_TEXTBOX",
                name: "alfresco/forms/controls/TextBox",
                config: {
                   fieldId: "TEXTBOX_FILTER",
-                  name: "filter",
+                  name: "nameFilter",
                   placeHolder: "clearance.filter.placeholder",
                   label: "clearance.filter.label",
                   additionalCssClasses: "security-clearance-filter"
@@ -101,6 +105,13 @@ model.jsonModel = {
                }]
             }
          }]
+      }
+   },{
+      name: "alfresco/lists/Paginator",
+      config: {
+         pubSubScope: "SECURITY_CLEARANCE_",
+         documentsPerPage: this.pageSize,
+         pageSizes: [25,50,75]
       }
    }]
 };
