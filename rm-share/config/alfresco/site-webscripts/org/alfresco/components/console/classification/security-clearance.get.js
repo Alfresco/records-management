@@ -1,8 +1,8 @@
-var pageSize = 25;
+var securityClearanceServiceScope = "SECURITY_CLEARANCE_";
 
 model.jsonModel = {
    services: [
-      "alfresco/services/CrudService"
+      "rm/services/UserSecurityClearanceService"
    ],
    widgets: [{
       id: "SET_PAGE_TITLE",
@@ -14,15 +14,15 @@ model.jsonModel = {
       name: "alfresco/lists/AlfFilteredList",
       config: {
          noDataMessage: msg.get("clearance.list.no.data.message"),
-         pubSubScope: "SECURITY_CLEARANCE_",
+         pubSubScope: securityClearanceServiceScope,
          filteringTopics: ["_valueChangeof_FILTER"],
          useHash: true,
-         loadDataPublishTopic: "ALF_CRUD_GET_ALL",
+         loadDataPublishTopic: "RM_USER_SECURITY_CLEARANCE_GET_ALL",
          loadDataPublishPayload: {
             url: "api/classification/clearance"
          },
          itemsProperty: "data.items",
-         currentPageSize: this.pageSize,
+         sortField: "cm:userName",
          startIndexProperty: "data.startIndex",
          totalResultsProperty: "data.total",
          widgetsForFilters: [{
@@ -44,23 +44,19 @@ model.jsonModel = {
                   name: "alfresco/documentlibrary/views/layouts/HeaderCell",
                   config: {
                      width: "50px",
-                     label: "",
-                     sortable: false,
-                     sortValue: ""
+                     label: ""
                   }
                },{
                   name: "alfresco/documentlibrary/views/layouts/HeaderCell",
                   config: {
                      label: msg.get("header.cell.user.name"),
-                     sortable: false,
-                     sortValue: ""
+                     sortable: true,
+                     sortValue: "cm:userName"
                   }
                },{
                   name: "alfresco/documentlibrary/views/layouts/HeaderCell",
                   config: {
-                     label: msg.get("header.cell.security.clearance"),
-                     sortable: false,
-                     sortValue: ""
+                     label: msg.get("header.cell.security.clearance")
                   }
                }],
                widgets: [{
@@ -107,11 +103,12 @@ model.jsonModel = {
          }]
       }
    },{
-      name: "alfresco/lists/Paginator",
+      name: "alfresco/layout/CenteredWidgets",
       config: {
-         pubSubScope: "SECURITY_CLEARANCE_",
-         documentsPerPage: this.pageSize,
-         pageSizes: [25,50,75]
+         pubSubScope: securityClearanceServiceScope,
+         widgets: [{
+            name: "alfresco/lists/Paginator"
+         }]
       }
    }]
 };
