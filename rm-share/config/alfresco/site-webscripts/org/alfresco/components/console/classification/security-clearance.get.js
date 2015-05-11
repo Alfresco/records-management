@@ -91,7 +91,7 @@ model.jsonModel = {
                            widgets: [{
                               name: "alfresco/renderers/Property",
                               config: {
-                                 propertyToRender: "classificationLabel",
+                                 propertyToRender: "clearanceLabel",
                                  renderedValueClass: "security-clearance-user-classification-level"
                               }
                            }]
