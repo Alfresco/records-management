@@ -28,15 +28,36 @@
  * @since RM 3.0
  *
  * @event RM_USER_SECURITY_CLEARANCE_GET_ALL
+ * @event RM_USER_SECURITY_CLEARANCE_SET
+ * @event RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED
  */
 
 define(["dojo/_base/declare",
       "alfresco/services/CrudService",
+      "service/constants/Default",
       "dojo/_base/lang"],
 
-      function(declare, CrudService, lang) {
+      function(declare, CrudService, AlfConstants, lang) {
 
    return declare([CrudService], {
+
+      /**
+       * An array of the i18n files to use with this service.
+       *
+       * @instance
+       * @type {object[]}
+       * @default [{i18nFile: "./i18n/UserSecurityClearanceService.properties"}]
+       */
+      i18nRequirements: [{i18nFile: "./i18n/UserSecurityClearanceService.properties"}],
+
+      /**
+       * The URL used to get and set a users' security clearance.
+       *
+       * @instance
+       * @type {string}
+       * @default api/classification/clearance
+       */
+      clearanceApi: AlfConstants.PROXY_URI + "api/classification/clearance",
 
       /**
        *
@@ -44,10 +65,19 @@ define(["dojo/_base/declare",
        * @param {array} args Constructor arguments
        *
        * @listens RM_USER_SECURITY_CLEARANCE_GET_ALL
+       * @listens RM_USER_SECURITY_CLEARANCE_SET
+       * @listens RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED
        */
       constructor: function rm_services_userSecurityClearanceService__constructor(args)
       {
          this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_GET_ALL", lang.hitch(this, this.onGetAll));
+         this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_SET", lang.hitch(this, this.onSet));
+         this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED", lang.hitch(this, this.onSetConfirmed));
+
+         // FIXME: Work around for rendering issue with list dropdown. AKU-289
+         this.alfSubscribe("ALF_DOCLIST_REQUEST_FINISHED", lang.hitch(this, function () {
+            this.alfPublish("ALF_WIDGET_PROCESSING_COMPLETE", {});
+         }));
       },
 
       /**
@@ -79,6 +109,76 @@ define(["dojo/_base/declare",
          });
 
          this.inherited(arguments);
+      },
+
+      /**
+       * This is called to set the user clearance level. It prompts the user for confirmation.
+       * Payload should look like:
+       * @example
+       * {
+       *    clearanceId: "TopSecret"
+       *    clearanceLabel: "Top Secret"
+       *    completeName: "Mike Jackson (mjackson)"
+       *    levels: {
+       *       Confidential: "Confidential"
+       *       Secret: "Secret"
+       *       TopSecret: "Top Secret"
+       *       Unclassified: "No Clearance"
+       *    }
+       *    username: "mjackson"
+       * }
+       *
+       * @param payload
+       * @fires ALF_CREATE_DIALOG_REQUEST
+       * @fires RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED
+       */
+      onSet: function rm_services_userSecurityClearance_onSet(payload)
+      {
+         this.alfPublish("ALF_CREATE_DIALOG_REQUEST", {
+            dialogTitle: this.message("userClearance.set.dialog.title"),
+            handleOverflow: false,
+            textContent: this.message("userClearance.set.dialog.content", {0: payload.completeName, 1: payload.levels[payload.clearanceId]}),
+            widgetsButtons: [
+               {
+                  name: "alfresco/buttons/AlfButton",
+                  config: {
+                     label: "userClearance.set.dialog.confirm",
+                     publishTopic: "RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED",
+                     publishPayload: payload
+                  }
+               },
+               {
+                  name: "alfresco/buttons/AlfButton",
+                  config: {
+                     label: "userClearance.set.dialog.cancel",
+                     publishTopic: payload.responseTopic + "_CANCEL"
+                  }
+               }
+            ]
+         }, true);
+      },
+
+      /**
+       * This calls the api to set the actual clearance level for a user.
+       *
+       * Payload should contain a username and a clearanceId
+       * Note: Success and failure notifications are handled externally to this service
+       * (e.g. built in to the publishingDropdownMenu used on the admin console page)
+       *
+       * @param payload
+       */
+      onSetConfirmed: function rm_services_userSecurityClearance_onSetConfirmed(payload)
+      {
+         var url = this.clearanceApi;
+
+         url = this.addQueryParameter(url, "username", payload.username);
+         url = this.addQueryParameter(url, "clearanceId", payload.clearanceId);
+
+         this.serviceXhr({
+            url: url,
+            method: "PUT",
+            alfTopic: payload.responseTopic
+         })
       }
    });
 });
