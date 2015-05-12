@@ -1,8 +1,28 @@
 var securityClearanceServiceScope = "SECURITY_CLEARANCE_";
 
+// Get the levels for the dropdown
+var levels = [];
+var levelsObj = {};
+var result = remote.call("/api/classification/levels");
+if (result.status.code == status.STATUS_OK) {
+   var rawData = JSON.parse(result);
+   if (rawData && rawData.data && rawData.data.items) {
+      var items = rawData.data.items;
+      for (var i = 0; i < items.length; i++) {
+         levels.push({
+            value: items[i].id,
+            label: items[i].displayLabel
+         });
+
+         levelsObj[items[i].id] = items[i].displayLabel;
+      }
+   }
+}
+
 model.jsonModel = {
    services: [
-      "rm/services/UserSecurityClearanceService"
+      "rm/services/UserSecurityClearanceService",
+      "alfresco/services/DialogService"
    ],
    widgets: [{
       id: "SET_PAGE_TITLE",
@@ -14,7 +34,7 @@ model.jsonModel = {
       name: "alfresco/lists/AlfFilteredList",
       config: {
          noDataMessage: msg.get("clearance.list.no.data.message"),
-         pubSubScope: securityClearanceServiceScope,
+         //pubSubScope: securityClearanceServiceScope,
          filteringTopics: ["_valueChangeof_FILTER"],
          useHash: true,
          loadDataPublishTopic: "RM_USER_SECURITY_CLEARANCE_GET_ALL",
@@ -89,10 +109,36 @@ model.jsonModel = {
                         name: "alfresco/documentlibrary/views/layouts/Cell",
                         config: {
                            widgets: [{
-                              name: "alfresco/renderers/Property",
+                              name: "alfresco/renderers/PublishingDropDownMenu",
+                              id: securityClearanceServiceScope + "MODIFY_CLEARANCE",
                               config: {
+                                 publishTopic: "RM_USER_SECURITY_CLEARANCE_SET",
+                                 publishPayload: {
+                                    username: {
+                                       alfType: "item",
+                                       alfProperty: "userName"
+                                    },
+                                    completeName: {
+                                       alfType: "item",
+                                       alfProperty: "completeName"
+                                    },
+                                    clearanceId: {
+                                       alfType: "payload",
+                                       alfProperty: "value"
+                                    },
+                                    clearanceLabel: {
+                                       alfType: "payload",
+                                       alfProperty: "label"
+                                    },
+                                    levels: levelsObj
+                                 },
+                                 publishPayloadType: "BUILD",
+                                 publishGlobal: true,
                                  propertyToRender: "clearanceLabel",
-                                 renderedValueClass: "security-clearance-user-classification-level"
+                                 renderedValueClass: "security-clearance-user-classification-level",
+                                 optionsConfig: {
+                                    fixed: levels
+                                 }
                               }
                            }]
                         }
