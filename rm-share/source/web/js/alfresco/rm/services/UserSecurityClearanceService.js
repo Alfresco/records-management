@@ -57,7 +57,7 @@ define(["dojo/_base/declare",
        * @type {string}
        * @default api/classification/clearance
        */
-      clearanceApi: AlfConstants.PROXY_URI + "api/classification/clearance",
+      clearanceApi: "api/classification/clearance",
 
       /**
        *
@@ -87,10 +87,7 @@ define(["dojo/_base/declare",
        */
       onGetAll: function rm_services_userSecurityClearanceService__onGetAll(payload)
       {
-         var url = lang.getObject("url", false, payload);
-         if (!url) {
-            this.alfLog("warn", "A request was made to service a UserSecurityClearance request but no 'url' attribute was provided on the payload", payload, this);
-         }
+         var url = this.clearanceApi;
 
          var sortAscending = payload.sortAscending;
          if (sortAscending != null)
@@ -169,7 +166,7 @@ define(["dojo/_base/declare",
        */
       onSetConfirmed: function rm_services_userSecurityClearance_onSetConfirmed(payload)
       {
-         var url = this.clearanceApi;
+         var url = AlfConstants.PROXY_URI + this.clearanceApi;
 
          url = this.addQueryParameter(url, "username", payload.username);
          url = this.addQueryParameter(url, "clearanceId", payload.clearanceId);

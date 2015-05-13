@@ -38,9 +38,6 @@ model.jsonModel = {
          filteringTopics: ["_valueChangeof_FILTER"],
          useHash: true,
          loadDataPublishTopic: "RM_USER_SECURITY_CLEARANCE_GET_ALL",
-         loadDataPublishPayload: {
-            url: "api/classification/clearance"
-         },
          itemsProperty: "data.items",
          sortField: "cm:userName",
          startIndexProperty: "data.startIndex",
