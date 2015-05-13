@@ -82,9 +82,9 @@ function main()
          services: [
             "alfresco/services/DocumentService",
             "alfresco/services/NotificationService",
-            "rm/services/RelationshipService",
-            "rm/services/AlfRmDialogService",
-            "rm/services/AlfRmOptionsService"
+            "alfresco/services/OptionsService",
+            "alfresco/services/DialogService",
+            "rm/services/RelationshipService"
          ],
          widgets: [toolbar, table]
       };

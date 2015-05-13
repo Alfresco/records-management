@@ -183,7 +183,7 @@ define(["dojo/_base/declare",
                site = item.location.site.name;
 
             this.alfPublish("ALF_CREATE_FORM_DIALOG_REQUEST", {
-               keepDialog: true,
+               dialogId: "ADD_RELATIONSHIP_DIALOG",
                dialogTitle: this.message("label.title.new-relationship"),
                dialogConfirmationButtonTitle: this.message("label.button.create"),
                dialogCancellationButtonTitle: this.message("label.button.cancel"),
