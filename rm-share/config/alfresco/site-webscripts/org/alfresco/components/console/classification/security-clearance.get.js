@@ -1,4 +1,4 @@
-var securityClearanceServiceScope = "SECURITY_CLEARANCE_";
+var securityClearanceServiceScope = "";//"SECURITY_CLEARANCE_";
 
 // Get the levels for the dropdown
 var levels = [];
@@ -34,7 +34,7 @@ model.jsonModel = {
       name: "alfresco/lists/AlfFilteredList",
       config: {
          noDataMessage: msg.get("clearance.list.no.data.message"),
-         //pubSubScope: securityClearanceServiceScope,
+         pubSubScope: securityClearanceServiceScope,
          filteringTopics: ["_valueChangeof_FILTER"],
          useHash: true,
          loadDataPublishTopic: "RM_USER_SECURITY_CLEARANCE_GET_ALL",
