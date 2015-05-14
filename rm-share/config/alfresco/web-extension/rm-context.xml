@@ -303,6 +303,13 @@
       <property name="action" value="editReferences" />
    </bean>
    <bean id="evaluator.rm.action.unlink-from-checkparents" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.UnlinkActionEvaluator"/>
+   <bean id="evaluator.rm.fileplan.isHeld" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+      <property name="aspects">
+         <list>
+            <value>rma:frozen</value>
+         </list>
+      </property>
+   </bean>
 
    <!--                          -->
    <!-- DocLib Common Evaluators -->
