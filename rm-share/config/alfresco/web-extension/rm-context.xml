@@ -358,6 +358,16 @@
          </list>
       </property>
    </bean>
+   <bean id="evaluator.rm.doclib.isInRmSite" parent="evaluator.doclib.action.sitePreset">
+      <property name="presets">
+         <list>
+            <value>rm-site-dashboard</value>
+         </list>
+      </property>
+   </bean>
+   <bean id="evaluator.rm.doclib.isNotInRmSite" parent="evaluator.rm.doclib.isInRmSite">
+      <property name="negateOutput" value="true" />
+   </bean>
    <bean id="evaluator.rm.classified.record" class="org.alfresco.web.evaluator.ChainedMatchAllEvaluator">
       <property name="evaluators">
          <list>
@@ -371,7 +381,7 @@
       <property name="evaluators">
          <list>
             <ref bean="evaluator.rm.doclib.isClassified" />
-            <ref bean="evaluator.rm.doclib.isInCollabSite" />
+            <ref bean="evaluator.rm.doclib.isNotInRmSite" />
             <ref bean="evaluator.rm.doclib.isContent" />
             <ref bean="evaluator.rm.doclib.isNotRecord" />
          </list>
