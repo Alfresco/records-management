@@ -126,16 +126,13 @@ define(["dojo/_base/declare",
           * @fires ALF_GET_FORM_CONTROL_OPTIONS
           */
          onClassifyContent: function rm_services_classifyService__onClassifyContent(payload) {
-            var item = payload.item,
-               site = item.location.site.name;
-
             this.alfPublish("ALF_CREATE_FORM_DIALOG_REQUEST", {
                dialogTitle: this.message("label.classify.dialog.title"),
                dialogConfirmationButtonTitle: this.message("label.button.create"),
                dialogCancellationButtonTitle: this.message("label.button.cancel"),
                formSubmissionTopic: "RM_CLASSIFY",
                formSubmissionPayloadMixin: {
-                  nodeRef: item.nodeRef
+                  nodeRef: payload.item.nodeRef
                },
                widgets: [
                   {
