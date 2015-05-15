@@ -3,7 +3,7 @@ var securityClearanceServiceScope = "";//"SECURITY_CLEARANCE_";
 // Get the levels for the dropdown
 var levels = [];
 var levelsObj = {};
-var result = remote.call("/api/classification/levels");
+var result = remote.call("/api/clearance/levels");
 if (result.status.code == status.STATUS_OK) {
    var rawData = JSON.parse(result);
    if (rawData && rawData.data && rawData.data.items) {
@@ -131,7 +131,7 @@ model.jsonModel = {
                                  },
                                  publishPayloadType: "BUILD",
                                  publishGlobal: true,
-                                 propertyToRender: "clearanceLabel",
+                                 propertyToRender: "classificationId",
                                  renderedValueClass: "security-clearance-user-classification-level",
                                  optionsConfig: {
                                     fixed: levels
