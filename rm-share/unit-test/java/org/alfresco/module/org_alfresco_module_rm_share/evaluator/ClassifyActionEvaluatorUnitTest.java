@@ -22,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.alfresco.test.BaseUnitTest;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
@@ -33,95 +34,69 @@ import org.junit.Test;
  */
 public class ClassifyActionEvaluatorUnitTest extends BaseUnitTest
 {
+    /** Constants */
+    private static final String NODE = "node";
+    private static final String ASPECTS = "aspects";
+    private static final String PROPERTIES = "properties";
+    private static final String ASPECT_CLASSIFIED = "clf:classified";
+    private static final String PROP_CURRENT_CLASSIFICATION = "clf:currentClassification";
+
     /** Classify action evaluator */
     private ClassifyActionEvaluator evaluator = new ClassifyActionEvaluator();
 
     /**
-     * Given that the "node" json object does not exist
-     * When evaluated
-     * Then the result is false
-     */
-    @SuppressWarnings("unchecked")
-    @Test
-    public void nodeObjectDoesNotExist()
-    {
-        JSONObject jsonObject = new JSONObject();
-        JSONObject node = new JSONObject();
-        node.put("hasClearance", true);
-        jsonObject.put("node1", node);
-
-        assertFalse(evaluator.evaluate(jsonObject));
-    }
-
-    /**
-     * Given that the "hasClearance" key exists
-     * And the it's value is true
+     * Given that the "classified" aspect does not exist
      * When evaluated
      * Then the result is true
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void hasClearanceValueTrue()
+    public void classifiedAspectDoesNotExist()
     {
         JSONObject jsonObject = new JSONObject();
         JSONObject node = new JSONObject();
-        node.put("hasClearance", true);
-        jsonObject.put("node", node);
-
+        JSONArray aspects = new JSONArray();
+        node.put(ASPECTS, aspects);
+        jsonObject.put(NODE, node);
         assertTrue(evaluator.evaluate(jsonObject));
     }
 
     /**
-     * Given that the "hasClearance" key exists
-     * And the it's value is false
+     * Given that the "classified" aspect exists but current classification is not set
      * When evaluated
-     * Then the result is false
+     * Then the result is true
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void hasClearanceValueFalse()
+    public void classifiedAspectWithoutCurrentClassification()
     {
         JSONObject jsonObject = new JSONObject();
         JSONObject node = new JSONObject();
-        node.put("hasClearance", false);
-        jsonObject.put("node", node);
-
-        assertFalse(evaluator.evaluate(jsonObject));
+        JSONArray aspects = new JSONArray();
+        aspects.add(ASPECT_CLASSIFIED);
+        node.put(ASPECTS, aspects);
+        jsonObject.put(NODE, node);
+        assertTrue(evaluator.evaluate(jsonObject));
     }
 
-    /**
-     * Given that the "hasClearance" key exists
-     * And the it's value is a string
-     * When evaluated
-     * A {@link ClassCastException} will be thrown
-     */
-    @SuppressWarnings("unchecked")
-    @Test (expected=ClassCastException.class)
-    public void hasClearanceValueString()
-    {
-        JSONObject jsonObject = new JSONObject();
-        JSONObject node = new JSONObject();
-        node.put("hasClearance", generateText());
-        jsonObject.put("node", node);
-
-        evaluator.evaluate(jsonObject);
-    }
-
-    /**
-     * Given that the "hasClearance" key exists
-     * And the it's value is <code>null</code>
-     * When evaluated
-     * Then the result is false
-     */
+   /**
+    * Given that the "classified" aspect exists and the current classification is set
+    * When evaluated
+    * Then the result is false
+    */
     @SuppressWarnings("unchecked")
     @Test
-    public void hasClearanceValueFalseNull()
+    public void classifiedAspectWithCurrentClassification()
     {
         JSONObject jsonObject = new JSONObject();
         JSONObject node = new JSONObject();
-        node.put("hasClearance", null);
-        jsonObject.put("node", node);
-
+        JSONArray aspects = new JSONArray();
+        aspects.add(ASPECT_CLASSIFIED);
+        JSONObject properties = new JSONObject();
+        properties.put(PROP_CURRENT_CLASSIFICATION, generateText());
+        node.put(ASPECTS, aspects);
+        node.put(PROPERTIES, properties);
+        jsonObject.put(NODE, node);
         assertFalse(evaluator.evaluate(jsonObject));
     }
 }

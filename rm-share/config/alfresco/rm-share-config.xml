@@ -689,7 +689,6 @@
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
             <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
-            <evaluator negate="true">evaluator.rm.doclib.isClassified</evaluator>
             <evaluator negate="true">evaluator.rm.fileplan.isHeld</evaluator>
          </action>
 

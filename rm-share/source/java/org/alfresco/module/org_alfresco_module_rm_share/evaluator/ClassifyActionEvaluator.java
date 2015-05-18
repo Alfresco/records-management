@@ -18,9 +18,9 @@
  */
 package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 
-import static org.alfresco.util.ParameterCheck.mandatory;
+import java.util.ArrayList;
 
-import org.alfresco.web.evaluator.BaseEvaluator;
+import org.alfresco.web.evaluator.HasAspectEvaluator;
 import org.json.simple.JSONObject;
 
 /**
@@ -29,26 +29,36 @@ import org.json.simple.JSONObject;
  * @author David Webster
  * @since 3.0
  */
-public class ClassifyActionEvaluator extends BaseEvaluator
+public class ClassifyActionEvaluator extends HasAspectEvaluator
 {
+    /** Classified aspect */
+    private static final String ASPECT_CLASSIFIED = "clf:classified";
+
+    /** Current classification property */
+    private static final String PROP_CURRENT_CLASSIFICATION = "clf:currentClassification";
+
     /**
-     * @see org.alfresco.web.evaluator.BaseEvaluator#evaluate(org.json.simple.JSONObject)
+     * @see org.alfresco.web.evaluator.HasAspectEvaluator#evaluate(org.json.simple.JSONObject)
      */
     @Override
     public boolean evaluate(JSONObject jsonObject)
     {
-        mandatory("jsonObject", jsonObject);
-
         boolean result = false;
 
-        JSONObject node = (JSONObject) jsonObject.get("node");
-        if (node != null)
+        ArrayList<String> aspects = new ArrayList<>();
+        aspects.add(ASPECT_CLASSIFIED);
+        setAspects(aspects);
+
+        if (super.evaluate(jsonObject))
         {
-            Boolean hasClearance = (Boolean) node.get("hasClearance");
-            if (hasClearance != null && hasClearance.booleanValue())
+            if (((String) getProperty(jsonObject, PROP_CURRENT_CLASSIFICATION)) == null)
             {
                 result = true;
             }
+        }
+        else
+        {
+            result = true;
         }
 
         return result;
