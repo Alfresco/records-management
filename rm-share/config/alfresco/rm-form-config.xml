@@ -10,6 +10,7 @@
       <forms>
          <dependencies>
             <js src="/rm/js/validation-min.js" />
+            <css src="/rm/modules/form/form.css" />
          </dependencies>
       </forms>
    </config>
@@ -477,13 +478,19 @@
                <show id="clfCurrentClassification" for-mode="view"/>
                <show id="clf:classificationAuthority" for-mode="view"/>
                <show id="clf:classificationReasons" for-mode="view"/>
+               <show id="clfClassificationReasonLabels" for-mode="view"/>
             </field-visibility>
             <appearance>
                <set id="rm-classification" label-id="label.set.classification" appearance="panel" />
                <field id="clfInitialClassification" label-id="label.initialClassification" read-only="true" set="rm-classification"/>
                <field id="clfCurrentClassification" label-id="label.currentClassification" read-only="true" set="rm-classification"/>
                <field id="clf:classificationAuthority" label-id="label.classificationAuthority" read-only="true" set="rm-classification"/>
-               <field id="clf:classificationReasons" label-id="label.classificationReasons" read-only="true" set="rm-classification"/>
+               <field id="clf:classificationReasons" label-id="label.classificationReasons" read-only="true" set="rm-classification">
+                  <control template="/org/alfresco/components/form/controls/classificationTooltip.ftl"/>
+               </field>
+               <field id="clfClassificationReasonLabels" read-only="true" set="rm-classification">
+                  <control template="/org/alfresco/components/form/controls/classificationHiddenField.ftl"/>
+               </field>
             </appearance>
          </form>
       </forms>
