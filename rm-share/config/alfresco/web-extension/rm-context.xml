@@ -387,6 +387,13 @@
          </list>
       </property>
    </bean>
+   <bean id="evaluator.rm.doclib.isShared" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+      <property name="aspects">
+         <list>
+            <value>qshare:shared</value>
+         </list>
+      </property>
+   </bean>
 
    <!-- DOD 5015 context import -->
    <import resource="classpath:alfresco/dod5015/dod5015-context.xml"/>

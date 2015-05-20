@@ -686,6 +686,7 @@
             <param name="function">onClassifyContent</param>
             <evaluator>evaluator.rm.user.canClassify</evaluator>
             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
+            <evaluator negate="true">evaluator.rm.doclib.isShared</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
             <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
