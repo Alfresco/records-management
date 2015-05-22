@@ -65,6 +65,7 @@
       {
          if (this.actionsView === "details")
          {
+            YAHOO.Bubbling.unsubscribe("metadataRefresh", this.doRefresh, this);
             window.location.reload(true);
          }
       }
@@ -145,8 +146,11 @@
                      text: me.msg("message.recordedVersionConfig.success")
                   });
 
-                  // Fire event so compnents on page are refreshed
-                  YAHOO.Bubbling.fire("metadataRefresh");
+                  if (this.actionsView !== "details")
+                  {
+                     // Fire event so compnents on page are refreshed
+                     YAHOO.Bubbling.fire("metadataRefresh");
+                  }
                },
                scope: this
             },
