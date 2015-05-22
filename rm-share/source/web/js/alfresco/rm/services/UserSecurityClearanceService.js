@@ -101,6 +101,8 @@ define(["dojo/_base/declare",
             url = this.addQueryParameter(url, "sortField", sortField);
          }
 
+         url = this.addQueryParameter(url, "noCache", new Date().getTime());
+
          payload = lang.mixin(payload, {
             url: url
          });
