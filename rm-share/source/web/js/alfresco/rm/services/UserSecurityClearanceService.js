@@ -35,9 +35,10 @@
 define(["dojo/_base/declare",
       "alfresco/services/CrudService",
       "service/constants/Default",
+      "dojo/_base/array",
       "dojo/_base/lang"],
 
-      function(declare, CrudService, AlfConstants, lang) {
+      function(declare, CrudService, AlfConstants, array, lang) {
 
    return declare([CrudService], {
 
@@ -73,11 +74,6 @@ define(["dojo/_base/declare",
          this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_GET_ALL", lang.hitch(this, this.onGetAll));
          this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_SET", lang.hitch(this, this.onSet));
          this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED", lang.hitch(this, this.onSetConfirmed));
-
-         // FIXME: Work around for rendering issue with list dropdown. AKU-289
-         this.alfSubscribe("ALF_DOCLIST_REQUEST_FINISHED", lang.hitch(this, function () {
-            this.alfPublish("ALF_WIDGET_PROCESSING_COMPLETE", {});
-         }));
       },
 
       /**
@@ -102,6 +98,14 @@ define(["dojo/_base/declare",
          }
 
          url = this.addQueryParameter(url, "noCache", new Date().getTime());
+
+         // FIXME: Remove this workaround after AKU-331 has been fixed.
+         if (payload.dataFilters)
+         {
+            array.forEach(payload.dataFilters, function(filter) {
+               filter.value = encodeURIComponent(filter.value);
+            }, this);
+         }
 
          payload = lang.mixin(payload, {
             url: url
