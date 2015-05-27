@@ -2,6 +2,7 @@ if (model.item != null && (model.site != (model.item.location.site != null ? mod
 {
    model.paths = getPaths();
    model.widgets = getWidgets();
+
 }
 
 function getPaths()
@@ -69,3 +70,25 @@ function getWidgets()
    model.showComments = "false";
    return widgets;
 }
+
+/**
+ * Is the document unclassified? (Used to determine if the QuickShare link should be enabled)
+ * This method equates documents classified as "Unclassified" and documents that haven't been classified at all.
+ * @returns {boolean}
+ */
+function isNotClassified()
+{
+   var isNotClassified = true,
+      classifiedProp = "clf:currentClassification";
+
+   // Content is classified if the property is set and not set to Unclassified.
+   if (model.item.node.properties[classifiedProp] && model.item.node.properties[classifiedProp] !== "Unclassified")
+   {
+      isNotClassified = false;
+   }
+
+   return isNotClassified;
+}
+
+// Hide quickShare link if content is classified
+model.showQuickShare = isNotClassified().toString();

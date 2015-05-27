@@ -322,4 +322,33 @@
       });
    });
 
+
+   /**
+    * Override default renderer to hide QuickShare link when content is classified.
+    */
+   // Run this after the default renderers have completed.
+   YAHOO.Bubbling.on("postDocumentListOnReady", function(){
+      YAHOO.Bubbling.fire("registerRenderer", {
+         propertyName: "social",
+         renderer: function RM_social(record) {
+            var jsNode = record.jsNode,
+               html = "",
+            // A document is classified if it has a currentClassification property. Treat content classified as "Unclassified" as not classified.
+               isClassified = (jsNode.hasProperty("clf:currentClassification") && jsNode.properties["clf:currentClassification"] !== "Unclassified");
+
+            /* Favourite / Likes / Comments */
+            html += '<span class="item item-social">' + Alfresco.DocumentList.generateFavourite(this, record) + '</span>';
+            html += '<span class="item item-social item-separator">' + Alfresco.DocumentList.generateLikes(this, record) + '</span>';
+            if (jsNode.permissions.user.CreateChildren) {
+               html += '<span class="item item-social item-separator">' + Alfresco.DocumentList.generateComments(this, record) + '</span>';
+            }
+            if (!record.node.isContainer && Alfresco.constants.QUICKSHARE_URL && !isClassified) {
+               html += '<span class="item item-separator">' + Alfresco.DocumentList.generateQuickShare(this, record) + '</span>';
+            }
+
+            return html;
+         }
+      })
+   });
+
 })();
