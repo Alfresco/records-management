@@ -28,8 +28,8 @@
  * @since RM 3.0
  *
  * @event RM_USER_SECURITY_CLEARANCE_GET_ALL
- * @event RM_USER_SECURITY_CLEARANCE_SET
- * @event RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED
+ * @event RM_USER_SECURITY_CLEARANCE_SET_CLASSIFICATION
+ * @event RM_USER_SECURITY_CLEARANCE_SET_CLASSIFICATION_CONFIRMED
  */
 
 define(["dojo/_base/declare",
@@ -66,14 +66,14 @@ define(["dojo/_base/declare",
        * @param {array} args Constructor arguments
        *
        * @listens RM_USER_SECURITY_CLEARANCE_GET_ALL
-       * @listens RM_USER_SECURITY_CLEARANCE_SET
-       * @listens RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED
+       * @listens RM_USER_SECURITY_CLEARANCE_SET_CLASSIFICATION
+       * @listens RM_USER_SECURITY_CLEARANCE_SET_CLASSIFICATION_CONFIRMED
        */
       constructor: function rm_services_userSecurityClearanceService__constructor(args)
       {
          this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_GET_ALL", lang.hitch(this, this.onGetAll));
-         this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_SET", lang.hitch(this, this.onSet));
-         this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED", lang.hitch(this, this.onSetConfirmed));
+         this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_SET_CLASSIFICATION", lang.hitch(this, this.onSet));
+         this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_SET_CLASSIFICATION_CONFIRMED", lang.hitch(this, this.onSetConfirmed));
       },
 
       /**
@@ -133,7 +133,7 @@ define(["dojo/_base/declare",
        *
        * @param payload
        * @fires ALF_CREATE_DIALOG_REQUEST
-       * @fires RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED
+       * @fires RM_USER_SECURITY_CLEARANCE_SET_CLASSIFICATION_CONFIRMED
        */
       onSet: function rm_services_userSecurityClearance_onSet(payload)
       {
@@ -146,7 +146,7 @@ define(["dojo/_base/declare",
                   name: "alfresco/buttons/AlfButton",
                   config: {
                      label: "userClearance.set.dialog.confirm",
-                     publishTopic: "RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED",
+                     publishTopic: "RM_USER_SECURITY_CLEARANCE_SET_CLASSIFICATION_CONFIRMED",
                      publishPayload: payload
                   }
                },
@@ -154,7 +154,7 @@ define(["dojo/_base/declare",
                   name: "alfresco/buttons/AlfButton",
                   config: {
                      label: "userClearance.set.dialog.cancel",
-                     publishTopic: payload.responseTopic + "_CANCEL"
+                     publishTopic: "RM_USER_SECURITY_CLEARANCE_" + payload.responseTopic + "_CANCEL"
                   }
                }
             ]
@@ -180,7 +180,7 @@ define(["dojo/_base/declare",
          this.serviceXhr({
             url: url,
             method: "PUT",
-            alfTopic: payload.responseTopic
+            alfTopic: "RM_USER_SECURITY_CLEARANCE_" + payload.responseTopic
          })
       }
    });

@@ -1,4 +1,4 @@
-var securityClearanceServiceScope = "";//"SECURITY_CLEARANCE_";
+var securityClearanceServiceScope = "RM_USER_SECURITY_CLEARANCE_";
 
 // Get the levels for the dropdown
 var levels = [];
@@ -109,7 +109,7 @@ model.jsonModel = {
                               name: "alfresco/renderers/PublishingDropDownMenu",
                               id: securityClearanceServiceScope + "MODIFY_CLEARANCE",
                               config: {
-                                 publishTopic: "RM_USER_SECURITY_CLEARANCE_SET",
+                                 publishTopic: "SET_CLASSIFICATION",
                                  publishPayload: {
                                     username: {
                                        alfType: "item",
