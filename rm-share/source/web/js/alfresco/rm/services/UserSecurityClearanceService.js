@@ -97,6 +97,7 @@ define(["dojo/_base/declare",
             url = this.addQueryParameter(url, "sortField", sortField);
          }
 
+         // FIXME: Remove this workaround after AKU-317 has been fixed.
          url = this.addQueryParameter(url, "noCache", new Date().getTime());
 
          // FIXME: Remove this workaround after AKU-331 has been fixed.
