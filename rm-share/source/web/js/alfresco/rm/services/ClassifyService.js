@@ -175,9 +175,12 @@ define(["dojo/_base/declare",
                            initialValue: true
                         },
                         optionsConfig: {
-                           queryAttribute: "displayLabel",
+                           queryAttribute: "fullReason",
                            valueAttribute: "id",
-                           labelAttribute: "displayLabel",
+                           labelAttribute: "fullReason",
+                           labelFormat: {
+                              choice: "{value}"
+                           },
                            publishTopic: "RM_CLASSIFY_REASONS_GET",
                            publishPayload: {
                               resultsProperty: "response.data.items"
