@@ -1,3 +1,4 @@
+
 /**
  * Copyright (C) 2005-2015 Alfresco Software Limited.
  *
@@ -127,6 +128,7 @@ define(["dojo/_base/declare",
           */
          onClassifyContent: function rm_services_classifyService__onClassifyContent(payload) {
             this.alfPublish("ALF_CREATE_FORM_DIALOG_REQUEST", {
+               dialogId: "CLASSIFY_CONTENT_DIALOG",
                dialogTitle: this.message("label.classify.dialog.title"),
                dialogConfirmationButtonTitle: this.message("label.button.create"),
                dialogCancellationButtonTitle: this.message("label.button.cancel"),
