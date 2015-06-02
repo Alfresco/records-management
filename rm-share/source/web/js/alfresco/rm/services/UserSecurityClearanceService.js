@@ -97,9 +97,6 @@ define(["dojo/_base/declare",
             url = this.addQueryParameter(url, "sortField", sortField);
          }
 
-         // FIXME: Remove this workaround after AKU-317 has been fixed.
-         url = this.addQueryParameter(url, "noCache", new Date().getTime());
-
          // FIXME: Remove this workaround after AKU-331 has been fixed.
          if (payload.dataFilters)
          {
@@ -109,7 +106,8 @@ define(["dojo/_base/declare",
          }
 
          payload = lang.mixin(payload, {
-            url: url
+            url: url,
+            preventCache: true
          });
 
          this.inherited(arguments);
@@ -145,6 +143,7 @@ define(["dojo/_base/declare",
             widgetsButtons: [
                {
                   name: "alfresco/buttons/AlfButton",
+                  id: "OK",
                   config: {
                      label: "userClearance.set.dialog.confirm",
                      publishTopic: "RM_USER_SECURITY_CLEARANCE_SET_CLASSIFICATION_CONFIRMED",
@@ -153,6 +152,7 @@ define(["dojo/_base/declare",
                },
                {
                   name: "alfresco/buttons/AlfButton",
+                  id: "CANCEL",
                   config: {
                      label: "userClearance.set.dialog.cancel",
                      publishTopic: "RM_USER_SECURITY_CLEARANCE_" + payload.responseTopic + "_CANCEL"
