@@ -127,9 +127,11 @@ define(["dojo/_base/declare",
           * @fires ALF_GET_FORM_CONTROL_OPTIONS
           */
          onClassifyContent: function rm_services_classifyService__onClassifyContent(payload) {
+            var dialogTitle = (Alfresco.rm.isRMSite())? "label.classify.dialog.title.rm" : "label.classify.dialog.title";
+
             this.alfPublish("ALF_CREATE_FORM_DIALOG_REQUEST", {
                dialogId: "CLASSIFY_CONTENT_DIALOG",
-               dialogTitle: this.message("label.classify.dialog.title"),
+               dialogTitle: this.message(dialogTitle),
                dialogConfirmationButtonTitle: this.message("label.button.create"),
                dialogCancellationButtonTitle: this.message("label.button.cancel"),
                formSubmissionTopic: "RM_CLASSIFY",

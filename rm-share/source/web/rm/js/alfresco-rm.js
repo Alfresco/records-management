@@ -138,3 +138,16 @@ Alfresco.rm.dataTableSelectedItems = function(dataTable)
    }
    return selectedHolds;
 };
+
+/**
+ *  Are we currently in an RM Site?
+ *
+ *  Returns false if:
+ *     - the current page is outside of a site context, OR
+ *     - the current page is in a site that isn't an RM site.
+ */
+Alfresco.rm.isRMSite = function()
+{
+   // FIXME: This needs replacing with something less fragile, see RM-2275
+   return (Alfresco.constants.SITE === "rm");
+};
