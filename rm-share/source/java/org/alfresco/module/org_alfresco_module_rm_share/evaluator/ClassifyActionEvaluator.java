@@ -51,7 +51,7 @@ public class ClassifyActionEvaluator extends HasAspectEvaluator
 
         if (super.evaluate(jsonObject))
         {
-            if (((String) getProperty(jsonObject, PROP_CURRENT_CLASSIFICATION)) == null)
+            if ((getProperty(jsonObject, PROP_CURRENT_CLASSIFICATION)) == null)
             {
                 result = true;
             }

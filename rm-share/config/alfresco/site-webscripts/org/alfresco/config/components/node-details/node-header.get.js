@@ -2,7 +2,6 @@ if (model.item != null && (model.site != (model.item.location.site != null ? mod
 {
    model.paths = getPaths();
    model.widgets = getWidgets();
-
 }
 
 function getPaths()
@@ -72,23 +71,26 @@ function getWidgets()
 }
 
 /**
- * Is the document unclassified? (Used to determine if the QuickShare link should be enabled)
- * This method equates documents classified as "Unclassified" and documents that haven't been classified at all.
+ * Is the content classified? (Used to determine if the QuickShare link should be disabled)
+ * This method equates contents classified as "Unclassified" and documents that haven't been classified at all.
  * @returns {boolean}
  */
-function isNotClassified()
+var isClassified = function isClassified()
 {
-   var isNotClassified = true,
+   var isClassified = false,
       classifiedProp = "clf:currentClassification";
 
    // Content is classified if the property is set and not set to Unclassified.
-   if (model.item.node.properties[classifiedProp] && model.item.node.properties[classifiedProp] !== "Unclassified")
+   if (model.item.node.properties[classifiedProp] && model.item.node.properties[classifiedProp].id !== "Unclassified")
    {
-      isNotClassified = false;
+      isClassified = true;
    }
 
-   return isNotClassified;
-}
+   return isClassified;
+}();
 
 // Hide quickShare link if content is classified
-model.showQuickShare = isNotClassified().toString();
+model.showQuickShare = (!isClassified).toString();
+
+// Is the content classified?
+model.isClassified = isClassified;
