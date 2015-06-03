@@ -151,3 +151,31 @@ Alfresco.rm.isRMSite = function()
    // FIXME: This needs replacing with something less fragile, see RM-2275
    return (Alfresco.constants.SITE === "rm");
 };
+
+/**
+ * Checks if the content is classified or not. A content which is
+ * classified as "Unclassified" will be treated as not classified.
+ *
+ * @method isClassified
+ */
+Alfresco.rm.isClassified = function(jsNode)
+{
+   var classifiedProp = "clf:currentClassification";
+   return jsNode.hasProperty(classifiedProp) && jsNode.properties[classifiedProp].id !== "Unclassified";
+};
+
+/**
+ * Adds the classified banner if the content has been classified
+ *
+ * @method classifiedRenderer
+ */
+Alfresco.rm.classifiedBanner = function(cell, record, msg)
+{
+   var jsNode = record.getData().jsNode,
+   isClassified = Alfresco.rm.isClassified(jsNode);
+
+   if (isClassified)
+   {
+      cell.innerHTML = '<div class="info-banner">' + msg("banner.classification.info") + ": " + jsNode.properties["clf:currentClassification"].label + '</div>' + cell.innerHTML;
+   }
+};

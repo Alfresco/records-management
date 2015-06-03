@@ -290,8 +290,10 @@
    YAHOO.Bubbling.fire("registerAction",
    {
       actionName: "onClassifyContent",
-      fn: function DLTB_onClassifyContent(record, owner) {
-         require(["rm/services/AlfRmActionBridge"], function (Bridge) {
+      fn: function DLTB_onClassifyContent(record, owner)
+      {
+         require(["rm/services/AlfRmActionBridge"], function (Bridge)
+         {
             var bridge = new Bridge();
             bridge.alfPublish("RM_CLASSIFY_CONTENT", {
                "item": record,
@@ -300,13 +302,15 @@
          });
       }
    });
+
    /**
     *  Create a bridge between an Aikau data-update event and a YAHOO meta-data-refresh event.
     */
-   require(["rm/services/AlfRmActionBridge"], function (Bridge) {
+   require(["rm/services/AlfRmActionBridge"], function (Bridge)
+   {
       var bridge = new Bridge();
-      bridge.alfSubscribe("ALF_DOCLIST_RELOAD_DATA", function(){
-
+      bridge.alfSubscribe("ALF_DOCLIST_RELOAD_DATA", function()
+      {
          // Are we on a Document List page (Collab site or RM File Plan)?
          if (Alfresco.util.ComponentManager.findFirst("Alfresco.DocumentList"))
          {
@@ -318,31 +322,31 @@
             // otherwise reload the page to update:
             window.location.reload(true);
          }
-
       });
    });
-
 
    /**
     * Override default renderer to hide QuickShare link when content is classified.
     */
    // Run this after the default renderers have completed.
-   YAHOO.Bubbling.on("postDocumentListOnReady", function(){
+   YAHOO.Bubbling.on("postDocumentListOnReady", function()
+   {
       YAHOO.Bubbling.fire("registerRenderer", {
          propertyName: "social",
-         renderer: function RM_social(record) {
+         renderer: function RM_social(record)
+         {
             var jsNode = record.jsNode,
-               html = "",
-            // A document is classified if it has a currentClassification property. Treat content classified as "Unclassified" as not classified.
-               isClassified = (jsNode.hasProperty("clf:currentClassification") && jsNode.properties["clf:currentClassification"] !== "Unclassified");
+               html = "";
 
             /* Favourite / Likes / Comments */
             html += '<span class="item item-social">' + Alfresco.DocumentList.generateFavourite(this, record) + '</span>';
             html += '<span class="item item-social item-separator">' + Alfresco.DocumentList.generateLikes(this, record) + '</span>';
-            if (jsNode.permissions.user.CreateChildren) {
+            if (jsNode.permissions.user.CreateChildren)
+            {
                html += '<span class="item item-social item-separator">' + Alfresco.DocumentList.generateComments(this, record) + '</span>';
             }
-            if (!record.node.isContainer && Alfresco.constants.QUICKSHARE_URL && !isClassified) {
+            if (!record.node.isContainer && Alfresco.constants.QUICKSHARE_URL && !Alfresco.rm.isClassified(jsNode))
+            {
                html += '<span class="item item-separator">' + Alfresco.DocumentList.generateQuickShare(this, record) + '</span>';
             }
 
@@ -351,4 +355,19 @@
       })
    });
 
+   YAHOO.Bubbling.subscribe("postSetupViewRenderers", function(layer, args)
+   {
+      var scope = args[1].scope,
+         detailedViewRenderer = scope.viewRenderers["detailed"],
+         detailedViewRendererName = detailedViewRenderer.name,
+         detailedViewRendererParentDocumentList = detailedViewRenderer.parentDocumentList,
+         rmDetailedViewRenderer = new Alfresco.rm.DocumentListViewRenderer(detailedViewRendererName, detailedViewRendererParentDocumentList);
+      scope.registerViewRenderer(rmDetailedViewRenderer);
+
+      var simpleViewRenderer = scope.viewRenderers["simple"],
+         simpleViewRendererName = simpleViewRenderer.name,
+         simpleViewRendererParentDocumentList = simpleViewRenderer.parentDocumentList,
+         rmSimpleViewRenderer = new Alfresco.rm.DocumentListSimpleViewRenderer(simpleViewRendererName, simpleViewRendererParentDocumentList);
+      scope.registerViewRenderer(rmSimpleViewRenderer);
+   });
 })();
