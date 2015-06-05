@@ -140,16 +140,19 @@ Alfresco.rm.dataTableSelectedItems = function(dataTable)
 };
 
 /**
- *  Are we currently in an RM Site?
+ * Checks if the given site is an RM site by checking
+ * the preset attribute of the give site object
  *
- *  Returns false if:
- *     - the current page is outside of a site context, OR
- *     - the current page is in a site that isn't an RM site.
+ * @method isRMPreset
  */
-Alfresco.rm.isRMSite = function()
+Alfresco.rm.isRMSite = function(site)
 {
-   // FIXME: This needs replacing with something less fragile, see RM-2275
-   return (Alfresco.constants.SITE === "rm");
+   var isRMSite = false;
+   if (site && site.preset === "rm-site-dashboard")
+   {
+      isRMSite = true;
+   }
+   return isRMSite;
 };
 
 /**
