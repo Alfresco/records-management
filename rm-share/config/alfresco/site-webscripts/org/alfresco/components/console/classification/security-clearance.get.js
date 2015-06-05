@@ -1,5 +1,3 @@
-var securityClearanceServiceScope = "RM_USER_SECURITY_CLEARANCE_";
-
 // Get the levels for the dropdown
 var levels = [];
 var levelsObj = {};
@@ -34,7 +32,6 @@ model.jsonModel = {
       name: "alfresco/lists/AlfFilteredList",
       config: {
          noDataMessage: msg.get("clearance.list.no.data.message"),
-         pubSubScope: securityClearanceServiceScope,
          filteringTopics: ["_valueChangeof_FILTER"],
          useHash: true,
          loadDataPublishTopic: "RM_USER_SECURITY_CLEARANCE_GET_ALL",
@@ -107,9 +104,9 @@ model.jsonModel = {
                         config: {
                            widgets: [{
                               name: "alfresco/renderers/PublishingDropDownMenu",
-                              id: securityClearanceServiceScope + "MODIFY_CLEARANCE",
+                              id: "MODIFY_CLEARANCE",
                               config: {
-                                 publishTopic: "SET_CLASSIFICATION",
+                                 publishTopic: "RM_USER_SECURITY_CLEARANCE_SET",
                                  publishPayload: {
                                     username: {
                                        alfType: "item",
@@ -148,7 +145,6 @@ model.jsonModel = {
    },{
       name: "alfresco/layout/CenteredWidgets",
       config: {
-         pubSubScope: securityClearanceServiceScope,
          widgets: [{
             name: "alfresco/lists/Paginator"
          }]
