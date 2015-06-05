@@ -133,7 +133,9 @@ define(["dojo/_base/declare",
                dialogId: "CLASSIFY_CONTENT_DIALOG",
                dialogTitle: this.message(dialogTitle),
                dialogConfirmationButtonTitle: this.message("label.button.create"),
+               dialogConfirmationButtonId: "OK",
                dialogCancellationButtonTitle: this.message("label.button.cancel"),
+               dialogCancellationButtonId: "CANCEL",
                formSubmissionTopic: "RM_CLASSIFY",
                formSubmissionPayloadMixin: {
                   nodeRef: payload.item.nodeRef
