@@ -345,7 +345,7 @@
             {
                html += '<span class="item item-social item-separator">' + Alfresco.DocumentList.generateComments(this, record) + '</span>';
             }
-            if (!record.node.isContainer && Alfresco.constants.QUICKSHARE_URL && !Alfresco.rm.isClassified(jsNode))
+            if (!record.node.isContainer && Alfresco.constants.QUICKSHARE_URL && !Alfresco.rm.isClassified(record))
             {
                html += '<span class="item item-separator">' + Alfresco.DocumentList.generateQuickShare(this, record) + '</span>';
             }

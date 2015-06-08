@@ -161,10 +161,20 @@ Alfresco.rm.isRMSite = function(site)
  *
  * @method isClassified
  */
-Alfresco.rm.isClassified = function(jsNode)
+Alfresco.rm.isClassified = function(recordData)
 {
-   var classifiedProp = "clf:currentClassification";
-   return jsNode.hasProperty(classifiedProp) && jsNode.properties[classifiedProp].id !== "Unclassified";
+   var isClassified = false;
+
+   if (recordData)
+   {
+      var node = recordData.node;
+      if (node && node.isClassified)
+      {
+         isClassified = true;
+      }
+   }
+
+   return isClassified;
 };
 
 /**
@@ -174,11 +184,9 @@ Alfresco.rm.isClassified = function(jsNode)
  */
 Alfresco.rm.classifiedBanner = function(cell, record, msg)
 {
-   var jsNode = record.getData().jsNode,
-   isClassified = Alfresco.rm.isClassified(jsNode);
-
-   if (isClassified)
+   var recordData = record.getData();
+   if (Alfresco.rm.isClassified(recordData))
    {
-      cell.innerHTML = '<div class="info-banner">' + msg("banner.classification.info") + ": " + jsNode.properties["clf:currentClassification"].label + '</div>' + cell.innerHTML;
+      cell.innerHTML = '<div class="info-banner">' + msg("banner.classification.info") + ": " + recordData.node.properties["clf:currentClassification"].label + '</div>' + cell.innerHTML;
    }
 };

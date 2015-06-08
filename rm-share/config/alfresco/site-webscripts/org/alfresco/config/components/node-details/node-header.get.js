@@ -70,24 +70,7 @@ function getWidgets()
    return widgets;
 }
 
-/**
- * Is the content classified? (Used to determine if the QuickShare link should be disabled)
- * This method equates contents classified as "Unclassified" and documents that haven't been classified at all.
- * @returns {boolean}
- */
-var isClassified = function isClassified()
-{
-   var isClassified = false,
-      classifiedProp = "clf:currentClassification";
-
-   // Content is classified if the property is set and not set to Unclassified.
-   if (model.item.node.properties[classifiedProp] && model.item.node.properties[classifiedProp].id !== "Unclassified")
-   {
-      isClassified = true;
-   }
-
-   return isClassified;
-}();
+var isClassified = model.node.isClassified;
 
 // Hide quickShare link if content is classified
 model.showQuickShare = (!isClassified).toString();
