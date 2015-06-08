@@ -180,9 +180,9 @@ Alfresco.rm.isClassified = function(recordData)
 /**
  * Adds the classified banner if the content has been classified
  *
- * @method classifiedRenderer
+ * @method addClassifiedBanner
  */
-Alfresco.rm.classifiedBanner = function(cell, record, msg)
+Alfresco.rm.addClassifiedBanner = function(cell, record, msg)
 {
    var recordData = record.getData();
    if (Alfresco.rm.isClassified(recordData))

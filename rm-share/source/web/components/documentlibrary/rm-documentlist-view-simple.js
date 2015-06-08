@@ -46,7 +46,7 @@
       renderCellDescription: function Alfresco_rm_DocumentListSimpleViewRenderer_renderCellDescription(scope, elCell, oRecord, oColumn, oData)
       {
          Alfresco.rm.DocumentListSimpleViewRenderer.superclass.renderCellDescription.call(this, scope, elCell, oRecord, oColumn, oData);
-         Alfresco.rm.classifiedBanner(elCell, oRecord, this.parentDocumentList.msg);
+         Alfresco.rm.addClassifiedBanner(elCell, oRecord, this.parentDocumentList.msg);
       }
    });
 })();
