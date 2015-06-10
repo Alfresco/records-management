@@ -187,6 +187,6 @@ Alfresco.rm.addClassifiedBanner = function(cell, record, msg)
    var recordData = record.getData();
    if (Alfresco.rm.isClassified(recordData))
    {
-      cell.innerHTML = '<div class="info-banner">' + msg("banner.classification.info") + ": " + recordData.node.properties["clf:currentClassification"].label + '</div>' + cell.innerHTML;
+      cell.innerHTML = '<div class="info-banner classified-banner">' + msg("banner.classification.info") + ": " + recordData.node.properties["clf:currentClassification"].label + '</div>' + cell.innerHTML;
    }
 };
