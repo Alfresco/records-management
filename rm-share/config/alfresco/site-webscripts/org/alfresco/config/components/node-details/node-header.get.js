@@ -70,7 +70,7 @@ function getWidgets()
    return widgets;
 }
 
-var isClassified = model.node.isClassified;
+var isClassified = (model.node) ? (model.node.isClassified ? true: false) : false;
 
 // Hide quickShare link if content is classified
 model.showQuickShare = (!isClassified).toString();
