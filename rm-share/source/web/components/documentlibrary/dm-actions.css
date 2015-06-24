@@ -69,3 +69,15 @@
 {
    width: 300px;
 }
+
+.classified-banner
+{
+   border: 1px solid #da4453;
+   border-radius: 5px;
+   clear: left;
+   margin-bottom: 4px;
+   padding: 5px 15px 3px 15px;
+   color: #da4453;
+   font-family: helvatica;
+   display: inline-block;
+}
