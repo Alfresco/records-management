@@ -4,8 +4,8 @@
 
 <@markup id="rm-widgets" target="html" action="before" scope="global">
    <#if isClassified>
-      <div class="status-banner theme-bg-color-2 theme-border-4 classified-banner">
-         <span class="classified-info">${msg("banner.classification.info")}: ${node.properties["clf:currentClassification"].label}</span>
+      <div class="status-banner theme-bg-color-2 theme-border-4 classified-info classified-banner">
+         <span>${node.properties["clf:currentClassification"].label?upper_case}</span>
       </div>
    </#if>
 </@markup>
