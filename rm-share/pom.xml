@@ -17,7 +17,7 @@
       <maven.tomcat.port>8081</maven.tomcat.port>
       <webapp.id.name>share</webapp.id.name>
       <webapp.id>${webapp.id.name}</webapp.id>
-      <alfresco.aikau.version>1.0.21</alfresco.aikau.version>
+      <alfresco.aikau.version>1.0.23.2</alfresco.aikau.version>
    </properties>
    <build>
       <sourceDirectory>source/java</sourceDirectory>

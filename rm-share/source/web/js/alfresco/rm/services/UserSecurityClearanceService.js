@@ -43,6 +43,11 @@ define(["dojo/_base/declare",
    return declare([CrudService], {
 
       /**
+       * Overrides the default value from {@link module:alfresc/core/CoreXhr} to encode URIs
+       */
+      encodeURIs: true,
+
+      /**
        * An array of the i18n files to use with this service.
        *
        * @instance
