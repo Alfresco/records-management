@@ -161,11 +161,11 @@ define(["dojo/_base/declare",
                         }
                      }
                   },{
-                     id: "AUTHORITY",
+                     id: "AGENCY",
                      name: "alfresco/forms/controls/DojoValidationTextBox",
                      config: {
-                        label: "label.classify.authority",
-                        name: "classificationAuthority",
+                        label: "label.classify.agency",
+                        name: "classificationAgency",
                         requirementConfig: {
                            initialValue: true
                         }

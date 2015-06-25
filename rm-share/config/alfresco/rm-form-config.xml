@@ -476,7 +476,7 @@
             <field-visibility>
                <show id="clfInitialClassification" for-mode="view"/>
                <show id="clfCurrentClassification" for-mode="view"/>
-               <show id="clf:classificationAuthority" for-mode="view"/>
+               <show id="clf:classificationAgency" for-mode="view"/>
                <show id="clf:classificationReasons" for-mode="view"/>
                <show id="clfClassificationReasonLabels" for-mode="view"/>
             </field-visibility>
@@ -484,7 +484,7 @@
                <set id="rm-classification" label-id="label.set.classification" appearance="panel" />
                <field id="clfInitialClassification" label-id="label.initialClassification" read-only="true" set="rm-classification"/>
                <field id="clfCurrentClassification" label-id="label.currentClassification" read-only="true" set="rm-classification"/>
-               <field id="clf:classificationAuthority" label-id="label.classificationAuthority" read-only="true" set="rm-classification"/>
+               <field id="clf:classificationAgency" label-id="label.classificationAgency" read-only="true" set="rm-classification"/>
                <field id="clf:classificationReasons" label-id="label.classificationReasons" read-only="true" set="rm-classification">
                   <control template="/org/alfresco/components/form/controls/classificationTooltip.ftl"/>
                </field>
