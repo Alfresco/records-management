@@ -161,14 +161,21 @@ define(["dojo/_base/declare",
                         }
                      }
                   },{
+                     id: "BY",
+                     name: "alfresco/forms/controls/DojoValidationTextBox",
+                     config: {
+                        label: "label.classify.by",
+                        name: "classifiedBy",
+                        requirementConfig: {
+                           initialValue: true
+                        }
+                     }
+                  },{
                      id: "AGENCY",
                      name: "alfresco/forms/controls/DojoValidationTextBox",
                      config: {
                         label: "label.classify.agency",
-                        name: "classificationAgency",
-                        requirementConfig: {
-                           initialValue: true
-                        }
+                        name: "classificationAgency"
                      }
                   },{
                      id: "REASONS",
