@@ -161,7 +161,7 @@ define(["dojo/_base/declare",
                         }
                      }
                   },{
-                     id: "BY",
+                     id: "CLASSIFIED_BY",
                      name: "alfresco/forms/controls/DojoValidationTextBox",
                      config: {
                         label: "label.classify.by",
