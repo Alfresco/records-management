@@ -55,29 +55,29 @@ model.jsonModel = {
             name: "alfresco/lists/views/AlfListView",
             config: {
                widgetsForHeader: [{
-                  name: "alfresco/documentlibrary/views/layouts/HeaderCell",
+                  name: "alfresco/lists/views/layouts/HeaderCell",
                   config: {
                      width: "50px",
                      label: ""
                   }
                },{
-                  name: "alfresco/documentlibrary/views/layouts/HeaderCell",
+                  name: "alfresco/lists/views/layouts/HeaderCell",
                   config: {
                      label: msg.get("header.cell.user.name"),
                      sortable: true,
                      sortValue: "cm:userName"
                   }
                },{
-                  name: "alfresco/documentlibrary/views/layouts/HeaderCell",
+                  name: "alfresco/lists/views/layouts/HeaderCell",
                   config: {
                      label: msg.get("header.cell.security.clearance")
                   }
                }],
                widgets: [{
-                  name: "alfresco/documentlibrary/views/layouts/Row",
+                  name: "alfresco/lists/views/layouts/Row",
                   config: {
                      widgets: [{
-                        name: "alfresco/documentlibrary/views/layouts/Cell",
+                        name: "alfresco/lists/views/layouts/Cell",
                         config: {
                            widgets: [{
                               name: "alfresco/renderers/AvatarThumbnail",
@@ -89,18 +89,27 @@ model.jsonModel = {
                            }]
                         }
                      },{
-                        name: "alfresco/documentlibrary/views/layouts/Cell",
+                        name: "alfresco/lists/views/layouts/Cell",
                         config: {
                            widgets: [{
-                              name: "alfresco/renderers/Property",
+                              name: "alfresco/renderers/PropertyLink",
                               config: {
                                  propertyToRender: "completeName",
-                                 renderedValueClass: "security-clearance-user-name"
+                                 renderedValueClass: "security-clearance-user-name",
+                                 publishGlobal: true,
+                                 publishTopic: "ALF_NAVIGATE_TO_PAGE",
+                                 useCurrentItemAsPayload: false,
+                                 publishPayloadType: "PROCESS",
+                                 publishPayloadModifiers: ["processCurrentItemTokens"],
+                                 publishPayload: {
+                                    url: "console/admin-console/users#state=panel%3Dview%26userid%3D{userName}",
+                                    type: "SHARE_PAGE_RELATIVE"
+                                 }
                               }
                            }]
                         }
                      },{
-                        name: "alfresco/documentlibrary/views/layouts/Cell",
+                        name: "alfresco/lists/views/layouts/Cell",
                         config: {
                            widgets: [{
                               name: "alfresco/renderers/PublishingDropDownMenu",
@@ -129,7 +138,7 @@ model.jsonModel = {
                                  publishPayloadType: "BUILD",
                                  publishGlobal: true,
                                  propertyToRender: "classificationId",
-                                 renderedValueClass: "security-clearance-user-classification-level",
+                                 additionalCssClasses: "security-clearance-user-classification-level",
                                  optionsConfig: {
                                     fixed: levels
                                  }
