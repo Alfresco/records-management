@@ -20,11 +20,15 @@ package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.internal.matchers.NotNull.NOT_NULL;
 
-import org.alfresco.test.BaseUnitTest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 /**
  * Classify action evaluator unit test
@@ -32,7 +36,7 @@ import org.junit.Test;
  * @author Tuna Aksoy
  * @since 3.0
  */
-public class ClassifyActionEvaluatorUnitTest extends BaseUnitTest
+public class ClassifyActionEvaluatorUnitTest
 {
     /** Constants */
     private static final String NODE = "node";
@@ -40,25 +44,63 @@ public class ClassifyActionEvaluatorUnitTest extends BaseUnitTest
     private static final String PROPERTIES = "properties";
     private static final String ASPECT_CLASSIFIED = "clf:classified";
     private static final String PROP_CURRENT_CLASSIFICATION = "clf:currentClassification";
+    private static final String HAS_CURRENT_USER_CLEARANCE = "hasCurrentUserClearance";
 
     /** Classify action evaluator */
     private ClassifyActionEvaluator evaluator = new ClassifyActionEvaluator();
+
+    @Mock private JSONObject mockedJsonObject;
+    @Mock private JSONObject mockedNodeJsonObject;
+    @Mock private JSONObject mockedPropertiesJsonObject;
+    @Mock private JSONArray mockedAspectsJsonArray;
+
+    @Before
+    public void setUp()
+    {
+        initMocks(this);
+    }
+
+    /**
+     * Given that the node json object is not available
+     * When evaluated
+     * Then the result is false
+     */
+    @Test
+    public void nodeObjectIsNull()
+    {
+        when(mockedJsonObject.get(NODE)).thenReturn(null);
+
+        assertFalse(evaluator.evaluate(mockedJsonObject));
+    }
+
+    /**
+     * Given that the current user does not have any clearance set
+     * When evaluated
+     * Then the result is false
+     */
+    @Test
+    public void userDoesNotHaveClearance()
+    {
+        when(mockedJsonObject.get(NODE)).thenReturn(mockedNodeJsonObject);
+        when(mockedNodeJsonObject.get(HAS_CURRENT_USER_CLEARANCE)).thenReturn(false);
+
+        assertFalse(evaluator.evaluate(mockedJsonObject));
+    }
 
     /**
      * Given that the "classified" aspect does not exist
      * When evaluated
      * Then the result is true
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void classifiedAspectDoesNotExist()
     {
-        JSONObject jsonObject = new JSONObject();
-        JSONObject node = new JSONObject();
-        JSONArray aspects = new JSONArray();
-        node.put(ASPECTS, aspects);
-        jsonObject.put(NODE, node);
-        assertTrue(evaluator.evaluate(jsonObject));
+        when(mockedJsonObject.get(NODE)).thenReturn(mockedNodeJsonObject);
+        when(mockedNodeJsonObject.get(HAS_CURRENT_USER_CLEARANCE)).thenReturn(true);
+        when(mockedNodeJsonObject.get(ASPECTS)).thenReturn(mockedAspectsJsonArray);
+        when(mockedAspectsJsonArray.contains(ASPECT_CLASSIFIED)).thenReturn(false);
+
+        assertTrue(evaluator.evaluate(mockedJsonObject));
     }
 
     /**
@@ -66,17 +108,16 @@ public class ClassifyActionEvaluatorUnitTest extends BaseUnitTest
      * When evaluated
      * Then the result is true
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void classifiedAspectWithoutCurrentClassification()
     {
-        JSONObject jsonObject = new JSONObject();
-        JSONObject node = new JSONObject();
-        JSONArray aspects = new JSONArray();
-        aspects.add(ASPECT_CLASSIFIED);
-        node.put(ASPECTS, aspects);
-        jsonObject.put(NODE, node);
-        assertTrue(evaluator.evaluate(jsonObject));
+        when(mockedJsonObject.get(NODE)).thenReturn(mockedNodeJsonObject);
+        when(mockedNodeJsonObject.get(HAS_CURRENT_USER_CLEARANCE)).thenReturn(true);
+        when(mockedNodeJsonObject.get(ASPECTS)).thenReturn(mockedAspectsJsonArray);
+        when(mockedAspectsJsonArray.contains(ASPECT_CLASSIFIED)).thenReturn(true);
+        when(mockedJsonObject.get(PROP_CURRENT_CLASSIFICATION)).thenReturn(null);
+
+        assertTrue(evaluator.evaluate(mockedJsonObject));
     }
 
    /**
@@ -84,19 +125,16 @@ public class ClassifyActionEvaluatorUnitTest extends BaseUnitTest
     * When evaluated
     * Then the result is false
     */
-    @SuppressWarnings("unchecked")
     @Test
     public void classifiedAspectWithCurrentClassification()
     {
-        JSONObject jsonObject = new JSONObject();
-        JSONObject node = new JSONObject();
-        JSONArray aspects = new JSONArray();
-        aspects.add(ASPECT_CLASSIFIED);
-        JSONObject properties = new JSONObject();
-        properties.put(PROP_CURRENT_CLASSIFICATION, generateText());
-        node.put(ASPECTS, aspects);
-        node.put(PROPERTIES, properties);
-        jsonObject.put(NODE, node);
-        assertFalse(evaluator.evaluate(jsonObject));
+        when(mockedJsonObject.get(NODE)).thenReturn(mockedNodeJsonObject);
+        when(mockedNodeJsonObject.get(HAS_CURRENT_USER_CLEARANCE)).thenReturn(true);
+        when(mockedNodeJsonObject.get(ASPECTS)).thenReturn(mockedAspectsJsonArray);
+        when(mockedAspectsJsonArray.contains(ASPECT_CLASSIFIED)).thenReturn(true);
+        when(mockedNodeJsonObject.get(PROPERTIES)).thenReturn(mockedPropertiesJsonObject);
+        when(mockedPropertiesJsonObject.get(PROP_CURRENT_CLASSIFICATION)).thenReturn(NOT_NULL);
+
+        assertFalse(evaluator.evaluate(mockedJsonObject));
     }
 }

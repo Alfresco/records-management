@@ -31,11 +31,17 @@ import org.json.simple.JSONObject;
  */
 public class ClassifyActionEvaluator extends HasAspectEvaluator
 {
+    /** Node attribute */
+    private static final String NODE = "node";
+
     /** Classified aspect */
     private static final String ASPECT_CLASSIFIED = "clf:classified";
 
     /** Current classification property */
     private static final String PROP_CURRENT_CLASSIFICATION = "clf:currentClassification";
+
+    /** Has the current user clearance */
+    private static final String HAS_CURRENT_USER_CLEARANCE = "hasCurrentUserClearance";
 
     /**
      * @see org.alfresco.web.evaluator.HasAspectEvaluator#evaluate(org.json.simple.JSONObject)
@@ -45,20 +51,24 @@ public class ClassifyActionEvaluator extends HasAspectEvaluator
     {
         boolean result = false;
 
-        ArrayList<String> aspects = new ArrayList<>();
-        aspects.add(ASPECT_CLASSIFIED);
-        setAspects(aspects);
-
-        if (super.evaluate(jsonObject))
+        JSONObject node = (JSONObject) jsonObject.get(NODE);
+        if (node != null && (Boolean) node.get(HAS_CURRENT_USER_CLEARANCE))
         {
-            if ((getProperty(jsonObject, PROP_CURRENT_CLASSIFICATION)) == null)
+            ArrayList<String> aspects = new ArrayList<>();
+            aspects.add(ASPECT_CLASSIFIED);
+            setAspects(aspects);
+
+            if (super.evaluate(jsonObject))
+            {
+                if ((getProperty(jsonObject, PROP_CURRENT_CLASSIFICATION)) == null)
+                {
+                    result = true;
+                }
+            }
+            else
             {
                 result = true;
             }
-        }
-        else
-        {
-            result = true;
         }
 
         return result;
