@@ -155,7 +155,7 @@ define(["dojo/_base/declare",
                      id: "LEVELS",
                      name: "alfresco/forms/controls/Select",
                      config: {
-                        label: "label.classify.levels",
+                        label: this.message("label.classify.levels"),
                         name: "classificationLevelId",
                         requirementConfig: {
                            initialValue: true
@@ -174,7 +174,7 @@ define(["dojo/_base/declare",
                      id: "CLASSIFIED_BY",
                      name: "alfresco/forms/controls/DojoValidationTextBox",
                      config: {
-                        label: "label.classify.by",
+                        label: this.message("label.classify.by"),
                         name: "classifiedBy",
                         requirementConfig: {
                            initialValue: true
@@ -184,14 +184,14 @@ define(["dojo/_base/declare",
                      id: "AGENCY",
                      name: "alfresco/forms/controls/DojoValidationTextBox",
                      config: {
-                        label: "label.classify.agency",
+                        label: this.message("label.classify.agency"),
                         name: "classificationAgency"
                      }
                   },{
                      id: "REASONS",
                      name: "alfresco/forms/controls/MultiSelectInput",
                      config: {
-                        label: "label.classify.reasons",
+                        label: this.message("label.classify.reasons"),
                         name: "classificationReasons",
                         width: "400px",
                         requirementConfig: {
