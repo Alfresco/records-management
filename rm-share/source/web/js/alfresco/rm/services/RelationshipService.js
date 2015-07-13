@@ -42,6 +42,15 @@ define(["dojo/_base/declare",
       return declare([CrudService], {
 
          /**
+          * Scope the message keys used in this service
+          *
+          * @instance
+          * @type String
+          * @default "org.alfresco.rm.RelationshipService"
+          */
+         i18nScope: "org.alfresco.rm.RelationshipService",
+
+         /**
           * An array of the i18n files to use with this service.
           *
           * @instance

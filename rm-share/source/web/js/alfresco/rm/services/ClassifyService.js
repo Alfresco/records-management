@@ -42,6 +42,16 @@ define(["dojo/_base/declare",
 
       return declare([AlfCore, AlfXhr, CrudService], {
 
+
+         /**
+          * Scope the message keys used in this service
+          *
+          * @instance
+          * @type String
+          * @default "org.alfresco.rm.ClassifyService"
+          */
+         i18nScope: "org.alfresco.rm.ClassifyService",
+
          /**
           * An array of the i18n files to use with this service.
           *
