@@ -36,16 +36,12 @@ define(["dojo/_base/declare",
       "alfresco/services/CrudService",
       "service/constants/Default",
       "dojo/_base/array",
-      "dojo/_base/lang"],
+      "dojo/_base/lang",
+      "alfresco/util/urlUtils"],
 
-      function(declare, CrudService, AlfConstants, array, lang) {
+      function(declare, CrudService, AlfConstants, array, lang, urlUtils) {
 
    return declare([CrudService], {
-
-      /**
-       * Overrides the default value from {@link module:alfresc/core/CoreXhr} to encode URIs
-       */
-      encodeURIs: true,
 
       /**
        * An array of the i18n files to use with this service.
@@ -79,6 +75,18 @@ define(["dojo/_base/declare",
          this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_GET_ALL", lang.hitch(this, this.onGetAll));
          this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_SET", lang.hitch(this, this.onSet));
          this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED", lang.hitch(this, this.onSetConfirmed));
+      },
+
+      /**
+       * @instance
+       * @see module:alfresco/util/urlUtils#addQueryParameter
+       */
+      addQueryParameter: function alfresco_services_userSecurityClearanceService__addQueryParameter() {
+         var url = arguments[0];
+         var param = arguments[1];
+         var value = arguments[2];
+         var encodeValue = true;
+         return urlUtils.addQueryParameter(url, param, value, encodeValue);
       },
 
       /**
