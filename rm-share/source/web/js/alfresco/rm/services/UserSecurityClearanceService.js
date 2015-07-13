@@ -82,10 +82,10 @@ define(["dojo/_base/declare",
        * @see module:alfresco/util/urlUtils#addQueryParameter
        */
       addQueryParameter: function alfresco_services_userSecurityClearanceService__addQueryParameter() {
-         var url = arguments[0];
-         var param = arguments[1];
-         var value = arguments[2];
-         var encodeValue = true;
+         var url = arguments[0],
+             param = arguments[1],
+             value = arguments[2],
+             encodeValue = true;
          return urlUtils.addQueryParameter(url, param, value, encodeValue);
       },
 
