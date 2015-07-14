@@ -84,7 +84,17 @@ model.jsonModel = {
                               config: {
                                  usernameProperty: "username",
                                  imageTitleProperty: "displayName",
-                                 customClasses: "security-clearance-user-avatar"
+                                 customClasses: "security-clearance-user-avatar",
+                                 publishGlobal: true,
+                                 publishTopic: "ALF_NAVIGATE_TO_PAGE",
+                                 useCurrentItemAsPayload: false,
+                                 publishPayloadType: "PROCESS",
+                                 publishPayloadModifiers: ["processCurrentItemTokens"],
+                                 publishPayload: {
+                                    url: "console/admin-console/users#state=panel%3Dview%26userid%3D{userName}",
+                                    type: "SHARE_PAGE_RELATIVE"
+                                 }
+
                               }
                            }]
                         }
