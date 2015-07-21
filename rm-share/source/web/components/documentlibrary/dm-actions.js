@@ -303,6 +303,22 @@
       }
    });
 
+   YAHOO.Bubbling.fire("registerAction",
+   {
+      actionName: "onEditClassifiedContent",
+      fn: function DLTB_onEditClassifiedContent(record, owner)
+      {
+         require(["rm/services/AlfRmActionBridge"], function (Bridge)
+         {
+            var bridge = new Bridge();
+            bridge.alfPublish("RM_EDIT_CLASSIFIED_CONTENT", {
+               "item": record,
+               "owner": owner
+            });
+         });
+      }
+   });
+
    /**
     *  Create a bridge between an Aikau data-update event and a YAHOO meta-data-refresh event.
     */
