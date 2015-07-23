@@ -1,4 +1,3 @@
-
 /**
  * Copyright (C) 2005-2015 Alfresco Software Limited.
  *
@@ -42,7 +41,6 @@ define(["dojo/_base/declare",
 
       return declare([AlfCore, AlfXhr, CrudService], {
 
-
          /**
           * Scope the message keys used in this service
           *
@@ -62,7 +60,6 @@ define(["dojo/_base/declare",
          i18nRequirements: [{i18nFile: "./i18n/ClassifyService.properties"}],
 
          /**
-          *
           * URL used to get classification reasons.
           *
           * @instance
@@ -72,7 +69,6 @@ define(["dojo/_base/declare",
          reasonsAPIGet: "api/classification/reasons",
 
          /**
-          *
           * URL used to get classification levels.
           *
           * @instance
@@ -82,27 +78,30 @@ define(["dojo/_base/declare",
          levelsAPIGet: "api/classification/levels",
 
          /**
-          * URL used to classify content. Parse through lang.mixin for token substitution.
+          * URL used to classify/edit content. Parse through lang.mixin for token substitution.
           *
           * @instance
           * @type {string}
           * @default
           */
-         classifyAPICreate: "api/node/{nodeRefUrl}/classify",
+         classifyAPICreateUpdate: "api/node/{nodeRefUrl}/classify",
 
          /**
-          *
           * @instance
           * @param {array} args Constructor arguments
           *
           * @listens RM_CLASSIFY_REASONS_GET
           * @listens RM_CLASSIFY_CONTENT
+          * @listens RM_EDIT_CLASSIFIED_CONTENT
           * @listens RM_CLASSIFY
+          * @listens RM_EDIT_CLASSIFIED
           */
          constructor: function rm_services_classifyService__constructor(args) {
             this.alfSubscribe("RM_CLASSIFY_REASONS_GET", lang.hitch(this, this.onGetReasons));
             this.alfSubscribe("RM_CLASSIFY_CONTENT", lang.hitch(this, this.onClassifyContent));
+            this.alfSubscribe("RM_EDIT_CLASSIFIED_CONTENT", lang.hitch(this, this.onEditClassifiedContent));
             this.alfSubscribe("RM_CLASSIFY", lang.hitch(this, this.onCreate));
+            this.alfSubscribe("RM_EDIT_CLASSIFIED", lang.hitch(this, this.onUpdate));
          },
 
          /**
@@ -126,27 +125,23 @@ define(["dojo/_base/declare",
          },
 
          /**
-          * Triggered by the classify document and classify record actions. Shows dialog using [DialogService]
+          * Helper method for creating publication events for classify/edit content dialogs
           *
-          * @instance
+          * @param configObject
           * @param payload
-          *
-          * @fires ALF_CREATE_FORM_DIALOG_REQUEST
-          * @fires RM_CLASSIFY
-          * @fires RM_CLASSIFY_REASONS_GET
-          * @fires ALF_GET_FORM_CONTROL_OPTIONS
           */
-         onClassifyContent: function rm_services_classifyService__onClassifyContent(payload) {
-            var dialogTitle = (Alfresco.rm.isRMSite(payload.item.location.site))? "label.classify.dialog.title.rm" : "label.classify.dialog.title";
+         _publishClassificationFormDialogRequest: function rm_services_classifyService__publishClassificationFormDialogRequest(configObject, payload)
+         {
+            var dialogTitle = (Alfresco.rm.isRMSite(payload.item.location.site)) ? configObject.dialogTitleRm : configObject.dialogTitleCollab;
 
             this.alfPublish("ALF_CREATE_FORM_DIALOG_REQUEST", {
-               dialogId: "CLASSIFY_CONTENT_DIALOG",
+               dialogId: configObject.dialogId,
                dialogTitle: this.message(dialogTitle),
-               dialogConfirmationButtonTitle: this.message("label.button.create"),
-               dialogConfirmationButtonId: "OK",
+               dialogConfirmationButtonTitle: this.message(configObject.dialogConfirmationButtonTitle),
+               dialogConfirmationButtonId: configObject.dialogConfirmationButtonId,
                dialogCancellationButtonTitle: this.message("label.button.cancel"),
                dialogCancellationButtonId: "CANCEL",
-               formSubmissionTopic: "RM_CLASSIFY",
+               formSubmissionTopic: configObject.formSubmissionTopic,
                formSubmissionPayloadMixin: {
                   nodeRef: payload.item.nodeRef
                },
@@ -160,6 +155,7 @@ define(["dojo/_base/declare",
                         requirementConfig: {
                            initialValue: true
                         },
+                        value: configObject.levelsValue,
                         optionsConfig: {
                            publishTopic: "ALF_GET_FORM_CONTROL_OPTIONS",
                            publishPayload: {
@@ -176,7 +172,7 @@ define(["dojo/_base/declare",
                      config: {
                         label: this.message("label.classify.by"),
                         name: "classifiedBy",
-                        value: Alfresco.constants.USER_FULLNAME,
+                        value: configObject.classifiedByValue,
                         requirementConfig: {
                            initialValue: true
                         }
@@ -186,7 +182,8 @@ define(["dojo/_base/declare",
                      name: "alfresco/forms/controls/TextBox",
                      config: {
                         label: this.message("label.classify.agency"),
-                        name: "classificationAgency"
+                        name: "classificationAgency",
+                        value: configObject.agencyValue
                      }
                   },{
                      id: "REASONS",
@@ -198,6 +195,7 @@ define(["dojo/_base/declare",
                         requirementConfig: {
                            initialValue: true
                         },
+                        value: configObject.reasonsValue,
                         optionsConfig: {
                            queryAttribute: "fullReason",
                            valueAttribute: "id",
@@ -218,11 +216,72 @@ define(["dojo/_base/declare",
          },
 
          /**
-          * Classifies the given node.
+          * Triggered by the classify document and classify record actions. Shows dialog using [DialogService]
+          *
+          * @instance
+          * @param payload
+          *
+          * @fires ALF_CREATE_FORM_DIALOG_REQUEST
+          * @fires RM_CLASSIFY
+          * @fires RM_CLASSIFY_REASONS_GET
+          * @fires ALF_GET_FORM_CONTROL_OPTIONS
+          */
+         onClassifyContent: function rm_services_classifyService__onClassifyContent(payload)
+         {
+            var configObject = {};
+            configObject.dialogTitleRm = "label.classify.dialog.title.rm";
+            configObject.dialogTitleCollab = "label.classify.dialog.title";
+            configObject.dialogId = "CLASSIFY_CONTENT_DIALOG";
+            configObject.dialogConfirmationButtonTitle = "label.button.create";
+            configObject.dialogConfirmationButtonId = "OK";
+            configObject.formSubmissionTopic = "RM_CLASSIFY";
+            configObject.levelsValue = null;
+            configObject.classifiedByValue = Alfresco.constants.USER_FULLNAME;
+            configObject.agencyValue = null;
+            configObject.reasonsValue = null;
+
+            this._publishClassificationFormDialogRequest(configObject, payload);
+         },
+
+         /**
+          * Triggered by the edit classified file/record actions. Shows dialog using [DialogService]
+          *
+          * @instance
+          * @param payload
+          *
+          * @fires ALF_CREATE_FORM_DIALOG_REQUEST
+          * @fires RM_CLASSIFY
+          * @fires RM_CLASSIFY_REASONS_GET
+          * @fires ALF_GET_FORM_CONTROL_OPTIONS
+          */
+         onEditClassifiedContent: function rm_services_classifyService_onEditClassifiedContent(payload)
+         {
+            var configObject = {},
+               properties = payload.item.node.properties;
+
+            configObject.dialogTitleRm = "label.edit.classification.dialog.title.rm";
+            configObject.dialogTitleCollab = "label.edit.classification.dialog.title";
+            configObject.dialogId = "EDIT_CLASSIFIED_CONTENT_DIALOG";
+            configObject.dialogConfirmationButtonTitle = "label.button.edit";
+            configObject.dialogConfirmationButtonId = "Edit";
+            configObject.formSubmissionTopic = "RM_EDIT_CLASSIFIED";
+            configObject.levelsValue = properties["clf_currentClassification"].id;
+            configObject.classifiedByValue = properties["clf_classifiedBy"];
+            configObject.agencyValue = properties["clf_classificationAgency"];
+            configObject.reasonsValue = properties["clf_classificationReasons"];
+
+            this._publishClassificationFormDialogRequest(configObject, payload);
+         },
+
+         /**
+          * Helper method for the classify/edit content actions.
           *
           * @param payload
+          * @param successMessage
+          * @param failureMessage
           */
-         onCreate: function rm_services_classifyService__onCreate(payload) {
+         _onClassifyAction: function rm_services_classifyService__onClassifyAction(payload, successMessage, failureMessage)
+         {
             if (!payload.nodeRef)
             {
                this.alfLog("error", "nodeRef required");
@@ -231,10 +290,32 @@ define(["dojo/_base/declare",
             // Update the payload before calling the superclass method:
             payload.nodeRefUrl = NodeUtils.processNodeRef(payload.nodeRef).uri;
             payload = lang.mixin(payload, {
-               url: lang.replace(this.classifyAPICreate, payload),
-               successMessage: this.message("label.classify.content.success"),
-               failureMessage: this.message("label.classify.content.failure")
+               url: lang.replace(this.classifyAPICreateUpdate, payload),
+               successMessage: this.message(successMessage),
+               failureMessage: this.message(failureMessage)
             });
+         },
+
+         /**
+          * Classifies the given content.
+          *
+          * @param payload
+          */
+         onCreate: function rm_services_classifyService_onCreate(payload)
+         {
+            this._onClassifyAction(payload, "label.classify.content.success", "label.classify.content.failure");
+
+            this.inherited(arguments);
+         },
+
+         /**
+          * Edits the classified content
+          *
+          * @param payload
+          */
+         onUpdate: function rm_services_classifyService_onUpdate(payload)
+         {
+            this._onClassifyAction(payload, "label.edit.classified.content.success", "label.edit.classified.content.failure");
 
             this.inherited(arguments);
          }
