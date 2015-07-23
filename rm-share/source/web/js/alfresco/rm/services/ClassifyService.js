@@ -25,7 +25,7 @@
  * @extends module:alfresco/service/crudService
  * @mixes module:alfresco/core/CoreXhr
  * @author David Webster
- * @since RM 3.0
+ * @since RM 3.0.a
  *
  * @event RM_CLASSIFY_REASONS_GET
  */

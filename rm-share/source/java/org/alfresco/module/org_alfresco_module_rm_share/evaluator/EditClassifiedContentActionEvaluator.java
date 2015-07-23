@@ -27,7 +27,7 @@ import org.json.simple.JSONObject;
  * Evaluator for editing a classified content
  *
  * @author Tuna Aksoy
- * @since 3.0
+ * @since 3.0.a
  */
 public class EditClassifiedContentActionEvaluator extends HasAspectEvaluator
 {

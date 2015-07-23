@@ -25,7 +25,7 @@
  * @extends alfresco/services/CrudService
  *
  * @author Tuna Aksoy
- * @since RM 3.0
+ * @since RM 3.0.a
  *
  * @event RM_USER_SECURITY_CLEARANCE_GET_ALL
  * @event RM_USER_SECURITY_CLEARANCE_SET

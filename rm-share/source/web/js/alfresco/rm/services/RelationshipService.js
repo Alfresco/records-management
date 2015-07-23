@@ -24,7 +24,7 @@
  * @extends alfresco/service/crudService
  *
  * @author David Webster
- * @since RM 3.0
+ * @since RM 3.0.a
  *
  * @event RM_RELATIONSHIP_CREATE
  * @event RM_RELATIONSHIP_GET_ALL
