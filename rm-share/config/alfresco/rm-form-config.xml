@@ -480,6 +480,16 @@
                <show id="clf:classificationAgency" for-mode="view"/>
                <show id="clf:classificationReasons" for-mode="view"/>
                <show id="clfClassificationReasonLabels" for-mode="view"/>
+               <show id="clf:downgradeDate" for-mode="view"/>
+               <show id="clf:downgradeEvent" for-mode="view"/>
+               <show id="clf:downgradeInstructions" for-mode="view"/>
+               <show id="clf:declassificationDate" for-mode="view"/>
+               <show id="clf:declassificationEvent" for-mode="view"/>
+               <show id="clf:declassificationExemptions" for-mode="view"/>
+               <show id="clf:lastReclassifyBy" for-mode="view"/>
+               <show id="clf:lastReclassifyAt" for-mode="view"/>
+               <show id="clf:lastReclassifyReason" for-mode="view"/>
+               <show id="clf:lastReclassificationAction" for-mode="view"/>
             </field-visibility>
             <appearance>
                <set id="rm-classification" label-id="label.set.classification" appearance="panel" />
@@ -493,6 +503,16 @@
                <field id="clfClassificationReasonLabels" read-only="true" set="rm-classification">
                   <control template="/org/alfresco/components/form/controls/classificationHiddenField.ftl"/>
                </field>
+               <field id="clf:downgradeDate" label-id="label.downgradeDate" read-only="true" set="rm-classification" />
+               <field id="clf:downgradeEvent" label-id="label.downgradeEvent" read-only="true" set="rm-classification" />
+               <field id="clf:downgradeInstructions" label-id="label.downgradeInstructions" read-only="true" set="rm-classification" />
+               <field id="clf:declassificationDate" label-id="label.declassificationDate" read-only="true" set="rm-classification" />
+               <field id="clf:declassificationEvent" label-id="label.declassificationEvent" read-only="true" set="rm-classification" />
+               <field id="clf:declassificationExemptions" label-id="label.declassificationExemptions" read-only="true" set="rm-classification" />
+               <field id="clf:lastReclassifyBy" label-id="label.lastReclassifyBy" read-only="true" set="rm-classification" />
+               <field id="clf:lastReclassifyAt" label-id="label.lastReclassifyAt" read-only="true" set="rm-classification" />
+               <field id="clf:lastReclassifyReason" label-id="label.lastReclassifyReason" read-only="true" set="rm-classification" />
+               <field id="clf:lastReclassificationAction" label-id="label.lastReclassificationAction" read-only="true" set="rm-classification" />
             </appearance>
          </form>
       </forms>
