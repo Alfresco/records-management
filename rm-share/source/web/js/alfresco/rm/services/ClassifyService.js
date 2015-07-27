@@ -219,8 +219,8 @@ define(["dojo/_base/declare",
                            searchStartsWith: false
                         }
                      }
-                  },
-                  configObject.reclassificationSchedulesWidget
+                  }/*,
+                  configObject.reclassificationSchedulesWidget*/
                ]
             }, true);
          },
@@ -281,6 +281,7 @@ define(["dojo/_base/declare",
             configObject.agencyValue = properties["clf_classificationAgency"];
             configObject.reasonsValue = properties["clf_classificationReasons"];
             configObject.reclassificationSchedulesWidget = {};
+            // FIXME: Tooltip
 //            {
 //               id: "TAB_CONTAINER",
 //               name: "alfresco/layout/AlfTabContainer",
