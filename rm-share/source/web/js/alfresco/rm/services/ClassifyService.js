@@ -187,6 +187,7 @@ define(["dojo/_base/declare",
                         }
                      }
                   },{
+                     // FIXME: Tooltip
                      id: "AGENCY",
                      name: "alfresco/forms/controls/TextBox",
                      config: {
@@ -219,8 +220,84 @@ define(["dojo/_base/declare",
                            searchStartsWith: false
                         }
                      }
-                  }/*,
-                  configObject.reclassificationSchedulesWidget*/
+                  }/*,{
+                     id: "TAB_CONTAINER",
+                     name: "alfresco/layout/AlfTabContainer",
+                     config: {
+                        widgets: [{
+                           name: "alfresco/layout/VerticalWidgets",
+                           id: "DOWNGRADE_SCHEDULE",
+                           title: this.message("label.classify.downgradeSchedule"),
+                           config: {
+                              widgets: [{
+                                 name: "alfresco/forms/controls/DateTextBox",
+                                 id: "DOWNGRADE_DATE",
+                                 config: {
+                                    name: "downgradeDate",
+                                    value: "",
+                                    label: this.message("label.classify.downgradeDate")
+                                 }
+                              },{
+                                 // FIXME: Tooltip
+                                 id: "DOWNGRADE_EVENT",
+                                 name: "alfresco/forms/controls/TextBox",
+                                 config: {
+                                    label: this.message("label.classify.downgradeEvent"),
+                                    name: "downgradeEvent"
+                                 }
+                              },{
+                                 id: "DOWNGRADE_INSTRUCTIONS",
+                                 name: "alfresco/forms/controls/TextArea",
+                                 config: {
+                                    label: this.message("label.classify.downgradeInstructions"),
+                                    name: "downgradeInstructions"
+                                 }
+                              }]
+                           }
+                        },{
+                           name: "alfresco/layout/VerticalWidgets",
+                           id: "DECLASSIFICATION_SCHEDULE",
+                           title: this.message("label.classify.declassificationSchedule"),
+                           // FIXME: Remove this after AKU-451 has been fixed
+                           delayProcessing: false,
+                           config: {
+                              widgets: [{
+                                 name: "alfresco/forms/controls/DateTextBox",
+                                 id: "DECLASSIFICATION_DATE",
+                                 config: {
+                                    name: "declassificationDate",
+                                    value: "",
+                                    label: this.message("label.classify.declassificationDate")
+                                 }
+                              },{
+                                 // FIXME: Tooltip
+                                 id: "DECLASSIFICATION_EVENT",
+                                 name: "alfresco/forms/controls/TextBox",
+                                 config: {
+                                    label: this.message("label.classify.declassificationEvent"),
+                                    name: "declassificationEvent"
+                                 }
+                              },{
+                                 id: "EXEMPTIONS",
+                                 name: "alfresco/forms/controls/Select",
+                                 config: {
+                                    label: this.message("label.classify.declassificationExemptions"),
+                                    name: "declassificationExemptions",
+                                    optionsConfig: {
+                                       publishTopic: "ALF_GET_FORM_CONTROL_OPTIONS",
+                                       publishPayload: {
+                                          url: AlfConstants.PROXY_URI + this.exemptionsAPIGet,
+                                          itemsAttribute: "data.items",
+                                          labelAttribute: "displayLabel",
+                                          valueAttribute: "id"
+                                       }
+                                    }
+                                 }
+                              }]
+                           }
+                        }]
+                     }
+                  }*/
                ]
             }, true);
          },
@@ -249,7 +326,6 @@ define(["dojo/_base/declare",
             configObject.classifiedByValue = Alfresco.constants.USER_FULLNAME;
             configObject.agencyValue = null;
             configObject.reasonsValue = null;
-            configObject.reclassificationSchedulesWidget = {};
 
             this._publishClassificationFormDialogRequest(configObject, payload);
          },
@@ -280,84 +356,6 @@ define(["dojo/_base/declare",
             configObject.classifiedByValue = properties["clf_classifiedBy"];
             configObject.agencyValue = properties["clf_classificationAgency"];
             configObject.reasonsValue = properties["clf_classificationReasons"];
-            configObject.reclassificationSchedulesWidget = {};
-            // FIXME: Tooltip
-//            {
-//               id: "TAB_CONTAINER",
-//               name: "alfresco/layout/AlfTabContainer",
-//               config: {
-//                  widgets: [{
-//                     name: "alfresco/layout/VerticalWidgets",
-//                     id: "DOWNGRADE_SCHEDULE",
-//                     title: this.message("label.classify.downgradeSchedule"),
-//                     config: {
-//                        widgets: [{
-//                           name: "alfresco/forms/controls/DateTextBox",
-//                           id: "DOWNGRADE_DATE",
-//                           config: {
-//                              name: "downgradeDate",
-//                              value: "",
-//                              label: this.message("label.classify.downgradeDate")
-//                           }
-//                        },{
-//                           id: "DOWNGRADE_EVENT",
-//                           name: "alfresco/forms/controls/TextBox",
-//                           config: {
-//                              label: this.message("label.classify.downgradeEvent"),
-//                              name: "downgradeEvent"
-//                           }
-//                        },{
-//                           id: "DOWNGRADE_INSTRUCTIONS",
-//                           name: "alfresco/forms/controls/TextArea",
-//                           config: {
-//                              label: this.message("label.classify.downgradeInstructions"),
-//                              name: "downgradeInstructions"
-//                           }
-//                        }]
-//                     }
-//                  },{
-//                     name: "alfresco/layout/VerticalWidgets",
-//                     id: "DECLASSIFICATION_SCHEDULE",
-//                     title: this.message("label.classify.declassificationSchedule"),
-//                     // FIXME: Remove this after AKU-451 has been fixed
-//                     delayProcessing: false,
-//                     config: {
-//                        widgets: [{
-//                           name: "alfresco/forms/controls/DateTextBox",
-//                           id: "DECLASSIFICATION_DATE",
-//                           config: {
-//                              name: "declassificationDate",
-//                              value: "",
-//                              label: this.message("label.classify.declassificationDate")
-//                           }
-//                        },{
-//                           id: "DECLASSIFICATION_EVENT",
-//                           name: "alfresco/forms/controls/TextBox",
-//                           config: {
-//                              label: this.message("label.classify.declassificationEvent"),
-//                              name: "declassificationEvent"
-//                           }
-//                        },{
-//                           id: "EXEMPTIONS",
-//                           name: "alfresco/forms/controls/Select",
-//                           config: {
-//                              label: this.message("label.classify.declassificationExemptions"),
-//                              name: "declassificationExemptions",
-//                              optionsConfig: {
-//                                 publishTopic: "ALF_GET_FORM_CONTROL_OPTIONS",
-//                                 publishPayload: {
-//                                    url: AlfConstants.PROXY_URI + this.exemptionsAPIGet,
-//                                    itemsAttribute: "data.items",
-//                                    labelAttribute: "displayLabel",
-//                                    valueAttribute: "id"
-//                                 }
-//                              }
-//                           }
-//                        }]
-//                     }
-//                  }]
-//               }
-//            };
 
             this._publishClassificationFormDialogRequest(configObject, payload);
          },
