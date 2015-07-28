@@ -111,6 +111,7 @@ define(["dojo/_base/declare",
             this.alfSubscribe("RM_EDIT_CLASSIFIED_CONTENT", lang.hitch(this, this.onEditClassifiedContent));
             this.alfSubscribe("RM_CLASSIFY", lang.hitch(this, this.onCreate));
             this.alfSubscribe("RM_EDIT_CLASSIFIED", lang.hitch(this, this.onUpdate));
+            this.alfSubscribe("ALF_CLASSIFY_VALIDATE_CLASSIFY_BY", lang.hitch(this, this.onValidateClassifiedBy));
          },
 
          /**
@@ -139,7 +140,7 @@ define(["dojo/_base/declare",
           * @param configObject
           * @param payload
           */
-         _publishClassificationFormDialogRequest: function rm_services_classifyService__publishClassificationFormDialogRequest(configObject, payload)
+         _publishClassificationFormDialogRequest: function rm_services_classifyService___publishClassificationFormDialogRequest(configObject, payload)
          {
             var dialogTitle = (Alfresco.rm.isRMSite(payload.item.location.site)) ? configObject.dialogTitleRm : configObject.dialogTitleCollab;
 
@@ -184,7 +185,14 @@ define(["dojo/_base/declare",
                         value: configObject.classifiedByValue,
                         requirementConfig: {
                            initialValue: true
-                        }
+                        },
+                        validationConfig: [
+                           {
+                              validation: "validationTopic",
+                              validationTopic: "ALF_CLASSIFY_VALIDATE_CLASSIFY_BY",
+                              errorMessage: this.message("label.classify.classifiedBy.validation.error")
+                           }
+                        ]
                      }
                   },{
                      // FIXME: Tooltip
@@ -341,7 +349,7 @@ define(["dojo/_base/declare",
           * @fires RM_CLASSIFY_REASONS_GET
           * @fires ALF_GET_FORM_CONTROL_OPTIONS
           */
-         onEditClassifiedContent: function rm_services_classifyService_onEditClassifiedContent(payload)
+         onEditClassifiedContent: function rm_services_classifyService__onEditClassifiedContent(payload)
          {
             var configObject = {},
                properties = payload.item.node.properties;
@@ -367,7 +375,7 @@ define(["dojo/_base/declare",
           * @param successMessage
           * @param failureMessage
           */
-         _onClassifyAction: function rm_services_classifyService__onClassifyAction(payload, successMessage, failureMessage)
+         _onClassifyAction: function rm_services_classifyService___onClassifyAction(payload, successMessage, failureMessage)
          {
             if (!payload.nodeRef)
             {
@@ -388,7 +396,7 @@ define(["dojo/_base/declare",
           *
           * @param payload
           */
-         onCreate: function rm_services_classifyService_onCreate(payload)
+         onCreate: function rm_services_classifyService__onCreate(payload)
          {
             this._onClassifyAction(payload, "label.classify.content.success", "label.classify.content.failure");
 
@@ -400,11 +408,24 @@ define(["dojo/_base/declare",
           *
           * @param payload
           */
-         onUpdate: function rm_services_classifyService_onUpdate(payload)
+         onUpdate: function rm_services_classifyService__onUpdate(payload)
          {
             this._onClassifyAction(payload, "label.edit.classified.content.success", "label.edit.classified.content.failure");
 
             this.inherited(arguments);
+         },
+
+         /**
+          * Used to validate the classified by field.
+          *
+          * @param payload
+          */
+         onValidateClassifiedBy: function rm_services_classifyService__onValidateClassifiedBy(payload)
+         {
+            // Classified By field MUST NOT start with a whitespace nor can it consist of only whitespaces. RM-2373
+            var isValid = (lang.trim(payload.value) !== "" && payload.value.substring(0,1) !== " ");
+
+            this.alfPublish(payload.alfResponseTopic, {isValid: isValid});
          }
       });
    });
