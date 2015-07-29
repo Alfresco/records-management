@@ -36,7 +36,7 @@ model.jsonModel = {
          useHash: true,
          loadDataPublishTopic: "RM_USER_SECURITY_CLEARANCE_GET_ALL",
          itemsProperty: "data.items",
-         sortField: "cm:userName",
+         sortField: "cm:firstName,cm:lastName,cm:userName",
          startIndexProperty: "data.startIndex",
          totalResultsProperty: "data.total",
          widgetsForFilters: [{
@@ -65,7 +65,7 @@ model.jsonModel = {
                   config: {
                      label: msg.get("header.cell.user.name"),
                      sortable: true,
-                     sortValue: "cm:userName"
+                     sortValue: "cm:firstName,cm:lastName,cm:userName"
                   }
                },{
                   name: "alfresco/lists/views/layouts/HeaderCell",
