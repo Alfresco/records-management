@@ -253,9 +253,9 @@ define(["dojo/_base/declare",
                      id: "DOWNGRADE_DATE",
                      name: "alfresco/forms/controls/DateTextBox",
                      config: {
+                        label: this.message("label.classify.downgradeDate"),
                         name: "downgradeDate",
-                        value: configObject.downgradeDate,
-                        label: this.message("label.classify.downgradeDate")
+                        value: configObject.downgradeDate
                      }
                   },{
                      // FIXME: Tooltip
@@ -275,12 +275,12 @@ define(["dojo/_base/declare",
                         value: configObject.downgradeInstructions
                      }
                   },{
-                     name: "alfresco/forms/controls/DateTextBox",
                      id: "DECLASSIFICATION_DATE",
+                     name: "alfresco/forms/controls/DateTextBox",
                      config: {
+                        label: this.message("label.classify.declassificationDate"),
                         name: "declassificationDate",
-                        value: configObject.declassificationDate,
-                        label: this.message("label.classify.declassificationDate")
+                        value: configObject.declassificationDate
                      }
                   },{
                      // FIXME: Tooltip
@@ -319,17 +319,17 @@ define(["dojo/_base/declare",
                      name: "alfresco/layout/AlfTabContainer",
                      config: {
                         widgets: [{
-                           name: "alfresco/layout/VerticalWidgets",
                            id: "DOWNGRADE_SCHEDULE",
                            title: this.message("label.classify.downgradeSchedule"),
+                           name: "alfresco/layout/VerticalWidgets",
                            config: {
                               widgets: [{
-                                 name: "alfresco/forms/controls/DateTextBox",
                                  id: "DOWNGRADE_DATE",
+                                 name: "alfresco/forms/controls/DateTextBox",
                                  config: {
+                                    label: this.message("label.classify.downgradeDate"),
                                     name: "downgradeDate",
-                                    value: "",
-                                    label: this.message("label.classify.downgradeDate")
+                                    value: configObject.downgradeDate
                                  }
                               },{
                                  // FIXME: Tooltip
@@ -337,31 +337,31 @@ define(["dojo/_base/declare",
                                  name: "alfresco/forms/controls/TextBox",
                                  config: {
                                     label: this.message("label.classify.downgradeEvent"),
-                                    name: "downgradeEvent"
+                                    name: "downgradeEvent",
+                                    value: configObject.downgradeEvent
                                  }
                               },{
                                  id: "DOWNGRADE_INSTRUCTIONS",
                                  name: "alfresco/forms/controls/TextArea",
                                  config: {
                                     label: this.message("label.classify.downgradeInstructions"),
-                                    name: "downgradeInstructions"
+                                    name: "downgradeInstructions",
+                                    value: configObject.downgradeInstructions
                                  }
                               }]
                            }
                         },{
-                           name: "alfresco/layout/VerticalWidgets",
                            id: "DECLASSIFICATION_SCHEDULE",
                            title: this.message("label.classify.declassificationSchedule"),
-                           // FIXME: Remove this after AKU-451 has been fixed
-                           delayProcessing: false,
+                           name: "alfresco/layout/VerticalWidgets",
                            config: {
                               widgets: [{
-                                 name: "alfresco/forms/controls/DateTextBox",
                                  id: "DECLASSIFICATION_DATE",
+                                 name: "alfresco/forms/controls/DateTextBox",
                                  config: {
+                                    label: this.message("label.classify.declassificationDate"),
                                     name: "declassificationDate",
-                                    value: "",
-                                    label: this.message("label.classify.declassificationDate")
+                                    value: configObject.declassificationDate
                                  }
                               },{
                                  // FIXME: Tooltip
@@ -369,7 +369,8 @@ define(["dojo/_base/declare",
                                  name: "alfresco/forms/controls/TextBox",
                                  config: {
                                     label: this.message("label.classify.declassificationEvent"),
-                                    name: "declassificationEvent"
+                                    name: "declassificationEvent",
+                                    value: configObject.declassificationEvent
                                  }
                               },{
                                  id: "EXEMPTIONS",
@@ -378,8 +379,7 @@ define(["dojo/_base/declare",
                                     label: this.message("label.classify.declassificationExemptions"),
                                     name: "declassificationExemptions",
                                     width: "362px",
-                                    // FIXME!!!
-                                    //value: configObject.reasonsValue,
+                                    value: configObject.declassificationExemptions,
                                     optionsConfig: {
                                        queryAttribute: "fullCategory",
                                        valueAttribute: "id",
@@ -423,16 +423,7 @@ define(["dojo/_base/declare",
             configObject.dialogConfirmationButtonTitle = "label.button.create";
             configObject.dialogConfirmationButtonId = "OK";
             configObject.formSubmissionTopic = "RM_CLASSIFY";
-            configObject.levelsValue = null;
             configObject.classifiedByValue = Alfresco.constants.USER_FULLNAME;
-            configObject.agencyValue = null;
-            configObject.reasonsValue = null;
-            configObject.downgradeDate = null;
-            configObject.downgradeEvent = null;
-            configObject.downgradeInstructions = null;
-            configObject.declassificationDate = null;
-            configObject.declassificationEvent = null;
-            configObject.declassificationExemptions = null;
 
             this._publishClassificationFormDialogRequest(configObject, payload);
          },
@@ -463,10 +454,10 @@ define(["dojo/_base/declare",
             configObject.classifiedByValue = properties["clf_classifiedBy"];
             configObject.agencyValue = properties["clf_classificationAgency"];
             configObject.reasonsValue = properties["clf_classificationReasons"];
-            configObject.downgradeDate = properties["clf_downgradeDate"].iso8601;
+            configObject.downgradeDate = properties["clf_downgradeDate"] && properties["clf_downgradeDate"].iso8601;
             configObject.downgradeEvent = properties["clf_downgradeEvent"];
             configObject.downgradeInstructions = properties["clf_downgradeInstructions"];
-            configObject.declassificationDate = properties["clf_declassificationDate"].iso8601;
+            configObject.declassificationDate = properties["clf_declassificationDate"] && properties["clf_declassificationDate"].iso8601;
             configObject.declassificationEvent = properties["clf_declassificationEvent"];
             configObject.declassificationExemptions = properties["clf_declassificationExemptions"];
 
