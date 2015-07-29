@@ -430,6 +430,9 @@ define(["dojo/_base/declare",
             configObject.downgradeDate = null;
             configObject.downgradeEvent = null;
             configObject.downgradeInstructions = null;
+            configObject.declassificationDate = null;
+            configObject.declassificationEvent = null;
+            configObject.declassificationExemptions = null;
 
             this._publishClassificationFormDialogRequest(configObject, payload);
          },
