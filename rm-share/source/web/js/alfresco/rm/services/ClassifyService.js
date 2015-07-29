@@ -107,6 +107,7 @@ define(["dojo/_base/declare",
           */
          constructor: function rm_services_classifyService__constructor(args) {
             this.alfSubscribe("RM_CLASSIFY_REASONS_GET", lang.hitch(this, this.onGetReasons));
+            this.alfSubscribe("RM_CLASSIFY_EXEMPTIONS_GET", lang.hitch(this, this.onGetExemptions));
             this.alfSubscribe("RM_CLASSIFY_CONTENT", lang.hitch(this, this.onClassifyContent));
             this.alfSubscribe("RM_EDIT_CLASSIFIED_CONTENT", lang.hitch(this, this.onEditClassifiedContent));
             this.alfSubscribe("RM_CLASSIFY", lang.hitch(this, this.onCreate));
@@ -131,6 +132,26 @@ define(["dojo/_base/declare",
             else
             {
                this.alfLog("error", "A request to get the classification reasons but the 'responseTopic' attributes was not provided in the payload", payload);
+            }
+         },
+
+         /**
+          * Get all the declassification exemptions
+          */
+         onGetExemptions: function rm_services_classifyService__onGetExemptions(payload)
+         {
+            if (payload && payload.alfResponseTopic)
+            {
+               var url = AlfConstants.PROXY_URI + this.exemptionsAPIGet;
+               this.serviceXhr({
+                  url: url,
+                  method: "GET",
+                  alfTopic: payload.alfResponseTopic
+               });
+            }
+            else
+            {
+               this.alfLog("error", "A request to get the declassification exemptions but the 'responseTopic' attributes was not provided in the payload", payload);
             }
          },
 
@@ -209,7 +230,7 @@ define(["dojo/_base/declare",
                      config: {
                         label: this.message("label.classify.reasons"),
                         name: "classificationReasons",
-                        width: "400px",
+                        width: "362px",
                         requirementConfig: {
                            initialValue: true
                         },
@@ -228,7 +249,72 @@ define(["dojo/_base/declare",
                            searchStartsWith: false
                         }
                      }
-                  }/*,{
+                  },{
+                     id: "DOWNGRADE_DATE",
+                     name: "alfresco/forms/controls/DateTextBox",
+                     config: {
+                        name: "downgradeDate",
+                        value: configObject.downgradeDate,
+                        label: this.message("label.classify.downgradeDate")
+                     }
+                  },{
+                     // FIXME: Tooltip
+                     id: "DOWNGRADE_EVENT",
+                     name: "alfresco/forms/controls/TextBox",
+                     config: {
+                        label: this.message("label.classify.downgradeEvent"),
+                        name: "downgradeEvent",
+                        value: configObject.downgradeEvent
+                     }
+                  },{
+                     id: "DOWNGRADE_INSTRUCTIONS",
+                     name: "alfresco/forms/controls/TextArea",
+                     config: {
+                        label: this.message("label.classify.downgradeInstructions"),
+                        name: "downgradeInstructions",
+                        value: configObject.downgradeInstructions
+                     }
+                  },{
+                     name: "alfresco/forms/controls/DateTextBox",
+                     id: "DECLASSIFICATION_DATE",
+                     config: {
+                        name: "declassificationDate",
+                        value: configObject.declassificationDate,
+                        label: this.message("label.classify.declassificationDate")
+                     }
+                  },{
+                     // FIXME: Tooltip
+                     id: "DECLASSIFICATION_EVENT",
+                     name: "alfresco/forms/controls/TextBox",
+                     config: {
+                        label: this.message("label.classify.declassificationEvent"),
+                        name: "declassificationEvent",
+                        value: configObject.declassificationEvent
+                     }
+                  },{
+                     id: "EXEMPTIONS",
+                     name: "alfresco/forms/controls/MultiSelectInput",
+                     config: {
+                        label: this.message("label.classify.declassificationExemptions"),
+                        name: "declassificationExemptions",
+                        width: "362px",
+                        value: configObject.declassificationExemptions,
+                        optionsConfig: {
+                           queryAttribute: "fullCategory",
+                           valueAttribute: "id",
+                           labelAttribute: "fullCategory",
+                           labelFormat: {
+                              choice: "{value}"
+                           },
+                           publishTopic: "RM_CLASSIFY_EXEMPTIONS_GET",
+                           publishPayload: {
+                              resultsProperty: "response.data.items"
+                           },
+                           searchStartsWith: false
+                        }
+                     }
+                  }
+                  /*,{
                      id: "TAB_CONTAINER",
                      name: "alfresco/layout/AlfTabContainer",
                      config: {
@@ -287,18 +373,25 @@ define(["dojo/_base/declare",
                                  }
                               },{
                                  id: "EXEMPTIONS",
-                                 name: "alfresco/forms/controls/Select",
+                                 name: "alfresco/forms/controls/MultiSelectInput",
                                  config: {
                                     label: this.message("label.classify.declassificationExemptions"),
                                     name: "declassificationExemptions",
+                                    width: "362px",
+                                    // FIXME!!!
+                                    //value: configObject.reasonsValue,
                                     optionsConfig: {
-                                       publishTopic: "ALF_GET_FORM_CONTROL_OPTIONS",
+                                       queryAttribute: "fullCategory",
+                                       valueAttribute: "id",
+                                       labelAttribute: "fullCategory",
+                                       labelFormat: {
+                                          choice: "{value}"
+                                       },
+                                       publishTopic: "RM_CLASSIFY_EXEMPTIONS_GET",
                                        publishPayload: {
-                                          url: AlfConstants.PROXY_URI + this.exemptionsAPIGet,
-                                          itemsAttribute: "data.items",
-                                          labelAttribute: "displayLabel",
-                                          valueAttribute: "id"
-                                       }
+                                          resultsProperty: "response.data.items"
+                                       },
+                                       searchStartsWith: false
                                     }
                                  }
                               }]
@@ -334,6 +427,9 @@ define(["dojo/_base/declare",
             configObject.classifiedByValue = Alfresco.constants.USER_FULLNAME;
             configObject.agencyValue = null;
             configObject.reasonsValue = null;
+            configObject.downgradeDate = null;
+            configObject.downgradeEvent = null;
+            configObject.downgradeInstructions = null;
 
             this._publishClassificationFormDialogRequest(configObject, payload);
          },
@@ -364,6 +460,12 @@ define(["dojo/_base/declare",
             configObject.classifiedByValue = properties["clf_classifiedBy"];
             configObject.agencyValue = properties["clf_classificationAgency"];
             configObject.reasonsValue = properties["clf_classificationReasons"];
+            configObject.downgradeDate = properties["clf_downgradeDate"].iso8601;
+            configObject.downgradeEvent = properties["clf_downgradeEvent"];
+            configObject.downgradeInstructions = properties["clf_downgradeInstructions"];
+            configObject.declassificationDate = properties["clf_declassificationDate"].iso8601;
+            configObject.declassificationEvent = properties["clf_declassificationEvent"];
+            configObject.declassificationExemptions = properties["clf_declassificationExemptions"];
 
             this._publishClassificationFormDialogRequest(configObject, payload);
          },
