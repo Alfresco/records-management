@@ -25,6 +25,7 @@
  * @extends module:alfresco/service/crudService
  * @mixes module:alfresco/core/CoreXhr
  * @author David Webster
+ * @author Tuna Aksoy
  * @since RM 3.0.a
  *
  * @event RM_CLASSIFY_REASONS_GET
@@ -216,7 +217,7 @@ define(["dojo/_base/declare",
                         ]
                      }
                   },{
-                     // FIXME: Tooltip
+                     // FIXME: Tooltip -> see mockup in RM-1953
                      id: "AGENCY",
                      name: "alfresco/forms/controls/TextBox",
                      config: {
@@ -267,7 +268,7 @@ define(["dojo/_base/declare",
                                     value: configObject.downgradeDate
                                  }
                               },{
-                                 // FIXME: Tooltip
+                                 // FIXME: Tooltip -> see mockup in RM-1953
                                  id: "DOWNGRADE_EVENT",
                                  name: "alfresco/forms/controls/TextBox",
                                  config: {
@@ -276,6 +277,7 @@ define(["dojo/_base/declare",
                                     value: configObject.downgradeEvent
                                  }
                               },{
+                                 // FIXME: This field need to gets a mandatory field if downgrade date and/or downgrade event is/are supplied.
                                  id: "DOWNGRADE_INSTRUCTIONS",
                                  name: "alfresco/forms/controls/TextArea",
                                  config: {
@@ -299,7 +301,7 @@ define(["dojo/_base/declare",
                                     value: configObject.declassificationDate
                                  }
                               },{
-                                 // FIXME: Tooltip
+                                 // FIXME: Tooltip -> see mockup in RM-1953
                                  id: "DECLASSIFICATION_EVENT",
                                  name: "alfresco/forms/controls/TextBox",
                                  config: {
@@ -333,7 +335,28 @@ define(["dojo/_base/declare",
                            }
                         }]
                      }
+                  },{
+                     // FIXME: This field is by default disabled and needs to be enabled once the classification level is changed
+                     id: "LAST_RECLASSIFY_BY",
+                     name: "alfresco/forms/controls/TextBox",
+                     config: {
+                        label: this.message("label.classify.lastReclassifyBy"),
+                        name: "lastReclassifyBy",
+                        value: configObject.lastReclassifyBy,
+                        _disabled: true
+                     }
+                  },{
+                     // FIXME: This field is by default disabled and needs to be enabled once the classification level is changed
+                     id: "LAST_RECLASSIFY_REASON",
+                     name: "alfresco/forms/controls/TextArea",
+                     config: {
+                        label: this.message("label.classify.lastReclassifyReason"),
+                        name: "lastReclassifyReason",
+                        value: configObject.lastReclassifyReason,
+                        _disabled: true
+                     }
                   }
+                  // FIXME: Show warning: Change of classification level
                ]
             }, true);
          },
@@ -395,6 +418,8 @@ define(["dojo/_base/declare",
             configObject.declassificationDate = properties["clf_declassificationDate"] && properties["clf_declassificationDate"].iso8601;
             configObject.declassificationEvent = properties["clf_declassificationEvent"];
             configObject.declassificationExemptions = properties["clf_declassificationExemptions"];
+            configObject.lastReclassifyBy = properties["clf_lastReclassifyBy"];
+            configObject.lastReclassifyReason = properties["clf_lastReclassifyReason"];
 
             this._publishClassificationFormDialogRequest(configObject, payload);
          },
