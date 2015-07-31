@@ -250,78 +250,13 @@ define(["dojo/_base/declare",
                         }
                      }
                   },{
-                     id: "DOWNGRADE_DATE",
-                     name: "alfresco/forms/controls/DateTextBox",
-                     config: {
-                        label: this.message("label.classify.downgradeDate"),
-                        name: "downgradeDate",
-                        value: configObject.downgradeDate
-                     }
-                  },{
-                     // FIXME: Tooltip
-                     id: "DOWNGRADE_EVENT",
-                     name: "alfresco/forms/controls/TextBox",
-                     config: {
-                        label: this.message("label.classify.downgradeEvent"),
-                        name: "downgradeEvent",
-                        value: configObject.downgradeEvent
-                     }
-                  },{
-                     id: "DOWNGRADE_INSTRUCTIONS",
-                     name: "alfresco/forms/controls/TextArea",
-                     config: {
-                        label: this.message("label.classify.downgradeInstructions"),
-                        name: "downgradeInstructions",
-                        value: configObject.downgradeInstructions
-                     }
-                  },{
-                     id: "DECLASSIFICATION_DATE",
-                     name: "alfresco/forms/controls/DateTextBox",
-                     config: {
-                        label: this.message("label.classify.declassificationDate"),
-                        name: "declassificationDate",
-                        value: configObject.declassificationDate
-                     }
-                  },{
-                     // FIXME: Tooltip
-                     id: "DECLASSIFICATION_EVENT",
-                     name: "alfresco/forms/controls/TextBox",
-                     config: {
-                        label: this.message("label.classify.declassificationEvent"),
-                        name: "declassificationEvent",
-                        value: configObject.declassificationEvent
-                     }
-                  },{
-                     id: "EXEMPTIONS",
-                     name: "alfresco/forms/controls/MultiSelectInput",
-                     config: {
-                        label: this.message("label.classify.declassificationExemptions"),
-                        name: "declassificationExemptions",
-                        width: "362px",
-                        value: configObject.declassificationExemptions,
-                        optionsConfig: {
-                           queryAttribute: "fullCategory",
-                           valueAttribute: "id",
-                           labelAttribute: "fullCategory",
-                           labelFormat: {
-                              choice: "{value}"
-                           },
-                           publishTopic: "RM_CLASSIFY_EXEMPTIONS_GET",
-                           publishPayload: {
-                              resultsProperty: "response.data.items"
-                           },
-                           searchStartsWith: false
-                        }
-                     }
-                  }
-                  /*,{
                      id: "TAB_CONTAINER",
-                     name: "alfresco/layout/AlfTabContainer",
+                     name: "alfresco/forms/TabbedControls",
                      config: {
                         widgets: [{
                            id: "DOWNGRADE_SCHEDULE",
                            title: this.message("label.classify.downgradeSchedule"),
-                           name: "alfresco/layout/VerticalWidgets",
+                           name: "alfresco/forms/ControlColumn",
                            config: {
                               widgets: [{
                                  id: "DOWNGRADE_DATE",
@@ -353,7 +288,7 @@ define(["dojo/_base/declare",
                         },{
                            id: "DECLASSIFICATION_SCHEDULE",
                            title: this.message("label.classify.declassificationSchedule"),
-                           name: "alfresco/layout/VerticalWidgets",
+                           name: "alfresco/forms/ControlColumn",
                            config: {
                               widgets: [{
                                  id: "DECLASSIFICATION_DATE",
@@ -398,7 +333,7 @@ define(["dojo/_base/declare",
                            }
                         }]
                      }
-                  }*/
+                  }
                ]
             }, true);
          },
