@@ -335,8 +335,9 @@ define(["dojo/_base/declare",
                            }
                         }]
                      }
-                  },{
+                  }/*,{
                      // FIXME: This field is by default disabled and needs to be enabled once the classification level is changed
+                     // FIXME: Show this field only in the edit classification dialog
                      id: "LAST_RECLASSIFY_BY",
                      name: "alfresco/forms/controls/TextBox",
                      config: {
@@ -347,6 +348,7 @@ define(["dojo/_base/declare",
                      }
                   },{
                      // FIXME: This field is by default disabled and needs to be enabled once the classification level is changed
+                     // FIXME: Show this field only in the edit classification dialog
                      id: "LAST_RECLASSIFY_REASON",
                      name: "alfresco/forms/controls/TextArea",
                      config: {
@@ -355,7 +357,7 @@ define(["dojo/_base/declare",
                         value: configObject.lastReclassifyReason,
                         _disabled: true
                      }
-                  }
+                  }*/
                   // FIXME: Show warning: Change of classification level
                ]
             }, true);
