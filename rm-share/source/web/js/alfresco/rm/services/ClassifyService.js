@@ -182,6 +182,7 @@ define(["dojo/_base/declare",
                      id: "LEVELS",
                      name: "alfresco/forms/controls/Select",
                      config: {
+                        fieldId: "LEVELS",
                         label: this.message("label.classify.levels"),
                         name: "classificationLevelId",
                         requirementConfig: {
@@ -335,29 +336,43 @@ define(["dojo/_base/declare",
                            }
                         }]
                      }
-                  }/*,{
-                     // FIXME: This field is by default disabled and needs to be enabled once the classification level is changed
-                     // FIXME: Show this field only in the edit classification dialog
+                  },{
                      id: "LAST_RECLASSIFY_BY",
                      name: "alfresco/forms/controls/TextBox",
                      config: {
                         label: this.message("label.classify.lastReclassifyBy"),
                         name: "lastReclassifyBy",
                         value: configObject.lastReclassifyBy,
-                        _disabled: true
+                        postWhenHiddenOrDisabled: false,
+                        disablementConfig: {
+                           rules: [{
+                              targetId: "LEVELS",
+                              is: [configObject.levelsValue]
+                           }]
+                        },
+                        visibilityConfig: {
+                           initialValue: configObject.visibilityReclassification
+                        }
                      }
                   },{
-                     // FIXME: This field is by default disabled and needs to be enabled once the classification level is changed
-                     // FIXME: Show this field only in the edit classification dialog
                      id: "LAST_RECLASSIFY_REASON",
                      name: "alfresco/forms/controls/TextArea",
                      config: {
                         label: this.message("label.classify.lastReclassifyReason"),
                         name: "lastReclassifyReason",
                         value: configObject.lastReclassifyReason,
-                        _disabled: true
+                        postWhenHiddenOrDisabled: false,
+                        disablementConfig: {
+                           rules: [{
+                              targetId: "LEVELS",
+                              is: [configObject.levelsValue]
+                           }]
+                        },
+                        visibilityConfig: {
+                           initialValue: configObject.visibilityReclassification
+                        }
                      }
-                  }*/
+                  }
                   // FIXME: Show warning: Change of classification level
                ]
             }, true);
@@ -383,7 +398,9 @@ define(["dojo/_base/declare",
             configObject.dialogConfirmationButtonTitle = "label.button.create";
             configObject.dialogConfirmationButtonId = "OK";
             configObject.formSubmissionTopic = "RM_CLASSIFY";
+            configObject.levelsValue = "";
             configObject.classifiedByValue = Alfresco.constants.USER_FULLNAME;
+            configObject.visibilityReclassification = false;
 
             this._publishClassificationFormDialogRequest(configObject, payload);
          },
@@ -422,6 +439,7 @@ define(["dojo/_base/declare",
             configObject.declassificationExemptions = properties["clf_declassificationExemptions"];
             configObject.lastReclassifyBy = properties["clf_lastReclassifyBy"];
             configObject.lastReclassifyReason = properties["clf_lastReclassifyReason"];
+            configObject.visibilityReclassification = true;
 
             this._publishClassificationFormDialogRequest(configObject, payload);
          },
