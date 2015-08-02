@@ -246,6 +246,7 @@ define(["dojo/_base/declare",
                            },
                            publishTopic: "RM_CLASSIFY_REASONS_GET",
                            publishPayload: {
+                              alfResponseTopic: this.generateUuid(),
                               resultsProperty: "response.data.items"
                            },
                            searchStartsWith: false
@@ -327,6 +328,7 @@ define(["dojo/_base/declare",
                                        },
                                        publishTopic: "RM_CLASSIFY_EXEMPTIONS_GET",
                                        publishPayload: {
+                                          alfResponseTopic: this.generateUuid(),
                                           resultsProperty: "response.data.items"
                                        },
                                        searchStartsWith: false
@@ -342,7 +344,7 @@ define(["dojo/_base/declare",
                      config: {
                         label: this.message("label.classify.lastReclassifyBy"),
                         name: "lastReclassifyBy",
-                        value: configObject.lastReclassifyBy,
+                        value: Alfresco.constants.USER_FULLNAME,
                         postWhenHiddenOrDisabled: false,
                         disablementConfig: {
                            rules: [{
