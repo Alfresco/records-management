@@ -265,6 +265,7 @@ define(["dojo/_base/declare",
                                  id: "DOWNGRADE_DATE",
                                  name: "alfresco/forms/controls/DateTextBox",
                                  config: {
+                                    fieldId: "DOWNGRADE_SCHEDULE_FIELD",
                                     label: this.message("label.classify.downgradeDate"),
                                     name: "downgradeDate",
                                     value: configObject.downgradeDate
@@ -273,19 +274,30 @@ define(["dojo/_base/declare",
                                  id: "DOWNGRADE_EVENT",
                                  name: "alfresco/forms/controls/TextBox",
                                  config: {
+                                    fieldId: "DOWNGRADE_SCHEDULE_FIELD",
                                     label: this.message("label.classify.downgradeEvent"),
                                     name: "downgradeEvent",
                                     value: configObject.downgradeEvent,
                                     inlineHelp: this.message("label.classify.downgradeEvent.help")
                                  }
                               },{
-                                 // FIXME: This field need to gets a mandatory field if downgrade date and/or downgrade event is/are supplied.
                                  id: "DOWNGRADE_INSTRUCTIONS",
                                  name: "alfresco/forms/controls/TextArea",
                                  config: {
                                     label: this.message("label.classify.downgradeInstructions"),
                                     name: "downgradeInstructions",
-                                    value: configObject.downgradeInstructions
+                                    value: configObject.downgradeInstructions,
+                                    requirementConfig: {
+                                       initialValue: false,
+                                       rules: [{
+                                          targetId: "DOWNGRADE_SCHEDULE_FIELD",
+                                          is: ["^\\s+$"]
+                                       }]
+                                    },
+                                    ruleValueComparator: function(currentValue, targetValue)
+                                    {
+                                       return currentValue && !currentValue.toString().match(targetValue);
+                                    }
                                  }
                               }]
                            }
@@ -344,7 +356,7 @@ define(["dojo/_base/declare",
                      config: {
                         label: this.message("label.classify.lastReclassifyBy"),
                         name: "lastReclassifyBy",
-                        value: Alfresco.constants.USER_FULLNAME,
+                        value: configObject.lastReclassifyBy,
                         postWhenHiddenOrDisabled: false,
                         disablementConfig: {
                            rules: [{
