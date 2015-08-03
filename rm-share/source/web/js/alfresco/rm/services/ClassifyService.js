@@ -218,13 +218,13 @@ define(["dojo/_base/declare",
                         ]
                      }
                   },{
-                     // FIXME: Tooltip -> see mockup in RM-1953
                      id: "AGENCY",
                      name: "alfresco/forms/controls/TextBox",
                      config: {
                         label: this.message("label.classify.agency"),
                         name: "classificationAgency",
-                        value: configObject.agencyValue
+                        value: configObject.agencyValue,
+                        inlineHelp: this.message("label.classify.agency.help")
                      }
                   },{
                      id: "REASONS",
@@ -270,13 +270,13 @@ define(["dojo/_base/declare",
                                     value: configObject.downgradeDate
                                  }
                               },{
-                                 // FIXME: Tooltip -> see mockup in RM-1953
                                  id: "DOWNGRADE_EVENT",
                                  name: "alfresco/forms/controls/TextBox",
                                  config: {
                                     label: this.message("label.classify.downgradeEvent"),
                                     name: "downgradeEvent",
-                                    value: configObject.downgradeEvent
+                                    value: configObject.downgradeEvent,
+                                    inlineHelp: this.message("label.classify.downgradeEvent.help")
                                  }
                               },{
                                  // FIXME: This field need to gets a mandatory field if downgrade date and/or downgrade event is/are supplied.
@@ -303,13 +303,13 @@ define(["dojo/_base/declare",
                                     value: configObject.declassificationDate
                                  }
                               },{
-                                 // FIXME: Tooltip -> see mockup in RM-1953
                                  id: "DECLASSIFICATION_EVENT",
                                  name: "alfresco/forms/controls/TextBox",
                                  config: {
                                     label: this.message("label.classify.declassificationEvent"),
                                     name: "declassificationEvent",
-                                    value: configObject.declassificationEvent
+                                    value: configObject.declassificationEvent,
+                                    inlineHelp: this.message("label.classify.declassificationEvent.help")
                                  }
                               },{
                                  id: "EXEMPTIONS",
