@@ -451,7 +451,7 @@ define(["dojo/_base/declare",
             configObject.declassificationDate = properties["clf_declassificationDate"] && properties["clf_declassificationDate"].iso8601;
             configObject.declassificationEvent = properties["clf_declassificationEvent"];
             configObject.declassificationExemptions = properties["clf_declassificationExemptions"];
-            configObject.lastReclassifyBy = properties["clf_lastReclassifyBy"];
+            configObject.lastReclassifyBy = Alfresco.constants.USER_FULLNAME;
             configObject.lastReclassifyReason = properties["clf_lastReclassifyReason"];
             configObject.visibilityReclassification = true;
 
