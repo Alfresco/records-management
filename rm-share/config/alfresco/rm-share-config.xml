@@ -102,12 +102,10 @@
          <indicator id="rm-version-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-version-record-16.png">
             <evaluator>evaluator.rm.doclib.versionRecord</evaluator>
          </indicator>
-         <!-- FIXME: Icon will be changed -->
          <indicator id="rm-classified-record" index="1" icon="../../../rm/components/documentlibrary/indicators/rm-classified-record-16.png">
             <evaluator>evaluator.rm.classified.record</evaluator>
             <override>rm-is-record</override>
          </indicator>
-         <!-- FIXME: Icon will be changed -->
          <indicator id="rm-classified-document" index="1" icon="../../../rm/components/documentlibrary/indicators/rm-classified-document-16.png">
             <evaluator>evaluator.rm.classified.document</evaluator>
          </indicator>
@@ -699,7 +697,6 @@
          </action>
 
          <!-- Edit classification -->
-         <!-- FIXME: Icon will be changed. See RM-2457 -->
          <action id="rm-edit-classified-content" type="javascript" label="actions.edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-document">
             <param name="function">onEditClassifiedContent</param>
             <permissions>
@@ -821,7 +818,6 @@
             <action index="290" id="rm-manage-permissions" />
             <action index="300" id="rm-add-relationship" />
             <action index="310" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
-            <!-- FIXME: Icon will be changed. See RM-2457 -->
             <action index="320" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
@@ -831,7 +827,6 @@
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
             <action index="140" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <!-- FIXME: Icon will be changed. See RM-2457 -->
             <action index="150" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
@@ -861,7 +856,6 @@
             <action index="290" id="rm-manage-permissions" />
             <action index="300" id="rm-add-relationship" />
             <action index="310" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <!-- FIXME: Icon will be changed. See RM-2457 -->
             <action index="320" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
@@ -871,7 +865,6 @@
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
             <action index="140" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <!-- FIXME: Icon will be changed. See RM-2457 -->
             <action index="150" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
@@ -899,7 +892,6 @@
             <action index="230" id="rm-manage-permissions" />
             <action index="240" id="rm-add-relationship" />
             <action index="250" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <!-- FIXME: Icon will be changed. See RM-2457 -->
             <action index="260" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
@@ -909,7 +901,6 @@
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
             <action index="140" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <!-- FIXME: Icon will be changed. See RM-2457 -->
             <action index="150" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
@@ -935,7 +926,6 @@
             <action index="230" id="rm-manage-permissions" />
             <action index="240" id="rm-add-relationship" />
             <action index="250" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <!-- FIXME: Icon will be changed. See RM-2457 -->
             <action index="260" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
@@ -945,7 +935,6 @@
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
             <action index="140" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <!-- FIXME: Icon will be changed. See RM-2457 -->
             <action index="150" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
@@ -1032,16 +1021,14 @@
             <action index="410" id="rm-declare-as-version-record" />
             <action index="420" id="dm-recorded-version-config" />
             <action index="430" id="rm-classify-content" />
-            <!-- FIXME: Icon will be changed. See RM-2457 -->
-            <action index="440" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
+            <action index="440" id="rm-edit-classified-content" />
          </actionGroup>
          <actionGroup id="document-details">
             <action index="400" id="rm-create-record" />
             <action index="410" id="rm-declare-as-version-record" />
             <action index="420" id="dm-recorded-version-config" />
             <action index="430" id="rm-classify-content"/>
-            <!-- FIXME: Icon will be changed. See RM-2457 -->
-            <action index="440" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
+            <action index="440" id="rm-edit-classified-content" />
          </actionGroup>
 
       </actionGroups>
