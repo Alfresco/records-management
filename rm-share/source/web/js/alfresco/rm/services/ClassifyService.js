@@ -513,7 +513,7 @@ define(["dojo/_base/declare",
          onValidateClassifiedBy: function rm_services_classifyService__onValidateClassifiedBy(payload)
          {
             // Classified By field MUST NOT start with a whitespace nor can it consist of only whitespaces. RM-2373
-            var isValid = payload.value.length === lang.trim(payload.value).length;
+            var isValid = payload.value.length === lang.trim(payload.value).length && lang.trim(payload.value).length !== 0;
 
             this.alfPublish(payload.alfResponseTopic, {isValid: isValid});
          }
