@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Document Action Dependencies</shortname>
+  <description>The Aikau dependencies required by the document action. See MNT-14494</description>
+  <url>/config/components/document-details/document-actions-dependencies</url>
+</webscript>

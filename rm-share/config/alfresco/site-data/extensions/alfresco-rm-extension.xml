@@ -736,6 +736,20 @@
                   </sub-component>
                </sub-components>
             </component>
+             <component>
+                 <scope>template</scope>
+                 <region-id>document-actions</region-id>
+                 <source-id>document-details</source-id>
+                 <sub-components>
+                     <sub-component id="rm-action-dependencies">
+                         <evaluations>
+                             <evaluation id="rm-action-dependencies">
+                                 <url>/config/components/document-details/document-actions-dependencies</url>
+                             </evaluation>
+                         </evaluations>
+                     </sub-component>
+                 </sub-components>
+             </component>
          </components>
       </module>
 
