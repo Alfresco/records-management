@@ -268,7 +268,8 @@ define(["dojo/_base/declare",
                                     fieldId: "DOWNGRADE_SCHEDULE_FIELD",
                                     label: this.message("label.classify.downgradeDate"),
                                     name: "downgradeDate",
-                                    value: configObject.downgradeDate
+                                    value: configObject.downgradeDate,
+                                    noPostWhenValueIs: [null]
                                  }
                               },{
                                  id: "DOWNGRADE_EVENT",
@@ -312,7 +313,8 @@ define(["dojo/_base/declare",
                                  config: {
                                     label: this.message("label.classify.declassificationDate"),
                                     name: "declassificationDate",
-                                    value: configObject.declassificationDate
+                                    value: configObject.declassificationDate,
+                                    noPostWhenValueIs: [null]
                                  }
                               },{
                                  id: "DECLASSIFICATION_EVENT",
