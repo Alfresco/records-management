@@ -18,10 +18,4 @@ function main()
    }
 };
 
-model.jsonModel = {
-   services: [
-      "rm/services/ClassifyService"
-   ]
-};
-
 main();
