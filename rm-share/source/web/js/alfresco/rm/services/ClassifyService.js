@@ -130,6 +130,7 @@ define(["dojo/_base/declare",
 
          /**
           * Displays a notification information when classification level is changed.
+          * And makes the reclassify by and reclassification reason fields mandatory.
           *
           * @param payload
           */
@@ -139,7 +140,7 @@ define(["dojo/_base/declare",
                notificationInfo = registry.byId("NOTIFICATION_INFO_EDIT"),
                notificationInfoDomNode = notificationInfo.domNode;
 
-            if (levels.value === payload.value)
+            if (payload.oldValue === "" || levels.value === payload.value)
             {
                domStyle.set(notificationInfoDomNode, "display", "none");
             }
@@ -195,6 +196,9 @@ define(["dojo/_base/declare",
                   });
 
                   domStyle.set(notificationInfoDomNode, "display", "");
+
+                  registry.byId("LAST_RECLASSIFY_BY_EDIT").setValue(Alfresco.constants.USER_FULLNAME);
+                  registry.byId("LAST_RECLASSIFY_REASON_EDIT").setValue("");
                }
             }
          },
@@ -453,6 +457,13 @@ define(["dojo/_base/declare",
                         },
                         visibilityConfig: {
                            initialValue: configObject.visibilityReclassification
+                        },
+                        requirementConfig: {
+                           initialValue: false,
+                           rules: [{
+                              targetId: "LEVELS",
+                              isNot: [configObject.levelsValue]
+                           }]
                         }
                      }
                   },{
@@ -472,6 +483,13 @@ define(["dojo/_base/declare",
                         },
                         visibilityConfig: {
                            initialValue: configObject.visibilityReclassification
+                        },
+                        requirementConfig: {
+                           initialValue: false,
+                           rules: [{
+                              targetId: "LEVELS",
+                              isNot: [configObject.levelsValue]
+                           }]
                         }
                      }
                   },{
