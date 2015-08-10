@@ -37,8 +37,10 @@ define(["dojo/_base/declare",
       "alfresco/services/CrudService",
       "service/constants/Default",
       "alfresco/core/NodeUtils",
+      "dijit/registry",
+      "dojo/dom-style",
       "dojo/_base/lang"],
-   function (declare, AlfCore, AlfXhr, CrudService, AlfConstants, NodeUtils, lang) {
+   function (declare, AlfCore, AlfXhr, CrudService, AlfConstants, NodeUtils, registry, domStyle, lang) {
 
       return declare([AlfCore, AlfXhr, CrudService], {
 
@@ -59,6 +61,15 @@ define(["dojo/_base/declare",
           * @default [{i18nFile: "./i18n/ClassifyService.properties"}]
           */
          i18nRequirements: [{i18nFile: "./i18n/ClassifyService.properties"}],
+
+         /**
+          * An array of the CSS files to use with this service.
+          *
+          * @instance
+          * @type {object[]}
+          * @default [{cssFile:"./css/ClassifyService.css"}]
+          */
+         cssRequirements: [{cssFile:"./css/ClassifyService.css"}],
 
          /**
           * URL used to get classification reasons.
@@ -114,6 +125,78 @@ define(["dojo/_base/declare",
             this.alfSubscribe("RM_CLASSIFY", lang.hitch(this, this.onCreate));
             this.alfSubscribe("RM_EDIT_CLASSIFIED", lang.hitch(this, this.onUpdate));
             this.alfSubscribe("ALF_CLASSIFY_VALIDATE_CLASSIFY_BY", lang.hitch(this, this.onValidateClassifiedBy));
+            this.alfSubscribe("LEVEL_CHANGE_EDIT_valueChangeOf_LEVELS", lang.hitch(this, this.onLevelChange));
+         },
+
+         /**
+          * Displays a notification information when classification level is changed.
+          *
+          * @param payload
+          */
+         onLevelChange: function rm_services_classifyService__onLevelChange(payload)
+         {
+            var levels = registry.byId("LEVELS_EDIT"),
+               notificationInfo = registry.byId("NOTIFICATION_INFO_EDIT"),
+               notificationInfoDomNode = notificationInfo.domNode;
+
+            if (levels.value === payload.value)
+            {
+               domStyle.set(notificationInfoDomNode, "display", "none");
+            }
+            else
+            {
+               var options = levels.options;
+
+               if (options != null)
+               {
+                  var length = options.length,
+                     action;
+
+                  if (payload.value === options[length - 1].value)
+                  {
+                     action = this.message("label.edit.classified.content.declassify");
+                  }
+                  else
+                  {
+                     var originalIndex;
+
+                     for (var i = 0; i < options.length; i++)
+                     {
+                        if (payload.value === options[i].value)
+                        {
+                           originalIndex = i;
+                           break;
+                        }
+                     }
+
+                     var newIndex;
+
+                     for (var i = 0; i < options.length; i++)
+                     {
+                        if (levels.value === options[i].value)
+                        {
+                           newIndex = i;
+                           break;
+                        }
+                     }
+
+                     if (originalIndex > newIndex)
+                     {
+                        action = this.message("label.edit.classified.content.downgrade");
+                     }
+                     else
+                     {
+                        action = this.message("label.edit.classified.content.upgrade");
+                     }
+                  }
+
+                  notificationInfoDomNode.innerHTML = this.message("label.edit.classified.content.reclassificationInformation", {
+                     0: action
+                  });
+
+                  domStyle.set(notificationInfoDomNode, "display", "");
+               }
+            }
          },
 
          /**
@@ -179,7 +262,7 @@ define(["dojo/_base/declare",
                },
                widgets: [
                   {
-                     id: "LEVELS",
+                     id: "LEVELS" + configObject.notificationAction,
                      name: "alfresco/forms/controls/Select",
                      config: {
                         fieldId: "LEVELS",
@@ -188,6 +271,7 @@ define(["dojo/_base/declare",
                         requirementConfig: {
                            initialValue: true
                         },
+                        pubSubScope: "LEVEL_CHANGE" + configObject.notificationAction,
                         value: configObject.levelsValue,
                         optionsConfig: {
                            publishTopic: "ALF_GET_FORM_CONTROL_OPTIONS",
@@ -353,13 +437,14 @@ define(["dojo/_base/declare",
                         }]
                      }
                   },{
-                     id: "LAST_RECLASSIFY_BY",
+                     id: "LAST_RECLASSIFY_BY" + configObject.notificationAction,
                      name: "alfresco/forms/controls/TextBox",
                      config: {
                         label: this.message("label.classify.lastReclassifyBy"),
                         name: "lastReclassifyBy",
                         value: configObject.lastReclassifyBy,
                         postWhenHiddenOrDisabled: false,
+                        pubSubScope: "LEVEL_CHANGE" + configObject.notificationAction,
                         disablementConfig: {
                            rules: [{
                               targetId: "LEVELS",
@@ -371,13 +456,14 @@ define(["dojo/_base/declare",
                         }
                      }
                   },{
-                     id: "LAST_RECLASSIFY_REASON",
+                     id: "LAST_RECLASSIFY_REASON" + configObject.notificationAction,
                      name: "alfresco/forms/controls/TextArea",
                      config: {
                         label: this.message("label.classify.lastReclassifyReason"),
                         name: "lastReclassifyReason",
                         value: configObject.lastReclassifyReason,
                         postWhenHiddenOrDisabled: false,
+                        pubSubScope: "LEVEL_CHANGE" + configObject.notificationAction,
                         disablementConfig: {
                            rules: [{
                               targetId: "LEVELS",
@@ -388,8 +474,14 @@ define(["dojo/_base/declare",
                            initialValue: configObject.visibilityReclassification
                         }
                      }
+                  },{
+                     id: "NOTIFICATION_INFO" + configObject.notificationAction,
+                     name: "alfresco/renderers/Banner",
+                     config: {
+                        bannerMessage: configObject.visibilityReclassification ? "label.edit.classified.content.reclassificationInformation" : null,
+                        additionalCssClasses: "reclassification-information"
+                     }
                   }
-                  // FIXME: Show warning: Change of classification level
                ]
             }, true);
          },
@@ -417,6 +509,7 @@ define(["dojo/_base/declare",
             configObject.levelsValue = "";
             configObject.classifiedByValue = Alfresco.constants.USER_FULLNAME;
             configObject.visibilityReclassification = false;
+            configObject.notificationAction = "";
 
             this._publishClassificationFormDialogRequest(configObject, payload);
          },
@@ -453,9 +546,10 @@ define(["dojo/_base/declare",
             configObject.declassificationDate = properties["clf_declassificationDate"] && properties["clf_declassificationDate"].iso8601;
             configObject.declassificationEvent = properties["clf_declassificationEvent"];
             configObject.declassificationExemptions = properties["clf_declassificationExemptions"];
-            configObject.lastReclassifyBy = Alfresco.constants.USER_FULLNAME;
+            configObject.lastReclassifyBy = properties["clf_lastReclassifyBy"];
             configObject.lastReclassifyReason = properties["clf_lastReclassifyReason"];
             configObject.visibilityReclassification = true;
+            configObject.notificationAction = "_EDIT";
 
             this._publishClassificationFormDialogRequest(configObject, payload);
          },
