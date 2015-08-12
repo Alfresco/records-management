@@ -551,7 +551,7 @@ define(["dojo/_base/declare",
             configObject.dialogTitleRm = "label.edit.classification.dialog.title.rm";
             configObject.dialogTitleCollab = "label.edit.classification.dialog.title";
             configObject.dialogId = "EDIT_CLASSIFIED_CONTENT_DIALOG";
-            configObject.dialogConfirmationButtonTitle = "label.button.edit";
+            configObject.dialogConfirmationButtonTitle = "label.button.save";
             configObject.dialogConfirmationButtonId = "Edit";
             configObject.formSubmissionTopic = "RM_EDIT_CLASSIFIED";
             configObject.levelsValue = properties["clf_currentClassification"].id;
