@@ -86,15 +86,13 @@ model.jsonModel = {
                                  imageTitleProperty: "displayName",
                                  customClasses: "security-clearance-user-avatar",
                                  publishGlobal: true,
-                                 publishTopic: "ALF_NAVIGATE_TO_PAGE",
+                                 publishTopic: "RM_USER_SECURITY_CLEARANCE_VIEW_USER",
                                  useCurrentItemAsPayload: false,
                                  publishPayloadType: "PROCESS",
                                  publishPayloadModifiers: ["processCurrentItemTokens"],
                                  publishPayload: {
-                                    url: "console/admin-console/users#state=panel%3Dview%26userid%3D{userName}",
-                                    type: "SHARE_PAGE_RELATIVE"
+                                    userName: "{userName}"
                                  }
-
                               }
                            }]
                         }
@@ -107,13 +105,12 @@ model.jsonModel = {
                                  propertyToRender: "completeName",
                                  renderedValueClass: "security-clearance-user-name",
                                  publishGlobal: true,
-                                 publishTopic: "ALF_NAVIGATE_TO_PAGE",
+                                 publishTopic: "RM_USER_SECURITY_CLEARANCE_VIEW_USER",
                                  useCurrentItemAsPayload: false,
                                  publishPayloadType: "PROCESS",
                                  publishPayloadModifiers: ["processCurrentItemTokens"],
                                  publishPayload: {
-                                    url: "console/admin-console/users#state=panel%3Dview%26userid%3D{userName}",
-                                    type: "SHARE_PAGE_RELATIVE"
+                                    userName: "{userName}"
                                  }
                               }
                            }]

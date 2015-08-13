@@ -75,6 +75,7 @@ define(["dojo/_base/declare",
          this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_GET_ALL", lang.hitch(this, this.onGetAll));
          this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_SET", lang.hitch(this, this.onSet));
          this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_SET_CONFIRMED", lang.hitch(this, this.onSetConfirmed));
+         this.alfSubscribe("RM_USER_SECURITY_CLEARANCE_VIEW_USER", lang.hitch(this, this.onViewUser));
       },
 
       /**
@@ -187,7 +188,26 @@ define(["dojo/_base/declare",
             url: url,
             method: "PUT",
             alfTopic: payload.responseTopic
-         })
+         });
+      },
+
+      /**
+       * Navigate to the user's admin console profile page.
+       * Note: we can't do this directly because the username needs double encoding on the URL!
+       *
+       * @param payload
+       */
+      onViewUser: function rm_services_userSecurityClearance_onViewUser(payload)
+      {
+         var publishPayload = {
+            url: "console/admin-console/users",
+            hashParams: {
+               state: "panel=view&userid=" + encodeURIComponent(payload.userName)
+            },
+            type: "PAGE_RELATIVE"
+         };
+
+         this.alfPublish("ALF_NAVIGATE_TO_PAGE", publishPayload, true);
       }
    });
 });
