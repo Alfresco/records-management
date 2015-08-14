@@ -131,18 +131,28 @@ define(["dojo/_base/declare",
          /**
           * Displays a notification information when classification level is changed.
           * And makes the reclassify by and reclassification reason fields mandatory.
+          * It also populates the reclassify by field with current user name and
+          * clears the reclassification reason field.
           *
           * @param payload
           */
          onLevelChange: function rm_services_classifyService__onLevelChange(payload)
          {
             var levels = registry.byId("LEVELS_EDIT"),
-               notificationInfo = registry.byId("NOTIFICATION_INFO_EDIT"),
+               notificationInfo = registry.byId("NOTIFICATION_INFO_EDIT")
+               lastReclassifyBy = registry.byId("LAST_RECLASSIFY_BY_EDIT"),
+               lastReclassifyReason = registry.byId("LAST_RECLASSIFY_REASON_EDIT"),
                notificationInfoDomNode = notificationInfo.domNode;
 
             if (payload.oldValue === "" || levels.value === payload.value)
             {
                domStyle.set(notificationInfoDomNode, "display", "none");
+
+               lastReclassifyBy.alfDisabled(true);
+               lastReclassifyBy.alfRequired(false);
+
+               lastReclassifyReason.alfDisabled(true);
+               lastReclassifyReason.alfRequired(false);
             }
             else
             {
@@ -197,8 +207,14 @@ define(["dojo/_base/declare",
 
                   domStyle.set(notificationInfoDomNode, "display", "");
 
-                  registry.byId("LAST_RECLASSIFY_BY_EDIT").setValue(Alfresco.constants.USER_FULLNAME);
-                  registry.byId("LAST_RECLASSIFY_REASON_EDIT").setValue("");
+                  lastReclassifyBy.setValue(Alfresco.constants.USER_FULLNAME);
+                  lastReclassifyBy.alfRequired(true);
+                  lastReclassifyBy.alfDisabled(false);
+
+                  lastReclassifyReason.setValue(null);
+                  lastReclassifyReason.alfRequired(true);
+                  lastReclassifyReason.alfDisabled(false);
+                  lastReclassifyReason.startValidation();
                }
             }
          },
@@ -448,22 +464,9 @@ define(["dojo/_base/declare",
                         name: "lastReclassifyBy",
                         value: configObject.lastReclassifyBy,
                         postWhenHiddenOrDisabled: false,
-                        pubSubScope: "LEVEL_CHANGE" + configObject.notificationAction,
-                        disablementConfig: {
-                           rules: [{
-                              targetId: "LEVELS",
-                              is: [configObject.levelsValue]
-                           }]
-                        },
+                        _disabled: true,
                         visibilityConfig: {
                            initialValue: configObject.visibilityReclassification
-                        },
-                        requirementConfig: {
-                           initialValue: false,
-                           rules: [{
-                              targetId: "LEVELS",
-                              isNot: [configObject.levelsValue]
-                           }]
                         }
                      }
                   },{
@@ -474,22 +477,9 @@ define(["dojo/_base/declare",
                         name: "lastReclassifyReason",
                         value: configObject.lastReclassifyReason,
                         postWhenHiddenOrDisabled: false,
-                        pubSubScope: "LEVEL_CHANGE" + configObject.notificationAction,
-                        disablementConfig: {
-                           rules: [{
-                              targetId: "LEVELS",
-                              is: [configObject.levelsValue]
-                           }]
-                        },
+                        _disabled: true,
                         visibilityConfig: {
                            initialValue: configObject.visibilityReclassification
-                        },
-                        requirementConfig: {
-                           initialValue: false,
-                           rules: [{
-                              targetId: "LEVELS",
-                              isNot: [configObject.levelsValue]
-                           }]
                         }
                      }
                   },{
