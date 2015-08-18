@@ -1,3 +1,6 @@
+<import resource="classpath:alfresco/site-webscripts/org/alfresco/share/imports/share-header.lib.js">
+<import resource="classpath:alfresco/site-webscripts/org/alfresco/aikau/webscript/libs/service-filtering.lib.js">
+
 // Get the levels for the dropdown
 var levels = [];
 var levelsObj = {};
@@ -17,11 +20,15 @@ if (result.status.code == status.STATUS_OK) {
    }
 }
 
+var headerServices = getHeaderServices();
+var pageServices = [
+   "rm/services/UserSecurityClearanceService",
+   "alfresco/services/DialogService"];
+
+var services = alfAddUniqueServices(headerServices, pageServices, true);
+
 model.jsonModel = {
-   services: [
-      "rm/services/UserSecurityClearanceService",
-      "alfresco/services/DialogService"
-   ],
+   services: services,
    widgets: [{
       id: "SET_PAGE_TITLE",
       name: "alfresco/header/SetTitle",
