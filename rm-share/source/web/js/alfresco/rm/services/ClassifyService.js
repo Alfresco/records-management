@@ -140,19 +140,19 @@ define(["dojo/_base/declare",
          {
             var levels = registry.byId("LEVELS_EDIT"),
                notificationInfo = registry.byId("NOTIFICATION_INFO_EDIT")
-               lastReclassifyBy = registry.byId("LAST_RECLASSIFY_BY_EDIT"),
-               lastReclassifyReason = registry.byId("LAST_RECLASSIFY_REASON_EDIT"),
+               reclassifyBy = registry.byId("RECLASSIFY_BY_EDIT"),
+               reclassifyReason = registry.byId("RECLASSIFY_REASON_EDIT"),
                notificationInfoDomNode = notificationInfo.domNode;
 
             if (payload.oldValue === "" || levels.value === payload.value)
             {
                domStyle.set(notificationInfoDomNode, "display", "none");
 
-               lastReclassifyBy.alfDisabled(true);
-               lastReclassifyBy.alfRequired(false);
+               reclassifyBy.alfDisabled(true);
+               reclassifyBy.alfRequired(false);
 
-               lastReclassifyReason.alfDisabled(true);
-               lastReclassifyReason.alfRequired(false);
+               reclassifyReason.alfDisabled(true);
+               reclassifyReason.alfRequired(false);
             }
             else
             {
@@ -207,14 +207,14 @@ define(["dojo/_base/declare",
 
                   domStyle.set(notificationInfoDomNode, "display", "");
 
-                  lastReclassifyBy.setValue(Alfresco.constants.USER_FULLNAME);
-                  lastReclassifyBy.alfRequired(true);
-                  lastReclassifyBy.alfDisabled(false);
+                  reclassifyBy.setValue(Alfresco.constants.USER_FULLNAME);
+                  reclassifyBy.alfRequired(true);
+                  reclassifyBy.alfDisabled(false);
 
-                  lastReclassifyReason.setValue(null);
-                  lastReclassifyReason.alfRequired(true);
-                  lastReclassifyReason.alfDisabled(false);
-                  lastReclassifyReason.startValidation();
+                  reclassifyReason.setValue(null);
+                  reclassifyReason.alfRequired(true);
+                  reclassifyReason.alfDisabled(false);
+                  reclassifyReason.startValidation();
                }
             }
          },
@@ -320,6 +320,52 @@ define(["dojo/_base/declare",
                               errorMessage: this.message("label.classify.classifiedBy.validation.error")
                            }
                         ]
+                     }
+                  },{
+                     id: "RECLASSIFY_BY" + configObject.notificationAction,
+                     name: "alfresco/forms/controls/TextBox",
+                     config: {
+                        label: this.message("label.classify.reclassifyBy"),
+                        name: "reclassifyBy",
+                        _disabled: true,
+                        visibilityConfig: {
+                           initialValue: configObject.visibilityReclassification
+                        }
+                     }
+                  },{
+                     id: "RECLASSIFY_REASON" + configObject.notificationAction,
+                     name: "alfresco/forms/controls/TextArea",
+                     config: {
+                        label: this.message("label.classify.reclassifyReason"),
+                        name: "reclassifyReason",
+                        _disabled: true,
+                        visibilityConfig: {
+                           initialValue: configObject.visibilityReclassification
+                        }
+                     }
+                  },{
+                     id: "LAST_RECLASSIFY_BY" + configObject.notificationAction,
+                     name: "alfresco/forms/controls/TextBox",
+                     config: {
+                        label: this.message("label.classify.lastReclassifyBy"),
+                        name: "lastReclassifyBy",
+                        value: configObject.lastReclassifyBy,
+                        visibilityConfig: {
+                           initialValue: configObject.visibilityLastReclassification
+                        }
+                     },
+                     inlineHelp: this.message("label.classify.lastReclassifyBy.help")
+                  },{
+                     id: "LAST_RECLASSIFY_REASON" + configObject.notificationAction,
+                     name: "alfresco/forms/controls/TextArea",
+                     config: {
+                        label: this.message("label.classify.lastReclassifyReason"),
+                        name: "lastReclassifyReason",
+                        value: configObject.lastReclassifyReason,
+                        visibilityConfig: {
+                           initialValue: configObject.visibilityLastReclassification
+                        },
+                        inlineHelp: this.message("label.classify.lastReclassifyReason.help")
                      }
                   },{
                      id: "AGENCY",
@@ -457,32 +503,6 @@ define(["dojo/_base/declare",
                         }]
                      }
                   },{
-                     id: "LAST_RECLASSIFY_BY" + configObject.notificationAction,
-                     name: "alfresco/forms/controls/TextBox",
-                     config: {
-                        label: this.message("label.classify.lastReclassifyBy"),
-                        name: "lastReclassifyBy",
-                        value: configObject.lastReclassifyBy,
-                        postWhenHiddenOrDisabled: false,
-                        _disabled: true,
-                        visibilityConfig: {
-                           initialValue: configObject.visibilityReclassification
-                        }
-                     }
-                  },{
-                     id: "LAST_RECLASSIFY_REASON" + configObject.notificationAction,
-                     name: "alfresco/forms/controls/TextArea",
-                     config: {
-                        label: this.message("label.classify.lastReclassifyReason"),
-                        name: "lastReclassifyReason",
-                        value: configObject.lastReclassifyReason,
-                        postWhenHiddenOrDisabled: false,
-                        _disabled: true,
-                        visibilityConfig: {
-                           initialValue: configObject.visibilityReclassification
-                        }
-                     }
-                  },{
                      id: "NOTIFICATION_INFO" + configObject.notificationAction,
                      name: "alfresco/renderers/Banner",
                      config: {
@@ -517,6 +537,7 @@ define(["dojo/_base/declare",
             configObject.levelsValue = "";
             configObject.classifiedByValue = Alfresco.constants.USER_FULLNAME;
             configObject.visibilityReclassification = false;
+            configObject.visibilityLastReclassification = false;
             configObject.notificationAction = "";
 
             this._publishClassificationFormDialogRequest(configObject, payload);
@@ -557,6 +578,7 @@ define(["dojo/_base/declare",
             configObject.lastReclassifyBy = properties["clf_lastReclassifyBy"];
             configObject.lastReclassifyReason = properties["clf_lastReclassifyReason"];
             configObject.visibilityReclassification = true;
+            configObject.visibilityLastReclassification = (configObject.lastReclassifyBy || configObject.lastReclassifyReason) ? true : false;
             configObject.notificationAction = "_EDIT";
 
             this._publishClassificationFormDialogRequest(configObject, payload);
