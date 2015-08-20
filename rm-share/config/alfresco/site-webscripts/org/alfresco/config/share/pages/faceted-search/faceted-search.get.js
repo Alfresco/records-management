@@ -13,3 +13,16 @@ searchResult.config.widgetsAbove = [{
 }];
 
 searchAdviceNoResult.config.widgets = [searchResult];
+
+// Remove the existing search service and add it back in with different config.
+var searchServiceIndex = model.jsonModel.services.indexOf("alfresco/services/SearchService");
+if (searchServiceIndex !== -1) {
+   model.jsonModel.services.splice(searchServiceIndex, 1);
+}
+
+model.jsonModel.services.push({
+   name: "alfresco/services/SearchService",
+   config: {
+      searchAPI: url.context + "/proxy/alfresco/slingshot/rmsearch/faceted/rmsearch"
+   }
+});
