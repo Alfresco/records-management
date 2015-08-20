@@ -25,9 +25,10 @@
  */
 define(["dojo/_base/declare",
         "dojo/dom-class",
+        "dojo/_base/lang",
         "alfresco/renderers/Banner"],
 
-function(declare, domClass, Banner)
+function(declare, domClass, lang, Banner)
 {
    return declare([Banner],
    {
@@ -45,27 +46,25 @@ function(declare, domClass, Banner)
        *
        * @instance
        * @type {string}
-       * @default "currentClassification"
+       * @default
        */
-      // FIXME!!!
-      classificationLevelPropertyName: "modifiedBy",
+      classificationLevelPropertyName: "node.properties.clf_currentClassification.label",
 
       /**
        * The name of property which has the value if the content is classified or not
        *
        * @instance
        * @type {string}
-       * @default "isClassified"
+       * @default
        */
-      // FIXME!!!
-      isClassifiedPropertyName: "isClassified",
+      isClassifiedPropertyName: "node.isClassified",
 
       /**
        * Property to keep the info if the current content is classified or not
        *
        * @instance
        * @type {boolean}
-       * @default false
+       * @default
        */
       isClassified: false,
 
@@ -75,10 +74,10 @@ function(declare, domClass, Banner)
        * @instance
        */
       postMixInProperties: function alfresco_rm_renderers_ClassificationLabel__postMixInProperties() {
-         this.isClassified = this.currentItem[this.isClassifiedPropertyName];
+         this.isClassified = lang.getObject(this.isClassifiedPropertyName, false, this.currentItem);
          if (this.isClassified)
          {
-            this.bannerMessage = this.currentItem[this.classificationLevelPropertyName].toUpperCase();
+            this.bannerMessage = lang.getObject(this.classificationLevelPropertyName, false, this.currentItem).toUpperCase();
          }
          this.inherited(arguments);
       },
