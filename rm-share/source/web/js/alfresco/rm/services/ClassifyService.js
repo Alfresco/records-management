@@ -116,6 +116,8 @@ define(["dojo/_base/declare",
           * @listens RM_EDIT_CLASSIFIED_CONTENT
           * @listens RM_CLASSIFY
           * @listens RM_EDIT_CLASSIFIED
+          * @listens ALF_CLASSIFY_VALIDATE_CLASSIFY_BY
+          * @listens LEVEL_CHANGE_EDIT_valueChangeOf_LEVELS
           */
          constructor: function rm_services_classifyService__constructor(args) {
             this.alfSubscribe("RM_CLASSIFY_REASONS_GET", lang.hitch(this, this.onGetReasons));
@@ -136,10 +138,9 @@ define(["dojo/_base/declare",
           *
           * @param payload
           */
-         onLevelChange: function rm_services_classifyService__onLevelChange(payload)
-         {
+         onLevelChange: function rm_services_classifyService__onLevelChange(payload) {
             var levels = registry.byId("LEVELS_EDIT"),
-               notificationInfo = registry.byId("NOTIFICATION_INFO_EDIT")
+               notificationInfo = registry.byId("NOTIFICATION_INFO_EDIT"),
                reclassifyBy = registry.byId("RECLASSIFY_BY_EDIT"),
                reclassifyReason = registry.byId("RECLASSIFY_REASON_EDIT"),
                notificationInfoDomNode = notificationInfo.domNode;
@@ -158,7 +159,7 @@ define(["dojo/_base/declare",
             {
                var options = levels.options;
 
-               if (options != null)
+               if (options !== null)
                {
                   var length = options.length,
                      action;
@@ -182,11 +183,11 @@ define(["dojo/_base/declare",
 
                      var newIndex;
 
-                     for (var i = 0; i < options.length; i++)
+                     for (var j = 0; j < options.length; j++)
                      {
-                        if (levels.value === options[i].value)
+                        if (levels.value === options[j].value)
                         {
-                           newIndex = i;
+                           newIndex = j;
                            break;
                         }
                      }
@@ -242,8 +243,7 @@ define(["dojo/_base/declare",
          /**
           * Get all the declassification exemptions
           */
-         onGetExemptions: function rm_services_classifyService__onGetExemptions(payload)
-         {
+         onGetExemptions: function rm_services_classifyService__onGetExemptions(payload) {
             if (payload && payload.alfResponseTopic)
             {
                var url = AlfConstants.PROXY_URI + this.exemptionsAPIGet;
@@ -264,9 +264,13 @@ define(["dojo/_base/declare",
           *
           * @param configObject
           * @param payload
+          *
+          * @fires ALF_CREATE_FORM_DIALOG_REQUEST
+          * @fires RM_CLASSIFY_REASONS_GET
+          * @fires RM_CLASSIFY_EXEMPTIONS_GET
+          * @fires ALF_GET_FORM_CONTROL_OPTIONS
           */
-         _publishClassificationFormDialogRequest: function rm_services_classifyService___publishClassificationFormDialogRequest(configObject, payload)
-         {
+         _publishClassificationFormDialogRequest: function rm_services_classifyService___publishClassificationFormDialogRequest(configObject, payload) {
             var dialogTitle = (Alfresco.rm.isRMSite(payload.item.location.site)) ? configObject.dialogTitleRm : configObject.dialogTitleCollab;
 
             this.alfPublish("ALF_CREATE_FORM_DIALOG_REQUEST", {
@@ -442,12 +446,8 @@ define(["dojo/_base/declare",
                                        initialValue: false,
                                        rules: [{
                                           targetId: "DOWNGRADE_SCHEDULE_FIELD",
-                                          is: ["^\\s+$"]
+                                          isNote: ["", null]
                                        }]
-                                    },
-                                    ruleValueComparator: function(currentValue, targetValue)
-                                    {
-                                       return currentValue && !currentValue.toString().match(targetValue);
                                     }
                                  }
                               }]
@@ -515,18 +515,14 @@ define(["dojo/_base/declare",
          },
 
          /**
-          * Triggered by the classify document and classify record actions. Shows dialog using [DialogService]
+          * Triggered by the classify document and classify record actions. Sets up data for dialog
           *
           * @instance
           * @param payload
           *
-          * @fires ALF_CREATE_FORM_DIALOG_REQUEST
           * @fires RM_CLASSIFY
-          * @fires RM_CLASSIFY_REASONS_GET
-          * @fires ALF_GET_FORM_CONTROL_OPTIONS
           */
-         onClassifyContent: function rm_services_classifyService__onClassifyContent(payload)
-         {
+         onClassifyContent: function rm_services_classifyService__onClassifyContent(payload) {
             var configObject = {};
             configObject.dialogTitleRm = "label.classify.dialog.title.rm";
             configObject.dialogTitleCollab = "label.classify.dialog.title";
@@ -544,18 +540,14 @@ define(["dojo/_base/declare",
          },
 
          /**
-          * Triggered by the edit classified file/record actions. Shows dialog using [DialogService]
+          * Triggered by the edit classified file/record actions. Sets up data for dialog
           *
           * @instance
           * @param payload
           *
-          * @fires ALF_CREATE_FORM_DIALOG_REQUEST
-          * @fires RM_CLASSIFY
-          * @fires RM_CLASSIFY_REASONS_GET
-          * @fires ALF_GET_FORM_CONTROL_OPTIONS
+          * @fires RM_EDIT_CLASSIFIED
           */
-         onEditClassifiedContent: function rm_services_classifyService__onEditClassifiedContent(payload)
-         {
+         onEditClassifiedContent: function rm_services_classifyService__onEditClassifiedContent(payload) {
             var configObject = {},
                properties = payload.item.node.properties;
 
@@ -591,14 +583,13 @@ define(["dojo/_base/declare",
           * @param successMessage
           * @param failureMessage
           */
-         _onClassifyAction: function rm_services_classifyService___onClassifyAction(payload, successMessage, failureMessage)
-         {
+         _onClassifyAction: function rm_services_classifyService___onClassifyAction(payload, successMessage, failureMessage) {
             if (!payload.nodeRef)
             {
                this.alfLog("error", "nodeRef required");
             }
 
-            // Update the payload before calling the superclass method:
+            // Update the payload
             payload.nodeRefUrl = NodeUtils.processNodeRef(payload.nodeRef).uri;
             payload = lang.mixin(payload, {
                url: lang.replace(this.classifyAPICreateUpdate, payload),
@@ -612,8 +603,7 @@ define(["dojo/_base/declare",
           *
           * @param payload
           */
-         onCreate: function rm_services_classifyService__onCreate(payload)
-         {
+         onCreate: function rm_services_classifyService__onCreate(payload) {
             this._onClassifyAction(payload, "label.classify.content.success", "label.classify.content.failure");
 
             this.inherited(arguments);
@@ -624,8 +614,7 @@ define(["dojo/_base/declare",
           *
           * @param payload
           */
-         onUpdate: function rm_services_classifyService__onUpdate(payload)
-         {
+         onUpdate: function rm_services_classifyService__onUpdate(payload) {
             this._onClassifyAction(payload, "label.edit.classified.content.success", "label.edit.classified.content.failure");
 
             this.inherited(arguments);
@@ -636,8 +625,7 @@ define(["dojo/_base/declare",
           *
           * @param payload
           */
-         onValidateClassifiedBy: function rm_services_classifyService__onValidateClassifiedBy(payload)
-         {
+         onValidateClassifiedBy: function rm_services_classifyService__onValidateClassifiedBy(payload) {
             // Classified By field MUST NOT start with a whitespace nor can it consist of only whitespaces. RM-2373
             var isValid = payload.value.length === lang.trim(payload.value).length && lang.trim(payload.value).length !== 0;
 
