@@ -429,7 +429,7 @@ define(["dojo/_base/declare",
                                  id: "DOWNGRADE_EVENT",
                                  name: "alfresco/forms/controls/TextBox",
                                  config: {
-                                    fieldId: "DOWNGRADE_SCHEDULE_FIELD",
+                                    fieldId: "DOWNGRADE_EVENT_FIELD",
                                     label: this.message("label.classify.downgradeEvent"),
                                     name: "downgradeEvent",
                                     value: configObject.downgradeEvent,
@@ -446,7 +446,7 @@ define(["dojo/_base/declare",
                                        initialValue: false,
                                        rules: [{
                                           targetId: "DOWNGRADE_SCHEDULE_FIELD",
-                                          isNote: ["", null]
+                                          isNot: ["", null]
                                        }]
                                     }
                                  }
