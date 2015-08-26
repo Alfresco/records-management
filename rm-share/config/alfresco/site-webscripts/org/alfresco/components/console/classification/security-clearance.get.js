@@ -20,15 +20,11 @@ if (result.status.code == status.STATUS_OK) {
    }
 }
 
-var headerServices = getHeaderServices();
-var pageServices = [
-   "rm/services/UserSecurityClearanceService",
-   "alfresco/services/DialogService"];
-
-var services = alfAddUniqueServices(headerServices, pageServices, true);
-
 model.jsonModel = {
-   services: services,
+   services: [
+      "rm/services/UserSecurityClearanceService",
+      "alfresco/services/DialogService"
+   ],
    widgets: [{
       id: "SET_PAGE_TITLE",
       name: "alfresco/header/SetTitle",
