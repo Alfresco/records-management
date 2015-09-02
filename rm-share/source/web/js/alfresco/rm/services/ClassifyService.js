@@ -332,6 +332,7 @@ define(["dojo/_base/declare",
                         label: this.message("label.classify.reclassifyBy"),
                         name: "reclassifyBy",
                         _disabled: true,
+                        postWhenHiddenOrDisabled: false,
                         visibilityConfig: {
                            initialValue: configObject.visibilityReclassification
                         }
@@ -343,6 +344,7 @@ define(["dojo/_base/declare",
                         label: this.message("label.classify.reclassifyReason"),
                         name: "reclassifyReason",
                         _disabled: true,
+                        postWhenHiddenOrDisabled: false,
                         visibilityConfig: {
                            initialValue: configObject.visibilityReclassification
                         }
