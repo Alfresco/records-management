@@ -27,7 +27,7 @@ import org.json.simple.JSONObject;
  * Checks if the user can classify a content
  *
  * @author David Webster
- * @since 3.0.a
+ * @since 2.4.a
  */
 public class ClassifyActionEvaluator extends HasAspectEvaluator
 {

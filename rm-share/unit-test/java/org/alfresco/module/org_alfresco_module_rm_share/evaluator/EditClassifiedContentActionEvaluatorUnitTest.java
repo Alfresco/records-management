@@ -34,7 +34,7 @@ import org.mockito.Mock;
  * Edit classified content action evaluator unit test
  *
  * @author Tuna Aksoy
- * @since 3.0.a
+ * @since 2.4.a
  */
 public class EditClassifiedContentActionEvaluatorUnitTest
 {
