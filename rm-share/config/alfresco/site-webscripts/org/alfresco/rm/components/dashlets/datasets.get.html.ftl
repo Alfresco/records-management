@@ -1,7 +1,7 @@
-<script type="text/javascript">//<![CDATA[
-   new Alfresco.rm.dashlet.DataSet("${args.htmlid}").setMessages(${messages});
-//]]></script>
 <#assign el=args.htmlid?html>
+<script type="text/javascript">//<![CDATA[
+   new Alfresco.rm.dashlet.DataSet("${el}").setMessages(${messages});
+//]]></script>
 <div class="dashlet">
    <div class="title">${msg("dataSet.header.title")}</div>
    <#if isRmSite>
