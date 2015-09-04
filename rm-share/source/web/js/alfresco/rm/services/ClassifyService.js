@@ -446,8 +446,12 @@ define(["dojo/_base/declare",
                                     value: configObject.downgradeInstructions,
                                     requirementConfig: {
                                        initialValue: false,
+                                       rulesMethod: "ANY",
                                        rules: [{
                                           targetId: "DOWNGRADE_SCHEDULE_FIELD",
+                                          isNot: ["", null]
+                                       },{
+                                          targetId: "DOWNGRADE_EVENT_FIELD",
                                           isNot: ["", null]
                                        }]
                                     }
