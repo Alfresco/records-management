@@ -347,7 +347,8 @@ define(["dojo/_base/declare",
                         postWhenHiddenOrDisabled: false,
                         visibilityConfig: {
                            initialValue: configObject.visibilityReclassification
-                        }
+                        },
+                        inlineHelp: this.message("label.classify.reclassifyReason.help")
                      }
                   },{
                      id: "LAST_RECLASSIFY_BY" + configObject.notificationAction,
@@ -358,9 +359,9 @@ define(["dojo/_base/declare",
                         value: configObject.lastReclassifyBy,
                         visibilityConfig: {
                            initialValue: configObject.visibilityLastReclassification
-                        }
-                     },
-                     inlineHelp: this.message("label.classify.lastReclassifyBy.help")
+                        },
+                        inlineHelp: this.message("label.classify.lastReclassifyBy.help")
+                     }
                   },{
                      id: "LAST_RECLASSIFY_REASON" + configObject.notificationAction,
                      name: "alfresco/forms/controls/TextArea",
