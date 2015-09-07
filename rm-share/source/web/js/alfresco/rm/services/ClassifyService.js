@@ -347,8 +347,7 @@ define(["dojo/_base/declare",
                         postWhenHiddenOrDisabled: false,
                         visibilityConfig: {
                            initialValue: configObject.visibilityReclassification
-                        },
-                        inlineHelp: this.message("label.classify.reclassifyReason.help")
+                        }
                      }
                   },{
                      id: "LAST_RECLASSIFY_BY" + configObject.notificationAction,
