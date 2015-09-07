@@ -186,9 +186,5 @@
          <artifactId>mockito-all</artifactId>
          <scope>test</scope>
       </dependency>
-      <dependency>
-         <groupId>commons-logging</groupId>
-         <artifactId>commons-logging</artifactId>
-      </dependency>
    </dependencies>
 </project>
