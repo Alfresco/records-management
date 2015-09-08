@@ -1082,7 +1082,7 @@
             this.modules.searchAuthorityFinder.setOptions(
             {
                singleSelectMode: true,
-               minSearchTermLength: 3
+               minSearchTermLength: 1
             });
 
             // Make sure we listen for events when the user selects a group
