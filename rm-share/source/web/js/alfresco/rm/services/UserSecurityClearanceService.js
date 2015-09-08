@@ -193,7 +193,6 @@ define(["dojo/_base/declare",
 
       /**
        * Navigate to the user's admin console profile page.
-       * Note: we can't do this directly because the username needs double encoding on the URL!
        *
        * @param payload
        */
@@ -202,7 +201,7 @@ define(["dojo/_base/declare",
          var publishPayload = {
             url: "console/admin-console/users",
             hashParams: {
-               state: "panel=view&userid=" + encodeURIComponent(payload.userName)
+               state: "panel=view&userid=" + payload.userName
             },
             type: "PAGE_RELATIVE"
          };
