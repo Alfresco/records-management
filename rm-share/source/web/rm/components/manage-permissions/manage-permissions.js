@@ -60,6 +60,7 @@
          this.widgets.inherited = Alfresco.util.createYUIButton(this, "inheritedButton", this.onInheritedButton);
          this.widgets.saveButton = Alfresco.util.createYUIButton(this, "okButton", this.onSaveButton);
          this.widgets.cancelButton = Alfresco.util.createYUIButton(this, "cancelButton", this.onCancelButton);
+         this.widgets.rolesTooltip = new Array();
 
          // DataSource set-up and event registration
          this._setupDataSources();
