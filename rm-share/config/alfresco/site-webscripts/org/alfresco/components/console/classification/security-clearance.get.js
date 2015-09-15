@@ -1,6 +1,3 @@
-<import resource="classpath:alfresco/site-webscripts/org/alfresco/share/imports/share-header.lib.js">
-<import resource="classpath:alfresco/site-webscripts/org/alfresco/aikau/webscript/libs/service-filtering.lib.js">
-
 // Get the levels for the dropdown
 var levels = [];
 var levelsObj = {};
