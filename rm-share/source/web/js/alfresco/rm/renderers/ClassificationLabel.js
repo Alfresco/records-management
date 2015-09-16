@@ -21,7 +21,7 @@
  * @module alfresco/rm/renderers/ClassificationLabel
  * @extends alfresco/renderers/Banner
  * @author Tuna Aksoy
- * @since 3.0.a
+ * @since 2.4.a
  */
 define(["dojo/_base/declare",
         "dojo/dom-class",

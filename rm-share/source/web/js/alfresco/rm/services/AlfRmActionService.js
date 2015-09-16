@@ -24,7 +24,7 @@
  * @extends alfresco/services/ActionService
  *
  * @author Tuna Aksoy
- * @since RM 3.0.a
+ * @since 2.4.a
  */
 define(["dojo/_base/declare",
       "alfresco/services/ActionService"],

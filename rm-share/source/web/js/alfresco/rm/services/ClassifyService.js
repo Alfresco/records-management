@@ -26,7 +26,7 @@
  * @mixes module:alfresco/core/CoreXhr
  * @author David Webster
  * @author Tuna Aksoy
- * @since RM 3.0.a
+ * @since 2.4.a
  *
  * @event RM_CLASSIFY_REASONS_GET
  */
