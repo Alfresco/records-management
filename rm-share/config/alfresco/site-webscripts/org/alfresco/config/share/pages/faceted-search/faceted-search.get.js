@@ -1,6 +1,6 @@
 <import resource="classpath:/alfresco/site-webscripts/org/alfresco/share/pages/faceted-search/faceted-search.get.js">
 
-services.push("rm/services/AlfRmActionService",
+model.jsonModel.services.push("rm/services/AlfRmActionService",
       "alfresco/services/OptionsService",
       "rm/services/ClassifyService");
 
