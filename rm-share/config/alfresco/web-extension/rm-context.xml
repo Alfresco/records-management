@@ -395,18 +395,6 @@
       </property>
    </bean>
 
-    <!-- Update Share Minification bean, needed following https://github.com/Alfresco/Aikau/pull/539 -->
-    <bean id="dependency.aggregator" parent="dependency.aggregator.abstract"
-          class="org.springframework.extensions.surf.DependencyAggregator">
-        <property name="compressionExclusions">
-            <list>
-                <value>*.css</value>
-                <value>*-min.js</value>
-                <value>*/lib/code-mirror/*.js</value>
-            </list>
-        </property>
-    </bean>
-
    <!-- DOD 5015 context import -->
    <import resource="classpath:alfresco/dod5015/dod5015-context.xml"/>
 </beans>
