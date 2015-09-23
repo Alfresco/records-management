@@ -146,6 +146,7 @@ define(["dojo/_base/declare",
             dialogTitle: this.message("userClearance.set.dialog.title"),
             handleOverflow: false,
             textContent: this.message("userClearance.set.dialog.content", {0: payload.completeName, 1: payload.levels[payload.clearanceId]}),
+            cancelPublishTopic: payload.responseTopic + "_CANCEL",
             widgetsButtons: [
                {
                   name: "alfresco/buttons/AlfButton",
