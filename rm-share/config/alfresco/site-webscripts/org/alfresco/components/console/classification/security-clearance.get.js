@@ -148,8 +148,7 @@ model.jsonModel = {
                                  additionalCssClasses: "security-clearance-user-classification-level",
                                  optionsConfig: {
                                     fixed: levels
-                                 },
-                                 cancelOnEscape: false
+                                 }
                               }
                            }]
                         }
