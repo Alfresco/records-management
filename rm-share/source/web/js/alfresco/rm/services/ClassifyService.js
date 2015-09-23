@@ -449,11 +449,15 @@ define(["dojo/_base/declare",
                                        rulesMethod: "ANY",
                                        rules: [{
                                           targetId: "DOWNGRADE_SCHEDULE_FIELD",
-                                          isNot: ["", null]
+                                          is: ["^\\s+$"]
                                        },{
                                           targetId: "DOWNGRADE_EVENT_FIELD",
-                                          isNot: ["", null]
+                                          is: ["^\\s+$"]
                                        }]
+                                    },
+                                    ruleValueComparator: function(currentValue, targetValue)
+                                    {
+                                       return currentValue && !currentValue.toString().match(targetValue);
                                     }
                                  }
                               }]
