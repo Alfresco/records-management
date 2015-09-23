@@ -24,13 +24,10 @@
                   </control>
                </field>
                <field id="rmwf:mixedAssignees" label-id="rm.wf.selected-users-and-groups" set="mixedAssignees" />
-               <field id="rmwf:requestedInformation" label-id="rm.wf.give-details" set="requestedInformation">
+               <field id="rmwf:requestedInformation" label-id="rm.wf.give-details" set="requestedInformation" mandatory="true">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl">
                      <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
-                  <constraint-handlers>
-                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.maxTextLength" />
-                  </constraint-handlers>
                </field>
             </appearance>
          </form>
@@ -55,21 +52,15 @@
                      <control-param name="style">width: 96%</control-param>
                   </control>
                </field>
-               <field id="rmwf:requestedInformation" label-id="rm.wf.details" set="requestedInformation">
+               <field id="rmwf:requestedInformation" label-id="rm.wf.details" set="requestedInformation" mandatory="true">
                   <control template="/org/alfresco/components/form/controls/readOnlyTextarea.ftl">
                      <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
-                  <constraint-handlers>
-                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.maxTextLength" />
-                  </constraint-handlers>
                </field>
-               <field id="rmwf:message" label-id="rm.wf.give-details" set="message" >
+               <field id="rmwf:message" label-id="rm.wf.give-details" set="message" mandatory="true">
                   <control template="/org/alfresco/components/form/controls/textarea.ftl">
                      <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
-                  <constraint-handlers>
-                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.maxTextLength" />
-                  </constraint-handlers>
                </field>
                <field id="transitions" set="transitions" />
             </appearance>
@@ -95,21 +86,15 @@
                      <control-param name="style">width: 96%</control-param>
                   </control>
                </field>
-               <field id="rmwf:requestedInformation" label-id="rm.wf.details" set="requestedInformation">
+               <field id="rmwf:requestedInformation" label-id="rm.wf.details" set="requestedInformation" mandatory="true">
                   <control template="/org/alfresco/components/form/controls/readOnlyTextarea.ftl">
                      <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
-                  <constraint-handlers>
-                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.maxTextLength" />
-                  </constraint-handlers>
                </field>
-               <field id="rmwf:message" label-id="rm.wf.details" set="message">
+               <field id="rmwf:message" label-id="rm.wf.details" set="message" mandatory="true">
                   <control template="/org/alfresco/components/form/controls/readOnlyTextarea.ftl">
                      <control-param name="style">width: 95%;height: 10em</control-param>
                   </control>
-                  <constraint-handlers>
-                     <constraint type="MANDATORY" validation-handler="Alfresco.forms.validation.maxTextLength" />
-                  </constraint-handlers>
                </field>
                <field id="transitions" set="transitions" />
             </appearance>
