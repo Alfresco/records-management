@@ -15,16 +15,16 @@
 /*   - removal of the ">" between form and BaseFormControl class in order to apply styles to controls inside a layout container */
 #CLASSIFY_CONTENT_DIALOG.alfresco-dialog-AlfDialog .dialog-body .alfresco-forms-Form.root-dialog-form > form .alfresco-forms-controls-BaseFormControl,
 #EDIT_CLASSIFIED_CONTENT_DIALOG.alfresco-dialog-AlfDialog .dialog-body .alfresco-forms-Form.root-dialog-form > form .alfresco-forms-controls-BaseFormControl {
-    min-width: @dialog-control-section +2;
+    min-width: @dialog-control-section + 2;
 
     .description-row > .description {
-        margin: 0 0 @standard-line-height @dialog-label-section +4;
+        margin: 0 0 @standard-line-height @dialog-label-section + 4;
     }
 
     .title-row {
         display: inline;
         float: left;
-        width: @dialog-label-section;
+        width: @dialog-label-section - 4;
         text-align: right;
         margin-right: 8px;
         margin-top: 2px;
