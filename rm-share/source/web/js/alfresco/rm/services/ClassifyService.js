@@ -370,8 +370,7 @@ define(["dojo/_base/declare",
                         value: configObject.lastReclassifyReason,
                         visibilityConfig: {
                            initialValue: configObject.visibilityLastReclassification
-                        },
-                        inlineHelp: this.message("label.classify.lastReclassifyReason.help")
+                        }
                      }
                   },{
                      id: "AGENCY",
