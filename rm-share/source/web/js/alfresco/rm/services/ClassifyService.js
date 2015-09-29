@@ -117,6 +117,7 @@ define(["dojo/_base/declare",
           * @listens RM_CLASSIFY
           * @listens RM_EDIT_CLASSIFIED
           * @listens ALF_CLASSIFY_VALIDATE_CLASSIFY_BY
+          * @listens ALF_CLASSIFY_VALIDATE_DOWNGRADE_INSTRUCTIONS
           * @listens LEVEL_CHANGE_EDIT_valueChangeOf_LEVELS
           */
          constructor: function rm_services_classifyService__constructor(args) {
@@ -127,6 +128,7 @@ define(["dojo/_base/declare",
             this.alfSubscribe("RM_CLASSIFY", lang.hitch(this, this.onCreate));
             this.alfSubscribe("RM_EDIT_CLASSIFIED", lang.hitch(this, this.onUpdate));
             this.alfSubscribe("ALF_CLASSIFY_VALIDATE_CLASSIFY_BY", lang.hitch(this, this.onValidateClassifiedBy));
+            this.alfSubscribe("ALF_CLASSIFY_VALIDATE_DOWNGRADE_INSTRUCTIONS", lang.hitch(this, this.onValidateDowngradeInstructions));
             this.alfSubscribe("LEVEL_CHANGE_EDIT_valueChangeOf_LEVELS", lang.hitch(this, this.onLevelChange));
          },
 
@@ -457,7 +459,11 @@ define(["dojo/_base/declare",
                                     ruleValueComparator: function(currentValue, targetValue)
                                     {
                                        return currentValue && !currentValue.toString().match(targetValue);
-                                    }
+                                    },
+                                    validationConfig: [{
+                                       validation: "validationTopic",
+                                       validationTopic: "ALF_CLASSIFY_VALIDATE_DOWNGRADE_INSTRUCTIONS"
+                                    }]
                                  }
                               }]
                            }
@@ -637,6 +643,25 @@ define(["dojo/_base/declare",
          onValidateClassifiedBy: function rm_services_classifyService__onValidateClassifiedBy(payload) {
             // Classified By field MUST NOT start with a whitespace nor can it consist of only whitespaces. RM-2373
             var isValid = payload.value.length === lang.trim(payload.value).length && lang.trim(payload.value).length !== 0;
+
+            this.alfPublish(payload.alfResponseTopic, {isValid: isValid});
+         },
+
+         /**
+          * Used to validate the downgrade instructions field.
+          *
+          * @param payload
+          */
+         onValidateDowngradeInstructions: function rm_services_classifyService__onValidateDowngradeInstructions(payload) {
+            var downgradeEvent = registry.byId("DOWNGRADE_EVENT").getValue(),
+               downgradeDate = registry.byId("DOWNGRADE_DATE").getValue(),
+               isValid = true;
+
+            if (((downgradeEvent && lang.trim(downgradeEvent).length > 0) || (downgradeDate && lang.trim(downgradeDate).length > 0)) &&
+                  !(payload && lang.trim(payload.value).length > 0))
+            {
+               isValid = false;
+            }
 
             this.alfPublish(payload.alfResponseTopic, {isValid: isValid});
          }
