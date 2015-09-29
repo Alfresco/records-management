@@ -14,7 +14,8 @@
 }
 
 .security-clearance-user-name .inner,
-.alfresco-renderers-PublishingDropDownMenu.security-clearance-user-classification-level
+.alfresco-renderers-PublishingDropDownMenu.security-clearance-user-classification-level,
+.alfresco-renderers-Property.security-clearance-user-classification-level
 {
    display: block;
    padding-top: 10px;

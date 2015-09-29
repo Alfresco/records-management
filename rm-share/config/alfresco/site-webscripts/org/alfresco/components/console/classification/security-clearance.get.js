@@ -148,7 +148,27 @@ model.jsonModel = {
                                  additionalCssClasses: "security-clearance-user-classification-level",
                                  optionsConfig: {
                                     fixed: levels
-                                 }
+                                 },
+                                 renderFilter: [
+                                    {
+                                       property: "isEditable",
+                                       values: [true]
+                                    }
+                                 ]
+                              }
+                           },
+                           {
+                              name: "alfresco/renderers/Property",
+                              id: "FIXED_CLEARANCE",
+                              config: {
+                                 propertyToRender: "clearanceLabel",
+                                 additionalCssClasses: "security-clearance-user-classification-level",
+                                 renderFilter: [
+                                    {
+                                       property: "isEditable",
+                                       values: [false]
+                                    }
+                                 ]
                               }
                            }]
                         }
