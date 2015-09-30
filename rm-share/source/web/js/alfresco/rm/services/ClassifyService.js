@@ -659,8 +659,8 @@ define(["dojo/_base/declare",
 
             if (downgradeEvent && downgradeDate)
             {
-               var downgradeEventValue = registry.byId("DOWNGRADE_EVENT").getValue(),
-                  downgradeDateValue = registry.byId("DOWNGRADE_DATE").getValue();
+               var downgradeEventValue = downgradeEvent.getValue(),
+                  downgradeDateValue = downgradeDate.getValue();
 
                if (((downgradeEventValue && lang.trim(downgradeEventValue).length > 0) || (downgradeDateValue && lang.trim(downgradeDateValue).length > 0)) &&
                      !(payload && lang.trim(payload.value).length > 0))
