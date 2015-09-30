@@ -653,14 +653,20 @@ define(["dojo/_base/declare",
           * @param payload
           */
          onValidateDowngradeInstructions: function rm_services_classifyService__onValidateDowngradeInstructions(payload) {
-            var downgradeEvent = registry.byId("DOWNGRADE_EVENT").getValue(),
-               downgradeDate = registry.byId("DOWNGRADE_DATE").getValue(),
-               isValid = true;
+            var isValid = true,
+               downgradeEvent = registry.byId("DOWNGRADE_EVENT"),
+               downgradeDate = registry.byId("DOWNGRADE_DATE");
 
-            if (((downgradeEvent && lang.trim(downgradeEvent).length > 0) || (downgradeDate && lang.trim(downgradeDate).length > 0)) &&
-                  !(payload && lang.trim(payload.value).length > 0))
+            if (downgradeEvent && downgradeDate)
             {
-               isValid = false;
+               var downgradeEventValue = registry.byId("DOWNGRADE_EVENT").getValue(),
+                  downgradeDateValue = registry.byId("DOWNGRADE_DATE").getValue();
+
+               if (((downgradeEventValue && lang.trim(downgradeEventValue).length > 0) || (downgradeDateValue && lang.trim(downgradeDateValue).length > 0)) &&
+                     !(payload && lang.trim(payload.value).length > 0))
+               {
+                  isValid = false;
+               }
             }
 
             this.alfPublish(payload.alfResponseTopic, {isValid: isValid});
