@@ -18,6 +18,3 @@ var compliance =
   }
 ];
 model.compliance = compliance;
-
-// FIXME: This should be removed after updating the current Alfresco dependency (5.1.a-EA)
-model.sitePresetsClass = (model.sitePresets.length == 1) ? " hidden" : "";
