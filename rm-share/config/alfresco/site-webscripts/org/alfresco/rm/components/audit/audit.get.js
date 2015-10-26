@@ -87,7 +87,7 @@ fromISO8601 = function()
    
    return fromISOString.apply(arguments.callee, arguments);
 };
-function getAuditLogStatus()
+function main()
 {
    var nodeRef = null;
    if (page.url.args.nodeRef)
@@ -109,15 +109,15 @@ function getAuditLogStatus()
       {
          data.entries[i].timestampDate = fromISO8601(data.entries[i].timestamp);
       }
-      return data;
+      model.auditStatus = data;
    }
-   else return {
-      enabled:false,
-      started:"",
-      stopped:"",
-      entries:[]
-   };
+   else
+   {
+      status.setCode(result.status,eval('(' + result + ')').message);
+      return;
+   }
+   
+   model.capabilities = getCapabilities(remote.connect("alfresco")).toSource();
 }
 
-model.auditStatus = getAuditLogStatus();
-model.capabilities = getCapabilities(remote.connect("alfresco")).toSource();
+main();
