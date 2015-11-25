@@ -102,13 +102,6 @@
          <indicator id="rm-version-record" index="10" icon="../../../rm/components/documentlibrary/indicators/rm-version-record-16.png">
             <evaluator>evaluator.rm.doclib.versionRecord</evaluator>
          </indicator>
-         <indicator id="rm-classified-record" index="1" icon="../../../rm/components/documentlibrary/indicators/rm-classified-record-16.png">
-            <evaluator>evaluator.rm.classified.record</evaluator>
-            <override>rm-is-record</override>
-         </indicator>
-         <indicator id="rm-classified-document" index="1" icon="../../../rm/components/documentlibrary/indicators/rm-classified-document-16.png">
-            <evaluator>evaluator.rm.classified.document</evaluator>
-         </indicator>
       </indicators>
 
       <!--
@@ -680,36 +673,6 @@
             <param name="function">onAddRelationship</param>
             <evaluator>evaluator.rm.action.editReferences</evaluator>
          </action>
-
-         <!-- Classification classify action used for both doclib and fileplan-->
-         <action id="rm-classify-content" type="javascript" label="actions.classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-document">
-            <param name="function">onClassifyContent</param>
-            <permissions>
-               <permission allow="true">Write</permission>
-            </permissions>
-            <evaluator>evaluator.rm.user.canClassify</evaluator>
-            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
-            <evaluator negate="true">evaluator.rm.doclib.isShared</evaluator>
-            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
-            <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
-            <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
-            <evaluator negate="true">evaluator.rm.fileplan.isHeld</evaluator>
-         </action>
-
-         <!-- Edit classification -->
-         <action id="rm-edit-classified-content" type="javascript" label="actions.edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-document">
-            <param name="function">onEditClassifiedContent</param>
-            <permissions>
-               <permission allow="true">Write</permission>
-            </permissions>
-            <evaluator>evaluator.rm.doclib.editClassifiedContent</evaluator>
-            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
-            <evaluator negate="true">evaluator.rm.doclib.isShared</evaluator>
-            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
-            <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
-            <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
-            <evaluator negate="true">evaluator.rm.fileplan.isHeld</evaluator>
-         </action>
       </actions>
 
       <!--
@@ -817,8 +780,6 @@
             <action index="280" id="rm-view-audit-log" />
             <action index="290" id="rm-manage-permissions" />
             <action index="300" id="rm-add-relationship" />
-            <action index="310" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
-            <action index="320" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-record-browse">
@@ -826,8 +787,6 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
-            <action index="140" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <action index="150" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
          <actionGroup id="rm-record-details">
@@ -855,8 +814,6 @@
             <action index="280" id="rm-view-audit-log" />
             <action index="290" id="rm-manage-permissions" />
             <action index="300" id="rm-add-relationship" />
-            <action index="310" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <action index="320" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-record-details">
@@ -864,8 +821,6 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
-            <action index="140" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <action index="150" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
          <actionGroup id="rm-undeclared-record-browse">
@@ -891,8 +846,6 @@
             <action index="220" id="rm-request-info" />
             <action index="230" id="rm-manage-permissions" />
             <action index="240" id="rm-add-relationship" />
-            <action index="250" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <action index="260" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-browse">
@@ -900,8 +853,6 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
-            <action index="140" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <action index="150" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
          <actionGroup id="rm-undeclared-record-details">
@@ -925,8 +876,6 @@
             <action index="220" id="rm-request-info" />
             <action index="230" id="rm-manage-permissions" />
             <action index="240" id="rm-add-relationship" />
-            <action index="250" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <action index="260" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
          <actionGroup id="rm-doclib-undeclared-record-details">
@@ -934,8 +883,6 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
-            <action index="140" id="rm-classify-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record"/>
-            <action index="150" id="rm-edit-classified-content" icon="../../../rm/components/documentlibrary/actions/rm-classify-record" />
          </actionGroup>
 
          <actionGroup id="rm-metadata-stub-folder-browse">
@@ -1020,15 +967,11 @@
             <action index="400" id="rm-create-record" />
             <action index="410" id="rm-declare-as-version-record" />
             <action index="420" id="dm-recorded-version-config" />
-            <action index="430" id="rm-classify-content" />
-            <action index="440" id="rm-edit-classified-content" />
          </actionGroup>
          <actionGroup id="document-details">
             <action index="400" id="rm-create-record" />
             <action index="410" id="rm-declare-as-version-record" />
             <action index="420" id="dm-recorded-version-config" />
-            <action index="430" id="rm-classify-content"/>
-            <action index="440" id="rm-edit-classified-content" />
          </actionGroup>
 
       </actionGroups>

@@ -322,18 +322,6 @@
       </property>
    </bean>
 
-   <!--                           -->
-   <!-- Classification Evaluators -->
-   <!--                           -->
-   <bean id="evaluator.rm.user.canClassify" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.ClassifyActionEvaluator" />
-   <bean id="evaluator.rm.doclib.editClassifiedContent" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.EditClassifiedContentActionEvaluator" />
-   <bean id="evaluator.rm.doclib.isClassified" class="org.alfresco.web.evaluator.HasAspectEvaluator">
-      <property name="aspects">
-         <list>
-            <value>clf:classified</value>
-         </list>
-      </property>
-   </bean>
    <bean id="evaluator.rm.doclib.isRecord" class="org.alfresco.web.evaluator.HasAspectEvaluator">
       <property name="aspects">
          <list>
@@ -367,25 +355,6 @@
    </bean>
    <bean id="evaluator.rm.doclib.isNotInRmSite" parent="evaluator.rm.doclib.isInRmSite">
       <property name="negateOutput" value="true" />
-   </bean>
-   <bean id="evaluator.rm.classified.record" class="org.alfresco.web.evaluator.ChainedMatchAllEvaluator">
-      <property name="evaluators">
-         <list>
-            <ref bean="evaluator.rm.doclib.isClassified" />
-            <ref bean="evaluator.rm.doclib.isContent" />
-            <ref bean="evaluator.rm.doclib.isRecord" />
-         </list>
-      </property>
-   </bean>
-   <bean id="evaluator.rm.classified.document" class="org.alfresco.web.evaluator.ChainedMatchAllEvaluator">
-      <property name="evaluators">
-         <list>
-            <ref bean="evaluator.rm.doclib.isClassified" />
-            <ref bean="evaluator.rm.doclib.isNotInRmSite" />
-            <ref bean="evaluator.rm.doclib.isContent" />
-            <ref bean="evaluator.rm.doclib.isNotRecord" />
-         </list>
-      </property>
    </bean>
    <bean id="evaluator.rm.doclib.isShared" class="org.alfresco.web.evaluator.HasAspectEvaluator">
       <property name="aspects">

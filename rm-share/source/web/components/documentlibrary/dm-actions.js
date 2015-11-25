@@ -287,38 +287,6 @@
       }
    });
 
-   YAHOO.Bubbling.fire("registerAction",
-   {
-      actionName: "onClassifyContent",
-      fn: function DLTB_onClassifyContent(record, owner)
-      {
-         require(["rm/services/AlfRmActionBridge"], function (Bridge)
-         {
-            var bridge = new Bridge();
-            bridge.alfPublish("RM_CLASSIFY_CONTENT", {
-               "item": record,
-               "owner": owner
-            });
-         });
-      }
-   });
-
-   YAHOO.Bubbling.fire("registerAction",
-   {
-      actionName: "onEditClassifiedContent",
-      fn: function DLTB_onEditClassifiedContent(record, owner)
-      {
-         require(["rm/services/AlfRmActionBridge"], function (Bridge)
-         {
-            var bridge = new Bridge();
-            bridge.alfPublish("RM_EDIT_CLASSIFIED_CONTENT", {
-               "item": record,
-               "owner": owner
-            });
-         });
-      }
-   });
-
    /**
     *  Create a bridge between an Aikau data-update event and a YAHOO meta-data-refresh event.
     */
@@ -339,51 +307,5 @@
             window.location.reload(true);
          }
       });
-   });
-
-   /**
-    * Override default renderer to hide QuickShare link when content is classified.
-    */
-   // Run this after the default renderers have completed.
-   YAHOO.Bubbling.on("postDocumentListOnReady", function()
-   {
-      YAHOO.Bubbling.fire("registerRenderer", {
-         propertyName: "social",
-         renderer: function RM_social(record)
-         {
-            var jsNode = record.jsNode,
-               html = "";
-
-            /* Favourite / Likes / Comments */
-            html += '<span class="item item-social">' + Alfresco.DocumentList.generateFavourite(this, record) + '</span>';
-            html += '<span class="item item-social item-separator">' + Alfresco.DocumentList.generateLikes(this, record) + '</span>';
-            if (jsNode.permissions.user.CreateChildren)
-            {
-               html += '<span class="item item-social item-separator">' + Alfresco.DocumentList.generateComments(this, record) + '</span>';
-            }
-            if (!record.node.isContainer && Alfresco.constants.QUICKSHARE_URL && !Alfresco.rm.isClassified(record))
-            {
-               html += '<span class="item item-separator">' + Alfresco.DocumentList.generateQuickShare(this, record) + '</span>';
-            }
-
-            return html;
-         }
-      })
-   });
-
-   YAHOO.Bubbling.subscribe("postSetupViewRenderers", function(layer, args)
-   {
-      var scope = args[1].scope,
-         detailedViewRenderer = scope.viewRenderers["detailed"],
-         detailedViewRendererName = detailedViewRenderer.name,
-         detailedViewRendererParentDocumentList = detailedViewRenderer.parentDocumentList,
-         rmDetailedViewRenderer = new Alfresco.rm.DocumentListViewRenderer(detailedViewRendererName, detailedViewRendererParentDocumentList);
-      scope.registerViewRenderer(rmDetailedViewRenderer);
-
-      var simpleViewRenderer = scope.viewRenderers["simple"],
-         simpleViewRendererName = simpleViewRenderer.name,
-         simpleViewRendererParentDocumentList = simpleViewRenderer.parentDocumentList,
-         rmSimpleViewRenderer = new Alfresco.rm.DocumentListSimpleViewRenderer(simpleViewRendererName, simpleViewRendererParentDocumentList);
-      scope.registerViewRenderer(rmSimpleViewRenderer);
    });
 })();

@@ -19,7 +19,7 @@
    </config-definitions>
 
    <constraints webscript="/api/actionConstraints"/>
-   
+
    <menu>
       <group>
          <condition name="no-condition"/>
@@ -31,7 +31,7 @@
          <property dataType="d:int" name="*"/>
          <property dataType="d:long" name="*"/>
          <property dataType="d:double" name="*"/>
-         <property dataType="d:float" name="*"/>         
+         <property dataType="d:float" name="*"/>
       </group>
       <group>
          <condition name="compare-mime-type"/>
@@ -44,7 +44,7 @@
       <group>
          <property name="*"/>
       </group>
-           
+
       <group>
          <condition name="has-tag"/>
          <condition name="in-category"/>
@@ -59,17 +59,16 @@
          <condition name="isKind"/>
          <condition name="isRecordType"/>
       </group>
-      <group>      
+      <group>
          <condition name="isDeclared"/>
          <condition name="isRecordFiled"/>
-         <condition name="isRecordFolderClosed"/>         
+         <condition name="isRecordFolderClosed"/>
          <condition name="isVital"/>
       </group>
       <group>
-         <condition name="hasDispositionAction"/> 
+         <condition name="hasDispositionAction"/>
       </group>
-      <group>     
-         <condition name="isClassified"/>
+      <group>
          <condition name="isCutoff"/>
       </group>
       <group>
@@ -90,7 +89,7 @@
       <property>dod:originatingOrganization</property>
       <property>dod:publicationDate</property>
       <property>rma:recordSearchDispositionAuthority</property>
-      <property>rma:recordSearchDispositionInstructions</property>      
+      <property>rma:recordSearchDispositionInstructions</property>
    </defaults>
 
    <property-evaluators>

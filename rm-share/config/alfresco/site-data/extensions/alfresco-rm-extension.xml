@@ -308,13 +308,6 @@
                                 </evaluation>
                             </evaluations>
                         </sub-component>
-                        <sub-component id="rm-action-dependencies">
-                            <evaluations>
-                                <evaluation id="rm-action-dependencies">
-                                    <url>/config/components/document-details/document-actions-dependencies</url>
-                                </evaluation>
-                            </evaluations>
-                        </sub-component>
                     </sub-components>
                 </component>
                 <component>

@@ -20,8 +20,6 @@
    <@script type="text/javascript" src="${url.context}/res/components/documentlibrary/documentlist.js" group="documentlibrary"/>
    <@script type="text/javascript" src="${url.context}/res/rm/components/documentlibrary/documentlist.js" group="documentlibrary"/>
    <@viewRenderererJsDeps/>
-   <@script type="text/javascript" src="${url.context}/res/components/documentlibrary/rm-documentlist-view-detailed.js" group="documentlibrary"/>
-   <@script type="text/javascript" src="${url.context}/res/components/documentlibrary/rm-documentlist-view-simple.js" group="documentlibrary"/>
 </@>
 
 <@markup id="widgets">

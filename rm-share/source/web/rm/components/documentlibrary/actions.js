@@ -1899,30 +1899,6 @@
       onAddRelationship: function RDLA_onAddRelationship(assets, owner)
       {
          this._publishAikauEvent(assets, owner, "RM_RELATIONSHIP_ADD");
-      },
-
-      /**
-       * Classify document action
-       *
-       * @method onClassifyContent
-       * @param assets {object} Object literal representing one or more record(s) to be actioned
-       * @param owner {HTMLElement} The action html element
-       */
-      onClassifyContent: function RDLA_onClassifyContent(assets, owner)
-      {
-         this._publishAikauEvent(assets, owner, "RM_CLASSIFY_CONTENT");
-      },
-
-      /**
-       * Edit classified content action
-       *
-       * @method onEditClassifiedContent
-       * @param assets {object} Object literal representing one or more record(s) to be actioned
-       * @param owner {HTMLElement} The action html element
-       */
-      onEditClassifiedContent: function RDLA_onEditClassifiedContent(assets, owner)
-      {
-         this._publishAikauEvent(assets, owner, "RM_EDIT_CLASSIFIED_CONTENT");
       }
    };
 })();
