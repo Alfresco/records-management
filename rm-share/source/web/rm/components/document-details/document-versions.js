@@ -78,7 +78,7 @@
          html += '   <span class="document-version">' + $html(doc.label) + '</span>';
          if (Alfresco.util.isValueSet(doc.recordNodeRef, false))
          {
-            html += '<span class="document-recorded-version-history" title="Recorded Version"/>';
+            html += '<span class="document-recorded-version-history" title="' + this.msg("label.recorded-version") + '"/>';
          }
          html += '</div>';
          html += '<div class="version-panel-right">';
