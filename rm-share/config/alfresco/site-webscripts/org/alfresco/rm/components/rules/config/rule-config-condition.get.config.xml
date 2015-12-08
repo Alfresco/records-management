@@ -69,6 +69,7 @@
          <condition name="hasDispositionAction"/>
       </group>
       <group>
+         <condition name="isClassified"/>
          <condition name="isCutoff"/>
       </group>
       <group>
