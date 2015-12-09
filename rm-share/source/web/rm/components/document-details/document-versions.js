@@ -78,18 +78,30 @@
          html += '   <span class="document-version">' + $html(doc.label) + '</span>';
          if (Alfresco.util.isValueSet(doc.recordNodeRef, false))
          {
-            html += '<span class="document-recorded-version-history" />';
+            html += '<span class="document-recorded-version-history" title="' + this.msg("label.recorded-version") + '"/>';
          }
          html += '</div>';
          html += '<div class="version-panel-right">';
-         html += '   <h3 class="thin dark" style="width:' + (Dom.getViewportWidth() * 0.25) + 'px;">' + $html(doc.name) +  '</h3>';
-         html += '   <span class="actions">';
-         if (this.options.allowNewVersionUpload)
+         html += '   <h3 class="thin dark" style="width:' + (Dom.getViewportWidth() * 0.25) + 'px;">'; 
+         if (doc.isRecordedVersionDestroyed)
          {
-            html += '   <a href="#" name=".onRevertVersionClick" rel="' + doc.label + '" class="' + this.id + ' revert" title="' + this.msg("label.revert") + '">&nbsp;</a>';
+             html += this.msg("label.destroyed-version");
          }
-         html += '      <a href="' + downloadURL + '" class="download" title="' + this.msg("label.download") + '">&nbsp;</a>';
-         html += '      <a href="#" name=".onViewHistoricPropertiesClick" rel="' + doc.nodeRef + '" class="' + this.id + ' historicProperties" title="' + this.msg("label.historicProperties") + '">&nbsp;</a>';
+         else
+         {
+             html += $html(doc.name);
+         }
+         html += '</h3>';
+         html += '   <span class="actions">';
+         if (doc.isRecordedVersionDestroyed == false)
+         {
+            if (this.options.allowNewVersionUpload)
+            {
+               html += '   <a href="#" name=".onRevertVersionClick" rel="' + doc.label + '" class="' + this.id + ' revert" title="' + this.msg("label.revert") + '">&nbsp;</a>';
+            }
+            html += '      <a href="' + downloadURL + '" class="download" title="' + this.msg("label.download") + '">&nbsp;</a>';
+            html += '      <a href="#" name=".onViewHistoricPropertiesClick" rel="' + doc.nodeRef + '" class="' + this.id + ' historicProperties" title="' + this.msg("label.historicProperties") + '">&nbsp;</a>';
+         }
          html += '   </span>';
          html += '   <div class="clear"></div>';
          html += '   <div class="version-details">';
