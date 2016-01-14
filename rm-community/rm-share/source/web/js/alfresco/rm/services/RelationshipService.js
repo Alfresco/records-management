@@ -96,7 +96,7 @@ define(["dojo/_base/declare",
           * @listens RM_RELATIONSHIP_GET_ALL
           * @listens RM_RELATIONSHIP_DELETE
           */
-         constructor: function rm_services_relationshipService__constructor(args)
+         registerSubscriptions: function rm_services_relationshipService__registerSubscriptions(args)
          {
             this.alfSubscribe("RM_RELATIONSHIP_CREATE", lang.hitch(this, this.onCreate));
             this.alfSubscribe("RM_RELATIONSHIP_GET_ALL", lang.hitch(this, this.onGetAll));
