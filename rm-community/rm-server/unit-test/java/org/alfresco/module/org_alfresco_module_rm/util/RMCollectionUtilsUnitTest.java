@@ -30,6 +30,8 @@ import static org.alfresco.module.org_alfresco_module_rm.util.RMCollectionUtils.
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -100,5 +102,14 @@ public class RMCollectionUtilsUnitTest
     {
         assertEquals(newHashSet("hello", "world"), asSet("hello", "world"));
         assertEquals(newHashSet(3, 7, 31, 127), asSet(3, 7, 31, 127));
+    }
+
+    @Test public void elementsAsSerializableList()
+    {
+        // If these lines compile, then we're good
+        Serializable s = RMCollectionUtils.<String, ArrayList<String>>asSerializableList("one", "two", "three");
+        List<String> l = RMCollectionUtils.<String, ArrayList<String>>asSerializableList("one", "two", "three");
+
+        assertEquals(s, l);
     }
 }

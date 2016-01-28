@@ -1,23 +1,50 @@
-<?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <parent>
-      <groupId>org.alfresco</groupId>
-      <artifactId>alfresco-rm-parent</artifactId>
-      <version>2.4-SNAPSHOT</version>
-   </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
    <modelVersion>4.0.0</modelVersion>
    <artifactId>alfresco-rm-share</artifactId>
    <name>Alfresco RM Share</name>
-   <!-- <packaging>amp</packaging> -->
+   <packaging>amp</packaging>
+   <description>Manages the lifecycle of the alfresco-rm-share amp</description>
+
+   <parent>
+      <groupId>org.alfresco</groupId>
+      <artifactId>alfresco-rm-parent</artifactId>
+      <version>2.5-SNAPSHOT</version>
+   </parent>
+
+   <!--
+      SDK properties have sensible defaults in the SDK parent,
+      but you can override the properties below to use another version.
+      For more available properties see the alfresco-sdk-parent POM.
+   -->
    <properties>
-      <alfresco.client.war>${alfresco.share.artifactId}</alfresco.client.war>
-      <alfresco.client.contextPath>/share</alfresco.client.contextPath>
+      <!--
+         This control the root logging level for all apps uncomment and change, defaults to WARN
+         <app.log.root.level>WARN</app.log.root.level>
+      -->
+      <!--
+         Set the enviroment to use, this controls which properties will be picked in src/test/properties
+         for embedded run, defaults to the 'local' environment. See SDK Parent POM for more info.
+         <env>other environment name</env>
+      -->
+      <!--
+         The Maven artifact ID to use when loading the Share.WAR that the AMP should be applied to,
+         defaults to the alfresco.war artifact ID, so we need to override here.
+      -->
+      <app.amp.client.war.artifactId>${alfresco.share.artifactId}</app.amp.client.war.artifactId>
+
+      <!-- Since Alfresco.WAR (i.e. the Repository) is already running on port 8080, we run Share.WAR on port 8081 -->
       <maven.tomcat.port>8081</maven.tomcat.port>
-      <webapp.id.name>share</webapp.id.name>
-      <webapp.id>${webapp.id.name}</webapp.id>
-      <alfresco.aikau.version>1.0.51</alfresco.aikau.version>
+
+      <!-- Used in share-config-custom.xml. By default points to local installation of Alfresco Repo -->
+      <alfresco.repo.url>http://localhost:8080/alfresco</alfresco.repo.url>
+
+      <alfresco.share.artifactId>share</alfresco.share.artifactId>
+
+      <alfresco.rm.artifactId>alfresco-rm-share</alfresco.rm.artifactId>
+
+      <alfresco.aikau.version>1.0.47</alfresco.aikau.version>
    </properties>
    <build>
       <sourceDirectory>source/java</sourceDirectory>
@@ -33,6 +60,7 @@
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
+            <version>1.8</version>
             <executions>
                <execution>
                   <id>add-test-source</id>
@@ -47,123 +75,135 @@
                </execution>
             </executions>
          </plugin>
+         <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+               <execution>
+                  <phase>prepare-package</phase>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+                  <configuration>
+                     <tasks>
+                        <move todir="${project.build.directory}/${project.build.finalName}/config/alfresco">
+                           <fileset dir="${project.build.outputDirectory}/alfresco"/>
+                        </move>
+                        <move todir="${project.build.directory}/${project.build.finalName}/web/components">
+                           <fileset dir="${project.build.outputDirectory}/components"/>
+                        </move>
+                        <move todir="${project.build.directory}/${project.build.finalName}/web/rm">
+                           <fileset dir="${project.build.outputDirectory}/rm"/>
+                        </move>
+                        <move todir="${project.build.directory}/${project.build.finalName}/web/js">
+                           <fileset dir="${project.build.outputDirectory}/js"/>
+                        </move>
+                        <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/file-mapping.properties"
+                           todir="${project.build.directory}/${project.build.finalName}"/>
+                        <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/module.properties"
+                           todir="${project.build.directory}/${project.build.finalName}"/>
+                     </tasks>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>net.alchim31.maven</groupId>
+            <artifactId>yuicompressor-maven-plugin</artifactId>
+         </plugin>
+         <!-- Fetch and unpack Alfresco Repository/Share WAR (alfresco.war or share.war) -->
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>unpack-alfresco</id>
+                  <phase>prepare-package</phase>
+                  <goals>
+                     <goal>unpack</goal>
+                  </goals>
+                  <configuration>
+                     <outputDirectory>${app.amp.client.war.folder}</outputDirectory>
+                     <artifactItems>
+                        <artifactItem>
+                           <groupId>${alfresco.groupId}</groupId>
+                           <artifactId>${app.amp.client.war.artifactId}</artifactId>
+                           <type>war</type>
+                           <version>${alfresco.version}</version>
+                        </artifactItem>
+                     </artifactItems>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <!-- The current AMP artifact is installed into the Alfresco.war or share.war
+            using alfresco-maven-plugin -->
+         <plugin>
+            <groupId>org.alfresco.maven.plugin</groupId>
+            <artifactId>alfresco-maven-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>attach-rm-jar</id>
+                  <goals>
+                     <goal>amp</goal>
+                  </goals>
+                  <configuration>
+                     <attachClasses>true</attachClasses>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>install-rm-amp</id>
+                  <goals>
+                     <goal>install</goal>
+                  </goals>
+                  <phase>package</phase>
+                  <configuration>
+                     <backup>true</backup>
+                     <ampLocation>${project.build.directory}/${alfresco.rm.artifactId}-${alfresco.rm.version}.amp</ampLocation>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>amps-to-war-overlay</id>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>install</goal>
+                  </goals>
+               </execution>
+            </executions>
+            <configuration>
+               <!-- We need to selectively not install web resources (i.e. /web folder in AMP),
+                  so these files can be picked up directly from the build project instead,
+                  enabling rapid application dev -->
+               <includeWebResources>true</includeWebResources>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+               <execution>
+                  <goals>
+                     <goal>test-jar</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.4</version>
+            <executions>
+               <execution>
+                  <id>attach-sources</id>
+                  <goals>
+                     <goal>jar-no-fork</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
       </plugins>
    </build>
-   <profiles>
-      <profile>
-         <id>fullBuild</id>
-         <build>
-            <plugins>
-               <plugin>
-                  <groupId>org.alfresco.maven.plugin</groupId>
-                  <artifactId>alfresco-maven-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <goals>
-                           <goal>amp</goal>
-                        </goals>
-                     </execution>
-                  </executions>
-               </plugin>
-               <plugin>
-                  <artifactId>maven-antrun-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <phase>prepare-package</phase>
-                        <goals>
-                           <goal>run</goal>
-                        </goals>
-                        <configuration>
-                           <tasks>
-                              <move todir="${project.build.directory}/${project.build.finalName}/config/alfresco">
-                                 <fileset dir="${project.build.outputDirectory}/alfresco"/>
-                              </move>
-                              <move todir="${project.build.directory}/${project.build.finalName}/web/components">
-                                 <fileset dir="${project.build.outputDirectory}/components"/>
-                              </move>
-                              <move todir="${project.build.directory}/${project.build.finalName}/web/rm">
-                                 <fileset dir="${project.build.outputDirectory}/rm"/>
-                              </move>
-                              <move todir="${project.build.directory}/${project.build.finalName}/web/js">
-                                 <fileset dir="${project.build.outputDirectory}/js"/>
-                              </move>
-                              <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/file-mapping.properties"
-                                 todir="${project.build.directory}/${project.build.finalName}"/>
-                              <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/module.properties"
-                                 todir="${project.build.directory}/${project.build.finalName}"/>
-                           </tasks>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-      <profile>
-         <id>minify-js</id>
-         <activation>
-            <property>
-               <name>minifyjs</name>
-               <value>true</value>
-            </property>
-         </activation>
-         <build>
-            <plugins>
-               <plugin>
-                  <groupId>net.alchim31.maven</groupId>
-                  <artifactId>yuicompressor-maven-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <id>minimize-slingshot-javascript</id>
-                        <goals>
-                           <goal>jslint</goal>
-                           <goal>compress</goal>
-                        </goals>
-                        <phase>prepare-package</phase>
-                     </execution>
-                  </executions>
-                  <configuration>
-                     <jswarn>false</jswarn>
-                     <encoding>UTF-8</encoding>
-                     <includes>
-                        <include>**/*.js</include>
-                     </includes>
-                     <sourceDirectory>${project.build.directory}/${project.build.finalName}/web</sourceDirectory>
-                     <outputDirectory>${project.build.directory}/${project.build.finalName}/web</outputDirectory>
-                     <excludeResources>true</excludeResources>
-                  </configuration>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-      <profile>
-         <id>appWarLocationSetting</id>
-         <properties>
-            <app.war.location>${project.build.directory}/${project.build.finalName}-war</app.war.location>
-         </properties>
-      </profile>
-      <profile>
-         <id>enterprise</id>
-         <properties>
-            <webapp.id>share-enterprise</webapp.id>
-         </properties>
-      </profile>
-   </profiles>
+
    <dependencies>
-      <dependency>
-         <groupId>org.alfresco</groupId>
-         <artifactId>share</artifactId>
-         <classifier>classes</classifier>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.alfresco</groupId>
-         <artifactId>${webapp.id}</artifactId>
-         <version>${alfresco.base.version}</version>
-         <type>war</type>
-         <scope>provided</scope>
-      </dependency>
-      <!--Uncomment this to upgrade Aikau dependency: (requires ${alfresco.base.version} >= 5.0.1 )  -->
       <dependency>
          <groupId>org.alfresco</groupId>
          <artifactId>aikau</artifactId>
@@ -174,6 +214,13 @@
                <artifactId>*</artifactId>
             </exclusion>
          </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>${alfresco.groupId}</groupId>
+         <artifactId>share</artifactId>
+         <version>${alfresco.version}</version>
+         <classifier>classes</classifier>
+         <scope>provided</scope>
       </dependency>
       <!--  Test Dependencies -->
       <dependency>
@@ -187,4 +234,53 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
+
+   <profiles>
+      <profile>
+         <id>start-share</id>
+         <build>
+            <plugins>
+               <!-- Configures Tomcat to run with the alfresco.war or share.war as virtual webapp.
+                  (http://tomcat.apache.org/tomcat-7.0-doc/config/context.html#Virtual_webapp)
+                  The target/classes and target/test-classes (containing tests and the amp config for test purposes) are prepended to the
+                  running webapp context, so changes from the IDE are automatically picked up first. See context.xml for details.
+               -->
+               <plugin>
+                  <groupId>org.apache.tomcat.maven</groupId>
+                  <artifactId>tomcat7-maven-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>run-embedded</id>
+                        <goals>
+                           <goal>run</goal>
+                        </goals>
+                        <phase>integration-test</phase>
+                        <configuration>
+                           <useTestClasspath>false</useTestClasspath>
+                           <ignorePackaging>true</ignorePackaging>
+                           <useSeparateTomcatClassLoader>true</useSeparateTomcatClassLoader>
+                           <systemProperties>
+                              <java.io.tmpdir>${project.build.directory}</java.io.tmpdir>
+                           </systemProperties>
+                           <delegate>true</delegate>
+                           <contextFile>${project.basedir}/tomcat/context.xml</contextFile>
+                           <warSourceDirectory>${app.amp.client.war.folder}</warSourceDirectory>
+                        </configuration>
+                     </execution>
+                  </executions>
+                  <!-- Include H2 scripts and lib -->
+                  <!--
+                  <dependencies>
+                     <dependency>
+                        <groupId>org.alfresco.maven</groupId>
+                        <artifactId>alfresco-rad</artifactId>
+                        <version>${maven.alfresco.version}</version>
+                     </dependency>
+                  </dependencies>
+                  -->
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+   </profiles>
 </project>
