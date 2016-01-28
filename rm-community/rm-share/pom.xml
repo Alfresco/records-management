@@ -148,6 +148,7 @@
                   </goals>
                   <configuration>
                      <attachClasses>true</attachClasses>
+                     <includeDependencies>true</includeDependencies>
                   </configuration>
                </execution>
                <execution>
