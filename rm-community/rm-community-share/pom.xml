@@ -50,6 +50,7 @@
       <resources>
          <resource>
             <directory>config</directory>
+            <filtering>${app.filtering.enabled}</filtering>
          </resource>
          <resource>
             <directory>source/web</directory>
@@ -59,7 +60,7 @@
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
-            <version>1.8</version>
+            <version>1.10</version>
             <executions>
                <execution>
                   <id>add-test-source</id>
