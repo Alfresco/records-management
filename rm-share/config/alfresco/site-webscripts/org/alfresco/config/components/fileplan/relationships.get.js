@@ -42,7 +42,7 @@ function main()
                id: "RM_RELATIONSHIP_TOOLBAR_ADD_BUTTON",
                additionalCssClasses: "rm-relationship-toolbar-add-button",
                label: msg.get("label.button.new-relationship"),
-               publishTopic: "ALF_RM_ADD_RELATIONSHIP",
+               publishTopic: "RM_RELATIONSHIP_ADD",
                publishPayload: {
                   item: nodeDetails.item
                }
@@ -60,153 +60,19 @@ function main()
          }
       };
 
-      // Relationship name
-      var relationshipName = {
-         name: "alfresco/documentlibrary/views/layouts/Cell",
-         config: {
-            widgets: [{
-               name: "alfresco/renderers/Property",
-               config: {
-                  renderedValueClass: "rm-relationship-table-relationship-name",
-                  propertyToRender: "node.relationshipLabel"
-               }
-            }]
-         }
-      };
-
-      // Record icon
-      var recordIcon = {
-         name: "alfresco/documentlibrary/views/layouts/Cell",
-         config: {
-            widgets: [{
-               name: "rm/renderers/AlfRmFileType",
-               config: {
-                  size: "medium"
-               }
-            }]
-         }
-      };
-
-      // Record info
-      var recordInfo = {
-         name: "alfresco/documentlibrary/views/layouts/Cell",
-         config: {
-            widgets: [{
-               name: "alfresco/documentlibrary/views/layouts/Row",
-               config: {
-                  widgets:[{
-                     name: "alfresco/renderers/PropertyLink",
-                     config: {
-                        renderedValueClass: "rm-relationship-table-record-name",
-                        propertyToRender: "node.properties.cm:name",
-                        publishGlobal: true,
-                        publishTopic: "ALF_NAVIGATE_TO_PAGE",
-                        useCurrentItemAsPayload: false,
-                        publishPayloadType: "PROCESS",
-                        publishPayloadModifiers: ["processCurrentItemTokens"],
-                        publishPayload: {
-                           url: "site/" + model.site + "/document-details?nodeRef={node.nodeRef}",
-                           type: "SHARE_PAGE_RELATIVE"
-                        }
-                     }
-                  }]
-               }
-            },{
-               name: "alfresco/documentlibrary/views/layouts/Row",
-               config: {
-                  widgets:[{
-                     name: "alfresco/documentlibrary/views/layouts/Cell",
-                     config: {
-                        widgets: [{
-                           name: "alfresco/renderers/Property",
-                           config: {
-                              renderedValueClass: "rm-relationship-table-record-identifier",
-                              label: msg.get("details.record.identifier"),
-                              propertyToRender: "node.properties.rma:identifier"
-                           }
-                        },{
-                           name: "alfresco/renderers/Separator",
-                           align: "left"
-                        },{
-                            name: "alfresco/renderers/Property",
-                            config: {
-                               renderedValueClass: "rm-relationship-table-record-version",
-                               label: msg.get("details.version.label"),
-                               propertyToRender: "node.properties.rmv:versionLabel"
-                            }
-                        }]
-                     }
-                  }]
-               }
-            },{
-               name: "alfresco/documentlibrary/views/layouts/Row",
-               config: {
-                  widgets:[{
-                     name: "alfresco/documentlibrary/views/layouts/Cell",
-                     config: {
-                        widgets: [{
-                           name: "alfresco/renderers/Property",
-                           config: {
-                              propertyToRender: "node.properties.cm:description"
-                           }
-                        }]
-                     }
-                  }]
-               }
-            }]
-         }
-      };
-
-      // Delete action
-      var nodeReference = node.nodeRef.replace("://", "/"),
-         deleteAction = {};
-      if (showAddDeleteRelationshipButton)
-      {
-         deleteAction = {
-            name: "alfresco/documentlibrary/views/layouts/Cell",
-            config: {
-               widgets: [{
-                  name: "alfresco/renderers/PublishAction",
-                  config: {
-                     iconClass: "delete-16",
-                     altText: msg.get("label.delete-relationship"),
-                     publishTopic: "ALF_CRUD_DELETE",
-                     publishPayloadType: "PROCESS",
-                     publishPayload: {
-                        requiresConfirmation: true,
-                        url: "api/node/" + nodeReference + "/targetnode/{node.nodeRef}/uniqueName/{node.relationshipUniqueName}",
-                        confirmationTitle: msg.get("label.confirmation.title.delete-relationship"),
-                        confirmationPrompt: msg.get("label.confirmationPrompt.delete-relationship"),
-                        successMessage: msg.get("label.delete-relationship.successMessage")
-                     },
-                     publishPayloadModifiers: ["processCurrentItemTokens", "convertNodeRefToUrl"]
-                  }
-               }]
-            }
-         };
-      };
-
-      // Table
       var table = {
-         name: "alfresco/lists/AlfList",
+         name: "rm/lists/AlfRmRelationshipList",
          config: {
             noDataMessage: msg.get("label.list.no.data.message"),
-            loadDataPublishTopic: "ALF_CRUD_GET_ALL",
+            loadDataPublishTopic: "RM_RELATIONSHIP_GET_ALL",
             loadDataPublishPayload: {
-               url: "api/node/" + nodeReference + "/relationships"
+               nodeRef: node.nodeRef
             },
             itemsProperty: "data.items",
-            widgets: [{
-               name: "alfresco/documentlibrary/views/AlfDocumentListView",
-               config: {
-                  widgets: [{
-                     name: "alfresco/documentlibrary/views/layouts/Row",
-                     config: {
-                        widgets: [relationshipName, recordIcon, recordInfo, deleteAction]
-                     }
-                  }]
-               }
-            }]
+            showDeleteAction: showAddDeleteRelationshipButton,
+            ShowRelationship: true,
+            currentItem: node,
+            site: model.site
          }
       };
 
@@ -216,14 +82,13 @@ function main()
          services: [
             "alfresco/services/DocumentService",
             "alfresco/services/NotificationService",
-            "rm/services/AlfRmCrudService",
-            "rm/services/AlfRmDialogService",
-            "rm/services/AlfRmActionService",
-            "rm/services/AlfRmOptionsService"
+            "alfresco/services/OptionsService",
+            "alfresco/services/DialogService",
+            "rm/services/RelationshipService"
          ],
          widgets: [toolbar, table]
       };
    }
-}
+};
 
 main();

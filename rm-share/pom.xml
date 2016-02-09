@@ -12,6 +12,7 @@
    <name>Alfresco RM Share</name>
    <properties>
       <webapp.id>share</webapp.id>
+      <alfresco.aikau.version>1.0.39</alfresco.aikau.version>
    </properties>
    <build>
       <sourceDirectory>source/java</sourceDirectory>
@@ -24,7 +25,7 @@
          </resource>
       </resources>
       <plugins>
-      	<plugin>
+         <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
             <executions>
@@ -56,6 +57,9 @@
                         <goals>
                            <goal>amp</goal>
                         </goals>
+                        <configuration>
+                           <includeDependencies>true</includeDependencies>
+                        </configuration>
                      </execution>
                   </executions>
                </plugin>
@@ -127,15 +131,34 @@
    <dependencies>
       <dependency>
          <groupId>org.alfresco</groupId>
+         <artifactId>aikau</artifactId>
+         <version>${alfresco.aikau.version}</version>
+         <exclusions>
+            <exclusion>
+               <groupId>*</groupId>
+               <artifactId>*</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>org.alfresco</groupId>
          <artifactId>share</artifactId>
          <version>${alfresco.base.version}</version>
          <classifier>classes</classifier>
+         <scope>provided</scope>
+         <exclusions>
+            <exclusion>
+               <groupId>org.alfresco</groupId>
+               <artifactId>aikau</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.alfresco</groupId>
          <artifactId>${webapp.id}</artifactId>
          <version>${alfresco.base.version}</version>
          <type>war</type>
+         <scope>provided</scope>
       </dependency>
       <!--  Test Dependencies -->
       <dependency>
