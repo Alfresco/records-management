@@ -9,6 +9,7 @@
 <@markup id="js">
    <#-- JavaScript Dependencies -->
    <@script src="${url.context}/res/components/rules/rules-header.js" group="rules"/>
+   <@script src="${url.context}/res/components/common/common-component-style-filter-chain.js" group="rules"/>
    <#-- Modified for RM -->
    <@script src="${url.context}/res/rm/components/rules/rules-header.js" group="rules"/>
    <@script src="${url.context}/res/modules/documentlibrary/global-folder.js" group="rules"/>
