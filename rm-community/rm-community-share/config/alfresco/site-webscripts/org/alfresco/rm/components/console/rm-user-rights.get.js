@@ -1,3 +1,5 @@
+<import resource="classpath:alfresco/site-webscripts/org/alfresco/rm/components/console/rm-console.lib.js">
+
 /*
  * #%L
  * This file is part of Alfresco.
@@ -18,8 +20,7 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-<import resource="classpath:alfresco/site-webscripts/org/alfresco/rm/components/console/rm-console.lib.js">
-
+ 
 function main()
 {
    var conn = remote.connect("alfresco");

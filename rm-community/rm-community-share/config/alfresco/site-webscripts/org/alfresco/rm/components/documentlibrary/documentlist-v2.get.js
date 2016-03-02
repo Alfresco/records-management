@@ -1,3 +1,7 @@
+<import resource="classpath:/alfresco/site-webscripts/org/alfresco/rm/components/documentlibrary/documentlist-v2.lib.js">
+<import resource="classpath:/alfresco/site-webscripts/org/alfresco/components/upload/uploadable.lib.js">
+<import resource="classpath:/alfresco/site-webscripts/org/alfresco/components/documentlibrary/include/documentlist.lib.js">
+
 /*
  * #%L
  * This file is part of Alfresco.
@@ -18,9 +22,6 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-<import resource="classpath:/alfresco/site-webscripts/org/alfresco/rm/components/documentlibrary/documentlist-v2.lib.js">
-<import resource="classpath:/alfresco/site-webscripts/org/alfresco/components/upload/uploadable.lib.js">
-<import resource="classpath:/alfresco/site-webscripts/org/alfresco/components/documentlibrary/include/documentlist.lib.js">
 
 doclibCommon();
 

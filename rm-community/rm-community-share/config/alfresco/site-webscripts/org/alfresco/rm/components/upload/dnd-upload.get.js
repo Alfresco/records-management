@@ -1,3 +1,5 @@
+<import resource="classpath:alfresco/site-webscripts/org/alfresco/components/upload/dnd-upload.get.js">
+
 /*
  * #%L
  * This file is part of Alfresco.
@@ -18,6 +20,5 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-<import resource="classpath:alfresco/site-webscripts/org/alfresco/components/upload/dnd-upload.get.js">
 
 model.widgets[0].name = "Alfresco.rm.component.DNDUpload";

@@ -1,3 +1,5 @@
+<import resource="classpath:/alfresco/templates/org/alfresco/import/alfresco-util.js">
+
 /*
  * #%L
  * This file is part of Alfresco.
@@ -18,7 +20,6 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-<import resource="classpath:/alfresco/templates/org/alfresco/import/alfresco-util.js">
 
 /**
  * Main entrypoint for component webscript logic

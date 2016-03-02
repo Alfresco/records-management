@@ -1,3 +1,6 @@
+<import resource="classpath:/alfresco/templates/org/alfresco/import/alfresco-util.js">
+<import resource="classpath:/alfresco/site-webscripts/org/alfresco/components/documentlibrary/include/documentlist.lib.js">
+
 /*
  * #%L
  * This file is part of Alfresco.
@@ -18,8 +21,6 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-<import resource="classpath:/alfresco/templates/org/alfresco/import/alfresco-util.js">
-<import resource="classpath:/alfresco/site-webscripts/org/alfresco/components/documentlibrary/include/documentlist.lib.js">
 
 function main()
 {

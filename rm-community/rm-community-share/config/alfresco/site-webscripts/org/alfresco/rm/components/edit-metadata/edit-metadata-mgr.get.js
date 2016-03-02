@@ -1,3 +1,5 @@
+<import resource="/org/alfresco/components/edit-metadata/edit-metadata-mgr.get.js">
+
 /*
  * #%L
  * This file is part of Alfresco.
@@ -18,7 +20,6 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-<import resource="/org/alfresco/components/edit-metadata/edit-metadata-mgr.get.js">
 
 function alfresco_rm_main()
 {
