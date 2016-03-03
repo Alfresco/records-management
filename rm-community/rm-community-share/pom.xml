@@ -18,7 +18,8 @@
       <alfresco.repo.url>http://localhost:8080/alfresco</alfresco.repo.url>
       <alfresco.share.artifactId>share</alfresco.share.artifactId>
       <alfresco.rm.artifactId>alfresco-rm-community-share</alfresco.rm.artifactId>
-      <alfresco.aikau.version>1.0.47</alfresco.aikau.version>
+      <alfresco.aikau.version>1.0.47</alfresco.aikau.version> 
+      <license.root>${project.parent.parent.basedir}/license</license.root>
    </properties>
 
    <build>
@@ -174,27 +175,7 @@
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>license-maven-plugin</artifactId>
-            <version>1.8</version>
             <configuration>
-      
-               <verbose>${license.verbose}</verbose>
-               <addSvnKeyWords>false</addSvnKeyWords>
-      
-               <!-- header configuration -->
-               <organizationName>${license.org.name}</organizationName>
-               <descriptionTemplate>${project.parent.parent.basedir}/license/description.ftl</descriptionTemplate>
-               <canUpdateCopyright>true</canUpdateCopyright>
-               <canUpdateDescription>true</canUpdateDescription>
-      
-               <!-- licence configuration -->
-               <addJavaLicenseAfterPackage>true</addJavaLicenseAfterPackage>
-               <licenseName>alfresco_community</licenseName>
-               <licenseResolver>file:${project.parent.parent.basedir}/license</licenseResolver>
-      
-               <!-- dry run options -->
-               <dryRun>${license.update.dryrun}</dryRun>
-               <failOnMissingHeader>true</failOnMissingHeader>
-               <failOnNotUptodateHeader>true</failOnNotUptodateHeader>
       
                <!-- source roots to check -->
                <roots>
@@ -203,17 +184,7 @@
                   <root>source/web</root>
                   <root>unit-test/java</root>
                </roots>
-      
-               <!-- exculsions -->
-               <excludes>
-                  <exclude>**/package-info.java</exclude>
-                  <exclude>**/*.properties</exclude>
-                  <exclude>**/*.css</exclude>
-                  <exclude>**/*.xml</exclude>
-                  <exclude>**/*.json</exclude>
-                  <exclude>**/*.txt</exclude>
-               </excludes>
-      
+               
             </configuration>
             <executions>
                <execution>
