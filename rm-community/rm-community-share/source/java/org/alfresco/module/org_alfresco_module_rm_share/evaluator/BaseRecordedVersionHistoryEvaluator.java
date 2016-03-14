@@ -25,7 +25,7 @@
  * #L%
  */
 
-package  org.alfresco.module.org_alfresco_module_rm_share.evaluator;
+package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 
 import org.alfresco.web.evaluator.BaseEvaluator;
 import org.apache.commons.lang.StringUtils;

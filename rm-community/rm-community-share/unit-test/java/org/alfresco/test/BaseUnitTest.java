@@ -25,7 +25,7 @@
  * #L%
  */
 
-package  org.alfresco.test;
+package org.alfresco.test;
 
 import java.util.UUID;
 
