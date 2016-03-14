@@ -32,9 +32,9 @@
 function main()
 {
    var constraints = [];
-   
+
    var conn = remote.connect("alfresco");
-   
+
    // retrieve the RM constraints - an array is returned
    var res = conn.get("/api/rma/admin/rmconstraints?withEmptyLists=false");
    if (res.status == 200)
@@ -42,8 +42,8 @@ function main()
       constraints = eval('(' + res + ')').data;
    }
    model.constraints = constraints;
-   
-   
+
+
    // retrieve the customisable aspects and types
    var customisable = [];
    var res2 = conn.get("/api/rma/admin/customisable");
@@ -52,7 +52,7 @@ function main()
 	   customisable = eval('(' + res2 + ')').data;
    }
    model.customisable = customisable;
-   
+
    // test user capabilities - can they access Custom Metadata?
    model.hasAccess = hasCapability(conn, "CreateModifyDestroyFileplanTypes");
 }

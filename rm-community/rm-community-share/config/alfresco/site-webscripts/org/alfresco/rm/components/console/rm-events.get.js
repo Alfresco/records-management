@@ -45,10 +45,10 @@ function sortByLabel(obj1, obj2)
 function main()
 {
    var conn = remote.connect("alfresco");
-   
+
    // test user capabilities - can they access Events?
    model.hasAccess = hasCapability(conn, "CreateModifyDestroyEvents");
-   
+
    // retrieve event types
    var repoResponse = conn.get("/api/rma/admin/rmeventtypes");
    if (repoResponse.status == 401)

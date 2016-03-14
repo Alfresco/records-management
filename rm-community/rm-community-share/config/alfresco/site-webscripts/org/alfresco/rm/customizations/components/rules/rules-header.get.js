@@ -1,3 +1,5 @@
+<import resource="classpath:alfresco/site-webscripts/org/alfresco/components/rules/rules-header.get.js">
+
 /*
  * #%L
  * Alfresco Records Management Module
@@ -24,7 +26,6 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-<import resource="classpath:alfresco/site-webscripts/org/alfresco/components/rules/rules-header.get.js">
 
 function rm_main()
 {

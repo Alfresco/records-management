@@ -44,15 +44,15 @@ if (siteNavigationWidgets.length > 0)
          selected: false
       }
    };
-      
+
    if (siteNavigationWidgets.length < config.global.header.maxDisplayedSitePages)
    {
       siteNavigationWidgets.push(managementConsoleWidget);
    }
-   else 
+   else
    {
       lastNavigationWidget = siteNavigationWidgets.pop();
-      if(lastNavigationWidget.config.widgets == undefined) 
+      if(lastNavigationWidget.config.widgets == undefined)
       {
          siteNavigationWidgets.push(lastNavigationWidget);
          siteNavigationWidgets.push(managementConsoleWidget);

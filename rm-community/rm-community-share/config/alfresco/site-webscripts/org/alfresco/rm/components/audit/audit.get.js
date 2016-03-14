@@ -110,7 +110,7 @@ fromISO8601 = function()
       	return result; // Date or null
       };
    }();
-   
+
    return fromISOString.apply(arguments.callee, arguments);
 };
 function main()
@@ -129,7 +129,7 @@ function main()
       var data = eval('(' + result + ')').data;
 
       data.startedDate=fromISO8601(data.started);
-      data.stoppedDate=fromISO8601(data.stopped);      
+      data.stoppedDate=fromISO8601(data.stopped);
       model.data=data.toSource();
       for (var i=0,len=data.entries.length;i<len;i++)
       {
@@ -142,7 +142,7 @@ function main()
       status.setCode(result.status,eval('(' + result + ')').message);
       return;
    }
-   
+
    model.capabilities = getCapabilities(remote.connect("alfresco")).toSource();
 }
 

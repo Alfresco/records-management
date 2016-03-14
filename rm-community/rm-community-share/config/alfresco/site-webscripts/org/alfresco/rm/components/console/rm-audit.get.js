@@ -29,9 +29,9 @@
 function main()
 {
    var meta = [];
-   
+
    var conn = remote.connect("alfresco");
-   
+
    // retrieve user capabilities - can they access Audit?
    var capabilities = getCapabilities(conn);
    var hasAccess = hasCapabilityImpl("AuditAdmin", capabilities);
@@ -41,7 +41,7 @@ function main()
       model.eventsStr = model.events.toSource();
       model.enabled = getAuditStatus(conn);
       model.capabilities = capabilities.toSource();
-      
+
       var groups = [];
       var res = conn.get("/slingshot/rmsearchproperties");  // TODO we should be passing the file plan here
       if (res.status == 200)
@@ -49,7 +49,7 @@ function main()
    	   groups = eval('(' + res + ')').data.groups;
       }
       model.groups = groups;
-      
+
    }
    model.hasAccess = hasAccess;
 }

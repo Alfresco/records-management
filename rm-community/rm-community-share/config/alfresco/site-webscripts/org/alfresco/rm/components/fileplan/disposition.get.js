@@ -98,16 +98,16 @@ function main()
          }
          if (schedule.authority)
          {
-            model.authority = schedule.authority;                     
+            model.authority = schedule.authority;
          }
          if (schedule.nodeRef)
          {
-            model.dipositionScheduleNodeRef = schedule.nodeRef;            
+            model.dipositionScheduleNodeRef = schedule.nodeRef;
          }
-         
+
          model.publishInProgress = schedule.publishInProgress;
          model.unpublishedUpdates = schedule.unpublishedUpdates;
-         
+
          model.recordLevelDisposition = schedule.recordLevelDisposition;
 
          var actions = schedule.actions,
@@ -126,7 +126,7 @@ function main()
                periodTypeLabel = periodTypeLabel ? periodTypeLabel.toLowerCase() : "";
                if (!periodAmount || periodAmount == "" || periodAmount == "0")
                {
-                  action.title = msg.get("label.title.noTime", [action.label, periodTypeLabel]);                  
+                  action.title = msg.get("label.title.noTime", [action.label, periodTypeLabel]);
                }
                else
                {
