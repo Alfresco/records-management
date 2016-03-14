@@ -1,3 +1,5 @@
+<import resource="classpath:/alfresco/templates/org/alfresco/import/alfresco-util.js">
+
 /*
  * #%L
  * Alfresco Records Management Module
@@ -5,26 +7,25 @@
  * Copyright (C) 2005 - 2016 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
- * 
+ *
  * If the software was purchased under a paid Alfresco license, the terms of
  * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * Alfresco is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Alfresco is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-<import resource="classpath:/alfresco/templates/org/alfresco/import/alfresco-util.js">
 
 /**
  * Main entrypoint for component webscript logic
@@ -98,16 +99,16 @@ function main()
          }
          if (schedule.authority)
          {
-            model.authority = schedule.authority;                     
+            model.authority = schedule.authority;
          }
          if (schedule.nodeRef)
          {
-            model.dipositionScheduleNodeRef = schedule.nodeRef;            
+            model.dipositionScheduleNodeRef = schedule.nodeRef;
          }
-         
+
          model.publishInProgress = schedule.publishInProgress;
          model.unpublishedUpdates = schedule.unpublishedUpdates;
-         
+
          model.recordLevelDisposition = schedule.recordLevelDisposition;
 
          var actions = schedule.actions,
@@ -126,7 +127,7 @@ function main()
                periodTypeLabel = periodTypeLabel ? periodTypeLabel.toLowerCase() : "";
                if (!periodAmount || periodAmount == "" || periodAmount == "0")
                {
-                  action.title = msg.get("label.title.noTime", [action.label, periodTypeLabel]);                  
+                  action.title = msg.get("label.title.noTime", [action.label, periodTypeLabel]);
                }
                else
                {

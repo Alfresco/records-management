@@ -1,3 +1,5 @@
+<import resource="classpath:alfresco/site-webscripts/org/alfresco/rm/components/console/rm-console.lib.js">
+
 /*
  * #%L
  * Alfresco Records Management Module
@@ -5,26 +7,25 @@
  * Copyright (C) 2005 - 2016 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
- * 
+ *
  * If the software was purchased under a paid Alfresco license, the terms of
  * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * Alfresco is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Alfresco is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-<import resource="classpath:alfresco/site-webscripts/org/alfresco/rm/components/console/rm-console.lib.js">
 
 /**
  * Converts an ISO8601-formatted date into a JavaScript native Date object
@@ -110,7 +111,7 @@ fromISO8601 = function()
       	return result; // Date or null
       };
    }();
-   
+
    return fromISOString.apply(arguments.callee, arguments);
 };
 function main()
@@ -129,7 +130,7 @@ function main()
       var data = eval('(' + result + ')').data;
 
       data.startedDate=fromISO8601(data.started);
-      data.stoppedDate=fromISO8601(data.stopped);      
+      data.stoppedDate=fromISO8601(data.stopped);
       model.data=data.toSource();
       for (var i=0,len=data.entries.length;i<len;i++)
       {
@@ -142,7 +143,7 @@ function main()
       status.setCode(result.status,eval('(' + result + ')').message);
       return;
    }
-   
+
    model.capabilities = getCapabilities(remote.connect("alfresco")).toSource();
 }
 

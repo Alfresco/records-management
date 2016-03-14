@@ -24,6 +24,7 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 package org.alfresco.module.org_alfresco_module_rm_share.resolver.doclib;
 
 import org.alfresco.web.resolver.doclib.DefaultDoclistActionGroupResolver;
