@@ -24,7 +24,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
+
+package  org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 
 import org.alfresco.error.AlfrescoRuntimeException;
 import org.json.simple.JSONObject;
