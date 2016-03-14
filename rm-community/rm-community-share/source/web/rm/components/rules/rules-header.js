@@ -69,7 +69,7 @@
             if ($html(this.folderDetails.fileName) == "")
             {
                // Display file name
-               this.widgets.titleEl.innerHTML = $html(this.msg("filePlan.label"));
+               this.widgets.titleEl.innerHTML = $html(this.msg("path.fileplan"));
             }
          }
       },
