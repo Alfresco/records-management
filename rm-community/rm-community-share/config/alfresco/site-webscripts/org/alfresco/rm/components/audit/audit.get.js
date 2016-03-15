@@ -6,10 +6,10 @@
  * %%
  * Copyright (C) 2005 - 2016 Alfresco Software Limited
  * %%
- * This file is part of the Alfresco software. 
+ * This file is part of the Alfresco software.
  * 
- * If the software was purchased under a paid Alfresco license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * If the software was purchased under a paid Alfresco license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  * 
  * Alfresco is free software: you can redistribute it and/or modify
@@ -111,7 +111,7 @@ fromISO8601 = function()
       	return result; // Date or null
       };
    }();
-   
+
    return fromISOString.apply(arguments.callee, arguments);
 };
 function main()
@@ -130,7 +130,7 @@ function main()
       var data = eval('(' + result + ')').data;
 
       data.startedDate=fromISO8601(data.started);
-      data.stoppedDate=fromISO8601(data.stopped);      
+      data.stoppedDate=fromISO8601(data.stopped);
       model.data=data.toSource();
       for (var i=0,len=data.entries.length;i<len;i++)
       {
@@ -143,7 +143,7 @@ function main()
       status.setCode(result.status,eval('(' + result + ')').message);
       return;
    }
-   
+
    model.capabilities = getCapabilities(remote.connect("alfresco")).toSource();
 }
 
