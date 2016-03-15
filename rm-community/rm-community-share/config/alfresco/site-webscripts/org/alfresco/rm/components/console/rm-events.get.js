@@ -6,10 +6,10 @@
  * %%
  * Copyright (C) 2005 - 2016 Alfresco Software Limited
  * %%
- * This file is part of the Alfresco software. 
+ * This file is part of the Alfresco software.
  * 
- * If the software was purchased under a paid Alfresco license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * If the software was purchased under a paid Alfresco license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  * 
  * Alfresco is free software: you can redistribute it and/or modify
@@ -46,10 +46,10 @@ function sortByLabel(obj1, obj2)
 function main()
 {
    var conn = remote.connect("alfresco");
-   
+
    // test user capabilities - can they access Events?
    model.hasAccess = hasCapability(conn, "CreateModifyDestroyEvents");
-   
+
    // retrieve event types
    var repoResponse = conn.get("/api/rma/admin/rmeventtypes");
    if (repoResponse.status == 401)

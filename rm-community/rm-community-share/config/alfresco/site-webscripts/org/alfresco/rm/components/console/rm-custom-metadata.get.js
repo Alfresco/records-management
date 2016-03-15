@@ -6,10 +6,10 @@
  * %%
  * Copyright (C) 2005 - 2016 Alfresco Software Limited
  * %%
- * This file is part of the Alfresco software. 
+ * This file is part of the Alfresco software.
  * 
- * If the software was purchased under a paid Alfresco license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * If the software was purchased under a paid Alfresco license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  * 
  * Alfresco is free software: you can redistribute it and/or modify
@@ -33,9 +33,9 @@
 function main()
 {
    var constraints = [];
-   
+
    var conn = remote.connect("alfresco");
-   
+
    // retrieve the RM constraints - an array is returned
    var res = conn.get("/api/rma/admin/rmconstraints?withEmptyLists=false");
    if (res.status == 200)
@@ -43,8 +43,8 @@ function main()
       constraints = eval('(' + res + ')').data;
    }
    model.constraints = constraints;
-   
-   
+
+
    // retrieve the customisable aspects and types
    var customisable = [];
    var res2 = conn.get("/api/rma/admin/customisable");
@@ -53,7 +53,7 @@ function main()
 	   customisable = eval('(' + res2 + ')').data;
    }
    model.customisable = customisable;
-   
+
    // test user capabilities - can they access Custom Metadata?
    model.hasAccess = hasCapability(conn, "CreateModifyDestroyFileplanTypes");
 }
