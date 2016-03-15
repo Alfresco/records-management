@@ -6,10 +6,10 @@
  * %%
  * Copyright (C) 2005 - 2016 Alfresco Software Limited
  * %%
- * This file is part of the Alfresco software. 
+ * This file is part of the Alfresco software.
  * 
- * If the software was purchased under a paid Alfresco license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * If the software was purchased under a paid Alfresco license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
  * 
  * Alfresco is free software: you can redistribute it and/or modify
@@ -30,9 +30,9 @@
 function main()
 {
    var meta = [];
-   
+
    var conn = remote.connect("alfresco");
-   
+
    // retrieve user capabilities - can they access Audit?
    var capabilities = getCapabilities(conn);
    var hasAccess = hasCapabilityImpl("AuditAdmin", capabilities);
@@ -42,7 +42,7 @@ function main()
       model.eventsStr = model.events.toSource();
       model.enabled = getAuditStatus(conn);
       model.capabilities = capabilities.toSource();
-      
+
       var groups = [];
       var res = conn.get("/slingshot/rmsearchproperties");  // TODO we should be passing the file plan here
       if (res.status == 200)
@@ -50,7 +50,7 @@ function main()
    	   groups = eval('(' + res + ')').data.groups;
       }
       model.groups = groups;
-      
+
    }
    model.hasAccess = hasAccess;
 }
