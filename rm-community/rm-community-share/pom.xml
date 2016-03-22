@@ -157,19 +157,7 @@
                </execution>
             </executions>
          </plugin>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <executions>
-               <execution>
-                  <id>attach-sources</id>
-                  <goals>
-                     <goal>jar-no-fork</goal>
-                  </goals>
-               </execution>
-            </executions>
-         </plugin>
-      
+
          <!-- License header generation -->
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
@@ -181,47 +169,47 @@
                   <root>config</root>
                   <root>source/web</root>
                   <root>unit-test/java</root>
-               </roots>              
+               </roots>
             </configuration>
          </plugin>
-	      
+
       </plugins>
       <pluginManagement>
-      	<plugins>
-      		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-      		<plugin>
-      			<groupId>org.eclipse.m2e</groupId>
-      			<artifactId>lifecycle-mapping</artifactId>
-      			<version>1.0.0</version>
-      			<configuration>
-      				<lifecycleMappingMetadata>
-      					<pluginExecutions>
-      						<pluginExecution>
-      							<pluginExecutionFilter>
-      								<groupId>
-      									org.codehaus.mojo
-      								</groupId>
-      								<artifactId>
-      									license-maven-plugin
-      								</artifactId>
-      								<versionRange>
-      									[1.8,)
-      								</versionRange>
-      								<goals>
-      									<goal>
-      										update-file-header
-      									</goal>
-      								</goals>
-      							</pluginExecutionFilter>
-      							<action>
-      								<ignore></ignore>
-      							</action>
-      						</pluginExecution>
-      					</pluginExecutions>
-      				</lifecycleMappingMetadata>
-      			</configuration>
-      		</plugin>
-      	</plugins>
+         <plugins>
+            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+            <plugin>
+               <groupId>org.eclipse.m2e</groupId>
+               <artifactId>lifecycle-mapping</artifactId>
+               <version>1.0.0</version>
+               <configuration>
+                  <lifecycleMappingMetadata>
+                     <pluginExecutions>
+                        <pluginExecution>
+                           <pluginExecutionFilter>
+                              <groupId>
+                                 org.codehaus.mojo
+                              </groupId>
+                              <artifactId>
+                                 license-maven-plugin
+                              </artifactId>
+                              <versionRange>
+                                 [1.8,)
+                              </versionRange>
+                              <goals>
+                                 <goal>
+                                    update-file-header
+                                 </goal>
+                              </goals>
+                           </pluginExecutionFilter>
+                           <action>
+                              <ignore></ignore>
+                           </action>
+                        </pluginExecution>
+                     </pluginExecutions>
+                  </lifecycleMappingMetadata>
+               </configuration>
+            </plugin>
+         </plugins>
       </pluginManagement>
    </build>
 
