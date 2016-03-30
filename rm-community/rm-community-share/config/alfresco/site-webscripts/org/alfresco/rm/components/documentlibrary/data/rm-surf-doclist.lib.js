@@ -34,56 +34,63 @@
 DocList.getAllMetadataTemplates = function getAllMetadataTemplates()
 {
    var scopedRoot = config.scoped["DocumentLibrary"]["metadata-templates"],
-      configs, templates = {}, templateConfig, templateId, templateIndex, template, templateParamConfig, orderedConfigs = [];
+   configs, templates = {}, templateConfig, templateId, template, rmTemplates = [], otherTemplates = [], orderedTemplates = {};
 
    try
    {
       configs = scopedRoot.getChildren("template");
- 
       if (configs)
       {
-         // Order the config templates by bringing rm templates first
-         for (var i = 0; i < configs.size(); i++)
-         {
-            orderedConfigs.push(configs.get(i));
-         }
-         orderedConfigs.sort(fnRMOrderTemplatesById);
+          // Order the config templates by bringing rm templates first
+          for (var i = 0; i < configs.size(); i++)
+          {
+             templateConfig = configs.get(i);
+             templateId = templateConfig.getAttribute("id");
+             if (templateId)
+             {
+                template = templates[templateId] ||
+                {
+                   id: templateId
+                };
 
-         for each (templateConfig in orderedConfigs)
-         {
-            templateId = templateConfig.getAttribute("id");
-            if (templateId)
-            {
-               template = templates[templateId] ||
-               {
-                  id: templateId
-               };
+                DocList.fnAddIfNotNull(template, DocList.getEvaluatorConfig(templateConfig), "evaluators");
+                template.title = DocList.getTemplateTitleConfig(templateConfig);
+                // Banners and Lines are special cases: we need to merge instead of replace to allow for custom overrides by id
+                template.banners = DocList.merge(template.banners || {}, DocList.getTemplateBannerConfig(templateConfig) || {});
+                template.lines = DocList.merge(template.lines || {}, DocList.getTemplateLineConfig(templateConfig) || {});
 
-               DocList.fnAddIfNotNull(template, DocList.getEvaluatorConfig(templateConfig), "evaluators");
-               template.title = DocList.getTemplateTitleConfig(templateConfig);
-               // Banners and Lines are special cases: we need to merge instead of replace to allow for custom overrides by id
-               template.banners = DocList.merge(template.banners || {}, DocList.getTemplateBannerConfig(templateConfig) || {});
-               template.lines = DocList.merge(template.lines || {}, DocList.getTemplateLineConfig(templateConfig) || {});
+                templates[templateId] = DocList.merge({}, template);
+             }
+          }
 
-               templates[templateId] = DocList.merge({}, template);
-            }
-         }
+          // separate the rm templates from the other templates
+          for each (template in templates)
+          {
+              if(template.id.startsWith("rm"))
+              {
+                  rmTemplates.push(template);
+              }
+              else
+              {
+                  otherTemplates.push(template);
+              }
+          }
+
+          // add the rm templates to the final template list
+          for each(template in rmTemplates)
+          {
+              orderedTemplates[template.id] = template;
+          }
+          // add the other templates to the final template list 
+          for each(template in otherTemplates)
+          {
+              orderedTemplates[template.id] = template;
+          }
       }
    }
    catch(e)
    {
    }
 
-   return templates;
-};
-
-
-/**
- * Order template by id, bring rm templates first
- */
-var fnRMOrderTemplatesById = function fnRMOrderTemplatesById(item1, item2)
-{
-   if(item1.getAttribute("id").startsWith("rm"))  return -1;
-   if(item2.getAttribute("id").startsWith("rm"))  return 1;
-   return 0;
+   return orderedTemplates;
 };
