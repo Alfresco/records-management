@@ -320,7 +320,14 @@
                var oRecordData = oRecord._oData;
                if (oRecordData.createPerson === true)
                {
-                  elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a class="theme-color-1 site-link" href="' + Alfresco.util.profileURL(oRecordData.nodeName) + '">' + $html(oRecordData.nodeName) + '</a>';
+                  if(oRecordData.nodeName != "")
+                  {
+                      elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a class="theme-color-1 site-link" href="' + Alfresco.util.profileURL(oRecordData.nodeName) + '">' + $html(oRecordData.nodeName) + '</a>';
+                  }
+                  else
+                  {
+                      elLiner.innerHTML = oRecordData.event + '&nbsp;&nbsp;&nbsp;';
+                  }
                }
                else
                {
