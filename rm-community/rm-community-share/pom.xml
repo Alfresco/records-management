@@ -18,7 +18,7 @@
       <alfresco.repo.url>http://localhost:8080/alfresco</alfresco.repo.url>
       <alfresco.share.artifactId>share</alfresco.share.artifactId>
       <alfresco.rm.artifactId>alfresco-rm-community-share</alfresco.rm.artifactId>
-      <alfresco.aikau.version>1.0.56</alfresco.aikau.version>
+      <alfresco.aikau.version>1.0.56.2</alfresco.aikau.version>
    </properties>
 
    <build>
@@ -157,7 +157,7 @@
                </execution>
             </executions>
          </plugin>
-      
+
          <!-- License header generation -->
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
@@ -169,10 +169,10 @@
                   <root>config</root>
                   <root>source/web</root>
                   <root>unit-test/java</root>
-               </roots>              
+               </roots>
             </configuration>
          </plugin>
-	      
+
       </plugins>
       <pluginManagement>
       	<plugins>
@@ -204,7 +204,7 @@
       							<action>
       								<ignore></ignore>
       							</action>
-      						</pluginExecution>      						
+      						</pluginExecution>
       					</pluginExecutions>
       				</lifecycleMappingMetadata>
       			</configuration>
