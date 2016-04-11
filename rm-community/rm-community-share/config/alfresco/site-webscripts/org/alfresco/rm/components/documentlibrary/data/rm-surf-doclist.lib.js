@@ -40,32 +40,31 @@ DocList.getAllMetadataTemplates = function getAllMetadataTemplates()
 
    try
    {
-          // get the original list of templates
-          templates = DocList.inheritedGetAllMetadataTemplates();
+      // get the original list of templates
+      templates = DocList.inheritedGetAllMetadataTemplates();
 
-          // separate the rm templates from the other templates
-          for each (template in templates)
+      // separate the rm templates from the other templates
+      for each (template in templates)
+      {
+          if(template.id.startsWith("rm"))
           {
-              if(template.id.startsWith("rm"))
-              {
-                  rmTemplates.push(template);
-              }
-              else
-              {
-                  otherTemplates.push(template);
-              }
+              rmTemplates.push(template);
           }
+          else
+          {
+              otherTemplates.push(template);
+          }
+      }
 
-          // add the rm templates to the final template list
-          for each(template in rmTemplates)
-          {
-              orderedTemplates[template.id] = template;
-          }
-          // add the other templates to the final template list 
-          for each(template in otherTemplates)
-          {
-              orderedTemplates[template.id] = template;
-          }
+      // add the rm templates to the final template list
+      for each(template in rmTemplates)
+      {
+          orderedTemplates[template.id] = template;
+      }
+      // add the other templates to the final template list 
+      for each(template in otherTemplates)
+      {
+          orderedTemplates[template.id] = template;
       }
    }
    catch(e)
