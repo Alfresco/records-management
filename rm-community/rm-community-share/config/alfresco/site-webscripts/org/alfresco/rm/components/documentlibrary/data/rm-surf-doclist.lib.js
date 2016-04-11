@@ -27,41 +27,21 @@
  * #L%
  */
 
+// Keep a reference to the original implementation
+DocList.inheritedGetAllMetadataTemplates = DocList.getAllMetadataTemplates;
+
 /* 
  * Override getAllMetadataTemplates to return rm templates first 
  * fix for RM-3202
  */ 
 DocList.getAllMetadataTemplates = function getAllMetadataTemplates()
 {
-   var scopedRoot = config.scoped["DocumentLibrary"]["metadata-templates"],
-   configs, templates = {}, templateConfig, templateId, template, rmTemplates = [], otherTemplates = [], orderedTemplates = {};
+   var templates, template, rmTemplates = [], otherTemplates = [], orderedTemplates = {};
 
    try
    {
-      configs = scopedRoot.getChildren("template");
-      if (configs)
-      {
-          // Order the config templates by bringing rm templates first
-          for (var i = 0; i < configs.size(); i++)
-          {
-             templateConfig = configs.get(i);
-             templateId = templateConfig.getAttribute("id");
-             if (templateId)
-             {
-                template = templates[templateId] ||
-                {
-                   id: templateId
-                };
-
-                DocList.fnAddIfNotNull(template, DocList.getEvaluatorConfig(templateConfig), "evaluators");
-                template.title = DocList.getTemplateTitleConfig(templateConfig);
-                // Banners and Lines are special cases: we need to merge instead of replace to allow for custom overrides by id
-                template.banners = DocList.merge(template.banners || {}, DocList.getTemplateBannerConfig(templateConfig) || {});
-                template.lines = DocList.merge(template.lines || {}, DocList.getTemplateLineConfig(templateConfig) || {});
-
-                templates[templateId] = DocList.merge({}, template);
-             }
-          }
+          // get the original list of templates
+          templates = DocList.inheritedGetAllMetadataTemplates();
 
           // separate the rm templates from the other templates
           for each (template in templates)
