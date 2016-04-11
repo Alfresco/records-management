@@ -57,7 +57,11 @@
     */
    Alfresco.rm.component.DocumentList = function(htmlId)
    {
-      return Alfresco.rm.component.DocumentList.superclass.constructor.call(this, htmlId);
+      Alfresco.rm.component.DocumentList.superclass.constructor.call(this, htmlId);
+      
+      this.dataSourceUrl = $combine(Alfresco.constants.URL_SERVICECONTEXT, "rm/components/documentlibrary/data/doclist/");
+      
+      return this;
    };
 
    /**

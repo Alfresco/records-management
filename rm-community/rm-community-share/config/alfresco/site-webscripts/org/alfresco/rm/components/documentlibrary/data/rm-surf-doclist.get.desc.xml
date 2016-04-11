@@ -1,0 +1,7 @@
+<webscript>
+  <shortname>rm-surf-doclist</shortname>
+  <description>RM Web Tier Document List Component - doclist data webscript endpoint</description>
+  <url>/rm/components/documentlibrary/data/{webscript}/{params}</url>
+  <url>/rm/components/documentlibrary/data/site/{site}/{webscript}/{params}</url>
+  <format default="json">argument</format>
+</webscript>
