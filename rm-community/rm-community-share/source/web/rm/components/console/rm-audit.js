@@ -725,7 +725,7 @@
       {
          Dom.addClass(Sel.query('.personFilter',this.id)[0], 'active');
          var person = args[1];
-         this._changeFilterText(person.firstName + ' ' + person.lastName);
+         this._changeFilterText(Alfresco.util.encodeHTML(person.firstName + ' ' + person.lastName));
          this.widgets.specifyfilterButton.set('label',this.msg('label.button-specify'));
          Dom.removeClass(this.widgets['people-finder'],'active');
          this.showingFilter = false;
