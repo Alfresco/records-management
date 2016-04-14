@@ -9,7 +9,7 @@
 .rm-relationship-toolbar-label
 {
    font-size: 123.1%;
-   margin-left: 1em;
+   padding: 5px 0;
 }
 
 #RM_RELATIONSHIP_TOOLBAR
