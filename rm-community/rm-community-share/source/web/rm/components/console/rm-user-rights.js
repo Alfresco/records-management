@@ -112,7 +112,7 @@
             for (var key in responseDataUsers)
             {
                var userObject = responseDataUsers[key];
-               userObject.name = userObject.firstName + ' ' + userObject.lastName;
+               userObject.name = $html(userObject.firstName + ' ' + userObject.lastName);
                //create a label so we can use it in the roles and groups renderer
                responseDataUsers[key].label = userObject.name;
                //convert groups to use label and not name
@@ -217,7 +217,7 @@
                            //render link
                            var link = YAHOO.lang.substitute(templates['link'],
                            {
-                              name: $html(users[items[i]].label),
+                              name: users[items[i]].label,
                               userId: $html(items[i])
                            });
                            // render dd
