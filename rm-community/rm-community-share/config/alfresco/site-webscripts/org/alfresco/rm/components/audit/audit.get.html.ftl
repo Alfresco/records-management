@@ -24,10 +24,10 @@
  along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  #L%
 -->
-<script type="text/javascript" charset="utf-8">    
+<script type="text/javascript" charset="utf-8">
     new Alfresco.rm.component.RMAudit('${htmlid}-audit').setOptions(
     {
-       <#if (nodeRef?exists)>nodeRef: '${nodeRef}',</#if>          
+       <#if (nodeRef?exists)>nodeRef: '${nodeRef}',</#if>
        siteId: "${page.url.templateArgs.site}",
        containerId: "${template.properties.container!"documentLibrary"}",
        viewMode: Alfresco.rm.component.RMAudit.VIEW_MODE_COMPACT,
@@ -46,7 +46,7 @@
       </div>
       <div class="auditActions">
          <button id="${htmlid}-audit-export" name="${htmlid}-audit-export" class="audit-export">${msg("label.button-export")}</button>
-         <button id="${htmlid}-audit-file-record" name="${htmlid}-audit-file-record" class="audit-file-record">${msg("label.button-file-record")}</button>            
+         <button id="${htmlid}-audit-file-record" name="${htmlid}-audit-file-record" class="audit-file-record">${msg("label.button-file-record")}</button>
       </div>
       <div style="clear:both;"/>
    </div>
@@ -89,16 +89,16 @@
                   <#list x.changedValues as v>
                   <tr>
                      <td>${v.name?html}</td>
-                  <#if (v.previous == "")>
-                     <td>${msg('label.no-previous')?html}</td>
-                  <#else>
+                  <#if (v.previous?? && v.previous != "")>
                      <td>${v.previous?html}</td>
+                  <#else>
+                     <td>${msg('label.no-previous')?html}</td>
                   </#if>
                      <td>${v.new?html}</td>
                   </tr>
                   </#list>
                </tbody>
-            </table>      
+            </table>
          </#if>
       </div>
    </#list>
