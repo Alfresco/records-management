@@ -9,7 +9,7 @@
 .rm-relationship-toolbar-label
 {
    font-size: 123.1%;
-   margin-left: 1em;
+   padding: 5px 0;
 }
 
 #RM_RELATIONSHIP_TOOLBAR
@@ -67,7 +67,7 @@
 {
    margin-bottom: -25px;
    margin-left: 5px;
-   margin-top: 12px;
+   margin-top: 20px;
 }
 
 #RM_RELATIONSHIP_SELECT_RECORD_DIALOG_PICKED_ITEM_CONTENT
@@ -89,7 +89,7 @@
    margin-top: -20px;
 }
 
-.rm-relationship-select-record-form-control
+#ADD_RELATIONSHIP_DIALOG .rm-relationship-select-record-form-control
 {
    margin-left: 20em;
    margin-top: -40px;
