@@ -129,8 +129,8 @@ public class FormUIGet extends org.alfresco.web.scripts.forms.FormUIGet
     /**
      * Gets the root sets as a list, including the dynamically discovered record meta-data sets.
      *
-     * @param context
-     * @return
+     * @param context The model context
+     * @return The root sets as list, including the dynamically discovered record meta-data sets.
      */
     protected List<FormSet> getRootSetsAsList(ModelContext context)
     {
@@ -142,8 +142,8 @@ public class FormUIGet extends org.alfresco.web.scripts.forms.FormUIGet
     /**
      * Gets all the record meta-data sets present in the form data.
      *
-     * @param context
-     * @return
+     * @param context The model context
+     * @return All the record meta-data sets present in the form data.
      */
     protected Collection<FormSet> getRecordMetaDataSetConfig(ModelContext context)
     {

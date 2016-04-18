@@ -41,9 +41,9 @@ public class ActionEvaluator extends BaseRMEvaluator
     private String action;
 
     /**
-     * The name of the action to check for
+     * Sets the name of the action to check for
      *
-     * @param action
+     * @param action The name of the action to check for
      */
     public void setAction(String action)
     {
@@ -80,7 +80,7 @@ public class ActionEvaluator extends BaseRMEvaluator
 
         return false;
     }
-    
+
     /**
      * Retrieve a JSONArray of applicable actions
      *

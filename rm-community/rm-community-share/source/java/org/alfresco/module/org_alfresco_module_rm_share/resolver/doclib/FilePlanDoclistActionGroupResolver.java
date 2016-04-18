@@ -51,11 +51,12 @@ public class FilePlanDoclistActionGroupResolver extends DefaultDoclistActionGrou
     }
 
     /**
+     * Will return the action group id matching rm action group configs in rm-share-config.xml.
      *
-     * @param jsonObject
-     * @param view
-     * @param isDocLib
-     * @return
+     * @param jsonObject An item (i.e. document or folder) in the doclist.
+     * @param view Name of the type of view in which the action will be displayed. I.e. "details"
+     * @param isDocLib <code>true</code> if we are in the doc lib, <code>false</code> otherwise.
+     * @return The action group id to use for displaying actions
      */
     public String resolve(JSONObject jsonObject, String view, boolean isDocLib)
     {
