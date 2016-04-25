@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
    <modelVersion>4.0.0</modelVersion>
    <artifactId>alfresco-rm-community-share</artifactId>
@@ -61,21 +60,19 @@
                   <configuration>
                      <target>
                         <move todir="${project.build.directory}/${project.build.finalName}/config/alfresco">
-                           <fileset dir="${project.build.outputDirectory}/alfresco"/>
+                           <fileset dir="${project.build.outputDirectory}/alfresco" />
                         </move>
                         <move todir="${project.build.directory}/${project.build.finalName}/web/components">
-                           <fileset dir="${project.build.outputDirectory}/components"/>
+                           <fileset dir="${project.build.outputDirectory}/components" />
                         </move>
                         <move todir="${project.build.directory}/${project.build.finalName}/web/rm">
-                           <fileset dir="${project.build.outputDirectory}/rm"/>
+                           <fileset dir="${project.build.outputDirectory}/rm" />
                         </move>
                         <move todir="${project.build.directory}/${project.build.finalName}/web/js">
-                           <fileset dir="${project.build.outputDirectory}/js"/>
+                           <fileset dir="${project.build.outputDirectory}/js" />
                         </move>
-                        <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/file-mapping.properties"
-                           todir="${project.build.directory}/${project.build.finalName}"/>
-                        <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/module.properties"
-                           todir="${project.build.directory}/${project.build.finalName}"/>
+                        <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/file-mapping.properties" todir="${project.build.directory}/${project.build.finalName}" />
+                        <move file="${project.build.directory}/${project.build.finalName}/config/alfresco/module/org_alfresco_module_rm_share/module.properties" todir="${project.build.directory}/${project.build.finalName}" />
                      </target>
                   </configuration>
                </execution>
@@ -202,7 +199,7 @@
                               </goals>
                            </pluginExecutionFilter>
                            <action>
-                              <ignore></ignore>
+                              <ignore />
                            </action>
                         </pluginExecution>
                      </pluginExecutions>
