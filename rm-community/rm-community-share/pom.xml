@@ -17,7 +17,7 @@
       <alfresco.repo.url>http://localhost:8080/alfresco</alfresco.repo.url>
       <alfresco.share.artifactId>share</alfresco.share.artifactId>
       <alfresco.rm.artifactId>alfresco-rm-community-share</alfresco.rm.artifactId>
-      <alfresco.aikau.version>1.0.65</alfresco.aikau.version>
+      <alfresco.aikau.version>1.0.66</alfresco.aikau.version>
    </properties>
 
    <build>
