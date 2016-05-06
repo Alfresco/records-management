@@ -49,6 +49,12 @@
       $decodeHtml = Alfresco.util.decodeHTML;
 
    /**
+    * Variables used for multiple click check
+    */
+   var timeOfFirstClick,
+       averageDelayTime = 500;
+
+   /**
     * DispositionEdit constructor.
     *
     * @param {String} htmlId The HTML id of the parent element
@@ -615,6 +621,16 @@
          {
             fn: function(p_config)
             {
+                var currentTimeClick = new Date().getTime();
+                if (timeOfFirstClick && (currentTimeClick - timeOfFirstClick) < averageDelayTime) 
+                {
+                    return false;
+                }
+                else
+                {
+                    timeOfFirstClick = currentTimeClick;
+                }
+
                // Inject empty events[] if all events hhave been removed
                if (YAHOO.lang.isUndefined(p_config.dataObj.events))
                {
