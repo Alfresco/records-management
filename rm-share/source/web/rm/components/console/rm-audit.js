@@ -912,7 +912,7 @@
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.user') + ':</th>'+
-               '<td>' + data.fullName + '</td>'+
+               '<td>' + Alfresco.util.encodeHTML(data.fullName) + '</td>'+
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.timestamp') + ':</th>'+
