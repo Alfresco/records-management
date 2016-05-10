@@ -225,7 +225,7 @@
        */
       _loadDispositionProperties: function DispositionEdit__loadDispostionProperties(action, actionEl)
       {
-    	 var remoteUrl = Alfresco.constants.PROXY_URI_RELATIVE + "/api/rma/dispositionproperties?recordlevel=" + this.options.recordLevelDisposition + "&dispositionaction=" + action.name;
+    	 var remoteUrl = Alfresco.constants.PROXY_URI_RELATIVE + "api/rma/dispositionproperties?recordlevel=" + this.options.recordLevelDisposition + "&dispositionaction=" + action.name;
 
     	 Alfresco.util.Ajax.jsonGet(
          {
