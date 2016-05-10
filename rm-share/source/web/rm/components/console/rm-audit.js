@@ -307,6 +307,14 @@
                }
             };
 
+            var renderCellFullName = function RecordsResults_renderCellFullname(elCell, oRecord, oColumn, oData)
+            {
+               if (oData)
+               {
+                  elCell.innerHTML = Alfresco.util.encodeHTML(oData);
+               }
+            };
+
             // Add the custom formatter to the shortcuts
             YAHOO.widget.DataTable.Formatter.eventCellFormatter = function eventCellFormatter(elLiner, oRecord, oColumn, oData)
             {
@@ -358,7 +366,7 @@
             this.widgets['auditDataTable'] = new YAHOO.widget.DataTable(this.id+"-auditDT",
                 [
                   {key:"timestamp", label:this.msg('label.timestamp'), formatter: renderCellDate, sortable:true, resizeable:true},
-                  {key:"fullName", label:this.msg('label.user'),  sortable:true, resizeable:true},
+                  {key:"fullName", label:this.msg('label.user'), formatter: renderCellFullName, sortable:true, resizeable:true},
                   {key:"userRole", label:this.msg('label.role'),  sortable:true, resizeable:true},
                   {key:"event", label:this.msg('label.event'),  formatter:"eventCellFormatter", sortable:true, resizeable:true}
                ],
