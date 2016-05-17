@@ -49,10 +49,9 @@
       $decodeHtml = Alfresco.util.decodeHTML;
 
    /**
-    * Variables used for multiple click check
+    * Variable used for multiple click check
     */
-   var timeOfFirstClick,
-       averageDelayTime = 500;
+   var multipleClick = false;
 
    /**
     * DispositionEdit constructor.
@@ -621,16 +620,11 @@
          {
             fn: function(p_config)
             {
-                var currentTimeClick = new Date().getTime();
-                if (timeOfFirstClick && (currentTimeClick - timeOfFirstClick) < averageDelayTime) 
-                {
-                    return false;
-                }
-                else
-                {
-                    timeOfFirstClick = currentTimeClick;
-                }
-
+            	if (multipleClick) 
+            	{
+                   return false;
+            	}
+            	multipleClick = true;
                // Inject empty events[] if all events hhave been removed
                if (YAHOO.lang.isUndefined(p_config.dataObj.events))
                {
@@ -679,6 +673,8 @@
 
                   // Display add step button
                   Dom.removeClass(this.widgets.flowButtons, "hidden");
+
+                  multipleClick = false;
                },
                obj:
                {
@@ -699,6 +695,7 @@
                   {
                      text: this.msg("message.saveActionFailure", this.name)
                   });
+                  multipleClick = false;
                },
                obj:
                {
