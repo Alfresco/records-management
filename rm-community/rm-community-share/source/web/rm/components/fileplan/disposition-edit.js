@@ -49,11 +49,6 @@
       $decodeHtml = Alfresco.util.decodeHTML;
 
    /**
-    * Variable used for multiple click check
-    */
-   var multipleClick = false;
-
-   /**
     * DispositionEdit constructor.
     *
     * @param {String} htmlId The HTML id of the parent element
@@ -553,6 +548,12 @@
             }, saveActionEl),
             cancelEl = Dom.getElementsByClassName("cancel", "span", actionEl)[0],
             cancelActionButton = Alfresco.util.createYUIButton(this, "cancel-button", null, {}, cancelEl);
+         
+         this.widgets.saveActionButton = saveActionButton;
+         saveActionButton.on("click", function()
+         {
+            this.widgets.saveActionButton.set("disabled", true);
+         }, null, this);
 
          cancelActionButton.on("click", this.onCancelActionButtonClick,
          {
@@ -620,11 +621,6 @@
          {
             fn: function(p_config)
             {
-            	if (multipleClick) 
-            	{
-                   return false;
-            	}
-            	multipleClick = true;
                // Inject empty events[] if all events hhave been removed
                if (YAHOO.lang.isUndefined(p_config.dataObj.events))
                {
@@ -674,7 +670,6 @@
                   // Display add step button
                   Dom.removeClass(this.widgets.flowButtons, "hidden");
 
-                  multipleClick = false;
                },
                obj:
                {
@@ -695,7 +690,6 @@
                   {
                      text: this.msg("message.saveActionFailure", this.name)
                   });
-                  multipleClick = false;
                },
                obj:
                {
