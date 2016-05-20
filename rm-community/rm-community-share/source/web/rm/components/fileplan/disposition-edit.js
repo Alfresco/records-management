@@ -548,6 +548,12 @@
             }, saveActionEl),
             cancelEl = Dom.getElementsByClassName("cancel", "span", actionEl)[0],
             cancelActionButton = Alfresco.util.createYUIButton(this, "cancel-button", null, {}, cancelEl);
+         
+         this.widgets.saveActionButton = saveActionButton;
+         saveActionButton.on("click", function()
+         {
+            this.widgets.saveActionButton.set("disabled", true);
+         }, null, this);
 
          cancelActionButton.on("click", this.onCancelActionButtonClick,
          {
@@ -663,6 +669,7 @@
 
                   // Display add step button
                   Dom.removeClass(this.widgets.flowButtons, "hidden");
+
                },
                obj:
                {
