@@ -3,7 +3,7 @@
    <modelVersion>4.0.0</modelVersion>
    <artifactId>alfresco-rm-community-share</artifactId>
    <name>Alfresco Records Management Community Share</name>
-   <description>Alfresco Record Management Core Share Extension</description>
+   <description>Alfresco Record Management Community Share Extension</description>
    <packaging>amp</packaging>
 
    <parent>
@@ -118,18 +118,8 @@
                   </goals>
                   <configuration>
                      <attachClasses>true</attachClasses>
+                     <attachConfig>true</attachConfig>
                      <includeDependencies>true</includeDependencies>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>install-rm-amp</id>
-                  <goals>
-                     <goal>install</goal>
-                  </goals>
-                  <phase>package</phase>
-                  <configuration>
-                     <backup>true</backup>
-                     <ampLocation>${project.build.directory}/${alfresco.rm.artifactId}-${alfresco.rm.version}.amp</ampLocation>
                   </configuration>
                </execution>
                <execution>
@@ -173,41 +163,41 @@
 
       </plugins>
       <pluginManagement>
-      	<plugins>
-      		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-      		<plugin>
-      			<groupId>org.eclipse.m2e</groupId>
-      			<artifactId>lifecycle-mapping</artifactId>
-      			<version>1.0.0</version>
-      			<configuration>
-      				<lifecycleMappingMetadata>
-      					<pluginExecutions>
-      						<pluginExecution>
-      							<pluginExecutionFilter>
-      								<groupId>
-      									org.codehaus.mojo
-      								</groupId>
-      								<artifactId>
-      									license-maven-plugin
-      								</artifactId>
-      								<versionRange>
-      									[1.8,)
-      								</versionRange>
-      								<goals>
-      									<goal>
-      										update-file-header
-      									</goal>
-      								</goals>
-      							</pluginExecutionFilter>
-      							<action>
-      								<ignore />
-      							</action>
-      						</pluginExecution>
-      					</pluginExecutions>
-      				</lifecycleMappingMetadata>
-      			</configuration>
-      		</plugin>
-      	</plugins>
+         <plugins>
+            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+            <plugin>
+               <groupId>org.eclipse.m2e</groupId>
+               <artifactId>lifecycle-mapping</artifactId>
+               <version>1.0.0</version>
+               <configuration>
+                  <lifecycleMappingMetadata>
+                     <pluginExecutions>
+                        <pluginExecution>
+                           <pluginExecutionFilter>
+                              <groupId>
+                                 org.codehaus.mojo
+                              </groupId>
+                              <artifactId>
+                                 license-maven-plugin
+                              </artifactId>
+                              <versionRange>
+                                 [1.8,)
+                              </versionRange>
+                              <goals>
+                                 <goal>
+                                    update-file-header
+                                 </goal>
+                              </goals>
+                           </pluginExecutionFilter>
+                           <action>
+                              <ignore />
+                           </action>
+                        </pluginExecution>
+                     </pluginExecutions>
+                  </lifecycleMappingMetadata>
+               </configuration>
+            </plugin>
+         </plugins>
       </pluginManagement>
    </build>
 
