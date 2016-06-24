@@ -118,18 +118,8 @@
                   </goals>
                   <configuration>
                      <attachClasses>true</attachClasses>
+                     <attachConfig>true</attachConfig>
                      <includeDependencies>true</includeDependencies>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>install-rm-amp</id>
-                  <goals>
-                     <goal>install</goal>
-                  </goals>
-                  <phase>package</phase>
-                  <configuration>
-                     <backup>true</backup>
-                     <ampLocation>${project.build.directory}/${alfresco.rm.artifactId}-${alfresco.rm.version}.amp</ampLocation>
                   </configuration>
                </execution>
                <execution>
