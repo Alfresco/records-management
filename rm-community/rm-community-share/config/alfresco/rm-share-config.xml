@@ -889,16 +889,16 @@
             <action index="100" id="rm-record-folder-view-details" />
             <action index="101" id="rm-file-destruction-report" />
             <action index="110" id="rm-manage-permissions" />
+            <action index="115" id="rm-move-recordfolder-to" />
             <action index="120" id="rm-delete" label="actions.delete" />
             <action index="130" id="rm-view-audit-log" />
-            <action index="240" id="rm-move-recordfolder-to" />
          </actionGroup>
          <actionGroup id="rm-metadata-stub-folder-details">
             <action index="50" id="rm-file-destruction-report" />
             <action index="110" id="rm-manage-permissions" />
+            <action index="115" id="rm-move-recordfolder-to" />
             <action index="120" id="rm-delete" label="actions.delete" />
             <action index="130" id="rm-view-audit-log" />
-            <action index="240" id="rm-move-recordfolder-to" />
          </actionGroup>
 
          <actionGroup id="rm-metadata-stub-browse">
