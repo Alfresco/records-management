@@ -323,18 +323,25 @@
                return file.node.rmNode.uiType;
             };
 
+            // first time around fill with permissions from first node
+            userAccess = files[0].node.permissions.user;
             // Check each file for user permissions
             for (i = 0, ii = files.length; i < ii; i++)
             {
                file = files[i];
 
                // Required user access level - logical AND of each file's permissions
+               // every time after that remove permission if it isn't present on the current node.
                fileAccess = file.node.permissions.user;
-               for (index in fileAccess)
+               for (index in userAccess)
                {
-                  if (fileAccess.hasOwnProperty(index))
+                  if (!fileAccess.hasOwnProperty(index))
                   {
-                     userAccess[index] = (userAccess[index] === undefined ? fileAccess[index] : userAccess[index] && fileAccess[index]);
+                     userAccess[index] = undefined;
+                  } 
+                  else 
+                  {
+                	 userAccess[index] = userAccess[index] && fileAccess[index];
                   }
                }
 
