@@ -3,7 +3,7 @@
    <modelVersion>4.0.0</modelVersion>
    <artifactId>alfresco-rm-community-share</artifactId>
    <name>Alfresco Records Management Community Share</name>
-   <description>Alfresco Record Management Core Share Extension</description>
+   <description>Alfresco Record Management Community Share Extension</description>
    <packaging>amp</packaging>
 
    <parent>
