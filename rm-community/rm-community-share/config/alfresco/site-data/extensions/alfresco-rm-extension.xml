@@ -2,6 +2,29 @@
     <modules>
 
         <module>
+            <id>Alfresco :: Records Management Global Header Customizations</id>
+            <auto-deploy-index>10</auto-deploy-index>
+            <auto-deploy>true</auto-deploy>
+
+            <!-- These customizations should be applied to the header on
+                 all pages (both Aikau and non-Aikau) through out Share. -->
+            <customizations>
+                <customization>
+                    <targetPackageRoot>org.alfresco</targetPackageRoot>
+                    <sourcePackageRoot>org.alfresco.share.pages.rm-customizations</sourcePackageRoot>
+                </customization>
+
+                <customization>
+                    <targetPackageRoot>org.alfresco.share.pages</targetPackageRoot>
+                    <sourcePackageRoot>org.alfresco.share.pages.rm-customizations.share.header</sourcePackageRoot>
+                    <alwaysApply>
+                      <webscript>share-header</webscript>
+                    </alwaysApply>
+                  </customization>
+            </customizations>
+        </module>
+
+        <module>
             <id>Alfresco :: Records Management Global (1)</id>
             <auto-deploy-index>10</auto-deploy-index>
             <auto-deploy>true</auto-deploy>
@@ -21,6 +44,14 @@
                     <targetPackageRoot>org.alfresco</targetPackageRoot>
                     <sourcePackageRoot>org.alfresco.rm.customizations</sourcePackageRoot>
                 </customization>
+
+                <customization>
+                    <targetPackageRoot>org.alfresco.share.pages</targetPackageRoot>
+                    <sourcePackageRoot>org.alfresco.rm.customizations.share.header</sourcePackageRoot>
+                    <alwaysApply>
+                      <webscript>share-header</webscript>
+                    </alwaysApply>
+                  </customization>
             </customizations>
         </module>
 
