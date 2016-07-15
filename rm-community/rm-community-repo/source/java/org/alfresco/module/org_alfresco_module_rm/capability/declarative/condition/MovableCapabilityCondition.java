@@ -24,21 +24,29 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+package org.alfresco.module.org_alfresco_module_rm.capability.declarative.condition;
 
-package org.alfresco.module.org_alfresco_module_rm.test.util;
-
-import org.alfresco.service.namespace.QName;
+import org.alfresco.module.org_alfresco_module_rm.capability.declarative.AbstractCapabilityCondition;
+import org.alfresco.service.cmr.repository.NodeRef;
 
 /**
- * @author Roy Wetherall
- * @since 2.3
+ * Movable capability condition.
+ *
+ * @author Roxana Dina
+ * @since 2.4.1
+ *
  */
-public interface TestModel
+public class MovableCapabilityCondition extends AbstractCapabilityCondition
 {
-    public static final String TEST_URI = "http://www.alfresco.org/model/rmtest/1.0";
-    public static final String TEST_PREFIX = "rmt";
-    
-    public static final QName ASPECT_RECORD_METADATA = QName.createQName(TEST_URI, "recordMetaData");
-    public static final QName PROPERTY_RECORD_METADATA = QName.createQName(TEST_URI, "recordMetaDataProperty");
-    public static final QName NOT_RM_FOLDER_TYPE = QName.createQName(TEST_URI, "notRmFolderType");
+
+    /**
+     * A record folder should not be moved when it is cut off, but it should be possible to move it when it is destroyed.
+     */
+    @Override
+    public boolean evaluateImpl(NodeRef nodeRef)
+    {
+        if (nodeService.hasAspect(nodeRef, ASPECT_GHOSTED) && dispositionService.isDisposableItemCutoff(nodeRef))
+            return true;
+        return !dispositionService.isDisposableItemCutoff(nodeRef);
+    }
 }
