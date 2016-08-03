@@ -215,7 +215,7 @@ define(["dojo/_base/declare",
 
       /**
        * Extended this method in order to hide the validation errors for the select record button.
-       * In this case we don't need the error errors displayed, we only need the create button disabled if we didn't selected the target record.
+       * In this case we don't need the errors displayed, we only need the create button disabled if we didn't selected the target record.
        */
       validate: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__validate() {
          this.inherited(arguments);
