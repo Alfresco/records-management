@@ -58,9 +58,9 @@
    Alfresco.rm.component.DocumentList = function(htmlId)
    {
       Alfresco.rm.component.DocumentList.superclass.constructor.call(this, htmlId);
-      
+
       this.dataSourceUrl = $combine(Alfresco.constants.URL_SERVICECONTEXT, "rm/components/documentlibrary/data/doclist/");
-      
+
       return this;
    };
 
@@ -520,6 +520,12 @@
          {
             var hash = window.location.hash;
             hash = hash.replace(/(filter=)[^\&]+/, '$1' + filterId);
+            window.location.hash = hash;
+         }
+         if (currentFilter === "path" && args[1].filterData === "/Unfiled Records")
+         {
+            var hash = window.location.hash;
+            hash = hash.replace(/(filter=)[^\&]+/, '$1' + "unfiledRecords") + "&page=" + this.currentPage;
             window.location.hash = hash;
          }
       }
