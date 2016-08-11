@@ -40,6 +40,8 @@ function disableRecordDetailsComponent(value)
    if (documentDetails != null)
    {
       var item = documentDetails.item;
+
+      // FIXME: RM-3805
       if (model.site != (item.location.site != null ? item.location.site.name : null) && item.node.isRmNode)
       {
          model[value] = null;
