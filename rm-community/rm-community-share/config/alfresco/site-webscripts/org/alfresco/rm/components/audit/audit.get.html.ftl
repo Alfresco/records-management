@@ -94,7 +94,7 @@
                   <#else>
                      <td>${msg('label.no-previous')?html}</td>
                   </#if>
-                     <td>${v.new?html}</td>
+                     <td>${(v.new)!""?html}</td>
                   </tr>
                   </#list>
                </tbody>
