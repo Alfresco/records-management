@@ -40,9 +40,7 @@ function disableRecordDetailsComponent(value)
    if (documentDetails != null)
    {
       var item = documentDetails.item;
-
-      // disable component if the node is an RM controlled node:
-      if (item.node && item.node.isRmNode)
+      if (model.site != (item.location.site != null ? item.location.site.name : null) && item.node.isRmNode)
       {
          model[value] = null;
          if (value == "allowNewVersionUpload")
