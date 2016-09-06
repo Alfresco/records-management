@@ -31,6 +31,8 @@
  * FIXME: Performance issue!?! We should not call AlfrescoUtil.getNodeDetails every time.
  * This can be done in the core and the value can be saved to the model. Which will save
  * the import of a resource and another method call.
+ *
+ * See RM-3926
  */
 
 function disableRecordDetailsComponent(value)
