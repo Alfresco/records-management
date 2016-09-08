@@ -87,9 +87,6 @@ if (siteNavigationWidgets.length > 0)
 // Add "Customize Dashboard" Link
 if (isRmPageTitle)
 {
-   // FIXME: Id changes in share-header breaks RM backwards Compatibility to 4.2.d
-   // Change this implementation after releasing 4.2.e
-   // See RM-3940
    var titleBarModel = getTitleBarModel(),
       customizeSiteDashboard = getCustomizeSiteDashboard(titleBarModel);
    if (customizeSiteDashboard)
