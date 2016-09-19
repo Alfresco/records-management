@@ -990,15 +990,13 @@
             var successFileCount = 0;
             var successFolderCount = 0;
             
-
-            
             for (i = 0, ii = data.json.totalResults; i < ii; i++)
             {
                result = data.json.results[i];
                
                if (result.success)
                {
-                  if (result.type == "folder")
+                  if (result.type === "folder")
                   {
                      successFolderCount++;
                   }
@@ -1007,7 +1005,7 @@
                      successFileCount++;
                   }
                   
-                  YAHOO.Bubbling.fire(result.type == "folder" ? "folderDeleted" : "fileDeleted",
+                  YAHOO.Bubbling.fire(result.type === "folder" ? "folderDeleted" : "fileDeleted",
                   {
                      multiple: true,
                      nodeRef: result.nodeRef
@@ -1021,6 +1019,7 @@
                {
             	   text: this.msg("message.multiple-delete.failure", data.json.successCount, data.json.failureCount)        	   
                });
+               // not automatically fired
                YAHOO.Bubbling.fire("filesDeleted");
                return;
             }
@@ -1048,7 +1047,7 @@
                            parentNodeRef : this.doclistMetadata.parent.nodeRef
                         };
                         
-                        if (data.json.results[i].type == "folder")
+                        if (data.json.results[i].type === "folder")
                         {
                            this.modules.actions.postActivity(this.options.siteId, "folder-deleted", "documentlibrary", activityData);
                         }
