@@ -1,4 +1,4 @@
-﻿<#if !hasAccess>
+<#if !hasAccess>
    <#include "./rm-console-access.ftl">
 <#else>
 <#if (action='new' || action='edit')>

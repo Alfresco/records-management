@@ -1,4 +1,4 @@
-﻿<#if !hasAccess>
+<#if !hasAccess>
    <#include "./rm-console-access.ftl">
 <#else>
    <script type="text/javascript">//<![CDATA[
