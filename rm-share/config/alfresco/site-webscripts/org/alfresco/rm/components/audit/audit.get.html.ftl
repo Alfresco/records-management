@@ -63,12 +63,16 @@
                   <#list x.changedValues as v>
                   <tr>
                      <td>${v.name?html}</td>
-                  <#if (v.previous == "")>
-                     <td>${msg('label.no-previous')?html}</td>
-                  <#else>
+                  <#if (v.previous?? && v.previous != "")>
                      <td>${v.previous?html}</td>
-                  </#if>
+                  <#else>
+                     <td>${msg('label.no-previous')?html}</td>
+                  </#if>                  
+                  <#if (v.new?? && v.new != "")>
                      <td>${v.new?html}</td>
+                  <#else>
+                     <td></td>
+                  </#if>
                   </tr>
                   </#list>
                </tbody>
