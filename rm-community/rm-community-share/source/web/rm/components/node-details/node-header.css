@@ -1,0 +1,5 @@
+/* Hide version details RM-2887 */
+.node-header .document-version
+{
+   display:none;
+}
