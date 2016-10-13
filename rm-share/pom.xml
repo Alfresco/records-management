@@ -19,29 +19,13 @@
       <resources>
          <resource>
             <directory>config</directory>
+            <filtering>true</filtering>
          </resource>
          <resource>
             <directory>source/web</directory>
          </resource>
       </resources>
       <plugins>
-         <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-               <execution>
-                  <id>add-test-source</id>
-                  <goals>
-                     <goal>add-test-source</goal>
-                  </goals>
-                  <configuration>
-                     <sources>
-                        <source>unit-test/java</source>
-                     </sources>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
       </plugins>
    </build>
    <profiles>
