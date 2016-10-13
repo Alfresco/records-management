@@ -4,8 +4,8 @@
    <script type="text/javascript">//<![CDATA[
       new Alfresco.rm.component.DocumentReferences("${el}").setOptions(
       {
-         siteId: "${site?js_string}",
-         containerId: "${container?js_string}",
+         siteId: "${(site!"")?js_string}",
+         containerId: "${(container!"")?js_string}",
          nodeRef : "${nodeRef?js_string}"
       }).setMessages(
          ${messages}
