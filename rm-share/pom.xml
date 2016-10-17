@@ -20,6 +20,12 @@
          <resource>
             <directory>config</directory>
             <filtering>true</filtering>
+            <includes>
+                <include>**/module.properties</include>
+             </includes>
+         </resource>
+         <resource>
+            <directory>config</directory>
          </resource>
          <resource>
             <directory>source/web</directory>
