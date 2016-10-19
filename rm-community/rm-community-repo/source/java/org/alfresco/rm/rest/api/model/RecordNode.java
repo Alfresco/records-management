@@ -24,31 +24,34 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-package org.alfresco.rest.api.model;
+package org.alfresco.rm.rest.api.model;
 
 import java.io.Serializable;
 import java.util.Map;
 
+import org.alfresco.rest.api.model.Node;
+import org.alfresco.rest.api.model.UserInfo;
 import org.alfresco.service.ServiceRegistry;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.namespace.QName;
 
 /**
- * Concrete class carrying specific information for a record folder
+ * Concrete class carrying specific information for a record
  * 
  * @author Ana Bozianu
  * @since 2.6
  */
-public class RecordFolderNode extends FileplanComponentNode
+public class RecordNode extends FileplanComponentNode
 {
-    private Boolean isClosed;
 
-    public RecordFolderNode(NodeRef nodeRef, NodeRef parentNodeRef, Map<QName, Serializable> nodeProps, Map<String, UserInfo> mapUserInfo, ServiceRegistry sr)
+    private Boolean isCompleted;
+
+    public RecordNode(NodeRef nodeRef, NodeRef parentNodeRef, Map<QName, Serializable> nodeProps, Map<String, UserInfo> mapUserInfo, ServiceRegistry sr)
     {
         super(nodeRef, parentNodeRef, nodeProps, mapUserInfo, sr);
     }
 
-    public RecordFolderNode(Node node)
+    public RecordNode(Node node)
     {
         super(node);
     }
@@ -56,18 +59,18 @@ public class RecordFolderNode extends FileplanComponentNode
     @Override
     protected void defineType()
     {
-        setIsRecordFolder(true);
+        setIsFile(true);
         setIsCategory(false);
-        setIsFile(false);
+        setIsRecordFolder(false);
     }
 
-    public Boolean getIsClosed()
+    public Boolean getIsCompleted()
     {
-        return isClosed;
+        return isCompleted;
     }
 
-    public void setIsClosed(Boolean isClosed)
+    public void setIsCompleted(Boolean isCompleted)
     {
-        this.isClosed = isClosed;
+        this.isCompleted = isCompleted;
     }
 }

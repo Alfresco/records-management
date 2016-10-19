@@ -26,12 +26,12 @@
  */
 
 /**
- * Package info that defines the Information Governance sites REST API
- *
- * @author Silviu Dinuta
+ * Package info that defines the Information Governance REST API
+ * 
+ * @author Ana Bozianu
  * @since 2.6
  */
 @WebApi(name="ig", scope=Api.SCOPE.PUBLIC, version=1)
-package org.alfresco.rest.api.sites;
+package org.alfresco.rm.rest.api.nodes;
 import org.alfresco.rest.framework.Api;
 import org.alfresco.rest.framework.WebApi;

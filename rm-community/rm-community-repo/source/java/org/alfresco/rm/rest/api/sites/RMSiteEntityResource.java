@@ -25,52 +25,41 @@
  * #L%
  */
 
-package org.alfresco.rest.api;
+package org.alfresco.rm.rest.api.sites;
 
-import org.alfresco.rest.api.Nodes;
-import org.alfresco.rest.api.model.Node;
-import org.alfresco.rest.framework.WebApiDescription;
-import org.alfresco.rest.framework.WebApiParam;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.alfresco.rest.api.Sites;
+import org.alfresco.rest.api.model.Site;
 import org.alfresco.rest.framework.resource.EntityResource;
 import org.alfresco.rest.framework.resource.actions.interfaces.EntityResourceAction;
 import org.alfresco.rest.framework.resource.parameters.Parameters;
 
 /**
- * Fileplan component children
- * 
- * @author Ana Bozianu
+ *
+ * @author Silviu Dinuta
  * @since 2.6
+ *
  */
-@EntityResource(name="fileplan-components", title = "Fileplan Components")
-public class FileplanComponentsEntityResource implements 
-        EntityResourceAction.ReadById<Node>,
-        EntityResourceAction.Delete,
-        EntityResourceAction.Update<Node>
+@EntityResource(name = "sites", title = "IG Sites")
+public class RMSiteEntityResource implements EntityResourceAction.Delete, EntityResourceAction.Create<Site>
 {
-    private Nodes nodes;
+    private Sites sites;
 
-    public void setNodes(Nodes nodes)
-    {
-        this.nodes = nodes;
-    }
-
-    @WebApiDescription(title = "Get Node Information", description = "Get information for the fileplan component with id 'nodeId'")
-    @WebApiParam(name = "nodeId", title = "The node id")
-    public Node readById(String nodeId, Parameters parameters)
-    {
-        return nodes.getFolderOrDocument(nodeId, parameters);
+    public void setSites(Sites sites) {
+        this.sites = sites;
     }
 
     @Override
-    public Node update(String nodeId, Node nodeInfo, Parameters parameters)
-    {
-        return nodes.updateNode(nodeId, nodeInfo, parameters);
+    public List<Site> create(List<Site> entity, Parameters parameters) {
+        List<Site> result = new ArrayList<>(1);
+        result.add(sites.createSite(entity.get(0), parameters));
+        return result;
     }
 
     @Override
-    public void delete(String nodeId, Parameters parameters)
-    {
-        nodes.deleteNode(nodeId, parameters);
+    public void delete(String id, Parameters parameters) {
+        sites.deleteSite(id, parameters);
     }
-
 }

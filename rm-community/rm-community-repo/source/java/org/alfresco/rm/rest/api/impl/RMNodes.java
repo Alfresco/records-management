@@ -24,51 +24,20 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-package org.alfresco.rest.api.model;
+package org.alfresco.rm.rest.api.impl;
 
-import java.io.Serializable;
-import java.util.Map;
-
-import org.alfresco.service.ServiceRegistry;
-import org.alfresco.service.cmr.repository.NodeRef;
-import org.alfresco.service.namespace.QName;
+import org.alfresco.rest.api.Nodes;
 
 /**
- * Concrete class carrying specific information for a record
+ * RM Nodes API
  * 
  * @author Ana Bozianu
  * @since 2.6
+ *
  */
-public class RecordNode extends FileplanComponentNode
+public interface RMNodes extends Nodes
 {
-
-    private Boolean isCompleted;
-
-    public RecordNode(NodeRef nodeRef, NodeRef parentNodeRef, Map<QName, Serializable> nodeProps, Map<String, UserInfo> mapUserInfo, ServiceRegistry sr)
-    {
-        super(nodeRef, parentNodeRef, nodeProps, mapUserInfo, sr);
-    }
-
-    public RecordNode(Node node)
-    {
-        super(node);
-    }
-
-    @Override
-    protected void defineType()
-    {
-        setIsFile(true);
-        setIsCategory(false);
-        setIsRecordFolder(false);
-    }
-
-    public Boolean getIsCompleted()
-    {
-        return isCompleted;
-    }
-
-    public void setIsCompleted(Boolean isCompleted)
-    {
-        this.isCompleted = isCompleted;
-    }
+    String PARAM_INCLUDE_HAS_RETENTION_SCHEDULE = "hasRetentionSchedule";
+    String PARAM_INCLUDE_IS_CLOSED = "isClosed";
+    String PARAM_INCLUDE_IS_COMPLETED = "isCompleted";
 }

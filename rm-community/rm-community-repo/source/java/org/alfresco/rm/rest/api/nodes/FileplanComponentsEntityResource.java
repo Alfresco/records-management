@@ -25,56 +25,52 @@
  * #L%
  */
 
-package org.alfresco.rest.api.sites;
+package org.alfresco.rm.rest.api.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.alfresco.rest.api.Sites;
-import org.alfresco.rest.api.model.Site;
-import org.alfresco.rest.framework.core.exceptions.EntityNotFoundException;
+import org.alfresco.rest.api.Nodes;
+import org.alfresco.rest.api.model.Node;
+import org.alfresco.rest.framework.WebApiDescription;
+import org.alfresco.rest.framework.WebApiParam;
 import org.alfresco.rest.framework.resource.EntityResource;
 import org.alfresco.rest.framework.resource.actions.interfaces.EntityResourceAction;
-import org.alfresco.rest.framework.resource.parameters.CollectionWithPagingInfo;
 import org.alfresco.rest.framework.resource.parameters.Parameters;
 
 /**
- *
- * @author Silviu Dinuta
+ * Fileplan component children
+ * 
+ * @author Ana Bozianu
  * @since 2.6
- *
  */
-@EntityResource(name = "ig-sites", title = "IG Sites")
-public class RMSiteEntityResource implements EntityResourceAction.Read<Site>, EntityResourceAction.ReadById<Site>,
-        EntityResourceAction.Delete, EntityResourceAction.Create<Site> {
+@EntityResource(name="fileplan-components", title = "Fileplan Components")
+public class FileplanComponentsEntityResource implements 
+        EntityResourceAction.ReadById<Node>,
+        EntityResourceAction.Delete,
+        EntityResourceAction.Update<Node>
+{
+    private Nodes nodes;
 
-    private Sites sites;
+    public void setNodes(Nodes nodes)
+    {
+        this.nodes = nodes;
+    }
 
-    public void setSites(Sites sites) {
-        this.sites = sites;
+    @WebApiDescription(title = "Get Node Information", description = "Get information for the fileplan component with id 'nodeId'")
+    @WebApiParam(name = "nodeId", title = "The node id")
+    public Node readById(String nodeId, Parameters parameters)
+    {
+        return nodes.getFolderOrDocument(nodeId, parameters);
     }
 
     @Override
-    public List<Site> create(List<Site> entity, Parameters parameters) {
-        List<Site> result = new ArrayList<>(1);
-        result.add(sites.createSite(entity.get(0), parameters));
-        return result;
+    public Node update(String nodeId, Node nodeInfo, Parameters parameters)
+    {
+        return nodes.updateNode(nodeId, nodeInfo, parameters);
     }
 
     @Override
-    public void delete(String id, Parameters parameters) {
-        sites.deleteSite(id, parameters);
-
-    }
-
-    @Override
-    public Site readById(String id, Parameters parameters) throws EntityNotFoundException {
-        return sites.getSite(id);
-    }
-
-    @Override
-    public CollectionWithPagingInfo<Site> readAll(Parameters params) {
-        return sites.getSites(params);
+    public void delete(String nodeId, Parameters parameters)
+    {
+        nodes.deleteNode(nodeId, parameters);
     }
 
 }
