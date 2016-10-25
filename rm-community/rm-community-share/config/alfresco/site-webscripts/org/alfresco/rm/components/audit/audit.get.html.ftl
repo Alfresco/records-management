@@ -93,7 +93,7 @@
                      <td>${v.previous?html}</td>
                   <#else>
                      <td>${msg('label.no-previous')?html}</td>
-                  </#if>                  
+                  </#if>
                   <#if (v.new?? && v.new != "")>
                      <td>${v.new?html}</td>
                   <#else>

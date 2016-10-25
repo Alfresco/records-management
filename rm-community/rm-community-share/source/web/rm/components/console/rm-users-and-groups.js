@@ -126,7 +126,7 @@
          Alfresco.util.Ajax.request(
          {
             method: Alfresco.util.Ajax.GET,
-            // FIXME: Use "/api/rma/admin/{store_type}/{store_id}/{id}/rmroles?auths={auths?}"
+            // FIXME: Use "/api/rma/admin/{store_type}/{store_id}/{id}/rmroles?auths={auths?}" See RM-3968
             url: Alfresco.constants.PROXY_URI + "api/rma/admin/rmroles?auths=true",
             successCallback:
             {
@@ -398,7 +398,7 @@
       {
          Alfresco.util.Ajax.jsonPost(
          {
-            // FIXME: Use "/api/rm/{store_type}/{store_id}/{id}/roles/{roleId}/authorities/{authorityName}"
+            // FIXME: Use "/api/rm/{store_type}/{store_id}/{id}/roles/{roleId}/authorities/{authorityName}" See RM-3968
             url: Alfresco.constants.PROXY_URI + "api/rm/roles/" + encodeURIComponent(roleId) + "/authorities/" + encodeURIComponent(objectId),
             successCallback:
             {
@@ -594,7 +594,7 @@
                   Alfresco.util.Ajax.request(
                   {
                      method: Alfresco.util.Ajax.DELETE,
-                     // FIXME: Use "/api/rm/{store_type}/{store_id}/{id}/roles/{roleId}/authorities/{authorityName}"
+                     // FIXME: Use "/api/rm/{store_type}/{store_id}/{id}/roles/{roleId}/authorities/{authorityName}" See RM-3968
                      url: Alfresco.constants.PROXY_URI + "api/rm/roles/" + encodeURIComponent(roleId) + "/authorities/" + encodeURIComponent(objectId),
                      successCallback:
                      {
