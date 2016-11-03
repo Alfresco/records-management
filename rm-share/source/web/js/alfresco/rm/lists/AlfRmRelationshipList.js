@@ -86,7 +86,9 @@ define(["dojo/_base/declare",
       },
 
       /**
-       * Extends the superclass implementation for replacing pacheholder vars when this function is called.
+       * Extends the superclass implementation for replacing placeholder vars when this function is called.
+       *
+       * FIXME: Remove this override once AKU-993 is resolved
        */
       renderView: function alfresco_rm_lists_AlfRmRelationshipList__renderView() {
          // Re-render the current view with the new data...
