@@ -12,7 +12,7 @@
    <name>Alfresco RM Share</name>
    <properties>
       <webapp.id>share</webapp.id>
-      <alfresco.aikau.version>1.0.39</alfresco.aikau.version>
+      <alfresco.aikau.version>1.0.92</alfresco.aikau.version>
    </properties>
    <build>
       <sourceDirectory>source/java</sourceDirectory>
