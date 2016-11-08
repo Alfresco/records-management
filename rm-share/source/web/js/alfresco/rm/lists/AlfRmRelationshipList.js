@@ -85,6 +85,40 @@ define(["dojo/_base/declare",
          this.processWidgets(clonedWidgets);
       },
 
+      /**
+       * Extends the superclass implementation for replacing placeholder vars when this function is called.
+       *
+       * FIXME: Remove this override once AKU-993 is resolved
+       */
+      renderView: function alfresco_rm_lists_AlfRmRelationshipList__renderView() {
+         // Re-render the current view with the new data...
+         var view = this.viewMap[this._currentlySelectedView];
+         if (view && !this.useInfiniteScroll)
+         {
+            if (this.useInfiniteScroll)
+            {
+               view.augmentData(this.currentData);
+               this.currentData = view.getData();
+               view.renderView(this.useInfiniteScroll);
+               this.showView(view);
+            }
+            else
+            {
+               // Overridden superclass in order to fix RM-3198 issue.
+               // Even if the placeholder vars where replaced in
+               // postCreate function, when renderView was called
+               // the placeholders where added back from original
+               // widget configuration.
+               var index = this.viewDefinitionMap[this._currentlySelectedView];
+               var clonedWidgets = [JSON.parse(JSON.stringify(this.widgets[index]))];
+               this.processObject(["processInstanceTokens"], clonedWidgets);
+               this.processWidgets(clonedWidgets, null, "NEW_VIEW_INSTANCE");
+            }
+         }
+
+         // Hide any messages
+         this.hideLoadingMessage();
+      },
 
       widgets: [{
          name: "alfresco/lists/views/AlfListView",
