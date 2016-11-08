@@ -33,3 +33,10 @@ model.jsonModel.services.unshift({
       showProgressIndicator: true
    }
 });
+
+// FIXME: Remove this once the new site creation dialog has been extended in RM
+var siteService = widgetUtils.findObject(model.jsonModel, "id", "SITE_SERVICE");
+if (siteService != null)
+{
+   siteService.config.legacyMode = true;
+}
