@@ -123,10 +123,3 @@ function getCustomizeSiteDashboard(titleBarModel)
    }
    return result;
 }
-
-
-
-var siteService=widgetUtils.findObject(model.jsonModel, "name", "alfresco/services/SiteService");
-
-//enable Aikau Dialog
-this.siteService.config.legacyMode=true;
