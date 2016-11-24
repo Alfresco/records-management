@@ -1,4 +1,4 @@
-<import resource="classpath:/alfresco/site-webscripts/org/alfresco/share/imports/share-header.lib.js">
+<import resource= "classpath:/alfresco/site-webscripts/org/alfresco/share/imports/share-header.lib.js" >
 
 /*
  * #%L
@@ -53,7 +53,7 @@ if (siteNavigationWidgets.length > 0)
    else
    {
       lastNavigationWidget = siteNavigationWidgets.pop();
-      if(lastNavigationWidget.config.widgets == undefined)
+      if (lastNavigationWidget.config.widgets == undefined)
       {
          siteNavigationWidgets.push(lastNavigationWidget);
          siteNavigationWidgets.push(managementConsoleWidget);
@@ -107,8 +107,7 @@ if (isRmPageTitle)
    }
 }
 
-function getCustomizeSiteDashboard(titleBarModel)
-{
+function getCustomizeSiteDashboard(titleBarModel) {
    var result,
       i,
       length = titleBarModel.length;
@@ -124,213 +123,66 @@ function getCustomizeSiteDashboard(titleBarModel)
    return result;
 }
 
-var siteService=widgetUtils.findObject(model.jsonModel, "name", "alfresco/services/SiteService");
-
+var siteService = widgetUtils.findObject(model.jsonModel, "name", "alfresco/services/SiteService");
 
 
 //enable Aikau Dialog
-this.siteService.config.legacyMode=false;
+this.siteService.config.legacyMode = false;
 
-var existingPresets= siteService.config.sitePresets;
-
-var rmSitePreset = { 
-      label: "description.recordsManagementSite", 
-      value: "rm-site-dashboard" 
-};
-
-var existingPresets = siteService.config.sitePresets;
-
-if (!existingPresets)
+// By default site presets is empty, if it's empty, then we need to add in the collab site before adding in the RM site
+// otherwise people will only be able to create an RM site.
+// TODO: Remove after AKU-1119?
+if (!siteService.config.sitePresets)
 {
    siteService.config.sitePresets = [
-      { label: "create-site.dialog.type.collaboration", value: "site-dashboard" },
-      { label: "description.recordsManagementSite", value: "rm-site-dashboard" }
-      ];
-}
-else
-{
-   sitePresets.config.sitePresets.push(rmSitePreset)
+      {
+         label: "create-site.dialog.type.collaboration",
+         value: "site-dashboard"
+      }
+   ];
 }
 
+var RMSitePresetId = "rm-site-dashboard";
 
+siteService.config.sitePresets.push({
+   label: "description.recordsManagementSite",
+   value: RMSitePresetId
+});
 
-siteService.config.widgetsForCreateSiteDialog=  [
-   {
-      id: "CREATE_SITE_FIELD_PRESET",
-      name: "alfresco/forms/controls/Select",
-      config: {
-         fieldId: "PRESET",
-         label: "create-site.dialog.type.label",
-         name: "sitePreset",
-         optionsConfig: {
-            fixed: "{sitePresets}"
-         }
-      }
-   },
-   {
-      id: "CREATE_SITE_FIELD_TITLE",
-      name: "alfresco/forms/controls/TextBox",
-      config: {
-         fieldId: "TITLE",
-         label: "create-site.dialog.name.label",
-         name: "title",
-         requirementConfig: {
-            initialValue: true
-         },
-         validationConfig: [
-            {
-               validation: "maxLength",
-               length: 256,
-               errorMessage: "create-site.dialog.name.maxLength"
-            },
-            {
-               scopeValidation: true,
-               warnOnly: true,
-               validation: "validationTopic",
-               validationTopic: "ALF_VALIDATE_SITE_IDENTIFIER",
-               validationValueProperty: "title",
-               negate: true,
-               validationResultProperty: "response.used",
-               errorMessage: "create-site-dialog.title.already.used"
-            }
-            ],
-            disablementConfig: {
-               rules: [
-                  {
-                     targetId: "PRESET",
-                     is: [
-                        "rm-site-dashboard"
-                        ]
-                  }
-                  ]
-            },
-            autoSetConfig: [  
-               {  
-                  rulePassValue: msg.get("description.recordsManagementSite"),  
-                  ruleFailValue: "",  
-                  rules: [  
-                     {  
-                        targetId: "PRESET",  
-                        is: ["rm-site-dashboard"]  
-                     }  
-                     ]  
-               }  
-               ]  
-      }
-   },
-   {
-      id: "CREATE_SITE_FIELD_SHORTNAME",
-      name: "alfresco/forms/controls/MaskingTextBox",
-      config: {
-         fieldId: "SHORTNAME",
-//       targetId: "TITLE",
-         replacements: [
-            {
-               regex: "[^a-z0-9-\\s]",
-               flags: "gi"
-            },
-            {
-               regex: "\\s+",
-               replacement: "-",
-               flags: "g"
-            }
-            ],
-            label: "create-site.dialog.urlname.label",
-            description: "create-site.dialog.urlname.description",
-            name: "shortName",
-            requirementConfig: {
-               initialValue: true
-            },
-            validationConfig: [
-               {
-                  validation: "maxLength",
-                  length: 72,
-                  errorMessage: "create-site.dialog.urlname.maxLength"
-               },
-               {
-                  validation: "regex",
-                  regex: "^[0-9a-zA-Z-]+$",
-                  errorMessage: "create-site.dialog.urlname.regex"
-               },
-               {
-                  scopeValidation: true,
-                  validation: "validationTopic",
-                  validationTopic: "ALF_VALIDATE_SITE_IDENTIFIER",
-                  validationValueProperty: "shortName",
-                  negate: true,
-                  validationResultProperty: "response.used",
-                  errorMessage: "create-site-dialog.name.already.used"
-               }
-               ],
-               disablementConfig: {
-                  rules: [
-                     {
-                        targetId: "PRESET",
-                        is: [
-                           "rm-site-dashboard"
-                           ]
-                     }
-                     ]
-               },  
-               autoSetConfig: [  
-                  {  
-                     rulePassValue: "rm",  
-                     ruleFailValue: "",  
-                     rules: [  
-                        {  
-                           targetId: "PRESET",  
-                           is: ["rm-site-dashboard"]  
-                        }  
-                        ]
-                  }  
-                  ]
-      }
-   },
-   {
-      id: "CREATE_SITE_FIELD_DESCRIPTION",
-      name: "alfresco/forms/controls/TextArea",
-      config: {
-         fieldId: "DESCRIPTION",
-         label: "create-site.dialog.description.label",
-         name: "description",
-         validationConfig: [
-            {
-               validation: "maxLength",
-               length: 512,
-               errorMessage: "create-site.dialog.description.maxLength"
-            }
-            ]
-      }
-   },
-   {
-      id: "CREATE_SITE_FIELD_VISIBILITY",
-      name: "alfresco/forms/controls/RadioButtons",
-      config: {
-         fieldId: "VISIBILITY",
-         label: "create-site.dialog.visibility.label",
-         name: "visibility",
-         optionsConfig: {
-            fixed: [
-               { 
-                  label: "create-site.dialog.visibility.public", 
-                  description: "create-site.dialog.visibility.public.description",
-                  value: "PUBLIC" 
-               },
-               { 
-                  label: "create-site.dialog.visibility.moderated", 
-                  description: "create-site.dialog.visibility.moderated.description",
-                  value: "MODERATED" 
-               },
-               { 
-                  label: "create-site.dialog.visibility.private",  
-                  description: "create-site.dialog.visibility.private.description",
-                  value: "PRIVATE" 
-               }
-               ]
-         }
-      }
-   },
-   {
+var isRMSitePreset = {
+      targetId: "PRESET",
+      is: [RMSitePresetId]
+   }
+   ;
+// Update site title to fixed value and disable editing if RM preset is selected.
+var siteTitle = widgetUtils.findObject(siteService.config.widgetsForCreateSiteDialog, "id", "CREATE_SITE_FIELD_TITLE");
+
+siteTitle.config.disablementConfig = siteTitle.config.disablementConfig || {};
+siteTitle.config.disablementConfig.rules = siteTitle.config.disablementConfig.rules || [];
+siteTitle.config.disablementConfig.rules.push(isRMSitePreset);
+
+siteTitle.config.autoSetConfig = siteTitle.config.autoSetConfig || [];
+siteTitle.config.autoSetConfig.push({
+   rulePassValue: msg.get("description.recordsManagementSite"),
+   ruleFailValue: "",
+   rules: [isRMSitePreset]
+});
+
+// Update site short name to fixed value and disable editing if RM Preset is selected.
+var siteShortname = widgetUtils.findObject(siteService.config.widgetsForCreateSiteDialog, "id", "CREATE_SITE_FIELD_SHORTNAME");
+
+siteShortname.config.disablementConfig = siteShortname.config.disablementConfig || {};
+siteShortname.config.disablementConfig.rules = siteShortname.config.disablementConfig.rules || [];
+siteShortname.config.disablementConfig.rules.push(isRMSitePreset);
+
+siteShortname.config.autoSetConfig = siteShortname.config.autoSetConfig || [];
+siteShortname.config.autoSetConfig.push({
+   rulePassValue: "rm",
+   ruleFailValue: "",
+   rules: [isRMSitePreset]
+});
+
+siteService.config.widgetsForCreateSiteDialog.push({
       id: "CREATE_SITE_FIELD_COMPLIANCE",
       name: "alfresco/forms/controls/Select",
       config: {
@@ -338,20 +190,20 @@ siteService.config.widgetsForCreateSiteDialog=  [
          label: "label.compliance",
          name: "siteCompliance",
          optionsConfig: {
-            fixed:  [
-               { label: "compliance.standard", value:"{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite" },
-               { label: "compliance.dod5015", value: "{http://www.alfresco.org/model/dod5015/1.0}site" }
-               ]
+            fixed: [
+               {
+                  label: "compliance.standard",
+                  value: "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite"
+               },
+               {
+                  label: "compliance.dod5015",
+                  value: "{http://www.alfresco.org/model/dod5015/1.0}site"
+               }
+            ]
          },
          visibilityConfig: {
-            rules: [
-               {
-                  targetId: "PRESET",
-                  is: ["rm-site-dashboard"]  
-               }
-               ]
+            rules: [isRMSitePreset]
          }
-      }      
+      }
    }
-];
-
+);
