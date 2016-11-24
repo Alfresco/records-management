@@ -42,11 +42,6 @@ define(["dojo/_base/declare",
 
       return declare([SiteService], {
          /**
-          * Register as the Alfresco SiteService to prevent that registering instead.
-          */
-         alfServiceName: "alfresco/services/SiteService",
-
-         /**
           * Override the SiteService init to add in additional code first.
           */
          initService: function rm_services_rmSiteService_initService() {

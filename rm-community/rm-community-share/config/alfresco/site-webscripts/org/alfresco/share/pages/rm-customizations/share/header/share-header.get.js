@@ -1,4 +1,5 @@
 //<import resource="classpath:/alfresco/site-webscripts/org/alfresco/share/imports/share-header.lib.js">
+//<import resource="classpath:alfresco/site-webscripts/org/alfresco/aikau/{aikauVersion}/libs/service-filtering.lib.js">
 /*
  * #%L
  * Alfresco Records Management Module
@@ -39,3 +40,6 @@ model.jsonModel.services.unshift({
       legacyMode: false
    }
 });
+
+// Remove SiteService from existing model
+model.jsonModel.services = alfRemoveService(model.jsonModel.services, "alfresco/services/SiteService");
