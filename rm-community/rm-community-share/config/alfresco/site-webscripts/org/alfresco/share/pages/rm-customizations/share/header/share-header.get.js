@@ -1,5 +1,4 @@
 //<import resource="classpath:/alfresco/site-webscripts/org/alfresco/share/imports/share-header.lib.js">
-//<import resource="classpath:alfresco/site-webscripts/org/alfresco/aikau/{aikauVersion}/libs/service-filtering.lib.js">
 /*
  * #%L
  * Alfresco Records Management Module
@@ -29,17 +28,73 @@
 
 // Insert a new NotificationService as the first entry in the services array (because this
 // is the first entry all others will be discarded)...
+var RMSitePresetId = "rm-site-dashboard",
+   isRMSitePreset = {
+      targetId: "PRESET",
+      is: [RMSitePresetId]
+   };
+
 model.jsonModel.services.unshift({
    name: "alfresco/services/NotificationService",
    config: {
       showProgressIndicator: true
    }
-}, { // Also add the RmSiteService which registers as SiteService to prevent that registering as well.
-   name: "rm/services/RmSiteService",
+}, {
+   name: "alfresco/services/SiteService",
    config: {
-      legacyMode: false
+      legacyMode: false,
+      additionalSitePresets: [{
+         label: "description.recordsManagementSite",
+         value: RMSitePresetId
+      }],
+      widgetsForCreateSiteDialogOverrides: [{
+         id: "CREATE_SITE_FIELD_TITLE",
+         config: {
+            disablementConfig: {
+               rules: [isRMSitePreset]
+            },
+            autoSetConfig: [{
+               rulePassValue: msg.get("description.recordsManagementSite"),
+               ruleFailValue: "",
+               rules: [isRMSitePreset]
+            }]
+         }
+      }, {
+         id: "CREATE_SITE_FIELD_SHORTNAME",
+         config: {
+            disablementConfig: {
+               rules: [isRMSitePreset]
+            },
+            autoSetConfig: [{
+               rulePassValue: "rm",
+               ruleFailValue: "",
+               rules: [isRMSitePreset]
+            }]
+         }
+      }, {
+         id: "CREATE_SITE_FIELD_COMPLIANCE",
+         targetPosition: "END",
+         name: "alfresco/forms/controls/Select",
+         config: {
+            fieldId: "COMPLIANCE",
+            label: "label.compliance",
+            name: "siteCompliance",
+            optionsConfig: {
+               fixed: [
+                  {
+                     label: "compliance.standard",
+                     value: "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite"
+                  },
+                  {
+                     label: "compliance.dod5015",
+                     value: "{http://www.alfresco.org/model/dod5015/1.0}site"
+                  }
+               ]
+            },
+            visibilityConfig: {
+               rules: [isRMSitePreset]
+            }
+         }
+      }]
    }
 });
-
-// Remove SiteService from existing model
-model.jsonModel.services = alfRemoveService(model.jsonModel.services, "alfresco/services/SiteService");
