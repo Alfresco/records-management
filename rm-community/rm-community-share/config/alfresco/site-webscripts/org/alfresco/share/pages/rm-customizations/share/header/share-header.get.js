@@ -1,3 +1,4 @@
+//<import resource="classpath:/alfresco/site-webscripts/org/alfresco/share/imports/share-header.lib.js">
 /*
  * #%L
  * Alfresco Records Management Module
@@ -31,5 +32,10 @@ model.jsonModel.services.unshift({
    name: "alfresco/services/NotificationService",
    config: {
       showProgressIndicator: true
+   }
+}, { // Also add the RmSiteService which registers as SiteService to prevent that registering as well.
+   name: "rm/services/RmSiteService",
+   config: {
+      legacyMode: false
    }
 });
