@@ -81,7 +81,7 @@ model.jsonModel.services.unshift({
          config: {
             fieldId: "COMPLIANCE",
             label: "label.compliance",
-            name: "siteCompliance",
+            name: "compliance",
             optionsConfig: {
                fixed: [
                   {
