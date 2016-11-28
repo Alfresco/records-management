@@ -32,7 +32,10 @@ var RMSitePresetId = "rm-site-dashboard",
    isRMSitePreset = {
       targetId: "PRESET",
       is: [RMSitePresetId]
-   };
+   },
+   stdRMType = "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite",
+   dod5015Type= "{http://www.alfresco.org/model/dod5015/1.0}site";
+
 
 model.jsonModel.services.unshift({
    name: "alfresco/services/NotificationService",
@@ -83,17 +86,41 @@ model.jsonModel.services.unshift({
                fixed: [
                   {
                      label: "compliance.standard",
-                     value: "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite"
+                     value: stdRMType
                   },
                   {
                      label: "compliance.dod5015",
-                     value: "{http://www.alfresco.org/model/dod5015/1.0}site"
+                     value: dod5015Type
                   }
                ]
             },
             visibilityConfig: {
                rules: [isRMSitePreset]
             }
+         }
+      }, {
+         id: "CREATE_SITE_FIELD_TYPE",
+         targetPosition: "END",
+         name: "alfresco/forms/controls/HiddenValue",
+         config: {
+            fieldId: "TYPE",
+            name: "type",
+            autoSetConfig: [{
+               rulePassValue: stdRMType,
+               rules: [{
+                  targetId: "COMPLIANCE",
+                  is: [stdRMType]
+               }]
+            },{
+               rulePassValue: dod5015Type,
+               rules: [{
+                  targetId: "COMPLIANCE",
+                  is: [dod5015Type]
+               }]
+            }, {
+               ruleFailValue: "{http://www.alfresco.org/model/site/1.0}site",
+               rules: [isRMSitePreset]
+            }]
          }
       }]
    }
