@@ -51,6 +51,7 @@ model.jsonModel.services.unshift({
          value: RMSitePresetId
       }],
       widgetsForCreateSiteDialogOverrides: [{
+         // Force site tile to match the rm site title
          id: "CREATE_SITE_FIELD_TITLE",
          config: {
             disablementConfig: {
@@ -63,6 +64,7 @@ model.jsonModel.services.unshift({
             }]
          }
       }, {
+         // Force site shortname to be "rm"
          id: "CREATE_SITE_FIELD_SHORTNAME",
          config: {
             disablementConfig: {
@@ -75,6 +77,19 @@ model.jsonModel.services.unshift({
             }]
          }
       }, {
+         // Force site visibility to be public
+         id: "CREATE_SITE_FIELD_VISIBILITY",
+         config: {
+            disablementConfig: {
+               rules: [isRMSitePreset]
+            },
+            autoSetConfig: [{
+               rulePassValue: "PUBLIC",
+               rules: [isRMSitePreset]
+            }]
+         }
+      }, {
+         // Add compliance dropdown option
          id: "CREATE_SITE_FIELD_COMPLIANCE",
          targetPosition: "END",
          name: "alfresco/forms/controls/Select",
@@ -99,6 +114,7 @@ model.jsonModel.services.unshift({
             }
          }
       }, {
+         // Add hidden type field
          id: "CREATE_SITE_FIELD_TYPE",
          targetPosition: "END",
          name: "alfresco/forms/controls/HiddenValue",
