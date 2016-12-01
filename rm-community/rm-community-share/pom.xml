@@ -18,7 +18,7 @@
       <alfresco.repo.url>http://localhost:8080/alfresco</alfresco.repo.url>
       <alfresco.share.artifactId>share</alfresco.share.artifactId>
       <alfresco.rm.artifactId>alfresco-rm-community-share</alfresco.rm.artifactId>
-      <alfresco.aikau.version>1.0.93</alfresco.aikau.version>
+      <alfresco.aikau.version>1.0.98</alfresco.aikau.version>
       <!-- This property does not exist in the parent and causes the build to fail -->
       <dependency.surf.version>6.3</dependency.surf.version>
    </properties>
