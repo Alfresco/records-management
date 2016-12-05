@@ -34,17 +34,8 @@ var RMSitePresetId = "rm-site-dashboard",
       is: [RMSitePresetId]
    },
    stdRMType = "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite",
-   dod5015Type= "{http://www.alfresco.org/model/dod5015/1.0}site";
-
-
-model.jsonModel.services.unshift({
-   name: "alfresco/services/NotificationService",
-   config: {
-      showProgressIndicator: true
-   }
-}, {
-   name: "alfresco/services/SiteService",
-   config: {
+   dod5015Type= "{http://www.alfresco.org/model/dod5015/1.0}site",
+   siteServiceConfig = {
       legacyMode: false,
       additionalSitePresets: [{
          label: "description.recordsManagementSite",
@@ -127,7 +118,7 @@ model.jsonModel.services.unshift({
                   targetId: "COMPLIANCE",
                   is: [stdRMType]
                }]
-            },{
+            }, {
                rulePassValue: dod5015Type,
                rules: [{
                   targetId: "COMPLIANCE",
@@ -139,5 +130,22 @@ model.jsonModel.services.unshift({
             }]
          }
       }]
+   };
+
+// We don't want to upgrade the create site dialog if the Share version is less than 5.2
+if (parseFloat(shareManifest.getSpecificationVersion()) < 5.2)
+{
+   siteServiceConfig = {
+      legacyMode: true
+   };
+}
+
+model.jsonModel.services.unshift({
+   name: "alfresco/services/NotificationService",
+   config: {
+      showProgressIndicator: true
    }
+}, {
+   name: "alfresco/services/SiteService",
+   config: siteServiceConfig
 });
