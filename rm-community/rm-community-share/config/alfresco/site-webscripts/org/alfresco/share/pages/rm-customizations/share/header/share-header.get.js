@@ -49,7 +49,7 @@ var RMSitePresetId = "rm-site-dashboard",
                rules: [isRMSitePreset]
             },
             autoSetConfig: [{
-               rulePassValue: msg.get("description.recordsManagementSite"),
+               rulePassValue: msg.get("title.recordsManagementSite"),
                ruleFailValue: "",
                rules: [isRMSitePreset]
             }]
@@ -76,6 +76,16 @@ var RMSitePresetId = "rm-site-dashboard",
             },
             autoSetConfig: [{
                rulePassValue: "PUBLIC",
+               rules: [isRMSitePreset]
+            }]
+         }
+      }, {
+         // Add default site description (which can be modified)
+         id: "CREATE_SITE_FIELD_DESCRIPTION",
+         config: {
+            autoSetConfig: [{
+               rulePassValue: msg.get("description.recordsManagementSite"),
+               ruleFailValue: "",
                rules: [isRMSitePreset]
             }]
          }
@@ -113,20 +123,26 @@ var RMSitePresetId = "rm-site-dashboard",
             fieldId: "TYPE",
             name: "type",
             autoSetConfig: [{
-               rulePassValue: stdRMType,
-               rules: [{
-                  targetId: "COMPLIANCE",
-                  is: [stdRMType]
-               }]
-            }, {
-               rulePassValue: dod5015Type,
-               rules: [{
-                  targetId: "COMPLIANCE",
-                  is: [dod5015Type]
-               }]
-            }, {
                ruleFailValue: "{http://www.alfresco.org/model/site/1.0}site",
                rules: [isRMSitePreset]
+            }, {
+               rulePassValue: stdRMType,
+               rules: [
+                  isRMSitePreset,
+                  {
+                     targetId: "COMPLIANCE",
+                     is: [stdRMType]
+                  }
+               ]
+            }, {
+               rulePassValue: dod5015Type,
+               rules: [
+                  isRMSitePreset,
+                  {
+                     targetId: "COMPLIANCE",
+                     is: [dod5015Type]
+                  }
+               ]
             }]
          }
       }]
