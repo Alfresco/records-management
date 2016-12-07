@@ -14,7 +14,7 @@
 
    <properties>
       <app.amp.client.war.artifactId>${alfresco.share.artifactId}</app.amp.client.war.artifactId>
-      <maven.tomcat.port>8081</maven.tomcat.port>
+      <maven.tomcat.port>8181</maven.tomcat.port>
       <alfresco.repo.url>http://localhost:8080/alfresco</alfresco.repo.url>
       <alfresco.share.artifactId>share</alfresco.share.artifactId>
       <alfresco.rm.artifactId>alfresco-rm-community-share</alfresco.rm.artifactId>
