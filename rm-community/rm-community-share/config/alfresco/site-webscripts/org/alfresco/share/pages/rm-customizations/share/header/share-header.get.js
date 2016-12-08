@@ -34,35 +34,28 @@ var RMSitePresetId = "rm-site-dashboard",
       is: [RMSitePresetId]
    },
    stdRMType = "{http://www.alfresco.org/model/recordsmanagement/1.0}rmsite",
-   dod5015Type= "{http://www.alfresco.org/model/dod5015/1.0}site";
-
-
-model.jsonModel.services.unshift({
-   name: "alfresco/services/NotificationService",
-   config: {
-      showProgressIndicator: true
-   }
-}, {
-   name: "alfresco/services/SiteService",
-   config: {
+   dod5015Type= "{http://www.alfresco.org/model/dod5015/1.0}site",
+   siteServiceConfig = {
       legacyMode: false,
       additionalSitePresets: [{
          label: "description.recordsManagementSite",
          value: RMSitePresetId
       }],
       widgetsForCreateSiteDialogOverrides: [{
+         // Force site tile to match the rm site title
          id: "CREATE_SITE_FIELD_TITLE",
          config: {
             disablementConfig: {
                rules: [isRMSitePreset]
             },
             autoSetConfig: [{
-               rulePassValue: msg.get("description.recordsManagementSite"),
+               rulePassValue: msg.get("title.recordsManagementSite"),
                ruleFailValue: "",
                rules: [isRMSitePreset]
             }]
          }
       }, {
+         // Force site shortname to be "rm"
          id: "CREATE_SITE_FIELD_SHORTNAME",
          config: {
             disablementConfig: {
@@ -75,6 +68,29 @@ model.jsonModel.services.unshift({
             }]
          }
       }, {
+         // Force site visibility to be public
+         id: "CREATE_SITE_FIELD_VISIBILITY",
+         config: {
+            disablementConfig: {
+               rules: [isRMSitePreset]
+            },
+            autoSetConfig: [{
+               rulePassValue: "PUBLIC",
+               rules: [isRMSitePreset]
+            }]
+         }
+      }, {
+         // Add default site description (which can be modified)
+         id: "CREATE_SITE_FIELD_DESCRIPTION",
+         config: {
+            autoSetConfig: [{
+               rulePassValue: msg.get("description.recordsManagementSite"),
+               ruleFailValue: "",
+               rules: [isRMSitePreset]
+            }]
+         }
+      }, {
+         // Add compliance dropdown option
          id: "CREATE_SITE_FIELD_COMPLIANCE",
          targetPosition: "END",
          name: "alfresco/forms/controls/Select",
@@ -99,6 +115,7 @@ model.jsonModel.services.unshift({
             }
          }
       }, {
+         // Add hidden type field
          id: "CREATE_SITE_FIELD_TYPE",
          targetPosition: "END",
          name: "alfresco/forms/controls/HiddenValue",
@@ -106,22 +123,45 @@ model.jsonModel.services.unshift({
             fieldId: "TYPE",
             name: "type",
             autoSetConfig: [{
-               rulePassValue: stdRMType,
-               rules: [{
-                  targetId: "COMPLIANCE",
-                  is: [stdRMType]
-               }]
-            },{
-               rulePassValue: dod5015Type,
-               rules: [{
-                  targetId: "COMPLIANCE",
-                  is: [dod5015Type]
-               }]
-            }, {
                ruleFailValue: "{http://www.alfresco.org/model/site/1.0}site",
                rules: [isRMSitePreset]
+            }, {
+               rulePassValue: stdRMType,
+               rules: [
+                  isRMSitePreset,
+                  {
+                     targetId: "COMPLIANCE",
+                     is: [stdRMType]
+                  }
+               ]
+            }, {
+               rulePassValue: dod5015Type,
+               rules: [
+                  isRMSitePreset,
+                  {
+                     targetId: "COMPLIANCE",
+                     is: [dod5015Type]
+                  }
+               ]
             }]
          }
       }]
+   };
+
+// We don't want to upgrade the create site dialog if the Share version is less than 5.2
+if (parseFloat(shareManifest.getSpecificationVersion()) < 5.2)
+{
+   siteServiceConfig = {
+      legacyMode: true
+   };
+}
+
+model.jsonModel.services.unshift({
+   name: "alfresco/services/NotificationService",
+   config: {
+      showProgressIndicator: true
    }
+}, {
+   name: "alfresco/services/SiteService",
+   config: siteServiceConfig
 });
