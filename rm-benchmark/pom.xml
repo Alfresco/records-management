@@ -15,7 +15,6 @@
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <server.version>2.1.4</server.version>
-      <junit.version>4.11</junit.version>
       <rm.community.rest.api.version>2.6-SNAPSHOT</rm.community.rest.api.version>
       <mongo.config.host>localhost</mongo.config.host>
       <suiteXmlFile>testng.xml</suiteXmlFile>
@@ -51,7 +50,6 @@
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
-         <version>${junit.version}</version>
          <scope>test</scope>
       </dependency>
       <dependency>
@@ -62,7 +60,6 @@
       <dependency>
          <groupId>org.mockito</groupId>
          <artifactId>mockito-all</artifactId>
-         <version>1.10.19</version>
          <scope>test</scope>
       </dependency>
    </dependencies>
@@ -88,7 +85,6 @@
       <plugins>
          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.19.1</version>
             <configuration>
                <redirectTestOutputToFile>false</redirectTestOutputToFile>
                <suiteXmlFiles>
@@ -99,7 +95,6 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
-            <version>2.1.1</version>
             <configuration>
                <attachClasses>true</attachClasses>
             </configuration>
@@ -107,7 +102,6 @@
          <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>

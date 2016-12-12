@@ -21,8 +21,8 @@ package org.alfresco.bm.dataload.rm.unfiled;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -30,6 +30,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.UUID;
+
+import com.mongodb.DBObject;
 
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
@@ -47,8 +49,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.mongodb.DBObject;
 
 /**
  * Unit tests for LoadUnfiledRecordFolders
@@ -283,7 +283,7 @@ public class LoadUnfiledRecordFoldersUnitTest implements RMEventConstants
         DBObject data = (DBObject) result.getData();
         assertNotNull(data.get("error"));
         assertEquals("aUser", data.get("username"));
-        assertEquals(mockedFolder, data.get("folder"));
+        assertEquals(mockedFolder.getPath(), data.get("path"));
         assertNotNull(data.get("stack"));
         assertEquals(0, result.getNextEvents().size());
     }

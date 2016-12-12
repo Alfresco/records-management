@@ -19,7 +19,10 @@
 
 package org.alfresco.bm.dataload.rm.unfiled;
 
-import static org.mockito.Mockito.any;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -29,9 +32,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import com.mongodb.DBObject;
 
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
@@ -45,8 +46,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.mongodb.DBObject;
 
 /**
  * Unit tests for ScheduleUnfiledRecordFolderLoaders
@@ -77,6 +76,25 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
         assertEquals(false, result.isSuccess());
         assertEquals("Unfiled Record Folders structure creation not wanted.",result.getData());
         assertEquals(0, result.getNextEvents().size());
+    }
+
+    @Test
+    public void testUnfiledRecordFoldersNotWantedAndContinueLoadingData() throws Exception
+    {
+        scheduleUnfiledRecordFolderLoaders.setCreateUnfiledRecordFolderStructure(false);
+        String unfiledRecordContainerPath = "/" + PATH_SNIPPET_SITES + "/" + PATH_SNIPPET_RM_SITE_ID + "/" + PATH_SNIPPET_FILE_PLAN + "/" + PATH_SNIPPET_UNFILED_RECORD_CONTAINER;
+        FolderData mockedFolder = mock(FolderData.class);
+        List<FolderData> unfiledContainerChildren = Arrays.asList(mockedFolder);
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, unfiledRecordContainerPath, 0, 1)).thenReturn(unfiledContainerChildren);
+        EventResult result = scheduleUnfiledRecordFolderLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, never()).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Unfiled Record Folders structure creation not wanted, continue with loading unfiled records.",result.getData());
+        assertEquals(1, result.getNextEvents().size());
+        assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(0).getName());
     }
 
     @Test

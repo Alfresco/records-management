@@ -31,6 +31,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 
+import com.mongodb.DBObject;
+
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.LoadFilePlan;
@@ -48,8 +50,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.mongodb.DBObject;
 
 /**
  * Unit tests for LoadFilePlan
