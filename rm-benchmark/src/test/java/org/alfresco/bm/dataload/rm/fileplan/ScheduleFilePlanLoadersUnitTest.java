@@ -1,0 +1,723 @@
+/*
+ * Copyright (C) 2005-2014 Alfresco Software Limited.
+ *
+ * This file is part of Alfresco
+ *
+ * Alfresco is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Alfresco is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.alfresco.bm.dataload.rm.fileplan;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import org.alfresco.bm.cm.FileFolderService;
+import org.alfresco.bm.cm.FolderData;
+import org.alfresco.bm.dataload.RMEventConstants;
+import org.alfresco.bm.dataload.ScheduleFilePlanLoaders;
+import org.alfresco.bm.event.Event;
+import org.alfresco.bm.event.EventResult;
+import org.alfresco.bm.session.SessionService;
+import org.apache.commons.lang3.time.StopWatch;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import com.mongodb.DBObject;
+
+/**
+ * Unit tests for ScheduleFilePlanLoaders
+ *
+ * @author Silviu Dinuta
+ * @since 1.0
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
+{
+    private static final String EMPTY_CONTEXT = "";
+
+    @Mock
+    private SessionService mockedSessionService;
+
+    @Mock
+    private FileFolderService mockedFileFolderService;
+
+    @InjectMocks
+    private ScheduleFilePlanLoaders scheduleFilePlanLoaders;
+
+    @Test
+    public void testScheduleRootCategories() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 4;
+        int categoryStructureDepth = 1;
+        String username = "bob";
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setUsername(username);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        FolderData mockedFilePlanFolder = mock(FolderData.class);
+        when(mockedFilePlanFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedFilePlanFolder.getPath()).thenReturn("/a");
+        List<FolderData> folders = Arrays.asList(mockedFilePlanFolder);
+        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT, 3L, 3L, 0L, Long.valueOf(rootCategoriesNumber-1), null, null, 0, 100)).thenReturn(folders);
+
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, times(1)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(1)).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Raised further 1 events and rescheduled self.",result.getData());
+        assertEquals(2, result.getNextEvents().size());
+
+        Event firstEvent = result.getNextEvents().get(0);
+        assertEquals("loadRecordCategories", firstEvent.getName());
+        DBObject dataObj = (DBObject)firstEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(EMPTY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals("/a", (String) dataObj.get(FIELD_PATH));
+        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
+        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+        assertEquals("scheduleFilePlanLoaders", result.getNextEvents().get(1).getName());
+    }
+
+    @Test
+    public void testScheduleRootCategoriesWtith0FilePlanDepth() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 4;
+        int categoryStructureDepth = 0;
+        String username = "bob";
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setUsername(username);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        FolderData mockedFilePlanFolder = mock(FolderData.class);
+        when(mockedFilePlanFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedFilePlanFolder.getPath()).thenReturn("/a");
+        List<FolderData> folders = Arrays.asList(mockedFilePlanFolder);
+        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT, 3L, 3L, 0L, Long.valueOf(rootCategoriesNumber-1), null, null, 0, 100)).thenReturn(folders);
+
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, never()).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Loading completed.  Raising 'done' event.",result.getData());
+        assertEquals(1, result.getNextEvents().size());
+        assertEquals("scheduleUnfiledRecordFoldersLoaders", result.getNextEvents().get(0).getName());
+    }
+
+    @Test
+    public void testScheduleChildrenCategoriesInCategories() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 0;
+        int categoriesChildrenAverage = 2;
+        int categoriesChildrenVariance = 0;
+        int foldersChildrenAverage = 0;
+        int foldersChildrenVariance = 0;
+        int categoryStructureDepth = 4;
+        String username = "bob";
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        scheduleFilePlanLoaders.setChildCategNumberAverage(categoriesChildrenAverage);
+        scheduleFilePlanLoaders.setChildCategNumberVariance(categoriesChildrenVariance);
+
+        scheduleFilePlanLoaders.setFolderNumberAverage(foldersChildrenAverage);
+        scheduleFilePlanLoaders.setFolderNumberVariance(foldersChildrenVariance);
+        scheduleFilePlanLoaders.setFolderCategoryMix(true);
+
+        scheduleFilePlanLoaders.setUsername(username);
+
+        FolderData mockedRootCategoryFolder = mock(FolderData.class);
+        when(mockedRootCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedRootCategoryFolder.getPath()).thenReturn("/a");
+        String name1 = ROOT_CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedRootCategoryFolder.getName()).thenReturn(name1);
+
+        FolderData mockedChildCategoryFolder = mock(FolderData.class);
+        when(mockedChildCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedChildCategoryFolder.getPath()).thenReturn("/b");
+        String name2 = CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedChildCategoryFolder.getName()).thenReturn(name2);
+
+        List<FolderData> folders = Arrays.asList(mockedRootCategoryFolder, mockedChildCategoryFolder);
+        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT, Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1), 0L, Long.valueOf(categoriesChildrenAverage-1), null, null, 0, 100)).thenReturn(folders);
+
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, times(2)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(2)).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Raised further 2 events and rescheduled self.",result.getData());
+        assertEquals(3, result.getNextEvents().size());
+
+        Event firstEvent = result.getNextEvents().get(0);
+        assertEquals("loadRecordCategories", firstEvent.getName());
+        DBObject dataObj = (DBObject)firstEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(EMPTY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals("/a", (String) dataObj.get(FIELD_PATH));
+        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(categoriesChildrenAverage), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(foldersChildrenAverage), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
+        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+        Event secondEvent = result.getNextEvents().get(1);
+        assertEquals("loadRecordCategories", secondEvent.getName());
+        dataObj = (DBObject)secondEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(EMPTY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals("/b", (String) dataObj.get(FIELD_PATH));
+        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(categoriesChildrenAverage), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(foldersChildrenAverage), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
+        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+        assertEquals("scheduleFilePlanLoaders", result.getNextEvents().get(2).getName());
+    }
+
+    @Test
+    public void testScheduleChildrenCategoriesWithVariance() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 0;
+        int categoriesChildrenAverage = 2;
+        int categoriesChildrenVariance = 1;
+        int foldersChildrenAverage = 0;
+        int foldersChildrenVariance = 0;
+        int categoryStructureDepth = 4;
+        String username = "bob";
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        scheduleFilePlanLoaders.setChildCategNumberAverage(categoriesChildrenAverage);
+        scheduleFilePlanLoaders.setChildCategNumberVariance(categoriesChildrenVariance);
+
+        scheduleFilePlanLoaders.setFolderNumberAverage(foldersChildrenAverage);
+        scheduleFilePlanLoaders.setFolderNumberVariance(foldersChildrenVariance);
+        scheduleFilePlanLoaders.setFolderCategoryMix(true);
+
+        scheduleFilePlanLoaders.setUsername(username);
+
+        FolderData mockedRootCategoryFolder = mock(FolderData.class);
+        when(mockedRootCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedRootCategoryFolder.getPath()).thenReturn("/a");
+        String name1 = ROOT_CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedRootCategoryFolder.getName()).thenReturn(name1);
+
+        FolderData mockedChildCategoryFolder = mock(FolderData.class);
+        when(mockedChildCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedChildCategoryFolder.getPath()).thenReturn("/b");
+        String name2 = CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedChildCategoryFolder.getName()).thenReturn(name2);
+
+        List<FolderData> folders = Arrays.asList(mockedRootCategoryFolder, mockedChildCategoryFolder);
+        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT,
+                    Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1),
+                    0L, Long.valueOf(categoriesChildrenAverage - scheduleFilePlanLoaders.getChildCategNumberStandardDeviation() - 1),
+                    null, null, 0, 100)).thenReturn(folders);
+
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, times(2)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(2)).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Raised further 2 events and rescheduled self.",result.getData());
+        assertEquals(3, result.getNextEvents().size());
+
+        Event firstEvent = result.getNextEvents().get(0);
+        assertEquals("loadRecordCategories", firstEvent.getName());
+        DBObject dataObj = (DBObject)firstEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(EMPTY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals("/a", (String) dataObj.get(FIELD_PATH));
+        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
+        assertTrue(checkVariance(categoriesChildrenAverage, scheduleFilePlanLoaders.getChildCategNumberStandardDeviation(), dataObj, FIELD_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(foldersChildrenAverage), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
+        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+        Event secondEvent = result.getNextEvents().get(1);
+        assertEquals("loadRecordCategories", secondEvent.getName());
+        dataObj = (DBObject)secondEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(EMPTY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals("/b", (String) dataObj.get(FIELD_PATH));
+        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
+        assertTrue(checkVariance(categoriesChildrenAverage, scheduleFilePlanLoaders.getChildCategNumberStandardDeviation(), dataObj, FIELD_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(foldersChildrenAverage), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
+        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+        assertEquals("scheduleFilePlanLoaders", result.getNextEvents().get(2).getName());
+    }
+
+    @Test
+    public void testScheduleChildrenCategoriesInCategoriesWithFilePlanDepthLessThan2() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 0;
+        int categoriesChildrenAverage = 2;
+        int categoriesChildrenVariance = 0;
+        int foldersChildrenAverage = 0;
+        int foldersChildrenVariance = 0;
+        int categoryStructureDepth = 1;
+        String username = "bob";
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        scheduleFilePlanLoaders.setChildCategNumberAverage(categoriesChildrenAverage);
+        scheduleFilePlanLoaders.setChildCategNumberVariance(categoriesChildrenVariance);
+
+        scheduleFilePlanLoaders.setFolderNumberAverage(foldersChildrenAverage);
+        scheduleFilePlanLoaders.setFolderNumberVariance(foldersChildrenVariance);
+        scheduleFilePlanLoaders.setFolderCategoryMix(true);
+
+        scheduleFilePlanLoaders.setUsername(username);
+
+        FolderData mockedRootCategoryFolder = mock(FolderData.class);
+        when(mockedRootCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedRootCategoryFolder.getPath()).thenReturn("/a");
+        String name1 = ROOT_CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedRootCategoryFolder.getName()).thenReturn(name1);
+
+        FolderData mockedChildCategoryFolder = mock(FolderData.class);
+        when(mockedChildCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedChildCategoryFolder.getPath()).thenReturn("/b");
+        String name2 = CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedChildCategoryFolder.getName()).thenReturn(name2);
+
+        List<FolderData> folders = Arrays.asList(mockedRootCategoryFolder, mockedChildCategoryFolder);
+        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT, Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1 -1), 0L, Long.valueOf(categoriesChildrenAverage-1), null, null, 0, 100)).thenReturn(folders);
+
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, never()).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Loading completed.  Raising 'done' event.",result.getData());
+        assertEquals(1, result.getNextEvents().size());
+        assertEquals("scheduleUnfiledRecordFoldersLoaders", result.getNextEvents().get(0).getName());
+    }
+
+    @Test
+    public void testScheduleChildrenCategoriesInRecordFolders() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 0;
+        int categoriesChildrenAverage = 2;
+        int categoriesChildrenVariance = 0;
+        int foldersChildrenAverage = 0;
+        int foldersChildrenVariance = 0;
+        int categoryStructureDepth = 4;
+        String username = "bob";
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        scheduleFilePlanLoaders.setChildCategNumberAverage(categoriesChildrenAverage);
+        scheduleFilePlanLoaders.setChildCategNumberVariance(categoriesChildrenVariance);
+
+        scheduleFilePlanLoaders.setFolderNumberAverage(foldersChildrenAverage);
+        scheduleFilePlanLoaders.setFolderNumberVariance(foldersChildrenVariance);
+        scheduleFilePlanLoaders.setFolderCategoryMix(true);
+
+        scheduleFilePlanLoaders.setUsername(username);
+
+        FolderData mockedRecordFolder = mock(FolderData.class);
+        when(mockedRecordFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedRecordFolder.getPath()).thenReturn("/a");
+        String name1 = RECORD_FOLDER_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedRecordFolder.getName()).thenReturn(name1);
+
+        FolderData mockedRecordFolder1 = mock(FolderData.class);
+        when(mockedRecordFolder1.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedRecordFolder1.getPath()).thenReturn("/b");
+        String name2 = RECORD_FOLDER_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedRecordFolder1.getName()).thenReturn(name2);
+
+        List<FolderData> folders = Arrays.asList(mockedRecordFolder, mockedRecordFolder1);
+        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT, Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1 -1), 0L, Long.valueOf(categoriesChildrenAverage-1), null, null, 0, 100)).thenReturn(folders);
+
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, never()).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Loading completed.  Raising 'done' event.",result.getData());
+        assertEquals(1, result.getNextEvents().size());
+        assertEquals("scheduleUnfiledRecordFoldersLoaders", result.getNextEvents().get(0).getName());
+    }
+
+    @Test
+    public void testScheduleChildrenRecordFoldersInCategoriesWithFilePlanDepthLessThan2() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 0;
+        int categoriesChildrenAverage = 0;
+        int categoriesChildrenVariance = 0;
+        int foldersChildrenAverage = 2;
+        int foldersChildrenVariance = 0;
+        int categoryStructureDepth = 1;
+        String username = "bob";
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        scheduleFilePlanLoaders.setChildCategNumberAverage(categoriesChildrenAverage);
+        scheduleFilePlanLoaders.setChildCategNumberVariance(categoriesChildrenVariance);
+
+        scheduleFilePlanLoaders.setFolderNumberAverage(foldersChildrenAverage);
+        scheduleFilePlanLoaders.setFolderNumberVariance(foldersChildrenVariance);
+        scheduleFilePlanLoaders.setFolderCategoryMix(true);
+
+        scheduleFilePlanLoaders.setUsername(username);
+
+        FolderData mockedRootCategoryFolder = mock(FolderData.class);
+        when(mockedRootCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedRootCategoryFolder.getPath()).thenReturn("/a");
+        String name1 = ROOT_CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedRootCategoryFolder.getName()).thenReturn(name1);
+
+        FolderData mockedChildCategoryFolder = mock(FolderData.class);
+        when(mockedChildCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedChildCategoryFolder.getPath()).thenReturn("/b");
+        String name2 = CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedChildCategoryFolder.getName()).thenReturn(name2);
+
+        List<FolderData> folders = Arrays.asList(mockedRootCategoryFolder, mockedChildCategoryFolder);
+        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT, Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1 -1), 0L, Long.valueOf(foldersChildrenAverage-1), null, null, 0, 100)).thenReturn(folders);
+
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, never()).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Loading completed.  Raising 'done' event.",result.getData());
+        assertEquals(1, result.getNextEvents().size());
+        assertEquals("scheduleUnfiledRecordFoldersLoaders", result.getNextEvents().get(0).getName());
+    }
+
+    @Test
+    public void testScheduleChildrenRecordFoldersInCategories() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 0;
+        int categoriesChildrenAverage = 0;
+        int categoriesChildrenVariance = 0;
+        int foldersChildrenAverage = 2;
+        int foldersChildrenVariance = 0;
+        int categoryStructureDepth = 4;
+        String username = "bob";
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        scheduleFilePlanLoaders.setChildCategNumberAverage(categoriesChildrenAverage);
+        scheduleFilePlanLoaders.setChildCategNumberVariance(categoriesChildrenVariance);
+
+        scheduleFilePlanLoaders.setFolderNumberAverage(foldersChildrenAverage);
+        scheduleFilePlanLoaders.setFolderNumberVariance(foldersChildrenVariance);
+        scheduleFilePlanLoaders.setFolderCategoryMix(true);
+
+        scheduleFilePlanLoaders.setUsername(username);
+
+        FolderData mockedRootCategoryFolder = mock(FolderData.class);
+        when(mockedRootCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedRootCategoryFolder.getPath()).thenReturn("/a");
+        String name1 = ROOT_CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedRootCategoryFolder.getName()).thenReturn(name1);
+
+        FolderData mockedChildCategoryFolder = mock(FolderData.class);
+        when(mockedChildCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedChildCategoryFolder.getPath()).thenReturn("/b");
+        String name2 = CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedChildCategoryFolder.getName()).thenReturn(name2);
+
+        List<FolderData> folders = Arrays.asList(mockedRootCategoryFolder, mockedChildCategoryFolder);
+        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT, Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1), 0L, Long.valueOf(foldersChildrenAverage-1), null, null, 0, 100)).thenReturn(folders);
+
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, times(2)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(2)).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Raised further 2 events and rescheduled self.",result.getData());
+        assertEquals(3, result.getNextEvents().size());
+
+        Event firstEvent = result.getNextEvents().get(0);
+        assertEquals("loadRecordCategories", firstEvent.getName());
+        DBObject dataObj = (DBObject)firstEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(EMPTY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals("/a", (String) dataObj.get(FIELD_PATH));
+        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(categoriesChildrenAverage), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(foldersChildrenAverage), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
+        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+        Event secondEvent = result.getNextEvents().get(1);
+        assertEquals("loadRecordCategories", secondEvent.getName());
+        dataObj = (DBObject)secondEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(EMPTY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals("/b", (String) dataObj.get(FIELD_PATH));
+        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(categoriesChildrenAverage), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(foldersChildrenAverage), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
+        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+        assertEquals("scheduleFilePlanLoaders", result.getNextEvents().get(2).getName());
+    }
+
+    @Test
+    public void testScheduleChildrenRecordFoldersWithVariance() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 0;
+        int categoriesChildrenAverage = 0;
+        int categoriesChildrenVariance = 0;
+        int foldersChildrenAverage = 2;
+        int foldersChildrenVariance = 1;
+        int categoryStructureDepth = 4;
+        String username = "bob";
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        scheduleFilePlanLoaders.setChildCategNumberAverage(categoriesChildrenAverage);
+        scheduleFilePlanLoaders.setChildCategNumberVariance(categoriesChildrenVariance);
+
+        scheduleFilePlanLoaders.setFolderNumberAverage(foldersChildrenAverage);
+        scheduleFilePlanLoaders.setFolderNumberVariance(foldersChildrenVariance);
+        scheduleFilePlanLoaders.setFolderCategoryMix(true);
+
+        scheduleFilePlanLoaders.setUsername(username);
+
+        FolderData mockedRootCategoryFolder = mock(FolderData.class);
+        when(mockedRootCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedRootCategoryFolder.getPath()).thenReturn("/a");
+        String name1 = ROOT_CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedRootCategoryFolder.getName()).thenReturn(name1);
+
+        FolderData mockedChildCategoryFolder = mock(FolderData.class);
+        when(mockedChildCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedChildCategoryFolder.getPath()).thenReturn("/b");
+        String name2 = CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedChildCategoryFolder.getName()).thenReturn(name2);
+
+        List<FolderData> folders = Arrays.asList(mockedRootCategoryFolder, mockedChildCategoryFolder);
+        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT,
+                    Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1),
+                    0L, Long.valueOf(foldersChildrenAverage - scheduleFilePlanLoaders.getFolderNumberStandardDeviation() - 1),
+                    null, null, 0, 100)).thenReturn(folders);
+
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, times(2)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(2)).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Raised further 2 events and rescheduled self.",result.getData());
+        assertEquals(3, result.getNextEvents().size());
+
+        Event firstEvent = result.getNextEvents().get(0);
+        assertEquals("loadRecordCategories", firstEvent.getName());
+        DBObject dataObj = (DBObject)firstEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(EMPTY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals("/a", (String) dataObj.get(FIELD_PATH));
+        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(categoriesChildrenAverage), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
+        assertTrue(checkVariance(foldersChildrenAverage, scheduleFilePlanLoaders.getFolderNumberStandardDeviation(), dataObj, FIELD_FOLDERS_TO_CREATE));
+        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+        Event secondEvent = result.getNextEvents().get(1);
+        assertEquals("loadRecordCategories", secondEvent.getName());
+        dataObj = (DBObject)secondEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(EMPTY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals("/b", (String) dataObj.get(FIELD_PATH));
+        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(categoriesChildrenAverage), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
+        assertTrue(checkVariance(foldersChildrenAverage, scheduleFilePlanLoaders.getFolderNumberStandardDeviation(), dataObj, FIELD_FOLDERS_TO_CREATE));
+        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+        assertEquals("scheduleFilePlanLoaders", result.getNextEvents().get(2).getName());
+    }
+
+    @Test
+    public void testScheduleChildrenRecordFoldersWithoutMix() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 0;
+        int categoriesChildrenAverage = 0;
+        int categoriesChildrenVariance = 0;
+        int foldersChildrenAverage = 2;
+        int foldersChildrenVariance = 0;
+        int categoryStructureDepth = 4;
+        String username = "bob";
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        scheduleFilePlanLoaders.setChildCategNumberAverage(categoriesChildrenAverage);
+        scheduleFilePlanLoaders.setChildCategNumberVariance(categoriesChildrenVariance);
+
+        scheduleFilePlanLoaders.setFolderNumberAverage(foldersChildrenAverage);
+        scheduleFilePlanLoaders.setFolderNumberVariance(foldersChildrenVariance);
+        scheduleFilePlanLoaders.setFolderCategoryMix(false);
+
+        scheduleFilePlanLoaders.setUsername(username);
+
+        FolderData mockedRootCategoryFolder = mock(FolderData.class);
+        when(mockedRootCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedRootCategoryFolder.getPath()).thenReturn("/a");
+        String name1 = ROOT_CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedRootCategoryFolder.getName()).thenReturn(name1);
+
+        FolderData mockedChildCategoryFolder = mock(FolderData.class);
+        when(mockedChildCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedChildCategoryFolder.getPath()).thenReturn("/b");
+        String name2 = CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedChildCategoryFolder.getName()).thenReturn(name2);
+
+        List<FolderData> folders = Arrays.asList(mockedRootCategoryFolder, mockedChildCategoryFolder);
+        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT, Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1), 0L, Long.valueOf(foldersChildrenAverage-1), null, null, 0, 100)).thenReturn(folders);
+
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, times(2)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(2)).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Raised further 2 events and rescheduled self.",result.getData());
+        assertEquals(3, result.getNextEvents().size());
+
+        Event firstEvent = result.getNextEvents().get(0);
+        assertEquals("loadRecordCategories", firstEvent.getName());
+        DBObject dataObj = (DBObject)firstEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(EMPTY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals("/a", (String) dataObj.get(FIELD_PATH));
+        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(categoriesChildrenAverage), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
+        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+        Event secondEvent = result.getNextEvents().get(1);
+        assertEquals("loadRecordCategories", secondEvent.getName());
+        dataObj = (DBObject)secondEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(EMPTY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals("/b", (String) dataObj.get(FIELD_PATH));
+        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(categoriesChildrenAverage), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
+        assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
+        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+        assertEquals("scheduleFilePlanLoaders", result.getNextEvents().get(2).getName());
+    }
+
+    @Test
+    public void testScheduleChildrenRecordFoldersInRecordFolders() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 0;
+        int categoriesChildrenAverage = 0;
+        int categoriesChildrenVariance = 0;
+        int foldersChildrenAverage = 2;
+        int foldersChildrenVariance = 0;
+        int categoryStructureDepth = 4;
+        String username = "bob";
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        scheduleFilePlanLoaders.setChildCategNumberAverage(categoriesChildrenAverage);
+        scheduleFilePlanLoaders.setChildCategNumberVariance(categoriesChildrenVariance);
+
+        scheduleFilePlanLoaders.setFolderNumberAverage(foldersChildrenAverage);
+        scheduleFilePlanLoaders.setFolderNumberVariance(foldersChildrenVariance);
+        scheduleFilePlanLoaders.setFolderCategoryMix(true);
+
+        scheduleFilePlanLoaders.setUsername(username);
+
+        FolderData mockedCategoryFolder = mock(FolderData.class);
+        when(mockedCategoryFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedCategoryFolder.getPath()).thenReturn("/a");
+        String name1 = RECORD_FOLDER_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedCategoryFolder.getName()).thenReturn(name1);
+
+        FolderData mockedCategoryFolder2 = mock(FolderData.class);
+        when(mockedCategoryFolder2.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedCategoryFolder2.getPath()).thenReturn("/b");
+        String name2 = RECORD_FOLDER_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedCategoryFolder2.getName()).thenReturn(name2);
+
+        List<FolderData> folders = Arrays.asList(mockedCategoryFolder, mockedCategoryFolder2);
+        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT, Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1 -1), 0L, Long.valueOf(foldersChildrenAverage-1), null, null, 0, 100)).thenReturn(folders);
+
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, never()).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Loading completed.  Raising 'done' event.",result.getData());
+        assertEquals(1, result.getNextEvents().size());
+        assertEquals("scheduleUnfiledRecordFoldersLoaders", result.getNextEvents().get(0).getName());
+    }
+
+    private boolean checkVariance(int average, int standardDeviation, DBObject dataObj, String keyFiled)
+    {
+        boolean valid = false;
+        if(Integer.valueOf(average - standardDeviation) <= (Integer) dataObj.get(keyFiled) &&
+                    (Integer) dataObj.get(keyFiled) <= Integer.valueOf(average + standardDeviation))
+        {
+            valid = true;
+        }
+        return valid;
+    }
+}
