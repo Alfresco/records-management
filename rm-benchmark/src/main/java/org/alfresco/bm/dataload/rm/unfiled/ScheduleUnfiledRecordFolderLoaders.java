@@ -235,8 +235,8 @@ public class ScheduleUnfiledRecordFolderLoaders extends RmBaseEventProcessor
             // Get categories needing loading
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
                         UNFILED_CONTEXT,
-                        Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL), Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL),
-                        0L, Long.valueOf((rootUnfiledRecordFolderNumber - 1)),
+                        Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL), Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL),//min and max level are 4, level of unfiled record container
+                        0L, Long.valueOf((rootUnfiledRecordFolderNumber - 1)),//limit the maximum number of child folders to rootUnfiledRecordFolderNumber - 1
                         null, null, // Ignore file limits
                         skip, limit);
             skip += limit;
@@ -298,8 +298,9 @@ public class ScheduleUnfiledRecordFolderLoaders extends RmBaseEventProcessor
             // Get folders needing loading
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
                     UNFILED_CONTEXT,
-                    Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL+1), Long.valueOf(maxLevel-1),
-                    0L, Long.valueOf(unfiledRecordFolderNumber - 1),// Get folders that still need folders
+                    Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL+1),//min level is 5, level of root unfiled record folders
+                    Long.valueOf(maxLevel-1),//max level is 4+unfiledRecordFolderDepth-1
+                    0L, Long.valueOf(unfiledRecordFolderNumber - 1),//limit the maximum number of child folders to rootUnfiledRecordFolderNumber - 1
                     null, null,                                 // Ignore file limits
                     skip, limit);
             skip += limit;
