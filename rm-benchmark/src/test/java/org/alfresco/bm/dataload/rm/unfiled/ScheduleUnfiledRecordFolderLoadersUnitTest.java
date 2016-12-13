@@ -19,7 +19,9 @@
 
 package org.alfresco.bm.dataload.rm.unfiled;
 
-import static org.mockito.Mockito.any;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -28,10 +30,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
@@ -174,8 +172,7 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
     {
         int maxActiveLoaders = 8;
         int rootUnfiledRecordFolderNumber = 0;
-        int unfiledRecordFolderChildrenAverage = 2;
-        int unfiledRecordFolderChildrenVariance = 0;
+        int unfiledRecordFolderChildrenNumber = 2;
         int unfiledRecordFolderDepth = 4;
         String username = "bob";
 
@@ -183,8 +180,7 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
         scheduleUnfiledRecordFolderLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleUnfiledRecordFolderLoaders.setRootUnfiledRecordFolderNumber(rootUnfiledRecordFolderNumber);
         scheduleUnfiledRecordFolderLoaders.setUnfiledRecordFolderDepth(unfiledRecordFolderDepth);
-        scheduleUnfiledRecordFolderLoaders.setUnfiledRecordFolderChildrenAverage(unfiledRecordFolderChildrenAverage);
-        scheduleUnfiledRecordFolderLoaders.setUnfiledRecordFolderChildrenVariance(unfiledRecordFolderChildrenVariance);
+        scheduleUnfiledRecordFolderLoaders.setUnfiledRecordFolderNumber(unfiledRecordFolderChildrenNumber);
         scheduleUnfiledRecordFolderLoaders.setUsername(username);
 
         FolderData mockedUnfiledRecordContainerFolder = mock(FolderData.class);
@@ -196,7 +192,7 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
         when(mockedUnfiledRecordContainerFolder2.getPath()).thenReturn("/b");
 
         List<FolderData> folders = Arrays.asList(mockedUnfiledRecordContainerFolder, mockedUnfiledRecordContainerFolder2);
-        when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT, Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL+1), Long.valueOf(scheduleUnfiledRecordFolderLoaders.getMaxLevel() - 1), 0L, Long.valueOf(unfiledRecordFolderChildrenAverage-1), null, null, 0, 100)).thenReturn(folders);
+        when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT, Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL+1), Long.valueOf(scheduleUnfiledRecordFolderLoaders.getMaxLevel() - 1), 0L, Long.valueOf(unfiledRecordFolderChildrenNumber-1), null, null, 0, 100)).thenReturn(folders);
 
         EventResult result = scheduleUnfiledRecordFolderLoaders.processEvent(null, new StopWatch());
 
@@ -214,7 +210,7 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
         assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals("/a", (String) dataObj.get(FIELD_PATH));
         assertEquals(Integer.valueOf(rootUnfiledRecordFolderNumber), (Integer) dataObj.get(FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE));
-        assertEquals(Integer.valueOf(unfiledRecordFolderChildrenAverage), (Integer) dataObj.get(FIELD_UNFILED_FOLDERS_TO_CREATE));
+        assertEquals(Integer.valueOf(unfiledRecordFolderChildrenNumber), (Integer) dataObj.get(FIELD_UNFILED_FOLDERS_TO_CREATE));
         assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
         Event secondEvent = result.getNextEvents().get(1);
@@ -224,71 +220,7 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
         assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals("/b", (String) dataObj.get(FIELD_PATH));
         assertEquals(Integer.valueOf(rootUnfiledRecordFolderNumber), (Integer) dataObj.get(FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE));
-        assertEquals(Integer.valueOf(unfiledRecordFolderChildrenAverage), (Integer) dataObj.get(FIELD_UNFILED_FOLDERS_TO_CREATE));
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
-
-        assertEquals("scheduleUnfiledFoldersLoaders", result.getNextEvents().get(2).getName());
-    }
-
-    @Test
-    public void testScheduleUnfiledRecordFoldersChildrenWithVariance() throws Exception
-    {
-        int maxActiveLoaders = 8;
-        int rootUnfiledRecordFolderNumber = 0;
-        int unfiledRecordFolderChildrenAverage = 2;
-        int unfiledRecordFolderChildrenVariance = 1;
-        int unfiledRecordFolderDepth = 4;
-        String username = "bob";
-
-        scheduleUnfiledRecordFolderLoaders.setCreateUnfiledRecordFolderStructure(true);
-        scheduleUnfiledRecordFolderLoaders.setMaxActiveLoaders(maxActiveLoaders);
-        scheduleUnfiledRecordFolderLoaders.setRootUnfiledRecordFolderNumber(rootUnfiledRecordFolderNumber);
-        scheduleUnfiledRecordFolderLoaders.setUnfiledRecordFolderDepth(unfiledRecordFolderDepth);
-        scheduleUnfiledRecordFolderLoaders.setUnfiledRecordFolderChildrenAverage(unfiledRecordFolderChildrenAverage);
-        scheduleUnfiledRecordFolderLoaders.setUnfiledRecordFolderChildrenVariance(unfiledRecordFolderChildrenVariance);
-        scheduleUnfiledRecordFolderLoaders.setUsername(username);
-
-        FolderData mockedUnfiledRecordContainerFolder = mock(FolderData.class);
-        when(mockedUnfiledRecordContainerFolder.getContext()).thenReturn(UNFILED_CONTEXT);
-        when(mockedUnfiledRecordContainerFolder.getPath()).thenReturn("/a");
-
-        FolderData mockedUnfiledRecordContainerFolder2 = mock(FolderData.class);
-        when(mockedUnfiledRecordContainerFolder2.getContext()).thenReturn(UNFILED_CONTEXT);
-        when(mockedUnfiledRecordContainerFolder2.getPath()).thenReturn("/b");
-
-        List<FolderData> folders = Arrays.asList(mockedUnfiledRecordContainerFolder, mockedUnfiledRecordContainerFolder2);
-        when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT,
-                    Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL+1), Long.valueOf(scheduleUnfiledRecordFolderLoaders.getMaxLevel() - 1),
-                    0L, Long.valueOf(unfiledRecordFolderChildrenAverage - scheduleUnfiledRecordFolderLoaders.getFolderNumberStandardDeviation() -1),
-                    null, null, 0, 100)).thenReturn(folders);
-
-        EventResult result = scheduleUnfiledRecordFolderLoaders.processEvent(null, new StopWatch());
-
-        verify(mockedFileFolderService, times(2)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(2)).startSession(any(DBObject.class));
-
-        assertEquals(true, result.isSuccess());
-        assertEquals("Raised further 2 events and rescheduled self.",result.getData());
-        assertEquals(3, result.getNextEvents().size());
-
-        Event firstEvent = result.getNextEvents().get(0);
-        assertEquals("loadUnfiledRecordFolders", firstEvent.getName());
-        DBObject dataObj = (DBObject)firstEvent.getData();
-        assertNotNull(dataObj);
-        assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-        assertEquals("/a", (String) dataObj.get(FIELD_PATH));
-        assertEquals(Integer.valueOf(rootUnfiledRecordFolderNumber), (Integer) dataObj.get(FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE));
-        assertTrue(checkVariance(unfiledRecordFolderChildrenAverage, scheduleUnfiledRecordFolderLoaders.getFolderNumberStandardDeviation(), dataObj, FIELD_UNFILED_FOLDERS_TO_CREATE));
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
-
-        Event secondEvent = result.getNextEvents().get(1);
-        assertEquals("loadUnfiledRecordFolders", secondEvent.getName());
-        dataObj = (DBObject)secondEvent.getData();
-        assertNotNull(dataObj);
-        assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-        assertEquals("/b", (String) dataObj.get(FIELD_PATH));
-        assertEquals(Integer.valueOf(rootUnfiledRecordFolderNumber), (Integer) dataObj.get(FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE));
-        assertTrue(checkVariance(unfiledRecordFolderChildrenAverage, scheduleUnfiledRecordFolderLoaders.getFolderNumberStandardDeviation(), dataObj, FIELD_UNFILED_FOLDERS_TO_CREATE));
+        assertEquals(Integer.valueOf(unfiledRecordFolderChildrenNumber), (Integer) dataObj.get(FIELD_UNFILED_FOLDERS_TO_CREATE));
         assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
         assertEquals("scheduleUnfiledFoldersLoaders", result.getNextEvents().get(2).getName());
@@ -299,8 +231,7 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
     {
         int maxActiveLoaders = 8;
         int rootUnfiledRecordFolderNumber = 0;
-        int unfiledRecordFolderChildrenAverage = 2;
-        int unfiledRecordFolderChildrenVariance = 0;
+        int unfiledRecordFolderChildrenNumber = 2;
         int unfiledRecordFolderDepth = 1;
         String username = "bob";
 
@@ -308,8 +239,7 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
         scheduleUnfiledRecordFolderLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleUnfiledRecordFolderLoaders.setRootUnfiledRecordFolderNumber(rootUnfiledRecordFolderNumber);
         scheduleUnfiledRecordFolderLoaders.setUnfiledRecordFolderDepth(unfiledRecordFolderDepth);
-        scheduleUnfiledRecordFolderLoaders.setUnfiledRecordFolderChildrenAverage(unfiledRecordFolderChildrenAverage);
-        scheduleUnfiledRecordFolderLoaders.setUnfiledRecordFolderChildrenVariance(unfiledRecordFolderChildrenVariance);
+        scheduleUnfiledRecordFolderLoaders.setUnfiledRecordFolderNumber(unfiledRecordFolderChildrenNumber);
         scheduleUnfiledRecordFolderLoaders.setUsername(username);
 
         FolderData mockedUnfiledRecordContainerFolder = mock(FolderData.class);
@@ -321,7 +251,7 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
         when(mockedUnfiledRecordContainerFolder2.getPath()).thenReturn("/b");
 
         List<FolderData> folders = Arrays.asList(mockedUnfiledRecordContainerFolder, mockedUnfiledRecordContainerFolder2);
-        when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT, Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL+1), Long.valueOf(scheduleUnfiledRecordFolderLoaders.getMaxLevel() - 1), 0L, Long.valueOf(unfiledRecordFolderChildrenAverage-1), null, null, 0, 100)).thenReturn(folders);
+        when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT, Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL+1), Long.valueOf(scheduleUnfiledRecordFolderLoaders.getMaxLevel() - 1), 0L, Long.valueOf(unfiledRecordFolderChildrenNumber-1), null, null, 0, 100)).thenReturn(folders);
 
         EventResult result = scheduleUnfiledRecordFolderLoaders.processEvent(null, new StopWatch());
 
@@ -332,16 +262,5 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
         assertEquals("Loading completed.  Raising 'done' event.",result.getData());
         assertEquals(1, result.getNextEvents().size());
         assertEquals("loadingUnfiledRecordFoldersComplete", result.getNextEvents().get(0).getName());
-    }
-
-    private boolean checkVariance(int average, int standardDeviation, DBObject dataObj, String keyFiled)
-    {
-        boolean valid = false;
-        if(Integer.valueOf(average - standardDeviation) <= (Integer) dataObj.get(keyFiled) &&
-                    (Integer) dataObj.get(keyFiled) <= Integer.valueOf(average + standardDeviation))
-        {
-            valid = true;
-        }
-        return valid;
     }
 }

@@ -22,18 +22,14 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
     @Autowired
     private SessionService sessionService;
 
-    // TODO: check valid values for certain parameters: for eg. average and variance !
     private int maxActiveLoaders;
     private long loadCheckDelay;
-    private int childCategNumberAverage;
-    private int folderNumberAverage;
+    private int childCategNumber;
+    private int folderNumber;
     private int categoryStructureDepth;
     private int maxLevel;
     private int categoryNumber;
     private int childCategNumberVariance;
-    private int childCategNumberStandardDeviation;
-    private int folderNumberVariance;
-    private int folderNumberStandardDeviation;
     private boolean folderCategoryMix;
     private String username;
 
@@ -98,35 +94,35 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
     }
 
     /**
-     * @return the childCategNumberAverage
+     * @return the childCategNumber
      */
-    public int getChildCategNumberAverage()
+    public int getChildCategNumber()
     {
-        return childCategNumberAverage;
+        return childCategNumber;
     }
 
     /**
-     * @param childCategNumberAverage the childCategNumberAverage to set
+     * @param childCategNumber the childCategNumber to set
      */
-    public void setChildCategNumberAverage(int childCategNumberAverage)
+    public void setChildCategNumber(int childCategNumber)
     {
-        this.childCategNumberAverage = childCategNumberAverage;
+        this.childCategNumber = childCategNumber;
     }
 
     /**
-     * @return the folderNumberAverage
+     * @return the folderNumber
      */
-    public int getFolderNumberAverage()
+    public int getFolderNumber()
     {
-        return folderNumberAverage;
+        return folderNumber;
     }
 
     /**
-     * @param folderNumberAverage the folderNumberAverage to set
+     * @param folderNumber the folderNumber to set
      */
-    public void setFolderNumberAverage(int folderNumberAverage)
+    public void setFolderNumber(int folderNumberAverage)
     {
-        this.folderNumberAverage = folderNumberAverage;
+        this.folderNumber = folderNumberAverage;
     }
 
     /**
@@ -151,40 +147,6 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
     public int getChildCategNumberVariance()
     {
         return childCategNumberVariance;
-    }
-
-    /**
-     * @param childCategNumberVariance the childCategNumberVariance to set
-     */
-    public void setChildCategNumberVariance(int childCategNumberVariance)
-    {
-        this.childCategNumberStandardDeviation = (int)Math.floor(Math.sqrt(childCategNumberVariance));
-    }
-
-    /**
-     * @return the folderNumberVariance
-     */
-    public int getFolderNumberVariance()
-    {
-        return folderNumberVariance;
-    }
-
-    /**
-     * @param folderNumberVariance the folderNumberVariance to set
-     */
-    public void setFolderNumberVariance(int folderNumberVariance)
-    {
-        this.folderNumberStandardDeviation = (int)Math.floor(Math.sqrt(folderNumberVariance));;
-    }
-
-    public int getFolderNumberStandardDeviation()
-    {
-        return this.folderNumberStandardDeviation;
-    }
-
-    public int getChildCategNumberStandardDeviation()
-    {
-        return this.childCategNumberStandardDeviation;
     }
 
     /**
@@ -317,13 +279,12 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
             for (FolderData emptyFolder : emptyFolders)
             {
                 int rootCategoriesToCreate = categoryNumber - (int)emptyFolder.getFolderCount();
-
                 try
                 {
                     // Create a lock folder that has too many files and folders so that it won't be picked up
                     // by this process in subsequent trawls
                     String lockPath = emptyFolder.getPath() + "/locked";
-                    FolderData lockFolder = new FolderData(UUID.randomUUID().toString(), "", lockPath, Long.MAX_VALUE,
+                    FolderData lockFolder = new FolderData(UUID.randomUUID().toString(), emptyFolder.getContext(), lockPath, Long.MAX_VALUE,
                                 Long.MAX_VALUE);
                     fileFolderService.createNewFolder(lockFolder);
                     // We locked this, so the load can be scheduled.
@@ -364,12 +325,10 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
         while (nextEvents.size() < loaderSessionsToCreate)
         {
             // Get categories needing loading
-
-            // TODO: check if valid ! => not negative or so !
             // the maximum number of children a folder should contain so that it will be picked up for further loading
-            int maxChildren = folderNumberAverage - folderNumberStandardDeviation + childCategNumberAverage - childCategNumberStandardDeviation - 1;
+            int maxChildren = folderNumber + childCategNumber - 1;
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
-                        "",
+                        RECORD_CATEGORY_CONTEXT,
                         Long.valueOf(FILE_PLAN_LEVEL + 1), Long.valueOf(maxLevel -1),/*we start from FILE_PLAN_LEVEL + 1 = 4, from root categories,
                                                                                             last level will be for record folders there fore -1 required*/
                         0L, Long.valueOf(maxChildren),
@@ -383,19 +342,15 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
             // Schedule a load for each folder
             for (FolderData emptyFolder : emptyFolders)
             {
-                if (emptyFolder.getName().startsWith(RECORD_FOLDER_NAME_IDENTIFIER))
-                {
-                    continue;
-                }
-                int categoryCount = fileFolderService.getChildFolders(RECORD_CHILD_CATEGORY_CONTEXT, emptyFolder.getPath(), skip, limit).size();
+                int categoryCount = fileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, emptyFolder.getPath(), skip, limit).size();
                 int folderCount = fileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, emptyFolder.getPath(), skip, limit).size();
 
-                int categoriesToCreate = calculateRequiredFilePlanComponentNumber(childCategNumberAverage, childCategNumberStandardDeviation) - categoryCount;
+                int categoriesToCreate = childCategNumber - categoryCount;
 
                 int foldersToCreate = 0;
                 if (this.folderCategoryMix)
                 {
-                    foldersToCreate = calculateRequiredFilePlanComponentNumber(folderNumberAverage, folderNumberStandardDeviation) - folderCount;
+                    foldersToCreate = folderNumber - folderCount;
                 }
 
                 try
@@ -403,7 +358,7 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
                     // Create a lock folder that has too many files and folders so that it won't be picked up
                     // by this process in subsequent trawls
                     String lockPath = emptyFolder.getPath() + "/locked";
-                    FolderData lockFolder = new FolderData(UUID.randomUUID().toString(), "", lockPath, Long.MAX_VALUE,
+                    FolderData lockFolder = new FolderData(UUID.randomUUID().toString(), emptyFolder.getContext(), lockPath, Long.MAX_VALUE,
                                 Long.MAX_VALUE);
                     fileFolderService.createNewFolder(lockFolder);
                     // We locked this, so the load can be scheduled.
@@ -446,9 +401,9 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
         {
             // Get categories needing loading
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
-                        "",
+                        RECORD_CATEGORY_CONTEXT,
                         Long.valueOf(maxLevel), Long.valueOf(maxLevel),
-                        0L, Long.valueOf((folderNumberAverage - folderNumberStandardDeviation - 1)), // TODO: is this always positive => no checks of params yet!
+                        0L, Long.valueOf(folderNumber - 1),
                         null, null, // Ignore file limits
                         skip, limit);
 
@@ -460,12 +415,8 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
             // Schedule a load for each folder
             for (FolderData emptyFolder : emptyFolders)
             {
-                if (emptyFolder.getName().startsWith(RECORD_FOLDER_NAME_IDENTIFIER))
-                {
-                    continue;
-                }
                 int folderCount = fileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, emptyFolder.getPath(), skip, limit).size();
-                int foldersToCreate = calculateRequiredFilePlanComponentNumber(folderNumberAverage, folderNumberStandardDeviation) - folderCount;
+                int foldersToCreate = folderNumber - folderCount;
 
                 try
                 {
@@ -474,7 +425,7 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
                     String lockPath = emptyFolder.getPath() + "/locked";
                     FolderData lockFolder = new FolderData(
                                 UUID.randomUUID().toString(),
-                                "", lockPath,
+                                emptyFolder.getContext(), lockPath,
                                 Long.MAX_VALUE, Long.MAX_VALUE);
                     fileFolderService.createNewFolder(lockFolder);
                     // We locked this, so the load can be scheduled.

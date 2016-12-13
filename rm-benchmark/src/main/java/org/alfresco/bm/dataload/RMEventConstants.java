@@ -44,7 +44,7 @@ public interface RMEventConstants
     public static final int UNFILED_RECORD_CONTAINER_LEVEL = 4;
     public static final String UNFILED_CONTEXT = "unfiled";
     public static final String RECORD_FOLDER_CONTEXT = "recordFolder";
-    public static final String RECORD_CHILD_CATEGORY_CONTEXT = "recordChildCategory";
+    public static final String RECORD_CATEGORY_CONTEXT = "recordCategory";
 
     public static final String PATH_SNIPPET_SITES = "Sites";
     public static final String PATH_SNIPPET_FILE_PLAN = "documentLibrary";

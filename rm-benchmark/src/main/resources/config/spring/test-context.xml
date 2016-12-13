@@ -120,11 +120,8 @@
   <bean id="event.scheduleFilePlanLoaders" class="org.alfresco.bm.dataload.ScheduleFilePlanLoaders"
     parent="rmBaseEventProcessor">
     <property name="categoryStructureDepth" value="${rm.categoryStructureDepth}" />
-    <property name="childCategNumberAverage" value="${rm.childCategNumberAverage}" />
-    <property name="childCategNumberVariance"
-      value="${rm.childCategNumberVariance}" />
-    <property name="folderNumberAverage" value="${rm.folderNumberAverage}" />
-    <property name="folderNumberVariance" value="${rm.folderNumberVariance}" />
+    <property name="childCategNumber" value="${rm.childCategNumber}" />
+    <property name="folderNumber" value="${rm.folderNumber}" />
     <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
     <property name="categoryNumber" value="${rm.categoryNumber}" />
@@ -158,8 +155,7 @@
     <property name="createUnfiledRecordFolderStructure" value="${rm.createUnfiledRecordFolderStructure}" />
     <property name="rootUnfiledRecordFolderNumber" value="${rm.rootUnfiledRecordFolderNumber}" />
     <property name="unfiledRecordFolderDepth" value="${rm.unfiledRecordFolderDepth}" />
-    <property name="unfiledRecordFolderChildrenAverage" value="${rm.unfiledRecordFolderChildrenAverage}" />
-    <property name="unfiledRecordFolderChildrenVariance" value="${rm.unfiledRecordFolderChildrenVariance}" />
+    <property name="unfiledRecordFolderNumber" value="${rm.unfiledRecordFolderNumber}" />
     <property name="username" value="${rm.username}" />
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
     <property name="chart" value="false" />

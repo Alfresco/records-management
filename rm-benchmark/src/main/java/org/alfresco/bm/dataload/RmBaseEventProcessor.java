@@ -5,7 +5,6 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -30,16 +29,6 @@ public abstract class RmBaseEventProcessor extends AbstractEventProcessor implem
     public void setTestFileService(TestFileService testFileService)
     {
         this.testFileService = testFileService;
-    }
-
-    protected int calculateRequiredFilePlanComponentNumber(int average, int standardDeviation)
-    {
-        if (standardDeviation == 0) return average;
-        Random randomGenerator = new Random();
-        int absoluteDeviation = randomGenerator.nextInt(standardDeviation + 1);
-        float coinFlip = randomGenerator.nextFloat();
-        int currentDeviation = (coinFlip > 0.5) ? absoluteDeviation : (0 - absoluteDeviation);
-        return (average + currentDeviation);
     }
 
     public void createFilePlanComponent(FolderData folder, FilePlanComponentAPI api,
