@@ -2,7 +2,6 @@ package org.alfresco.bm.dataload;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -21,17 +20,6 @@ public abstract class RmBaseEventProcessor extends AbstractEventProcessor implem
     {
         this.fileFolderService = fileFolderService;
     }
-
-    protected int calculateRequiredFilePlanComponentNumber(int average, int standardDeviation)
-    {
-        if (standardDeviation == 0) return average;
-        Random randomGenerator = new Random();
-        int absoluteDeviation = randomGenerator.nextInt(standardDeviation + 1);
-        float coinFlip = randomGenerator.nextFloat();
-        int currentDeviation = (coinFlip > 0.5) ? absoluteDeviation : (0 - absoluteDeviation);
-        return (average + currentDeviation);
-    }
-
     public void createFilePlanComponent(FolderData folder, FilePlanComponentAPI api,
                 FilePlanComponent parentFilePlanComponent, int componentsToCreate, String nameIdentifier, String type, String context,
                 long loadFilePlanComponentDelay) throws Exception // to-check: type of exception
