@@ -267,7 +267,7 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
                         "",
                         Long.valueOf(FILE_PLAN_LEVEL), Long.valueOf(FILE_PLAN_LEVEL),//we need only file plan level here since we load root categories on filePlan
-                        0L, Long.valueOf((categoryNumber - 1)),
+                        0L, Long.valueOf((categoryNumber - 1)),//limit the maximum number of child folders to number of needed root categories - 1
                         null, null, // Ignore file limits
                         skip, limit);
             if (emptyFolders.size() == 0)
@@ -329,9 +329,9 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
             int maxChildren = folderNumber + childCategNumber - 1;
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
                         RECORD_CATEGORY_CONTEXT,
-                        Long.valueOf(FILE_PLAN_LEVEL + 1), Long.valueOf(maxLevel -1),/*we start from FILE_PLAN_LEVEL + 1 = 4, from root categories,
-                                                                                            last level will be for record folders there fore -1 required*/
-                        0L, Long.valueOf(maxChildren),
+                        Long.valueOf(FILE_PLAN_LEVEL + 1),//min level FILE_PLAN_LEVEL + 1 = 4, root categories
+                        Long.valueOf(maxLevel -1),//last level will be for record folders, FILE_PLAN_LEVEL+depth-1 required
+                        0L, Long.valueOf(maxChildren),//maximum number of sub folders so that it will be picked up for further loading
                         null, null,
                         skip, limit);
             if (emptyFolders.size() == 0)
@@ -402,8 +402,8 @@ public class ScheduleFilePlanLoaders extends RmBaseEventProcessor
             // Get categories needing loading
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
                         RECORD_CATEGORY_CONTEXT,
-                        Long.valueOf(maxLevel), Long.valueOf(maxLevel),
-                        0L, Long.valueOf(folderNumber - 1),
+                        Long.valueOf(maxLevel), Long.valueOf(maxLevel),//max and min level are FILE_PLAN_LEVEL+depth, of last category, where we load lowest level of record folders
+                        0L, Long.valueOf(folderNumber - 1),//limit the maximum number of child folders to number of record folder to create - 1
                         null, null, // Ignore file limits
                         skip, limit);
 
