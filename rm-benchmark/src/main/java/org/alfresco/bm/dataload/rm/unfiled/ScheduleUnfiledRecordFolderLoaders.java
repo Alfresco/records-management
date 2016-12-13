@@ -23,15 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
-
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RmBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
 
 /**
  * Prepare event for unfiled record folders structure

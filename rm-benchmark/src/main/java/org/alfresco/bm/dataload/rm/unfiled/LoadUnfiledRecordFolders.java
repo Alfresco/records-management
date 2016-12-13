@@ -25,9 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
-
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RmBaseEventProcessor;
 import org.alfresco.bm.event.Event;
@@ -38,6 +35,9 @@ import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent
 import org.alfresco.rest.rm.community.requests.FilePlanComponentAPI;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
 
 /**
  * Unfiled record folders structure creation event

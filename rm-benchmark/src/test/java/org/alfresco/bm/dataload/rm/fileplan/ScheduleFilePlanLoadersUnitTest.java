@@ -33,8 +33,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.mongodb.DBObject;
-
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMEventConstants;
@@ -48,6 +46,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.mongodb.DBObject;
 
 /**
  * Unit tests for ScheduleFilePlanLoaders
