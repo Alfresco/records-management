@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 import com.mongodb.BasicDBObjectBuilder;
@@ -34,14 +35,18 @@ import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RmBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
+import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.bm.session.SessionService;
+import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
+import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
+import org.alfresco.rest.rm.community.requests.FilePlanComponentAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Prepare event for loading unfiled records
  *
  * @author Silviu Dinuta
- * @since 1.0
+ * @since 2.6
  *
  */
 public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
@@ -52,6 +57,9 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
 
     @Autowired
     private SessionService sessionService;
+
+    @Autowired
+    private RestAPIFactory restAPIFactory;
 
     private int maxActiveLoaders;
     private boolean uploadUnfiledRecords;
@@ -244,26 +252,40 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
     {
         if(unfiledRecordFoldersThatNeedRecords == null)
         {
-            int skip = 0;
-            int limit = 100;
             unfiledRecordFoldersThatNeedRecords = new ArrayList<FolderData>();
-            List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
-                        UNFILED_CONTEXT,
-                        null, null,
-                        null, null,
-                        null, null,
-                        skip, limit);
-            while(emptyFolders.size() > 0)
+            if(paths == null || paths.size() == 0)
             {
-                unfiledRecordFoldersThatNeedRecords.addAll(emptyFolders);
-                skip += limit;
-                emptyFolders = fileFolderService.getFoldersByCounts(
-                            UNFILED_CONTEXT,
-                            null, null,
-                            null, null,
-                            null, null,
-                            skip, limit);
-           }
+                initialiseFoldersToExistingUnfiledRecordsFoldersStructure();
+            }
+            else
+            {
+                for(String path : paths)
+                {
+                    FolderData folder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH + path);
+                    if(folder != null)//if folder exists
+                    {
+                        unfiledRecordFoldersThatNeedRecords.add(folder);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            folder = createFolder(path);
+                            unfiledRecordFoldersThatNeedRecords.add(folder);
+                        }
+                        catch(Exception e)
+                        {
+                            // something went wrong on creating current path structure, not all required paths will be created
+                        }
+                    }
+                }
+
+             // configured paths did not existed in db and something went wrong with creation for all of them, initialize to existing structure in this case
+                if(unfiledRecordFoldersThatNeedRecords.size() == 0)
+                {
+                    initialiseFoldersToExistingUnfiledRecordsFoldersStructure();
+                }
+            }
            if(unfiledRecordFoldersThatNeedRecords.size() > 0)
            {
                //TODO randomly distribute the number of records here
@@ -276,6 +298,71 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
         }
     }
 
+    private void initialiseFoldersToExistingUnfiledRecordsFoldersStructure()
+    {
+        int skip = 0;
+        int limit = 100;
+        List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
+                    UNFILED_CONTEXT,
+                    null, null,
+                    null, null,
+                    null, null,
+                    skip, limit);
+        while(emptyFolders.size() > 0)
+        {
+            unfiledRecordFoldersThatNeedRecords.addAll(emptyFolders);
+            skip += limit;
+            emptyFolders = fileFolderService.getFoldersByCounts(
+                        UNFILED_CONTEXT,
+                        null, null,
+                        null, null,
+                        null, null,
+                        skip, limit);
+        }
+    }
+
+    private FolderData createFolder(String path) throws Exception
+    {
+        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentAPI(getUsername());
+        //TODO to use relativePath=/el1/el2 for path=/el1/el2/el3 and create folder el3 in mentioned relative path
+        List<String> pathElements = getPathElements(path);
+        FolderData parentFolder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH);
+        for(String pathElement: pathElements)
+        {
+            FilePlanComponent filePlanComponent = api.getFilePlanComponent(parentFolder.getId());
+            FolderData folder = fileFolderService.getFolder(UNFILED_CONTEXT, parentFolder.getPath() + "/" + pathElement);
+            if(folder != null)
+            {
+                parentFolder = folder;
+            }
+            else
+            {
+                parentFolder = createFilePlanComponentWithFixedName(parentFolder, api, filePlanComponent, pathElement, FilePlanComponentType.UNFILED_RECORD_FOLDER_TYPE.toString(), parentFolder.getContext());
+            }
+        }
+        return parentFolder;
+    }
+
+    /**
+     * Helper method that parses a string representing a file path and returns a list of element names
+     * @param path the file path represented as a string
+     * @return a list of file path element names
+     */
+    private List<String> getPathElements(String path)
+    {
+        final List<String> pathElements = new ArrayList<>();
+        if (path != null && path.trim().length() > 0)
+        {
+            // There is no need to check for leading and trailing "/"
+            final StringTokenizer tokenizer = new StringTokenizer(path, "/");
+            while (tokenizer.hasMoreTokens())
+            {
+                pathElements.add(tokenizer.nextToken().trim());
+            }
+        }
+        return pathElements;
+    }
+
     private void prepareUnfiledRecords(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         calculateListOfEmptyFolders();
@@ -283,7 +370,7 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
         emptyFolders.addAll(unfiledRecordFoldersThatNeedRecords);
         while (nextEvents.size() < loaderSessionsToCreate)
         {
-            if(mapOfRecordsPerUnfiledRecordFolder.size() == 0)
+            if(mapOfRecordsPerUnfiledRecordFolder == null || mapOfRecordsPerUnfiledRecordFolder.size() == 0)
             {
                 break;
             }

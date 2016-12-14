@@ -37,7 +37,7 @@ import com.mongodb.DBObject;
  * Prepare event for unfiled record folders structure
  *
  * @author Silviu Dinuta
- * @since 1.0
+ * @since 2.6
  *
  */
 public class ScheduleUnfiledRecordFolderLoaders extends RmBaseEventProcessor
@@ -199,8 +199,7 @@ public class ScheduleUnfiledRecordFolderLoaders extends RmBaseEventProcessor
         // Do we actually need to do anything
         if (!createUnfiledRecordFolderStructure)
         {
-            String unfiledRecordContainerPath = "/" + PATH_SNIPPET_SITES + "/" + PATH_SNIPPET_RM_SITE_ID + "/" + PATH_SNIPPET_FILE_PLAN + "/" + PATH_SNIPPET_UNFILED_RECORD_CONTAINER;
-            List<FolderData> unfiledRecordContainer = fileFolderService.getChildFolders(UNFILED_CONTEXT, unfiledRecordContainerPath, 0, 1);
+            List<FolderData> unfiledRecordContainer = fileFolderService.getChildFolders(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH, 0, 1);
             if(unfiledRecordContainer.size() == 0)
             {
                 return new EventResult("Unfiled Record Folders structure creation not wanted.", false);

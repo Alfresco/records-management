@@ -50,4 +50,8 @@ public interface RMEventConstants
     public static final String PATH_SNIPPET_FILE_PLAN = "documentLibrary";
     public static final String PATH_SNIPPET_RM_SITE_ID = "rm";
     public static final String PATH_SNIPPET_UNFILED_RECORD_CONTAINER = "Unfiled Records";
+    public static final String UNFILED_RECORD_CONTAINER_PATH = "/" + PATH_SNIPPET_SITES +
+                                                               "/" + PATH_SNIPPET_RM_SITE_ID +
+                                                               "/" + PATH_SNIPPET_FILE_PLAN +
+                                                               "/" + PATH_SNIPPET_UNFILED_RECORD_CONTAINER;
 }

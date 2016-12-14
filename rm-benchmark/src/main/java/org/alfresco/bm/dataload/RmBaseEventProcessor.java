@@ -46,8 +46,6 @@ public abstract class RmBaseEventProcessor extends AbstractEventProcessor implem
 
             try
             {
-                api.setParameters("include=path");
-
                 // Build filePlan component records folder properties
                 FilePlanComponent filePlanComponentModel = FilePlanComponent.builder()
                     .name(newfilePlanComponentName)
@@ -75,6 +73,40 @@ public abstract class RmBaseEventProcessor extends AbstractEventProcessor implem
         fileFolderService.incrementFolderCount(folder.getContext(), folderPath, componentsToCreate);
     }
 
+    public FolderData createFilePlanComponentWithFixedName(FolderData folder, FilePlanComponentAPI api,
+                FilePlanComponent parentFilePlanComponent, String name, String type, String context) throws Exception // to-check: type of exception
+    {
+        FolderData createdFolder = null;
+        String folderPath = folder.getPath();
+        String newfilePlanComponentTitle = "title: " + name;
+        try
+        {
+            // Build filePlan component records folder properties
+            FilePlanComponent filePlanComponentModel = FilePlanComponent.builder()
+                        .name(name)
+                        .nodeType(type)
+                        .properties(FilePlanComponentProperties.builder()
+                                    .title(newfilePlanComponentTitle)
+                                    .description(EMPTY)
+                                    .build())
+                        .build();
+
+            FilePlanComponent filePlanComponent = api.createFilePlanComponent(filePlanComponentModel, parentFilePlanComponent.getId());
+
+            String newfilePlanComponentId = filePlanComponent.getId();
+            fileFolderService.createNewFolder(newfilePlanComponentId, context,
+                        folderPath + "/" + name);
+            // Increment counts
+            fileFolderService.incrementFolderCount(folder.getContext(), folderPath, 1);
+            createdFolder = fileFolderService.getFolder(newfilePlanComponentId);
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+        return createdFolder;
+    }
+
     public void createRecord(FolderData folder, FilePlanComponentAPI api,
                 FilePlanComponent parentFilePlanComponent, int componentsToCreate, String nameIdentifier, String type,
                 long loadFilePlanComponentDelay) throws Exception // to-check: type of exception
@@ -90,8 +122,6 @@ public abstract class RmBaseEventProcessor extends AbstractEventProcessor implem
 
             try
             {
-                api.setParameters("include=path");
-
                 // Build filePlan component records folder properties
                 FilePlanComponent filePlanComponentModel = FilePlanComponent.builder()
                         .name(newfilePlanComponentName)
@@ -134,7 +164,6 @@ public abstract class RmBaseEventProcessor extends AbstractEventProcessor implem
             String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
             try
             {
-                api.setParameters("include=path");
                 // Build filePlan component records folder properties
                 FilePlanComponent filePlanComponentModel = FilePlanComponent.builder()
                         .name(newfilePlanComponentName)

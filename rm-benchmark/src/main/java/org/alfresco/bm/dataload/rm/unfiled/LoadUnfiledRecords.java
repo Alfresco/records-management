@@ -43,7 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Unfiled records creation event
  *
  * @author Silviu Dinuta
- * @since 1.0
+ * @since 2.6
  *
  */
 public class LoadUnfiledRecords extends RmBaseEventProcessor
@@ -122,8 +122,6 @@ public class LoadUnfiledRecords extends RmBaseEventProcessor
                 throws IOException
     {
         FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentAPI(siteManager);
-        api.setParameters("include=path");
-
         try
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
@@ -133,8 +131,8 @@ public class LoadUnfiledRecords extends RmBaseEventProcessor
             if(recordsToCreate > 0)
             {
                 super.resumeTimer();
-                createRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, FilePlanComponentType.NON_ELECTRONIC_RECORD_TYPE.toString(), loadUnfiledRecordDelay);
-//                uploadElectronicRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
+//                createRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, FilePlanComponentType.NON_ELECTRONIC_RECORD_TYPE.toString(), loadUnfiledRecordDelay);
+                uploadElectronicRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
                 super.suspendTimer();
                 // Clean up the lock
                 String lockedPath = container.getPath() + "/locked";

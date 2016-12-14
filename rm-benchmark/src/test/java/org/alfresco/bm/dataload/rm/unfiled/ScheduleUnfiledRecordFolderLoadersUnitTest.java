@@ -49,7 +49,7 @@ import com.mongodb.DBObject;
 /**
  * Unit tests for ScheduleUnfiledRecordFolderLoaders
  * @author Silviu Dinuta
- * @since 1.0
+ * @since 2.6
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConstants
@@ -81,10 +81,9 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
     public void testUnfiledRecordFoldersNotWantedAndContinueLoadingData() throws Exception
     {
         scheduleUnfiledRecordFolderLoaders.setCreateUnfiledRecordFolderStructure(false);
-        String unfiledRecordContainerPath = "/" + PATH_SNIPPET_SITES + "/" + PATH_SNIPPET_RM_SITE_ID + "/" + PATH_SNIPPET_FILE_PLAN + "/" + PATH_SNIPPET_UNFILED_RECORD_CONTAINER;
         FolderData mockedFolder = mock(FolderData.class);
         List<FolderData> unfiledContainerChildren = Arrays.asList(mockedFolder);
-        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, unfiledRecordContainerPath, 0, 1)).thenReturn(unfiledContainerChildren);
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH, 0, 1)).thenReturn(unfiledContainerChildren);
         EventResult result = scheduleUnfiledRecordFolderLoaders.processEvent(null, new StopWatch());
 
         verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
