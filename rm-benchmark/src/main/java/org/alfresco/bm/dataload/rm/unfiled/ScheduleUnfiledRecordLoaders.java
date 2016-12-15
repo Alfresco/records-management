@@ -277,7 +277,6 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
     private FolderData createFolder(String path) throws Exception
     {
         FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentAPI(getUsername());
-        //TODO to use relativePath=/el1/el2 for path=/el1/el2/el3 and create folder el3 in mentioned relative path
         List<String> pathElements = getPathElements(path);
         FolderData parentFolder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH);
         for(String pathElement: pathElements)
