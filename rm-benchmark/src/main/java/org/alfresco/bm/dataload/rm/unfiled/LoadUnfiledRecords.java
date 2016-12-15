@@ -34,7 +34,6 @@ import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
 import org.alfresco.rest.rm.community.requests.FilePlanComponentAPI;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,7 +130,6 @@ public class LoadUnfiledRecords extends RmBaseEventProcessor
             if(recordsToCreate > 0)
             {
                 super.resumeTimer();
-//                createRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, FilePlanComponentType.NON_ELECTRONIC_RECORD_TYPE.toString(), loadUnfiledRecordDelay);
                 uploadElectronicRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
                 super.suspendTimer();
                 // Clean up the lock
