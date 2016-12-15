@@ -186,7 +186,6 @@
     <property name="uploadUnfiledRecords" value="${rm.uploadUnfiledRecords}" />
     <property name="unfiledRecordsNumber" value="${rm.unfiledRecordsNumber}" />
     <property name="unfiledRecordFolderPaths" value="${rm.unfiledRecordFolderPaths}" />
-    <property name="unfiledRecordFolderDepth" value="${rm.unfiledRecordFolderDepth}" />
     <property name="username" value="${rm.username}" />
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
     <property name="chart" value="false" />

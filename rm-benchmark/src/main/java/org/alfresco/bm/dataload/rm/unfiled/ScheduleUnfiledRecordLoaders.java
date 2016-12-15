@@ -68,8 +68,6 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
     private List<String> paths;
     private long loadCheckDelay;
     private String username;
-    private int maxLevel;
-    private int unfiledRecordFolderDepth;
     private String eventNameLoadUnfiledRecords = EVENT_NAME_LOAD_UNFILED_RECORDS;
     private String eventNameScheduleLoaders = EVENT_NAME_SCHEDULE_LOADERS;
     private String eventNameLoadingComplete = EVENT_NAME_LOADING_COMPLETE;
@@ -84,22 +82,6 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
     public void setMaxActiveLoaders(int maxActiveLoaders)
     {
         this.maxActiveLoaders = maxActiveLoaders;
-    }
-
-    public int getUnfiledRecordFolderDepth()
-    {
-        return unfiledRecordFolderDepth;
-    }
-
-    public void setUnfiledRecordFolderDepth(int unfiledRecordFolderDepth)
-    {
-        this.unfiledRecordFolderDepth = unfiledRecordFolderDepth;
-        this.maxLevel = this.unfiledRecordFolderDepth + 4;      // Add levels for "/Sites<L1>/siteId<L2>/documentLibrary<L3>/Unfiled Records<L4>"
-    }
-
-    public int getMaxLevel()
-    {
-        return maxLevel;
     }
 
     public boolean isUploadUnfiledRecords()
@@ -280,7 +262,7 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
                     }
                 }
 
-             // configured paths did not existed in db and something went wrong with creation for all of them, initialize to existing structure in this case
+                // configured paths did not existed in db and something went wrong with creation for all of them, initialize to existing structure in this case
                 if(unfiledRecordFoldersThatNeedRecords.size() == 0)
                 {
                     initialiseFoldersToExistingUnfiledRecordsFoldersStructure();
@@ -373,37 +355,45 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
             for (FolderData emptyFolder : emptyFolders)
             {
                 int recordsToCreate = mapOfRecordsPerUnfiledRecordFolder.get(emptyFolder) - (int) emptyFolder.getFileCount();
-                try
+                if(recordsToCreate <= 0)
                 {
-                    // Create a lock folder that has too many files and folders so that it won't be picked up
-                    // by this process in subsequent trawls
-                    String lockPath = emptyFolder.getPath() + "/locked";
-                    FolderData lockFolder = new FolderData(
+                    unfiledRecordFoldersThatNeedRecords.remove(emptyFolder);
+                    mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);
+                }
+                else
+                {
+                    try
+                    {
+                        // Create a lock folder that has too many files and folders so that it won't be picked up
+                        // by this process in subsequent trawls
+                        String lockPath = emptyFolder.getPath() + "/locked";
+                        FolderData lockFolder = new FolderData(
                                 UUID.randomUUID().toString(),
                                 emptyFolder.getContext(), lockPath,
                                 Long.MAX_VALUE, Long.MAX_VALUE);
-                    fileFolderService.createNewFolder(lockFolder);
-                    // We locked this, so the load can be scheduled.
-                    // The loader will remove the lock when it completes
-                    DBObject loadData = BasicDBObjectBuilder.start()
+                        fileFolderService.createNewFolder(lockFolder);
+                        // We locked this, so the load can be scheduled.
+                        // The loader will remove the lock when it completes
+                        DBObject loadData = BasicDBObjectBuilder.start()
                                 .add(FIELD_CONTEXT, emptyFolder.getContext())
                                 .add(FIELD_PATH, emptyFolder.getPath())
                                 .add(FIELD_RECORDS_TO_CREATE, Integer.valueOf(recordsToCreate))
                                 .add(FIELD_SITE_MANAGER, username)
                                 .get();
-                    Event loadEvent = new Event(eventNameLoadUnfiledRecords, loadData);
-                    // Each load event must be associated with a session
-                    String sessionId = sessionService.startSession(loadData);
-                    loadEvent.setSessionId(sessionId);
-                    // Add the event to the list
-                    nextEvents.add(loadEvent);
-                    unfiledRecordFoldersThatNeedRecords.remove(emptyFolder);
-                    mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);
-                }
-                catch (Exception e)
-                {
-                    // The lock was already applied; find another
-                    continue;
+                        Event loadEvent = new Event(eventNameLoadUnfiledRecords, loadData);
+                        // Each load event must be associated with a session
+                        String sessionId = sessionService.startSession(loadData);
+                        loadEvent.setSessionId(sessionId);
+                        // Add the event to the list
+                        nextEvents.add(loadEvent);
+                        unfiledRecordFoldersThatNeedRecords.remove(emptyFolder);
+                        mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);
+                    }
+                    catch (Exception e)
+                    {
+                        // The lock was already applied; find another
+                        continue;
+                    }
                 }
                 // Check if we have enough
                 if (nextEvents.size() >= loaderSessionsToCreate)
