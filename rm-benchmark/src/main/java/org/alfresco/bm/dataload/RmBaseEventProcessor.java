@@ -4,10 +4,12 @@ import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanCo
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -219,5 +221,50 @@ public abstract class RmBaseEventProcessor extends AbstractEventProcessor implem
             generatedValues[i] = aux[i+1] - aux[i];
         }
         return generatedValues;
+    }
+
+    /**
+     * Helper method that parses a string representing a file path and returns a list of element names
+     * @param path the file path represented as a string
+     * @return a list of file path element names
+     */
+    public List<String> getPathElements(String path)
+    {
+        final List<String> pathElements = new ArrayList<>();
+        if (path != null && path.trim().length() > 0)
+        {
+            // There is no need to check for leading and trailing "/"
+            final StringTokenizer tokenizer = new StringTokenizer(path, "/");
+            while (tokenizer.hasMoreTokens())
+            {
+                pathElements.add(tokenizer.nextToken().trim());
+            }
+        }
+        return pathElements;
+    }
+
+    public List<FolderData> initialiseFoldersToExistingStructure(String context)
+    {
+        List<FolderData> existingFolderStructure = new ArrayList<FolderData>();
+        int skip = 0;
+        int limit = 100;
+        List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
+                    context,
+                    null, null,
+                    null, null,
+                    null, null,
+                    skip, limit);
+        while(emptyFolders.size() > 0)
+        {
+            existingFolderStructure.addAll(emptyFolders);
+            skip += limit;
+            emptyFolders = fileFolderService.getFoldersByCounts(
+                        context,
+                        null, null,
+                        null, null,
+                        null, null,
+                        skip, limit);
+        }
+        return existingFolderStructure;
     }
 }
