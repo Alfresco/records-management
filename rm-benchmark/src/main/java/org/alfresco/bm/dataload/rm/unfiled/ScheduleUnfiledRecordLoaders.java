@@ -288,12 +288,7 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
             }
            if(unfiledRecordFoldersThatNeedRecords.size() > 0)
            {
-               //TODO randomly distribute the number of records here
-               mapOfRecordsPerUnfiledRecordFolder = new HashMap<FolderData,Integer>();
-               for(FolderData folder : unfiledRecordFoldersThatNeedRecords)
-               {
-                   mapOfRecordsPerUnfiledRecordFolder.put(folder, 2);
-               }
+               mapOfRecordsPerUnfiledRecordFolder = distributeNumberOfRecords(unfiledRecordFoldersThatNeedRecords, unfiledRecordsNumber);
            }
         }
     }
@@ -378,45 +373,37 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
             for (FolderData emptyFolder : emptyFolders)
             {
                 int recordsToCreate = mapOfRecordsPerUnfiledRecordFolder.get(emptyFolder) - (int) emptyFolder.getFileCount();
-                if(recordsToCreate <= 0)
+                try
                 {
-                    unfiledRecordFoldersThatNeedRecords.remove(emptyFolder);
-                    mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);
-                }
-                else
-                {
-                    try
-                    {
-                        // Create a lock folder that has too many files and folders so that it won't be picked up
-                        // by this process in subsequent trawls
-                        String lockPath = emptyFolder.getPath() + "/locked";
-                        FolderData lockFolder = new FolderData(
+                    // Create a lock folder that has too many files and folders so that it won't be picked up
+                    // by this process in subsequent trawls
+                    String lockPath = emptyFolder.getPath() + "/locked";
+                    FolderData lockFolder = new FolderData(
                                 UUID.randomUUID().toString(),
                                 emptyFolder.getContext(), lockPath,
                                 Long.MAX_VALUE, Long.MAX_VALUE);
-                        fileFolderService.createNewFolder(lockFolder);
-                        // We locked this, so the load can be scheduled.
-                        // The loader will remove the lock when it completes
-                        DBObject loadData = BasicDBObjectBuilder.start()
+                    fileFolderService.createNewFolder(lockFolder);
+                    // We locked this, so the load can be scheduled.
+                    // The loader will remove the lock when it completes
+                    DBObject loadData = BasicDBObjectBuilder.start()
                                 .add(FIELD_CONTEXT, emptyFolder.getContext())
                                 .add(FIELD_PATH, emptyFolder.getPath())
                                 .add(FIELD_RECORDS_TO_CREATE, Integer.valueOf(recordsToCreate))
                                 .add(FIELD_SITE_MANAGER, username)
                                 .get();
-                        Event loadEvent = new Event(eventNameLoadUnfiledRecords, loadData);
-                        // Each load event must be associated with a session
-                        String sessionId = sessionService.startSession(loadData);
-                        loadEvent.setSessionId(sessionId);
-                        // Add the event to the list
-                        nextEvents.add(loadEvent);
-                        unfiledRecordFoldersThatNeedRecords.remove(emptyFolder);
-                        mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);
-                    }
-                    catch (Exception e)
-                    {
-                        // The lock was already applied; find another
-                        continue;
-                    }
+                    Event loadEvent = new Event(eventNameLoadUnfiledRecords, loadData);
+                    // Each load event must be associated with a session
+                    String sessionId = sessionService.startSession(loadData);
+                    loadEvent.setSessionId(sessionId);
+                    // Add the event to the list
+                    nextEvents.add(loadEvent);
+                    unfiledRecordFoldersThatNeedRecords.remove(emptyFolder);
+                    mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);
+                }
+                catch (Exception e)
+                {
+                    // The lock was already applied; find another
+                    continue;
                 }
                 // Check if we have enough
                 if (nextEvents.size() >= loaderSessionsToCreate)

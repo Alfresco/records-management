@@ -4,7 +4,10 @@ import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanCo
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -185,10 +188,36 @@ public abstract class RmBaseEventProcessor extends AbstractEventProcessor implem
         }
     }
 
-    public HashMap<Integer, Integer> distributeNumberOfRecords(int numberOrRecords, int numberOfFolders)
+    public HashMap<FolderData, Integer> distributeNumberOfRecords(List<FolderData> listOfFolders, int numberOfRecords)
     {
-        HashMap<Integer, Integer> mapOfValues = new HashMap<Integer, Integer>();
-        return mapOfValues;
+        HashMap<FolderData, Integer> mapOfRecordsPerFolder = new HashMap<FolderData,Integer>();
+        int[] generateRandomValues = generateRandomValues(listOfFolders.size(), numberOfRecords);
+        int counter = 0;
+        for(FolderData folder : listOfFolders)
+        {
+            int records = (int)(folder.getFileCount() + generateRandomValues[counter]);
+            mapOfRecordsPerFolder.put(folder, records);
+            counter++;
+        }
+        return mapOfRecordsPerFolder;
     }
 
+    private int[] generateRandomValues(int numberOfFolders, int numberOfRecords)
+    {
+        int[] aux = new int[numberOfFolders+1];
+        int[] generatedValues = new int[numberOfFolders];
+        Random r = new Random();
+        for(int i = 1;i < numberOfFolders;i++)
+        {
+            aux[i] = r.nextInt(numberOfRecords)+1;
+        }
+        aux[0] = 0;
+        aux[numberOfFolders] = numberOfRecords;
+        Arrays.sort(aux);
+        for(int i = 0;i < numberOfFolders;i++)
+        {
+            generatedValues[i] = aux[i+1] - aux[i];
+        }
+        return generatedValues;
+    }
 }
