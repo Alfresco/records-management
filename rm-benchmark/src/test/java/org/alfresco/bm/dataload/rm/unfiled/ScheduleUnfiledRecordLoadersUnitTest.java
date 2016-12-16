@@ -261,6 +261,164 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
     }
 
     @Test
+    public void testUploadRecordsWithExistentPathsOneChildOfTheOther() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int unfiledRecordsNumber = 4;
+        String configuredPath1 = "/e1/e2/e3";
+        String configuredPath2 = "/e1/e2/e3/e4";
+        String entirePath1 = UNFILED_RECORD_CONTAINER_PATH + configuredPath1;
+        String entirePath2 = UNFILED_RECORD_CONTAINER_PATH + configuredPath2;
+        String paths = configuredPath1 + "," + configuredPath2;
+        String username = "bob";
+
+        scheduleUnfiledRecordLoaders.setUploadUnfiledRecords(true);
+        scheduleUnfiledRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleUnfiledRecordLoaders.setUnfiledRecordsNumber(unfiledRecordsNumber);
+        scheduleUnfiledRecordLoaders.setUnfiledRecordFolderPaths(paths);
+        scheduleUnfiledRecordLoaders.setUsername(username);
+
+        FolderData mockedUnfiledRecordFolder = mock(FolderData.class);
+        when(mockedUnfiledRecordFolder.getId()).thenReturn("folderId1");
+        when(mockedUnfiledRecordFolder.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedUnfiledRecordFolder.getPath()).thenReturn(entirePath1);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, entirePath1)).thenReturn(mockedUnfiledRecordFolder);
+
+        FolderData mockedUnfiledRecordFolder1 = mock(FolderData.class);
+        when(mockedUnfiledRecordFolder1.getId()).thenReturn("newfolderId2");
+        when(mockedUnfiledRecordFolder1.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedUnfiledRecordFolder1.getPath()).thenReturn(entirePath2);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, entirePath2)).thenReturn(mockedUnfiledRecordFolder1);
+
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath1, 0, 100)).thenReturn(Arrays.asList(mockedUnfiledRecordFolder1));
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath2, 0, 100)).thenReturn(new ArrayList<FolderData>());
+
+        when(mockedRestApiFactory.getFilePlanComponentAPI(username)).thenReturn(mockedFilePlanComponentAPI);
+
+        EventResult result = scheduleUnfiledRecordLoaders.processEvent(null, new StopWatch());
+        verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
+        verify(mockedFileFolderService, times(4)).getChildFolders(any(String.class), any(String.class), any(Integer.class), any(Integer.class));
+        assertEquals(true, result.isSuccess());
+
+        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
+        // and if the number of records to create is 0 the event for loading will not be scheduled
+        int nextEventsSize = result.getNextEvents().size();
+        verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
+        assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
+
+        Event firstEvent = result.getNextEvents().get(0);
+        if(nextEventsSize - 1 == 2)
+        {
+            assertEquals("loadUnfiledRecords", firstEvent.getName());
+            DBObject dataObj = (DBObject)firstEvent.getData();
+            assertNotNull(dataObj);
+            assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+            assertEquals(entirePath2, (String) dataObj.get(FIELD_PATH));
+            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
+            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+            Event secondEvent = result.getNextEvents().get(1);
+            assertEquals("loadUnfiledRecords", secondEvent.getName());
+            dataObj = (DBObject)secondEvent.getData();
+            assertNotNull(dataObj);
+            assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+            assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
+            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
+            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+            assertEquals(unfiledRecordsNumber, value1 + value2);
+        }
+        else
+        {
+            //in case that one of generated values is 0 we check that the scheduled event had created all records
+            DBObject dataObj = (DBObject)firstEvent.getData();
+            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
+            assertEquals(unfiledRecordsNumber, value);
+        }
+        assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+    }
+
+    @Test
+    public void testUploadRecordsWithExistentPathWithOneChildInside() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int unfiledRecordsNumber = 4;
+        String configuredPath1 = "/e1/e2/e3";
+        String entirePath1 = UNFILED_RECORD_CONTAINER_PATH + configuredPath1;
+        String paths = configuredPath1;
+        String username = "bob";
+
+        scheduleUnfiledRecordLoaders.setUploadUnfiledRecords(true);
+        scheduleUnfiledRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleUnfiledRecordLoaders.setUnfiledRecordsNumber(unfiledRecordsNumber);
+        scheduleUnfiledRecordLoaders.setUnfiledRecordFolderPaths(paths);
+        scheduleUnfiledRecordLoaders.setUsername(username);
+
+        FolderData mockedUnfiledRecordFolder = mock(FolderData.class);
+        when(mockedUnfiledRecordFolder.getId()).thenReturn("folderId1");
+        when(mockedUnfiledRecordFolder.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedUnfiledRecordFolder.getPath()).thenReturn(entirePath1);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, entirePath1)).thenReturn(mockedUnfiledRecordFolder);
+
+        //child of configured path
+        String childPath = entirePath1 + "/" + "child1";
+        FolderData mockedUnfiledRecordFolder1 = mock(FolderData.class);
+        when(mockedUnfiledRecordFolder1.getId()).thenReturn("newfolderId2");
+        when(mockedUnfiledRecordFolder1.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedUnfiledRecordFolder1.getPath()).thenReturn(childPath);
+
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, childPath)).thenReturn(mockedUnfiledRecordFolder1);
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath1, 0, 100)).thenReturn(Arrays.asList(mockedUnfiledRecordFolder1));
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, childPath, 0, 100)).thenReturn(new ArrayList<FolderData>());
+
+        when(mockedRestApiFactory.getFilePlanComponentAPI(username)).thenReturn(mockedFilePlanComponentAPI);
+
+        EventResult result = scheduleUnfiledRecordLoaders.processEvent(null, new StopWatch());
+        verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
+        verify(mockedFileFolderService, times(3)).getChildFolders(any(String.class), any(String.class), any(Integer.class), any(Integer.class));
+        assertEquals(true, result.isSuccess());
+
+        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
+        // and if the number of records to create is 0 the event for loading will not be scheduled
+        int nextEventsSize = result.getNextEvents().size();
+        verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
+        assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
+
+        Event firstEvent = result.getNextEvents().get(0);
+        if(nextEventsSize - 1 == 2)
+        {
+            assertEquals("loadUnfiledRecords", firstEvent.getName());
+            DBObject dataObj = (DBObject)firstEvent.getData();
+            assertNotNull(dataObj);
+            assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+            assertEquals(childPath, (String) dataObj.get(FIELD_PATH));
+            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
+            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+            Event secondEvent = result.getNextEvents().get(1);
+            assertEquals("loadUnfiledRecords", secondEvent.getName());
+            dataObj = (DBObject)secondEvent.getData();
+            assertNotNull(dataObj);
+            assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+            assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
+            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
+            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+            assertEquals(unfiledRecordsNumber, value1 + value2);
+        }
+        else
+        {
+            //in case that one of generated values is 0 we check that the scheduled event had created all records
+            DBObject dataObj = (DBObject)firstEvent.getData();
+            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
+            assertEquals(unfiledRecordsNumber, value);
+        }
+        assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+    }
+
+    @Test
     public void testUploadRecordsWithNotExistentPreconfiguredPaths() throws Exception
     {
         int maxActiveLoaders = 8;

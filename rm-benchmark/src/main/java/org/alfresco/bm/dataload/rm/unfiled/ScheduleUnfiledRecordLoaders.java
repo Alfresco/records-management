@@ -24,7 +24,9 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.alfresco.bm.cm.FolderData;
@@ -240,12 +242,13 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
             }
             else
             {
+                LinkedHashSet<FolderData> unfiledFolderStructerFromExistentProvidedPaths = new LinkedHashSet<FolderData>();
                 for(String path : paths)
                 {
                     FolderData folder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH + path);
                     if(folder != null)//if folder exists
                     {
-                        unfiledRecordFoldersThatNeedRecords.add(folder);
+                        unfiledFolderStructerFromExistentProvidedPaths.addAll(getUnfiledRecordFolders(folder));
                     }
                     else
                     {
@@ -260,7 +263,11 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
                         }
                     }
                 }
-
+                //add unfiled record folders from existent paths
+                if(unfiledFolderStructerFromExistentProvidedPaths.size() > 0)
+                {
+                    unfiledRecordFoldersThatNeedRecords.addAll(unfiledFolderStructerFromExistentProvidedPaths);
+                }
                 // configured paths did not existed in db and something went wrong with creation for all of them, initialize to existing structure in this case
                 if(unfiledRecordFoldersThatNeedRecords.size() == 0)
                 {
@@ -272,6 +279,36 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
                mapOfRecordsPerUnfiledRecordFolder = distributeNumberOfRecords(unfiledRecordFoldersThatNeedRecords, unfiledRecordsNumber);
            }
         }
+    }
+
+    /**
+     * Obtains all unfiled record folders underneath specified parent folder plus the parent folder
+     *
+     * @param parentFolder
+     * @return all unfiled record folders underneath specified parent folder plus the parent folder
+     */
+    private Set<FolderData> getUnfiledRecordFolders(FolderData parentFolder)
+    {
+        LinkedHashSet<FolderData> result = new LinkedHashSet<FolderData>();
+        int skip = 0;
+        int limit = 100;
+        List<FolderData> directChildren = new ArrayList<FolderData>();
+        List<FolderData> childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
+        while(childFolders.size() > 0)
+        {
+            directChildren.addAll(childFolders);
+            skip += limit;
+            childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
+        }
+        if(directChildren.size() > 0)
+        {
+            for(FolderData childFolder : directChildren)
+            {
+                result.addAll(getUnfiledRecordFolders(childFolder));
+            }
+        }
+        result.add(parentFolder);
+        return result;
     }
 
     private FolderData createFolder(String path) throws Exception
