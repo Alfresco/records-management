@@ -398,6 +398,103 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
     }
 
     @Test
+    public void testUploadRecordsWithNotExistentPreconfiguredSinglePath() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int unfiledRecordsNumber = 4;
+        String configuredPath1 = "/e1/e2/e3";
+        String paths = configuredPath1;
+        String username = "bob";
+
+        scheduleUnfiledRecordLoaders.setUploadUnfiledRecords(true);
+        scheduleUnfiledRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleUnfiledRecordLoaders.setUnfiledRecordsNumber(unfiledRecordsNumber);
+        scheduleUnfiledRecordLoaders.setUnfiledRecordFolderPaths(paths);
+        scheduleUnfiledRecordLoaders.setUsername(username);
+
+        //unfiledRecord should be always there
+        FolderData mockedUnfiledRecordContainer = mock(FolderData.class);
+        when(mockedUnfiledRecordContainer.getId()).thenReturn("unfiledRecordContainerId");
+        when(mockedUnfiledRecordContainer.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedUnfiledRecordContainer.getPath()).thenReturn(UNFILED_RECORD_CONTAINER_PATH);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH)).thenReturn(mockedUnfiledRecordContainer);
+
+        when(mockedRestApiFactory.getFilePlanComponentAPI(username)).thenReturn(mockedFilePlanComponentAPI);
+        FilePlanComponent mockedUnfiledContaineFilePlanComponent = mock(FilePlanComponent.class);
+        when(mockedUnfiledContaineFilePlanComponent.getId()).thenReturn("unfiledRecordContainerId");
+        when(mockedFilePlanComponentAPI.getFilePlanComponent("unfiledRecordContainerId")).thenReturn(mockedUnfiledContaineFilePlanComponent);
+
+        //e1 folder
+        FilePlanComponent mockedE1FilePlanComponent = mock(FilePlanComponent.class);
+        when(mockedE1FilePlanComponent .getId()).thenReturn("e1Id");
+        when(mockedFilePlanComponentAPI.getFilePlanComponent("e1Id")).thenReturn(mockedE1FilePlanComponent);
+        when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("unfiledRecordContainerId"))).thenReturn(mockedE1FilePlanComponent);
+
+        String e1Path = UNFILED_RECORD_CONTAINER_PATH + "/e1";
+        FolderData mockedE1 = mock(FolderData.class);
+        when(mockedE1.getId()).thenReturn("e1Id");
+        when(mockedE1.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedE1.getPath()).thenReturn(e1Path);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, e1Path)).thenReturn(null)
+        .thenReturn(mockedE1);
+        when(mockedFileFolderService.getFolder("e1Id")).thenReturn(mockedE1);
+
+        //e2 folder
+        FilePlanComponent mockedE2FilePlanComponent = mock(FilePlanComponent.class);
+        when(mockedE2FilePlanComponent .getId()).thenReturn("e2Id");
+        when(mockedFilePlanComponentAPI.getFilePlanComponent("e2Id")).thenReturn(mockedE2FilePlanComponent);
+        when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("e1Id"))).thenReturn(mockedE2FilePlanComponent);
+
+        String e2Path = UNFILED_RECORD_CONTAINER_PATH + "/e1/e2";
+        FolderData mockedE2 = mock(FolderData.class);
+        when(mockedE2.getId()).thenReturn("e2Id");
+        when(mockedE2.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedE2.getPath()).thenReturn(e2Path);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, e2Path)).thenReturn(null)
+        .thenReturn(mockedE2);
+        when(mockedFileFolderService.getFolder("e2Id")).thenReturn(mockedE2);
+
+        //e3 folder
+        FilePlanComponent mockedE3FilePlanComponent = mock(FilePlanComponent.class);
+        when(mockedE3FilePlanComponent .getId()).thenReturn("e3Id");
+        when(mockedFilePlanComponentAPI.getFilePlanComponent("e3Id")).thenReturn(mockedE3FilePlanComponent);
+
+        String e3Path = UNFILED_RECORD_CONTAINER_PATH + "/e1/e2/e3";
+        FolderData mockedE3 = mock(FolderData.class);
+        when(mockedE3.getId()).thenReturn("e3Id");
+        when(mockedE3.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedE3.getPath()).thenReturn(e3Path);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, e3Path)).thenReturn(null)
+                                                                        .thenReturn(null)
+                                                                        .thenReturn(mockedE3);
+        when(mockedFileFolderService.getFolder("e3Id")).thenReturn(mockedE3);
+        when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("e2Id"))).thenReturn(mockedE3FilePlanComponent);
+
+        EventResult result = scheduleUnfiledRecordLoaders.processEvent(null, new StopWatch());
+        verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
+        verify(mockedFileFolderService, times(3)).createNewFolder(any(String.class), any(String.class), any(String.class));
+        verify(mockedFileFolderService, times(3)).incrementFolderCount(any(String.class), any(String.class), eq(1L));
+        verify(mockedFileFolderService, times(3)).getFolder(any(String.class));
+        verify(mockedFileFolderService, times(1)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(1)).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Raised further 1 events and rescheduled self.", result.getData());
+        assertEquals(2, result.getNextEvents().size());
+
+        Event firstEvent = result.getNextEvents().get(0);
+        assertEquals("loadUnfiledRecords", firstEvent.getName());
+        DBObject dataObj = (DBObject)firstEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals(e3Path, (String) dataObj.get(FIELD_PATH));
+        int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
+        assertEquals(unfiledRecordsNumber, value);
+        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+        assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(1).getName());
+    }
+
+    @Test
     public void testUploadRecordsWithExceptionWhenCreatingPreconfiguredPaths() throws Exception
     {
         int maxActiveLoaders = 8;
