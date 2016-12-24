@@ -1,5 +1,7 @@
 package org.alfresco.bm.dataload;
 
+import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.RECORD_CATEGORY_TYPE;
+import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.RECORD_FOLDER_TYPE;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.io.IOException;
@@ -14,7 +16,6 @@ import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
 import org.alfresco.rest.rm.community.requests.FilePlanComponentAPI;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +119,7 @@ public class LoadFilePlan extends RmBaseEventProcessor
                 super.resumeTimer();
                 createFilePlanComponent(container, api, filePlanComponent, rootCategoriesToCreate,
                             ROOT_CATEGORY_NAME_IDENTIFIER,
-                            FilePlanComponentType.RECORD_CATEGORY_TYPE.toString(), RECORD_CATEGORY_CONTEXT, loadFilePlanDelay);
+                            RECORD_CATEGORY_TYPE, RECORD_CATEGORY_CONTEXT, loadFilePlanDelay);
                 super.suspendTimer();
                 String lockedPath = container.getPath() + "/locked";
                 fileFolderService.deleteFolder(container.getContext(), lockedPath, false);
@@ -130,7 +131,7 @@ public class LoadFilePlan extends RmBaseEventProcessor
                 super.resumeTimer();
                 createFilePlanComponent(container, api, filePlanComponent, categoriesToCreate,
                             CATEGORY_NAME_IDENTIFIER,
-                            FilePlanComponentType.RECORD_CATEGORY_TYPE.toString(), RECORD_CATEGORY_CONTEXT, loadFilePlanDelay);
+                            RECORD_CATEGORY_TYPE, RECORD_CATEGORY_CONTEXT, loadFilePlanDelay);
                 super.suspendTimer();
                 String lockedPath = container.getPath() + "/locked";
                 fileFolderService.deleteFolder(container.getContext(), lockedPath, false);
@@ -142,7 +143,7 @@ public class LoadFilePlan extends RmBaseEventProcessor
                 super.resumeTimer();
                 createFilePlanComponent(container, api, filePlanComponent, foldersToCreate,
                             RECORD_FOLDER_NAME_IDENTIFIER,
-                            FilePlanComponentType.RECORD_FOLDER_TYPE.toString(), RECORD_FOLDER_CONTEXT, loadFilePlanDelay);
+                            RECORD_FOLDER_TYPE, RECORD_FOLDER_CONTEXT, loadFilePlanDelay);
                 super.suspendTimer();
                 String lockedPath = container.getPath() + "/locked";
                 fileFolderService.deleteFolder(container.getContext(), lockedPath, false);

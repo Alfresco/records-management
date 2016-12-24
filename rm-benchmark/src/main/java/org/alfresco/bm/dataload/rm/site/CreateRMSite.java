@@ -19,6 +19,10 @@ import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_DESC;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_TITLE;
+import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.FILE_PLAN_ALIAS;
+import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.HOLDS_ALIAS;
+import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.TRANSFERS_ALIAS;
+import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS;
 import static org.alfresco.rest.rm.community.model.site.RMSiteCompliance.STANDARD;
 import static org.alfresco.rest.rm.community.util.ParameterCheck.mandatoryObject;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -34,7 +38,6 @@ import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias;
 import org.alfresco.rest.rm.community.model.site.RMSite;
 import org.alfresco.rest.rm.community.requests.RMSiteAPI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,7 +164,7 @@ public class CreateRMSite extends AbstractEventProcessor
     private void loadSpecialContainersInDB(String siteId, String siteManager) throws Exception
     {
         FilePlanComponent filePlanComponent = restAPIFactory.getFilePlanComponentAPI(siteManager)
-                    .getFilePlanComponent(FilePlanComponentAlias.FILE_PLAN_ALIAS.toString());
+                    .getFilePlanComponent(FILE_PLAN_ALIAS);
 
         FolderData filePlan = new FolderData(
                 filePlanComponent.getId(),                                   // already unique
@@ -172,7 +175,7 @@ public class CreateRMSite extends AbstractEventProcessor
 
         //add Unfiled record container
         filePlanComponent = restAPIFactory.getFilePlanComponentAPI(siteManager)
-                    .getFilePlanComponent(FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS.toString());
+                    .getFilePlanComponent(UNFILED_RECORDS_CONTAINER_ALIAS);
 
         FolderData unfiledRecordContainer = new FolderData(
                 filePlanComponent.getId(),                                   // already unique
@@ -183,7 +186,7 @@ public class CreateRMSite extends AbstractEventProcessor
 
         //add Transfer container
         filePlanComponent = restAPIFactory.getFilePlanComponentAPI(siteManager)
-                    .getFilePlanComponent(FilePlanComponentAlias.TRANSFERS_ALIAS.toString());
+                    .getFilePlanComponent(TRANSFERS_ALIAS);
 
         FolderData transferContainer = new FolderData(
                     filePlanComponent.getId(),                                   // already unique
@@ -194,7 +197,7 @@ public class CreateRMSite extends AbstractEventProcessor
 
         //add Hold container
         filePlanComponent = restAPIFactory.getFilePlanComponentAPI(siteManager)
-                    .getFilePlanComponent(FilePlanComponentAlias.HOLDS_ALIAS.toString());
+                    .getFilePlanComponent(HOLDS_ALIAS);
 
         FolderData holdContainer = new FolderData(
                     filePlanComponent.getId(),                                   // already unique

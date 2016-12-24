@@ -191,13 +191,13 @@ public class CreateRMSiteUnitTest
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(true);
 
         when(mockedRestAPIFactory.getFilePlanComponentAPI(siteManager)).thenReturn(mockedFilePlanComponentAPI);
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(FILE_PLAN_ALIAS.toString())).thenReturn(mockedFilePlan);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent(FILE_PLAN_ALIAS)).thenReturn(mockedFilePlan);
         when(mockedFilePlan.getId()).thenReturn(randomUUID().toString());
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(UNFILED_RECORDS_CONTAINER_ALIAS.toString())).thenReturn(mockedFilePlan);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent(UNFILED_RECORDS_CONTAINER_ALIAS)).thenReturn(mockedFilePlan);
         when(mockedUnfiledRecordsContainer.getId()).thenReturn(randomUUID().toString());
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(TRANSFERS_ALIAS.toString())).thenReturn(mockedFilePlan);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent(TRANSFERS_ALIAS)).thenReturn(mockedFilePlan);
         when(mockedTransfers.getId()).thenReturn(randomUUID().toString());
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(HOLDS_ALIAS.toString())).thenReturn(mockedFilePlan);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent(HOLDS_ALIAS)).thenReturn(mockedFilePlan);
         when(mockedHolds.getId()).thenReturn(randomUUID().toString());
 
         EventResult result = createRMSite.processEvent(mockedEvent);
@@ -243,13 +243,13 @@ public class CreateRMSiteUnitTest
         when(mockedRMSiteAPI.getSite()).thenReturn(mockedRMSite);
 
         when(mockedRestAPIFactory.getFilePlanComponentAPI(siteManager)).thenReturn(mockedFilePlanComponentAPI);
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(FILE_PLAN_ALIAS.toString())).thenReturn(mockedFilePlan);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent(FILE_PLAN_ALIAS)).thenReturn(mockedFilePlan);
         when(mockedFilePlan.getId()).thenReturn(randomUUID().toString());
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(UNFILED_RECORDS_CONTAINER_ALIAS.toString())).thenReturn(mockedFilePlan);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent(UNFILED_RECORDS_CONTAINER_ALIAS)).thenReturn(mockedFilePlan);
         when(mockedUnfiledRecordsContainer.getId()).thenReturn(randomUUID().toString());
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(TRANSFERS_ALIAS.toString())).thenReturn(mockedFilePlan);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent(TRANSFERS_ALIAS)).thenReturn(mockedFilePlan);
         when(mockedTransfers.getId()).thenReturn(randomUUID().toString());
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(HOLDS_ALIAS.toString())).thenReturn(mockedFilePlan);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent(HOLDS_ALIAS)).thenReturn(mockedFilePlan);
         when(mockedHolds.getId()).thenReturn(randomUUID().toString());
 
         EventResult result = createRMSite.processEvent(mockedEvent);

@@ -19,11 +19,15 @@
 
 package org.alfresco.bm.dataload.rm.unfiled;
 
+import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.UNFILED_RECORD_FOLDER_TYPE;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
 
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RmBaseEventProcessor;
@@ -31,13 +35,9 @@ import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
 import org.alfresco.rest.rm.community.requests.FilePlanComponentAPI;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
 
 /**
  * Unfiled record folders structure creation event
@@ -136,7 +136,7 @@ public class LoadUnfiledRecordFolders extends RmBaseEventProcessor
             if(rootFoldersToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, rootFoldersToCreate, ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, FilePlanComponentType.UNFILED_RECORD_FOLDER_TYPE.toString(),
+                createFilePlanComponent(container, api, filePlanComponent, rootFoldersToCreate, ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, UNFILED_RECORD_FOLDER_TYPE,
                                         container.getContext(), loadUnfiledRecordFolderDelay);
                 super.suspendTimer();
                 String lockedPath = container.getPath() + "/locked";
@@ -147,7 +147,7 @@ public class LoadUnfiledRecordFolders extends RmBaseEventProcessor
             if(foldersToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, foldersToCreate, UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, FilePlanComponentType.UNFILED_RECORD_FOLDER_TYPE.toString(),
+                createFilePlanComponent(container, api, filePlanComponent, foldersToCreate, UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, UNFILED_RECORD_FOLDER_TYPE,
                                         container.getContext(), loadUnfiledRecordFolderDelay);
                 super.suspendTimer();
                 String lockedPath = container.getPath() + "/locked";
