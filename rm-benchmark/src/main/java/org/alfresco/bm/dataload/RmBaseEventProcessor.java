@@ -10,7 +10,7 @@ import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.event.AbstractEventProcessor;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentProperties;
-import org.alfresco.rest.rm.community.requests.FilePlanComponentAPI;
+import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 
 public abstract class RmBaseEventProcessor extends AbstractEventProcessor implements RMEventConstants
 {

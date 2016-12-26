@@ -40,7 +40,7 @@ import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
-import org.alfresco.rest.rm.community.requests.RMSiteAPI;
+import org.alfresco.rest.rm.community.requests.igCoreAPI.RMSiteAPI;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;

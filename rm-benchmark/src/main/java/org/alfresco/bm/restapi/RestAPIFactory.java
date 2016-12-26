@@ -11,8 +11,8 @@
  */
 package org.alfresco.bm.restapi;
 
-import org.alfresco.rest.rm.community.requests.FilePlanComponentAPI;
-import org.alfresco.rest.rm.community.requests.RMSiteAPI;
+import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
+import org.alfresco.rest.rm.community.requests.igCoreAPI.RMSiteAPI;
 
 /**
  * Rest API Factory interface

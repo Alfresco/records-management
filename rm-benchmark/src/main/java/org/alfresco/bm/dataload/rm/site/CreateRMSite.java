@@ -39,7 +39,7 @@ import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.model.site.RMSite;
-import org.alfresco.rest.rm.community.requests.RMSiteAPI;
+import org.alfresco.rest.rm.community.requests.igCoreAPI.RMSiteAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
