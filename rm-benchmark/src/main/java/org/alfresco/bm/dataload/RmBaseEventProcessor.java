@@ -35,8 +35,6 @@ public abstract class RmBaseEventProcessor extends AbstractEventProcessor implem
 
             try
             {
-                api.setParameters("include=path");
-
                 // Build filePlan component records folder properties
                 FilePlanComponent filePlanComponentModel = FilePlanComponent.builder()
                     .name(newfilePlanComponentName)
@@ -47,7 +45,7 @@ public abstract class RmBaseEventProcessor extends AbstractEventProcessor implem
                             .build())
                     .build();
 
-                FilePlanComponent filePlanComponent = api.createFilePlanComponent(filePlanComponentModel, parentFilePlanComponent.getId());
+                FilePlanComponent filePlanComponent = api.createFilePlanComponent(filePlanComponentModel, parentFilePlanComponent.getId(), "include=path");
 
                 String newfilePlanComponentId = filePlanComponent.getId();
                 fileFolderService.createNewFolder(newfilePlanComponentId, context,

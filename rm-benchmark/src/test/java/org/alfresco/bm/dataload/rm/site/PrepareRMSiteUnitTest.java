@@ -15,13 +15,13 @@ import static org.alfresco.bm.data.DataCreationState.Created;
 import static org.alfresco.bm.data.DataCreationState.Scheduled;
 import static org.alfresco.bm.dataload.rm.role.RMRole.ADMINISTRATOR;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.DEFAULT_EVENT_NAME_RM_SITE_PREPARED;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_ONLY_DB_LOAD;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
-import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_ONLY_DB_LOAD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentCaptor.forClass;
-import static org.mockito.Mockito.any;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -34,13 +34,14 @@ import com.mongodb.DBObject;
 
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
+import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.RMSiteAPI;
+import org.alfresco.utility.model.UserModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -82,7 +83,7 @@ public class PrepareRMSiteUnitTest
         prepareRMSite.setCreateRMSite(false);
         prepareRMSite.setUsername(username);
         prepareRMSite.setPassword(password);
-        when(mockedRestAPIFactory.getRMSiteAPI(username)).thenReturn(mockedRMSiteAPI);
+        when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(false);
 
         EventResult result = prepareRMSite.processEvent(mockedEvent);
@@ -102,7 +103,7 @@ public class PrepareRMSiteUnitTest
         prepareRMSite.setCreateRMSite(true);
         prepareRMSite.setUsername(username);
         prepareRMSite.setPassword(password);
-        when(mockedRestAPIFactory.getRMSiteAPI(username)).thenReturn(mockedRMSiteAPI);
+        when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(false);
 
         EventResult result = prepareRMSite.processEvent(null);
@@ -150,7 +151,7 @@ public class PrepareRMSiteUnitTest
         prepareRMSite.setCreateRMSite(true);
         prepareRMSite.setUsername(username);
         prepareRMSite.setPassword(password);
-        when(mockedRestAPIFactory.getRMSiteAPI(username)).thenReturn(mockedRMSiteAPI);
+        when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(true);
 
         EventResult result = prepareRMSite.processEvent(null);
@@ -198,7 +199,7 @@ public class PrepareRMSiteUnitTest
         prepareRMSite.setCreateRMSite(true);
         prepareRMSite.setUsername(username);
         prepareRMSite.setPassword(password);
-        when(mockedRestAPIFactory.getRMSiteAPI(username)).thenReturn(mockedRMSiteAPI);
+        when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(true);
         SiteData mockedSiteData = mock(SiteData.class);
         when(mockedSiteData.getSiteId()).thenReturn(RM_SITE_ID);
@@ -237,7 +238,7 @@ public class PrepareRMSiteUnitTest
         prepareRMSite.setCreateRMSite(true);
         prepareRMSite.setUsername(username);
         prepareRMSite.setPassword(password);
-        when(mockedRestAPIFactory.getRMSiteAPI(username)).thenReturn(mockedRMSiteAPI);
+        when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(false);
         SiteData mockedSiteData = mock(SiteData.class);
         when(mockedSiteData.getSiteId()).thenReturn(RM_SITE_ID);

@@ -52,13 +52,6 @@
     <constructor-arg name="ftpPath" value="${files.ftp.path}" />
   </bean>
 
-  <bean id="restAPIFactory" class="org.alfresco.bm.restapi.impl.RestAPIFactoryImpl">
-    <property name="scheme" value="${alfresco.scheme}" />
-    <property name="host" value="${alfresco.server}" />
-    <property name="port" value="${alfresco.port}" />
-    <property name="rmBasePath" value="${rm.basePath}" />
-  </bean>
-
   <bean id="rmBaseEventProcessor" class="org.alfresco.bm.dataload.RmBaseEventProcessor"
     abstract="true" parent="event.base">
     <property name="fileFolderService" ref="fileFolderService" />

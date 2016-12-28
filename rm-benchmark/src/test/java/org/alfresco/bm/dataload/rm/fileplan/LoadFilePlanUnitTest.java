@@ -31,16 +31,19 @@ import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 
+import com.mongodb.DBObject;
+
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.LoadFilePlan;
 import org.alfresco.bm.dataload.RMEventConstants;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.bm.session.SessionService;
+import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
+import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,8 +51,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.mongodb.DBObject;
 
 /**
  * Unit tests for LoadFilePlan
@@ -265,10 +266,10 @@ public class LoadFilePlanUnitTest implements RMEventConstants
         loadFilePlan.setFileFolderService(mockedFileFolderService);
         when(mockedEvent.getSessionId()).thenReturn("someId");
 
-        when(mockedRestAPIFactory.getFilePlanComponentAPI("aUser")).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestAPIFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanComponent.getId()).thenReturn("folderId");
-        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId", "include=path")).thenReturn(mockedFilePlanComponent);
         FilePlanComponent mockedChildFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedChildFilePlanComponent.getId()).thenReturn(UUID.randomUUID().toString());
         when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("folderId"))).thenReturn(mockedChildFilePlanComponent);
@@ -307,13 +308,12 @@ public class LoadFilePlanUnitTest implements RMEventConstants
         loadFilePlan.setEventNameRecordCategoryLoaded("recordCategoriesLoaded");
         loadFilePlan.setFileFolderService(mockedFileFolderService);
         when(mockedEvent.getSessionId()).thenReturn("someId");
-
-        when(mockedRestAPIFactory.getFilePlanComponentAPI("aUser")).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestAPIFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanComponent.getId()).thenReturn("folderId");
-        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId", "include=path")).thenReturn(mockedFilePlanComponent);
 
-        Mockito.doThrow(new Exception("someError")).when(mockedFilePlanComponentAPI).createFilePlanComponent(any(FilePlanComponent.class), any(String.class));
+        Mockito.doThrow(new Exception("someError")).when(mockedFilePlanComponentAPI).createFilePlanComponent(any(FilePlanComponent.class), any(String.class), eq("include=path"));
         EventResult result = loadFilePlan.processEvent(mockedEvent, new StopWatch());
         verify(mockedFileFolderService, never()).createNewFolder(any(String.class), any(String.class), any(String.class));
         verify(mockedFileFolderService, never()).incrementFolderCount(any(String.class), any(String.class), any(Long.class));
@@ -350,13 +350,13 @@ public class LoadFilePlanUnitTest implements RMEventConstants
         loadFilePlan.setFileFolderService(mockedFileFolderService);
         when(mockedEvent.getSessionId()).thenReturn("someId");
 
-        when(mockedRestAPIFactory.getFilePlanComponentAPI("aUser")).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestAPIFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanComponent.getId()).thenReturn("folderId");
-        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId", "include=path")).thenReturn(mockedFilePlanComponent);
         FilePlanComponent mockedChildFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedChildFilePlanComponent.getId()).thenReturn(UUID.randomUUID().toString());
-        when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("folderId"))).thenReturn(mockedChildFilePlanComponent);
+        when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("folderId"), eq("include=path"))).thenReturn(mockedChildFilePlanComponent);
 
         EventResult result = loadFilePlan.processEvent(mockedEvent, new StopWatch());
         verify(mockedFileFolderService, times(rootCategoriesNumber)).createNewFolder(any(String.class), any(String.class), any(String.class));
@@ -393,13 +393,13 @@ public class LoadFilePlanUnitTest implements RMEventConstants
         loadFilePlan.setFileFolderService(mockedFileFolderService);
         when(mockedEvent.getSessionId()).thenReturn("someId");
 
-        when(mockedRestAPIFactory.getFilePlanComponentAPI("aUser")).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestAPIFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanComponent.getId()).thenReturn("folderId");
-        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId", "include=path")).thenReturn(mockedFilePlanComponent);
         FilePlanComponent mockedChildFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedChildFilePlanComponent.getId()).thenReturn(UUID.randomUUID().toString());
-        when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("folderId"))).thenReturn(mockedChildFilePlanComponent);
+        when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("folderId"), eq("include=path"))).thenReturn(mockedChildFilePlanComponent);
 
         EventResult result = loadFilePlan.processEvent(mockedEvent, new StopWatch());
         verify(mockedFileFolderService, times(childCategoriesNumber)).createNewFolder(any(String.class), any(String.class), any(String.class));
@@ -436,13 +436,13 @@ public class LoadFilePlanUnitTest implements RMEventConstants
         loadFilePlan.setFileFolderService(mockedFileFolderService);
         when(mockedEvent.getSessionId()).thenReturn("someId");
 
-        when(mockedRestAPIFactory.getFilePlanComponentAPI("aUser")).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestAPIFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanComponent.getId()).thenReturn("folderId");
-        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
+        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId", "include=path")).thenReturn(mockedFilePlanComponent);
         FilePlanComponent mockedChildFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedChildFilePlanComponent.getId()).thenReturn(UUID.randomUUID().toString());
-        when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("folderId"))).thenReturn(mockedChildFilePlanComponent);
+        when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("folderId"), eq("include=path"))).thenReturn(mockedChildFilePlanComponent);
 
         EventResult result = loadFilePlan.processEvent(mockedEvent, new StopWatch());
         verify(mockedFileFolderService, times(childRecordFolderNumber)).createNewFolder(any(String.class), any(String.class), any(String.class));

@@ -34,12 +34,14 @@ import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.event.AbstractEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
+import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.model.site.RMSite;
+import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.RMSiteAPI;
+import org.alfresco.utility.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -117,7 +119,7 @@ public class CreateRMSite extends AbstractEventProcessor
         String msg = null;
         try
         {
-            RMSiteAPI rmSiteAPI = restAPIFactory.getRMSiteAPI(siteManager);
+            RMSiteAPI rmSiteAPI = restAPIFactory.getRMSiteAPI(new UserModel(siteManager, siteManager));
             String guid = null;
             if (onlyLoadInDb == null)
             {
@@ -163,8 +165,8 @@ public class CreateRMSite extends AbstractEventProcessor
 
     private void loadSpecialContainersInDB(String siteId, String siteManager) throws Exception
     {
-        FilePlanComponent filePlanComponent = restAPIFactory.getFilePlanComponentAPI(siteManager)
-                    .getFilePlanComponent(FILE_PLAN_ALIAS);
+        FilePlanComponentAPI filePlanComponentsAPI = restAPIFactory.getFilePlanComponentsAPI(new UserModel(siteManager, siteManager));
+        FilePlanComponent filePlanComponent = filePlanComponentsAPI.getFilePlanComponent(FILE_PLAN_ALIAS);
 
         FolderData filePlan = new FolderData(
                 filePlanComponent.getId(),                                   // already unique
@@ -174,8 +176,7 @@ public class CreateRMSite extends AbstractEventProcessor
         fileFolderService.createNewFolder(filePlan);
 
         //add Unfiled record container
-        filePlanComponent = restAPIFactory.getFilePlanComponentAPI(siteManager)
-                    .getFilePlanComponent(UNFILED_RECORDS_CONTAINER_ALIAS);
+        filePlanComponent = filePlanComponentsAPI.getFilePlanComponent(UNFILED_RECORDS_CONTAINER_ALIAS);
 
         FolderData unfiledRecordContainer = new FolderData(
                 filePlanComponent.getId(),                                   // already unique
@@ -185,8 +186,7 @@ public class CreateRMSite extends AbstractEventProcessor
         fileFolderService.createNewFolder(unfiledRecordContainer);
 
         //add Transfer container
-        filePlanComponent = restAPIFactory.getFilePlanComponentAPI(siteManager)
-                    .getFilePlanComponent(TRANSFERS_ALIAS);
+        filePlanComponent = filePlanComponentsAPI.getFilePlanComponent(TRANSFERS_ALIAS);
 
         FolderData transferContainer = new FolderData(
                     filePlanComponent.getId(),                                   // already unique
@@ -196,8 +196,7 @@ public class CreateRMSite extends AbstractEventProcessor
         fileFolderService.createNewFolder(transferContainer);
 
         //add Hold container
-        filePlanComponent = restAPIFactory.getFilePlanComponentAPI(siteManager)
-                    .getFilePlanComponent(HOLDS_ALIAS);
+        filePlanComponent = filePlanComponentsAPI.getFilePlanComponent(HOLDS_ALIAS);
 
         FolderData holdContainer = new FolderData(
                     filePlanComponent.getId(),                                   // already unique

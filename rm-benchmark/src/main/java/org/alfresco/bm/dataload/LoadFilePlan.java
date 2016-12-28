@@ -14,9 +14,10 @@ import com.mongodb.DBObject;
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.bm.restapi.RestAPIFactory;
+import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
+import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -105,13 +106,12 @@ public class LoadFilePlan extends RmBaseEventProcessor
     private EventResult loadCategory(FolderData container, int rootCategoriesToCreate, int categoriesToCreate,
                 int foldersToCreate, String siteManager) throws IOException
     {
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentAPI(siteManager);
-        api.setParameters("include=path");
+        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(siteManager, siteManager));
 
         try
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
-            FilePlanComponent filePlanComponent = api.getFilePlanComponent(container.getId());
+            FilePlanComponent filePlanComponent = api.getFilePlanComponent(container.getId(), "include=path");
 
             // Create root categories
             if(rootCategoriesToCreate > 0)

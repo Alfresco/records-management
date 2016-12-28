@@ -13,19 +13,19 @@ package org.alfresco.bm.dataload.rm.site;
 
 import static java.util.UUID.randomUUID;
 
+import static org.alfresco.bm.data.DataCreationState.Created;
 import static org.alfresco.bm.data.DataCreationState.Failed;
 import static org.alfresco.bm.data.DataCreationState.Scheduled;
-import static org.alfresco.bm.data.DataCreationState.Created;
 import static org.alfresco.bm.dataload.rm.site.CreateRMSite.DEFAULT_EVENT_NAME_SITE_CREATED;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_ONLY_DB_LOAD;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
-import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_ONLY_DB_LOAD;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.FILE_PLAN_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.HOLDS_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.TRANSFERS_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.any;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -40,13 +40,14 @@ import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
+import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.model.site.RMSite;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.RMSiteAPI;
+import org.alfresco.utility.model.UserModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -186,11 +187,11 @@ public class CreateRMSiteUnitTest
         when(mockedEvent.getData()).thenReturn(mockedData);
         when(mockedSiteDataService.getSite(siteId)).thenReturn(mockedSiteData);
         when(mockedSiteData.getCreationState()).thenReturn(Scheduled);
-        when(mockedRestAPIFactory.getRMSiteAPI(siteManager)).thenReturn(mockedRMSiteAPI);
+        when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
         when(mockedRMSiteAPI.createRMSite(any(RMSite.class))).thenReturn(mockedRMSite);
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(true);
 
-        when(mockedRestAPIFactory.getFilePlanComponentAPI(siteManager)).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestAPIFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
         when(mockedFilePlanComponentAPI.getFilePlanComponent(FILE_PLAN_ALIAS)).thenReturn(mockedFilePlan);
         when(mockedFilePlan.getId()).thenReturn(randomUUID().toString());
         when(mockedFilePlanComponentAPI.getFilePlanComponent(UNFILED_RECORDS_CONTAINER_ALIAS)).thenReturn(mockedFilePlan);
@@ -235,14 +236,14 @@ public class CreateRMSiteUnitTest
 
         when(mockedSiteDataService.getSite(siteId)).thenReturn(mockedSiteData);
         when(mockedSiteData.getCreationState()).thenReturn(Scheduled);
-        when(mockedRestAPIFactory.getRMSiteAPI(siteManager)).thenReturn(mockedRMSiteAPI);
+        when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(true);
 
         String guuid = randomUUID().toString();
         when(mockedRMSite.getGuid()).thenReturn(guuid);
         when(mockedRMSiteAPI.getSite()).thenReturn(mockedRMSite);
 
-        when(mockedRestAPIFactory.getFilePlanComponentAPI(siteManager)).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestAPIFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
         when(mockedFilePlanComponentAPI.getFilePlanComponent(FILE_PLAN_ALIAS)).thenReturn(mockedFilePlan);
         when(mockedFilePlan.getId()).thenReturn(randomUUID().toString());
         when(mockedFilePlanComponentAPI.getFilePlanComponent(UNFILED_RECORDS_CONTAINER_ALIAS)).thenReturn(mockedFilePlan);
@@ -279,7 +280,7 @@ public class CreateRMSiteUnitTest
         when(mockedEvent.getData()).thenReturn(mockedData);
         when(mockedSiteDataService.getSite(siteId)).thenReturn(mockedSiteData);
         when(mockedSiteData.getCreationState()).thenReturn(Scheduled);
-        when(mockedRestAPIFactory.getRMSiteAPI(siteManager)).thenThrow(mockedException);
+        when(mockedRestAPIFactory.getRMSiteAPI(new UserModel(siteManager, siteManager))).thenThrow(mockedException);
         when(mockedException.getMessage()).thenReturn(randomUUID().toString());
         createRMSite.processEvent(mockedEvent);
     }

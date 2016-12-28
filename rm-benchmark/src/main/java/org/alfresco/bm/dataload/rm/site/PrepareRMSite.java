@@ -32,12 +32,13 @@ import com.mongodb.DBObject;
 import org.alfresco.bm.event.AbstractEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
+import org.alfresco.rest.core.RestAPIFactory;
+import org.alfresco.utility.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -194,7 +195,7 @@ public class PrepareRMSite extends AbstractEventProcessor
             }
         }
 
-        boolean existsRMSite = restAPIFactory.getRMSiteAPI(getUsername()).existsRMSite();
+        boolean existsRMSite = restAPIFactory.getRMSiteAPI(new UserModel(getUsername(), getUsername())).existsRMSite();
 
         //rm site does not exists and we don't want to create it
         if (!existsRMSite && !isCreateRMSite())
