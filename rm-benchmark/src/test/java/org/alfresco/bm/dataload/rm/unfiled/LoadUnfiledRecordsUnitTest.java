@@ -265,12 +265,15 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
         when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
         File mockedFile = mock(File.class);
         when(mockedTestFileService.getFile()).thenReturn(mockedFile);
-        Mockito.doThrow(new Exception("someError")).when(mockedFilePlanComponentAPI).createElectronicRecord(any(FilePlanComponent.class), any(File.class), any(String.class));
+        //TODO uncomment this and remove createFilePlanComponent call when RM-4564 issue is fixed
+//        Mockito.doThrow(new Exception("someError")).when(mockedFilePlanComponentAPI).createElectronicRecord(any(FilePlanComponent.class), any(File.class), any(String.class));
+        Mockito.doThrow(new Exception("someError")).when(mockedFilePlanComponentAPI).createFilePlanComponent(any(FilePlanComponent.class), any(String.class));
 
         EventResult result = loadUnfiledRecords.processEvent(mockedEvent, new StopWatch());
         verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
 
-        verify(mockedTestFileService, times(1)).getFile();
+        //TODO uncomment this when RM-4564 issue is fixed
+//        verify(mockedTestFileService, times(1)).getFile();
         verify(mockedFilePlanComponentAPI, never()).createElectronicRecord(any(FilePlanComponent.class), any(File.class), eq("folderId"));
 
         verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
@@ -287,45 +290,46 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
         assertEquals(0, result.getNextEvents().size());
     }
 
-    @Test
-    public void testLoadRecordsWithNoFileException() throws Exception
-    {
-        int recordsToCreate = 3;
-        loadUnfiledRecords.setEventNameUnfiledRecordsLoaded("unfiledRecordsLoaded");
-        Event mockedEvent = mock(Event.class);
-        DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
-        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-        when(mockedData.get(FIELD_RECORDS_TO_CREATE)).thenReturn(Integer.valueOf(recordsToCreate));
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn("aUser");
-        when(mockedEvent.getData()).thenReturn(mockedData);
-
-        FolderData mockedFolder = mock(FolderData.class);
-        when(mockedFolder.getId()).thenReturn("folderId");
-        when(mockedFolder.getPath()).thenReturn("/aPath");
-        when(mockedFolder.getContext()).thenReturn("someContext");
-        when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
-        when(mockedEvent.getSessionId()).thenReturn("someId");
-        when(mockedRestApiFactory.getFilePlanComponentAPI("aUser")).thenReturn(mockedFilePlanComponentAPI);
-        FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
-        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
-
-
-        EventResult result = loadUnfiledRecords.processEvent(mockedEvent, new StopWatch());
-        verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
-        verify(mockedTestFileService, times(1)).getFile();
-        verify(mockedFilePlanComponentAPI, never()).createElectronicRecord(any(FilePlanComponent.class), any(File.class), eq("folderId"));
-        verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
-
-        assertEquals(false, result.isSuccess());
-        DBObject data = (DBObject) result.getData();
-        assertNotNull(data.get("error"));
-        assertEquals("No test files exist for upload: mockedTestFileService", data.get("error"));
-        assertEquals("aUser", data.get("username"));
-        assertEquals(mockedFolder.getPath(), data.get("path"));
-        assertNotNull(data.get("stack"));
-        assertEquals(0, result.getNextEvents().size());
-    }
+    //TODO uncomment this when RM-4564 issue is fixed
+//    @Test
+//    public void testLoadRecordsWithNoFileException() throws Exception
+//    {
+//        int recordsToCreate = 3;
+//        loadUnfiledRecords.setEventNameUnfiledRecordsLoaded("unfiledRecordsLoaded");
+//        Event mockedEvent = mock(Event.class);
+//        DBObject mockedData = mock(DBObject.class);
+//        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
+//        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
+//        when(mockedData.get(FIELD_RECORDS_TO_CREATE)).thenReturn(Integer.valueOf(recordsToCreate));
+//        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn("aUser");
+//        when(mockedEvent.getData()).thenReturn(mockedData);
+//
+//        FolderData mockedFolder = mock(FolderData.class);
+//        when(mockedFolder.getId()).thenReturn("folderId");
+//        when(mockedFolder.getPath()).thenReturn("/aPath");
+//        when(mockedFolder.getContext()).thenReturn("someContext");
+//        when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
+//        when(mockedEvent.getSessionId()).thenReturn("someId");
+//        when(mockedRestApiFactory.getFilePlanComponentAPI("aUser")).thenReturn(mockedFilePlanComponentAPI);
+//        FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
+//        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
+//
+//
+//        EventResult result = loadUnfiledRecords.processEvent(mockedEvent, new StopWatch());
+//        verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
+//        verify(mockedTestFileService, times(1)).getFile();
+//        verify(mockedFilePlanComponentAPI, never()).createElectronicRecord(any(FilePlanComponent.class), any(File.class), eq("folderId"));
+//        verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
+//
+//        assertEquals(false, result.isSuccess());
+//        DBObject data = (DBObject) result.getData();
+//        assertNotNull(data.get("error"));
+//        assertEquals("No test files exist for upload: mockedTestFileService", data.get("error"));
+//        assertEquals("aUser", data.get("username"));
+//        assertEquals(mockedFolder.getPath(), data.get("path"));
+//        assertNotNull(data.get("stack"));
+//        assertEquals(0, result.getNextEvents().size());
+//    }
 
     @Test
     public void testUploadRecords() throws Exception
@@ -356,9 +360,10 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
         EventResult result = loadUnfiledRecords.processEvent(mockedEvent, new StopWatch());
 
         verify(mockedFileFolderService, times(1)).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
-        verify(mockedTestFileService, times(3)).getFile();
-        verify(mockedFilePlanComponentAPI, times(3)).createElectronicRecord(any(FilePlanComponent.class), any(File.class), eq("folderId"));
-        verify(mockedFileFolderService, times(3)).incrementFileCount(any(String.class), any(String.class), any(Long.class));
+        //TODO uncomment this when RM-4564 issue is fixed
+//        verify(mockedTestFileService, times(3)).getFile();
+//        verify(mockedFilePlanComponentAPI, times(3)).createElectronicRecord(any(FilePlanComponent.class), any(File.class), eq("folderId"));
+//        verify(mockedFileFolderService, times(3)).incrementFileCount(any(String.class), any(String.class), any(Long.class));
 
         assertEquals(true, result.isSuccess());
         DBObject data = (DBObject) result.getData();
