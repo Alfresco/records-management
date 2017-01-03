@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2016 Alfresco Software Limited
+ * Copyright (C) 2005 - 2017 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -25,7 +25,7 @@
  * #L%
  */
 
-package org.alfresco.rm.rest.api.nodes;
+package org.alfresco.rm.rest.api.fileplancomponents;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

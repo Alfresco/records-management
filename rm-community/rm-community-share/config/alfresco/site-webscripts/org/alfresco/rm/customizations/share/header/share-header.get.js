@@ -1,10 +1,9 @@
-<import resource="classpath:/alfresco/site-webscripts/org/alfresco/share/imports/share-header.lib.js">
-
+//<import resource="classpath:/alfresco/site-webscripts/org/alfresco/share/imports/share-header.lib.js">
 /*
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2016 Alfresco Software Limited
+ * Copyright (C) 2005 - 2017 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -53,7 +52,7 @@ if (siteNavigationWidgets.length > 0)
    else
    {
       lastNavigationWidget = siteNavigationWidgets.pop();
-      if(lastNavigationWidget.config.widgets == undefined)
+      if (lastNavigationWidget.config.widgets == undefined)
       {
          siteNavigationWidgets.push(lastNavigationWidget);
          siteNavigationWidgets.push(managementConsoleWidget);
@@ -105,8 +104,7 @@ if (isRmPageTitle)
    }
 }
 
-function getCustomizeSiteDashboard(titleBarModel)
-{
+function getCustomizeSiteDashboard(titleBarModel) {
    var result,
       i,
       length = titleBarModel.length;
