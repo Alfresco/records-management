@@ -31,16 +31,19 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 
+import com.mongodb.DBObject;
+
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMEventConstants;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.file.TestFileService;
-import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.bm.session.SessionService;
+import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.requests.FilePlanComponentAPI;
+import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
+import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,8 +51,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.mongodb.DBObject;
 
 /**
  * Unit tests for LoadUnfiledRecords
@@ -218,7 +219,7 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
         when(mockedFolder.getContext()).thenReturn("someContext");
         when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
         when(mockedEvent.getSessionId()).thenReturn("someId");
-        when(mockedRestApiFactory.getFilePlanComponentAPI("aUser")).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
 
@@ -260,7 +261,7 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
         when(mockedFolder.getContext()).thenReturn("someContext");
         when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
         when(mockedEvent.getSessionId()).thenReturn("someId");
-        when(mockedRestApiFactory.getFilePlanComponentAPI("aUser")).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
         File mockedFile = mock(File.class);
@@ -350,7 +351,7 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
         when(mockedFolder.getContext()).thenReturn("someContext");
         when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
         when(mockedEvent.getSessionId()).thenReturn("someId");
-        when(mockedRestApiFactory.getFilePlanComponentAPI("aUser")).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanComponent.getId()).thenReturn("folderId");
         when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);

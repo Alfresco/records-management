@@ -32,23 +32,24 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.mongodb.DBObject;
+
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMEventConstants;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.bm.session.SessionService;
+import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.requests.FilePlanComponentAPI;
+import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
+import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.mongodb.DBObject;
 
 /**
  * Unit tests for ScheduleUnfiledRecordLoaders
@@ -136,7 +137,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         when(mockedUnfiledRecordFolder.getPath()).thenReturn(UNFILED_RECORD_CONTAINER_PATH + "/folder1");
         when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH + "/folder1")).thenReturn(mockedUnfiledRecordFolder);
 
-        when(mockedRestApiFactory.getFilePlanComponentAPI(username)).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
 
         //returns unfiled record container here, this is always available plus another unfiled record folder
         when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedUnfiledRecordContainer, mockedUnfiledRecordFolder));
@@ -216,7 +217,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         when(mockedUnfiledRecordFolder1.getPath()).thenReturn(entirePath2);
         when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, entirePath2)).thenReturn(mockedUnfiledRecordFolder1);
 
-        when(mockedRestApiFactory.getFilePlanComponentAPI(username)).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
 
         EventResult result = scheduleUnfiledRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
@@ -294,7 +295,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<FolderData>());
         when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath2, 0, 100)).thenReturn(new ArrayList<FolderData>());
 
-        when(mockedRestApiFactory.getFilePlanComponentAPI(username)).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
 
         EventResult result = scheduleUnfiledRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
@@ -373,7 +374,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<FolderData>());
         when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, childPath, 0, 100)).thenReturn(new ArrayList<FolderData>());
 
-        when(mockedRestApiFactory.getFilePlanComponentAPI(username)).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
 
         EventResult result = scheduleUnfiledRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
@@ -441,7 +442,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         when(mockedUnfiledRecordContainer.getPath()).thenReturn(UNFILED_RECORD_CONTAINER_PATH);
         when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH)).thenReturn(mockedUnfiledRecordContainer);
 
-        when(mockedRestApiFactory.getFilePlanComponentAPI(username)).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedUnfiledContaineFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedUnfiledContaineFilePlanComponent.getId()).thenReturn("unfiledRecordContainerId");
         when(mockedFilePlanComponentAPI.getFilePlanComponent("unfiledRecordContainerId")).thenReturn(mockedUnfiledContaineFilePlanComponent);
@@ -577,7 +578,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         when(mockedUnfiledRecordContainer.getPath()).thenReturn(UNFILED_RECORD_CONTAINER_PATH);
         when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH)).thenReturn(mockedUnfiledRecordContainer);
 
-        when(mockedRestApiFactory.getFilePlanComponentAPI(username)).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedUnfiledContaineFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedUnfiledContaineFilePlanComponent.getId()).thenReturn("unfiledRecordContainerId");
         when(mockedFilePlanComponentAPI.getFilePlanComponent("unfiledRecordContainerId")).thenReturn(mockedUnfiledContaineFilePlanComponent);
@@ -680,7 +681,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         when(mockedUnfiledRecordFolder.getPath()).thenReturn(UNFILED_RECORD_CONTAINER_PATH + "/folder1");
         when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH + "/folder1")).thenReturn(mockedUnfiledRecordFolder);
 
-        when(mockedRestApiFactory.getFilePlanComponentAPI(username)).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
 
         //returns unfiled record container here, this is always available plus another unfiled record folder
         when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedUnfiledRecordContainer, mockedUnfiledRecordFolder));

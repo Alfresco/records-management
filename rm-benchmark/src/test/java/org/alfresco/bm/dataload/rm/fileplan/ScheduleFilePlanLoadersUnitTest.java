@@ -53,7 +53,7 @@ import com.mongodb.DBObject;
  * Unit tests for ScheduleFilePlanLoaders
  *
  * @author Silviu Dinuta
- * @since 1.0
+ * @since 2.6
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants

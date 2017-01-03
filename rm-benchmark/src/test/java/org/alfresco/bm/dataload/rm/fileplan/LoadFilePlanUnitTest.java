@@ -56,7 +56,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * Unit tests for LoadFilePlan
  *
  * @author Silviu Dinuta
- * @since 1.0
+ * @since 2.6
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LoadFilePlanUnitTest implements RMEventConstants

@@ -53,7 +53,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * Unit test for prepare RM site event processor
  *
  * @author Tuna Aksoy
- * @since 1.0
+ * @since 2.6
  */
 @RunWith(MockitoJUnitRunner.class)
 public class PrepareRMSiteUnitTest

@@ -54,7 +54,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * Unit tests for LoadUnfiledRecordFolders
  * @author Silviu Dinuta
- * @since 1.0
+ * @since 2.6
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LoadUnfiledRecordFoldersUnitTest implements RMEventConstants

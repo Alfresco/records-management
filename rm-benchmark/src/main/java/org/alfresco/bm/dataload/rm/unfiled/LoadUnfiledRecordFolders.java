@@ -44,7 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Unfiled record folders structure creation event
  *
  * @author Silviu Dinuta
- * @since 1.0
+ * @since 2.6
  *
  */
 public class LoadUnfiledRecordFolders extends RmBaseEventProcessor

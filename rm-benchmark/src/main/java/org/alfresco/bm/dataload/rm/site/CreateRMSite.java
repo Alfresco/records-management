@@ -48,7 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * RM Site creation event
  *
  * @author Tuna Aksoy
- * @since 1.0
+ * @since 2.6
  */
 public class CreateRMSite extends AbstractEventProcessor
 {

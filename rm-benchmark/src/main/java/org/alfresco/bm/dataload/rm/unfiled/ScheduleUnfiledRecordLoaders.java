@@ -29,19 +29,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
+
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RmBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.bm.session.SessionService;
+import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
-import org.alfresco.rest.rm.community.requests.FilePlanComponentAPI;
+import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
+import org.alfresco.utility.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
 
 /**
  * Prepare event for loading unfiled records
@@ -313,7 +314,7 @@ public class ScheduleUnfiledRecordLoaders extends RmBaseEventProcessor
 
     private FolderData createFolder(String path) throws Exception
     {
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentAPI(getUsername());
+        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(getUsername(), getUsername()));
         List<String> pathElements = getPathElements(path);
         FolderData parentFolder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH);
         for(String pathElement: pathElements)

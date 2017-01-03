@@ -47,7 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Michael Suzuki
  * @author Derek Hulley
  * @author Tuna Aksoy
- * @since 1.0
+ * @since 2.6
  */
 public class PrepareRMSite extends AbstractEventProcessor
 {

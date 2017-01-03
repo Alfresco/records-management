@@ -24,7 +24,7 @@ import java.util.Random;
  * Site membership role based on record management site.
  *
  * @author Michael Suzuki
- * @since 1.0
+ * @since 2.6
  */
 public enum RMRole
 {
