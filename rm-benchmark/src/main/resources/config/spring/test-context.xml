@@ -55,6 +55,7 @@
   <bean id="rmBaseEventProcessor" class="org.alfresco.bm.dataload.RmBaseEventProcessor"
     abstract="true" parent="event.base">
     <property name="fileFolderService" ref="fileFolderService" />
+    <property name="testFileService" ref="testFileService" />
   </bean>
 
   <!-- -->
@@ -154,9 +155,8 @@
     <property name="eventNameLoadUnfiledRecordFolders" value="loadUnfiledRecordFolders" />
     <property name="eventNameScheduleLoaders" value="scheduleUnfiledRecordFoldersLoaders" />
     <property name="eventNameLoadingComplete" value="loadingUnfiledRecordFoldersComplete" />
+    <property name="eventNameContinueLoadingUnfiledRecords" value="scheduleUnfiledRecordLoaders" />
   </bean>
-  <bean id="producer.loadingUnfiledRecordFoldersComplete" class="org.alfresco.bm.event.producer.TerminateEventProducer"
-    parent="producer.base" />
 
   <bean id="event.loadUnfiledRecordFolders" class="org.alfresco.bm.dataload.rm.unfiled.LoadUnfiledRecordFolders"
     parent="rmBaseEventProcessor">
@@ -165,6 +165,34 @@
     <property name="chart" value="true" />
   </bean>
 
-  <bean id="producer.unfiledRecordFoldersLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer"
-    parent="producer.base" />
+  <bean id="producer.unfiledRecordFoldersLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <!-- -->
+  <!-- Upload Unfiled Records -->
+  <!-- -->
+  <bean id="producer.loadingUnfiledRecordFoldersComplete" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base" >
+    <constructor-arg name="newEventName" value="scheduleUnfiledRecordLoaders" />
+  </bean>
+
+  <bean id="event.scheduleUnfiledRecordLoaders" class="org.alfresco.bm.dataload.rm.unfiled.ScheduleUnfiledRecordLoaders" parent="rmBaseEventProcessor">
+    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
+    <property name="uploadUnfiledRecords" value="${rm.uploadUnfiledRecords}" />
+    <property name="unfiledRecordsNumber" value="${rm.unfiledRecordsNumber}" />
+    <property name="unfiledRecordFolderPaths" value="${rm.unfiledRecordFolderPaths}" />
+    <property name="username" value="${rm.username}" />
+    <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
+    <property name="chart" value="false" />
+    <property name="eventNameLoadUnfiledRecords" value="loadUnfiledRecords" />
+    <property name="eventNameScheduleLoaders" value="scheduleUnfiledRecordLoaders" />
+    <property name="eventNameLoadingComplete" value="loadingUnfiledRecordsComplete" />
+  </bean>
+
+  <bean id="producer.loadingUnfiledRecordsComplete" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <bean id="event.loadUnfiledRecords" class="org.alfresco.bm.dataload.rm.unfiled.LoadUnfiledRecords" parent="rmBaseEventProcessor">
+    <property name="eventNameUnfiledRecordsLoaded" value="unfiledRecordsLoaded" />
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.unfiledRecordsLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 </beans>

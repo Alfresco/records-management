@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of Alfresco
  *
@@ -37,7 +37,7 @@ import com.mongodb.DBObject;
  * Prepare event for unfiled record folders structure
  *
  * @author Silviu Dinuta
- * @since 1.0
+ * @since 2.6
  *
  */
 public class ScheduleUnfiledRecordFolderLoaders extends RmBaseEventProcessor
@@ -45,6 +45,7 @@ public class ScheduleUnfiledRecordFolderLoaders extends RmBaseEventProcessor
     public static final String EVENT_NAME_LOAD_UNFILED_RECORD_FOLDERS = "loadUnfiledRecordFolders";
     public static final String EVENT_NAME_SCHEDULE_LOADERS = "scheduleUnfiledFoldersLoaders";
     public static final String EVENT_NAME_LOADING_COMPLETE = "loadingUnfiledRecordFoldersComplete";
+    public static final String EVENT_NAME_CONTINUE_LOADING_UNFILED_RECORDS = "scheduleUnfiledRecordLoaders";
 
     @Autowired
     private SessionService sessionService;
@@ -60,6 +61,7 @@ public class ScheduleUnfiledRecordFolderLoaders extends RmBaseEventProcessor
     private String eventNameLoadUnfiledRecordFolders = EVENT_NAME_LOAD_UNFILED_RECORD_FOLDERS;
     private String eventNameScheduleLoaders = EVENT_NAME_SCHEDULE_LOADERS;
     private String eventNameLoadingComplete = EVENT_NAME_LOADING_COMPLETE;
+    private String eventNameContinueLoadingUnfiledRecords = EVENT_NAME_CONTINUE_LOADING_UNFILED_RECORDS;
 
     public int getMaxActiveLoaders()
     {
@@ -176,6 +178,16 @@ public class ScheduleUnfiledRecordFolderLoaders extends RmBaseEventProcessor
         this.eventNameLoadingComplete = eventNameLoadingComplete;
     }
 
+    public String getEventNameContinueLoadingUnfiledRecords()
+    {
+        return eventNameContinueLoadingUnfiledRecords;
+    }
+
+    public void setEventNameContinueLoadingUnfiledRecords(String eventNameContinueLoadingUnfiledRecords)
+    {
+        this.eventNameContinueLoadingUnfiledRecords = eventNameContinueLoadingUnfiledRecords;
+    }
+
     @Override
     protected EventResult processEvent(Event arg0) throws Exception
     {
@@ -187,7 +199,15 @@ public class ScheduleUnfiledRecordFolderLoaders extends RmBaseEventProcessor
         // Do we actually need to do anything
         if (!createUnfiledRecordFolderStructure)
         {
-            return new EventResult("Unfiled Record Folders structure creation not wanted.", false);
+            List<FolderData> unfiledRecordContainer = fileFolderService.getChildFolders(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH, 0, 1);
+            if(unfiledRecordContainer.size() == 0)
+            {
+                return new EventResult("Unfiled Record Folders structure creation not wanted.", false);
+            }
+            else
+            {
+                return new EventResult("Unfiled Record Folders structure creation not wanted, continue with loading unfiled records.", new Event(getEventNameContinueLoadingUnfiledRecords(), null));
+            }
         }
         if(unfiledRecordFolderDepth > 0)
         {

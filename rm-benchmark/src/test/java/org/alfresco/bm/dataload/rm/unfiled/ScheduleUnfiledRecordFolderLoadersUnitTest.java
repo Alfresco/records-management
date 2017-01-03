@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of Alfresco
  *
@@ -49,7 +49,7 @@ import com.mongodb.DBObject;
 /**
  * Unit tests for ScheduleUnfiledRecordFolderLoaders
  * @author Silviu Dinuta
- * @since 1.0
+ * @since 2.6
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConstants
@@ -75,6 +75,24 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
         assertEquals(false, result.isSuccess());
         assertEquals("Unfiled Record Folders structure creation not wanted.",result.getData());
         assertEquals(0, result.getNextEvents().size());
+    }
+
+    @Test
+    public void testUnfiledRecordFoldersNotWantedAndContinueLoadingData() throws Exception
+    {
+        scheduleUnfiledRecordFolderLoaders.setCreateUnfiledRecordFolderStructure(false);
+        FolderData mockedFolder = mock(FolderData.class);
+        List<FolderData> unfiledContainerChildren = Arrays.asList(mockedFolder);
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH, 0, 1)).thenReturn(unfiledContainerChildren);
+        EventResult result = scheduleUnfiledRecordFolderLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, never()).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Unfiled Record Folders structure creation not wanted, continue with loading unfiled records.",result.getData());
+        assertEquals(1, result.getNextEvents().size());
+        assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(0).getName());
     }
 
     @Test

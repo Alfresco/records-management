@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of Alfresco
  *
@@ -284,7 +284,7 @@ public class LoadUnfiledRecordFoldersUnitTest implements RMEventConstants
         DBObject data = (DBObject) result.getData();
         assertNotNull(data.get("error"));
         assertEquals("aUser", data.get("username"));
-        assertEquals(mockedFolder, data.get("folder"));
+        assertEquals(mockedFolder.getPath(), data.get("path"));
         assertNotNull(data.get("stack"));
         assertEquals(0, result.getNextEvents().size());
     }

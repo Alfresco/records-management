@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of Alfresco
  *
@@ -27,12 +27,14 @@ public interface RMEventConstants
 
     public static final String FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE = "rootFoldersToCreate";
     public static final String FIELD_UNFILED_FOLDERS_TO_CREATE = "foldersToCreate";
+    public static final String FIELD_RECORDS_TO_CREATE = "recordsToCreate";
 
     public static final String RECORD_FOLDER_NAME_IDENTIFIER = "bmFolder";
     public static final String CATEGORY_NAME_IDENTIFIER = "bmCateg";
     public static final String ROOT_CATEGORY_NAME_IDENTIFIER = "bmRootCateg";
     public static final String ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER = "UnfiledRoot";
     public static final String UNFILED_RECORD_FOLDER_NAME_IDENTIFIER = "UnfiledFolder";
+    public static final String RECORD_NAME_IDENTIFIER = "Record";
 
     public static final String FIELD_ROOT_CATEGORIES_TO_CREATE = "rootCategoriesToCreate";
     public static final String FIELD_CATEGORIES_TO_CREATE = "categoriesToCreate";
@@ -43,4 +45,13 @@ public interface RMEventConstants
     public static final String UNFILED_CONTEXT = "unfiled";
     public static final String RECORD_FOLDER_CONTEXT = "recordFolder";
     public static final String RECORD_CATEGORY_CONTEXT = "recordCategory";
+
+    public static final String PATH_SNIPPET_SITES = "Sites";
+    public static final String PATH_SNIPPET_FILE_PLAN = "documentLibrary";
+    public static final String PATH_SNIPPET_RM_SITE_ID = "rm";
+    public static final String PATH_SNIPPET_UNFILED_RECORD_CONTAINER = "Unfiled Records";
+    public static final String UNFILED_RECORD_CONTAINER_PATH = "/" + PATH_SNIPPET_SITES +
+                                                               "/" + PATH_SNIPPET_RM_SITE_ID +
+                                                               "/" + PATH_SNIPPET_FILE_PLAN +
+                                                               "/" + PATH_SNIPPET_UNFILED_RECORD_CONTAINER;
 }

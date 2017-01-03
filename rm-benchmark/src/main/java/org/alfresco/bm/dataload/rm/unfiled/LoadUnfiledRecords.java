@@ -19,7 +19,6 @@
 
 package org.alfresco.bm.dataload.rm.unfiled;
 
-import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.UNFILED_RECORD_FOLDER_TYPE;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.io.IOException;
@@ -33,52 +32,50 @@ import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RmBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.rest.core.RestAPIFactory;
+import org.alfresco.bm.restapi.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
-import org.alfresco.utility.model.UserModel;
+import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
+import org.alfresco.rest.rm.community.requests.FilePlanComponentAPI;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Unfiled record folders structure creation event
+ * Unfiled records creation event
  *
  * @author Silviu Dinuta
- * @since 1.0
+ * @since 2.6
  *
  */
-public class LoadUnfiledRecordFolders extends RmBaseEventProcessor
+public class LoadUnfiledRecords extends RmBaseEventProcessor
 {
-    public static final long DEFAULT_LOAD_UNFILED_RECORD_FOLDER_DELAY = 100L;
 
-    private String eventNameUnfiledRecordFoldersLoaded;
-    private long loadUnfiledRecordFolderDelay = DEFAULT_LOAD_UNFILED_RECORD_FOLDER_DELAY;
+    public static final String EVENT_NAME_UNFILED_RECORDS_LOADED = "unfiledRecordsLoaded";
+    public static final long DEFAULT_LOAD_UNFILED_RECORD_DELAY = 100L;
 
     @Autowired
     private RestAPIFactory restAPIFactory;
 
-    public String getEventNameUnfiledRecordFoldersLoaded()
+    private String eventNameUnfiledRecordsLoaded = EVENT_NAME_UNFILED_RECORDS_LOADED;
+    private long loadUnfiledRecordDelay = DEFAULT_LOAD_UNFILED_RECORD_DELAY;
+
+    public String getEventNameUnfiledRecordsLoaded()
     {
-        return eventNameUnfiledRecordFoldersLoaded;
+        return eventNameUnfiledRecordsLoaded;
     }
 
-    public void setEventNameUnfiledRecordFoldersLoaded(String eventNameUnfiledRecordFoldersLoaded)
+    public void setEventNameUnfiledRecordsLoaded(String eventNameUnfiledRecordsLoaded)
     {
-        this.eventNameUnfiledRecordFoldersLoaded = eventNameUnfiledRecordFoldersLoaded;
+        this.eventNameUnfiledRecordsLoaded = eventNameUnfiledRecordsLoaded;
     }
 
-
-    public long getLoadUnfiledRecordFolderDelay()
+    public long getLoadUnfiledRecordDelay()
     {
-        return loadUnfiledRecordFolderDelay;
+        return loadUnfiledRecordDelay;
     }
 
-    /**
-     * Override the {@link #DEFAULT_Site_CREATION_DELAY default} time between creation requests
-     */
-    public void setLoadUnfiledRecordFolderDelay(long loadUnfiledRecordFolderDelay)
+    public void setLoadUnfiledRecordDelay(long loadUnfiledRecordDelay)
     {
-        this.loadUnfiledRecordFolderDelay = loadUnfiledRecordFolderDelay;
+        this.loadUnfiledRecordDelay = loadUnfiledRecordDelay;
     }
 
     @Override
@@ -98,12 +95,11 @@ public class LoadUnfiledRecordFolders extends RmBaseEventProcessor
         }
         String context = (String) dataObj.get(FIELD_CONTEXT);
         String path = (String) dataObj.get(FIELD_PATH);
-        Integer rootFoldersToCreate = (Integer) dataObj.get(FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE);
-        Integer foldersToCreate = (Integer) dataObj.get(FIELD_UNFILED_FOLDERS_TO_CREATE);
+        Integer recordsToCreate = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
         String siteManager = (String) dataObj.get(FIELD_SITE_MANAGER);
-        if (context == null || path == null || rootFoldersToCreate == null || foldersToCreate == null || isBlank(siteManager))
+        if (context == null || path == null || recordsToCreate == null || isBlank(siteManager))
         {
-            return new EventResult("Request data not complete for folder loading: " + dataObj, false);
+            return new EventResult("Request data not complete for records loading: " + dataObj, false);
         }
 
         // Get the folder
@@ -119,36 +115,25 @@ public class LoadUnfiledRecordFolders extends RmBaseEventProcessor
             return new EventResult("Load scheduling should create a session for each loader.",false);
         }
 
-        return loadUnfiledRecordFolder(folder, rootFoldersToCreate, foldersToCreate, siteManager);
+        return loadRecords(folder, recordsToCreate, siteManager);
     }
 
-    private EventResult loadUnfiledRecordFolder(FolderData container, int rootFoldersToCreate, int foldersToCreate, String siteManager)
+    private EventResult loadRecords(FolderData container, int recordsToCreate, String siteManager)
                 throws IOException
     {
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(siteManager, siteManager));
-
+        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentAPI(siteManager);
         try
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
-            FilePlanComponent filePlanComponent = api.getFilePlanComponent(container.getId(), "include=path");
+            FilePlanComponent filePlanComponent = api.getFilePlanComponent(container.getId());
 
-            //Create root unfiled record folders
-            if(rootFoldersToCreate > 0)
+            //Create records
+            if(recordsToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, rootFoldersToCreate, ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, UNFILED_RECORD_FOLDER_TYPE,
-                                        container.getContext(), loadUnfiledRecordFolderDelay);
-                super.suspendTimer();
-                String lockedPath = container.getPath() + "/locked";
-                fileFolderService.deleteFolder(container.getContext(), lockedPath, false);
-            }
-
-            //Create unfiled record folder children
-            if(foldersToCreate > 0)
-            {
-                super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, foldersToCreate, UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, UNFILED_RECORD_FOLDER_TYPE,
-                                        container.getContext(), loadUnfiledRecordFolderDelay);
+                //TODO uncomment this and remove createRecord when RM-4564 issue is fixed
+                //uploadElectronicRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
+                createRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, FilePlanComponentType.NON_ELECTRONIC_RECORD_TYPE.toString(), loadUnfiledRecordDelay);
                 super.suspendTimer();
                 // Clean up the lock
                 String lockedPath = container.getPath() + "/locked";
@@ -158,11 +143,11 @@ public class LoadUnfiledRecordFolders extends RmBaseEventProcessor
             DBObject eventData = BasicDBObjectBuilder.start()
                         .add(FIELD_CONTEXT, container.getContext())
                         .add(FIELD_PATH, container.getPath()).get();
-           Event nextEvent = new Event(eventNameUnfiledRecordFoldersLoaded, eventData);
+           Event nextEvent = new Event(eventNameUnfiledRecordsLoaded, eventData);
 
            scheduleEvents.add(nextEvent);
             DBObject resultData = BasicDBObjectBuilder.start()
-                        .add("msg", "Created " + rootFoldersToCreate + " root unfiled record folders and " + foldersToCreate + " unfiled folders children.")
+                        .add("msg", "Created " + recordsToCreate + " records.")
                         .add("path", container.getPath())
                         .add("username", siteManager)
                         .get();
