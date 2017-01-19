@@ -47,6 +47,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.mongodb.DBObject;
@@ -621,6 +622,104 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         assertEquals(recordsNumber, value);
         assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
         assertEquals("scheduleRecordLoaders", result.getNextEvents().get(1).getName());
+    }
+
+    @Test
+    public void testUploadRecordsWithNotExistentOnePathElementPreconfiguredSinglePath() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int recordsNumber = 4;
+        String configuredPath1 = "/e1";
+        String paths = configuredPath1;
+        String username = "bob";
+
+        scheduleRecordLoaders.setUploadRecords(true);
+        scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleRecordLoaders.setRecordsNumber(recordsNumber);
+        scheduleRecordLoaders.setRecordFolderPaths(paths);
+        scheduleRecordLoaders.setUsername(username);
+
+        //file plan should be always there
+        FolderData mockedFilePlanContainer = mock(FolderData.class);
+        when(mockedFilePlanContainer.getId()).thenReturn("filePlanId");
+        when(mockedFilePlanContainer.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedFilePlanContainer.getPath()).thenReturn(RECORD_CONTAINER_PATH);
+        when(mockedFileFolderService.getFolder(EMPTY_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(mockedFilePlanContainer);
+
+        //2 existent record folders
+        String path1 = RECORD_CONTAINER_PATH + "/categ1/folder1";
+        FolderData mockedRecordFolder1 = mock(FolderData.class);
+        when(mockedRecordFolder1.getId()).thenReturn("recordFolder1Id");
+        when(mockedRecordFolder1.getContext()).thenReturn(RECORD_FOLDER_CONTEXT);
+        when(mockedRecordFolder1.getPath()).thenReturn(path1);
+        when(mockedFileFolderService.getFolder(RECORD_FOLDER_CONTEXT, path1)).thenReturn(mockedRecordFolder1);
+
+        String path2 = RECORD_CONTAINER_PATH + "/categ2/folder2";
+        FolderData mockedRecordFolder2 = mock(FolderData.class);
+        when(mockedRecordFolder2.getId()).thenReturn("recordFolder2Id");
+        when(mockedRecordFolder2.getContext()).thenReturn(RECORD_FOLDER_CONTEXT);
+        when(mockedRecordFolder2.getPath()).thenReturn(path2);
+        when(mockedFileFolderService.getFolder(RECORD_FOLDER_CONTEXT, path2)).thenReturn(mockedRecordFolder2);
+
+        //returns available record folders
+        when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1, mockedRecordFolder2));
+        when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<FolderData>());
+
+        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        FilePlanComponent mockedFilePlanContaineFilePlanComponent = mock(FilePlanComponent.class);
+        when(mockedFilePlanContaineFilePlanComponent.getId()).thenReturn("filePlanId");
+        when(mockedFilePlanComponentAPI.getFilePlanComponent("filePlanId")).thenReturn(mockedFilePlanContaineFilePlanComponent);
+
+        //throw exception when trying to create record folder directly in filePlan
+        Mockito.doThrow(new Exception("someError")).when(mockedFilePlanComponentAPI).createFilePlanComponent(any(FilePlanComponent.class), eq("filePlanId"));
+
+        String e1Path = RECORD_CONTAINER_PATH + "/e1";
+        when(mockedFileFolderService.getFolder(RECORD_FOLDER_CONTEXT, e1Path)).thenReturn(null);
+
+        EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
+        verify(mockedFileFolderService, never()).getFolder(any(String.class));
+        verify(mockedFileFolderService, never()).incrementFolderCount(any(String.class), any(String.class), eq(1L));
+        verify(mockedFileFolderService, never()).createNewFolder(any(String.class), any(String.class), any(String.class));
+        verify(mockedFileFolderService, times(2)).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
+
+        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
+        // and if the number of records to create is 0 the event for loading will not be scheduled
+        int nextEventsSize = result.getNextEvents().size();
+        verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Raised further " + (nextEventsSize -1) + " events and rescheduled self.", result.getData());
+
+        Event firstEvent = result.getNextEvents().get(0);
+        if(nextEventsSize - 1 == 2)
+        {
+            assertEquals("loadRecords", firstEvent.getName());
+            DBObject dataObj = (DBObject)firstEvent.getData();
+            assertNotNull(dataObj);
+            assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+            assertEquals(path1, (String) dataObj.get(FIELD_PATH));
+            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
+            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+
+            Event secondEvent = result.getNextEvents().get(1);
+            assertEquals("loadRecords", secondEvent.getName());
+            dataObj = (DBObject)secondEvent.getData();
+            assertNotNull(dataObj);
+            assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+            assertEquals(path2, (String) dataObj.get(FIELD_PATH));
+            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
+            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
+            assertEquals(recordsNumber, value1 + value2);
+        }
+        else
+        {
+            //in case that one of generated values is 0 we check that the scheduled event had created all records
+            DBObject dataObj = (DBObject)firstEvent.getData();
+            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
+            assertEquals(recordsNumber, value);
+        }
+        assertEquals("scheduleRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
     }
 
     @Test
