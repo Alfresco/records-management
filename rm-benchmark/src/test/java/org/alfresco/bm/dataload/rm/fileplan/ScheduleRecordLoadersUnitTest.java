@@ -625,7 +625,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
     }
 
     @Test
-    public void testUploadRecordsWithNotExistentOnePathElementPreconfiguredSinglePath() throws Exception
+    public void testUploadRecordsInNonExistentOnePathElCategory() throws Exception
     {
         int maxActiveLoaders = 8;
         int recordsNumber = 4;
