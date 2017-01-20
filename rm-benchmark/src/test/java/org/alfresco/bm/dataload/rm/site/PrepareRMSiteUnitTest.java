@@ -75,6 +75,53 @@ public class PrepareRMSiteUnitTest
     private PrepareRMSite prepareRMSite;
 
     @Test
+    public void testCreateRMSiteWhenRMSiteDoesNotExistAndNotLoadedInDb() throws Exception
+    {
+        String username = "bob";
+        String password = "secret";
+
+        prepareRMSite.setUsername(username);
+        prepareRMSite.setPassword(password);
+        when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
+        when(mockedRMSiteAPI.existsRMSite()).thenReturn(false);
+
+        EventResult result = prepareRMSite.processEvent(null);
+
+        ArgumentCaptor<UserData> userData = forClass(UserData.class);
+        verify(mockedUserDataService).createNewUser(userData.capture());
+
+        ArgumentCaptor<SiteData> siteData = forClass(SiteData.class);
+        verify(mockedSiteDataService).addSite(siteData.capture());
+
+        ArgumentCaptor<SiteMemberData> siteMemberData = forClass(SiteMemberData.class);
+        verify(mockedSiteDataService).addSiteMember(siteMemberData.capture());
+
+        // Check RM admin user
+        assertEquals(Created, userData.getValue().getCreationState());
+
+        // Check RM site
+        SiteData siteDataValue = siteData.getValue();
+        assertEquals(Scheduled, siteDataValue.getCreationState());
+
+        // Check RM admin member
+        SiteMemberData siteMemberDataValue = siteMemberData.getValue();
+        assertEquals(Created, siteMemberDataValue.getCreationState());
+        assertEquals(ADMINISTRATOR.toString(), siteMemberDataValue.getRole());
+
+        // Check events
+        assertEquals(true, result.isSuccess());
+        List<Event> events = result.getNextEvents();
+        assertEquals(1, events.size());
+        Event event = events.get(0);
+        assertEquals(DEFAULT_EVENT_NAME_RM_SITE_PREPARED, event.getName());
+        DBObject data = (DBObject) event.getData();
+        notNull(data);
+        assertEquals(siteDataValue.getSiteId(), (String) data.get(FIELD_SITE_ID));
+        assertEquals(username, (String) data.get(FIELD_SITE_MANAGER));
+        assertEquals(null, (String) data.get(FIELD_ONLY_DB_LOAD));
+    }
+
+    @Test
     public void testRMSiteDoesExistAndNotLoadedInMongoDB() throws Exception
     {
         String username = "bob";
