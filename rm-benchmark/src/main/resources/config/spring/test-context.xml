@@ -83,7 +83,6 @@
   <!-- -->
   <bean id="event.prepareRMSite" class="org.alfresco.bm.dataload.rm.site.PrepareRMSite"
     parent="event.base">
-    <property name="createRMSite" value="${rm.createRMSite}" />
     <property name="username" value="${rm.username}" />
     <property name="password" value="${rm.password}" />
     <property name="chart" value="false" />

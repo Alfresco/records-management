@@ -75,28 +75,11 @@ public class PrepareRMSite extends AbstractEventProcessor
     @Autowired
     private RestAPIFactory restAPIFactory;
 
-    private boolean createRMSite = false;
     private String eventNameRMSitePrepared = DEFAULT_EVENT_NAME_RM_SITE_PREPARED;
     private String eventNameLoadRMSiteIntoDB = "loadRMSiteIntoDB";
     private String eventNameContinueLoadingData = "scheduleFilePlanLoaders";
     private String username;
     private String password;
-
-    /**
-     * @return the createRMSite
-     */
-    public boolean isCreateRMSite()
-    {
-        return this.createRMSite;
-    }
-
-    /**
-     * @param createRMSite the createRMSite to set
-     */
-    public void setCreateRMSite(boolean createRMSite)
-    {
-        this.createRMSite = createRMSite;
-    }
 
     /**
      * @return the eventNameRMSitePrepared
@@ -195,16 +178,8 @@ public class PrepareRMSite extends AbstractEventProcessor
             }
         }
 
-        boolean existsRMSite = restAPIFactory.getRMSiteAPI(new UserModel(getUsername(), getUsername())).existsRMSite();
-
-        //rm site does not exists and we don't want to create it
-        if (!existsRMSite && !isCreateRMSite())
-        {
-            return new EventResult("RM Site creation not wanted.", false);
-        }
-
         SiteData rmSite = siteDataService.getSite(RM_SITE_ID);
-        if(rmSite == null)
+        if (rmSite == null)
         {
             // Create data
             rmSite = new SiteData();
@@ -234,22 +209,24 @@ public class PrepareRMSite extends AbstractEventProcessor
         builder.add(FIELD_SITE_ID, rmSite.getSiteId())
                .add(FIELD_SITE_MANAGER, getUsername());
 
-        //rm site exists and it is loaded in mongo db
-        if(existsRMSite && rmSite.getCreationState() == Created)
+        boolean existsRMSite = restAPIFactory.getRMSiteAPI(new UserModel(getUsername(), getUsername())).existsRMSite();
+
+        // RM site exists and it is loaded in MongoDB
+        if (existsRMSite && rmSite.getCreationState() == Created)
         {
             return new EventResult("RM Site already created, continue loading data.", new Event(getEventNameContinueLoadingData(), null));
         }
 
-        //rm sites exists and it is not loaded in mongo db
-        if(existsRMSite && rmSite.getCreationState() != Created)
+        // RM site exists and it is not loaded in MongoDB
+        if (existsRMSite && rmSite.getCreationState() != Created)
         {
             builder.add(FIELD_ONLY_DB_LOAD, true);
             DBObject data = builder.get();
             events.add(new Event(getEventNameLoadRMSiteIntoDB(), data));
         }
 
-        //rm sites does not exists and will be created
-        if(!existsRMSite)
+        // RM site does not exist and will be created
+        if (!existsRMSite)
         {
             DBObject data = builder.get();
             events.add(new Event(getEventNameRMSitePrepared(), data));
