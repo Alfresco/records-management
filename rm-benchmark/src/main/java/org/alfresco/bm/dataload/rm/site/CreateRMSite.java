@@ -105,7 +105,7 @@ public class CreateRMSite extends AbstractEventProcessor
         }
         if (site.getCreationState() == Created)
         {
-            return new EventResult("RM Site already exists in DB: " + site, false);
+            return new EventResult("RM Site already exists in DB: " + site, new Event(eventNameSiteCreated, null));
         }
         if (site.getCreationState() != Created && site.getCreationState() != Scheduled)
         {

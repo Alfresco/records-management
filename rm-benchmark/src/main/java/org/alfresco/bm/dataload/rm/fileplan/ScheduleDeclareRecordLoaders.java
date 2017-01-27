@@ -18,9 +18,29 @@
  */
 package org.alfresco.bm.dataload.rm.fileplan;
 
+import static org.alfresco.bm.data.DataCreationState.Created;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
+import org.alfresco.bm.site.SiteData;
+import org.alfresco.bm.site.SiteDataService;
+import org.alfresco.rest.core.RestAPIFactory;
+import org.alfresco.rest.core.RestWrapper;
+import org.alfresco.rest.model.RestNodeModel;
+import org.alfresco.rest.model.RestNodeModelsCollection;
+import org.alfresco.rest.model.RestSiteContainerModel;
+import org.alfresco.rest.model.RestSiteModel;
+import org.alfresco.utility.model.ContentModel;
+import org.alfresco.utility.model.UserModel;
+import org.apache.commons.lang.NotImplementedException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Loader class that schedules the records declare event by creating the preconditions for {@link DeclareRecords} event.
@@ -33,20 +53,45 @@ import org.alfresco.bm.event.EventResult;
  */
 public class ScheduleDeclareRecordLoaders extends RMBaseEventProcessor
 {
+    private boolean enabled = false;
     private String collabSiteId;
-    private String collabSitePath;
+    private List<String> collabSitePaths;
     private String recordsToDeclare;
-
+    private String username;
+    private String password;
     private String eventNameDeclareRecords;
+    private String eventNameSkipDeclareRecords;
+
+    @Autowired
+    private SiteDataService siteDataService;
+
+    @Autowired
+    private RestAPIFactory restAPIFactory;
+
+    @Autowired
+    private RestWrapper restCoreAPI;
+
+    
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
+    }
 
     public void setCollabSiteId(String collabSiteId)
     {
-        this.collabSiteId = collabSiteId;
+        this.collabSiteId = collabSiteId.toLowerCase();
     }
 
-    public void setCollabSitePath(String collabSitePath)
+    public void setCollabSitePaths(String collabSitePathsString)
     {
-        this.collabSitePath = collabSitePath;
+        if (isNotBlank(collabSitePathsString))
+        {
+            this.collabSitePaths = Arrays.asList(collabSitePathsString.split(","));
+        }
+        else
+        {
+            this.collabSitePaths = new ArrayList<>();;
+        }
     }
 
     public void setRecordsToDeclare(String recordsToDeclare)
@@ -54,23 +99,137 @@ public class ScheduleDeclareRecordLoaders extends RMBaseEventProcessor
         this.recordsToDeclare = recordsToDeclare;
     }
 
+    public void setUsername(String username)
+    {
+        this.username = username;
+    }
+
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+
     public void setEventNameDeclareRecords(String eventNameDeclareRecords)
     {
         this.eventNameDeclareRecords = eventNameDeclareRecords;
     }
 
+    public void setEventNameSkipDeclareRecords(String eventNameSkipDeclareRecords)
+    {
+        this.eventNameSkipDeclareRecords = eventNameSkipDeclareRecords;
+    }
+
     @Override
     protected EventResult processEvent(Event event) throws Exception
     {
+        if (!enabled)
+        {
+            StringBuilder eventOutputMsg = new StringBuilder("Declaring in place records not wanted.");
+            return new EventResult(eventOutputMsg.toString(), new Event(eventNameSkipDeclareRecords, null));
+        }
+
         StringBuilder eventOutputMsg = new StringBuilder("Preparing files to declare: \n");
 
-        // create collaboration site
+        restCoreAPI.authenticateUser(new UserModel(username, password));
 
-        // upload files to collaboration site
+        // get or create collaboration site
+        loadCollaborationSite(eventOutputMsg);
 
-        // schedule the created files to be declared as records
+        // schedule the files to be declared as records
+        loadFilesToBeDeclared(eventOutputMsg);
 
         return new EventResult(eventOutputMsg.toString(), new Event(eventNameDeclareRecords, null));
     }
 
+    /**
+     * Helper method that makes sure the site exists on the server and loads it in the benchmark DB
+     */
+    private void loadCollaborationSite(StringBuilder eventOutputMsg) throws Exception
+    {
+        // Check if site exists on server
+        Optional<RestSiteModel> colabSiteOptional = restCoreAPI
+                .withCoreAPI()
+                .getSites().getEntries().stream().filter(s->s.onModel().getId().equalsIgnoreCase(collabSiteId)).findFirst();
+
+        if(!colabSiteOptional.isPresent())
+        {
+            // TODO create site 
+            throw new NotImplementedException("The collaboration site to declare records from must exist");
+        }
+        RestSiteModel colabSite = colabSiteOptional.get();
+
+        // Store the collaboration site in benchmark's DB
+        SiteData colabSiteData = siteDataService.getSite(collabSiteId);
+        if(colabSiteData == null)
+        {
+            // load site in Benchmark's DB
+            colabSiteData = new SiteData();
+            colabSiteData.setSiteId(collabSiteId);
+            colabSiteData.setTitle(colabSite.onModel().getTitle());
+            colabSiteData.setGuid(colabSite.onModel().getGuid());
+            colabSiteData.setDescription(colabSite.onModel().getDescription());
+            colabSiteData.setSitePreset(colabSite.onModel().getPreset());
+            colabSiteData.setVisibility(colabSite.onModel().getVisibility().toString());
+            colabSiteData.setCreationState(Created);
+            siteDataService.addSite(colabSiteData);
+
+            eventOutputMsg.append("   Added site '" + collabSiteId + "' as created.\n");
+        }
+    }
+
+    /**
+     * Helper method that loads the files to be declared in the benchmark DB as scheduled
+     */
+    private void loadFilesToBeDeclared(StringBuilder eventOutputMsg) throws Exception
+    {
+        RestSiteContainerModel documentLibrary = restCoreAPI.withCoreAPI().usingSite(collabSiteId).getSiteContainer("documentLibrary");
+
+        if(collabSitePaths.isEmpty())
+        {
+            handleExistingNode(documentLibrary.onModel().getId(), false, eventOutputMsg);
+        }
+        else
+        {
+            for(String relativePath : collabSitePaths)
+            {
+                ContentModel docLibrary = new ContentModel();
+                docLibrary.setNodeRef(documentLibrary.getId());
+                RestNodeModelsCollection children = restCoreAPI.withParams("relativePath="+relativePath).withCoreAPI().usingNode(docLibrary).listChildren();
+                for(RestNodeModel child : children.getEntries())
+                {
+                    handleExistingNode(child.onModel().getId(), child.onModel().getIsFile(), eventOutputMsg);
+                }
+            }
+        }
+    }
+
+    /**
+     * Helper method that handles the current existing node. 
+     * If the code is a file it stores it in the DB else calls the method again on children nodes.
+     * 
+     * @param currentNode the root node to start iterating from
+     * @param eventOutputMsg output for logs
+     * return 
+     * @throws Exception
+     */
+    private void handleExistingNode(String currentNodeId, boolean isFile, StringBuilder eventOutputMsg) throws Exception
+    {
+        if(isFile)
+        {
+            eventOutputMsg.append("sheduled file to be declared as record: " + currentNodeId);
+            // save it in benchmark's database
+            
+            
+        }
+        else
+        {
+            ContentModel currentNodeModel = new ContentModel();
+            currentNodeModel.setNodeRef(currentNodeId);
+            RestNodeModelsCollection children = restCoreAPI.withCoreAPI().usingNode(currentNodeModel).listChildren();
+            for(RestNodeModel child : children.getEntries())
+            {
+                handleExistingNode(child.onModel().getId(), child.onModel().getIsFile(), eventOutputMsg);
+            }
+        }
+    }
 }
