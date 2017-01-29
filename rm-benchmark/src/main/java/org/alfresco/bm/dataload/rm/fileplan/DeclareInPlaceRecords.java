@@ -21,6 +21,9 @@ package org.alfresco.bm.dataload.rm.fileplan;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
+import org.alfresco.rest.core.RestAPIFactory;
+import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mongodb.DBObject;
 
@@ -32,6 +35,9 @@ import com.mongodb.DBObject;
  */
 public class DeclareInPlaceRecords extends RMBaseEventProcessor
 {
+    @Autowired
+    private RestAPIFactory restAPIFactory;
+
     private String eventNameInPlaceRecordsDeclared;
 
     public void setEventNameInPlaceRecordsDeclared(String eventNameInPlaceRecordsDeclared)
@@ -54,10 +60,17 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
         DBObject dataObj = (DBObject) event.getData();
         if (dataObj == null)
         {
-            throw new IllegalStateException("This processor requires data with field " + FIELD_PATH);
+            throw new IllegalStateException("This processor requires data with field " + FIELD_ID);
         }
         String id = (String) dataObj.get(FIELD_ID);
         String siteManager = (String) dataObj.get(FIELD_SITE_MANAGER);
+
+        if (id == null)
+        {
+            throw new IllegalStateException("This processor requires data with field " + FIELD_ID);
+        }
+
+        FilePlanComponent record = restAPIFactory.getFilesAPI().declareAsRecord(id);
 
         return new EventResult(eventOutputMsg.toString(), new Event(eventNameInPlaceRecordsDeclared, null));
     }
