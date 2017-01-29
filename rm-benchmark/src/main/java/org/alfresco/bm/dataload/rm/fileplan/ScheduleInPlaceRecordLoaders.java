@@ -29,9 +29,9 @@ import java.util.Optional;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
+import org.alfresco.bm.session.SessionService;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
-import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.core.RestWrapper;
 import org.alfresco.rest.model.RestNodeModel;
 import org.alfresco.rest.model.RestNodeModelsCollection;
@@ -42,16 +42,19 @@ import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
+
 /**
- * Loader class that schedules the records declare event by creating the preconditions for {@link DeclareRecords} event.
+ * Loader class that schedules the records declare event by creating the preconditions for {@link DeclareInPlaceRecords} event.
  *  - checks the state of the system
  *  - creates the community site and uploads files to be declared as records (if they don't exist)
- *  - creates the declare record events in the benchmark database in the SCHEDULES state
+ *  - creates the declare record events in the benchmark database in the SCHEDULED state
  *
  * @author Ana Bozianu
  * @since 2.6
  */
-public class ScheduleDeclareRecordLoaders extends RMBaseEventProcessor
+public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor
 {
     private boolean enabled = false;
     private String collabSiteId;
@@ -59,19 +62,18 @@ public class ScheduleDeclareRecordLoaders extends RMBaseEventProcessor
     private String recordsToDeclare;
     private String username;
     private String password;
-    private String eventNameDeclareRecords;
-    private String eventNameSkipDeclareRecords;
+    private String eventNameDeclareInPlaceRecords;
+    private String eventNameSkipDeclareInPlaceRecords;
+
+    @Autowired
+    private SessionService sessionService;
 
     @Autowired
     private SiteDataService siteDataService;
 
     @Autowired
-    private RestAPIFactory restAPIFactory;
-
-    @Autowired
     private RestWrapper restCoreAPI;
 
-    
     public void setEnabled(boolean enabled)
     {
         this.enabled = enabled;
@@ -109,14 +111,14 @@ public class ScheduleDeclareRecordLoaders extends RMBaseEventProcessor
         this.password = password;
     }
 
-    public void setEventNameDeclareRecords(String eventNameDeclareRecords)
+    public void setEventNameDeclareInPlaceRecords(String eventNameDeclareInPlaceRecords)
     {
-        this.eventNameDeclareRecords = eventNameDeclareRecords;
+        this.eventNameDeclareInPlaceRecords = eventNameDeclareInPlaceRecords;
     }
 
-    public void setEventNameSkipDeclareRecords(String eventNameSkipDeclareRecords)
+    public void setEventNameSkipDeclareInPlaceRecords(String eventNameSkipDeclareInPlaceRecords)
     {
-        this.eventNameSkipDeclareRecords = eventNameSkipDeclareRecords;
+        this.eventNameSkipDeclareInPlaceRecords = eventNameSkipDeclareInPlaceRecords;
     }
 
     @Override
@@ -125,7 +127,7 @@ public class ScheduleDeclareRecordLoaders extends RMBaseEventProcessor
         if (!enabled)
         {
             StringBuilder eventOutputMsg = new StringBuilder("Declaring in place records not wanted.");
-            return new EventResult(eventOutputMsg.toString(), new Event(eventNameSkipDeclareRecords, null));
+            return new EventResult(eventOutputMsg.toString(), new Event(eventNameSkipDeclareInPlaceRecords, null));
         }
 
         StringBuilder eventOutputMsg = new StringBuilder("Preparing files to declare: \n");
@@ -136,9 +138,9 @@ public class ScheduleDeclareRecordLoaders extends RMBaseEventProcessor
         loadCollaborationSite(eventOutputMsg);
 
         // schedule the files to be declared as records
-        loadFilesToBeDeclared(eventOutputMsg);
+        List<Event> events = loadFilesToBeDeclared(eventOutputMsg);
 
-        return new EventResult(eventOutputMsg.toString(), new Event(eventNameDeclareRecords, null));
+        return new EventResult(eventOutputMsg.toString(), events);
     }
 
     /**
@@ -180,16 +182,19 @@ public class ScheduleDeclareRecordLoaders extends RMBaseEventProcessor
     /**
      * Helper method that loads the files to be declared in the benchmark DB as scheduled
      */
-    private void loadFilesToBeDeclared(StringBuilder eventOutputMsg) throws Exception
+    private List<Event> loadFilesToBeDeclared(StringBuilder eventOutputMsg) throws Exception
     {
         RestSiteContainerModel documentLibrary = restCoreAPI.withCoreAPI().usingSite(collabSiteId).getSiteContainer("documentLibrary");
 
         if(collabSitePaths.isEmpty())
         {
-            handleExistingNode(documentLibrary.onModel().getId(), false, eventOutputMsg);
+            // list the whole fileplan
+            return listContainer(documentLibrary.getId(), eventOutputMsg);
         }
         else
         {
+            // list the provided paths
+            List<Event> events = new ArrayList<>();
             for(String relativePath : collabSitePaths)
             {
                 ContentModel docLibrary = new ContentModel();
@@ -197,9 +202,10 @@ public class ScheduleDeclareRecordLoaders extends RMBaseEventProcessor
                 RestNodeModelsCollection children = restCoreAPI.withParams("relativePath="+relativePath).withCoreAPI().usingNode(docLibrary).listChildren();
                 for(RestNodeModel child : children.getEntries())
                 {
-                    handleExistingNode(child.onModel().getId(), child.onModel().getIsFile(), eventOutputMsg);
+                    events.addAll(handleExistingNode(child.onModel(), eventOutputMsg));
                 }
             }
+            return events;
         }
     }
 
@@ -212,24 +218,43 @@ public class ScheduleDeclareRecordLoaders extends RMBaseEventProcessor
      * return 
      * @throws Exception
      */
-    private void handleExistingNode(String currentNodeId, boolean isFile, StringBuilder eventOutputMsg) throws Exception
+    private List<Event> handleExistingNode(RestNodeModel node, StringBuilder eventOutputMsg) throws Exception
     {
-        if(isFile)
+        if(node.getIsFile())
         {
-            eventOutputMsg.append("sheduled file to be declared as record: " + currentNodeId);
+            eventOutputMsg.append("sheduled file to be declared as record: " + node.getId());
+
             // save it in benchmark's database
             
-            
+            // create an event 
+            DBObject loadData = BasicDBObjectBuilder.start()
+                    //.add(FIELD_CONTEXT, node.getContext())
+                    .add(FIELD_ID, node.getId())
+                    .add(FIELD_SITE_MANAGER, username)
+                    .get();
+            Event loadEvent = new Event(eventNameDeclareInPlaceRecords, loadData);
+            // Each load event must be associated with a session
+            String sessionId = sessionService.startSession(loadData);
+            loadEvent.setSessionId(sessionId);
+            // Add the event to the list
+            return Arrays.asList(loadEvent);
         }
         else
         {
-            ContentModel currentNodeModel = new ContentModel();
-            currentNodeModel.setNodeRef(currentNodeId);
-            RestNodeModelsCollection children = restCoreAPI.withCoreAPI().usingNode(currentNodeModel).listChildren();
-            for(RestNodeModel child : children.getEntries())
-            {
-                handleExistingNode(child.onModel().getId(), child.onModel().getIsFile(), eventOutputMsg);
-            }
+            return listContainer(node.getId(), eventOutputMsg);
         }
+    }
+
+    private List<Event> listContainer(String currentNodeId, StringBuilder eventOutputMsg) throws Exception
+    {
+        ContentModel currentNodeModel = new ContentModel();
+        currentNodeModel.setNodeRef(currentNodeId);
+        RestNodeModelsCollection children = restCoreAPI.withCoreAPI().usingNode(currentNodeModel).listChildren();
+        List<Event> events = new ArrayList<>();
+        for(RestNodeModel child : children.getEntries())
+        {
+            events.addAll(handleExistingNode(child.onModel(), eventOutputMsg));
+        }
+        return events;
     }
 }

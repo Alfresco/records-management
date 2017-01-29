@@ -225,26 +225,26 @@
   <!-- -->
 
   <bean id="producer.unfiledRecordsLoaded" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base">
-        <constructor-arg name="newEventName" value="scheduleDeclareRecordLoaders" />
+        <constructor-arg name="newEventName" value="scheduleInPlaceRecordLoaders" />
   </bean>
 
   <bean id="producer.loadingUnfiledRecordsComplete" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base">
         <constructor-arg name="newEventName" value="scheduleInPlaceRecordLoaders" />
   </bean>
 
-  <bean id="event.scheduleInPlaceRecordLoaders" class="org.alfresco.bm.dataload.rm.fileplan.ScheduleDeclareRecordLoaders" parent="rmBaseEventProcessor">
+  <bean id="event.scheduleInPlaceRecordLoaders" class="org.alfresco.bm.dataload.rm.fileplan.ScheduleInPlaceRecordLoaders" parent="rmBaseEventProcessor">
     <property name="enabled" value="${rm.inPlaceRecords.enabled}" />
     <property name="collabSiteId" value="${rm.inPlaceRecords.collabSiteId}" />
     <property name="collabSitePaths" value="${rm.inPlaceRecords.collabSitePaths}" />
     <property name="recordsToDeclare" value="${rm.inPlaceRecords.recordsToDeclare}" />
     <property name="username" value="${rm.username}" />
     <property name="password" value="${rm.password}" />
-    <property name="eventNameDeclareRecords" value="declareInPlaceRecords"/>
-    <property name="eventNameSkipDeclareRecords" value="inPlaceRecordsDeclared"/>
+    <property name="eventNameDeclareInPlaceRecords" value="declareInPlaceRecords"/>
+    <property name="eventNameSkipDeclareInPlaceRecords" value="inPlaceRecordsDeclared"/>
   </bean>
 
-  <bean id="event.declareInPlaceRecords" class="org.alfresco.bm.dataload.rm.fileplan.DeclareRecords" parent="rmBaseEventProcessor">
-    <property name="eventNameRecordsDeclared" value="inPlaceRecordsDeclared"/>
+  <bean id="event.declareInPlaceRecords" class="org.alfresco.bm.dataload.rm.fileplan.DeclareInPlaceRecords" parent="rmBaseEventProcessor">
+    <property name="eventNameInPlaceRecordsDeclared" value="inPlaceRecordsDeclared"/>
   </bean>
 
   <bean id="producer.inPlaceRecordsDeclared" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />

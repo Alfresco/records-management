@@ -22,19 +22,21 @@ import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 
+import com.mongodb.DBObject;
+
 /**
- * Timed event that declares pre-scheduled records
+ * Timed event that declares as record pre-scheduled file
  * 
  * @author Ana Bozianu
  * @since 2.6
  */
-public class DeclareRecords extends RMBaseEventProcessor
+public class DeclareInPlaceRecords extends RMBaseEventProcessor
 {
-    private String eventNameRecordsDeclared;
+    private String eventNameInPlaceRecordsDeclared;
 
-    public void setEventNameRecordsDeclared(String eventNameRecordsDeclared)
+    public void setEventNameInPlaceRecordsDeclared(String eventNameInPlaceRecordsDeclared)
     {
-        this.eventNameRecordsDeclared = eventNameRecordsDeclared;
+        this.eventNameInPlaceRecordsDeclared = eventNameInPlaceRecordsDeclared;
     }
 
     @Override
@@ -42,7 +44,22 @@ public class DeclareRecords extends RMBaseEventProcessor
     {
         StringBuilder eventOutputMsg = new StringBuilder("Declaring files as records: \n");
 
-        return new EventResult(eventOutputMsg.toString(), new Event(eventNameRecordsDeclared, null));
+        super.suspendTimer();
+
+        if (event == null)
+        {
+            throw new IllegalStateException("This processor requires an event.");
+        }
+
+        DBObject dataObj = (DBObject) event.getData();
+        if (dataObj == null)
+        {
+            throw new IllegalStateException("This processor requires data with field " + FIELD_PATH);
+        }
+        String id = (String) dataObj.get(FIELD_ID);
+        String siteManager = (String) dataObj.get(FIELD_SITE_MANAGER);
+
+        return new EventResult(eventOutputMsg.toString(), new Event(eventNameInPlaceRecordsDeclared, null));
     }
 
 }
