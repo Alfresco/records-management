@@ -184,7 +184,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor
      */
     private List<Event> loadFilesToBeDeclared(StringBuilder eventOutputMsg) throws Exception
     {
-        RestSiteContainerModel documentLibrary = restCoreAPI.withCoreAPI().usingSite(collabSiteId).getSiteContainer("documentLibrary");
+        RestSiteContainerModel documentLibrary = restCoreAPI.withParams("where=(isPrimary=true)").withCoreAPI().usingSite(collabSiteId).getSiteContainer("documentLibrary");
 
         if(collabSitePaths.isEmpty())
         {
@@ -199,7 +199,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor
             {
                 ContentModel docLibrary = new ContentModel();
                 docLibrary.setNodeRef(documentLibrary.getId());
-                RestNodeModelsCollection children = restCoreAPI.withParams("relativePath="+relativePath).withCoreAPI().usingNode(docLibrary).listChildren();
+                RestNodeModelsCollection children = restCoreAPI.withParams("where=(isPrimary=true)", "relativePath="+relativePath).withCoreAPI().usingNode(docLibrary).listChildren();
                 for(RestNodeModel child : children.getEntries())
                 {
                     events.addAll(handleExistingNode(child.onModel(), eventOutputMsg));
