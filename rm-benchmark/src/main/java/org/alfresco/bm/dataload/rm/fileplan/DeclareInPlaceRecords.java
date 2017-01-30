@@ -18,11 +18,15 @@
  */
 package org.alfresco.bm.dataload.rm.fileplan;
 
+import java.util.concurrent.TimeUnit;
+
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
+import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
+import org.alfresco.utility.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -36,10 +40,12 @@ import com.mongodb.DBObject;
  */
 public class DeclareInPlaceRecords extends RMBaseEventProcessor
 {
+    public static final long DEFAULT_DECLARE_RECORDS_DELAY = 10000L;
+    private long declareInPlaceRecordDelay = DEFAULT_DECLARE_RECORDS_DELAY;
+    private String eventNameInPlaceRecordsDeclared;
+
     @Autowired
     private RestAPIFactory restAPIFactory;
-
-    private String eventNameInPlaceRecordsDeclared;
 
     public void setEventNameInPlaceRecordsDeclared(String eventNameInPlaceRecordsDeclared)
     {
@@ -71,16 +77,22 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
             throw new IllegalStateException("This processor requires data with field " + FIELD_ID);
         }
 
-        FilePlanComponent record = restAPIFactory.getFilesAPI().declareAsRecord(id);
-
+        // call the REST API 
+        super.resumeTimer();
+        restAPIFactory.getFilesAPI(new UserModel(siteManager, siteManager)).declareAsRecord(id);
         String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
-        if(statusCode.equals(HttpStatus.OK))
+        super.suspendTimer();
+        TimeUnit.MILLISECONDS.sleep(declareInPlaceRecordDelay);
+
+        if(statusCode.equals(HttpStatus.CREATED))
         {
             eventOutputMsg.append("success");
         }
         else
         {
-            eventOutputMsg.append("failed with code " + statusCode);
+            eventOutputMsg.append("Failed with code " + statusCode + ".\n " + 
+                                   restAPIFactory.getRmRestWrapper().assertLastError().getBriefSummary() + ". \n" +
+                                   restAPIFactory.getRmRestWrapper().assertLastError().getStackTrace());
         }
 
         return new EventResult(eventOutputMsg.toString(), new Event(eventNameInPlaceRecordsDeclared, null));
