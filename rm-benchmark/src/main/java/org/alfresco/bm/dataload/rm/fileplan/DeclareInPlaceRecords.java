@@ -24,6 +24,7 @@ import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import com.mongodb.DBObject;
 
@@ -48,7 +49,7 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
     @Override
     protected EventResult processEvent(Event event) throws Exception
     {
-        StringBuilder eventOutputMsg = new StringBuilder("Declaring files as records: \n");
+        StringBuilder eventOutputMsg = new StringBuilder("Declaring file as record: \n");
 
         super.suspendTimer();
 
@@ -71,6 +72,16 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
         }
 
         FilePlanComponent record = restAPIFactory.getFilesAPI().declareAsRecord(id);
+
+        String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
+        if(statusCode.equals(HttpStatus.OK))
+        {
+            eventOutputMsg.append("success");
+        }
+        else
+        {
+            eventOutputMsg.append("failed with code " + statusCode);
+        }
 
         return new EventResult(eventOutputMsg.toString(), new Event(eventNameInPlaceRecordsDeclared, null));
     }
