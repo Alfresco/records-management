@@ -71,9 +71,9 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
         verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
         verify(mockedSessionService, never()).startSession(any(DBObject.class));
 
-        assertEquals(false, result.isSuccess());
+        assertEquals(true, result.isSuccess());
         assertEquals("Unfiled Record Folders structure creation not wanted.",result.getData());
-        assertEquals(0, result.getNextEvents().size());
+        assertEquals(1, result.getNextEvents().size());
     }
 
     @Test
