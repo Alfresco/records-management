@@ -283,7 +283,6 @@ public class LoadRecordsUnitTest implements RMEventConstants
 //        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
 //        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
 //        when(mockedData.get(FIELD_RECORDS_TO_CREATE)).thenReturn(Integer.valueOf(recordsToCreate));
-//        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn("aUser");
 //        when(mockedEvent.getData()).thenReturn(mockedData);
 //
 //        FolderData mockedFolder = mock(FolderData.class);
@@ -296,7 +295,7 @@ public class LoadRecordsUnitTest implements RMEventConstants
 //        FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
 //        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
 //
-//
+//        mockSiteAndUserData();
 //        EventResult result = loadRecords.processEvent(mockedEvent, new StopWatch());
 //        verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
 //        verify(mockedTestFileService, times(1)).getFile();
