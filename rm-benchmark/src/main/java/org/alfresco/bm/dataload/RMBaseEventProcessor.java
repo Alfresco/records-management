@@ -36,16 +36,32 @@ import java.util.concurrent.TimeUnit;
 
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
+import org.alfresco.bm.data.DataCreationState;
+import org.alfresco.bm.dataload.rm.role.RMRole;
 import org.alfresco.bm.event.AbstractEventProcessor;
 import org.alfresco.bm.file.TestFileService;
+import org.alfresco.bm.site.SiteData;
+import org.alfresco.bm.site.SiteDataService;
+import org.alfresco.bm.site.SiteMemberData;
+import org.alfresco.bm.site.SiteRole;
+import org.alfresco.bm.user.UserData;
+import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentProperties;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
+import org.apache.commons.logging.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class RMBaseEventProcessor extends AbstractEventProcessor implements RMEventConstants
 {
     protected FileFolderService fileFolderService;
     protected TestFileService testFileService;
+
+    @Autowired
+    protected UserDataService userDataService;
+
+    @Autowired
+    protected SiteDataService siteDataService;
 
     public void setFileFolderService(FileFolderService fileFolderService)
     {
@@ -336,5 +352,37 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                         skip, limit);
         }
         return existingFolderStructure;
+    }
+
+    /**
+     * Attempt to find a user to use.<br/>
+     * The site ID will be used to find a valid site manager or collaborator.
+     */
+    public UserData getUser(Log logger)
+    {
+        // Check
+        SiteData siteData = siteDataService.getSite(PATH_SNIPPET_RM_SITE_ID);
+        if (siteData == null)
+        {
+            throw new IllegalStateException("Unable to find site '" + PATH_SNIPPET_RM_SITE_ID + "'");
+        }
+        SiteMemberData siteMember = siteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.ADMINISTRATOR.toString());
+        if (siteMember == null)
+        {
+            throw new IllegalStateException("Unable to find a collaborator or manager for site: " + PATH_SNIPPET_RM_SITE_ID);
+        }
+        String username = siteMember.getUsername();
+        // Retrieve the user data
+        UserData user = userDataService.findUserByUsername(username);
+        if (user == null)
+        {
+            throw new IllegalStateException("Unable to find a user '" + username + "' linked to site: " + PATH_SNIPPET_RM_SITE_ID);
+        }
+        // Done
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Found site member '" + username + "'");
+        }
+        return user;
     }
 }

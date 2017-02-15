@@ -51,7 +51,6 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     private int categoryNumber;
     private int childCategNumberVariance;
     private boolean folderCategoryMix;
-    private String username;
 
     private String eventNameLoadRecordCategories = EVENT_NAME_LOAD_RECORD_CATEGORIES;
     private String eventNameScheduleLoaders = EVENT_NAME_SCHEDULE_LOADERS;
@@ -186,22 +185,6 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @return the username
-     */
-    public String getUsername()
-    {
-        return username;
-    }
-
-    /**
-     * @param username the username to set
-     */
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
-
-    /**
      * @return the filePlanDepth
      */
     public int getCategoryStructureDepth()
@@ -314,7 +297,6 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
                                 .add(FIELD_ROOT_CATEGORIES_TO_CREATE, Integer.valueOf(rootCategoriesToCreate))
                                 .add(FIELD_CATEGORIES_TO_CREATE, Integer.valueOf(0))
                                 .add(FIELD_FOLDERS_TO_CREATE, Integer.valueOf(0))
-                                .add(FIELD_SITE_MANAGER, username)
                                 .get();
                     Event loadEvent = new Event(eventNameLoadRecordCategories, loadData);
                     // Each load event must be associated with a session
@@ -388,7 +370,6 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
                                 .add(FIELD_ROOT_CATEGORIES_TO_CREATE, Integer.valueOf(0))
                                 .add(FIELD_CATEGORIES_TO_CREATE, Integer.valueOf(categoriesToCreate))
                                 .add(FIELD_FOLDERS_TO_CREATE, Integer.valueOf(foldersToCreate))
-                                .add(FIELD_SITE_MANAGER, username)
                                 .get();
                     Event loadEvent = new Event(eventNameLoadRecordCategories, loadData);
                     // Each load event must be associated with a session
@@ -456,7 +437,6 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
                                 .add(FIELD_ROOT_CATEGORIES_TO_CREATE, Integer.valueOf(0))
                                 .add(FIELD_CATEGORIES_TO_CREATE, Integer.valueOf(0))
                                 .add(FIELD_FOLDERS_TO_CREATE, Integer.valueOf(foldersToCreate))
-                                .add(FIELD_SITE_MANAGER, username)
                                 .get();
                     Event loadEvent = new Event(eventNameLoadRecordCategories, loadData);
                     // Each load event must be associated with a session

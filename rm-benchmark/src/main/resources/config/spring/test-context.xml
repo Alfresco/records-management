@@ -119,7 +119,6 @@
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
     <property name="categoryNumber" value="${rm.categoryNumber}" />
     <property name="folderCategoryMix" value="${rm.folderCategoryMix}" />
-    <property name="username" value="${rm.username}" />
     <property name="chart" value="false" />
     <property name="eventNameLoadRecordCategories" value="loadRecordCategories" />
     <property name="eventNameScheduleLoaders" value="scheduleFilePlanLoaders" />
@@ -145,7 +144,6 @@
 
   <bean id="event.scheduleRecordLoaders" class="org.alfresco.bm.dataload.rm.fileplan.ScheduleRecordLoaders" parent="rmBaseEventProcessor">
     <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
-    <property name="username" value="${rm.username}" />
     <property name="uploadRecords" value="${rm.uploadRecords}" />
     <property name="recordFolderPaths" value="${rm.recordFolderPaths}" />
     <property name="recordsNumber" value="${rm.recordsNumber}" />
@@ -178,7 +176,6 @@
     <property name="rootUnfiledRecordFolderNumber" value="${rm.rootUnfiledRecordFolderNumber}" />
     <property name="unfiledRecordFolderDepth" value="${rm.unfiledRecordFolderDepth}" />
     <property name="unfiledRecordFolderNumber" value="${rm.unfiledRecordFolderNumber}" />
-    <property name="username" value="${rm.username}" />
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
     <property name="chart" value="false" />
     <property name="eventNameLoadUnfiledRecordFolders" value="loadUnfiledRecordFolders" />
@@ -207,7 +204,6 @@
     <property name="uploadUnfiledRecords" value="${rm.uploadUnfiledRecords}" />
     <property name="unfiledRecordsNumber" value="${rm.unfiledRecordsNumber}" />
     <property name="unfiledRecordFolderPaths" value="${rm.unfiledRecordFolderPaths}" />
-    <property name="username" value="${rm.username}" />
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
     <property name="chart" value="false" />
     <property name="eventNameLoadUnfiledRecords" value="loadUnfiledRecords" />

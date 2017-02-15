@@ -60,7 +60,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     private long loadCheckDelay;
     private boolean uploadRecords;
     private int recordsNumber;
-    private String username;
     private String recordFolderPaths;
     private List<String> paths;
     private String eventNameLoadRecords = EVENT_NAME_LOAD_RECORDS;
@@ -85,22 +84,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     public void setUploadRecords(boolean uploadRecords)
     {
         this.uploadRecords = uploadRecords;
-    }
-
-    /**
-     * @return the username
-     */
-    public String getUsername()
-    {
-        return username;
-    }
-
-    /**
-     * @param username the username to set
-     */
-    public void setUsername(String username)
-    {
-        this.username = username;
     }
 
     /**
@@ -345,7 +328,8 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
 
     private FolderData createFolder(String path) throws Exception
     {
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(getUsername(), getUsername()));
+        //TODO replace plain user and password here
+        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel("admin", "admin"));
         List<String> pathElements = getPathElements(path);
         FolderData parentFolder = fileFolderService.getFolder("", RECORD_CONTAINER_PATH);
         // for(String pathElement: pathElements)
@@ -411,7 +395,7 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
                         DBObject loadData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, emptyFolder.getContext())
                                     .add(FIELD_PATH, emptyFolder.getPath())
                                     .add(FIELD_RECORDS_TO_CREATE, Integer.valueOf(recordsToCreate))
-                                    .add(FIELD_SITE_MANAGER, username).get();
+                                    .get();
                         Event loadEvent = new Event(eventNameLoadRecords, loadData);
                         // Each load event must be associated with a session
                         String sessionId = sessionService.startSession(loadData);

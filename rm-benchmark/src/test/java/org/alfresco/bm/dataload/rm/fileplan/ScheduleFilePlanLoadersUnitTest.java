@@ -74,11 +74,9 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         int maxActiveLoaders = 8;
         int rootCategoriesNumber = 4;
         int categoryStructureDepth = 1;
-        String username = "bob";
 
         scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
-        scheduleFilePlanLoaders.setUsername(username);
         scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
         FolderData mockedFilePlanFolder = mock(FolderData.class);
         when(mockedFilePlanFolder.getContext()).thenReturn(EMPTY_CONTEXT);
@@ -104,7 +102,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
         assertEquals("scheduleFilePlanLoaders", result.getNextEvents().get(1).getName());
     }
@@ -115,11 +112,9 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         int maxActiveLoaders = 8;
         int rootCategoriesNumber = 4;
         int categoryStructureDepth = 0;
-        String username = "bob";
 
         scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
-        scheduleFilePlanLoaders.setUsername(username);
         scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
         FolderData mockedFilePlanFolder = mock(FolderData.class);
         when(mockedFilePlanFolder.getContext()).thenReturn(EMPTY_CONTEXT);
@@ -146,7 +141,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         int categoriesChildrenNumber = 2;
         int foldersChildrenNumber= 0;
         int categoryStructureDepth = 4;
-        String username = "bob";
 
         scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
@@ -155,8 +149,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
 
         scheduleFilePlanLoaders.setFolderNumber(foldersChildrenNumber);
         scheduleFilePlanLoaders.setFolderCategoryMix(true);
-
-        scheduleFilePlanLoaders.setUsername(username);
 
         FolderData mockedRootCategoryFolder = mock(FolderData.class);
         when(mockedRootCategoryFolder.getContext()).thenReturn(RECORD_CATEGORY_CONTEXT);
@@ -193,7 +185,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(categoriesChildrenNumber), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(foldersChildrenNumber), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
         Event secondEvent = result.getNextEvents().get(1);
         assertEquals("loadRecordCategories", secondEvent.getName());
@@ -204,7 +195,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(categoriesChildrenNumber), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(foldersChildrenNumber), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
         assertEquals("scheduleFilePlanLoaders", result.getNextEvents().get(2).getName());
     }
@@ -217,7 +207,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         int categoriesChildrenNumber = 2;
         int foldersChildrenNumber= 0;
         int categoryStructureDepth = 1;
-        String username = "bob";
 
         scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
@@ -226,8 +215,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
 
         scheduleFilePlanLoaders.setFolderNumber(foldersChildrenNumber);
         scheduleFilePlanLoaders.setFolderCategoryMix(true);
-
-        scheduleFilePlanLoaders.setUsername(username);
 
         FolderData mockedRootCategoryFolder = mock(FolderData.class);
         when(mockedRootCategoryFolder.getContext()).thenReturn(RECORD_CATEGORY_CONTEXT);
@@ -263,7 +250,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         int categoriesChildrenNumber = 0;
         int foldersChildrenNumber= 2;
         int categoryStructureDepth = 1;
-        String username = "bob";
 
         scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
@@ -272,8 +258,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
 
         scheduleFilePlanLoaders.setFolderNumber(foldersChildrenNumber);
         scheduleFilePlanLoaders.setFolderCategoryMix(true);
-
-        scheduleFilePlanLoaders.setUsername(username);
 
         FolderData mockedRootCategoryFolder = mock(FolderData.class);
         when(mockedRootCategoryFolder.getContext()).thenReturn(RECORD_CATEGORY_CONTEXT);
@@ -309,7 +293,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         int categoriesChildrenNumber = 0;
         int foldersChildrenNumber= 2;
         int categoryStructureDepth = 4;
-        String username = "bob";
 
         scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
@@ -318,8 +301,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
 
         scheduleFilePlanLoaders.setFolderNumber(foldersChildrenNumber);
         scheduleFilePlanLoaders.setFolderCategoryMix(true);
-
-        scheduleFilePlanLoaders.setUsername(username);
 
         FolderData mockedRootCategoryFolder = mock(FolderData.class);
         when(mockedRootCategoryFolder.getContext()).thenReturn(RECORD_CATEGORY_CONTEXT);
@@ -354,7 +335,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(categoriesChildrenNumber), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(foldersChildrenNumber), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
         Event secondEvent = result.getNextEvents().get(1);
         assertEquals("loadRecordCategories", secondEvent.getName());
@@ -365,7 +345,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(categoriesChildrenNumber), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(foldersChildrenNumber), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
         assertEquals("scheduleFilePlanLoaders", result.getNextEvents().get(2).getName());
     }
@@ -378,7 +357,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         int categoriesChildrenNumber = 0;
         int foldersChildrenNumber= 2;
         int categoryStructureDepth = 4;
-        String username = "bob";
 
         scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
@@ -387,8 +365,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
 
         scheduleFilePlanLoaders.setFolderNumber(foldersChildrenNumber);
         scheduleFilePlanLoaders.setFolderCategoryMix(false);
-
-        scheduleFilePlanLoaders.setUsername(username);
 
         FolderData mockedRootCategoryFolder = mock(FolderData.class);
         when(mockedRootCategoryFolder.getContext()).thenReturn(RECORD_CATEGORY_CONTEXT);
@@ -423,7 +399,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(categoriesChildrenNumber), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
         Event secondEvent = result.getNextEvents().get(1);
         assertEquals("loadRecordCategories", secondEvent.getName());
@@ -434,7 +409,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(categoriesChildrenNumber), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
         assertEquals("scheduleFilePlanLoaders", result.getNextEvents().get(2).getName());
     }

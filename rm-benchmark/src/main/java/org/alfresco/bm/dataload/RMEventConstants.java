@@ -21,7 +21,6 @@ package org.alfresco.bm.dataload;
 
 public interface RMEventConstants
 {
-    public static final String FIELD_SITE_MANAGER = "siteManager";
     public static final String FIELD_CONTEXT = "context";
     public static final String FIELD_PATH = "path";
 

@@ -123,13 +123,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         int maxActiveLoaders = 8;
         int recordsNumber = 4;
         String paths = EMPTY_CONTEXT;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         String path1 = RECORD_CONTAINER_PATH + "/RootCateg1/recordFolder1";
         FolderData mockedRecordFolder1 = mock(FolderData.class);
@@ -173,7 +171,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(path1, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadRecords", secondEvent.getName());
@@ -182,7 +179,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(path2, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(recordsNumber, value1 + value2);
         }
         else
@@ -205,13 +201,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         String entirePath1 = RECORD_CONTAINER_PATH + configuredPath1;
         String entirePath2 = RECORD_CONTAINER_PATH + configuredPath2;
         String paths = configuredPath1 + "," + configuredPath2;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         FolderData mockedRecordFolder1 = mock(FolderData.class);
         when(mockedRecordFolder1.getId()).thenReturn("recordFolder1Id");
@@ -247,7 +241,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadRecords", secondEvent.getName());
@@ -256,7 +249,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(entirePath2, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(recordsNumber, value1 + value2);
         }
         else
@@ -279,13 +271,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         String entirePath1 = RECORD_CONTAINER_PATH + configuredPath1;
         String entirePath2 = RECORD_CONTAINER_PATH + configuredPath2;
         String paths = configuredPath1 + "," + configuredPath2;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         FolderData mockedRecordCategory = mock(FolderData.class);
         when(mockedRecordCategory.getId()).thenReturn("recordCategoryId1");
@@ -323,7 +313,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals(entirePath2, (String) dataObj.get(FIELD_PATH));
         int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
         assertEquals(recordsNumber, value);
 
         assertEquals("scheduleRecordLoaders", result.getNextEvents().get(1).getName());
@@ -337,13 +326,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         String configuredPath1 = "/e1/e2/e3";
         String entirePath1 = RECORD_CONTAINER_PATH + configuredPath1;
         String paths = configuredPath1;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         FolderData mockedRecordCategory = mock(FolderData.class);
         when(mockedRecordCategory.getId()).thenReturn("recordCategoryId");
@@ -384,7 +371,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals(childPath, (String) dataObj.get(FIELD_PATH));
         int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
         assertEquals(recordsNumber, value);
 
         assertEquals("scheduleRecordLoaders", result.getNextEvents().get(1).getName());
@@ -398,13 +384,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         String configuredPath1 = "/e1/e2/e3";
         String configuredPath2 = "/e1/e2/e4";
         String paths = configuredPath1 + "," + configuredPath2;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         //file plan should be always there
         FolderData mockedFilePlanContainer = mock(FolderData.class);
@@ -505,7 +489,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(e3Path, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadRecords", secondEvent.getName());
@@ -514,7 +497,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(e4Path, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(recordsNumber, value1 + value2);
         }
         else
@@ -534,13 +516,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         int recordsNumber = 4;
         String configuredPath1 = "/e1/e2/e3";
         String paths = configuredPath1;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         //file plan should be always there
         FolderData mockedFilePlanContainer = mock(FolderData.class);
@@ -620,7 +600,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         assertEquals(e3Path, (String) dataObj.get(FIELD_PATH));
         int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
         assertEquals(recordsNumber, value);
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
         assertEquals("scheduleRecordLoaders", result.getNextEvents().get(1).getName());
     }
 
@@ -631,13 +610,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         int recordsNumber = 4;
         String configuredPath1 = "/e1";
         String paths = configuredPath1;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         //file plan should be always there
         FolderData mockedFilePlanContainer = mock(FolderData.class);
@@ -700,7 +677,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(path1, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadRecords", secondEvent.getName());
@@ -709,7 +685,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(path2, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(recordsNumber, value1 + value2);
         }
         else
@@ -730,13 +705,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         String configuredPath1 = "/e1/e2/e3";
         String configuredPath2 = "/e1/e2/e4";
         String paths = configuredPath1 + "," + configuredPath2;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         String path1 = RECORD_CONTAINER_PATH + "/categ1/folder1";
         FolderData mockedRecordFolder1 = mock(FolderData.class);
@@ -779,7 +752,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(path1, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadRecords", secondEvent.getName());
@@ -788,7 +760,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(path2, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(recordsNumber, value1 + value2);
         }
         else

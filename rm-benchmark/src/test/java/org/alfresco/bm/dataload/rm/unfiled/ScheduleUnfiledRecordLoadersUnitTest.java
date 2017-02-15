@@ -117,13 +117,11 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         int maxActiveLoaders = 8;
         int unfiledRecordsNumber = 4;
         String paths = "";
-        String username = "bob";
 
         scheduleUnfiledRecordLoaders.setUploadUnfiledRecords(true);
         scheduleUnfiledRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleUnfiledRecordLoaders.setUnfiledRecordsNumber(unfiledRecordsNumber);
         scheduleUnfiledRecordLoaders.setUnfiledRecordFolderPaths(paths);
-        scheduleUnfiledRecordLoaders.setUsername(username);
 
         FolderData mockedUnfiledRecordContainer = mock(FolderData.class);
         when(mockedUnfiledRecordContainer.getId()).thenReturn("unfiledRecordContainerId");
@@ -165,7 +163,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(UNFILED_RECORD_CONTAINER_PATH, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadUnfiledRecords", secondEvent.getName());
@@ -174,7 +171,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(UNFILED_RECORD_CONTAINER_PATH + "/folder1", (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(unfiledRecordsNumber, value1 + value2);
         }
         else
@@ -197,13 +193,11 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         String entirePath1 = UNFILED_RECORD_CONTAINER_PATH + configuredPath1;
         String entirePath2 = UNFILED_RECORD_CONTAINER_PATH + configuredPath2;
         String paths = configuredPath1 + "," + configuredPath2;
-        String username = "bob";
 
         scheduleUnfiledRecordLoaders.setUploadUnfiledRecords(true);
         scheduleUnfiledRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleUnfiledRecordLoaders.setUnfiledRecordsNumber(unfiledRecordsNumber);
         scheduleUnfiledRecordLoaders.setUnfiledRecordFolderPaths(paths);
-        scheduleUnfiledRecordLoaders.setUsername(username);
 
         FolderData mockedUnfiledRecordFolder = mock(FolderData.class);
         when(mockedUnfiledRecordFolder.getId()).thenReturn("folderId1");
@@ -239,7 +233,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadUnfiledRecords", secondEvent.getName());
@@ -248,7 +241,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(entirePath2, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(unfiledRecordsNumber, value1 + value2);
         }
         else
@@ -271,13 +263,11 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         String entirePath1 = UNFILED_RECORD_CONTAINER_PATH + configuredPath1;
         String entirePath2 = UNFILED_RECORD_CONTAINER_PATH + configuredPath2;
         String paths = configuredPath1 + "," + configuredPath2;
-        String username = "bob";
 
         scheduleUnfiledRecordLoaders.setUploadUnfiledRecords(true);
         scheduleUnfiledRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleUnfiledRecordLoaders.setUnfiledRecordsNumber(unfiledRecordsNumber);
         scheduleUnfiledRecordLoaders.setUnfiledRecordFolderPaths(paths);
-        scheduleUnfiledRecordLoaders.setUsername(username);
 
         FolderData mockedUnfiledRecordFolder = mock(FolderData.class);
         when(mockedUnfiledRecordFolder.getId()).thenReturn("folderId1");
@@ -318,7 +308,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(entirePath2, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadUnfiledRecords", secondEvent.getName());
@@ -327,7 +316,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(unfiledRecordsNumber, value1 + value2);
         }
         else
@@ -348,13 +336,11 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         String configuredPath1 = "/e1/e2/e3";
         String entirePath1 = UNFILED_RECORD_CONTAINER_PATH + configuredPath1;
         String paths = configuredPath1;
-        String username = "bob";
 
         scheduleUnfiledRecordLoaders.setUploadUnfiledRecords(true);
         scheduleUnfiledRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleUnfiledRecordLoaders.setUnfiledRecordsNumber(unfiledRecordsNumber);
         scheduleUnfiledRecordLoaders.setUnfiledRecordFolderPaths(paths);
-        scheduleUnfiledRecordLoaders.setUsername(username);
 
         FolderData mockedUnfiledRecordFolder = mock(FolderData.class);
         when(mockedUnfiledRecordFolder.getId()).thenReturn("folderId1");
@@ -397,7 +383,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(childPath, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadUnfiledRecords", secondEvent.getName());
@@ -406,7 +391,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(unfiledRecordsNumber, value1 + value2);
         }
         else
@@ -427,13 +411,11 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         String configuredPath1 = "/e1/e2/e3";
         String configuredPath2 = "/e1/e2/e4";
         String paths = configuredPath1 + "," + configuredPath2;
-        String username = "bob";
 
         scheduleUnfiledRecordLoaders.setUploadUnfiledRecords(true);
         scheduleUnfiledRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleUnfiledRecordLoaders.setUnfiledRecordsNumber(unfiledRecordsNumber);
         scheduleUnfiledRecordLoaders.setUnfiledRecordFolderPaths(paths);
-        scheduleUnfiledRecordLoaders.setUsername(username);
 
         //unfiledRecord should be always there
         FolderData mockedUnfiledRecordContainer = mock(FolderData.class);
@@ -534,7 +516,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(e3Path, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadUnfiledRecords", secondEvent.getName());
@@ -543,7 +524,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(e4Path, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(unfiledRecordsNumber, value1 + value2);
         }
         else
@@ -563,13 +543,11 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         int unfiledRecordsNumber = 4;
         String configuredPath1 = "/e1/e2/e3";
         String paths = configuredPath1;
-        String username = "bob";
 
         scheduleUnfiledRecordLoaders.setUploadUnfiledRecords(true);
         scheduleUnfiledRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleUnfiledRecordLoaders.setUnfiledRecordsNumber(unfiledRecordsNumber);
         scheduleUnfiledRecordLoaders.setUnfiledRecordFolderPaths(paths);
-        scheduleUnfiledRecordLoaders.setUsername(username);
 
         //unfiledRecord should be always there
         FolderData mockedUnfiledRecordContainer = mock(FolderData.class);
@@ -649,7 +627,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         assertEquals(e3Path, (String) dataObj.get(FIELD_PATH));
         int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
         assertEquals(unfiledRecordsNumber, value);
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
         assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(1).getName());
     }
 
@@ -661,13 +638,11 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         String configuredPath1 = "/e1/e2/e3";
         String configuredPath2 = "/e1/e2/e4";
         String paths = configuredPath1 + "," + configuredPath2;
-        String username = "bob";
 
         scheduleUnfiledRecordLoaders.setUploadUnfiledRecords(true);
         scheduleUnfiledRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleUnfiledRecordLoaders.setUnfiledRecordsNumber(unfiledRecordsNumber);
         scheduleUnfiledRecordLoaders.setUnfiledRecordFolderPaths(paths);
-        scheduleUnfiledRecordLoaders.setUsername(username);
 
         FolderData mockedUnfiledRecordContainer = mock(FolderData.class);
         when(mockedUnfiledRecordContainer.getId()).thenReturn("unfiledRecordContainerId");
@@ -708,7 +683,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(UNFILED_RECORD_CONTAINER_PATH, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadUnfiledRecords", secondEvent.getName());
@@ -717,7 +691,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(UNFILED_RECORD_CONTAINER_PATH + "/folder1", (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(unfiledRecordsNumber, value1 + value2);
         }
         else

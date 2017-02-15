@@ -69,7 +69,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     private String unfiledRecordFolderPaths;
     private List<String> paths;
     private long loadCheckDelay;
-    private String username;
     private String eventNameLoadUnfiledRecords = EVENT_NAME_LOAD_UNFILED_RECORDS;
     private String eventNameScheduleLoaders = EVENT_NAME_SCHEDULE_LOADERS;
     private String eventNameLoadingComplete = EVENT_NAME_LOADING_COMPLETE;
@@ -128,16 +127,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     public void setLoadCheckDelay(long loadCheckDelay)
     {
         this.loadCheckDelay = loadCheckDelay;
-    }
-
-    public String getUsername()
-    {
-        return username;
-    }
-
-    public void setUsername(String username)
-    {
-        this.username = username;
     }
 
     public String getEventNameLoadUnfiledRecords()
@@ -318,7 +307,8 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
 
     private FolderData createFolder(String path) throws Exception
     {
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(getUsername(), getUsername()));
+        //TODO replace plain user and password here
+        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel("admin", "admin"));
         List<String> pathElements = getPathElements(path);
         FolderData parentFolder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH);
         for(String pathElement: pathElements)
@@ -375,7 +365,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
                                 .add(FIELD_CONTEXT, emptyFolder.getContext())
                                 .add(FIELD_PATH, emptyFolder.getPath())
                                 .add(FIELD_RECORDS_TO_CREATE, Integer.valueOf(recordsToCreate))
-                                .add(FIELD_SITE_MANAGER, username)
                                 .get();
                         Event loadEvent = new Event(eventNameLoadUnfiledRecords, loadData);
                         // Each load event must be associated with a session

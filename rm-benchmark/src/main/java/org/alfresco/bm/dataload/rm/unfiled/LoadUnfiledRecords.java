@@ -19,8 +19,6 @@
 
 package org.alfresco.bm.dataload.rm.unfiled;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +30,7 @@ import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
+import org.alfresco.bm.user.UserData;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
@@ -97,8 +96,7 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
         String context = (String) dataObj.get(FIELD_CONTEXT);
         String path = (String) dataObj.get(FIELD_PATH);
         Integer recordsToCreate = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-        String siteManager = (String) dataObj.get(FIELD_SITE_MANAGER);
-        if (context == null || path == null || recordsToCreate == null || isBlank(siteManager))
+        if (context == null || path == null || recordsToCreate == null)
         {
             return new EventResult("Request data not complete for records loading: " + dataObj, false);
         }
@@ -116,13 +114,16 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
             return new EventResult("Load scheduling should create a session for each loader.",false);
         }
 
-        return loadRecords(folder, recordsToCreate, siteManager);
+        return loadRecords(folder, recordsToCreate);
     }
 
-    private EventResult loadRecords(FolderData container, int recordsToCreate, String siteManager)
+    private EventResult loadRecords(FolderData container, int recordsToCreate)
                 throws IOException
     {
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(siteManager, siteManager));
+        UserData user = getUser(logger);
+        String username = user.getUsername();
+        String password = user.getPassword();
+        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(username, password));
         try
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
@@ -150,7 +151,7 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
             DBObject resultData = BasicDBObjectBuilder.start()
                         .add("msg", "Created " + recordsToCreate + " records.")
                         .add("path", container.getPath())
-                        .add("username", siteManager)
+                        .add("username", username)
                         .get();
 
             return new EventResult(resultData, scheduleEvents);
@@ -162,7 +163,7 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
             // Grab REST API information
             DBObject data = BasicDBObjectBuilder.start()
                         .append("error", error)
-                        .append("username", siteManager)
+                        .append("username", username)
                         .append("path", container.getPath())
                         .append("stack", stack)
                         .get();
