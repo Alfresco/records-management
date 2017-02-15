@@ -43,7 +43,6 @@ import org.alfresco.bm.file.TestFileService;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.bm.site.SiteMemberData;
-import org.alfresco.bm.site.SiteRole;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
