@@ -15,10 +15,17 @@ package org.alfresco.bm.dataload.rm.site;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
 import java.util.List;
 
+import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.rm.role.RMRole;
+import org.alfresco.bm.event.Event;
+import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.site.SiteDataService;
+import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,5 +97,47 @@ public class PrepareRMSiteMembersUnitTest
     public void testInexistentRole() throws Exception
     {
         prepareRMSiteMembers.setRole("inexistent1");
+    }
+
+    @Test
+    public void testAssignRMRolesNotWanted() throws Exception
+    {
+        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setAssignRMRoleToUsers(false);
+        EventResult result = prepareRMSiteMembers.processEvent(null);
+        assertEquals(true, result.isSuccess());
+        assertEquals(PrepareRMSiteMembers.ASSIGNATION_NOT_WANTED_MSG, result.getData());
+        List<Event> nextEvents = result.getNextEvents();
+        assertEquals(1, nextEvents.size());
+        assertEquals(prepareRMSiteMembers.getEventNameContinueLoadingData(), nextEvents.get(0).getName());
+    }
+
+    @Test
+    public void testNoUsersWanted() throws Exception
+    {
+        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setAssignRMRoleToUsers(true);
+        prepareRMSiteMembers.setUserCount(0);
+        EventResult result = prepareRMSiteMembers.processEvent(null);
+        assertEquals(true, result.isSuccess());
+        assertEquals(PrepareRMSiteMembers.NO_USERS_WANTED_MSG, result.getData());
+        List<Event> nextEvents = result.getNextEvents();
+        assertEquals(1, nextEvents.size());
+        assertEquals(prepareRMSiteMembers.getEventNameContinueLoadingData(), nextEvents.get(0).getName());
+    }
+
+    @Test
+    public void testNoUsersToChoseFrom() throws Exception
+    {
+        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setAssignRMRoleToUsers(true);
+        prepareRMSiteMembers.setUserCount(1);
+        when(mockedUserDataService.getUsersByCreationState(DataCreationState.Created, 0, 100)).thenReturn(new ArrayList<UserData>());
+        EventResult result = prepareRMSiteMembers.processEvent(null);
+        assertEquals(true, result.isSuccess());
+        assertEquals(PrepareRMSiteMembers.NO_USERS_AVAILABLE_MSG, result.getData());
+        List<Event> nextEvents = result.getNextEvents();
+        assertEquals(1, nextEvents.size());
+        assertEquals(prepareRMSiteMembers.getEventNameContinueLoadingData(), nextEvents.get(0).getName());
     }
 }

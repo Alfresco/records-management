@@ -36,6 +36,9 @@ import org.alfresco.bm.user.UserData;
  */
 public class PrepareRMSiteMembers extends RMBaseEventProcessor
 {
+    public static final String NO_USERS_AVAILABLE_MSG = "There are no users available, continue loading data.";
+    public static final String NO_USERS_WANTED_MSG = "No users wanted, continue loading data.";
+    public static final String ASSIGNATION_NOT_WANTED_MSG = "Assignation of RM users not wanted, continue loading data.";
     public static final String EVENT_NAME_SITE_MEMBERS_PREPARED = "rmSiteMembersPrepared";
     public static final String EVENT_NAME_CONTINUE_LOADING_DATA = "scheduleFilePlanLoaders";
     private boolean assignRMRoleToUsers;
@@ -123,11 +126,11 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
     {
         if (!isAssignRMRoleToUsers())
         {
-            return new EventResult("Assignation of RM users not wanted, continue loading data.", new Event(getEventNameContinueLoadingData(), null));
+            return new EventResult(ASSIGNATION_NOT_WANTED_MSG, new Event(getEventNameContinueLoadingData(), null));
         }
         if(getUserCount() <= 0)
         {
-            return new EventResult("No users wanted, continue loading data.", new Event(getEventNameContinueLoadingData(), null));
+            return new EventResult(NO_USERS_WANTED_MSG, new Event(getEventNameContinueLoadingData(), null));
         }
 
         int membersCount = 0;
@@ -136,7 +139,7 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
         List<UserData> users = userDataService.getUsersByCreationState(DataCreationState.Created, userSkip, userPageSize);
         if (users.size() == 0L)
         {
-            return new EventResult("There are no users available, continue loading data.", new Event(getEventNameContinueLoadingData(), null));
+            return new EventResult(NO_USERS_AVAILABLE_MSG, new Event(getEventNameContinueLoadingData(), null));
         }
 
         String siteId = PATH_SNIPPET_RM_SITE_ID;
