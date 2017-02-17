@@ -14,6 +14,7 @@ package org.alfresco.bm.dataload.rm.site;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,11 +37,14 @@ import org.alfresco.bm.user.UserData;
  */
 public class PrepareRMSiteMembers extends RMBaseEventProcessor
 {
+    public static final String NO_NEW_USERS_FOUND_MSG = "No new users found to assign to RM, continue loading data.";
     public static final String NO_USERS_AVAILABLE_MSG = "There are no users available, continue loading data.";
     public static final String NO_USERS_WANTED_MSG = "No users wanted, continue loading data.";
     public static final String ASSIGNATION_NOT_WANTED_MSG = "Assignation of RM users not wanted, continue loading data.";
     public static final String EVENT_NAME_SITE_MEMBERS_PREPARED = "rmSiteMembersPrepared";
     public static final String EVENT_NAME_CONTINUE_LOADING_DATA = "scheduleFilePlanLoaders";
+    public static final String PREPARED_MSG_TEMPLATE = "Prepared {0} site members";
+    public static final String PREPARED_INCOMPLETE_MSG_TEMPLATE = "Prepared only {0} site members, and the requested number of users was {1}.";
     private boolean assignRMRoleToUsers;
     private int userCount;
     private List<RMRole> rolesToChoseFrom = new ArrayList<RMRole>();
@@ -97,7 +101,7 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
         rolesToChoseFrom = new ArrayList<RMRole>();
         if (isBlank(role))
         {
-            throw new IllegalArgumentException("'role' may not be null.");
+            throw new IllegalArgumentException("'role' may not be null or empty.");
         }
         // Split by comma
         StringTokenizer commaTokenizer = new StringTokenizer(role, ",");
@@ -105,7 +109,6 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
         {
             String roleStr = commaTokenizer.nextToken();
             roleStr = roleStr.trim();
-            // Store the chance
             try
             {
                 RMRole chosenRole = RMRole.valueOf(roleStr);
@@ -180,10 +183,16 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
 
         if(membersCount == 0)
         {
-            return new EventResult("No new users found to assign to RM, continue loading data.", new Event(getEventNameContinueLoadingData(), null));
+            return new EventResult(NO_NEW_USERS_FOUND_MSG, new Event(getEventNameContinueLoadingData(), null));
         }
+
+        String msg = MessageFormat.format(PREPARED_MSG_TEMPLATE, membersCount);
+        if(membersCount < siteUsersToCreate)
+        {
+            msg = MessageFormat.format(PREPARED_INCOMPLETE_MSG_TEMPLATE, membersCount, siteUsersToCreate);
+        }
+
         // We need an event to mark completion
-        String msg = "Prepared " + membersCount + " site members";
         Event outputEvent = new Event(eventNameSiteMembersPrepared, null);
 
         // Create result

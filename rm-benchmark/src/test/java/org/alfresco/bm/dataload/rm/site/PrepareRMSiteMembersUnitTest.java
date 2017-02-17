@@ -15,16 +15,25 @@ package org.alfresco.bm.dataload.rm.site;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.alfresco.bm.data.DataCreationState;
+import org.alfresco.bm.dataload.RMEventConstants;
 import org.alfresco.bm.dataload.rm.role.RMRole;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.site.SiteDataService;
+import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.junit.Test;
@@ -40,7 +49,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @since 2.6
  */
 @RunWith(MockitoJUnitRunner.class)
-public class PrepareRMSiteMembersUnitTest
+public class PrepareRMSiteMembersUnitTest implements RMEventConstants
 {
     @Mock
     private UserDataService mockedUserDataService;
@@ -139,5 +148,98 @@ public class PrepareRMSiteMembersUnitTest
         List<Event> nextEvents = result.getNextEvents();
         assertEquals(1, nextEvents.size());
         assertEquals(prepareRMSiteMembers.getEventNameContinueLoadingData(), nextEvents.get(0).getName());
+    }
+
+    @Test
+    public void testNoNewUsersAvailable() throws Exception
+    {
+        int userCount = 2;
+        String user1 = "user1";
+        String user2 = "user2";
+
+        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setAssignRMRoleToUsers(true);
+        prepareRMSiteMembers.setUserCount(userCount);
+        UserData mockedUserData1 = mock(UserData.class);
+        when(mockedUserData1.getUsername()).thenReturn(user1);
+        UserData mockedUserData2 = mock(UserData.class);
+        when(mockedUserData2.getUsername()).thenReturn(user2);
+        List<UserData> users = Arrays.asList(mockedUserData1, mockedUserData2);
+        when(mockedUserDataService.getUsersByCreationState(DataCreationState.Created, 0, 100)).thenReturn(users);
+        when(mockedSiteDataService.getSiteMembers(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, 0, userCount)).thenReturn(new ArrayList<>());
+
+        SiteMemberData mockedSiteMemberData1 = mock(SiteMemberData.class);
+        SiteMemberData mockedSiteMemberData2 = mock(SiteMemberData.class);
+        when(mockedSiteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, user1)).thenReturn(mockedSiteMemberData1);
+        when(mockedSiteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, user2)).thenReturn(mockedSiteMemberData2);
+
+        EventResult result = prepareRMSiteMembers.processEvent(null);
+        verify(mockedSiteDataService, never()).addSiteMember(any(SiteMemberData.class));
+        assertEquals(true, result.isSuccess());
+        assertEquals(PrepareRMSiteMembers.NO_NEW_USERS_FOUND_MSG, result.getData());
+        List<Event> nextEvents = result.getNextEvents();
+        assertEquals(1, nextEvents.size());
+        assertEquals(prepareRMSiteMembers.getEventNameContinueLoadingData(), nextEvents.get(0).getName());
+    }
+
+    @Test
+    public void testLessThanRequestedNumeberOfUsersFound() throws Exception
+    {
+        int userCount = 2;
+        String user1 = "user1";
+        String user2 = "user2";
+
+        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setAssignRMRoleToUsers(true);
+        prepareRMSiteMembers.setUserCount(userCount);
+        UserData mockedUserData1 = mock(UserData.class);
+        when(mockedUserData1.getUsername()).thenReturn(user1);
+        UserData mockedUserData2 = mock(UserData.class);
+        when(mockedUserData2.getUsername()).thenReturn(user2);
+        List<UserData> users = Arrays.asList(mockedUserData1, mockedUserData2);
+        when(mockedUserDataService.getUsersByCreationState(DataCreationState.Created, 0, 100)).thenReturn(users);
+        when(mockedSiteDataService.getSiteMembers(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, 0, userCount)).thenReturn(new ArrayList<>());
+
+        SiteMemberData mockedSiteMemberData1 = mock(SiteMemberData.class);
+        when(mockedSiteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, user1)).thenReturn(mockedSiteMemberData1);
+        when(mockedSiteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, user2)).thenReturn(null);
+
+        EventResult result = prepareRMSiteMembers.processEvent(null);
+        verify(mockedSiteDataService, times(1)).addSiteMember(any(SiteMemberData.class));
+        assertEquals(true, result.isSuccess());
+        assertEquals(MessageFormat.format(PrepareRMSiteMembers.PREPARED_INCOMPLETE_MSG_TEMPLATE, 1, userCount), result.getData());
+        List<Event> nextEvents = result.getNextEvents();
+        assertEquals(1, nextEvents.size());
+        assertEquals(prepareRMSiteMembers.getEventNameSiteMembersPrepared(), nextEvents.get(0).getName());
+    }
+
+    @Test
+    public void testAllRequestedNumeberOfUsersFound() throws Exception
+    {
+        int userCount = 2;
+        String user1 = "user1";
+        String user2 = "user2";
+
+        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setAssignRMRoleToUsers(true);
+        prepareRMSiteMembers.setUserCount(userCount);
+        UserData mockedUserData1 = mock(UserData.class);
+        when(mockedUserData1.getUsername()).thenReturn(user1);
+        UserData mockedUserData2 = mock(UserData.class);
+        when(mockedUserData2.getUsername()).thenReturn(user2);
+        List<UserData> users = Arrays.asList(mockedUserData1, mockedUserData2);
+        when(mockedUserDataService.getUsersByCreationState(DataCreationState.Created, 0, 100)).thenReturn(users);
+        when(mockedSiteDataService.getSiteMembers(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, 0, userCount)).thenReturn(new ArrayList<>());
+
+        when(mockedSiteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, user1)).thenReturn(null);
+        when(mockedSiteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, user2)).thenReturn(null);
+
+        EventResult result = prepareRMSiteMembers.processEvent(null);
+        verify(mockedSiteDataService, times(2)).addSiteMember(any(SiteMemberData.class));
+        assertEquals(true, result.isSuccess());
+        assertEquals(MessageFormat.format(PrepareRMSiteMembers.PREPARED_MSG_TEMPLATE, userCount), result.getData());
+        List<Event> nextEvents = result.getNextEvents();
+        assertEquals(1, nextEvents.size());
+        assertEquals(prepareRMSiteMembers.getEventNameSiteMembersPrepared(), nextEvents.get(0).getName());
     }
 }
