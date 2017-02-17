@@ -20,24 +20,38 @@ package org.alfresco.bm.dataload.rm.role;
 
 import java.util.Random;
 
+import org.alfresco.rest.rm.community.model.user.UserRoles;
+
 /**
  * Site membership role based on record management site.
  *
  * @author Michael Suzuki
+ * @author Silviu Dinuta
  * @since 2.6
  */
 public enum RMRole
 {
-    USER,
-    POWER_USER,
-    SECURITY_OFFICER,
-    RECORDS_MANAGER,
-    ADMINISTRATOR;
+    USER(UserRoles.ROLE_RM_USER),
+    POWER_USER(UserRoles.ROLE_RM_POWER_USER),
+    SECURITY_OFFICER(UserRoles.ROLE_RM_SECURITY_OFFICER),
+    RECORDS_MANAGER(UserRoles.ROLE_RM_MANAGER),
+    ADMINISTRATOR(UserRoles.ROLE_RM_ADMIN);
 
+    private String text;
     private static Random random = new Random();
 
+    private RMRole(String text)
+    {
+        this.text = text;
+    }
     public static RMRole getRandomRole()
     {
         return values()[random.nextInt(values().length)];
+    }
+
+    @Override
+    public String toString()
+    {
+        return text;
     }
 }

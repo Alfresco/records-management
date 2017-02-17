@@ -88,7 +88,7 @@
     <property name="chart" value="false" />
     <property name="eventNameRMSitePrepared" value="createRMSite" />
     <property name="eventNameLoadRMSiteIntoDB" value="loadRMSiteIntoDB" />
-    <property name="eventNameContinueLoadingData" value="scheduleFilePlanLoaders" />
+    <property name="eventNameContinueLoadingData" value="prepareRMSiteMembers" />
   </bean>
 
   <bean id="event.createRMSite" class="org.alfresco.bm.dataload.rm.site.CreateRMSite"
@@ -101,12 +101,48 @@
     <property name="eventNameSiteCreated" value="rmSiteCreated" />
   </bean>
 
+  <!--                    -->
+  <!-- Site Membership    -->
+  <!--                    -->
+
+  <bean id="producer.rmSiteCreated" class="org.alfresco.bm.event.producer.RedirectEventProducer"
+    parent="producer.base">
+    <constructor-arg name="newEventName" value="prepareRMSiteMembers" />
+  </bean>
+
+  <bean id="event.prepareRMSiteMembers" class="org.alfresco.bm.dataload.rm.site.PrepareRMSiteMembers" parent="rmBaseEventProcessor" >
+      <property name="assignRMRoleToUsers" value="${rm.assignRMRoleToUsers}" />
+      <property name="userCount" value="${rm.userCount}" />
+      <property name="role" value="${rm.role}" />
+      <property name="eventNameSiteMembersPrepared" value="rmSiteMembersPrepared" />
+      <property name="eventNameContinueLoadingData" value="scheduleFilePlanLoaders" />
+      <property name="chart" value="false"/>
+  </bean>
+
+  <bean id="producer.rmSiteMembersPrepared" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base" >
+      <constructor-arg name="newEventName" value="createRMSiteMembers" />
+  </bean>
+
+  <bean id="event.createRMSiteMembers" class="org.alfresco.bm.dataload.rm.site.CreateRMSiteMembers" parent="rmBaseEventProcessor" >
+      <property name="memberCreationDelay" value="${rm.siteMemberCreationDelay}" />
+      <property name="batchSize" value="${rm.batch.size}" />
+      <property name="eventNameRMSiteMembersCreated" value="rmSiteMembersCreated" />
+      <property name="eventNameCreateRMSiteMembers" value="createRMSiteMembers" />
+      <property name="eventNameCreateRMSiteMember" value="createRMSiteMember" />
+      <property name="chart" value="false"/>
+  </bean>
+
+  <bean id="event.createRMSiteMember" class="org.alfresco.bm.dataload.rm.site.CreateRMSiteMember" parent="rmBaseEventProcessor">
+      <property name="eventNameRMSiteMemberCreated" value="rmSiteMemberCreated" />
+  </bean>
+
+  <bean id="producer.rmSiteMemberCreated" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
   <!-- -->
   <!-- File Plan structure Creation -->
   <!-- -->
 
-  <bean id="producer.rmSiteCreated" class="org.alfresco.bm.event.producer.RedirectEventProducer"
-    parent="producer.base">
+  <bean id="producer.rmSiteMembersCreated" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base">
     <constructor-arg name="newEventName" value="scheduleFilePlanLoaders" />
   </bean>
 
