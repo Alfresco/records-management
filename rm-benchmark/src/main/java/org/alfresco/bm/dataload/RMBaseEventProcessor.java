@@ -365,7 +365,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         {
             throw new IllegalStateException("Unable to find site '" + PATH_SNIPPET_RM_SITE_ID + "'");
         }
-        SiteMemberData siteMember = siteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.ADMINISTRATOR.toString());
+        SiteMemberData siteMember = siteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.ADMINISTRATOR.name());
         if (siteMember == null)
         {
             throw new IllegalStateException("Unable to find a collaborator or manager for site: " + PATH_SNIPPET_RM_SITE_ID);
