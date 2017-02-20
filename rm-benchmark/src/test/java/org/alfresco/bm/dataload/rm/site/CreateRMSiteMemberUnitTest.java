@@ -12,7 +12,11 @@
 
 package org.alfresco.bm.dataload.rm.site;
 
+import org.alfresco.bm.dataload.RMEventConstants;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * Unit test class for CreateRMSiteMember
@@ -20,8 +24,12 @@ import org.junit.Test;
  * @author Silviu Dinuta
  * @since 2.6
  */
-public class CreateRMSiteMemberUnitTest
+@RunWith(MockitoJUnitRunner.class)
+public class CreateRMSiteMemberUnitTest implements RMEventConstants
 {
+    @InjectMocks
+    private CreateRMSiteMember createRMSiteMember;
+
     @Test
     public void test() throws Exception
     {

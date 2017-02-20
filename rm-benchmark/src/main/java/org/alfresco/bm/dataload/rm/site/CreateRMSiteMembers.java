@@ -12,6 +12,7 @@
 
 package org.alfresco.bm.dataload.rm.site;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import com.mongodb.DBObject;
 */
 public class CreateRMSiteMembers extends RMBaseEventProcessor
 {
+    public static final String SCHEDULED_MEMBERS_MSG_TEMPLATE = "Scheduled {0} RM site member(s) for creation";
     public static final String DEFAULT_EVENT_NAME_RM_SITE_MEMBERS_CREATED = "rmSiteMembersCreated";
     public static final String DEFAULT_EVENT_NAME_CREATE_RM_SITE_MEMBER = "createRMSiteMember";
     public static final String DEFAULT_EVENT_NAME_CREATE_RM_SITE_MEMBERS = "createRMSiteMembers";
@@ -44,6 +46,7 @@ public class CreateRMSiteMembers extends RMBaseEventProcessor
     private String eventNameCreateRMSiteMembers = DEFAULT_EVENT_NAME_CREATE_RM_SITE_MEMBERS;
     private int batchSize = DEFAULT_BATCH_SIZE;
     private long memberCreationDelay = DEFAULT_MEMBER_CREATION_DELAY;
+
     /**
      * Override the {@link #DEFAULT_EVENT_NAME_RM_SITE_MEMBERS_CREATED default} event name for completion
      */
@@ -52,12 +55,22 @@ public class CreateRMSiteMembers extends RMBaseEventProcessor
         this.eventNameRMSiteMembersCreated = eventNameRMSiteMembersCreated;
     }
 
+    public String getEventNameRMSiteMembersCreated()
+    {
+        return eventNameRMSiteMembersCreated;
+    }
+
     /**
-     * Override the {@link #DEFAULT_EVENT_NAME_CREATE_RM_SITE_MEMBER default} event name for creating a site member
+     * Override the {@link #DEFAULT_EVENT_NAME_CREATE_RM_SITE_MEMBER default} event name for creating a RM site member
      */
     public void setEventNameCreateRMSiteMember(String eventNameCreateRMSiteMember)
     {
         this.eventNameCreateRMSiteMember = eventNameCreateRMSiteMember;
+    }
+
+    public String getEventNameCreateRMSiteMember()
+    {
+        return eventNameCreateRMSiteMember;
     }
 
     /**
@@ -66,6 +79,11 @@ public class CreateRMSiteMembers extends RMBaseEventProcessor
     public void setEventNameCreateRMSiteMembers(String eventNameCreateRMSiteMembers)
     {
         this.eventNameCreateRMSiteMembers = eventNameCreateRMSiteMembers;
+    }
+
+    public String getEventNameCreateRMSiteMembers()
+    {
+        return eventNameCreateRMSiteMembers;
     }
 
     /**
@@ -117,7 +135,6 @@ public class CreateRMSiteMembers extends RMBaseEventProcessor
                     continue;
                 }
                 // RM Site created
-
                 nextEventTime += memberCreationDelay;
 
                 DBObject dataObj = new BasicDBObject()
@@ -136,7 +153,7 @@ public class CreateRMSiteMembers extends RMBaseEventProcessor
         }
 
         // Return messages + next events
-        return new EventResult("Scheduled " + numSitesMembers + " site member(s) for creation", nextEvents);
+        return new EventResult(MessageFormat.format(SCHEDULED_MEMBERS_MSG_TEMPLATE, numSitesMembers), nextEvents);
     }
 
 }
