@@ -25,7 +25,6 @@ import org.alfresco.bm.event.selector.EventDataObject.STATUS;
 import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.RMUserAPI;
-import org.alfresco.utility.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mongodb.DBObject;
@@ -108,11 +107,10 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
         String roleStr = siteMember.getRole();
         RMRole role = RMRole.valueOf(roleStr);
 
-        //TODO replace plain text admin user
-        String runAs = "admin";
         try
         {
-            RMUserAPI rmUserAPI = restAPIFactory.getRMUserAPI(new UserModel(runAs, runAs));
+            //assign RM roles to new members as admin user
+            RMUserAPI rmUserAPI = restAPIFactory.getRMUserAPI(null);
             rmUserAPI.assignRoleToUser(username, role.toString());
             siteDataService.setSiteMemberCreationState(PATH_SNIPPET_RM_SITE_ID, username, DataCreationState.Created);
 
@@ -126,7 +124,7 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
         catch (Exception e)
         {
             // Failure
-            throw new RuntimeException("Create RM site member as user: " + runAs + " failed (" + e.getMessage() + "): " + siteMember, e);
+            throw new RuntimeException("Create RM site member as user: admin failed (" + e.getMessage() + "): " + siteMember, e);
         }
 
         if (logger.isDebugEnabled())

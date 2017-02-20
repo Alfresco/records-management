@@ -45,7 +45,6 @@ import org.alfresco.bm.session.SessionService;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.bm.site.SiteMemberData;
-import org.alfresco.bm.site.SiteRole;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.core.RestAPIFactory;
@@ -358,13 +357,16 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
         assertEquals("/aPath", eventData.get(FIELD_PATH));
     }
 
+    /**
+     * Helper method for mocking user data
+     */
     private void mockSiteAndUserData()
     {
         SiteData mockedSiteData = mock(SiteData.class);
         when(mockedSiteDataService.getSite(PATH_SNIPPET_RM_SITE_ID)).thenReturn(mockedSiteData);
         SiteMemberData mockedSiteMemberData = mock(SiteMemberData.class);
         when(mockedSiteMemberData.getUsername()).thenReturn("aUser");
-        when(mockedSiteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.ADMINISTRATOR.toString())).thenReturn(mockedSiteMemberData);
+        when(mockedSiteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.ADMINISTRATOR.name())).thenReturn(mockedSiteMemberData);
         UserData mockedUserData = mock(UserData.class);
         when(mockedUserData.getUsername()).thenReturn("aUser");
         when(mockedUserData.getPassword()).thenReturn("aUser");

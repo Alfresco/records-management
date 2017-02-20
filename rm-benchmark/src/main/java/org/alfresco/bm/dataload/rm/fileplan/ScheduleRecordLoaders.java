@@ -40,7 +40,6 @@ import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
-import org.alfresco.utility.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ScheduleRecordLoaders extends RMBaseEventProcessor
@@ -328,8 +327,8 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
 
     private FolderData createFolder(String path) throws Exception
     {
-        //TODO replace plain user and password here
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel("admin", "admin"));
+        //create inexistent elements from configured paths as admin
+        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(null);
         List<String> pathElements = getPathElements(path);
         FolderData parentFolder = fileFolderService.getFolder("", RECORD_CONTAINER_PATH);
         // for(String pathElement: pathElements)
