@@ -12,6 +12,8 @@
 
 package org.alfresco.bm.dataload.rm.site;
 
+import java.text.MessageFormat;
+
 import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.dataload.rm.role.RMRole;
@@ -25,8 +27,6 @@ import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.RMUserAPI;
 import org.alfresco.utility.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.social.alfresco.connect.exception.AlfrescoException;
 
 import com.mongodb.DBObject;
 
@@ -38,6 +38,11 @@ import com.mongodb.DBObject;
 */
 public class CreateRMSiteMember extends RMBaseEventProcessor
 {
+    public static final String CREATED_RM_SITE_MEMBER_MSG_TEMPLATE = "Created RM site member: \n   Response: {0}";
+    public static final String SITE_MEMBER_ALREADY_PROCESSED_MSG_TEMPLATE = "Site membership has already been processed: {0}";
+    public static final String SITE_MEMBER_MISSING_MSG_TEMPLATE = "Site member is missing: {0}";
+    public static final String MSG_KEY = "msg";
+    public static final String INVALID_SITE_MEMBER_REQUEST_MSG = "Invalid site member request.";
     public static final String DEFAULT_EVENT_NAME_RM_SITE_MEMBER_CREATED = "rmSiteMemberCreated";
     public static final String FIELD_USERNAME = "username";
     private String eventNameRMSiteMemberCreated = DEFAULT_EVENT_NAME_RM_SITE_MEMBER_CREATED;
@@ -51,10 +56,25 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
     {
         this.eventNameRMSiteMemberCreated = eventNameRMSiteMemberCreated;
     }
+
+    public String getEventNameRMSiteMemberCreated()
+    {
+        return eventNameRMSiteMemberCreated;
+    }
+
     @Override
     protected EventResult processEvent(Event event) throws Exception
     {
+        if (event == null)
+        {
+            throw new IllegalStateException("This processor requires an event.");
+        }
+
         DBObject dataObj = (DBObject) event.getData();
+        if (dataObj == null)
+        {
+            throw new IllegalStateException("This processor requires data with field " + FIELD_USERNAME);
+        }
         String username = (String) dataObj.get(FIELD_USERNAME);
 
         EventProcessorResponse response = null;
@@ -65,7 +85,7 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
         // Check the input
         if (username == null)
         {
-            dataObj.put("msg", "Invalid site member request.");
+            dataObj.put(MSG_KEY, INVALID_SITE_MEMBER_REQUEST_MSG);
             return new EventResult(dataObj, false);
         }
 
@@ -73,12 +93,12 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
         SiteMemberData siteMember = siteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, username);
         if (siteMember == null)
         {
-            dataObj.put("msg", "Site member is missing: " + username);
+            dataObj.put(MSG_KEY, MessageFormat.format(SITE_MEMBER_MISSING_MSG_TEMPLATE, username));
             return new EventResult(dataObj, false);
         }
         if (siteMember.getCreationState() != DataCreationState.Scheduled)
         {
-            dataObj.put("msg", "Site membership has already been processed: " + siteMember);
+            dataObj.put(MSG_KEY, MessageFormat.format(SITE_MEMBER_ALREADY_PROCESSED_MSG_TEMPLATE, siteMember));
             return new EventResult(dataObj, false);
         }
 
@@ -100,28 +120,13 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
             EventDataObject responseData = new EventDataObject(STATUS.SUCCESS, siteMember);
             response = new EventProcessorResponse("Added RM site member", true, responseData);
 
-            msg = "Created RM site member: \n" + "   Response: " + response;
+            msg = MessageFormat.format(CREATED_RM_SITE_MEMBER_MSG_TEMPLATE, response);
             nextEvent = new Event(eventNameRMSiteMemberCreated, null);
         }
-        catch (AlfrescoException e)
+        catch (Exception e)
         {
-            if (e.getStatusCode().equals(HttpStatus.CONFLICT))
-            {
-                // Already a member
-                siteDataService.setSiteMemberCreationState(PATH_SNIPPET_RM_SITE_ID, username, DataCreationState.Created);
-
-                siteMember = siteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, username);
-                EventDataObject responseData = new EventDataObject(STATUS.SUCCESS, siteMember);
-                response = new EventProcessorResponse("Added RM site member", true, responseData);
-
-                msg = "Site member already exists on server: \n" + "   Response: " + response;
-                nextEvent = new Event(eventNameRMSiteMemberCreated, null);
-            }
-            else
-            {
-                // Failure
-                throw new RuntimeException("Create RM site member as user: " + runAs + " failed (" + e.getStatusCode() + "): " + siteMember, e);
-            }
+            // Failure
+            throw new RuntimeException("Create RM site member as user: " + runAs + " failed (" + e.getMessage() + "): " + siteMember, e);
         }
 
         if (logger.isDebugEnabled())
@@ -132,5 +137,4 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
         EventResult result = new EventResult(msg, nextEvent);
         return result;
     }
-
 }
