@@ -20,7 +20,7 @@ package org.alfresco.bm.dataload.rm.site;
 
 import static org.alfresco.bm.data.DataCreationState.Created;
 import static org.alfresco.bm.data.DataCreationState.Scheduled;
-import static org.alfresco.bm.dataload.rm.role.RMRole.ADMINISTRATOR;
+import static org.alfresco.bm.dataload.rm.role.RMRole.Administrator;
 import static org.alfresco.bm.site.SiteVisibility.PUBLIC;
 
 import java.util.ArrayList;
@@ -198,7 +198,7 @@ public class PrepareRMSite extends AbstractEventProcessor
             // Record the administrator
             SiteMemberData rmAdminMember = new SiteMemberData();
             rmAdminMember.setCreationState(Created);
-            rmAdminMember.setRole(ADMINISTRATOR.toString());
+            rmAdminMember.setRole(Administrator.toString());
             rmAdminMember.setSiteId(RM_SITE_ID);
             rmAdminMember.setUsername(getUsername());
             siteDataService.addSiteMember(rmAdminMember);

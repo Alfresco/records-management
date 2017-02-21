@@ -63,25 +63,25 @@ public class PrepareRMSiteMembersUnitTest implements RMEventConstants
     @Test
     public void testExistentRolesValues() throws Exception
     {
-        prepareRMSiteMembers.setRole("ADMINISTRATOR, RECORDS_MANAGER, SECURITY_OFFICER, POWER_USER, USER");
+        prepareRMSiteMembers.setRole("Administrator, RecordsManager, SecurityOfficer, PowerUser, User");
         List<RMRole> rolesToChoseFrom = prepareRMSiteMembers.getRolesToChoseFrom();
         assertEquals(5, rolesToChoseFrom.size());
-        assertTrue(rolesToChoseFrom.contains(RMRole.ADMINISTRATOR));
-        assertTrue(rolesToChoseFrom.contains(RMRole.RECORDS_MANAGER));
-        assertTrue(rolesToChoseFrom.contains(RMRole.SECURITY_OFFICER));
-        assertTrue(rolesToChoseFrom.contains(RMRole.POWER_USER));
-        assertTrue(rolesToChoseFrom.contains(RMRole.USER));
+        assertTrue(rolesToChoseFrom.contains(RMRole.Administrator));
+        assertTrue(rolesToChoseFrom.contains(RMRole.RecordsManager));
+        assertTrue(rolesToChoseFrom.contains(RMRole.SecurityOfficer));
+        assertTrue(rolesToChoseFrom.contains(RMRole.PowerUser));
+        assertTrue(rolesToChoseFrom.contains(RMRole.User));
 
-        prepareRMSiteMembers.setRole("ADMINISTRATOR, RECORDS_MANAGER");
+        prepareRMSiteMembers.setRole("Administrator, RecordsManager");
         rolesToChoseFrom = prepareRMSiteMembers.getRolesToChoseFrom();
         assertEquals(2, rolesToChoseFrom.size());
-        assertTrue(rolesToChoseFrom.contains(RMRole.ADMINISTRATOR));
-        assertTrue(rolesToChoseFrom.contains(RMRole.RECORDS_MANAGER));
+        assertTrue(rolesToChoseFrom.contains(RMRole.Administrator));
+        assertTrue(rolesToChoseFrom.contains(RMRole.RecordsManager));
 
-        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setRole("Administrator");
         rolesToChoseFrom = prepareRMSiteMembers.getRolesToChoseFrom();
         assertEquals(1, rolesToChoseFrom.size());
-        assertTrue(rolesToChoseFrom.contains(RMRole.ADMINISTRATOR));
+        assertTrue(rolesToChoseFrom.contains(RMRole.Administrator));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -97,9 +97,24 @@ public class PrepareRMSiteMembersUnitTest implements RMEventConstants
     }
 
     @Test(expected = IllegalArgumentException.class)
+    public void testEmptyStringRolesConfigured() throws Exception
+    {
+        prepareRMSiteMembers.setRole(",,,");
+    }
+
+    @Test
+    public void testOneRoleAndEmptyStringRolesConfigured() throws Exception
+    {
+        prepareRMSiteMembers.setRole(",Administrator,,");
+        List<RMRole> rolesToChoseFrom = prepareRMSiteMembers.getRolesToChoseFrom();
+        assertEquals(1, rolesToChoseFrom.size());
+        assertTrue(rolesToChoseFrom.contains(RMRole.Administrator));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void testInexistentRoleBetweenExistentRoles() throws Exception
     {
-        prepareRMSiteMembers.setRole("ADMINISTRATOR, RECORDS_MANAGER, SECURITY_OFFICER,inexistent1");
+        prepareRMSiteMembers.setRole("Administrator, RecordsManager, SecurityOfficer,inexistent1");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -111,7 +126,7 @@ public class PrepareRMSiteMembersUnitTest implements RMEventConstants
     @Test
     public void testAssignRMRolesNotWanted() throws Exception
     {
-        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setRole("Administrator");
         prepareRMSiteMembers.setAssignRMRoleToUsers(false);
         EventResult result = prepareRMSiteMembers.processEvent(null);
         assertEquals(true, result.isSuccess());
@@ -124,7 +139,7 @@ public class PrepareRMSiteMembersUnitTest implements RMEventConstants
     @Test
     public void testNoUsersWanted() throws Exception
     {
-        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setRole("Administrator");
         prepareRMSiteMembers.setAssignRMRoleToUsers(true);
         prepareRMSiteMembers.setUserCount(0);
         EventResult result = prepareRMSiteMembers.processEvent(null);
@@ -138,7 +153,7 @@ public class PrepareRMSiteMembersUnitTest implements RMEventConstants
     @Test
     public void testNoUsersToChoseFrom() throws Exception
     {
-        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setRole("Administrator");
         prepareRMSiteMembers.setAssignRMRoleToUsers(true);
         prepareRMSiteMembers.setUserCount(1);
         when(mockedUserDataService.getUsersByCreationState(DataCreationState.Created, 0, 100)).thenReturn(new ArrayList<UserData>());
@@ -157,7 +172,7 @@ public class PrepareRMSiteMembersUnitTest implements RMEventConstants
         String user1 = "user1";
         String user2 = "user2";
 
-        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setRole("Administrator");
         prepareRMSiteMembers.setAssignRMRoleToUsers(true);
         prepareRMSiteMembers.setUserCount(userCount);
         UserData mockedUserData1 = mock(UserData.class);
@@ -189,7 +204,7 @@ public class PrepareRMSiteMembersUnitTest implements RMEventConstants
         String user1 = "user1";
         String user2 = "user2";
 
-        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setRole("Administrator");
         prepareRMSiteMembers.setAssignRMRoleToUsers(true);
         prepareRMSiteMembers.setUserCount(userCount);
         UserData mockedUserData1 = mock(UserData.class);
@@ -220,7 +235,7 @@ public class PrepareRMSiteMembersUnitTest implements RMEventConstants
         String user1 = "user1";
         String user2 = "user2";
 
-        prepareRMSiteMembers.setRole("ADMINISTRATOR");
+        prepareRMSiteMembers.setRole("Administrator");
         prepareRMSiteMembers.setAssignRMRoleToUsers(true);
         prepareRMSiteMembers.setUserCount(userCount);
         UserData mockedUserData1 = mock(UserData.class);

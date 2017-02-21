@@ -13,13 +13,13 @@
 package org.alfresco.bm.dataload.rm.site;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.split;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.StringTokenizer;
 
 import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
@@ -104,11 +104,14 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
             throw new IllegalArgumentException("'role' may not be null or empty.");
         }
         // Split by comma
-        StringTokenizer commaTokenizer = new StringTokenizer(role, ",");
-        while (commaTokenizer.hasMoreTokens())
+        String[] roles = split(role, ",");
+        if(roles.length < 1)
         {
-            String roleStr = commaTokenizer.nextToken();
-            roleStr = roleStr.trim();
+            throw new IllegalArgumentException("'role' has to contain at least one RM Role, ',,,' values are not allowed.");
+        }
+        for (String roleValue : roles)
+        {
+            String roleStr = roleValue.trim();
             try
             {
                 RMRole chosenRole = RMRole.valueOf(roleStr);
@@ -171,7 +174,7 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
                 siteMember = new SiteMemberData();
                 siteMember.setCreationState(DataCreationState.NotScheduled);
                 RMRole randomRole = getRandomRole();
-                siteMember.setRole(randomRole.name());
+                siteMember.setRole(randomRole.toString());
                 siteMember.setSiteId(siteId);
                 siteMember.setUsername(username);
                 siteDataService.addSiteMember(siteMember);
@@ -199,10 +202,7 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
         EventResult result = new EventResult(msg, Collections.singletonList(outputEvent));
 
         // Done
-        if (logger.isDebugEnabled())
-        {
-            logger.debug(msg);
-        }
+        logger.debug(msg);
         return result;
     }
 

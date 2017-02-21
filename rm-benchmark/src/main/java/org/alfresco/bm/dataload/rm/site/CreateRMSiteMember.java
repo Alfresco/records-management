@@ -16,7 +16,6 @@ import java.text.MessageFormat;
 
 import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
-import org.alfresco.bm.dataload.rm.role.RMRole;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.event.selector.EventDataObject;
@@ -104,15 +103,13 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
 
         // Start by marking it as a failure in order to handle all failure paths
         siteDataService.setSiteMemberCreationState(PATH_SNIPPET_RM_SITE_ID, username, DataCreationState.Failed);
-
         String roleStr = siteMember.getRole();
-        RMRole role = RMRole.valueOf(roleStr);
 
         try
         {
             //assign RM roles to new members as admin user
             RMUserAPI rmUserAPI = restAPIFactory.getRMUserAPI();
-            rmUserAPI.assignRoleToUser(username, role.toString());
+            rmUserAPI.assignRoleToUser(username, roleStr);
             siteDataService.setSiteMemberCreationState(PATH_SNIPPET_RM_SITE_ID, username, DataCreationState.Created);
 
             siteMember = siteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, username);
@@ -128,11 +125,7 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
             throw new RuntimeException("Create RM site member as user: admin failed (" + e.getMessage() + "): " + siteMember, e);
         }
 
-        if (logger.isDebugEnabled())
-        {
-            logger.debug(msg);
-        }
-
+        logger.debug(msg);
         EventResult result = new EventResult(msg, nextEvent);
         return result;
     }

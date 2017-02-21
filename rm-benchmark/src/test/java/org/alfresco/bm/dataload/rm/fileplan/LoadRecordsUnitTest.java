@@ -367,7 +367,7 @@ public class LoadRecordsUnitTest implements RMEventConstants
         when(mockedSiteDataService.getSite(PATH_SNIPPET_RM_SITE_ID)).thenReturn(mockedSiteData);
         SiteMemberData mockedSiteMemberData = mock(SiteMemberData.class);
         when(mockedSiteMemberData.getUsername()).thenReturn("aUser");
-        when(mockedSiteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.ADMINISTRATOR.name())).thenReturn(mockedSiteMemberData);
+        when(mockedSiteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.Administrator.toString())).thenReturn(mockedSiteMemberData);
         UserData mockedUserData = mock(UserData.class);
         when(mockedUserData.getUsername()).thenReturn("aUser");
         when(mockedUserData.getPassword()).thenReturn("aUser");

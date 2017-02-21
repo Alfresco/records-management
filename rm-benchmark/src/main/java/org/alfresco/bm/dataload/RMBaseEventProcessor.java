@@ -48,7 +48,8 @@ import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentProperties;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
-import org.apache.commons.logging.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -60,6 +61,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public abstract class RMBaseEventProcessor extends AbstractEventProcessor implements RMEventConstants
 {
+    /** Resource for derived classes to use for logging */
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
     protected FileFolderService fileFolderService;
     protected TestFileService testFileService;
 
@@ -438,7 +441,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     /**
      * Gets a random user from the RM site.
      */
-    public UserData getRandomUser(Log logger)
+    public UserData getRandomUser(Logger logger)
     {
         // Check
         SiteData siteData = siteDataService.getSite(PATH_SNIPPET_RM_SITE_ID);
@@ -446,7 +449,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         {
             throw new IllegalStateException("Unable to find site '" + PATH_SNIPPET_RM_SITE_ID + "'");
         }
-        SiteMemberData siteMember = siteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.ADMINISTRATOR.name());
+        SiteMemberData siteMember = siteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.Administrator.toString());
         if (siteMember == null)
         {
             throw new IllegalStateException("Unable to find an user with specified roles for site: " + PATH_SNIPPET_RM_SITE_ID);
@@ -459,10 +462,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
             throw new IllegalStateException("Unable to find a user '" + username + "' linked to site: " + PATH_SNIPPET_RM_SITE_ID);
         }
         // Done
-        if (logger.isDebugEnabled())
-        {
-            logger.debug("Found RM site member '" + username + "'");
-        }
+        logger.debug("Found RM site member '" + username + "'");
         return user;
     }
 }

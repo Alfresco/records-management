@@ -15,7 +15,6 @@ package org.alfresco.bm.dataload.rm.site;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -33,7 +32,6 @@ import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.RMUserAPI;
-import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -155,7 +153,7 @@ public class CreateRMSiteMemberUnitTest implements RMEventConstants
         when(mockedEvent.getData()).thenReturn(mockedData);
         SiteMemberData mockedSiteMemberData = mock(SiteMemberData.class);
         when(mockedSiteMemberData.getCreationState()).thenReturn(DataCreationState.Scheduled);
-        when(mockedSiteMemberData.getRole()).thenReturn(RMRole.ADMINISTRATOR.name());
+        when(mockedSiteMemberData.getRole()).thenReturn(RMRole.Administrator.toString());
         when(mockedSiteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, userName)).thenReturn(mockedSiteMemberData);
         RMUserAPI mockedRMUserAPI = mock(RMUserAPI.class);
         when(mockedRestAPIFactory.getRMUserAPI()).thenReturn(mockedRMUserAPI);
@@ -165,7 +163,7 @@ public class CreateRMSiteMemberUnitTest implements RMEventConstants
         verify(mockedData, never()).put(CreateRMSiteMember.MSG_KEY, CreateRMSiteMember.INVALID_SITE_MEMBER_REQUEST_MSG);
         verify(mockedData, never()).put(CreateRMSiteMember.MSG_KEY, MessageFormat.format(CreateRMSiteMember.SITE_MEMBER_MISSING_MSG_TEMPLATE, userName));
         verify(mockedData, never()).put(CreateRMSiteMember.MSG_KEY, MessageFormat.format(CreateRMSiteMember.SITE_MEMBER_ALREADY_PROCESSED_MSG_TEMPLATE, mockedSiteMemberData));
-        verify(mockedRMUserAPI, times(1)).assignRoleToUser(userName, RMRole.ADMINISTRATOR.toString());
+        verify(mockedRMUserAPI, times(1)).assignRoleToUser(userName, RMRole.Administrator.toString());
         verify(mockedSiteDataService, times(1)).setSiteMemberCreationState(PATH_SNIPPET_RM_SITE_ID, userName, DataCreationState.Created);
         verify(mockedSiteDataService, times(2)).getSiteMember(PATH_SNIPPET_RM_SITE_ID, userName);
         assertEquals(true, result.isSuccess());
@@ -185,12 +183,12 @@ public class CreateRMSiteMemberUnitTest implements RMEventConstants
         when(mockedEvent.getData()).thenReturn(mockedData);
         SiteMemberData mockedSiteMemberData = mock(SiteMemberData.class);
         when(mockedSiteMemberData.getCreationState()).thenReturn(DataCreationState.Scheduled);
-        when(mockedSiteMemberData.getRole()).thenReturn(RMRole.ADMINISTRATOR.name());
+        when(mockedSiteMemberData.getRole()).thenReturn(RMRole.Administrator.toString());
         when(mockedSiteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, userName)).thenReturn(mockedSiteMemberData);
         RMUserAPI mockedRMUserAPI = mock(RMUserAPI.class);
         when(mockedRestAPIFactory.getRMUserAPI()).thenReturn(mockedRMUserAPI);
 
-        Mockito.doThrow(new Exception("someError")).when(mockedRMUserAPI).assignRoleToUser(userName, RMRole.ADMINISTRATOR.toString());
+        Mockito.doThrow(new Exception("someError")).when(mockedRMUserAPI).assignRoleToUser(userName, RMRole.Administrator.toString());
         createRMSiteMember.processEvent(mockedEvent, new StopWatch());
     }
 }

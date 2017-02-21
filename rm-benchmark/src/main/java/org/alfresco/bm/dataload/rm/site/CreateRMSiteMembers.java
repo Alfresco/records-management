@@ -27,7 +27,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 /**
-* Generate create RM site member events for site members in the site members collection that are pending creation.
+* Generate 'create RM site member' events for pending creation site members.
 *
 * @author Silviu Dinuta
 * @since 2.6
