@@ -21,10 +21,14 @@ package org.alfresco.bm.dataload.rm.fileplan;
 import static org.alfresco.bm.data.DataCreationState.Created;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Queue;
+import java.util.Set;
 
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
@@ -37,33 +41,45 @@ import org.alfresco.rest.model.RestNodeModel;
 import org.alfresco.rest.model.RestNodeModelsCollection;
 import org.alfresco.rest.model.RestSiteContainerModel;
 import org.alfresco.rest.model.RestSiteModel;
+import org.alfresco.rest.model.builder.NodesBuilder.NodeDetail;
 import org.alfresco.utility.model.ContentModel;
 import org.alfresco.utility.model.UserModel;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 
 /**
- * Loader class that schedules the records declare event by creating the preconditions for {@link DeclareInPlaceRecords} event.
- *  - checks the state of the system
- *  - creates the community site and uploads files to be declared as records (if they don't exist)
- *  - creates the declare record events in the benchmark database in the SCHEDULED state
+ * Loader class that schedules the {@link DeclareInPlaceRecords} event by creating the preconditions.
+ *  - creates/loads the community site and uploads files to be declared as records (if they don't exist)
+ *  - preloads the file ids
+ *  - schedules a set of events that run in parallel and reschedules self
  *
  * @author Ana Bozianu
  * @since 2.6
  */
-public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor
+public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implements InitializingBean
 {
     private boolean enabled = false;
+    private Integer maxActiveLoaders;
+    private long loadCheckDelay;
     private String collabSiteId;
     private List<String> collabSitePaths;
-    private Integer recordsToDeclare;
     private String username;
     private String password;
-    private String eventNameDeclareInPlaceRecords;
-    private String eventNameSkipDeclareInPlaceRecords;
+    private String eventNameDeclareInPlaceRecord;
+    private String eventNameComplete;
+    private String eventNameRescheduleSelf;
+
+    private Integer numberOfRecordsToDeclare;
+    private int numberOfRecordsDeclared = 0;
+    // buffer with the file ids of unscheduled files 
+    private Queue<String> unscheduledFilesCache; 
+    private Set<String> fullLoadedFolders;
+    private final static int FILES_TO_SCHEDULE_BUFFER_SIZE = 10000;
 
     @Autowired
     private SessionService sessionService;
@@ -74,9 +90,25 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor
     @Autowired
     private RestWrapper restCoreAPI;
 
+    public ScheduleInPlaceRecordLoaders()
+    {
+        unscheduledFilesCache = new LinkedList<>();
+        fullLoadedFolders = new HashSet<>();
+    }
+
     public void setEnabled(boolean enabled)
     {
         this.enabled = enabled;
+    }
+
+    public void setMaxActiveLoaders(int maxActiveLoaders)
+    {
+        this.maxActiveLoaders = maxActiveLoaders;
+    }
+
+    public void setLoadCheckDelay(long loadCheckDelay)
+    {
+        this.loadCheckDelay = loadCheckDelay;
     }
 
     public void setCollabSiteId(String collabSiteId)
@@ -86,13 +118,15 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor
 
     public void setCollabSitePaths(String collabSitePathsString)
     {
-        if (isNotBlank(collabSitePathsString))
+        collabSitePaths = Arrays.asList(collabSitePathsString.split(","));
+        if(isNotBlank(collabSitePathsString))
         {
-            this.collabSitePaths = Arrays.asList(collabSitePathsString.split(","));
+            collabSitePaths = Arrays.asList(collabSitePathsString.split(","));
         }
         else
         {
-            this.collabSitePaths = new ArrayList<>();;
+            collabSitePaths = new ArrayList<>();
+            collabSitePaths.add(new String("")); // If no paths specified use the document library
         }
     }
 
@@ -100,11 +134,11 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor
     {
         if(isNotBlank(recordsToDeclareString))
         {
-            this.recordsToDeclare = Integer.parseInt(recordsToDeclareString);
+            this.numberOfRecordsToDeclare = Integer.parseInt(recordsToDeclareString);
         }
         else
         {
-            this.recordsToDeclare = 0;
+            this.numberOfRecordsToDeclare = 0;
         }
     }
 
@@ -118,14 +152,33 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor
         this.password = password;
     }
 
-    public void setEventNameDeclareInPlaceRecords(String eventNameDeclareInPlaceRecords)
+    public void setEventNameDeclareInPlaceRecord(String eventNameDeclareInPlaceRecord)
     {
-        this.eventNameDeclareInPlaceRecords = eventNameDeclareInPlaceRecords;
+        this.eventNameDeclareInPlaceRecord = eventNameDeclareInPlaceRecord;
     }
 
-    public void setEventNameSkipDeclareInPlaceRecords(String eventNameSkipDeclareInPlaceRecords)
+    public void setEventNameComplete(String eventNameComplete)
     {
-        this.eventNameSkipDeclareInPlaceRecords = eventNameSkipDeclareInPlaceRecords;
+        this.eventNameComplete = eventNameComplete;
+    }
+
+    public void setEventNameRescheduleSelf(String eventNameRescheduleSelf)
+    {
+        this.eventNameRescheduleSelf = eventNameRescheduleSelf;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        Assert.notNull(maxActiveLoaders);
+        Assert.notNull(collabSiteId);
+        Assert.notEmpty(collabSitePaths);
+        Assert.notNull(username);
+        Assert.notNull(password);
+        Assert.notNull(eventNameDeclareInPlaceRecord);
+        Assert.notNull(eventNameComplete);
+        Assert.notNull(eventNameRescheduleSelf);
+        Assert.notNull(numberOfRecordsToDeclare);
     }
 
     @Override
@@ -133,140 +186,222 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor
     {
         if (!enabled)
         {
-            StringBuilder eventOutputMsg = new StringBuilder("Declaring in place records not wanted.");
-            return new EventResult(eventOutputMsg.toString(), new Event(eventNameSkipDeclareInPlaceRecords, null));
+            return new EventResult("Declaring in place records not wanted.", new Event(eventNameComplete, null));
+        }
+        if(numberOfRecordsToDeclare == numberOfRecordsDeclared)
+        {
+            return new EventResult("Raising 'done' event.", new Event(eventNameComplete, null));
         }
 
-        StringBuilder eventOutputMsg = new StringBuilder("Preparing files to declare: \n");
+        long sessionCount = sessionService.getActiveSessionsCount();
+        int loaderSessionsToCreate = maxActiveLoaders - (int) sessionCount;
+        StringBuilder eventOutputMsg = new StringBuilder();
+        List<Event> nextEvents = new ArrayList<>(loaderSessionsToCreate + 1);
 
+        /*
+         * Prepare files
+         */
         restCoreAPI.authenticateUser(new UserModel(username, password));
+        prepareFilesToBeDeclared(eventOutputMsg);
 
-        // get or create collaboration site
-        loadCollaborationSite(eventOutputMsg);
+        /*
+         * Schedule worker events
+         */
+        for (int i = 0; i < loaderSessionsToCreate; i++)
+        {
+            String fileId = unscheduledFilesCache.poll();
+            if(fileId == null)
+            {
+                break;
+            }
+            nextEvents.add(scheduleFile(fileId, eventOutputMsg));
+        }
+        numberOfRecordsDeclared += nextEvents.size();
 
+        /*
+         * Reschedule self
+         */
+        Event nextEvent = new Event(eventNameRescheduleSelf, System.currentTimeMillis() + loadCheckDelay, null);
+        nextEvents.add(nextEvent);
+        eventOutputMsg.append("Raised further " + (nextEvents.size() - 1) + " events and rescheduled self.");
 
-        // schedule the files to be declared as records
-        List<Event> events = loadFilesToBeDeclared(eventOutputMsg, recordsToDeclare);
-
-        return new EventResult(eventOutputMsg.toString(), events);
+        return new EventResult(eventOutputMsg.toString(), nextEvents);
     }
 
     /**
-     * Helper method that makes sure the site exists on the server and loads it in the benchmark DB
+     * Helper method that makes sure the collaboration site contains enough files to declare.
+     * If the collaboration site doesn't have enough files it creates new empty files.
+     * The method caches the ids of the files ready to be declared in unscheduledFileBuffer queue.
+     * 
+     * @param eventOutputMsg
+     * @throws Exception
      */
-    private void loadCollaborationSite(StringBuilder eventOutputMsg) throws Exception
+    public void prepareFilesToBeDeclared(StringBuilder eventOutputMsg) throws Exception
     {
-        // Check if site exists on server
-        Optional<RestSiteModel> colabSiteOptional = restCoreAPI
-                .withCoreAPI()
-                .getSites().getEntries().stream().filter(s->s.onModel().getId().equalsIgnoreCase(collabSiteId)).findFirst();
-
-        if(!colabSiteOptional.isPresent())
+        if(!unscheduledFilesCache.isEmpty())
         {
-            // TODO create site 
-            throw new NotImplementedException("The collaboration site to declare records from must exist");
+            return;
         }
-        RestSiteModel colabSite = colabSiteOptional.get();
+        eventOutputMsg.append("Preparing files to declare: \n");
+
+        // Get the collaboration site document library
+        String documentLibraryNodeId = getCollaborationSiteDoclib(eventOutputMsg);
+
+        // Get the existing files in the provided paths
+        Set<String> nonExistingPaths = new HashSet<>();
+        for(String relativePath : collabSitePaths)
+        {
+            if(unscheduledFilesCache.size() >= FILES_TO_SCHEDULE_BUFFER_SIZE)
+            {
+                // we have enough files cached
+                return;
+            }
+
+            try
+            {
+                preloadExistingFiles(documentLibraryNodeId, relativePath, eventOutputMsg);
+            }
+            catch(FileNotFoundException ex)
+            {
+                nonExistingPaths.add(relativePath);
+            }
+        }
+
+        /*
+         * Not enough files to load, create new files
+         */
+        int filesToCreate = Integer.min(numberOfRecordsToDeclare - numberOfRecordsDeclared, FILES_TO_SCHEDULE_BUFFER_SIZE) - unscheduledFilesCache.size();
+        int filesToCreatePerPath = filesToCreate / collabSitePaths.size();
+
+        ContentModel currentNodeModel = new ContentModel();
+        currentNodeModel.setNodeRef(documentLibraryNodeId);
+        for(String relativePath : collabSitePaths)
+        {
+                NodeDetail targetFolder = restCoreAPI.withParams("relativePath="+relativePath).withCoreAPI().usingNode(currentNodeModel)
+                        .defineNodes().folder("AutoGeneratedFiles");
+
+                for(int i = 0; i < filesToCreatePerPath; i++)
+                {
+                    NodeDetail file = targetFolder.file("recordToBe");
+                    eventOutputMsg.append("Created file " + file.getId() + ".");
+
+                    unscheduledFilesCache.add(file.getId());
+                }
+        }
+    }
+
+    /**
+     *  Helper method that makes sure the site exists on the server and loads it in the benchmark DB
+     *  
+     * @param eventOutputMsg
+     * @return the collaboration site's document library id
+     * @throws Exception
+     */
+    private String getCollaborationSiteDoclib(StringBuilder eventOutputMsg) throws Exception
+    {
+        // Check if the collaboration site exists on server using the REST api
+        RestSiteModel colabSite = restCoreAPI.withCoreAPI().usingSite(collabSiteId).getSite();
+
+        if (Integer.parseInt(restCoreAPI.getStatusCode()) == HttpStatus.SC_NOT_FOUND)
+        {
+            // The collaboration site doesn't exist, create it
+            colabSite = restCoreAPI.withCoreAPI().usingSite(collabSiteId).createSite();
+        }
 
         // Store the collaboration site in benchmark's DB
         SiteData colabSiteData = siteDataService.getSite(collabSiteId);
         if(colabSiteData == null)
         {
-            // load site in Benchmark's DB
+            // Store site info in Benchmark's DB
             colabSiteData = new SiteData();
             colabSiteData.setSiteId(collabSiteId);
-            colabSiteData.setTitle(colabSite.onModel().getTitle());
-            colabSiteData.setGuid(colabSite.onModel().getGuid());
-            colabSiteData.setDescription(colabSite.onModel().getDescription());
-            colabSiteData.setSitePreset(colabSite.onModel().getPreset());
-            colabSiteData.setVisibility(colabSite.onModel().getVisibility().toString());
+            colabSiteData.setTitle(colabSite.getTitle());
+            colabSiteData.setGuid(colabSite.getGuid());
+            colabSiteData.setDescription(colabSite.getDescription());
+            colabSiteData.setSitePreset(colabSite.getPreset());
+            colabSiteData.setVisibility(colabSite.getVisibility().toString());
             colabSiteData.setCreationState(Created);
             siteDataService.addSite(colabSiteData);
 
             eventOutputMsg.append(" Added site '" + collabSiteId + "' as created.\n");
         }
+
+        // Get site's document library
+        RestSiteContainerModel documentLibrary = restCoreAPI.withCoreAPI().usingSite(collabSiteId).getSiteContainer("documentLibrary");
+        return documentLibrary.getId();
     }
 
     /**
-     * Helper method that loads the files to be declared in the benchmark DB as scheduled
-     */
-    private List<Event> loadFilesToBeDeclared(StringBuilder eventOutputMsg, final int recordsToDeclareInThisSession) throws Exception
-    {
-        List<Event> events = new ArrayList<>(recordsToDeclare);
-
-        RestSiteContainerModel documentLibrary = restCoreAPI.withParams("where=(isPrimary=true)").withCoreAPI().usingSite(collabSiteId).getSiteContainer("documentLibrary");
-
-        if(collabSitePaths.isEmpty())
-        {
-            // list the whole fileplan
-            listContainer(documentLibrary.getId(), events, recordsToDeclareInThisSession, eventOutputMsg);
-        }
-        else
-        {
-            // list the provided paths
-            for(String relativePath : collabSitePaths)
-            {
-                ContentModel docLibrary = new ContentModel();
-                docLibrary.setNodeRef(documentLibrary.getId());
-                RestNodeModelsCollection children = restCoreAPI.withParams("where=(isPrimary=true)", "relativePath="+relativePath).withCoreAPI().usingNode(docLibrary).listChildren();
-                for(RestNodeModel child : children.getEntries())
-                {
-                    handleExistingNode(child.onModel(), events, recordsToDeclareInThisSession, eventOutputMsg);
-                }
-            }
-        }
-
-        return events;
-    }
-
-    /**
-     * Helper method that handles the current existing node. 
-     * If the code is a file it stores it in the DB else calls the method again on children nodes.
+     * Helper method that iterates the hierarchy tree starting from a folder and caches the file ids
      * 
-     * @param currentNode the root node to start iterating from
-     * @param eventOutputMsg output for logs
+     * @param currentNodeId
+     * @param relativePath
+     * @param eventOutputMsg
      * @throws Exception
      */
-    private void handleExistingNode(RestNodeModel node, List<Event> events, final int recordsToDeclareInThisSession, StringBuilder eventOutputMsg) throws Exception
+    private void preloadExistingFiles(String currentNodeId, String relativePath, StringBuilder eventOutputMsg) throws Exception
     {
-        if(events.size() == recordsToDeclareInThisSession)
+        boolean moreChildren;
+        do
         {
-            return;
-        }
+            ContentModel currentNodeModel = new ContentModel();
+            currentNodeModel.setNodeRef(currentNodeId);
+            RestNodeModelsCollection children = restCoreAPI.withParams("where=(isPrimary=true)", "relativePath="+relativePath).withCoreAPI().usingNode(currentNodeModel).listChildren();
+            if(Integer.parseInt(restCoreAPI.getStatusCode()) == HttpStatus.SC_NOT_FOUND)
+            {
+                throw new FileNotFoundException();
+            }
 
-        if(node.getIsFile())
-        {
-            eventOutputMsg.append(" Sheduled file to be declared as record: " + node.getId() + ". ");
+            for(RestNodeModel child : children.getEntries())
+            {
+                if(unscheduledFilesCache.size() >= FILES_TO_SCHEDULE_BUFFER_SIZE)
+                {
+                    // we have enough files
+                    return;
+                }
+    
+                if(child.onModel().getIsFile())
+                {
+                    unscheduledFilesCache.add(child.onModel().getId());
+                }
+                else if(!fullLoadedFolders.contains(child.onModel().getId()))
+                {
+                    preloadExistingFiles(child.onModel().getId(), "", eventOutputMsg);
+                }
+            }
 
-            //TODO save it in benchmark's database
+            moreChildren = children.getPagination().isHasMoreItems();
+        }
+        while(moreChildren);
 
-            // create an event 
-            DBObject declareData = BasicDBObjectBuilder.start()
-                    .add(FIELD_ID, node.getId())
-                    .add(FIELD_SITE_MANAGER, username)
-                    .get();
-            Event declareEvent = new Event(eventNameDeclareInPlaceRecords, declareData);
-            // Each load event must be associated with a session
-            String sessionId = sessionService.startSession(declareData);
-            declareEvent.setSessionId(sessionId);
-            // Add the event to the list
-            events.add(declareEvent);
-        }
-        else
-        {
-            listContainer(node.getId(), events, recordsToDeclareInThisSession, eventOutputMsg);
-        }
+        // mark the folder as complete to avoid listing its children in a following iteration
+        fullLoadedFolders.add(currentNodeId);
     }
 
-    private void listContainer(String currentNodeId,  List<Event> events, final int recordsToDeclareInThisSession, StringBuilder eventOutputMsg) throws Exception
+    /**
+     * Helper method that creates a declare record event for the provided file
+     * 
+     * @param fileId id of the file to declare as record
+     * @param eventOutputMsg
+     * @return the declare as record event for the provided file
+     */
+    private Event scheduleFile(String fileId, StringBuilder eventOutputMsg)
     {
-        ContentModel currentNodeModel = new ContentModel();
-        currentNodeModel.setNodeRef(currentNodeId);
-        RestNodeModelsCollection children = restCoreAPI.withCoreAPI().usingNode(currentNodeModel).listChildren();
+        eventOutputMsg.append("Sheduled file to be declared as record: " + fileId + ". ");
 
-        for(RestNodeModel child : children.getEntries())
-        {
-            handleExistingNode(child.onModel(), events, recordsToDeclareInThisSession, eventOutputMsg);
-        }
+        //TODO save it in benchmark's database to lock it  ???
+
+        // Create an event 
+        DBObject declareData = BasicDBObjectBuilder.start()
+                .add(FIELD_ID, fileId)
+                .add(FIELD_SITE_MANAGER, username)
+                .get();
+
+        Event declareEvent = new Event(eventNameDeclareInPlaceRecord, declareData);
+        // Each load event must be associated with a session
+        String sessionId = sessionService.startSession(declareData);
+        declareEvent.setSessionId(sessionId);
+
+        return declareEvent;
     }
 }

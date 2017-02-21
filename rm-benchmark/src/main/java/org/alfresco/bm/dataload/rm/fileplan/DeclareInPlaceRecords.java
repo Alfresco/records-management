@@ -24,8 +24,6 @@ import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RestAPIFactory;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.alfresco.utility.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -77,14 +75,14 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
             throw new IllegalStateException("This processor requires data with field " + FIELD_ID);
         }
 
-        // call the REST API 
+        // Call the REST API 
         super.resumeTimer();
         restAPIFactory.getFilesAPI(new UserModel(siteManager, siteManager)).declareAsRecord(id);
         String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
         super.suspendTimer();
         TimeUnit.MILLISECONDS.sleep(declareInPlaceRecordDelay);
 
-        if(statusCode.equals(HttpStatus.CREATED))
+        if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.CREATED)
         {
             eventOutputMsg.append("success");
         }
