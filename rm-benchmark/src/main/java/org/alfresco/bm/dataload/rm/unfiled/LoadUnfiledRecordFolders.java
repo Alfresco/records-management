@@ -123,7 +123,7 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
 
     /**
      * Helper method that creates specified number of root unfiled record folders if the specified container is unfiled record container,
-     * or specified number of unfiled record folder childredn if the container is a root unfiled record folder or an ordinary unfiled record folder.
+     * or specified number of unfiled record folder children if the container is a root unfiled record folder or an ordinary unfiled record folder.
      *
      * @param container - unfiled record container, or an unfiled record folder
      * @param rootFoldersToCreate - number of root unfiled record folders to create
