@@ -20,6 +20,7 @@
 package org.alfresco.bm.dataload;
 
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.CONTENT_TYPE;
+import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.NON_ELECTRONIC_RECORD_TYPE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.io.File;
@@ -85,14 +86,14 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     /**
      * Helper method for creating a filePlan component of specified type that have the name starting with provided nameIdentifier and a random generated string.
      *
-     * @param folder
-     * @param api
-     * @param parentFilePlanComponent
-     * @param componentsToCreate
-     * @param nameIdentifier
-     * @param type
-     * @param context
-     * @param loadFilePlanComponentDelay
+     * @param folder - container that will contain created filePlan component
+     * @param api - FilePlanComponentAPI instance
+     * @param parentFilePlanComponent - parent filePlan component
+     * @param componentsToCreate - number of components to create
+     * @param nameIdentifier - a string identifier that the created components will start with
+     * @param type - the type or filePlan components that are created
+     * @param context - the context for created filePlan components
+     * @param loadFilePlanComponentDelay - delay between creation of filePlan components
      * @throws Exception
      */
     public void createFilePlanComponent(FolderData folder, FilePlanComponentAPI api,
@@ -140,13 +141,13 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     /**
      * Helper method for creating a filePlan component with a specified name.
      *
-     * @param folder
-     * @param api
-     * @param parentFilePlanComponent
-     * @param name
-     * @param type
-     * @param context
-     * @return
+     * @param folder - container that will contain created filePlan component
+     * @param api - FilePlanComponentAPI instance
+     * @param parentFilePlanComponent - parent filePlan component
+     * @param name - the name that created filePlan component will have
+     * @param type - the type or filePlan components that are created
+     * @param context - the context for created filePlan components
+     * @return created filePlan component with a specified name
      * @throws Exception
      */
     public FolderData createFilePlanComponentWithFixedName(FolderData folder, FilePlanComponentAPI api,
@@ -184,19 +185,18 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     }
 
     /**
-     * Helper method for creating specifiedn number of non-electronic documents in specified container.
+     * Helper method for creating specified number of non-electronic documents in specified container.
      *
-     * @param folder
-     * @param api
-     * @param parentFilePlanComponent
-     * @param componentsToCreate
-     * @param nameIdentifier
-     * @param type
-     * @param loadFilePlanComponentDelay
+     * @param folder - container that will contain created non-electronic document
+     * @param api - FilePlanComponentAPI instance
+     * @param parentFilePlanComponent - parent filePlan component
+     * @param componentsToCreate - number of non-electronic documents to create
+     * @param nameIdentifier - a string identifier that the created non-electronic documents will start with
+     * @param loadFilePlanComponentDelay - delay between creation of non-electronic documents
      * @throws Exception
      */
     public void createRecord(FolderData folder, FilePlanComponentAPI api,
-                FilePlanComponent parentFilePlanComponent, int componentsToCreate, String nameIdentifier, String type,
+                FilePlanComponent parentFilePlanComponent, int componentsToCreate, String nameIdentifier,
                 long loadFilePlanComponentDelay) throws Exception // to-check: type of exception
     {
         String unique;
@@ -213,7 +213,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                 // Build filePlan component records folder properties
                 FilePlanComponent filePlanComponentModel = FilePlanComponent.builder()
                         .name(newfilePlanComponentName)
-                        .nodeType(type)
+                        .nodeType(NON_ELECTRONIC_RECORD_TYPE.toString())
                         .properties(FilePlanComponentProperties.builder()
                                 .title(newfilePlanComponentTitle)
                                 .description(EMPTY)
@@ -236,12 +236,12 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     /**
      * Helper method for uploading specified number of records on specified container.
      *
-     * @param folder
-     * @param api
-     * @param parentFilePlanComponent
-     * @param componentsToCreate
-     * @param nameIdentifier
-     * @param loadFilePlanComponentDelay
+     * @param folder - container that will contain uploaded records
+     * @param api - FilePlanComponentAPI instance
+     * @param parentFilePlanComponent - parent filePlan component
+     * @param componentsToCreate - number of records to be uploaded
+     * @param nameIdentifier - a string identifier that the uploaded records will start with
+     * @param loadFilePlanComponentDelay - delay between upload record operations
      * @throws Exception
      */
     public void uploadElectronicRecord(FolderData folder, FilePlanComponentAPI api,
@@ -287,8 +287,8 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     /**
      * Helper method to distribute the number of records to create on the given list of folders.
      *
-     * @param listOfFolders
-     * @param numberOfRecords
+     * @param listOfFolders - list of available folders to distribute records into
+     * @param numberOfRecords - number of records to be distributed
      * @return a map with folders as keys and the number of records to create on that folder as values.
      */
     public HashMap<FolderData, Integer> distributeNumberOfRecords(List<FolderData> listOfFolders, int numberOfRecords)
@@ -308,7 +308,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     /**
      * Obtains all record folders underneath specified parent if the parent is a category or the parent itself if it is a record folder
      *
-     * @param parentFolder
+     * @param parentFolder - the parent folder to retrieve children folders from
      * @return all record folders underneath specified parent if the parent is a category or the parent itself if it is a record folder
      */
     protected Set<FolderData> getRecordFolders(FolderData parentFolder)
@@ -364,9 +364,9 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     /**
      * Algorithm to distribute number of records to specified number of folders.
      *
-     * @param numberOfFolders
-     * @param numberOfRecords
-     * @return
+     * @param numberOfFolders - number of available folders
+     * @param numberOfRecords - number of records that need to be distributed in all available folders
+     * @return an array with number of records to be created for each folder
      */
     private int[] generateRandomValues(int numberOfFolders, int numberOfRecords)
     {
@@ -452,7 +452,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         SiteMemberData siteMember = siteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.Administrator.toString());
         if (siteMember == null)
         {
-            throw new IllegalStateException("Unable to find an user with specified roles for site: " + PATH_SNIPPET_RM_SITE_ID);
+            throw new IllegalStateException("Unable to find a user with specified roles for site: " + PATH_SNIPPET_RM_SITE_ID);
         }
         String username = siteMember.getUsername();
         // Retrieve the user data

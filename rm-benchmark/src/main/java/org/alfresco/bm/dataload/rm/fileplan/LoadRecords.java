@@ -19,8 +19,6 @@
 
 package org.alfresco.bm.dataload.rm.fileplan;
 
-import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.NON_ELECTRONIC_RECORD_TYPE;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -137,8 +135,7 @@ public class LoadRecords extends RMBaseEventProcessor
                 super.resumeTimer();
                 //TODO uncomment this and remove createRecord when RM-4564 issue is fixed
 //                uploadElectronicRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadRecordsDelay);
-                createRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER,
-                            NON_ELECTRONIC_RECORD_TYPE.toString(), loadRecordsDelay);
+                createRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadRecordsDelay);
                 super.suspendTimer();
                 // Clean up the lock
                 String lockedPath = container.getPath() + "/locked";

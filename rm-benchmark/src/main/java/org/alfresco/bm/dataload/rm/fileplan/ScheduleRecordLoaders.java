@@ -380,8 +380,8 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     /**
      * Helper method for preparing events for loading records randomly in the record folders structure or in specified record folder paths.
      *
-     * @param loaderSessionsToCreate
-     * @param nextEvents
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
      */
     private void prepareRecords(int loaderSessionsToCreate, List<Event> nextEvents)
     {

@@ -238,8 +238,8 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
     /**
      * Helper method for preparing the events that load the root unfiled record folders.
      *
-     * @param loaderSessionsToCreate
-     * @param nextEvents
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
      */
     private void prepareRootUnfiledRecordFolders(int loaderSessionsToCreate, List<Event> nextEvents)
     {
@@ -306,8 +306,8 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
     /**
      * Helper method for preparing the load of unfiled record folders children.
      *
-     * @param loaderSessionsToCreate
-     * @param nextEvents
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
      */
     private void prepareUnfiledRecordFolders(int loaderSessionsToCreate, List<Event> nextEvents)
     {

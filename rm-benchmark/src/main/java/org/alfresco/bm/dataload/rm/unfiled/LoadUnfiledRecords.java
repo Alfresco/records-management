@@ -33,7 +33,6 @@ import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -143,7 +142,7 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
                 super.resumeTimer();
                 //TODO uncomment this and remove createRecord when RM-4564 issue is fixed
                 //uploadElectronicRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
-                createRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, FilePlanComponentType.NON_ELECTRONIC_RECORD_TYPE.toString(), loadUnfiledRecordDelay);
+                createRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
                 super.suspendTimer();
                 // Clean up the lock
                 String lockedPath = container.getPath() + "/locked";

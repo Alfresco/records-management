@@ -269,8 +269,8 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     /**
      * Helper method for preparing the events that load the root record categories.
      *
-     * @param loaderSessionsToCreate
-     * @param nextEvents
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
      */
     private void prepareRootCategories(int loaderSessionsToCreate, List<Event> nextEvents)
     {
@@ -335,8 +335,8 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     /**
      * Helper method for preparing the load events for record categories children and record folders children without the last level of record folders.
      *
-     * @param loaderSessionsToCreate
-     * @param nextEvents
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
      */
     private void prepareSubCategoriesAndRecordFolders(int loaderSessionsToCreate, List<Event> nextEvents)
     {
@@ -414,8 +414,8 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     /**
      * Helper method for preparing the load events for record folders children from the last level.
      *
-     * @param loaderSessionsToCreate
-     * @param nextEvents
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
      */
     private void prepareRecordFoldersOnLowestLevel(int loaderSessionsToCreate, List<Event> nextEvents)
     {

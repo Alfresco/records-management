@@ -281,7 +281,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     /**
      * Obtains all unfiled record folders underneath specified parent folder plus the parent folder
      *
-     * @param parentFolder
+     * @param parentFolder - the parent folder that we need to get unfiled record folders from
      * @return all unfiled record folders underneath specified parent folder plus the parent folder
      */
     private Set<FolderData> getUnfiledRecordFolders(FolderData parentFolder)
@@ -340,8 +340,8 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     /**
      * Helper method for preparing events for loading unfiled records randomly in the unfiled record folders structure or in specified unfiled record folder paths.
      *
-     * @param loaderSessionsToCreate
-     * @param nextEvents
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
      */
     private void prepareUnfiledRecords(int loaderSessionsToCreate, List<Event> nextEvents)
     {
