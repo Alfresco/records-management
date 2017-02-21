@@ -143,7 +143,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedRecordFolder2.getPath()).thenReturn(path2);
         when(mockedFileFolderService.getFolder(RECORD_FOLDER_CONTEXT, path2)).thenReturn(mockedRecordFolder2);
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
 
         //returns record folders
         when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1, mockedRecordFolder2));
@@ -219,7 +219,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedRecordFolder2.getPath()).thenReturn(entirePath2);
         when(mockedFileFolderService.getFolder(RECORD_FOLDER_CONTEXT, entirePath2)).thenReturn(mockedRecordFolder2);
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
 
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
@@ -293,7 +293,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1));
         when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<FolderData>());
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
 
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
@@ -351,7 +351,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1));
         when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<FolderData>());
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
 
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
@@ -397,7 +397,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFilePlanContainer.getPath()).thenReturn(RECORD_CONTAINER_PATH);
         when(mockedFileFolderService.getFolder(EMPTY_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(mockedFilePlanContainer);
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanContaineFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanContaineFilePlanComponent.getId()).thenReturn("filePlanId");
         when(mockedFilePlanComponentAPI.getFilePlanComponent("filePlanId")).thenReturn(mockedFilePlanContaineFilePlanComponent);
@@ -529,7 +529,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFilePlanContainer.getPath()).thenReturn(RECORD_CONTAINER_PATH);
         when(mockedFileFolderService.getFolder(EMPTY_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(mockedFilePlanContainer);
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanContaineFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanContaineFilePlanComponent.getId()).thenReturn("filePlanId");
         when(mockedFilePlanComponentAPI.getFilePlanComponent("filePlanId")).thenReturn(mockedFilePlanContaineFilePlanComponent);
@@ -642,7 +642,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1, mockedRecordFolder2));
         when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<FolderData>());
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanContaineFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanContaineFilePlanComponent.getId()).thenReturn("filePlanId");
         when(mockedFilePlanComponentAPI.getFilePlanComponent("filePlanId")).thenReturn(mockedFilePlanContaineFilePlanComponent);
@@ -725,7 +725,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedRecordFolder2.getPath()).thenReturn(path2);
         when(mockedFileFolderService.getFolder(RECORD_FOLDER_CONTEXT, path2)).thenReturn(mockedRecordFolder2);
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
 
         //returns available record folders
         when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1, mockedRecordFolder2));

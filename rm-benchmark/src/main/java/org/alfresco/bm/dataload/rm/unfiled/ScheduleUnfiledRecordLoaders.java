@@ -220,6 +220,10 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         return result;
     }
 
+    /**
+     * Helper method that initialize the unfiled record folders that can receive loaded unfiled records.
+     * This method, also calculates the number of records to  add to the initialized unfiled record folders.
+     */
     private void calculateListOfEmptyFolders()
     {
         if(unfiledRecordFoldersThatNeedRecords == null)
@@ -304,10 +308,17 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         return result;
     }
 
+    /**
+     * Helper method used for creating in alfresco repo and in mongo DB, unfiled record folders from configured path elements.
+     *
+     * @param path - path element
+     * @return created unfiled record folder, or existent unfiled record folder, if it already created
+     * @throws Exception
+     */
     private FolderData createFolder(String path) throws Exception
     {
         //create inexistent elements from configured paths as admin
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(null);
+        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI();
         List<String> pathElements = getPathElements(path);
         FolderData parentFolder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH);
         for(String pathElement: pathElements)
@@ -326,6 +337,12 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         return parentFolder;
     }
 
+    /**
+     * Helper method for preparing events for loading unfiled records randomly in the unfiled record folders structure or in specified unfiled record folder paths.
+     *
+     * @param loaderSessionsToCreate
+     * @param nextEvents
+     */
     private void prepareUnfiledRecords(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         calculateListOfEmptyFolders();

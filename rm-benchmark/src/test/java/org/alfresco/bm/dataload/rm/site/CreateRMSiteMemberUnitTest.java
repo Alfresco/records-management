@@ -93,6 +93,20 @@ public class CreateRMSiteMemberUnitTest implements RMEventConstants
     }
 
     @Test
+    public void testWithEmtyUsername() throws Exception
+    {
+        Event mockedEvent = mock(Event.class);
+        DBObject mockedData = mock(DBObject.class);
+        when(mockedData.get(CreateRMSiteMember.FIELD_USERNAME)).thenReturn("");
+        when(mockedEvent.getData()).thenReturn(mockedData);
+        EventResult result = createRMSiteMember.processEvent(mockedEvent, new StopWatch());
+        verify(mockedData, times(1)).put(CreateRMSiteMember.MSG_KEY, CreateRMSiteMember.INVALID_SITE_MEMBER_REQUEST_MSG);
+        assertEquals(false, result.isSuccess());
+        DBObject data = (DBObject) result.getData();
+        assertNotNull(data);
+    }
+
+    @Test
     public void testSiteMemberMissing() throws Exception
     {
         String userName = "user1";
@@ -144,7 +158,7 @@ public class CreateRMSiteMemberUnitTest implements RMEventConstants
         when(mockedSiteMemberData.getRole()).thenReturn(RMRole.ADMINISTRATOR.name());
         when(mockedSiteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, userName)).thenReturn(mockedSiteMemberData);
         RMUserAPI mockedRMUserAPI = mock(RMUserAPI.class);
-        when(mockedRestAPIFactory.getRMUserAPI(any(UserModel.class))).thenReturn(mockedRMUserAPI);
+        when(mockedRestAPIFactory.getRMUserAPI()).thenReturn(mockedRMUserAPI);
 
         EventResult result = createRMSiteMember.processEvent(mockedEvent, new StopWatch());
 
@@ -174,7 +188,7 @@ public class CreateRMSiteMemberUnitTest implements RMEventConstants
         when(mockedSiteMemberData.getRole()).thenReturn(RMRole.ADMINISTRATOR.name());
         when(mockedSiteDataService.getSiteMember(PATH_SNIPPET_RM_SITE_ID, userName)).thenReturn(mockedSiteMemberData);
         RMUserAPI mockedRMUserAPI = mock(RMUserAPI.class);
-        when(mockedRestAPIFactory.getRMUserAPI(any(UserModel.class))).thenReturn(mockedRMUserAPI);
+        when(mockedRestAPIFactory.getRMUserAPI()).thenReturn(mockedRMUserAPI);
 
         Mockito.doThrow(new Exception("someError")).when(mockedRMUserAPI).assignRoleToUser(userName, RMRole.ADMINISTRATOR.toString());
         createRMSiteMember.processEvent(mockedEvent, new StopWatch());

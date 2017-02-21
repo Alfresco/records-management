@@ -41,6 +41,13 @@ import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * FilePlan structure creation event.
+ *
+ * @author Silviu Dinuta
+ * @since 2.6
+ *
+ */
 public class LoadFilePlan extends RMBaseEventProcessor
 {
 
@@ -122,10 +129,22 @@ public class LoadFilePlan extends RMBaseEventProcessor
         return loadCategory(folder, rootCategoriesToCreate, categoriesToCreate, foldersToCreate);
     }
 
+    /**
+     * Helper method that creates specified number of root record categories if the specified container is the filePlan,
+     * specified number of record categories and record folder children if the container is a record category,
+     * or only specified number of record folders if we are on the last level or record categories.
+     *
+     * @param container - filePlan, root record category, or ordinary record category
+     * @param rootFoldersToCreate - number of root record categories to create
+     * @param categoriesToCreate - number of record category children
+     * @param foldersToCreate - number of record folder children
+     * @return EventResult - the loading result or error if there was an exception on loading
+     * @throws IOException
+     */
     private EventResult loadCategory(FolderData container, int rootCategoriesToCreate, int categoriesToCreate,
                 int foldersToCreate) throws IOException
     {
-        UserData user = getUser(logger);
+        UserData user = getRandomUser(logger);
         String username = user.getUsername();
         String password = user.getPassword();
         FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(username, password));

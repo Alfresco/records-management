@@ -51,6 +51,13 @@ import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Base helper class for RM events.
+ *
+ * @author Silviu Dinuta
+ * @since 2.6
+ *
+ */
 public abstract class RMBaseEventProcessor extends AbstractEventProcessor implements RMEventConstants
 {
     protected FileFolderService fileFolderService;
@@ -72,6 +79,19 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         this.testFileService = testFileService;
     }
 
+    /**
+     * Helper method for creating a filePlan component of specified type that have the name starting with provided nameIdentifier and a random generated string.
+     *
+     * @param folder
+     * @param api
+     * @param parentFilePlanComponent
+     * @param componentsToCreate
+     * @param nameIdentifier
+     * @param type
+     * @param context
+     * @param loadFilePlanComponentDelay
+     * @throws Exception
+     */
     public void createFilePlanComponent(FolderData folder, FilePlanComponentAPI api,
                 FilePlanComponent parentFilePlanComponent, int componentsToCreate, String nameIdentifier, String type, String context,
                 long loadFilePlanComponentDelay) throws Exception // to-check: type of exception
@@ -114,6 +134,18 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         fileFolderService.incrementFolderCount(folder.getContext(), folderPath, componentsToCreate);
     }
 
+    /**
+     * Helper method for creating a filePlan component with a specified name.
+     *
+     * @param folder
+     * @param api
+     * @param parentFilePlanComponent
+     * @param name
+     * @param type
+     * @param context
+     * @return
+     * @throws Exception
+     */
     public FolderData createFilePlanComponentWithFixedName(FolderData folder, FilePlanComponentAPI api,
                 FilePlanComponent parentFilePlanComponent, String name, String type, String context) throws Exception // to-check: type of exception
     {
@@ -148,6 +180,18 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         return createdFolder;
     }
 
+    /**
+     * Helper method for creating specifiedn number of non-electronic documents in specified container.
+     *
+     * @param folder
+     * @param api
+     * @param parentFilePlanComponent
+     * @param componentsToCreate
+     * @param nameIdentifier
+     * @param type
+     * @param loadFilePlanComponentDelay
+     * @throws Exception
+     */
     public void createRecord(FolderData folder, FilePlanComponentAPI api,
                 FilePlanComponent parentFilePlanComponent, int componentsToCreate, String nameIdentifier, String type,
                 long loadFilePlanComponentDelay) throws Exception // to-check: type of exception
@@ -186,6 +230,17 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         fileFolderService.incrementFileCount(folder.getContext(), folderPath, componentsToCreate);
     }
 
+    /**
+     * Helper method for uploading specified number of records on specified container.
+     *
+     * @param folder
+     * @param api
+     * @param parentFilePlanComponent
+     * @param componentsToCreate
+     * @param nameIdentifier
+     * @param loadFilePlanComponentDelay
+     * @throws Exception
+     */
     public void uploadElectronicRecord(FolderData folder, FilePlanComponentAPI api,
                 FilePlanComponent parentFilePlanComponent, int componentsToCreate, String nameIdentifier,
                 long loadFilePlanComponentDelay) throws Exception // to-check: type of exception
@@ -226,6 +281,13 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         }
     }
 
+    /**
+     * Helper method to distribute the number of records to create on the given list of folders.
+     *
+     * @param listOfFolders
+     * @param numberOfRecords
+     * @return a map with folders as keys and the number of records to create on that folder as values.
+     */
     public HashMap<FolderData, Integer> distributeNumberOfRecords(List<FolderData> listOfFolders, int numberOfRecords)
     {
         HashMap<FolderData, Integer> mapOfRecordsPerFolder = new HashMap<FolderData,Integer>();
@@ -274,6 +336,13 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         return result;
     }
 
+    /**
+     * Helper method to obtain all direct children of specified context from provided folder.
+     *
+     * @param parentFolder - the folder to get children from
+     * @param context - the context of the needed children
+     * @return all direct children of specified context from provided folder.
+     */
     private List<FolderData> getDirectChildrenByContext(FolderData parentFolder, String context)
     {
         int skip = 0;
@@ -289,6 +358,13 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         return directChildren;
     }
 
+    /**
+     * Algorithm to distribute number of records to specified number of folders.
+     *
+     * @param numberOfFolders
+     * @param numberOfRecords
+     * @return
+     */
     private int[] generateRandomValues(int numberOfFolders, int numberOfRecords)
     {
         int[] aux = new int[numberOfFolders+1];
@@ -328,6 +404,12 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         return pathElements;
     }
 
+    /**
+     * Helper method to obtain all folders with specified context.
+     *
+     * @param context - context of the wanted folders
+     * @return all folders with specified context.
+     */
     public List<FolderData> initialiseFoldersToExistingStructure(String context)
     {
         List<FolderData> existingFolderStructure = new ArrayList<FolderData>();
@@ -354,10 +436,9 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     }
 
     /**
-     * Attempt to find a user to use.<br/>
-     * The site ID will be used to find a valid site manager or collaborator.
+     * Gets a random user from the RM site.
      */
-    public UserData getUser(Log logger)
+    public UserData getRandomUser(Log logger)
     {
         // Check
         SiteData siteData = siteDataService.getSite(PATH_SNIPPET_RM_SITE_ID);
@@ -368,7 +449,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         SiteMemberData siteMember = siteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.ADMINISTRATOR.name());
         if (siteMember == null)
         {
-            throw new IllegalStateException("Unable to find a collaborator or manager for site: " + PATH_SNIPPET_RM_SITE_ID);
+            throw new IllegalStateException("Unable to find an user with specified roles for site: " + PATH_SNIPPET_RM_SITE_ID);
         }
         String username = siteMember.getUsername();
         // Retrieve the user data
@@ -380,7 +461,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         // Done
         if (logger.isDebugEnabled())
         {
-            logger.debug("Found site member '" + username + "'");
+            logger.debug("Found RM site member '" + username + "'");
         }
         return user;
     }

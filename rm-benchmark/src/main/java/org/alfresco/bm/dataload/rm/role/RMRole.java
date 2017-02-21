@@ -44,6 +44,7 @@ public enum RMRole
     {
         this.text = text;
     }
+
     public static RMRole getRandomRole()
     {
         return values()[random.nextInt(values().length)];

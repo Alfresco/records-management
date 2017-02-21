@@ -99,7 +99,7 @@ public class RMBaseEventProcessorUnitTest implements RMEventConstants
     {
         Log mockedLog = mock(Log.class);
         when(mockedSiteDataService.getSite(PATH_SNIPPET_RM_SITE_ID)).thenReturn(null);
-        testRMBaseEventProcessor.getUser(mockedLog);
+        testRMBaseEventProcessor.getRandomUser(mockedLog);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -109,7 +109,7 @@ public class RMBaseEventProcessorUnitTest implements RMEventConstants
         SiteData mockedSiteData = mock(SiteData.class);
         when(mockedSiteDataService.getSite(PATH_SNIPPET_RM_SITE_ID)).thenReturn(mockedSiteData);
         when(mockedSiteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.ADMINISTRATOR.name())).thenReturn(null);
-        testRMBaseEventProcessor.getUser(mockedLog);
+        testRMBaseEventProcessor.getRandomUser(mockedLog);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -123,7 +123,7 @@ public class RMBaseEventProcessorUnitTest implements RMEventConstants
         when(mockedSiteMemberData.getUsername()).thenReturn(userName);
         when(mockedSiteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.ADMINISTRATOR.name())).thenReturn(mockedSiteMemberData);
         when(mockedUserDataService.findUserByUsername(userName)).thenReturn(null);
-        testRMBaseEventProcessor.getUser(mockedLog);
+        testRMBaseEventProcessor.getRandomUser(mockedLog);
     }
 
     @Test
@@ -138,7 +138,7 @@ public class RMBaseEventProcessorUnitTest implements RMEventConstants
         when(mockedSiteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.ADMINISTRATOR.name())).thenReturn(mockedSiteMemberData);
         UserData mockedUserData = mock(UserData.class);
         when(mockedUserDataService.findUserByUsername(userName)).thenReturn(mockedUserData);
-        UserData user = testRMBaseEventProcessor.getUser(mockedLog);
+        UserData user = testRMBaseEventProcessor.getRandomUser(mockedLog);
         assertEquals(mockedUserData, user);
     }
 }

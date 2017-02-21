@@ -19,6 +19,12 @@
 
 package org.alfresco.bm.dataload;
 
+/**
+ * Interface that contains useful constants used in RM benchmark events.
+ *
+ * @author Silviu Dinuta
+ * @since 2.6
+ */
 public interface RMEventConstants
 {
     public static final String FIELD_CONTEXT = "context";

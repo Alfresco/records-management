@@ -25,6 +25,7 @@ import org.alfresco.bm.event.selector.EventDataObject.STATUS;
 import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.RMUserAPI;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mongodb.DBObject;
@@ -82,7 +83,7 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
         String msg = null;
 
         // Check the input
-        if (username == null)
+        if (StringUtils.isBlank(username))
         {
             dataObj.put(MSG_KEY, INVALID_SITE_MEMBER_REQUEST_MSG);
             return new EventResult(dataObj, false);
@@ -110,7 +111,7 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
         try
         {
             //assign RM roles to new members as admin user
-            RMUserAPI rmUserAPI = restAPIFactory.getRMUserAPI(null);
+            RMUserAPI rmUserAPI = restAPIFactory.getRMUserAPI();
             rmUserAPI.assignRoleToUser(username, role.toString());
             siteDataService.setSiteMemberCreationState(PATH_SNIPPET_RM_SITE_ID, username, DataCreationState.Created);
 

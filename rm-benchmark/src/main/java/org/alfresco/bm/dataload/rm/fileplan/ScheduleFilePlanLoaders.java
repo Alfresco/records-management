@@ -33,6 +33,12 @@ import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Prepare event for loading root categories, record categories and record folders.
+ *
+ * @author Silviu Dinuta
+ * @since 2.6
+ */
 public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
 {
     public static final String EVENT_NAME_LOAD_RECORD_CATEGORIES = "loadRecordCategories";
@@ -260,6 +266,12 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         return result;
     }
 
+    /**
+     * Helper method for preparing the events that load the root record categories.
+     *
+     * @param loaderSessionsToCreate
+     * @param nextEvents
+     */
     private void prepareRootCategories(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         int skip = 0;
@@ -320,6 +332,12 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         }
     }
 
+    /**
+     * Helper method for preparing the load events for record categories children and record folders children without the last level of record folders.
+     *
+     * @param loaderSessionsToCreate
+     * @param nextEvents
+     */
     private void prepareSubCategoriesAndRecordFolders(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         int skip = 0;
@@ -393,6 +411,12 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         }
     }
 
+    /**
+     * Helper method for preparing the load events for record folders children from the last level.
+     *
+     * @param loaderSessionsToCreate
+     * @param nextEvents
+     */
     private void prepareRecordFoldersOnLowestLevel(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         int skip = 0;

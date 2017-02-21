@@ -121,10 +121,20 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
         return loadUnfiledRecordFolder(folder, rootFoldersToCreate, foldersToCreate);
     }
 
+    /**
+     * Helper method that creates specified number of root unfiled record folders if the specified container is unfiled record container,
+     * or specified number of unfiled record folder childredn if the container is a root unfiled record folder or an ordinary unfiled record folder.
+     *
+     * @param container - unfiled record container, or an unfiled record folder
+     * @param rootFoldersToCreate - number of root unfiled record folders to create
+     * @param foldersToCreate - number of unfiled record folder children
+     * @return EventResult - the loading result or error if there was an exception on loading
+     * @throws IOException
+     */
     private EventResult loadUnfiledRecordFolder(FolderData container, int rootFoldersToCreate, int foldersToCreate)
                 throws IOException
     {
-        UserData user = getUser(logger);
+        UserData user = getRandomUser(logger);
         String username = user.getUsername();
         String password = user.getPassword();
         FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(username, password));

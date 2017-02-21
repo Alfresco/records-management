@@ -42,6 +42,13 @@ import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Prepare event for loading records in filePlan folder structure.
+ *
+ * @author Silviu Dinuta
+ * @since 2.6
+ *
+ */
 public class ScheduleRecordLoaders extends RMBaseEventProcessor
 {
     public static final String EVENT_NAME_LOAD_RECORDS = "loadRecords";
@@ -262,6 +269,10 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
         return result;
     }
 
+    /**
+     * Helper method that initialize the record folders that can receive loaded unfiled records.
+     * This method, also calculates the number of records to  add to the initialized record folders.
+     */
     private void calculateListOfEmptyFolders()
     {
         if (recordFoldersThatNeedRecords == null)
@@ -325,10 +336,17 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
         }
     }
 
+    /**
+     * Helper method used for creating in alfresco repo and in mongo DB, record root categories, record categories and record folders from configured path elements.
+     *
+     * @param path - path element
+     * @return created record folder, or existent record folder, if it already created
+     * @throws Exception
+     */
     private FolderData createFolder(String path) throws Exception
     {
         //create inexistent elements from configured paths as admin
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(null);
+        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI();
         List<String> pathElements = getPathElements(path);
         FolderData parentFolder = fileFolderService.getFolder("", RECORD_CONTAINER_PATH);
         // for(String pathElement: pathElements)
@@ -359,6 +377,12 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
         return parentFolder;
     }
 
+    /**
+     * Helper method for preparing events for loading records randomly in the record folders structure or in specified record folder paths.
+     *
+     * @param loaderSessionsToCreate
+     * @param nextEvents
+     */
     private void prepareRecords(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         calculateListOfEmptyFolders();
