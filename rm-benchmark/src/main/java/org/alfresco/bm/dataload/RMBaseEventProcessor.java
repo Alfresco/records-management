@@ -26,7 +26,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
@@ -121,7 +121,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                             .build())
                     .build();
 
-                FilePlanComponent filePlanComponent = api.createFilePlanComponent(filePlanComponentModel, parentFilePlanComponent.getId(), "include=path");
+                FilePlanComponent filePlanComponent = api.createFilePlanComponent(filePlanComponentModel, parentFilePlanComponent.getId());
 
                 String newfilePlanComponentId = filePlanComponent.getId();
                 fileFolderService.createNewFolder(newfilePlanComponentId, context,
@@ -291,9 +291,9 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
      * @param numberOfRecords - number of records to be distributed
      * @return a map with folders as keys and the number of records to create on that folder as values.
      */
-    public HashMap<FolderData, Integer> distributeNumberOfRecords(List<FolderData> listOfFolders, int numberOfRecords)
+    public LinkedHashMap<FolderData, Integer> distributeNumberOfRecords(List<FolderData> listOfFolders, int numberOfRecords)
     {
-        HashMap<FolderData, Integer> mapOfRecordsPerFolder = new HashMap<FolderData,Integer>();
+        LinkedHashMap<FolderData, Integer> mapOfRecordsPerFolder = new LinkedHashMap<FolderData,Integer>();
         int[] generateRandomValues = generateRandomValues(listOfFolders.size(), numberOfRecords);
         int counter = 0;
         for(FolderData folder : listOfFolders)

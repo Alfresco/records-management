@@ -152,7 +152,7 @@ public class LoadFilePlan extends RMBaseEventProcessor
         try
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
-            FilePlanComponent filePlanComponent = api.getFilePlanComponent(container.getId(), "include=path");
+            FilePlanComponent filePlanComponent = api.getFilePlanComponent(container.getId());
 
             // Create root categories
             if(rootCategoriesToCreate > 0)

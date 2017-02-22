@@ -23,7 +23,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
@@ -73,8 +73,7 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     private String eventNameLoadingComplete = EVENT_NAME_LOADING_COMPLETE;
     private String eventNameContinueLoadingUnfiledRecordFolders = EVENT_NAME_CONTINUE_LOADING_UNFILED_RECORD_FOLDERS;
 
-    private List<FolderData> recordFoldersThatNeedRecords = null;
-    private HashMap<FolderData, Integer> mapOfRecordsPerRecordFolder = null;
+    private LinkedHashMap<FolderData, Integer> mapOfRecordsPerRecordFolder = null;
 
     /**
      * @return the uploadRecords
@@ -245,7 +244,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
         if (loaderSessionsToCreate > 0 && nextEvents.size() == 0)
         {
             // There are no records to load even though there are sessions available
-            recordFoldersThatNeedRecords = null;
             mapOfRecordsPerRecordFolder = null;
             Event nextEvent = new Event(eventNameLoadingComplete, null);
             nextEvents.add(nextEvent);
@@ -275,9 +273,10 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
      */
     private void calculateListOfEmptyFolders()
     {
-        if (recordFoldersThatNeedRecords == null)
+        if (mapOfRecordsPerRecordFolder == null)
         {
-            recordFoldersThatNeedRecords = new ArrayList<FolderData>();
+            mapOfRecordsPerRecordFolder = new LinkedHashMap<FolderData, Integer>();
+            List<FolderData> recordFoldersThatNeedRecords = new ArrayList<FolderData>();
             if (paths == null || paths.size() == 0)
             {
                 // get the existing file plan folder structure
@@ -387,7 +386,7 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     {
         calculateListOfEmptyFolders();
         List<FolderData> emptyFolders = new ArrayList<FolderData>();
-        emptyFolders.addAll(recordFoldersThatNeedRecords);
+        emptyFolders.addAll(mapOfRecordsPerRecordFolder.keySet());
         while (nextEvents.size() < loaderSessionsToCreate)
         {
             if (mapOfRecordsPerRecordFolder == null || mapOfRecordsPerRecordFolder.size() == 0)
@@ -400,7 +399,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
                 int recordsToCreate = mapOfRecordsPerRecordFolder.get(emptyFolder) - (int) emptyFolder.getFileCount();
                 if (recordsToCreate <= 0)
                 {
-                    recordFoldersThatNeedRecords.remove(emptyFolder);
                     mapOfRecordsPerRecordFolder.remove(emptyFolder);
                 }
                 else
@@ -425,11 +423,11 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
                         loadEvent.setSessionId(sessionId);
                         // Add the event to the list
                         nextEvents.add(loadEvent);
-                        recordFoldersThatNeedRecords.remove(emptyFolder);
                         mapOfRecordsPerRecordFolder.remove(emptyFolder);
                     }
                     catch (Exception e)
                     {
+                        mapOfRecordsPerRecordFolder.remove(emptyFolder);
                         // The lock was already applied; find another
                         continue;
                     }

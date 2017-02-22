@@ -23,7 +23,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,8 +71,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     private String eventNameLoadUnfiledRecords = EVENT_NAME_LOAD_UNFILED_RECORDS;
     private String eventNameScheduleLoaders = EVENT_NAME_SCHEDULE_LOADERS;
     private String eventNameLoadingComplete = EVENT_NAME_LOADING_COMPLETE;
-    private List<FolderData> unfiledRecordFoldersThatNeedRecords = null;
-    private HashMap<FolderData, Integer> mapOfRecordsPerUnfiledRecordFolder = null;
+    private LinkedHashMap<FolderData, Integer> mapOfRecordsPerUnfiledRecordFolder = null;
 
     public int getMaxActiveLoaders()
     {
@@ -163,16 +162,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         return paths;
     }
 
-    public List<FolderData> getUnfiledRecordFoldersThatNeedRecords()
-    {
-        return unfiledRecordFoldersThatNeedRecords;
-    }
-
-    public HashMap<FolderData, Integer> getMapOfRecordsPerUnfiledRecordFolder()
-    {
-        return mapOfRecordsPerUnfiledRecordFolder;
-    }
-
     @Override
     protected EventResult processEvent(Event event) throws Exception
     {
@@ -197,7 +186,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         if (loaderSessionsToCreate > 0 && nextEvents.size() == 0)
         {
             // There are no records to load even though there are sessions available
-            unfiledRecordFoldersThatNeedRecords = null;
             mapOfRecordsPerUnfiledRecordFolder = null;
             Event nextEvent = new Event(eventNameLoadingComplete, null);
             nextEvents.add(nextEvent);
@@ -226,9 +214,10 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
      */
     private void calculateListOfEmptyFolders()
     {
-        if(unfiledRecordFoldersThatNeedRecords == null)
+        if(mapOfRecordsPerUnfiledRecordFolder == null)
         {
-            unfiledRecordFoldersThatNeedRecords = new ArrayList<FolderData>();
+            mapOfRecordsPerUnfiledRecordFolder = new LinkedHashMap<FolderData, Integer>();
+            List<FolderData> unfiledRecordFoldersThatNeedRecords = new ArrayList<FolderData>();
             if(paths == null || paths.size() == 0)
             {
                 unfiledRecordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(UNFILED_CONTEXT));
@@ -347,7 +336,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     {
         calculateListOfEmptyFolders();
         List<FolderData> emptyFolders = new ArrayList<FolderData>();
-        emptyFolders.addAll(unfiledRecordFoldersThatNeedRecords);
+        emptyFolders.addAll(mapOfRecordsPerUnfiledRecordFolder.keySet());
         while (nextEvents.size() < loaderSessionsToCreate)
         {
             if(mapOfRecordsPerUnfiledRecordFolder == null || mapOfRecordsPerUnfiledRecordFolder.size() == 0)
@@ -360,7 +349,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
                 int recordsToCreate = mapOfRecordsPerUnfiledRecordFolder.get(emptyFolder) - (int) emptyFolder.getFileCount();
                 if(recordsToCreate <= 0)
                 {
-                    unfiledRecordFoldersThatNeedRecords.remove(emptyFolder);
                     mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);
                 }
                 else
@@ -388,11 +376,11 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
                         loadEvent.setSessionId(sessionId);
                         // Add the event to the list
                         nextEvents.add(loadEvent);
-                        unfiledRecordFoldersThatNeedRecords.remove(emptyFolder);
                         mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);
                     }
                     catch (Exception e)
                     {
+                        mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);
                         // The lock was already applied; find another
                         continue;
                     }

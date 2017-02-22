@@ -142,7 +142,7 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
         try
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
-            FilePlanComponent filePlanComponent = api.getFilePlanComponent(container.getId(), "include=path");
+            FilePlanComponent filePlanComponent = api.getFilePlanComponent(container.getId());
 
             //Create root unfiled record folders
             if(rootFoldersToCreate > 0)
