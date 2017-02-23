@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.bm.dataload.rm.fileplan;
+package org.alfresco.bm.dataload.rm.records;
 
 import static org.alfresco.bm.data.DataCreationState.Created;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
