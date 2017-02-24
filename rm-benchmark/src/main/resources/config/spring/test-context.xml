@@ -230,7 +230,7 @@
     <constructor-arg name="newEventName" value="scheduleInPlaceRecordLoaders" />
   </bean>
 
-  <bean id="event.scheduleInPlaceRecordLoaders" class="org.alfresco.bm.dataload.rm.fileplan.ScheduleInPlaceRecordLoaders" parent="rmBaseEventProcessor">
+  <bean id="event.scheduleInPlaceRecordLoaders" class="org.alfresco.bm.dataload.rm.records.ScheduleInPlaceRecordLoaders" parent="rmBaseEventProcessor">
     <property name="enabled" value="${rm.inPlaceRecords.enabled}" />
     <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
@@ -244,7 +244,7 @@
     <property name="eventNameRescheduleSelf" value="scheduleInPlaceRecordLoaders"/>
   </bean>
 
-  <bean id="event.declareInPlaceRecord" class="org.alfresco.bm.dataload.rm.fileplan.DeclareInPlaceRecords" parent="rmBaseEventProcessor">
+  <bean id="event.declareInPlaceRecord" class="org.alfresco.bm.dataload.rm.records.DeclareInPlaceRecords" parent="rmBaseEventProcessor">
     <property name="eventNameInPlaceRecordsDeclared" value="inPlaceRecordDeclared"/>
   </bean>
 
