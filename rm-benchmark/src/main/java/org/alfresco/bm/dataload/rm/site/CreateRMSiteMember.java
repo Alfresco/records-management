@@ -22,10 +22,8 @@ import org.alfresco.bm.event.selector.EventDataObject;
 import org.alfresco.bm.event.selector.EventProcessorResponse;
 import org.alfresco.bm.event.selector.EventDataObject.STATUS;
 import org.alfresco.bm.site.SiteMemberData;
-import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.RMUserAPI;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mongodb.DBObject;
 
@@ -45,8 +43,6 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
     public static final String DEFAULT_EVENT_NAME_RM_SITE_MEMBER_CREATED = "rmSiteMemberCreated";
     public static final String FIELD_USERNAME = "username";
     private String eventNameRMSiteMemberCreated = DEFAULT_EVENT_NAME_RM_SITE_MEMBER_CREATED;
-    @Autowired
-    private RestAPIFactory restAPIFactory;
 
     /**
      * Override the {@link #DEFAULT_EVENT_NAME_RM_SITE_MEMBER_CREATED default} event name emitted when a rm site member is created
@@ -108,7 +104,7 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
         try
         {
             //assign RM roles to new members as admin user
-            RMUserAPI rmUserAPI = restAPIFactory.getRMUserAPI();
+            RMUserAPI rmUserAPI = getRestAPIFactory().getRMUserAPI();
             rmUserAPI.assignRoleToUser(username, roleStr);
             siteDataService.setSiteMemberCreationState(PATH_SNIPPET_RM_SITE_ID, username, DataCreationState.Created);
 

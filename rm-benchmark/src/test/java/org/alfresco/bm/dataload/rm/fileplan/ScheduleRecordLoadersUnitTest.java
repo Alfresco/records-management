@@ -41,7 +41,6 @@ import org.alfresco.bm.session.SessionService;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
-import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +48,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
 
 import com.mongodb.DBObject;
 
@@ -74,6 +74,9 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
     @Mock
     private FilePlanComponentAPI mockedFilePlanComponentAPI;
+
+    @Mock
+    private ApplicationContext mockedApplicationContext;
 
     @InjectMocks
     private ScheduleRecordLoaders scheduleRecordLoaders;
@@ -465,6 +468,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("e2Id"))).thenReturn(mockedE3FilePlanComponent)
                                                                                                           .thenReturn(mockedE4FilePlanComponent);
 
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestApiFactory);
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
         verify(mockedFileFolderService, times(4)).createNewFolder(any(String.class), any(String.class), any(String.class));
@@ -580,6 +584,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFileFolderService.getFolder("e3Id")).thenReturn(mockedE3);
         when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("e2Id"))).thenReturn(mockedE3FilePlanComponent);
 
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestApiFactory);
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
         verify(mockedFileFolderService, times(3)).createNewFolder(any(String.class), any(String.class), any(String.class));

@@ -39,6 +39,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
 
 import com.mongodb.DBObject;
 
@@ -58,6 +59,9 @@ public class CreateRMSiteMemberUnitTest implements RMEventConstants
 
     @Mock
     private RestAPIFactory mockedRestAPIFactory;
+
+    @Mock
+    private ApplicationContext mockedApplicationContext;
 
     @InjectMocks
     private CreateRMSiteMember createRMSiteMember;
@@ -158,6 +162,7 @@ public class CreateRMSiteMemberUnitTest implements RMEventConstants
         RMUserAPI mockedRMUserAPI = mock(RMUserAPI.class);
         when(mockedRestAPIFactory.getRMUserAPI()).thenReturn(mockedRMUserAPI);
 
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestAPIFactory);
         EventResult result = createRMSiteMember.processEvent(mockedEvent, new StopWatch());
 
         verify(mockedData, never()).put(CreateRMSiteMember.MSG_KEY, CreateRMSiteMember.INVALID_SITE_MEMBER_REQUEST_MSG);

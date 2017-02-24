@@ -33,12 +33,10 @@ import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.user.UserData;
-import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Unfiled record folders structure creation event
@@ -53,9 +51,6 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
 
     private String eventNameUnfiledRecordFoldersLoaded;
     private long loadUnfiledRecordFolderDelay = DEFAULT_LOAD_UNFILED_RECORD_FOLDER_DELAY;
-
-    @Autowired
-    private RestAPIFactory restAPIFactory;
 
     public String getEventNameUnfiledRecordFoldersLoaded()
     {
@@ -137,7 +132,8 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
         UserData user = getRandomUser(logger);
         String username = user.getUsername();
         String password = user.getPassword();
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(username, password));
+        UserModel userModel = new UserModel(username, password);
+        FilePlanComponentAPI api = getRestAPIFactory().getFilePlanComponentsAPI(userModel);
 
         try
         {
@@ -148,7 +144,7 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
             if(rootFoldersToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, rootFoldersToCreate, ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, UNFILED_RECORD_FOLDER_TYPE,
+                createFilePlanComponent(container, userModel, filePlanComponent, rootFoldersToCreate, ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, UNFILED_RECORD_FOLDER_TYPE,
                                         container.getContext(), loadUnfiledRecordFolderDelay);
                 super.suspendTimer();
                 String lockedPath = container.getPath() + "/locked";
@@ -159,7 +155,7 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
             if(foldersToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, foldersToCreate, UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, UNFILED_RECORD_FOLDER_TYPE,
+                createFilePlanComponent(container, userModel, filePlanComponent, foldersToCreate, UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, UNFILED_RECORD_FOLDER_TYPE,
                                         container.getContext(), loadUnfiledRecordFolderDelay);
                 super.suspendTimer();
                 // Clean up the lock

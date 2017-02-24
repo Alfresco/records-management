@@ -49,6 +49,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Unit tests for ScheduleUnfiledRecordLoaders
@@ -69,6 +70,9 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
 
     @Mock
     private FilePlanComponentAPI mockedFilePlanComponentAPI;
+
+    @Mock
+    private ApplicationContext mockedApplicationContext;
 
     @InjectMocks
     private ScheduleUnfiledRecordLoaders scheduleUnfiledRecordLoaders;
@@ -491,6 +495,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("e2Id"))).thenReturn(mockedE3FilePlanComponent)
                                                                                                           .thenReturn(mockedE4FilePlanComponent);
 
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestApiFactory);
         EventResult result = scheduleUnfiledRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
         verify(mockedFileFolderService, times(4)).createNewFolder(any(String.class), any(String.class), any(String.class));
@@ -606,6 +611,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         when(mockedFileFolderService.getFolder("e3Id")).thenReturn(mockedE3);
         when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("e2Id"))).thenReturn(mockedE3FilePlanComponent);
 
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestApiFactory);
         EventResult result = scheduleUnfiledRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
         verify(mockedFileFolderService, times(3)).createNewFolder(any(String.class), any(String.class), any(String.class));

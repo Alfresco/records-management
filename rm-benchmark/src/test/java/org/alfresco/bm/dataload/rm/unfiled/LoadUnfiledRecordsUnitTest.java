@@ -58,6 +58,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Unit tests for LoadUnfiledRecords
@@ -86,6 +87,9 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
 
     @Mock
     private SiteDataService mockedSiteDataService;
+
+    @Mock
+    private ApplicationContext mockedApplicationContext;
 
     @InjectMocks
     private LoadUnfiledRecords loadUnfiledRecords;
@@ -371,5 +375,6 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
         when(mockedUserData.getUsername()).thenReturn("aUser");
         when(mockedUserData.getPassword()).thenReturn("aUser");
         when(mockedUserDataService.findUserByUsername("aUser")).thenReturn(mockedUserData);
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestApiFactory);
     }
 }

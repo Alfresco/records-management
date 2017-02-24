@@ -34,12 +34,10 @@ import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.user.UserData;
-import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * FilePlan structure creation event.
@@ -58,10 +56,6 @@ public class LoadFilePlan extends RMBaseEventProcessor
     private long loadFilePlanDelay = DEFAULT_LOAD_FILEPLAN_DELAY;
 
     private String eventNameRecordCategoryLoaded;
-
-    @Autowired
-    private RestAPIFactory restAPIFactory;
-
 
     public String getEventNameRecordCategoryLoaded()
     {
@@ -147,7 +141,8 @@ public class LoadFilePlan extends RMBaseEventProcessor
         UserData user = getRandomUser(logger);
         String username = user.getUsername();
         String password = user.getPassword();
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(username, password));
+        UserModel userModel = new UserModel(username, password);
+        FilePlanComponentAPI api = getRestAPIFactory().getFilePlanComponentsAPI(userModel);
 
         try
         {
@@ -158,7 +153,7 @@ public class LoadFilePlan extends RMBaseEventProcessor
             if(rootCategoriesToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, rootCategoriesToCreate,
+                createFilePlanComponent(container, userModel, filePlanComponent, rootCategoriesToCreate,
                             ROOT_CATEGORY_NAME_IDENTIFIER,
                             RECORD_CATEGORY_TYPE, RECORD_CATEGORY_CONTEXT, loadFilePlanDelay);
                 super.suspendTimer();
@@ -170,7 +165,7 @@ public class LoadFilePlan extends RMBaseEventProcessor
             if(categoriesToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, categoriesToCreate,
+                createFilePlanComponent(container, userModel, filePlanComponent, categoriesToCreate,
                             CATEGORY_NAME_IDENTIFIER,
                             RECORD_CATEGORY_TYPE, RECORD_CATEGORY_CONTEXT, loadFilePlanDelay);
                 super.suspendTimer();
@@ -182,7 +177,7 @@ public class LoadFilePlan extends RMBaseEventProcessor
             if(foldersToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, foldersToCreate,
+                createFilePlanComponent(container, userModel, filePlanComponent, foldersToCreate,
                             RECORD_FOLDER_NAME_IDENTIFIER,
                             RECORD_FOLDER_TYPE, RECORD_FOLDER_CONTEXT, loadFilePlanDelay);
                 super.suspendTimer();

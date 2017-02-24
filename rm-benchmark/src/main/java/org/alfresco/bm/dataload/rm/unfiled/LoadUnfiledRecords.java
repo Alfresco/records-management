@@ -31,12 +31,10 @@ import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.user.UserData;
-import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Unfiled records creation event
@@ -50,9 +48,6 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
 
     public static final String EVENT_NAME_UNFILED_RECORDS_LOADED = "unfiledRecordsLoaded";
     public static final long DEFAULT_LOAD_UNFILED_RECORD_DELAY = 100L;
-
-    @Autowired
-    private RestAPIFactory restAPIFactory;
 
     private String eventNameUnfiledRecordsLoaded = EVENT_NAME_UNFILED_RECORDS_LOADED;
     private long loadUnfiledRecordDelay = DEFAULT_LOAD_UNFILED_RECORD_DELAY;
@@ -130,7 +125,8 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
         UserData user = getRandomUser(logger);
         String username = user.getUsername();
         String password = user.getPassword();
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(username, password));
+        UserModel userModel = new UserModel(username, password);
+        FilePlanComponentAPI api = getRestAPIFactory().getFilePlanComponentsAPI(userModel);
         try
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
@@ -142,7 +138,7 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
                 super.resumeTimer();
                 //TODO uncomment this and remove createRecord when RM-4564 issue is fixed
                 //uploadElectronicRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
-                createRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
+                createRecord(container, userModel, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
                 super.suspendTimer();
                 // Clean up the lock
                 String lockedPath = container.getPath() + "/locked";

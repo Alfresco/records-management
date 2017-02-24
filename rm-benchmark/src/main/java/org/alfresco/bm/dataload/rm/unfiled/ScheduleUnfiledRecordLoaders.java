@@ -37,7 +37,6 @@ import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
-import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
@@ -58,9 +57,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
 
     @Autowired
     private SessionService sessionService;
-
-    @Autowired
-    private RestAPIFactory restAPIFactory;
 
     private int maxActiveLoaders;
     private boolean uploadUnfiledRecords;
@@ -307,7 +303,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     private FolderData createFolder(String path) throws Exception
     {
         //create inexistent elements from configured paths as admin
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI();
+        FilePlanComponentAPI api = getRestAPIFactory().getFilePlanComponentsAPI();
         List<String> pathElements = getPathElements(path);
         FolderData parentFolder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH);
         for(String pathElement: pathElements)
