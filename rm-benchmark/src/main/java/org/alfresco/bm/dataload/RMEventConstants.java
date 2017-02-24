@@ -29,6 +29,9 @@ public interface RMEventConstants
 {
     public static final String FIELD_CONTEXT = "context";
     public static final String FIELD_PATH = "path";
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_USERNAME = "username";
+    public static final String FIELD_PASSWORD = "password";
 
     public static final String FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE = "rootFoldersToCreate";
     public static final String FIELD_UNFILED_FOLDERS_TO_CREATE = "foldersToCreate";

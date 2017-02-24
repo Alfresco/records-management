@@ -87,9 +87,9 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
         verify(mockedSessionService, never()).startSession(any(DBObject.class));
 
-        assertEquals(false, result.isSuccess());
+        assertEquals(true, result.isSuccess());
         assertEquals("Uploading of Unfiled Records not wanted.",result.getData());
-        assertEquals(0, result.getNextEvents().size());
+        assertEquals(1, result.getNextEvents().size());
     }
 
     @Test

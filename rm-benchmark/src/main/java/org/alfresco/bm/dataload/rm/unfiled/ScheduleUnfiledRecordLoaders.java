@@ -169,7 +169,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         // Do we actually need to do anything
         if (!isUploadUnfiledRecords())
         {
-            return new EventResult("Uploading of Unfiled Records not wanted.", false);
+            return new EventResult("Uploading of Unfiled Records not wanted.", new Event(eventNameLoadingComplete, null));
         }
         if(unfiledRecordsNumber > 0)
         {

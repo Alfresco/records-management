@@ -191,7 +191,7 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
             List<FolderData> unfiledRecordContainer = fileFolderService.getChildFolders(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH, 0, 1);
             if(unfiledRecordContainer.size() == 0)
             {
-                return new EventResult("Unfiled Record Folders structure creation not wanted.", false);
+                return new EventResult("Unfiled Record Folders structure creation not wanted.",  new Event(eventNameLoadingComplete, null));
             }
             else
             {
