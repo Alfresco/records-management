@@ -411,7 +411,8 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
         // Create an event 
         DBObject declareData = BasicDBObjectBuilder.start()
                 .add(FIELD_ID, fileId)
-                .add(FIELD_SITE_MANAGER, username)
+                .add(FIELD_USERNAME, username)
+                .add(FIELD_PASSWORD, password)
                 .get();
 
         Event declareEvent = new Event(eventNameDeclareInPlaceRecord, declareData);

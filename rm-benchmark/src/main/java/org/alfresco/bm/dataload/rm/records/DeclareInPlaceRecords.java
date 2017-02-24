@@ -25,9 +25,12 @@ import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.utility.model.UserModel;
+import org.apache.commons.lang3.concurrent.ConcurrentException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 
 /**
@@ -54,7 +57,6 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
     protected EventResult processEvent(Event event) throws Exception
     {
         StringBuilder eventOutputMsg = new StringBuilder("Declaring file as record: \n");
-
         super.suspendTimer();
 
         if (event == null)
@@ -68,32 +70,50 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
             throw new IllegalStateException("This processor requires data with field " + FIELD_ID);
         }
         String id = (String) dataObj.get(FIELD_ID);
-        String siteManager = (String) dataObj.get(FIELD_SITE_MANAGER);
+        String username = (String) dataObj.get(FIELD_USERNAME);
+        String password = (String) dataObj.get(FIELD_PASSWORD);
 
         if (id == null)
         {
             throw new IllegalStateException("This processor requires data with field " + FIELD_ID);
         }
-
+    
         // Call the REST API 
-        super.resumeTimer();
-        restAPIFactory.getFilesAPI(new UserModel(siteManager, siteManager)).declareAsRecord(id);
-        String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
-        super.suspendTimer();
-        TimeUnit.MILLISECONDS.sleep(declareInPlaceRecordDelay);
-
-        if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.CREATED)
+        try
         {
-            eventOutputMsg.append("success");
-        }
-        else
-        {
-            eventOutputMsg.append("Failed with code " + statusCode + ".\n " + 
-                                   restAPIFactory.getRmRestWrapper().assertLastError().getBriefSummary() + ". \n" +
-                                   restAPIFactory.getRmRestWrapper().assertLastError().getStackTrace());
-        }
+            super.resumeTimer();
+            restAPIFactory.getFilesAPI(new UserModel(username, password)).declareAsRecord(id);
+            String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
+            super.suspendTimer();
+            TimeUnit.MILLISECONDS.sleep(declareInPlaceRecordDelay);
+    
+            if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.CREATED)
+            {
+                eventOutputMsg.append("success");
+            }
+            else
+            {
+                eventOutputMsg.append("Failed with code " + statusCode + ".\n " + 
+                                       restAPIFactory.getRmRestWrapper().assertLastError().getBriefSummary() + ". \n" +
+                                       restAPIFactory.getRmRestWrapper().assertLastError().getStackTrace());
+            }
 
-        return new EventResult(eventOutputMsg.toString(), new Event(eventNameInPlaceRecordsDeclared, null));
+            return new EventResult(eventOutputMsg.toString(), new Event(eventNameInPlaceRecordsDeclared, dataObj));
+        }
+        catch (Exception e)
+        {
+            String error = e.getMessage();
+            String stack = ExceptionUtils.getStackTrace(e);
+            // Grab REST API information
+            DBObject data = BasicDBObjectBuilder.start()
+                    .append("error", error)
+                    .append(FIELD_ID, id)
+                    .append(FIELD_USERNAME, username)
+                    .append(FIELD_PASSWORD, password)
+                    .append("stack", stack).get();
+            // Build failure result
+            return new EventResult(data, false);
+        }
     }
 
 }
