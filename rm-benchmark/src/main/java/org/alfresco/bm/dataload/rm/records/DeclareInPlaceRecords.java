@@ -18,6 +18,9 @@
  */
 package org.alfresco.bm.dataload.rm.records;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import java.text.MessageFormat;
 import java.util.concurrent.TimeUnit;
 
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
@@ -25,7 +28,6 @@ import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.utility.model.UserModel;
-import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,15 +37,17 @@ import com.mongodb.DBObject;
 
 /**
  * Timed event that declares as record pre-scheduled file
- * 
+ *
  * @author Ana Bozianu
  * @since 2.6
  */
 public class DeclareInPlaceRecords extends RMBaseEventProcessor
 {
+    public static final String INVALID_DATA_MSG_TEMPLATE = "This processor requires data with fields: {0}, {1}, {2}.";
     public static final long DEFAULT_DECLARE_RECORDS_DELAY = 10000L;
     private long declareInPlaceRecordDelay = DEFAULT_DECLARE_RECORDS_DELAY;
-    private String eventNameInPlaceRecordsDeclared;
+    public static final String DEFAULT_EVENT_NAME_IN_PLACE_RECORD_DECLARED = "inPlaceRecordDeclared";
+    private String eventNameInPlaceRecordsDeclared = DEFAULT_EVENT_NAME_IN_PLACE_RECORD_DECLARED;
 
     @Autowired
     private RestAPIFactory restAPIFactory;
@@ -51,6 +55,16 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
     public void setEventNameInPlaceRecordsDeclared(String eventNameInPlaceRecordsDeclared)
     {
         this.eventNameInPlaceRecordsDeclared = eventNameInPlaceRecordsDeclared;
+    }
+
+    public String getEventNameInPlaceRecordsDeclared()
+    {
+        return eventNameInPlaceRecordsDeclared;
+    }
+
+    public void setDeclareInPlaceRecordDelay(long declareInPlaceRecordDelay)
+    {
+        this.declareInPlaceRecordDelay = declareInPlaceRecordDelay;
     }
 
     @Override
@@ -67,18 +81,18 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
         DBObject dataObj = (DBObject) event.getData();
         if (dataObj == null)
         {
-            throw new IllegalStateException("This processor requires data with field " + FIELD_ID);
+            throw new IllegalStateException(MessageFormat.format(INVALID_DATA_MSG_TEMPLATE, FIELD_ID, FIELD_USERNAME, FIELD_PASSWORD));
         }
         String id = (String) dataObj.get(FIELD_ID);
         String username = (String) dataObj.get(FIELD_USERNAME);
         String password = (String) dataObj.get(FIELD_PASSWORD);
 
-        if (id == null)
+        if (isBlank(id) || isBlank(username) || isBlank(password))
         {
-            throw new IllegalStateException("This processor requires data with field " + FIELD_ID);
+            throw new IllegalStateException(MessageFormat.format(INVALID_DATA_MSG_TEMPLATE, FIELD_ID, FIELD_USERNAME, FIELD_PASSWORD));
         }
-    
-        // Call the REST API 
+
+        // Call the REST API
         try
         {
             super.resumeTimer();
@@ -86,19 +100,19 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
             String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
             super.suspendTimer();
             TimeUnit.MILLISECONDS.sleep(declareInPlaceRecordDelay);
-    
+
             if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.CREATED)
             {
                 eventOutputMsg.append("success");
             }
             else
             {
-                eventOutputMsg.append("Failed with code " + statusCode + ".\n " + 
+                eventOutputMsg.append("Failed with code " + statusCode + ".\n " +
                                        restAPIFactory.getRmRestWrapper().assertLastError().getBriefSummary() + ". \n" +
                                        restAPIFactory.getRmRestWrapper().assertLastError().getStackTrace());
             }
 
-            return new EventResult(eventOutputMsg.toString(), new Event(eventNameInPlaceRecordsDeclared, dataObj));
+            return new EventResult(eventOutputMsg.toString(), new Event(getEventNameInPlaceRecordsDeclared(), dataObj));
         }
         catch (Exception e)
         {
