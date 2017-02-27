@@ -35,7 +35,6 @@ import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
 import org.alfresco.bm.site.SiteData;
-import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.rest.core.RestWrapper;
 import org.alfresco.rest.model.RestNodeModel;
 import org.alfresco.rest.model.RestNodeModelsCollection;
@@ -63,6 +62,11 @@ import com.mongodb.DBObject;
  */
 public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implements InitializingBean
 {
+    public static final String DONE_EVENT_MSG = "Raising 'done' event.";
+    public static final String DECLARING_NOT_WANTED_MSG = "Declaring in place records not wanted.";
+    private static final String DEFAULT_EVENT_NAME_RESCHEDULE_SELF = "scheduleInPlaceRecordLoaders";
+    private static final String DEFAULT_EVENT_NAME_DECLARE_IN_PLACE_RECORD = "declareInPlaceRecord";
+    private static final String DEFAULT_EVENT_NAME_COMPLETE = "declaringInPlaceRecordsComplete";
     private boolean enabled = false;
     private Integer maxActiveLoaders;
     private long loadCheckDelay;
@@ -70,22 +74,19 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
     private List<String> collabSitePaths;
     private String username;
     private String password;
-    private String eventNameDeclareInPlaceRecord;
-    private String eventNameComplete;
-    private String eventNameRescheduleSelf;
+    private String eventNameDeclareInPlaceRecord = DEFAULT_EVENT_NAME_DECLARE_IN_PLACE_RECORD;
+    private String eventNameComplete = DEFAULT_EVENT_NAME_COMPLETE;
+    private String eventNameRescheduleSelf = DEFAULT_EVENT_NAME_RESCHEDULE_SELF;
 
     private Integer numberOfRecordsToDeclare;
     private int numberOfRecordsDeclared = 0;
-    // buffer with the file ids of unscheduled files 
-    private Queue<String> unscheduledFilesCache; 
+    // buffer with the file ids of unscheduled files
+    private Queue<String> unscheduledFilesCache;
     private Set<String> fullLoadedFolders;
     private final static int FILES_TO_SCHEDULE_BUFFER_SIZE = 10000;
 
     @Autowired
     private SessionService sessionService;
-
-    @Autowired
-    private SiteDataService siteDataService;
 
     @Autowired
     private RestWrapper restCoreAPI;
@@ -118,7 +119,6 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
 
     public void setCollabSitePaths(String collabSitePathsString)
     {
-        collabSitePaths = Arrays.asList(collabSitePathsString.split(","));
         if(isNotBlank(collabSitePathsString))
         {
             collabSitePaths = Arrays.asList(collabSitePathsString.split(","));
@@ -157,14 +157,29 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
         this.eventNameDeclareInPlaceRecord = eventNameDeclareInPlaceRecord;
     }
 
+    public String getEventNameDeclareInPlaceRecord()
+    {
+        return eventNameDeclareInPlaceRecord;
+    }
+
     public void setEventNameComplete(String eventNameComplete)
     {
         this.eventNameComplete = eventNameComplete;
     }
 
+    public String getEventNameComplete()
+    {
+        return eventNameComplete;
+    }
+
     public void setEventNameRescheduleSelf(String eventNameRescheduleSelf)
     {
         this.eventNameRescheduleSelf = eventNameRescheduleSelf;
+    }
+
+    public String getEventNameRescheduleSelf()
+    {
+        return eventNameRescheduleSelf;
     }
 
     @Override
@@ -175,9 +190,9 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
         Assert.notEmpty(collabSitePaths);
         Assert.notNull(username);
         Assert.notNull(password);
-        Assert.notNull(eventNameDeclareInPlaceRecord);
-        Assert.notNull(eventNameComplete);
-        Assert.notNull(eventNameRescheduleSelf);
+        Assert.notNull(getEventNameDeclareInPlaceRecord());
+        Assert.notNull(getEventNameComplete());
+        Assert.notNull(getEventNameRescheduleSelf());
         Assert.notNull(numberOfRecordsToDeclare);
     }
 
@@ -186,11 +201,11 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
     {
         if (!enabled)
         {
-            return new EventResult("Declaring in place records not wanted.", new Event(eventNameComplete, null));
+            return new EventResult(DECLARING_NOT_WANTED_MSG, new Event(getEventNameComplete(), null));
         }
         if(numberOfRecordsToDeclare == numberOfRecordsDeclared)
         {
-            return new EventResult("Raising 'done' event.", new Event(eventNameComplete, null));
+            return new EventResult(DONE_EVENT_MSG, new Event(getEventNameComplete(), null));
         }
 
         long sessionCount = sessionService.getActiveSessionsCount();
@@ -221,7 +236,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
         /*
          * Reschedule self
          */
-        Event nextEvent = new Event(eventNameRescheduleSelf, System.currentTimeMillis() + loadCheckDelay, null);
+        Event nextEvent = new Event(getEventNameRescheduleSelf(), System.currentTimeMillis() + loadCheckDelay, null);
         nextEvents.add(nextEvent);
         eventOutputMsg.append("Raised further " + (nextEvents.size() - 1) + " events and rescheduled self.");
 
@@ -232,7 +247,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
      * Helper method that makes sure the collaboration site contains enough files to declare.
      * If the collaboration site doesn't have enough files it creates new empty files.
      * The method caches the ids of the files ready to be declared in unscheduledFileBuffer queue.
-     * 
+     *
      * @param eventOutputMsg
      * @throws Exception
      */
@@ -263,6 +278,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
             }
             catch(FileNotFoundException ex)
             {
+                //TODO why do we use nonExistingPaths??
                 nonExistingPaths.add(relativePath);
             }
         }
@@ -281,12 +297,12 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
             {
                     NodeDetail targetFolder = restCoreAPI.withParams("relativePath="+relativePath).withCoreAPI().usingNode(currentNodeModel)
                             .defineNodes().folder("AutoGeneratedFiles");
-    
+
                     for(int i = 0; i < filesToCreatePerPath; i++)
                     {
                         NodeDetail file = targetFolder.file("recordToBe");
                         eventOutputMsg.append("Created file " + file.getId() + ".");
-    
+
                         unscheduledFilesCache.add(file.getId());
 
                         if(numberOfFilesLeftToPreload() <= 0)
@@ -309,7 +325,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
 
     /**
      *  Helper method that makes sure the site exists on the server and loads it in the benchmark DB
-     *  
+     *
      * @param eventOutputMsg
      * @return the collaboration site's document library id
      * @throws Exception
@@ -340,7 +356,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
             colabSiteData.setCreationState(Created);
             siteDataService.addSite(colabSiteData);
 
-            eventOutputMsg.append(" Added site '" + collabSiteId + "' as created.\n");
+            eventOutputMsg.append(" Added site \"" + collabSiteId + "\" as created.\n");
         }
 
         // Get site's document library
@@ -350,7 +366,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
 
     /**
      * Helper method that iterates the hierarchy tree starting from a folder and caches the file ids
-     * 
+     *
      * @param currentNodeId
      * @param relativePath
      * @param eventOutputMsg
@@ -376,7 +392,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
                     // we have enough files
                     return;
                 }
-    
+
                 if(child.onModel().getIsFile())
                 {
                     unscheduledFilesCache.add(child.onModel().getId());
@@ -397,7 +413,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
 
     /**
      * Helper method that creates a declare record event for the provided file
-     * 
+     *
      * @param fileId id of the file to declare as record
      * @param eventOutputMsg
      * @return the declare as record event for the provided file
@@ -408,14 +424,14 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
 
         //TODO save it in benchmark's database to lock it  ???
 
-        // Create an event 
+        // Create an event
         DBObject declareData = BasicDBObjectBuilder.start()
                 .add(FIELD_ID, fileId)
                 .add(FIELD_USERNAME, username)
                 .add(FIELD_PASSWORD, password)
                 .get();
 
-        Event declareEvent = new Event(eventNameDeclareInPlaceRecord, declareData);
+        Event declareEvent = new Event(getEventNameDeclareInPlaceRecord(), declareData);
         // Each load event must be associated with a session
         String sessionId = sessionService.startSession(declareData);
         declareEvent.setSessionId(sessionId);
