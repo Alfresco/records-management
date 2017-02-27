@@ -806,4 +806,124 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         assertEquals(scheduleInPlaceRecordLoaders.getEventNameDeclareInPlaceRecord(), result.getNextEvents().get(1).getName());
         assertEquals(scheduleInPlaceRecordLoaders.getEventNameRescheduleSelf(), result.getNextEvents().get(2).getName());
     }
+
+    @Test(expected = Exception.class)
+    public void testNullActiveLoaders() throws Exception
+    {
+        scheduleInPlaceRecordLoaders.setCollabSiteId("someSiteID");
+        scheduleInPlaceRecordLoaders.setCollabSitePaths("path1");
+        scheduleInPlaceRecordLoaders.setUsername("someUser");
+        scheduleInPlaceRecordLoaders.setPassword("somePassword");
+        scheduleInPlaceRecordLoaders.setEventNameRescheduleSelf("someEvent1");
+        scheduleInPlaceRecordLoaders.setEventNameComplete("someEvent2");
+        scheduleInPlaceRecordLoaders.setEventNameDeclareInPlaceRecord("someEvent3");
+        scheduleInPlaceRecordLoaders.setRecordsToDeclare("");
+        scheduleInPlaceRecordLoaders.afterPropertiesSet();
+    }
+
+    @Test(expected = Exception.class)
+    public void testNullSiteId() throws Exception
+    {
+        scheduleInPlaceRecordLoaders.setMaxActiveLoaders(8);
+        scheduleInPlaceRecordLoaders.setCollabSiteId(null);
+        scheduleInPlaceRecordLoaders.afterPropertiesSet();
+    }
+
+    @Test(expected = Exception.class)
+    public void testNullPaths() throws Exception
+    {
+        scheduleInPlaceRecordLoaders.setMaxActiveLoaders(8);
+        scheduleInPlaceRecordLoaders.setCollabSiteId("someSiteID");
+        scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
+        scheduleInPlaceRecordLoaders.afterPropertiesSet();
+    }
+
+    @Test(expected = Exception.class)
+    public void testNullUserName() throws Exception
+    {
+        scheduleInPlaceRecordLoaders.setMaxActiveLoaders(8);
+        scheduleInPlaceRecordLoaders.setCollabSiteId("someSiteID");
+        scheduleInPlaceRecordLoaders.setCollabSitePaths("path1");
+        scheduleInPlaceRecordLoaders.setUsername(null);
+        scheduleInPlaceRecordLoaders.afterPropertiesSet();
+    }
+
+    @Test(expected = Exception.class)
+    public void testNullPassword() throws Exception
+    {
+        scheduleInPlaceRecordLoaders.setMaxActiveLoaders(8);
+        scheduleInPlaceRecordLoaders.setCollabSiteId("someSiteID");
+        scheduleInPlaceRecordLoaders.setCollabSitePaths("path1");
+        scheduleInPlaceRecordLoaders.setUsername("someUser");
+        scheduleInPlaceRecordLoaders.setPassword(null);
+        scheduleInPlaceRecordLoaders.afterPropertiesSet();
+    }
+
+    @Test(expected = Exception.class)
+    public void testNullScheduleSelfEvent() throws Exception
+    {
+        scheduleInPlaceRecordLoaders.setMaxActiveLoaders(8);
+        scheduleInPlaceRecordLoaders.setCollabSiteId("someSiteID");
+        scheduleInPlaceRecordLoaders.setCollabSitePaths("path1");
+        scheduleInPlaceRecordLoaders.setUsername("someUser");
+        scheduleInPlaceRecordLoaders.setPassword("somePassword");
+        scheduleInPlaceRecordLoaders.setEventNameRescheduleSelf(null);
+        scheduleInPlaceRecordLoaders.afterPropertiesSet();
+    }
+
+    @Test(expected = Exception.class)
+    public void testNullCompleteEvent() throws Exception
+    {
+        scheduleInPlaceRecordLoaders.setMaxActiveLoaders(8);
+        scheduleInPlaceRecordLoaders.setCollabSiteId("someSiteID");
+        scheduleInPlaceRecordLoaders.setCollabSitePaths("path1");
+        scheduleInPlaceRecordLoaders.setUsername("someUser");
+        scheduleInPlaceRecordLoaders.setPassword("somePassword");
+        scheduleInPlaceRecordLoaders.setEventNameRescheduleSelf("someEvent1");
+        scheduleInPlaceRecordLoaders.setEventNameComplete(null);
+        scheduleInPlaceRecordLoaders.afterPropertiesSet();
+    }
+
+    @Test(expected = Exception.class)
+    public void testNullScheduleDeclareInPlaceRecordEvent() throws Exception
+    {
+        scheduleInPlaceRecordLoaders.setMaxActiveLoaders(8);
+        scheduleInPlaceRecordLoaders.setCollabSiteId("someSiteID");
+        scheduleInPlaceRecordLoaders.setCollabSitePaths("path1");
+        scheduleInPlaceRecordLoaders.setUsername("someUser");
+        scheduleInPlaceRecordLoaders.setPassword("somePassword");
+        scheduleInPlaceRecordLoaders.setEventNameRescheduleSelf("someEvent1");
+        scheduleInPlaceRecordLoaders.setEventNameComplete("someEvent2");
+        scheduleInPlaceRecordLoaders.setEventNameDeclareInPlaceRecord(null);
+        scheduleInPlaceRecordLoaders.afterPropertiesSet();
+    }
+
+    @Test(expected = Exception.class)
+    public void testNullRecordsToDeclare() throws Exception
+    {
+        scheduleInPlaceRecordLoaders.setMaxActiveLoaders(8);
+        scheduleInPlaceRecordLoaders.setCollabSiteId("someSiteID");
+        scheduleInPlaceRecordLoaders.setCollabSitePaths("path1");
+        scheduleInPlaceRecordLoaders.setUsername("someUser");
+        scheduleInPlaceRecordLoaders.setPassword("somePassword");
+        scheduleInPlaceRecordLoaders.setEventNameRescheduleSelf("someEvent1");
+        scheduleInPlaceRecordLoaders.setEventNameComplete("someEvent2");
+        scheduleInPlaceRecordLoaders.setEventNameDeclareInPlaceRecord("someEvent3");
+        scheduleInPlaceRecordLoaders.afterPropertiesSet();
+    }
+
+    @Test
+    public void testAfterPropertiesSuccess() throws Exception
+    {
+        scheduleInPlaceRecordLoaders.setMaxActiveLoaders(8);
+        scheduleInPlaceRecordLoaders.setCollabSiteId("someSiteID");
+        scheduleInPlaceRecordLoaders.setCollabSitePaths("path1");
+        scheduleInPlaceRecordLoaders.setUsername("someUser");
+        scheduleInPlaceRecordLoaders.setPassword("somePassword");
+        scheduleInPlaceRecordLoaders.setEventNameRescheduleSelf("someEvent1");
+        scheduleInPlaceRecordLoaders.setEventNameComplete("someEvent2");
+        scheduleInPlaceRecordLoaders.setEventNameDeclareInPlaceRecord("someEvent3");
+        scheduleInPlaceRecordLoaders.setRecordsToDeclare("");
+        scheduleInPlaceRecordLoaders.afterPropertiesSet();
+    }
 }
