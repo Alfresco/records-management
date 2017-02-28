@@ -21,7 +21,6 @@ package org.alfresco.bm.dataload.rm.records;
 import static org.alfresco.bm.data.DataCreationState.Created;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
