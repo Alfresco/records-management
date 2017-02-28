@@ -21,7 +21,6 @@ package org.alfresco.bm.dataload.rm.fileplan;
 
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.RECORD_CATEGORY_TYPE;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.RECORD_FOLDER_TYPE;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,13 +33,19 @@ import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.rest.core.RestAPIFactory;
+import org.alfresco.bm.user.UserData;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * FilePlan structure creation event.
+ *
+ * @author Silviu Dinuta
+ * @since 2.6
+ *
+ */
 public class LoadFilePlan extends RMBaseEventProcessor
 {
 
@@ -51,10 +56,6 @@ public class LoadFilePlan extends RMBaseEventProcessor
     private long loadFilePlanDelay = DEFAULT_LOAD_FILEPLAN_DELAY;
 
     private String eventNameRecordCategoryLoaded;
-
-    @Autowired
-    private RestAPIFactory restAPIFactory;
-
 
     public String getEventNameRecordCategoryLoaded()
     {
@@ -100,9 +101,8 @@ public class LoadFilePlan extends RMBaseEventProcessor
         Integer rootCategoriesToCreate = (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE);
         Integer categoriesToCreate = (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE);
         Integer foldersToCreate = (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE);
-        String siteManager = (String) dataObj.get(FIELD_SITE_MANAGER);
         if (context == null || path == null || foldersToCreate == null || categoriesToCreate == null
-                    || rootCategoriesToCreate == null || isBlank(siteManager))
+                    || rootCategoriesToCreate == null)
         {
             return new EventResult("Request data not complete for folder loading: " + dataObj, false);
         }
@@ -120,24 +120,40 @@ public class LoadFilePlan extends RMBaseEventProcessor
             return new EventResult("Load scheduling should create a session for each loader.", false);
         }
 
-        return loadCategory(folder, rootCategoriesToCreate, categoriesToCreate, foldersToCreate, siteManager);
+        return loadCategory(folder, rootCategoriesToCreate, categoriesToCreate, foldersToCreate);
     }
 
+    /**
+     * Helper method that creates specified number of root record categories if the specified container is the filePlan,
+     * specified number of record categories and record folder children if the container is a record category,
+     * or only specified number of record folders if we are on the last level or record categories.
+     *
+     * @param container - filePlan, root record category, or ordinary record category
+     * @param rootFoldersToCreate - number of root record categories to create
+     * @param categoriesToCreate - number of record category children
+     * @param foldersToCreate - number of record folder children
+     * @return EventResult - the loading result or error if there was an exception on loading
+     * @throws IOException
+     */
     private EventResult loadCategory(FolderData container, int rootCategoriesToCreate, int categoriesToCreate,
-                int foldersToCreate, String siteManager) throws IOException
+                int foldersToCreate) throws IOException
     {
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(siteManager, siteManager));
+        UserData user = getRandomUser(logger);
+        String username = user.getUsername();
+        String password = user.getPassword();
+        UserModel userModel = new UserModel(username, password);
+        FilePlanComponentAPI api = getRestAPIFactory().getFilePlanComponentsAPI(userModel);
 
         try
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
-            FilePlanComponent filePlanComponent = api.getFilePlanComponent(container.getId(), "include=path");
+            FilePlanComponent filePlanComponent = api.getFilePlanComponent(container.getId());
 
             // Create root categories
             if(rootCategoriesToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, rootCategoriesToCreate,
+                createFilePlanComponent(container, userModel, filePlanComponent, rootCategoriesToCreate,
                             ROOT_CATEGORY_NAME_IDENTIFIER,
                             RECORD_CATEGORY_TYPE, RECORD_CATEGORY_CONTEXT, loadFilePlanDelay);
                 super.suspendTimer();
@@ -149,7 +165,7 @@ public class LoadFilePlan extends RMBaseEventProcessor
             if(categoriesToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, categoriesToCreate,
+                createFilePlanComponent(container, userModel, filePlanComponent, categoriesToCreate,
                             CATEGORY_NAME_IDENTIFIER,
                             RECORD_CATEGORY_TYPE, RECORD_CATEGORY_CONTEXT, loadFilePlanDelay);
                 super.suspendTimer();
@@ -161,7 +177,7 @@ public class LoadFilePlan extends RMBaseEventProcessor
             if(foldersToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, foldersToCreate,
+                createFilePlanComponent(container, userModel, filePlanComponent, foldersToCreate,
                             RECORD_FOLDER_NAME_IDENTIFIER,
                             RECORD_FOLDER_TYPE, RECORD_FOLDER_CONTEXT, loadFilePlanDelay);
                 super.suspendTimer();
@@ -179,7 +195,7 @@ public class LoadFilePlan extends RMBaseEventProcessor
                         .add("msg", "Created " + rootCategoriesToCreate + " root categories, " + categoriesToCreate + " categories and " + foldersToCreate
                                     + " record folders.")
                         .add("path", container.getPath())
-                        .add("username", siteManager).get();
+                        .add("username", username).get();
 
             return new EventResult(resultData, scheduleEvents);
         }
@@ -188,7 +204,7 @@ public class LoadFilePlan extends RMBaseEventProcessor
             String error = e.getMessage();
             String stack = ExceptionUtils.getStackTrace(e);
             // Grab REST API information
-            DBObject data = BasicDBObjectBuilder.start().append("error", error).append("username", siteManager)
+            DBObject data = BasicDBObjectBuilder.start().append("error", error).append("username", username)
                         .append("path", container.getPath()).append("stack", stack).get();
             // Build failure result
             return new EventResult(data, false);

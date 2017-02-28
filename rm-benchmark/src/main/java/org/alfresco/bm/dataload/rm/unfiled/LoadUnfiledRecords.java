@@ -19,8 +19,6 @@
 
 package org.alfresco.bm.dataload.rm.unfiled;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +30,11 @@ import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.rest.core.RestAPIFactory;
+import org.alfresco.bm.user.UserData;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Unfiled records creation event
@@ -52,9 +48,6 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
 
     public static final String EVENT_NAME_UNFILED_RECORDS_LOADED = "unfiledRecordsLoaded";
     public static final long DEFAULT_LOAD_UNFILED_RECORD_DELAY = 100L;
-
-    @Autowired
-    private RestAPIFactory restAPIFactory;
 
     private String eventNameUnfiledRecordsLoaded = EVENT_NAME_UNFILED_RECORDS_LOADED;
     private long loadUnfiledRecordDelay = DEFAULT_LOAD_UNFILED_RECORD_DELAY;
@@ -97,8 +90,7 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
         String context = (String) dataObj.get(FIELD_CONTEXT);
         String path = (String) dataObj.get(FIELD_PATH);
         Integer recordsToCreate = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-        String siteManager = (String) dataObj.get(FIELD_SITE_MANAGER);
-        if (context == null || path == null || recordsToCreate == null || isBlank(siteManager))
+        if (context == null || path == null || recordsToCreate == null)
         {
             return new EventResult("Request data not complete for records loading: " + dataObj, false);
         }
@@ -116,13 +108,25 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
             return new EventResult("Load scheduling should create a session for each loader.",false);
         }
 
-        return loadRecords(folder, recordsToCreate, siteManager);
+        return loadRecords(folder, recordsToCreate);
     }
 
-    private EventResult loadRecords(FolderData container, int recordsToCreate, String siteManager)
+    /**
+     * Helper method that load specified numbers of unfiled records in specified unfiled record container of unfiled record folder.
+     *
+     * @param container - unfiled record container, or an unfiled record folder
+     * @param recordsToCreate - number of records to create
+     * @return EventResult - the loading result or error if there was an exception on loading
+     * @throws IOException
+     */
+    private EventResult loadRecords(FolderData container, int recordsToCreate)
                 throws IOException
     {
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(siteManager, siteManager));
+        UserData user = getRandomUser(logger);
+        String username = user.getUsername();
+        String password = user.getPassword();
+        UserModel userModel = new UserModel(username, password);
+        FilePlanComponentAPI api = getRestAPIFactory().getFilePlanComponentsAPI(userModel);
         try
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
@@ -134,7 +138,7 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
                 super.resumeTimer();
                 //TODO uncomment this and remove createRecord when RM-4564 issue is fixed
                 //uploadElectronicRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
-                createRecord(container, api, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, FilePlanComponentType.NON_ELECTRONIC_RECORD_TYPE.toString(), loadUnfiledRecordDelay);
+                createRecord(container, userModel, filePlanComponent, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
                 super.suspendTimer();
                 // Clean up the lock
                 String lockedPath = container.getPath() + "/locked";
@@ -150,7 +154,7 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
             DBObject resultData = BasicDBObjectBuilder.start()
                         .add("msg", "Created " + recordsToCreate + " records.")
                         .add("path", container.getPath())
-                        .add("username", siteManager)
+                        .add("username", username)
                         .get();
 
             return new EventResult(resultData, scheduleEvents);
@@ -162,7 +166,7 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
             // Grab REST API information
             DBObject data = BasicDBObjectBuilder.start()
                         .append("error", error)
-                        .append("username", siteManager)
+                        .append("username", username)
                         .append("path", container.getPath())
                         .append("stack", stack)
                         .get();

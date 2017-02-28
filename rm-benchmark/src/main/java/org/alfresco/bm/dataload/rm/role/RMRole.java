@@ -24,15 +24,16 @@ import java.util.Random;
  * Site membership role based on record management site.
  *
  * @author Michael Suzuki
+ * @author Silviu Dinuta
  * @since 2.6
  */
 public enum RMRole
 {
-    USER,
-    POWER_USER,
-    SECURITY_OFFICER,
-    RECORDS_MANAGER,
-    ADMINISTRATOR;
+    User,
+    PowerUser,
+    SecurityOfficer,
+    RecordsManager,
+    Administrator;
 
     private static Random random = new Random();
 

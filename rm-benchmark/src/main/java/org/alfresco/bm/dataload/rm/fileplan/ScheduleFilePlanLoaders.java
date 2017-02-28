@@ -33,6 +33,12 @@ import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Prepare event for loading root categories, record categories and record folders.
+ *
+ * @author Silviu Dinuta
+ * @since 2.6
+ */
 public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
 {
     public static final String EVENT_NAME_LOAD_RECORD_CATEGORIES = "loadRecordCategories";
@@ -51,7 +57,6 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     private int categoryNumber;
     private int childCategNumberVariance;
     private boolean folderCategoryMix;
-    private String username;
 
     private String eventNameLoadRecordCategories = EVENT_NAME_LOAD_RECORD_CATEGORIES;
     private String eventNameScheduleLoaders = EVENT_NAME_SCHEDULE_LOADERS;
@@ -186,22 +191,6 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @return the username
-     */
-    public String getUsername()
-    {
-        return username;
-    }
-
-    /**
-     * @param username the username to set
-     */
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
-
-    /**
      * @return the filePlanDepth
      */
     public int getCategoryStructureDepth()
@@ -277,6 +266,12 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         return result;
     }
 
+    /**
+     * Helper method for preparing the events that load the root record categories.
+     *
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
+     */
     private void prepareRootCategories(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         int skip = 0;
@@ -314,7 +309,6 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
                                 .add(FIELD_ROOT_CATEGORIES_TO_CREATE, Integer.valueOf(rootCategoriesToCreate))
                                 .add(FIELD_CATEGORIES_TO_CREATE, Integer.valueOf(0))
                                 .add(FIELD_FOLDERS_TO_CREATE, Integer.valueOf(0))
-                                .add(FIELD_SITE_MANAGER, username)
                                 .get();
                     Event loadEvent = new Event(eventNameLoadRecordCategories, loadData);
                     // Each load event must be associated with a session
@@ -338,6 +332,12 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         }
     }
 
+    /**
+     * Helper method for preparing the load events for record categories children and record folders children without the last level of record folders.
+     *
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
+     */
     private void prepareSubCategoriesAndRecordFolders(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         int skip = 0;
@@ -388,7 +388,6 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
                                 .add(FIELD_ROOT_CATEGORIES_TO_CREATE, Integer.valueOf(0))
                                 .add(FIELD_CATEGORIES_TO_CREATE, Integer.valueOf(categoriesToCreate))
                                 .add(FIELD_FOLDERS_TO_CREATE, Integer.valueOf(foldersToCreate))
-                                .add(FIELD_SITE_MANAGER, username)
                                 .get();
                     Event loadEvent = new Event(eventNameLoadRecordCategories, loadData);
                     // Each load event must be associated with a session
@@ -412,6 +411,12 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         }
     }
 
+    /**
+     * Helper method for preparing the load events for record folders children from the last level.
+     *
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
+     */
     private void prepareRecordFoldersOnLowestLevel(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         int skip = 0;
@@ -456,7 +461,6 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
                                 .add(FIELD_ROOT_CATEGORIES_TO_CREATE, Integer.valueOf(0))
                                 .add(FIELD_CATEGORIES_TO_CREATE, Integer.valueOf(0))
                                 .add(FIELD_FOLDERS_TO_CREATE, Integer.valueOf(foldersToCreate))
-                                .add(FIELD_SITE_MANAGER, username)
                                 .get();
                     Event loadEvent = new Event(eventNameLoadRecordCategories, loadData);
                     // Each load event must be associated with a session

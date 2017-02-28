@@ -20,7 +20,6 @@
 package org.alfresco.bm.dataload.rm.unfiled;
 
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.UNFILED_RECORD_FOLDER_TYPE;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,12 +32,11 @@ import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.rest.core.RestAPIFactory;
+import org.alfresco.bm.user.UserData;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Unfiled record folders structure creation event
@@ -53,9 +51,6 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
 
     private String eventNameUnfiledRecordFoldersLoaded;
     private long loadUnfiledRecordFolderDelay = DEFAULT_LOAD_UNFILED_RECORD_FOLDER_DELAY;
-
-    @Autowired
-    private RestAPIFactory restAPIFactory;
 
     public String getEventNameUnfiledRecordFoldersLoaded()
     {
@@ -100,8 +95,7 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
         String path = (String) dataObj.get(FIELD_PATH);
         Integer rootFoldersToCreate = (Integer) dataObj.get(FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE);
         Integer foldersToCreate = (Integer) dataObj.get(FIELD_UNFILED_FOLDERS_TO_CREATE);
-        String siteManager = (String) dataObj.get(FIELD_SITE_MANAGER);
-        if (context == null || path == null || rootFoldersToCreate == null || foldersToCreate == null || isBlank(siteManager))
+        if (context == null || path == null || rootFoldersToCreate == null || foldersToCreate == null)
         {
             return new EventResult("Request data not complete for folder loading: " + dataObj, false);
         }
@@ -119,24 +113,38 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
             return new EventResult("Load scheduling should create a session for each loader.",false);
         }
 
-        return loadUnfiledRecordFolder(folder, rootFoldersToCreate, foldersToCreate, siteManager);
+        return loadUnfiledRecordFolder(folder, rootFoldersToCreate, foldersToCreate);
     }
 
-    private EventResult loadUnfiledRecordFolder(FolderData container, int rootFoldersToCreate, int foldersToCreate, String siteManager)
+    /**
+     * Helper method that creates specified number of root unfiled record folders if the specified container is unfiled record container,
+     * or specified number of unfiled record folder children if the container is a root unfiled record folder or an ordinary unfiled record folder.
+     *
+     * @param container - unfiled record container, or an unfiled record folder
+     * @param rootFoldersToCreate - number of root unfiled record folders to create
+     * @param foldersToCreate - number of unfiled record folder children
+     * @return EventResult - the loading result or error if there was an exception on loading
+     * @throws IOException
+     */
+    private EventResult loadUnfiledRecordFolder(FolderData container, int rootFoldersToCreate, int foldersToCreate)
                 throws IOException
     {
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(siteManager, siteManager));
+        UserData user = getRandomUser(logger);
+        String username = user.getUsername();
+        String password = user.getPassword();
+        UserModel userModel = new UserModel(username, password);
+        FilePlanComponentAPI api = getRestAPIFactory().getFilePlanComponentsAPI(userModel);
 
         try
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
-            FilePlanComponent filePlanComponent = api.getFilePlanComponent(container.getId(), "include=path");
+            FilePlanComponent filePlanComponent = api.getFilePlanComponent(container.getId());
 
             //Create root unfiled record folders
             if(rootFoldersToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, rootFoldersToCreate, ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, UNFILED_RECORD_FOLDER_TYPE,
+                createFilePlanComponent(container, userModel, filePlanComponent, rootFoldersToCreate, ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, UNFILED_RECORD_FOLDER_TYPE,
                                         container.getContext(), loadUnfiledRecordFolderDelay);
                 super.suspendTimer();
                 String lockedPath = container.getPath() + "/locked";
@@ -147,7 +155,7 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
             if(foldersToCreate > 0)
             {
                 super.resumeTimer();
-                createFilePlanComponent(container, api, filePlanComponent, foldersToCreate, UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, UNFILED_RECORD_FOLDER_TYPE,
+                createFilePlanComponent(container, userModel, filePlanComponent, foldersToCreate, UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, UNFILED_RECORD_FOLDER_TYPE,
                                         container.getContext(), loadUnfiledRecordFolderDelay);
                 super.suspendTimer();
                 // Clean up the lock
@@ -164,7 +172,7 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
             DBObject resultData = BasicDBObjectBuilder.start()
                         .add("msg", "Created " + rootFoldersToCreate + " root unfiled record folders and " + foldersToCreate + " unfiled folders children.")
                         .add("path", container.getPath())
-                        .add("username", siteManager)
+                        .add("username", username)
                         .get();
 
             return new EventResult(resultData, scheduleEvents);
@@ -176,7 +184,7 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
             // Grab REST API information
             DBObject data = BasicDBObjectBuilder.start()
                         .append("error", error)
-                        .append("username", siteManager)
+                        .append("username", username)
                         .append("path", container.getPath())
                         .append("stack", stack)
                         .get();

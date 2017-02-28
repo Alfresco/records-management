@@ -35,11 +35,18 @@ import com.mongodb.DBObject;
 
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
+import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.RMEventConstants;
+import org.alfresco.bm.dataload.rm.role.RMRole;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.file.TestFileService;
 import org.alfresco.bm.session.SessionService;
+import org.alfresco.bm.site.SiteData;
+import org.alfresco.bm.site.SiteDataService;
+import org.alfresco.bm.site.SiteMemberData;
+import org.alfresco.bm.user.UserData;
+import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
@@ -51,6 +58,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Unit tests for LoadRecordsUnitTest
@@ -75,6 +83,15 @@ public class LoadRecordsUnitTest implements RMEventConstants
 
     @Mock
     private TestFileService mockedTestFileService;
+
+    @Mock
+    private UserDataService mockedUserDataService;
+
+    @Mock
+    private SiteDataService mockedSiteDataService;
+
+    @Mock
+    private ApplicationContext mockedApplicationContext;
 
     @InjectMocks
     private LoadRecords loadRecords;
@@ -135,38 +152,6 @@ public class LoadRecordsUnitTest implements RMEventConstants
         assertEquals(0, result.getNextEvents().size());
     }
 
-    @Test
-    public void testWithNullSiteManager() throws Exception
-    {
-        Event mockedEvent = mock(Event.class);
-        DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
-        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-        when(mockedData.get(FIELD_RECORDS_TO_CREATE)).thenReturn(Integer.valueOf(0));
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(null);
-        when(mockedEvent.getData()).thenReturn(mockedData);
-        EventResult result = loadRecords.processEvent(mockedEvent, new StopWatch());
-        assertEquals(false, result.isSuccess());
-        assertEquals("Request data not complete for records loading: " + mockedData, result.getData());
-        assertEquals(0, result.getNextEvents().size());
-    }
-
-    @Test
-    public void testWithBlankSiteManager() throws Exception
-    {
-        Event mockedEvent = mock(Event.class);
-        DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
-        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-        when(mockedData.get(FIELD_RECORDS_TO_CREATE)).thenReturn(Integer.valueOf(0));
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn("");
-        when(mockedEvent.getData()).thenReturn(mockedData);
-        EventResult result = loadRecords.processEvent(mockedEvent, new StopWatch());
-        assertEquals(false, result.isSuccess());
-        assertEquals("Request data not complete for records loading: " + mockedData, result.getData());
-        assertEquals(0, result.getNextEvents().size());
-    }
-
     @Test(expected=IllegalStateException.class)
     public void testInexistentFolderForContextAndPath() throws Exception
     {
@@ -175,7 +160,6 @@ public class LoadRecordsUnitTest implements RMEventConstants
         when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
         when(mockedData.get(FIELD_RECORDS_TO_CREATE)).thenReturn(Integer.valueOf(0));
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn("aUser");
         when(mockedEvent.getData()).thenReturn(mockedData);
         when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(null);
 
@@ -190,7 +174,6 @@ public class LoadRecordsUnitTest implements RMEventConstants
         when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
         when(mockedData.get(FIELD_RECORDS_TO_CREATE)).thenReturn(Integer.valueOf(0));
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn("aUser");
         when(mockedEvent.getData()).thenReturn(mockedData);
         FolderData mockedFolder = mock(FolderData.class);
         when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
@@ -211,7 +194,6 @@ public class LoadRecordsUnitTest implements RMEventConstants
         when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
         when(mockedData.get(FIELD_RECORDS_TO_CREATE)).thenReturn(Integer.valueOf(recordsToCreate));
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn("aUser");
         when(mockedEvent.getData()).thenReturn(mockedData);
 
         FolderData mockedFolder = mock(FolderData.class);
@@ -224,6 +206,7 @@ public class LoadRecordsUnitTest implements RMEventConstants
         FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
 
+        mockSiteAndUserData();
         EventResult result = loadRecords.processEvent(mockedEvent, new StopWatch());
         verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
         verify(mockedTestFileService, never()).getFile();
@@ -253,7 +236,6 @@ public class LoadRecordsUnitTest implements RMEventConstants
         when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
         when(mockedData.get(FIELD_RECORDS_TO_CREATE)).thenReturn(Integer.valueOf(recordsToCreate));
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn("aUser");
         when(mockedEvent.getData()).thenReturn(mockedData);
 
         FolderData mockedFolder = mock(FolderData.class);
@@ -271,6 +253,7 @@ public class LoadRecordsUnitTest implements RMEventConstants
 //        Mockito.doThrow(new Exception("someError")).when(mockedFilePlanComponentAPI).createElectronicRecord(any(FilePlanComponent.class), any(File.class), any(String.class));
         Mockito.doThrow(new Exception("someError")).when(mockedFilePlanComponentAPI).createFilePlanComponent(any(FilePlanComponent.class), any(String.class));
 
+        mockSiteAndUserData();
         EventResult result = loadRecords.processEvent(mockedEvent, new StopWatch());
         verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
 
@@ -303,7 +286,6 @@ public class LoadRecordsUnitTest implements RMEventConstants
 //        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
 //        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
 //        when(mockedData.get(FIELD_RECORDS_TO_CREATE)).thenReturn(Integer.valueOf(recordsToCreate));
-//        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn("aUser");
 //        when(mockedEvent.getData()).thenReturn(mockedData);
 //
 //        FolderData mockedFolder = mock(FolderData.class);
@@ -316,7 +298,7 @@ public class LoadRecordsUnitTest implements RMEventConstants
 //        FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
 //        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
 //
-//
+//        mockSiteAndUserData();
 //        EventResult result = loadRecords.processEvent(mockedEvent, new StopWatch());
 //        verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
 //        verify(mockedTestFileService, times(1)).getFile();
@@ -343,7 +325,6 @@ public class LoadRecordsUnitTest implements RMEventConstants
         when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
         when(mockedData.get(FIELD_RECORDS_TO_CREATE)).thenReturn(Integer.valueOf(recordsToCreate));
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn("aUser");
         when(mockedEvent.getData()).thenReturn(mockedData);
 
         FolderData mockedFolder = mock(FolderData.class);
@@ -359,6 +340,7 @@ public class LoadRecordsUnitTest implements RMEventConstants
         File mockedFile = mock(File.class);
         when(mockedTestFileService.getFile()).thenReturn(mockedFile);
 
+        mockSiteAndUserData();
         EventResult result = loadRecords.processEvent(mockedEvent, new StopWatch());
 
         verify(mockedFileFolderService, times(1)).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
@@ -378,5 +360,22 @@ public class LoadRecordsUnitTest implements RMEventConstants
         DBObject eventData = (DBObject) event.getData();
         assertEquals("someContext", eventData.get(FIELD_CONTEXT));
         assertEquals("/aPath", eventData.get(FIELD_PATH));
+    }
+
+    /**
+     * Helper method for mocking user data
+     */
+    private void mockSiteAndUserData()
+    {
+        SiteData mockedSiteData = mock(SiteData.class);
+        when(mockedSiteDataService.getSite(PATH_SNIPPET_RM_SITE_ID)).thenReturn(mockedSiteData);
+        SiteMemberData mockedSiteMemberData = mock(SiteMemberData.class);
+        when(mockedSiteMemberData.getUsername()).thenReturn("aUser");
+        when(mockedSiteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.Administrator.toString())).thenReturn(mockedSiteMemberData);
+        UserData mockedUserData = mock(UserData.class);
+        when(mockedUserData.getUsername()).thenReturn("aUser");
+        when(mockedUserData.getPassword()).thenReturn("aUser");
+        when(mockedUserDataService.findUserByUsername("aUser")).thenReturn(mockedUserData);
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestApiFactory);
     }
 }

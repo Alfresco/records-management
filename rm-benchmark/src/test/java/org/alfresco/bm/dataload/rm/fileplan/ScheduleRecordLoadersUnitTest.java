@@ -41,7 +41,6 @@ import org.alfresco.bm.session.SessionService;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
-import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +48,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
 
 import com.mongodb.DBObject;
 
@@ -74,6 +74,9 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
     @Mock
     private FilePlanComponentAPI mockedFilePlanComponentAPI;
+
+    @Mock
+    private ApplicationContext mockedApplicationContext;
 
     @InjectMocks
     private ScheduleRecordLoaders scheduleRecordLoaders;
@@ -123,13 +126,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         int maxActiveLoaders = 8;
         int recordsNumber = 4;
         String paths = EMPTY_CONTEXT;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         String path1 = RECORD_CONTAINER_PATH + "/RootCateg1/recordFolder1";
         FolderData mockedRecordFolder1 = mock(FolderData.class);
@@ -145,7 +146,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedRecordFolder2.getPath()).thenReturn(path2);
         when(mockedFileFolderService.getFolder(RECORD_FOLDER_CONTEXT, path2)).thenReturn(mockedRecordFolder2);
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
 
         //returns record folders
         when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1, mockedRecordFolder2));
@@ -173,7 +174,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(path1, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadRecords", secondEvent.getName());
@@ -182,7 +182,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(path2, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(recordsNumber, value1 + value2);
         }
         else
@@ -205,13 +204,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         String entirePath1 = RECORD_CONTAINER_PATH + configuredPath1;
         String entirePath2 = RECORD_CONTAINER_PATH + configuredPath2;
         String paths = configuredPath1 + "," + configuredPath2;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         FolderData mockedRecordFolder1 = mock(FolderData.class);
         when(mockedRecordFolder1.getId()).thenReturn("recordFolder1Id");
@@ -225,7 +222,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedRecordFolder2.getPath()).thenReturn(entirePath2);
         when(mockedFileFolderService.getFolder(RECORD_FOLDER_CONTEXT, entirePath2)).thenReturn(mockedRecordFolder2);
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
 
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
@@ -247,7 +244,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadRecords", secondEvent.getName());
@@ -256,7 +252,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(entirePath2, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(recordsNumber, value1 + value2);
         }
         else
@@ -279,13 +274,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         String entirePath1 = RECORD_CONTAINER_PATH + configuredPath1;
         String entirePath2 = RECORD_CONTAINER_PATH + configuredPath2;
         String paths = configuredPath1 + "," + configuredPath2;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         FolderData mockedRecordCategory = mock(FolderData.class);
         when(mockedRecordCategory.getId()).thenReturn("recordCategoryId1");
@@ -303,7 +296,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1));
         when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<FolderData>());
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
 
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
@@ -323,7 +316,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals(entirePath2, (String) dataObj.get(FIELD_PATH));
         int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
         assertEquals(recordsNumber, value);
 
         assertEquals("scheduleRecordLoaders", result.getNextEvents().get(1).getName());
@@ -337,13 +329,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         String configuredPath1 = "/e1/e2/e3";
         String entirePath1 = RECORD_CONTAINER_PATH + configuredPath1;
         String paths = configuredPath1;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         FolderData mockedRecordCategory = mock(FolderData.class);
         when(mockedRecordCategory.getId()).thenReturn("recordCategoryId");
@@ -364,7 +354,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1));
         when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<FolderData>());
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
 
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
@@ -384,7 +374,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals(childPath, (String) dataObj.get(FIELD_PATH));
         int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
         assertEquals(recordsNumber, value);
 
         assertEquals("scheduleRecordLoaders", result.getNextEvents().get(1).getName());
@@ -398,13 +387,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         String configuredPath1 = "/e1/e2/e3";
         String configuredPath2 = "/e1/e2/e4";
         String paths = configuredPath1 + "," + configuredPath2;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         //file plan should be always there
         FolderData mockedFilePlanContainer = mock(FolderData.class);
@@ -413,7 +400,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFilePlanContainer.getPath()).thenReturn(RECORD_CONTAINER_PATH);
         when(mockedFileFolderService.getFolder(EMPTY_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(mockedFilePlanContainer);
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanContaineFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanContaineFilePlanComponent.getId()).thenReturn("filePlanId");
         when(mockedFilePlanComponentAPI.getFilePlanComponent("filePlanId")).thenReturn(mockedFilePlanContaineFilePlanComponent);
@@ -481,6 +468,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("e2Id"))).thenReturn(mockedE3FilePlanComponent)
                                                                                                           .thenReturn(mockedE4FilePlanComponent);
 
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestApiFactory);
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
         verify(mockedFileFolderService, times(4)).createNewFolder(any(String.class), any(String.class), any(String.class));
@@ -505,7 +493,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(e3Path, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadRecords", secondEvent.getName());
@@ -514,7 +501,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(e4Path, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(recordsNumber, value1 + value2);
         }
         else
@@ -534,13 +520,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         int recordsNumber = 4;
         String configuredPath1 = "/e1/e2/e3";
         String paths = configuredPath1;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         //file plan should be always there
         FolderData mockedFilePlanContainer = mock(FolderData.class);
@@ -549,7 +533,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFilePlanContainer.getPath()).thenReturn(RECORD_CONTAINER_PATH);
         when(mockedFileFolderService.getFolder(EMPTY_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(mockedFilePlanContainer);
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanContaineFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanContaineFilePlanComponent.getId()).thenReturn("filePlanId");
         when(mockedFilePlanComponentAPI.getFilePlanComponent("filePlanId")).thenReturn(mockedFilePlanContaineFilePlanComponent);
@@ -600,6 +584,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFileFolderService.getFolder("e3Id")).thenReturn(mockedE3);
         when(mockedFilePlanComponentAPI.createFilePlanComponent(any(FilePlanComponent.class), eq("e2Id"))).thenReturn(mockedE3FilePlanComponent);
 
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestApiFactory);
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
         verify(mockedFileFolderService, times(3)).createNewFolder(any(String.class), any(String.class), any(String.class));
@@ -620,7 +605,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         assertEquals(e3Path, (String) dataObj.get(FIELD_PATH));
         int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
         assertEquals(recordsNumber, value);
-        assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
         assertEquals("scheduleRecordLoaders", result.getNextEvents().get(1).getName());
     }
 
@@ -631,13 +615,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         int recordsNumber = 4;
         String configuredPath1 = "/e1";
         String paths = configuredPath1;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         //file plan should be always there
         FolderData mockedFilePlanContainer = mock(FolderData.class);
@@ -665,7 +647,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1, mockedRecordFolder2));
         when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<FolderData>());
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
         FilePlanComponent mockedFilePlanContaineFilePlanComponent = mock(FilePlanComponent.class);
         when(mockedFilePlanContaineFilePlanComponent.getId()).thenReturn("filePlanId");
         when(mockedFilePlanComponentAPI.getFilePlanComponent("filePlanId")).thenReturn(mockedFilePlanContaineFilePlanComponent);
@@ -700,7 +682,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(path1, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadRecords", secondEvent.getName());
@@ -709,7 +690,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(path2, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(recordsNumber, value1 + value2);
         }
         else
@@ -730,13 +710,11 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         String configuredPath1 = "/e1/e2/e3";
         String configuredPath2 = "/e1/e2/e4";
         String paths = configuredPath1 + "," + configuredPath2;
-        String username = "bob";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleRecordLoaders.setRecordsNumber(recordsNumber);
         scheduleRecordLoaders.setRecordFolderPaths(paths);
-        scheduleRecordLoaders.setUsername(username);
 
         String path1 = RECORD_CONTAINER_PATH + "/categ1/folder1";
         FolderData mockedRecordFolder1 = mock(FolderData.class);
@@ -752,7 +730,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedRecordFolder2.getPath()).thenReturn(path2);
         when(mockedFileFolderService.getFolder(RECORD_FOLDER_CONTEXT, path2)).thenReturn(mockedRecordFolder2);
 
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
+        when(mockedRestApiFactory.getFilePlanComponentsAPI()).thenReturn(mockedFilePlanComponentAPI);
 
         //returns available record folders
         when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1, mockedRecordFolder2));
@@ -779,7 +757,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(path1, (String) dataObj.get(FIELD_PATH));
             int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
 
             Event secondEvent = result.getNextEvents().get(1);
             assertEquals("loadRecords", secondEvent.getName());
@@ -788,7 +765,6 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
             assertEquals(path2, (String) dataObj.get(FIELD_PATH));
             int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(username, (String) dataObj.get(FIELD_SITE_MANAGER));
             assertEquals(recordsNumber, value1 + value2);
         }
         else

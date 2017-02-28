@@ -19,11 +19,19 @@
 
 package org.alfresco.bm.dataload;
 
+/**
+ * Interface that contains useful constants used in RM benchmark events.
+ *
+ * @author Silviu Dinuta
+ * @since 2.6
+ */
 public interface RMEventConstants
 {
-    public static final String FIELD_SITE_MANAGER = "siteManager";
     public static final String FIELD_CONTEXT = "context";
     public static final String FIELD_PATH = "path";
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_USERNAME = "username";
+    public static final String FIELD_PASSWORD = "password";
 
     public static final String FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE = "rootFoldersToCreate";
     public static final String FIELD_UNFILED_FOLDERS_TO_CREATE = "foldersToCreate";

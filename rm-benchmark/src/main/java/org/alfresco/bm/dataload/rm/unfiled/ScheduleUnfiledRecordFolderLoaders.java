@@ -56,7 +56,6 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
     private boolean createUnfiledRecordFolderStructure;
     private int rootUnfiledRecordFolderNumber;
     private long loadCheckDelay;
-    private String username;
     private int maxLevel;
     private String eventNameLoadUnfiledRecordFolders = EVENT_NAME_LOAD_UNFILED_RECORD_FOLDERS;
     private String eventNameScheduleLoaders = EVENT_NAME_SCHEDULE_LOADERS;
@@ -129,16 +128,6 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
         this.loadCheckDelay = loadCheckDelay;
     }
 
-    public String getUsername()
-    {
-        return username;
-    }
-
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
-
     public String getEventNameLoadUnfiledRecordFolders()
     {
         return eventNameLoadUnfiledRecordFolders;
@@ -202,7 +191,7 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
             List<FolderData> unfiledRecordContainer = fileFolderService.getChildFolders(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH, 0, 1);
             if(unfiledRecordContainer.size() == 0)
             {
-                return new EventResult("Unfiled Record Folders structure creation not wanted.", false);
+                return new EventResult("Unfiled Record Folders structure creation not wanted.",  new Event(eventNameLoadingComplete, null));
             }
             else
             {
@@ -246,6 +235,12 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
         return result;
     }
 
+    /**
+     * Helper method for preparing the events that load the root unfiled record folders.
+     *
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
+     */
     private void prepareRootUnfiledRecordFolders(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         int skip = 0;
@@ -286,7 +281,6 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
                                 .add(FIELD_PATH, emptyFolder.getPath())
                                 .add(FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE, Integer.valueOf(unfiledRecordFolderToCreate))
                                 .add(FIELD_UNFILED_FOLDERS_TO_CREATE, Integer.valueOf(0))
-                                .add(FIELD_SITE_MANAGER, username)
                                 .get();
                     Event loadEvent = new Event(eventNameLoadUnfiledRecordFolders, loadData);
                     // Each load event must be associated with a session
@@ -309,6 +303,12 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
         }
     }
 
+    /**
+     * Helper method for preparing the load of unfiled record folders children.
+     *
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
+     */
     private void prepareUnfiledRecordFolders(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         int skip = 0;
@@ -350,7 +350,6 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
                             .add(FIELD_PATH, emptyFolder.getPath())
                             .add(FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE, Integer.valueOf(0))
                             .add(FIELD_UNFILED_FOLDERS_TO_CREATE, Integer.valueOf(foldersToCreate))
-                            .add(FIELD_SITE_MANAGER, username)
                             .get();
                     Event loadEvent = new Event(eventNameLoadUnfiledRecordFolders, loadData);
                     // Each load event must be associated with a session
