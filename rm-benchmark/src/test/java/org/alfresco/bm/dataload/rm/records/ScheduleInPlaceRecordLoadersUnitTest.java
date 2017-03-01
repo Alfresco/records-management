@@ -19,9 +19,14 @@
 
 package org.alfresco.bm.dataload.rm.records;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-
-import static org.mockito.Mockito.any;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -29,9 +34,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
+import org.alfresco.bm.dataload.RMEventConstants;
+import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
 import org.alfresco.bm.site.SiteData;
@@ -47,15 +56,19 @@ import org.alfresco.rest.model.builder.NodesBuilder.NodeDetail;
 import org.alfresco.rest.requests.Node;
 import org.alfresco.rest.requests.Site;
 import org.alfresco.rest.requests.coreAPI.RestCoreAPI;
+import org.alfresco.utility.model.ContentModel;
 import org.alfresco.utility.model.RepoTestModel;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.social.alfresco.api.entities.Site.Visibility;
+
+import com.mongodb.DBObject;
 
 /**
  * Unit tests for ScheduleInPlaceRecordLoaders
@@ -89,18 +102,61 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         assertEquals(scheduleInPlaceRecordLoaders.getEventNameComplete(), result.getNextEvents().get(0).getName());
     }
 
+    /**
+     * Given the collaboration site exists and contains undeclared files with the following structure
+     * - documentLibrary
+     *   - file1
+     *   - file2
+     *   - folder
+     *     - file3
+     *     - file4
+     * When running the scheduler with numberOfRecordsToDeclare=0 
+     * Then all existing files should be scheduled for declaring
+     *  
+     * @throws Exception
+     */
     @Test
-    public void testWithNoRecordsToDeclare() throws Exception
+    public void testDeclareAllExistingFiles() throws Exception
     {
         String numberOfRecordsToDeclare = "0";
+        String siteId = "testSiteId";
+
+        /*
+         * Given
+         */
         scheduleInPlaceRecordLoaders.setEnabled(true);
         scheduleInPlaceRecordLoaders.setMaxActiveLoaders(8);
         scheduleInPlaceRecordLoaders.setRecordsToDeclare(numberOfRecordsToDeclare);
+        scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
+
+        scheduleInPlaceRecordLoaders.setCollabSiteId(siteId);
+        String documentLibrary = mockExistingCollaborationSite(siteId);
+
+        RestCoreAPI coreApi = mockCoreApiWithParams("where=(isPrimary=true)", "relativePath="+"");
+
+        String file1Id = "file1_id";
+        String file2Id = "file2_id";
+        String folderId = "folder_id";
+        List<RestNodeModel> level0Nodes = Arrays.asList(mockNode(file1Id, true), mockNode(file2Id, true), mockNode(folderId, false));
+        mockListChildren(coreApi, documentLibrary, "", false, level0Nodes);
+        
+        String file3Id = "file3_id";
+        String file4Id = "file4_id";
+        List<RestNodeModel> level1Nodes = Arrays.asList(mockNode(file3Id, true), mockNode(file4Id, true));
+        mockListChildren(coreApi, folderId, "", false, level1Nodes);
+
+        /*
+         * When
+         */
         EventResult result = scheduleInPlaceRecordLoaders.processEvent(null, new StopWatch());
+
+        /*
+         * Then
+         */
         assertEquals(true, result.isSuccess());
-        assertEquals(ScheduleInPlaceRecordLoaders.DONE_EVENT_MSG, result.getData());
-        assertEquals(1, result.getNextEvents().size());
-        assertEquals(scheduleInPlaceRecordLoaders.getEventNameComplete(), result.getNextEvents().get(0).getName());
+        assertEquals(5, result.getNextEvents().size());
+
+        validateFiredEvents(true, Arrays.asList(file1Id, file2Id, file3Id, file4Id), result);
     }
 
     @Test
@@ -892,5 +948,176 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         scheduleInPlaceRecordLoaders.setEventNameDeclareInPlaceRecord("someEvent3");
         scheduleInPlaceRecordLoaders.setRecordsToDeclare("");
         scheduleInPlaceRecordLoaders.afterPropertiesSet();
+    }
+
+    /**
+     * Utility method that mocks the retrieval of an existing collaboration site
+     *
+     * @return the id of the generated document library
+     * @throws Exception
+     */
+    private String mockExistingCollaborationSite(String siteId) throws Exception
+    {
+        String documentLibraryId = UUID.randomUUID().toString();
+
+        /*
+         * Mock the rest core API
+         */
+        RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
+        when(mockedCoreAPI.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
+
+        /*
+         * Mock the site
+         */
+        Site mockedSiteEndpoint = mock(Site.class);
+        when(mockedRestCoreAPI.usingSite(siteId.toLowerCase())).thenReturn(mockedSiteEndpoint);
+        RestSiteModel colabSite = mock(RestSiteModel.class);
+        when(mockedSiteEndpoint.getSite()).thenReturn(colabSite);
+        when(colabSite.getVisibility()).thenReturn(Visibility.PUBLIC);
+
+        /*
+         * Mock document library
+         */
+        RestSiteContainerModel mockedRestSiteContainerModel = mock(RestSiteContainerModel.class);
+        when(mockedRestSiteContainerModel.getId()).thenReturn(documentLibraryId);
+        when(mockedSiteEndpoint.getSiteContainer("documentLibrary")).thenReturn(mockedRestSiteContainerModel);
+
+        return documentLibraryId;
+    }
+
+    /**
+     * Utility method that mocks the core api with parameters
+     * 
+     * @param params parameters to use in the api
+     * @return the mocked core api
+     */
+    private RestCoreAPI mockCoreApiWithParams(String... params)
+    {
+        RestWrapper mockedRestWrapperWithParams = mock(RestWrapper.class);
+        when(mockedCoreAPI.withParams(params)).thenReturn(mockedRestWrapperWithParams);
+
+        RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
+        when(mockedRestWrapperWithParams.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
+
+        return mockedRestCoreAPI;
+    }
+ 
+    /**
+     * Utility method that mocks list children api call
+     * 
+     * @param mockedRestCoreAPI the core api to use
+     * @param currentNodeId the node to list from, request parameter 
+     * @param relativePath the relative path to use for the list, request parameter
+     * @param hasMoreItems whether the mocked paginated list has more items, response parameter
+     * @param children the list of children to return, response parameter
+     * @throws Exception
+     */
+    private void mockListChildren(RestCoreAPI mockedRestCoreAPI, String currentNodeId, String relativePath, boolean hasMoreItems, List<RestNodeModel> children) throws Exception
+    {
+        /*
+         * Mock the listChildren call
+         */
+        ArgumentMatcher<ContentModel> modelForCurrentNode = new ArgumentMatcher<ContentModel>() {
+            @Override
+            public boolean matches(Object argument) {
+                return ((ContentModel) argument).getNodeRef().equals(currentNodeId);
+            }
+        };
+        Node nodesEndpoint = mock(Node.class);
+        doReturn(nodesEndpoint).when(mockedRestCoreAPI).usingNode(argThat(modelForCurrentNode));
+
+        RestNodeModelsCollection childrenCollection = mock(RestNodeModelsCollection.class);
+        when(nodesEndpoint.listChildren()).thenReturn(childrenCollection);
+
+        /*
+         * Mock the results
+         */
+        RestPaginationModel mockedPagination = mock(RestPaginationModel.class);
+        when(childrenCollection.getPagination()).thenReturn(mockedPagination);
+        when(mockedPagination.isHasMoreItems()).thenReturn(hasMoreItems);
+        when(childrenCollection.getEntries()).thenReturn(children);
+    }
+
+    /**
+     * Utility method that mock a node model
+     * @param id the id of the node to mock
+     * @param isFile isFile value of the node to mock
+     * @return the mocked model for the file
+     * @throws Exception
+     */
+    private RestNodeModel mockNode(String id, boolean isFile) throws Exception
+    {
+        RestNodeModel node = mock(RestNodeModel.class);
+        RestNodeModel onModelNode = mock(RestNodeModel.class);
+        when(node.onModel()).thenReturn(onModelNode);
+
+        when(onModelNode.getId()).thenReturn(id);
+        when(onModelNode.getIsFile()).thenReturn(isFile);
+        return node;
+    }
+
+    /**
+     * Utility method that validates the list of events returned bu the scheduler
+     * 
+     * @param rescheduleSelfExpected whether we expect the event to reschedule itself
+     * @param expectedScheduledFileIds the list of files we expect to be scheduled for declare
+     * @param result the event result to validate
+     */
+    private void validateFiredEvents(boolean rescheduleSelfExpected, List<String> expectedScheduledFileIds, EventResult result)
+    {
+        boolean rescheduleSelfEventFired = false;
+        boolean doneEventFired = false;
+        List<String> scheduledFiles = new ArrayList<>();
+        for(Event event : result.getNextEvents())
+        {
+            if(event.getName().equals(scheduleInPlaceRecordLoaders.getEventNameRescheduleSelf()))
+            {
+                if(!rescheduleSelfExpected)
+                {
+                    fail("Reschedule self not expected but fired!");
+                }
+                if(rescheduleSelfEventFired)
+                {
+                    fail("Reschedule self fired multiple times!");
+                }
+                rescheduleSelfEventFired = true;
+            }
+            else if(event.getName().equals(scheduleInPlaceRecordLoaders.getEventNameComplete()))
+            {
+                if(rescheduleSelfExpected)
+                {
+                    fail("Reschedule self was expected but Done event was fired instead!");
+                }
+                if(doneEventFired)
+                {
+                    fail("Done event fired multiple times!");
+                }
+                doneEventFired = true;
+            }
+            else if(event.getName().equals(scheduleInPlaceRecordLoaders.getEventNameDeclareInPlaceRecord()))
+            {
+                DBObject dataObj = (DBObject) event.getData();
+                String id = (String) dataObj.get(RMEventConstants.FIELD_ID);
+                scheduledFiles.add(id);
+            }
+            else
+            {
+                fail("Unexpected event name " + event.getName());
+            }
+        }
+
+        assertFalse("Both reschedule self and done events were fired in the same time", rescheduleSelfEventFired && doneEventFired);
+        if(rescheduleSelfExpected)
+        {
+            assertTrue(rescheduleSelfEventFired);
+        }
+        else
+        {
+            assertTrue(doneEventFired);
+        }
+
+        assertArrayEquals(expectedScheduledFileIds.toArray(), scheduledFiles.toArray());
     }
 }
