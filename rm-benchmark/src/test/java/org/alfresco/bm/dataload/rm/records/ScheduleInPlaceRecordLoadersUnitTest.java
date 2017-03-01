@@ -79,6 +79,9 @@ import com.mongodb.DBObject;
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleInPlaceRecordLoadersUnitTest
 {
+    private final String DEFAULT_COLLABORATION_SITE_ID = "testSiteId";
+    private final int DEFAULT_MAX_ACTIVE_LOADERS = 8;
+
     @Mock
     private SiteDataService mockedSiteDataService;
 
@@ -86,7 +89,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
     private SessionService mockedSessionService;
 
     @Mock
-    private RestWrapper mockedCoreAPI;
+    private RestWrapper mockedRestWrapper;
 
     @InjectMocks
     private ScheduleInPlaceRecordLoaders scheduleInPlaceRecordLoaders;
@@ -118,32 +121,35 @@ public class ScheduleInPlaceRecordLoadersUnitTest
     @Test
     public void testDeclareAllExistingFiles() throws Exception
     {
-        String numberOfRecordsToDeclare = "0";
-        String siteId = "testSiteId";
+        String file1Id = "file1_id";
+        String file2Id = "file2_id";
+        String folderId = "folder_id";
+        String file3Id = "file3_id";
+        String file4Id = "file4_id";
 
         /*
          * Given
          */
         scheduleInPlaceRecordLoaders.setEnabled(true);
         scheduleInPlaceRecordLoaders.setMaxActiveLoaders(8);
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare(numberOfRecordsToDeclare);
+        scheduleInPlaceRecordLoaders.setCollabSiteId(DEFAULT_COLLABORATION_SITE_ID);
+        scheduleInPlaceRecordLoaders.setRecordsToDeclare("0");
         scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
 
-        scheduleInPlaceRecordLoaders.setCollabSiteId(siteId);
-        String documentLibrary = mockExistingCollaborationSite(siteId);
+        // mock the collaboration site
+        RestCoreAPI mockedCoreApi = mockCoreApi();
+        Site collabSite = mockSitesEndpoint(mockedCoreApi, DEFAULT_COLLABORATION_SITE_ID);
+        String documentLibrary = mockExistingCollaborationSite(collabSite, DEFAULT_COLLABORATION_SITE_ID, true);
 
-        RestCoreAPI coreApi = mockCoreApiWithParams("where=(isPrimary=true)", "relativePath="+"");
+        // mock listing the document library
+        Node doclibNode = mockNodesEndpoint(mockedCoreApi, documentLibrary);
+        List<RestNodeModel> level0Nodes = Arrays.asList(mockNodeModel(file1Id, true), mockNodeModel(file2Id, true), mockNodeModel(folderId, false));
+        mockListChildren(doclibNode, false, level0Nodes);
 
-        String file1Id = "file1_id";
-        String file2Id = "file2_id";
-        String folderId = "folder_id";
-        List<RestNodeModel> level0Nodes = Arrays.asList(mockNode(file1Id, true), mockNode(file2Id, true), mockNode(folderId, false));
-        mockListChildren(coreApi, documentLibrary, "", false, level0Nodes);
-        
-        String file3Id = "file3_id";
-        String file4Id = "file4_id";
-        List<RestNodeModel> level1Nodes = Arrays.asList(mockNode(file3Id, true), mockNode(file4Id, true));
-        mockListChildren(coreApi, folderId, "", false, level1Nodes);
+        // mock listing the folder
+        Node folderNode = mockNodesEndpoint(mockedCoreApi, folderId);
+        List<RestNodeModel> level1Nodes = Arrays.asList(mockNodeModel(file3Id, true), mockNodeModel(file4Id, true));
+        mockListChildren(folderNode, false, level1Nodes);
 
         /*
          * When
@@ -154,75 +160,68 @@ public class ScheduleInPlaceRecordLoadersUnitTest
          * Then
          */
         assertEquals(true, result.isSuccess());
-        assertEquals(5, result.getNextEvents().size());
-
-        validateFiredEvents(true, Arrays.asList(file1Id, file2Id, file3Id, file4Id), result);
+        List<String> scheduledFiles = Arrays.asList(file1Id, file2Id, file3Id, file4Id);
+        validateScheduleFilesOutputMessage(new ArrayList<String>(), scheduledFiles, (String)result.getData());
+        validateFiredEvents(true, scheduledFiles, result.getNextEvents());
     }
 
+    /**
+     * Given the collaboration site already exists and is loaded in the database
+     * When running the scheduler with numberOfRecordsToDeclare=1
+     * Then we don't attempt to load or create the site and 1 file is created and scheduled to be declared
+     * 
+     * @throws Exception
+     */
     @Test
     public void testDeclareRecordsColabSiteExistsAndLoadedInDb() throws Exception
     {
+        String fileID = UUID.randomUUID().toString();
+
+        /*
+         * Given
+         */
         String numberOfRecordsToDeclare = "1";
-        int maxActiveLoaders = 8;
-        String siteId = "testSiteId";
-        String documentLibraryId = UUID.randomUUID().toString();
         scheduleInPlaceRecordLoaders.setEnabled(true);
         scheduleInPlaceRecordLoaders.setRecordsToDeclare(numberOfRecordsToDeclare);
-        scheduleInPlaceRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
-        scheduleInPlaceRecordLoaders.setCollabSiteId(siteId);
+        scheduleInPlaceRecordLoaders.setMaxActiveLoaders(DEFAULT_MAX_ACTIVE_LOADERS);
+        scheduleInPlaceRecordLoaders.setCollabSiteId(DEFAULT_COLLABORATION_SITE_ID);
         scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
 
-        RestSiteModel mockedRestSiteModel = mock(RestSiteModel.class);
-        RestSiteContainerModel mockedRestSiteContainerModel = mock(RestSiteContainerModel.class);
-        when(mockedRestSiteContainerModel.getId()).thenReturn(documentLibraryId);
+        RestCoreAPI mockedRestCoreAPI = mockCoreApi();
+        Site mockedSitesEndpoint = mockSitesEndpoint(mockedRestCoreAPI, DEFAULT_COLLABORATION_SITE_ID);
+        String documentLibraryId = mockExistingCollaborationSite(mockedSitesEndpoint, DEFAULT_COLLABORATION_SITE_ID, true);
 
-        Site mockedSite = mock(Site.class);
-        when(mockedSite.getSite()).thenReturn(mockedRestSiteModel);
-        when(mockedSite.getSiteContainer("documentLibrary")).thenReturn(mockedRestSiteContainerModel);
+        Node doclibNodesEndpoint = mockNodesEndpoint(mockedRestCoreAPI, documentLibraryId);
 
+        mockListChildren(doclibNodesEndpoint, false, new ArrayList<RestNodeModel>());
 
-        RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
-        when(mockedRestCoreAPI.usingSite(siteId.toLowerCase())).thenReturn(mockedSite);
-
-        when(mockedCoreAPI.withCoreAPI()).thenReturn(mockedRestCoreAPI);
-        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
-
-        SiteData mockedSiteData = mock(SiteData.class);
-        when(mockedSiteDataService.getSite(siteId.toLowerCase())).thenReturn(mockedSiteData);
-
-        RestPaginationModel mockedPagination = mock(RestPaginationModel.class);
-        when(mockedPagination.isHasMoreItems()).thenReturn(false);
-        RestNodeModelsCollection mockedCollection = mock(RestNodeModelsCollection.class);
-        when(mockedCollection.getPagination()).thenReturn(mockedPagination);
-        Node mockedNode = mock(Node.class);
-        when(mockedNode.listChildren()).thenReturn(mockedCollection);
-        RestCoreAPI mockedRestCoreAPIWithParams = mock(RestCoreAPI.class);
-        when(mockedRestCoreAPIWithParams.usingNode(any(RepoTestModel.class))).thenReturn(mockedNode);
-        RestWrapper mockedRestWrapperWithParams = mock(RestWrapper.class);
-        when(mockedRestWrapperWithParams.withCoreAPI()).thenReturn(mockedRestCoreAPIWithParams);
-        when(mockedCoreAPI.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
-
-        //for creating files
-        NodeDetail mockedTargetNodeDetail = mock(NodeDetail.class);
+        // mock node builder
         NodesBuilder mockedNodeBuilder = mock(NodesBuilder.class);
-        when(mockedNodeBuilder.folder("AutoGeneratedFiles")).thenReturn(mockedTargetNodeDetail);
-        when(mockedNode.defineNodes()).thenReturn(mockedNodeBuilder);
-        when(mockedRestCoreAPI.usingNode(any(RepoTestModel.class))).thenReturn(mockedNode);
+        when(doclibNodesEndpoint.defineNodes()).thenReturn(mockedNodeBuilder);
 
+        // mock create folder helper method
+        NodeDetail mockedAutoGeneratedFolder = mock(NodeDetail.class);
+        when(mockedNodeBuilder.folder("AutoGeneratedFiles")).thenReturn(mockedAutoGeneratedFolder);
+
+        // mock create file
         NodeDetail mockedFile = mock(NodeDetail.class);
-        String fileID = UUID.randomUUID().toString();
         when(mockedFile.getId()).thenReturn(fileID);
-        when(mockedTargetNodeDetail.file("recordToBe")).thenReturn(mockedFile);
+        when(mockedAutoGeneratedFolder.file("recordToBe")).thenReturn(mockedFile);
 
+        /*
+         * When
+         */
         EventResult result = scheduleInPlaceRecordLoaders.processEvent(null, new StopWatch());
-        verify(mockedSite, never()).createSite();
+
+        /*
+         * Then
+         */
+        verify(mockedSitesEndpoint, never()).createSite();
         verify(mockedSiteDataService, never()).addSite(any(SiteData.class));
         assertEquals(true, result.isSuccess());
-        String template = "Preparing files to declare: \nCreated file {0}.Sheduled file to be declared as record: {1}. Raised further {2} events and rescheduled self.";
-        assertEquals(MessageFormat.format(template, fileID, fileID, 1), result.getData());
-        assertEquals(2, result.getNextEvents().size());
-        assertEquals(scheduleInPlaceRecordLoaders.getEventNameDeclareInPlaceRecord(), result.getNextEvents().get(0).getName());
-        assertEquals(scheduleInPlaceRecordLoaders.getEventNameRescheduleSelf(), result.getNextEvents().get(1).getName());
+        List<String> createdAndScheduledFiles = Arrays.asList(fileID);
+        validateScheduleFilesOutputMessage(createdAndScheduledFiles, createdAndScheduledFiles, (String)result.getData());
+        validateFiredEvents(true, Arrays.asList(fileID), result.getNextEvents());
     }
 
     @Test
@@ -250,8 +249,8 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
         when(mockedRestCoreAPI.usingSite(siteId.toLowerCase())).thenReturn(mockedSite);
 
-        when(mockedCoreAPI.withCoreAPI()).thenReturn(mockedRestCoreAPI);
-        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_NOT_FOUND));
+        when(mockedRestWrapper.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+        when(mockedRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_NOT_FOUND));
 
         SiteData mockedSiteData = mock(SiteData.class);
         when(mockedSiteDataService.getSite(siteId.toLowerCase())).thenReturn(mockedSiteData);
@@ -266,7 +265,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         when(mockedRestCoreAPIWithParams.usingNode(any(RepoTestModel.class))).thenReturn(mockedNode);
         RestWrapper mockedRestWrapperWithParams = mock(RestWrapper.class);
         when(mockedRestWrapperWithParams.withCoreAPI()).thenReturn(mockedRestCoreAPIWithParams);
-        when(mockedCoreAPI.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
+        when(mockedRestWrapper.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
 
         //for creating files
         NodeDetail mockedTargetNodeDetail = mock(NodeDetail.class);
@@ -326,8 +325,8 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
         when(mockedRestCoreAPI.usingSite(siteId.toLowerCase())).thenReturn(mockedSite);
 
-        when(mockedCoreAPI.withCoreAPI()).thenReturn(mockedRestCoreAPI);
-        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
+        when(mockedRestWrapper.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+        when(mockedRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
 
         when(mockedSiteDataService.getSite(siteId.toLowerCase())).thenReturn(null);
 
@@ -342,14 +341,14 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         when(mockedRestCoreAPI.usingNode(any(RepoTestModel.class))).thenReturn(mockedNode);
         RestWrapper mockedRestWrapperWithParams = mock(RestWrapper.class);
         when(mockedRestWrapperWithParams.withCoreAPI()).thenReturn(mockedRestCoreAPI);
-        when(mockedCoreAPI.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
+        when(mockedRestWrapper.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
 
         //for creating files
         NodeDetail mockedTargetNodeDetail = mock(NodeDetail.class);
         NodesBuilder mockedNodeBuilder = mock(NodesBuilder.class);
         when(mockedNodeBuilder.folder("AutoGeneratedFiles")).thenReturn(mockedTargetNodeDetail);
         when(mockedNode.defineNodes()).thenReturn(mockedNodeBuilder);
-        when(mockedCoreAPI.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+        when(mockedRestWrapper.withCoreAPI()).thenReturn(mockedRestCoreAPI);
 
         NodeDetail mockedFile = mock(NodeDetail.class);
         String fileID = UUID.randomUUID().toString();
@@ -403,8 +402,8 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
         when(mockedRestCoreAPI.usingSite(siteId.toLowerCase())).thenReturn(mockedSite);
 
-        when(mockedCoreAPI.withCoreAPI()).thenReturn(mockedRestCoreAPI);
-        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_NOT_FOUND));
+        when(mockedRestWrapper.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+        when(mockedRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_NOT_FOUND));
 
         when(mockedSiteDataService.getSite(siteId.toLowerCase())).thenReturn(null);
 
@@ -418,7 +417,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         when(mockedRestCoreAPIWithParams.usingNode(any(RepoTestModel.class))).thenReturn(mockedNode);
         RestWrapper mockedRestWrapperWithParams = mock(RestWrapper.class);
         when(mockedRestWrapperWithParams.withCoreAPI()).thenReturn(mockedRestCoreAPIWithParams);
-        when(mockedCoreAPI.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
+        when(mockedRestWrapper.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
 
         //for creating files
         NodeDetail mockedTargetNodeDetail = mock(NodeDetail.class);
@@ -464,12 +463,11 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         when(mockedSite.getSite()).thenReturn(mockedRestSiteModel);
         when(mockedSite.getSiteContainer("documentLibrary")).thenReturn(mockedRestSiteContainerModel);
 
-
         RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
         when(mockedRestCoreAPI.usingSite(siteId.toLowerCase())).thenReturn(mockedSite);
 
-        when(mockedCoreAPI.withCoreAPI()).thenReturn(mockedRestCoreAPI);
-        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
+        when(mockedRestWrapper.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+        when(mockedRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
 
         SiteData mockedSiteData = mock(SiteData.class);
         when(mockedSiteDataService.getSite(siteId.toLowerCase())).thenReturn(mockedSiteData);
@@ -500,7 +498,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         when(mockedRestCoreAPIWithParams.usingNode(any(RepoTestModel.class))).thenReturn(mockedNode);
         RestWrapper mockedRestWrapperWithParams = mock(RestWrapper.class);
         when(mockedRestWrapperWithParams.withCoreAPI()).thenReturn(mockedRestCoreAPIWithParams);
-        when(mockedCoreAPI.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
+        when(mockedRestWrapper.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
 
         EventResult result = scheduleInPlaceRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedSite, never()).createSite();
@@ -539,8 +537,8 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
         when(mockedRestCoreAPI.usingSite(siteId.toLowerCase())).thenReturn(mockedSite);
 
-        when(mockedCoreAPI.withCoreAPI()).thenReturn(mockedRestCoreAPI);
-        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK))
+        when(mockedRestWrapper.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+        when(mockedRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK))
                                            .thenReturn(Integer.toString(HttpStatus.SC_NOT_FOUND));
 
         SiteData mockedSiteData = mock(SiteData.class);
@@ -557,7 +555,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         when(mockedRestCoreAPIWithParams.usingNode(any(RepoTestModel.class))).thenReturn(mockedNode);
         RestWrapper mockedRestWrapperWithParams = mock(RestWrapper.class);
         when(mockedRestWrapperWithParams.withCoreAPI()).thenReturn(mockedRestCoreAPIWithParams);
-        when(mockedCoreAPI.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
+        when(mockedRestWrapper.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
 
         //for creating files
         NodeDetail mockedTargetNodeDetail = mock(NodeDetail.class);
@@ -607,8 +605,8 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
         when(mockedRestCoreAPI.usingSite(siteId.toLowerCase())).thenReturn(mockedSite);
 
-        when(mockedCoreAPI.withCoreAPI()).thenReturn(mockedRestCoreAPI);
-        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
+        when(mockedRestWrapper.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+        when(mockedRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
 
         SiteData mockedSiteData = mock(SiteData.class);
         when(mockedSiteDataService.getSite(siteId.toLowerCase())).thenReturn(mockedSiteData);
@@ -639,7 +637,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         when(mockedRestCoreAPIWithParams.usingNode(any(RepoTestModel.class))).thenReturn(mockedNode);
         RestWrapper mockedRestWrapperWithParams = mock(RestWrapper.class);
         when(mockedRestWrapperWithParams.withCoreAPI()).thenReturn(mockedRestCoreAPIWithParams);
-        when(mockedCoreAPI.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
+        when(mockedRestWrapper.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
 
         //for creating files
         NodeDetail mockedTargetNodeDetail = mock(NodeDetail.class);
@@ -691,8 +689,8 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
         when(mockedRestCoreAPI.usingSite(siteId.toLowerCase())).thenReturn(mockedSite);
 
-        when(mockedCoreAPI.withCoreAPI()).thenReturn(mockedRestCoreAPI);
-        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
+        when(mockedRestWrapper.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+        when(mockedRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
 
         SiteData mockedSiteData = mock(SiteData.class);
         when(mockedSiteDataService.getSite(siteId.toLowerCase())).thenReturn(mockedSiteData);
@@ -731,7 +729,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         when(mockedRestCoreAPIWithParams.usingNode(any(RepoTestModel.class))).thenReturn(mockedNode);
         RestWrapper mockedRestWrapperWithParams = mock(RestWrapper.class);
         when(mockedRestWrapperWithParams.withCoreAPI()).thenReturn(mockedRestCoreAPIWithParams);
-        when(mockedCoreAPI.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
+        when(mockedRestWrapper.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
 
         //for creating files
         NodeDetail mockedTargetNodeDetail = mock(NodeDetail.class);
@@ -783,8 +781,8 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
         when(mockedRestCoreAPI.usingSite(siteId.toLowerCase())).thenReturn(mockedSite);
 
-        when(mockedCoreAPI.withCoreAPI()).thenReturn(mockedRestCoreAPI);
-        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
+        when(mockedRestWrapper.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+        when(mockedRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
 
         SiteData mockedSiteData = mock(SiteData.class);
         when(mockedSiteDataService.getSite(siteId.toLowerCase())).thenReturn(mockedSiteData);
@@ -816,7 +814,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         when(mockedRestCoreAPIWithParams.usingNode(any(RepoTestModel.class))).thenReturn(mockedNode);
         RestWrapper mockedRestWrapperWithParams = mock(RestWrapper.class);
         when(mockedRestWrapperWithParams.withCoreAPI()).thenReturn(mockedRestCoreAPIWithParams);
-        when(mockedCoreAPI.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
+        when(mockedRestWrapper.withParams(any(String.class), any(String.class))).thenReturn(mockedRestWrapperWithParams);
 
         EventResult result = scheduleInPlaceRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedSite, never()).createSite();
@@ -951,27 +949,70 @@ public class ScheduleInPlaceRecordLoadersUnitTest
     }
 
     /**
+     * Utility method that mocks the core api (with and without params)
+     * 
+     * @return the mocked core api
+     */
+    private RestCoreAPI mockCoreApi()
+    {
+        RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
+        when(mockedRestWrapper.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+
+        RestWrapper mockedRestWrapperWithParams = mock(RestWrapper.class);
+        when(mockedRestWrapper.withParams("where=(isPrimary=true)", "relativePath=")).thenReturn(mockedRestWrapperWithParams);
+        when(mockedRestWrapperWithParams.withCoreAPI()).thenReturn(mockedRestCoreAPI);
+
+        return mockedRestCoreAPI;
+    }
+
+    /**
+     * Utility method that mocks the sites endpoint
+     * 
+     * @param mockedCoreApi the mocked core api
+     * @param siteId the id of the site to mock the endpoint for
+     * @return the mocked sites endpoint
+     */
+    private Site mockSitesEndpoint(RestCoreAPI mockedCoreApi, String siteId)
+    {
+        /*
+         * Mock the sites endpoint
+         */
+        Site mockedSiteEndpoint = mock(Site.class);
+        when(mockedCoreApi.usingSite(siteId.toLowerCase())).thenReturn(mockedSiteEndpoint);
+        return mockedSiteEndpoint;
+    }
+
+    /**
+     * Utility method that mocks the nodes endpoint
+     * 
+     * @param mockedCoreApi the mocked core api
+     * @param nodeId the id of the node to mock the endpoint for
+     * @return the mocked endpoint
+     * @throws Exception
+     */
+    private Node mockNodesEndpoint(RestCoreAPI mockedCoreApi, String nodeId) throws Exception
+    {
+        ArgumentMatcher<ContentModel> modelForCurrentNode = new ArgumentMatcher<ContentModel>() {
+            @Override
+            public boolean matches(Object argument) {
+                return ((ContentModel) argument).getNodeRef().equals(nodeId);
+            }
+        };
+        Node nodesEndpoint = mock(Node.class);
+        doReturn(nodesEndpoint).when(mockedCoreApi).usingNode(argThat(modelForCurrentNode));
+        return nodesEndpoint;
+    }
+
+    /**
      * Utility method that mocks the retrieval of an existing collaboration site
      *
      * @return the id of the generated document library
      * @throws Exception
      */
-    private String mockExistingCollaborationSite(String siteId) throws Exception
+    private String mockExistingCollaborationSite(Site mockedSiteEndpoint, String siteId, boolean siteExistsInMongo) throws Exception
     {
         String documentLibraryId = UUID.randomUUID().toString();
 
-        /*
-         * Mock the rest core API
-         */
-        RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
-        when(mockedCoreAPI.withCoreAPI()).thenReturn(mockedRestCoreAPI);
-        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
-
-        /*
-         * Mock the site
-         */
-        Site mockedSiteEndpoint = mock(Site.class);
-        when(mockedRestCoreAPI.usingSite(siteId.toLowerCase())).thenReturn(mockedSiteEndpoint);
         RestSiteModel colabSite = mock(RestSiteModel.class);
         when(mockedSiteEndpoint.getSite()).thenReturn(colabSite);
         when(colabSite.getVisibility()).thenReturn(Visibility.PUBLIC);
@@ -982,54 +1023,36 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         RestSiteContainerModel mockedRestSiteContainerModel = mock(RestSiteContainerModel.class);
         when(mockedRestSiteContainerModel.getId()).thenReturn(documentLibraryId);
         when(mockedSiteEndpoint.getSiteContainer("documentLibrary")).thenReturn(mockedRestSiteContainerModel);
+        when(mockedRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
+
+        /*
+         * Mock the mongo service
+         */
+        if(siteExistsInMongo)
+        {
+            SiteData mockedSiteData = mock(SiteData.class);
+            when(mockedSiteDataService.getSite(siteId.toLowerCase())).thenReturn(mockedSiteData);
+        }
+        else
+        {
+            when(mockedSiteDataService.getSite(siteId.toLowerCase())).thenReturn(null);
+        }
 
         return documentLibraryId;
-    }
-
-    /**
-     * Utility method that mocks the core api with parameters
-     * 
-     * @param params parameters to use in the api
-     * @return the mocked core api
-     */
-    private RestCoreAPI mockCoreApiWithParams(String... params)
-    {
-        RestWrapper mockedRestWrapperWithParams = mock(RestWrapper.class);
-        when(mockedCoreAPI.withParams(params)).thenReturn(mockedRestWrapperWithParams);
-
-        RestCoreAPI mockedRestCoreAPI = mock(RestCoreAPI.class);
-        when(mockedRestWrapperWithParams.withCoreAPI()).thenReturn(mockedRestCoreAPI);
-        when(mockedCoreAPI.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
-
-        return mockedRestCoreAPI;
     }
  
     /**
      * Utility method that mocks list children api call
      * 
-     * @param mockedRestCoreAPI the core api to use
-     * @param currentNodeId the node to list from, request parameter 
-     * @param relativePath the relative path to use for the list, request parameter
+     * @param mockedNodesEndpoint the nodes endpoint for the current node
      * @param hasMoreItems whether the mocked paginated list has more items, response parameter
      * @param children the list of children to return, response parameter
      * @throws Exception
      */
-    private void mockListChildren(RestCoreAPI mockedRestCoreAPI, String currentNodeId, String relativePath, boolean hasMoreItems, List<RestNodeModel> children) throws Exception
+    private void mockListChildren(Node mockedNodesEndpoint, boolean hasMoreItems, List<RestNodeModel> children) throws Exception
     {
-        /*
-         * Mock the listChildren call
-         */
-        ArgumentMatcher<ContentModel> modelForCurrentNode = new ArgumentMatcher<ContentModel>() {
-            @Override
-            public boolean matches(Object argument) {
-                return ((ContentModel) argument).getNodeRef().equals(currentNodeId);
-            }
-        };
-        Node nodesEndpoint = mock(Node.class);
-        doReturn(nodesEndpoint).when(mockedRestCoreAPI).usingNode(argThat(modelForCurrentNode));
-
         RestNodeModelsCollection childrenCollection = mock(RestNodeModelsCollection.class);
-        when(nodesEndpoint.listChildren()).thenReturn(childrenCollection);
+        when(mockedNodesEndpoint.listChildren()).thenReturn(childrenCollection);
 
         /*
          * Mock the results
@@ -1038,6 +1061,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         when(childrenCollection.getPagination()).thenReturn(mockedPagination);
         when(mockedPagination.isHasMoreItems()).thenReturn(hasMoreItems);
         when(childrenCollection.getEntries()).thenReturn(children);
+        when(mockedRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.SC_OK));
     }
 
     /**
@@ -1047,7 +1071,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
      * @return the mocked model for the file
      * @throws Exception
      */
-    private RestNodeModel mockNode(String id, boolean isFile) throws Exception
+    private RestNodeModel mockNodeModel(String id, boolean isFile) throws Exception
     {
         RestNodeModel node = mock(RestNodeModel.class);
         RestNodeModel onModelNode = mock(RestNodeModel.class);
@@ -1065,12 +1089,14 @@ public class ScheduleInPlaceRecordLoadersUnitTest
      * @param expectedScheduledFileIds the list of files we expect to be scheduled for declare
      * @param result the event result to validate
      */
-    private void validateFiredEvents(boolean rescheduleSelfExpected, List<String> expectedScheduledFileIds, EventResult result)
+    private void validateFiredEvents(boolean rescheduleSelfExpected, List<String> expectedScheduledFileIds, List<Event> nextEvents)
     {
+        assertEquals(expectedScheduledFileIds.size() + 1, nextEvents.size());
+
         boolean rescheduleSelfEventFired = false;
         boolean doneEventFired = false;
         List<String> scheduledFiles = new ArrayList<>();
-        for(Event event : result.getNextEvents())
+        for(Event event : nextEvents)
         {
             if(event.getName().equals(scheduleInPlaceRecordLoaders.getEventNameRescheduleSelf()))
             {
@@ -1119,5 +1145,28 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         }
 
         assertArrayEquals(expectedScheduledFileIds.toArray(), scheduledFiles.toArray());
+    }
+
+    /**
+     * Validate the output message returned when files are scheduled
+     * 
+     * @param createdFiles the files created in the current run
+     * @param scheduledFiles the files scheduled in the current fun
+     * @param outputMessage the message to validate
+     */
+    private void validateScheduleFilesOutputMessage(List<String> createdFiles, List<String> scheduledFiles, String outputMessage)
+    {
+        StringBuilder template = new StringBuilder();
+        template.append("Preparing files to declare: \n");
+        for(String file: createdFiles)
+        {
+            template.append("Created file " + file + ".");
+        }
+        for(String file: scheduledFiles)
+        {
+            template.append("Sheduled file to be declared as record: " + file + ". ");
+        }
+        template.append("Raised further " + scheduledFiles.size() + " events and rescheduled self.");
+        assertEquals(template.toString(), outputMessage);
     }
 }
