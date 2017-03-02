@@ -30,12 +30,21 @@ import java.util.List;
 import java.util.Random;
 
 import org.alfresco.bm.cm.FolderData;
+import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.RMEventConstants;
 import org.alfresco.bm.dataload.rm.fileplan.ScheduleFilePlanLoaders;
+import org.alfresco.bm.dataload.rm.role.RMRole;
+import org.alfresco.bm.site.SiteData;
+import org.alfresco.bm.site.SiteDataService;
+import org.alfresco.bm.site.SiteMemberData;
+import org.alfresco.bm.user.UserData;
+import org.alfresco.bm.user.UserDataService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.Logger;
 
 /**
  * Unit tests for RMBaseEventProcessor
@@ -46,6 +55,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class RMBaseEventProcessorUnitTest implements RMEventConstants
 {
+    @Mock
+    private SiteDataService mockedSiteDataService;
+
+    @Mock
+    private UserDataService mockedUserDataService;
+
     /**
      * Used one class that extends abstract class RMBaseEventProcessor here in order to test utility methods, chose ScheduleFilePlanLoaders, but we can use any other class
      */
@@ -77,5 +92,53 @@ public class RMBaseEventProcessorUnitTest implements RMEventConstants
             actualSum += value;
         }
         assertEquals(expectedSum, actualSum);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testGetUserWhenRMSiteDoesNotExist() throws Exception
+    {
+        Logger mockedLog = mock(Logger.class);
+        when(mockedSiteDataService.getSite(PATH_SNIPPET_RM_SITE_ID)).thenReturn(null);
+        testRMBaseEventProcessor.getRandomUser(mockedLog);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testGetUserWithNoAdminRoleUser() throws Exception
+    {
+        Logger mockedLog = mock(Logger.class);
+        SiteData mockedSiteData = mock(SiteData.class);
+        when(mockedSiteDataService.getSite(PATH_SNIPPET_RM_SITE_ID)).thenReturn(mockedSiteData);
+        when(mockedSiteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.Administrator.toString())).thenReturn(null);
+        testRMBaseEventProcessor.getRandomUser(mockedLog);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testGetUserWithNoRegisteredAdminRoleUser() throws Exception
+    {
+        String userName = "user1";
+        Logger mockedLog = mock(Logger.class);
+        SiteData mockedSiteData = mock(SiteData.class);
+        when(mockedSiteDataService.getSite(PATH_SNIPPET_RM_SITE_ID)).thenReturn(mockedSiteData);
+        SiteMemberData mockedSiteMemberData = mock(SiteMemberData.class);
+        when(mockedSiteMemberData.getUsername()).thenReturn(userName);
+        when(mockedSiteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.Administrator.toString())).thenReturn(mockedSiteMemberData);
+        when(mockedUserDataService.findUserByUsername(userName)).thenReturn(null);
+        testRMBaseEventProcessor.getRandomUser(mockedLog);
+    }
+
+    @Test
+    public void testGetUserSuccessfull() throws Exception
+    {
+        String userName = "user1";
+        Logger mockedLog = mock(Logger.class);
+        SiteData mockedSiteData = mock(SiteData.class);
+        when(mockedSiteDataService.getSite(PATH_SNIPPET_RM_SITE_ID)).thenReturn(mockedSiteData);
+        SiteMemberData mockedSiteMemberData = mock(SiteMemberData.class);
+        when(mockedSiteMemberData.getUsername()).thenReturn(userName);
+        when(mockedSiteDataService.randomSiteMember(PATH_SNIPPET_RM_SITE_ID, DataCreationState.Created, null, RMRole.Administrator.toString())).thenReturn(mockedSiteMemberData);
+        UserData mockedUserData = mock(UserData.class);
+        when(mockedUserDataService.findUserByUsername(userName)).thenReturn(mockedUserData);
+        UserData user = testRMBaseEventProcessor.getRandomUser(mockedLog);
+        assertEquals(mockedUserData, user);
     }
 }

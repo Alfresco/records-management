@@ -19,8 +19,6 @@
       <alfresco.share.artifactId>share</alfresco.share.artifactId>
       <alfresco.rm.artifactId>alfresco-rm-community-share</alfresco.rm.artifactId>
       <alfresco.aikau.version>1.0.101.5</alfresco.aikau.version>
-      <!-- This property does not exist in the parent and causes the build to fail -->
-      <dependency.surf.version>6.3</dependency.surf.version>
    </properties>
 
    <build>
@@ -204,19 +202,6 @@
    </build>
 
    <dependencies>
-      <!-- Override the following surf dependencies as the version property is not set -->
-      <dependency>
-         <groupId>org.alfresco.surf</groupId>
-         <artifactId>spring-surf</artifactId>
-         <version>${dependency.surf.version}</version>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.alfresco.surf</groupId>
-         <artifactId>spring-surf-api</artifactId>
-         <version>${dependency.surf.version}</version>
-         <scope>provided</scope>
-      </dependency>
       <dependency>
          <groupId>org.alfresco</groupId>
          <artifactId>aikau</artifactId>

@@ -23,7 +23,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,11 +37,9 @@ import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
-import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
-import org.alfresco.utility.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -60,21 +58,16 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     @Autowired
     private SessionService sessionService;
 
-    @Autowired
-    private RestAPIFactory restAPIFactory;
-
     private int maxActiveLoaders;
     private boolean uploadUnfiledRecords;
     private int unfiledRecordsNumber;
     private String unfiledRecordFolderPaths;
     private List<String> paths;
     private long loadCheckDelay;
-    private String username;
     private String eventNameLoadUnfiledRecords = EVENT_NAME_LOAD_UNFILED_RECORDS;
     private String eventNameScheduleLoaders = EVENT_NAME_SCHEDULE_LOADERS;
     private String eventNameLoadingComplete = EVENT_NAME_LOADING_COMPLETE;
-    private List<FolderData> unfiledRecordFoldersThatNeedRecords = null;
-    private HashMap<FolderData, Integer> mapOfRecordsPerUnfiledRecordFolder = null;
+    private LinkedHashMap<FolderData, Integer> mapOfRecordsPerUnfiledRecordFolder = null;
 
     public int getMaxActiveLoaders()
     {
@@ -130,16 +123,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         this.loadCheckDelay = loadCheckDelay;
     }
 
-    public String getUsername()
-    {
-        return username;
-    }
-
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
-
     public String getEventNameLoadUnfiledRecords()
     {
         return eventNameLoadUnfiledRecords;
@@ -175,16 +158,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         return paths;
     }
 
-    public List<FolderData> getUnfiledRecordFoldersThatNeedRecords()
-    {
-        return unfiledRecordFoldersThatNeedRecords;
-    }
-
-    public HashMap<FolderData, Integer> getMapOfRecordsPerUnfiledRecordFolder()
-    {
-        return mapOfRecordsPerUnfiledRecordFolder;
-    }
-
     @Override
     protected EventResult processEvent(Event event) throws Exception
     {
@@ -196,7 +169,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         // Do we actually need to do anything
         if (!isUploadUnfiledRecords())
         {
-            return new EventResult("Uploading of Unfiled Records not wanted.", false);
+            return new EventResult("Uploading of Unfiled Records not wanted.", new Event(eventNameLoadingComplete, null));
         }
         if(unfiledRecordsNumber > 0)
         {
@@ -209,7 +182,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         if (loaderSessionsToCreate > 0 && nextEvents.size() == 0)
         {
             // There are no records to load even though there are sessions available
-            unfiledRecordFoldersThatNeedRecords = null;
             mapOfRecordsPerUnfiledRecordFolder = null;
             Event nextEvent = new Event(eventNameLoadingComplete, null);
             nextEvents.add(nextEvent);
@@ -232,11 +204,16 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         return result;
     }
 
+    /**
+     * Helper method that initialize the unfiled record folders that can receive loaded unfiled records.
+     * This method, also calculates the number of records to  add to the initialized unfiled record folders.
+     */
     private void calculateListOfEmptyFolders()
     {
-        if(unfiledRecordFoldersThatNeedRecords == null)
+        if(mapOfRecordsPerUnfiledRecordFolder == null)
         {
-            unfiledRecordFoldersThatNeedRecords = new ArrayList<FolderData>();
+            mapOfRecordsPerUnfiledRecordFolder = new LinkedHashMap<FolderData, Integer>();
+            List<FolderData> unfiledRecordFoldersThatNeedRecords = new ArrayList<FolderData>();
             if(paths == null || paths.size() == 0)
             {
                 unfiledRecordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(UNFILED_CONTEXT));
@@ -289,7 +266,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     /**
      * Obtains all unfiled record folders underneath specified parent folder plus the parent folder
      *
-     * @param parentFolder
+     * @param parentFolder - the parent folder that we need to get unfiled record folders from
      * @return all unfiled record folders underneath specified parent folder plus the parent folder
      */
     private Set<FolderData> getUnfiledRecordFolders(FolderData parentFolder)
@@ -316,9 +293,17 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         return result;
     }
 
+    /**
+     * Helper method used for creating in alfresco repo and in mongo DB, unfiled record folders from configured path elements.
+     *
+     * @param path - path element
+     * @return created unfiled record folder, or existent unfiled record folder, if it already created
+     * @throws Exception
+     */
     private FolderData createFolder(String path) throws Exception
     {
-        FilePlanComponentAPI api = restAPIFactory.getFilePlanComponentsAPI(new UserModel(getUsername(), getUsername()));
+        //create inexistent elements from configured paths as admin
+        FilePlanComponentAPI api = getRestAPIFactory().getFilePlanComponentsAPI();
         List<String> pathElements = getPathElements(path);
         FolderData parentFolder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH);
         for(String pathElement: pathElements)
@@ -337,11 +322,17 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         return parentFolder;
     }
 
+    /**
+     * Helper method for preparing events for loading unfiled records randomly in the unfiled record folders structure or in specified unfiled record folder paths.
+     *
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
+     */
     private void prepareUnfiledRecords(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         calculateListOfEmptyFolders();
         List<FolderData> emptyFolders = new ArrayList<FolderData>();
-        emptyFolders.addAll(unfiledRecordFoldersThatNeedRecords);
+        emptyFolders.addAll(mapOfRecordsPerUnfiledRecordFolder.keySet());
         while (nextEvents.size() < loaderSessionsToCreate)
         {
             if(mapOfRecordsPerUnfiledRecordFolder == null || mapOfRecordsPerUnfiledRecordFolder.size() == 0)
@@ -354,7 +345,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
                 int recordsToCreate = mapOfRecordsPerUnfiledRecordFolder.get(emptyFolder) - (int) emptyFolder.getFileCount();
                 if(recordsToCreate <= 0)
                 {
-                    unfiledRecordFoldersThatNeedRecords.remove(emptyFolder);
                     mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);
                 }
                 else
@@ -375,7 +365,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
                                 .add(FIELD_CONTEXT, emptyFolder.getContext())
                                 .add(FIELD_PATH, emptyFolder.getPath())
                                 .add(FIELD_RECORDS_TO_CREATE, Integer.valueOf(recordsToCreate))
-                                .add(FIELD_SITE_MANAGER, username)
                                 .get();
                         Event loadEvent = new Event(eventNameLoadUnfiledRecords, loadData);
                         // Each load event must be associated with a session
@@ -383,11 +372,11 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
                         loadEvent.setSessionId(sessionId);
                         // Add the event to the list
                         nextEvents.add(loadEvent);
-                        unfiledRecordFoldersThatNeedRecords.remove(emptyFolder);
                         mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);
                     }
                     catch (Exception e)
                     {
+                        mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);
                         // The lock was already applied; find another
                         continue;
                     }

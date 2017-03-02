@@ -13,7 +13,7 @@ package org.alfresco.bm.dataload.rm.site;
 
 import static org.alfresco.bm.data.DataCreationState.Created;
 import static org.alfresco.bm.data.DataCreationState.Scheduled;
-import static org.alfresco.bm.dataload.rm.role.RMRole.ADMINISTRATOR;
+import static org.alfresco.bm.dataload.rm.role.RMRole.Administrator;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.DEFAULT_EVENT_NAME_RM_SITE_PREPARED;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_ONLY_DB_LOAD;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
@@ -106,7 +106,7 @@ public class PrepareRMSiteUnitTest
         // Check RM admin member
         SiteMemberData siteMemberDataValue = siteMemberData.getValue();
         assertEquals(Created, siteMemberDataValue.getCreationState());
-        assertEquals(ADMINISTRATOR.toString(), siteMemberDataValue.getRole());
+        assertEquals(Administrator.toString(), siteMemberDataValue.getRole());
 
         // Check events
         assertEquals(true, result.isSuccess());
@@ -153,7 +153,7 @@ public class PrepareRMSiteUnitTest
         // Check RM admin member
         SiteMemberData siteMemberDataValue = siteMemberData.getValue();
         assertEquals(Created, siteMemberDataValue.getCreationState());
-        assertEquals(ADMINISTRATOR.toString(), siteMemberDataValue.getRole());
+        assertEquals(Administrator.toString(), siteMemberDataValue.getRole());
 
         // Check events
         assertEquals(true, result.isSuccess());
