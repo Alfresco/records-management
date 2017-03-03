@@ -97,7 +97,7 @@
                   <#if (v.new?? && v.new != "")>
                      <td>${v.new?html}</td>
                   <#else>
-                     <td></td>
+                     <td>${msg('label.no-next')?html}</td>
                   </#if>
                   </tr>
                   </#list>
