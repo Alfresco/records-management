@@ -77,7 +77,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
     private String eventNameComplete = DEFAULT_EVENT_NAME_COMPLETE;
     private String eventNameRescheduleSelf = DEFAULT_EVENT_NAME_RESCHEDULE_SELF;
 
-    private Integer numberOfRecordsToDeclare;
+    private Integer recordDeclarationLimit;
     private int numberOfRecordsDeclared = 0;
     // buffer with the file ids of unscheduled files
     private Queue<String> unscheduledFilesCache;
@@ -129,15 +129,15 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
         }
     }
 
-    public void setRecordsToDeclare(String recordsToDeclareString)
+    public void setRecordDeclarationLimit(String recordDeclarationLimitString)
     {
-        if(isNotBlank(recordsToDeclareString))
+        if(isNotBlank(recordDeclarationLimitString))
         {
-            this.numberOfRecordsToDeclare = Integer.parseInt(recordsToDeclareString);
+            this.recordDeclarationLimit = Integer.parseInt(recordDeclarationLimitString);
         }
         else
         {
-            this.numberOfRecordsToDeclare = 0;
+            this.recordDeclarationLimit = 0;
         }
     }
 
@@ -192,7 +192,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
         Assert.notNull(getEventNameDeclareInPlaceRecord());
         Assert.notNull(getEventNameComplete());
         Assert.notNull(getEventNameRescheduleSelf());
-        Assert.notNull(numberOfRecordsToDeclare);
+        Assert.notNull(recordDeclarationLimit);
     }
 
     @Override
@@ -262,11 +262,6 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
 
         // Get the collaboration site document library
         String documentLibraryNodeId = getCollaborationSiteDoclib(eventOutputMsg);
-        if(documentLibraryNodeId == null)
-        {
-            // the site doesn't exist and we don't want to create it
-            return;
-        }
 
         // Get the existing files in the provided paths
         for(String relativePath : collabSitePaths)
@@ -282,7 +277,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
         /*
          * Not enough files to load, create new files
          */
-        if(numberOfRecordsToDeclare == 0)
+        if(recordDeclarationLimit == 0)
         {
             // If number of records to declare is 0 declare all files we can find but don't create new files
             return;
@@ -318,19 +313,19 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
      */
     private int numberOfFilesLeftToPreload()
     {
-        if(numberOfRecordsToDeclare == 0)
+        if(recordDeclarationLimit == 0)
         {
             // If number of records to declare is 0 load all the files we can find
             return FILES_TO_SCHEDULE_BUFFER_SIZE - unscheduledFilesCache.size();
         }
-        return Integer.min(numberOfRecordsToDeclare - numberOfRecordsDeclared, FILES_TO_SCHEDULE_BUFFER_SIZE) - unscheduledFilesCache.size();
+        return Integer.min(recordDeclarationLimit - numberOfRecordsDeclared, FILES_TO_SCHEDULE_BUFFER_SIZE) - unscheduledFilesCache.size();
     }
 
     /**
      *  Helper method that makes sure the site exists on the server and loads it in the benchmark DB
      *
      * @param eventOutputMsg
-     * @return the collaboration site's document library id or NULL if the site doesn't exist and numberOfRecordsToDeclare is 0
+     * @return the collaboration site's document library id
      * @throws Exception
      */
     private String getCollaborationSiteDoclib(StringBuilder eventOutputMsg) throws Exception
@@ -340,12 +335,6 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
 
         if (Integer.parseInt(restCoreAPI.getStatusCode()) == HttpStatus.SC_NOT_FOUND)
         {
-            if(numberOfRecordsToDeclare == 0)
-            {
-                // The site doesn't exist and we don't want to create any new file
-                return null;
-            }
-
             // The collaboration site doesn't exist, create it
             colabSite = restCoreAPI.withCoreAPI().usingSite(collabSiteId).createSite();
         }
