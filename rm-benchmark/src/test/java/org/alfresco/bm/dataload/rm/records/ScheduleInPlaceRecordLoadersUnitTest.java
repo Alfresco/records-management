@@ -133,7 +133,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         scheduleInPlaceRecordLoaders.setEnabled(true);
         scheduleInPlaceRecordLoaders.setMaxActiveLoaders(8);
         scheduleInPlaceRecordLoaders.setCollabSiteId(DEFAULT_COLLABORATION_SITE_ID);
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare("0");
+        scheduleInPlaceRecordLoaders.setRecordDeclarationLimit("0");
         scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
 
         // mock the collaboration site
@@ -182,7 +182,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
          */
         String numberOfRecordsToDeclare = "1";
         scheduleInPlaceRecordLoaders.setEnabled(true);
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare(numberOfRecordsToDeclare);
+        scheduleInPlaceRecordLoaders.setRecordDeclarationLimit(numberOfRecordsToDeclare);
         scheduleInPlaceRecordLoaders.setMaxActiveLoaders(DEFAULT_MAX_ACTIVE_LOADERS);
         scheduleInPlaceRecordLoaders.setCollabSiteId(DEFAULT_COLLABORATION_SITE_ID);
         scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
@@ -232,7 +232,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         String siteId = "testSiteId";
         String documentLibraryId = UUID.randomUUID().toString();
         scheduleInPlaceRecordLoaders.setEnabled(true);
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare(numberOfRecordsToDeclare);
+        scheduleInPlaceRecordLoaders.setRecordDeclarationLimit(numberOfRecordsToDeclare);
         scheduleInPlaceRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleInPlaceRecordLoaders.setCollabSiteId(siteId);
         scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
@@ -303,7 +303,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         String preset = "somePreset";
         Visibility visibility = Visibility.PUBLIC;
         scheduleInPlaceRecordLoaders.setEnabled(true);
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare(numberOfRecordsToDeclare);
+        scheduleInPlaceRecordLoaders.setRecordDeclarationLimit(numberOfRecordsToDeclare);
         scheduleInPlaceRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleInPlaceRecordLoaders.setCollabSiteId(siteId);
         scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
@@ -379,7 +379,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         String preset = "somePreset";
         Visibility visibility = Visibility.PUBLIC;
         scheduleInPlaceRecordLoaders.setEnabled(true);
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare(numberOfRecordsToDeclare);
+        scheduleInPlaceRecordLoaders.setRecordDeclarationLimit(numberOfRecordsToDeclare);
         scheduleInPlaceRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleInPlaceRecordLoaders.setCollabSiteId(siteId);
         scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
@@ -450,7 +450,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         String siteId = "testSiteId";
         String documentLibraryId = UUID.randomUUID().toString();
         scheduleInPlaceRecordLoaders.setEnabled(true);
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare(numberOfRecordsToDeclare);
+        scheduleInPlaceRecordLoaders.setRecordDeclarationLimit(numberOfRecordsToDeclare);
         scheduleInPlaceRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleInPlaceRecordLoaders.setCollabSiteId(siteId);
         scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
@@ -520,7 +520,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         String siteId = "testSiteId";
         String documentLibraryId = UUID.randomUUID().toString();
         scheduleInPlaceRecordLoaders.setEnabled(true);
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare(numberOfRecordsToDeclare);
+        scheduleInPlaceRecordLoaders.setRecordDeclarationLimit(numberOfRecordsToDeclare);
         scheduleInPlaceRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleInPlaceRecordLoaders.setCollabSiteId(siteId);
         scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
@@ -588,7 +588,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         String siteId = "testSiteId";
         String documentLibraryId = UUID.randomUUID().toString();
         scheduleInPlaceRecordLoaders.setEnabled(true);
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare(numberOfRecordsToDeclare);
+        scheduleInPlaceRecordLoaders.setRecordDeclarationLimit(numberOfRecordsToDeclare);
         scheduleInPlaceRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleInPlaceRecordLoaders.setCollabSiteId(siteId);
         scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
@@ -672,7 +672,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         String siteId = "testSiteId";
         String documentLibraryId = UUID.randomUUID().toString();
         scheduleInPlaceRecordLoaders.setEnabled(true);
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare(numberOfRecordsToDeclare);
+        scheduleInPlaceRecordLoaders.setRecordDeclarationLimit(numberOfRecordsToDeclare);
         scheduleInPlaceRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleInPlaceRecordLoaders.setCollabSiteId(siteId);
         scheduleInPlaceRecordLoaders.setCollabSitePaths(null);
@@ -764,7 +764,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         String siteId = "testSiteId";
         String documentLibraryId = UUID.randomUUID().toString();
         scheduleInPlaceRecordLoaders.setEnabled(true);
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare(numberOfRecordsToDeclare);
+        scheduleInPlaceRecordLoaders.setRecordDeclarationLimit(numberOfRecordsToDeclare);
         scheduleInPlaceRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleInPlaceRecordLoaders.setCollabSiteId(siteId);
         scheduleInPlaceRecordLoaders.setCollabSitePaths("path1,path2");
@@ -838,7 +838,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         scheduleInPlaceRecordLoaders.setEventNameRescheduleSelf("someEvent1");
         scheduleInPlaceRecordLoaders.setEventNameComplete("someEvent2");
         scheduleInPlaceRecordLoaders.setEventNameDeclareInPlaceRecord("someEvent3");
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare("");
+        scheduleInPlaceRecordLoaders.setRecordDeclarationLimit("");
         scheduleInPlaceRecordLoaders.afterPropertiesSet();
     }
 
@@ -944,7 +944,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
         scheduleInPlaceRecordLoaders.setEventNameRescheduleSelf("someEvent1");
         scheduleInPlaceRecordLoaders.setEventNameComplete("someEvent2");
         scheduleInPlaceRecordLoaders.setEventNameDeclareInPlaceRecord("someEvent3");
-        scheduleInPlaceRecordLoaders.setRecordsToDeclare("");
+        scheduleInPlaceRecordLoaders.setRecordDeclarationLimit("");
         scheduleInPlaceRecordLoaders.afterPropertiesSet();
     }
 
