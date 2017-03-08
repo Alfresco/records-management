@@ -268,7 +268,7 @@
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
     <property name="collabSiteId" value="${rm.inPlaceRecords.collabSiteId}" />
     <property name="collabSitePaths" value="${rm.inPlaceRecords.collabSitePaths}" />
-    <property name="recordsToDeclare" value="${rm.inPlaceRecords.recordsToDeclare}" />
+    <property name="recordDeclarationLimit" value="${rm.inPlaceRecords.recordDeclarationLimit}" />
     <property name="username" value="${rm.username}" />
     <property name="password" value="${rm.password}" />
     <property name="eventNameDeclareInPlaceRecord" value="declareInPlaceRecord"/>
