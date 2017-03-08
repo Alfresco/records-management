@@ -35,6 +35,7 @@ import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RMRestWrapper;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.model.RestErrorModel;
+import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.rest.rm.community.requests.igCoreAPI.FilesAPI;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.time.StopWatch;
@@ -175,6 +176,9 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
 
         FilesAPI mockedFilesAPI = mock(FilesAPI.class);
         when(mockedRestAPIFactory.getFilesAPI(any(UserModel.class))).thenReturn(mockedFilesAPI);
+        FilePlanComponent record = mock(FilePlanComponent.class);
+        when(record.getName()).thenReturn("newRecordName");
+        when(mockedFilesAPI.declareAsRecord(fileId)).thenReturn(record);
         RMRestWrapper mockedRmRestWrapper = mock(RMRestWrapper.class);
         when(mockedRmRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.CREATED.value()));
         when(mockedRestAPIFactory.getRmRestWrapper()).thenReturn(mockedRmRestWrapper);
