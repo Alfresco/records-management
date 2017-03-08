@@ -26,6 +26,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.alfresco.bm.dataload.RMEventConstants;
+import org.alfresco.bm.dataload.rm.services.ExecutionState;
+import org.alfresco.bm.dataload.rm.services.RecordContext;
+import org.alfresco.bm.dataload.rm.services.RecordData;
+import org.alfresco.bm.dataload.rm.services.RecordService;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RMRestWrapper;
@@ -57,6 +61,9 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
 
     @Mock
     private RestAPIFactory mockedRestAPIFactory;
+
+    @Mock
+    private RecordService mockedRecordService;
 
     @InjectMocks
     private DeclareInPlaceRecords declareInPlaceRecords;
@@ -150,7 +157,7 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
     @Test
     public void testDeclareAsRecordWithSuccess() throws Exception
     {
-        String siteId = "testColabSiteId";
+        String fileId = "testFileId";
         String username = "testUserName";
         String password = "testPassword";
         long delay = 10L;
@@ -158,10 +165,14 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
         declareInPlaceRecords.setDeclareInPlaceRecordDelay(delay);
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_ID)).thenReturn(siteId);
+        when(mockedData.get(FIELD_ID)).thenReturn(fileId);
         when(mockedData.get(FIELD_USERNAME)).thenReturn(username);
         when(mockedData.get(FIELD_PASSWORD)).thenReturn(password);
         when(mockedEvent.getData()).thenReturn(mockedData);
+
+        RecordData dbRecord = new RecordData(fileId, RecordContext.IN_PLACE_RECORD, "testFileName", "testFilePath", "testInPlacePath", ExecutionState.SCHEDULED);
+        when(mockedRecordService.getRecord(fileId)).thenReturn(dbRecord);
+
         FilesAPI mockedFilesAPI = mock(FilesAPI.class);
         when(mockedRestAPIFactory.getFilesAPI(any(UserModel.class))).thenReturn(mockedFilesAPI);
         RMRestWrapper mockedRmRestWrapper = mock(RMRestWrapper.class);
@@ -177,7 +188,7 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
     @Test
     public void testDeclareAsRecordWithFail() throws Exception
     {
-        String siteId = "testColabSiteId";
+        String fileId = "testFileId";
         String username = "testUserName";
         String password = "testPassword";
         String summary = "testSummary";
@@ -187,10 +198,14 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
         declareInPlaceRecords.setDeclareInPlaceRecordDelay(delay);
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_ID)).thenReturn(siteId);
+        when(mockedData.get(FIELD_ID)).thenReturn(fileId);
         when(mockedData.get(FIELD_USERNAME)).thenReturn(username);
         when(mockedData.get(FIELD_PASSWORD)).thenReturn(password);
         when(mockedEvent.getData()).thenReturn(mockedData);
+
+        RecordData dbRecord = new RecordData(fileId, RecordContext.IN_PLACE_RECORD, "testFileName", "testFilePath", "testInPlacePath", ExecutionState.SCHEDULED);
+        when(mockedRecordService.getRecord(fileId)).thenReturn(dbRecord);
+
         FilesAPI mockedFilesAPI = mock(FilesAPI.class);
         when(mockedRestAPIFactory.getFilesAPI(any(UserModel.class))).thenReturn(mockedFilesAPI);
         RMRestWrapper mockedRmRestWrapper = mock(RMRestWrapper.class);
@@ -212,16 +227,20 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
     @Test
     public void testDeclareAsRecordWithRestAPIException() throws Exception
     {
-        String siteId = "testColabSiteId";
+        String fileId = "testFileId";
         String username = "testUserName";
         String password = "testPassword";
 
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_ID)).thenReturn(siteId);
+        when(mockedData.get(FIELD_ID)).thenReturn(fileId);
         when(mockedData.get(FIELD_USERNAME)).thenReturn(username);
         when(mockedData.get(FIELD_PASSWORD)).thenReturn(password);
         when(mockedEvent.getData()).thenReturn(mockedData);
+
+        RecordData dbRecord = new RecordData(fileId, RecordContext.IN_PLACE_RECORD, "testFileName", "testFilePath", "testInPlacePath", ExecutionState.SCHEDULED);
+        when(mockedRecordService.getRecord(fileId)).thenReturn(dbRecord);
+
         FilesAPI mockedFilesAPI = mock(FilesAPI.class);
         when(mockedRestAPIFactory.getFilesAPI(any(UserModel.class))).thenReturn(mockedFilesAPI);
         Mockito.doThrow(new Exception("someError")).when(mockedFilesAPI).declareAsRecord(any(String.class));
@@ -231,7 +250,7 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
         DBObject data = (DBObject) result.getData();
         assertNotNull(data.get("error"));
         assertEquals("someError", data.get("error"));
-        assertEquals(siteId, data.get(FIELD_ID));
+        assertEquals(fileId, data.get(FIELD_ID));
         assertEquals(username, data.get(FIELD_USERNAME));
         assertEquals(password, data.get(FIELD_PASSWORD));
         assertNotNull(data.get("stack"));
