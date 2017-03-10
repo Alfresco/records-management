@@ -24,9 +24,13 @@ import java.text.MessageFormat;
 import java.util.concurrent.TimeUnit;
 
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
+import org.alfresco.bm.dataload.rm.services.ExecutionState;
+import org.alfresco.bm.dataload.rm.services.RecordData;
+import org.alfresco.bm.dataload.rm.services.RecordService;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RestAPIFactory;
+import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +55,9 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
 
     @Autowired
     private RestAPIFactory restAPIFactory;
+
+    @Autowired
+    private RecordService recordService;
 
     public void setEventNameInPlaceRecordsDeclared(String eventNameInPlaceRecordsDeclared)
     {
@@ -92,11 +99,18 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
             throw new IllegalStateException(MessageFormat.format(INVALID_DATA_MSG_TEMPLATE, FIELD_ID, FIELD_USERNAME, FIELD_PASSWORD));
         }
 
-        // Call the REST API
         try
         {
+            // Get the record from database
+            RecordData dbRecord = recordService.getRecord(id);
+            if(dbRecord.getExecutionState() != ExecutionState.SCHEDULED)
+            {
+                throw new IllegalStateException("The record + " + id + " was found but it was already processed");
+            }
+
+            // Call the REST API
             super.resumeTimer();
-            restAPIFactory.getFilesAPI(new UserModel(username, password)).declareAsRecord(id);
+            FilePlanComponent record = restAPIFactory.getFilesAPI(new UserModel(username, password)).declareAsRecord(id);
             String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
             super.suspendTimer();
             TimeUnit.MILLISECONDS.sleep(declareInPlaceRecordDelay);
@@ -104,14 +118,18 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
             if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.CREATED)
             {
                 eventOutputMsg.append("success");
+                dbRecord.setExecutionState(ExecutionState.SUCCESS);
+                dbRecord.setName(record.getName());
             }
             else
             {
                 eventOutputMsg.append("Failed with code " + statusCode + ".\n " +
                                        restAPIFactory.getRmRestWrapper().assertLastError().getBriefSummary() + ". \n" +
                                        restAPIFactory.getRmRestWrapper().assertLastError().getStackTrace());
+                dbRecord.setExecutionState(ExecutionState.FAILED);
             }
 
+            recordService.updateRecord(dbRecord);
             return new EventResult(eventOutputMsg.toString(), new Event(getEventNameInPlaceRecordsDeclared(), dataObj));
         }
         catch (Exception e)
@@ -129,5 +147,4 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
             return new EventResult(data, false);
         }
     }
-
 }

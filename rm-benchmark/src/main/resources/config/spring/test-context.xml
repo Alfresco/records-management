@@ -36,6 +36,11 @@
     <constructor-arg name="collection" value="${files.collection.name}" />
   </bean>
 
+  <bean id="recordService" class="org.alfresco.bm.dataload.rm.services.RecordService">
+        <constructor-arg name="db" ref="testMongoDB" />
+        <constructor-arg name="collection" value="${mirror.records}" />
+    </bean>
+
   <!-- -->
   <!-- Test Files -->
   <!-- -->

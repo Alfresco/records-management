@@ -30,6 +30,12 @@ import java.util.Queue;
 import java.util.Set;
 
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
+import org.alfresco.bm.dataload.rm.exceptions.DuplicateRecordException;
+import org.alfresco.bm.dataload.rm.exceptions.EventAlreadyScheduledException;
+import org.alfresco.bm.dataload.rm.services.ExecutionState;
+import org.alfresco.bm.dataload.rm.services.RecordContext;
+import org.alfresco.bm.dataload.rm.services.RecordData;
+import org.alfresco.bm.dataload.rm.services.RecordService;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
@@ -80,12 +86,15 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
     private Integer recordDeclarationLimit;
     private int numberOfRecordsDeclared = 0;
     // buffer with the file ids of unscheduled files
-    private Queue<String> unscheduledFilesCache;
+    private Queue<RecordData> unscheduledFilesCache;
     private Set<String> fullLoadedFolders;
-    private final static int FILES_TO_SCHEDULE_BUFFER_SIZE = 10000;
+    private final static int FILES_TO_SCHEDULE_BUFFER_SIZE = 1000;
 
     @Autowired
     private SessionService sessionService;
+
+    @Autowired
+    private RecordService recordService;
 
     @Autowired
     private RestWrapper restCoreAPI;
@@ -225,12 +234,19 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
          */
         for (int i = 0; i < loaderSessionsToCreate; i++)
         {
-            String fileId = unscheduledFilesCache.poll();
-            if(fileId == null)
+            RecordData record = unscheduledFilesCache.poll();
+            if(record == null)
             {
                 break;
             }
-            nextEvents.add(scheduleFile(fileId, eventOutputMsg));
+            try
+            {
+                nextEvents.add(scheduleFile(record, eventOutputMsg));
+            }
+            catch(EventAlreadyScheduledException ex)
+            {
+                logger.info("File " + record.getId() + " has already been scheduled. Skip it.", ex);
+            }
         }
         numberOfRecordsDeclared += nextEvents.size();
 
@@ -293,10 +309,12 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
 
             for(int i = 0; i < filesToCreate; i++)
             {
+                // Create a new file
                 NodeDetail file = targetFolder.file("recordToBe");
                 eventOutputMsg.append("Created file " + file.getId() + ".");
 
-                unscheduledFilesCache.add(file.getId());
+                RecordData record = new RecordData(file.getId(), RecordContext.IN_PLACE_RECORD, file.getName(), null, null, ExecutionState.SCHEDULED);
+                unscheduledFilesCache.add(record);
 
                 if(numberOfFilesLeftToPreload() <= 0)
                 {
@@ -374,11 +392,12 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
     private void preloadExistingFiles(String currentNodeId, String relativePath, StringBuilder eventOutputMsg) throws Exception
     {
         boolean moreChildren;
+        int skipCount = 0;
         do
         {
             ContentModel currentNodeModel = new ContentModel();
             currentNodeModel.setNodeRef(currentNodeId);
-            RestNodeModelsCollection children = restCoreAPI.withParams("where=(isPrimary=true)", "relativePath="+relativePath).withCoreAPI().usingNode(currentNodeModel).listChildren();
+            RestNodeModelsCollection children = restCoreAPI.withParams("where=(isPrimary=true)", "relativePath="+relativePath, "skipCount="+skipCount).withCoreAPI().usingNode(currentNodeModel).listChildren();
             if(Integer.parseInt(restCoreAPI.getStatusCode()) == HttpStatus.SC_NOT_FOUND)
             {
                 return;
@@ -394,7 +413,8 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
 
                 if(child.onModel().getIsFile())
                 {
-                    unscheduledFilesCache.add(child.onModel().getId());
+                    RecordData record = new RecordData(child.onModel().getId(), RecordContext.IN_PLACE_RECORD, child.onModel().getName(), null, null, ExecutionState.SCHEDULED);
+                    unscheduledFilesCache.add(record);
                 }
                 else if(!fullLoadedFolders.contains(child.onModel().getId()))
                 {
@@ -403,6 +423,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
             }
 
             moreChildren = children.getPagination().isHasMoreItems();
+            skipCount += children.getPagination().getCount();
         }
         while(moreChildren);
 
@@ -413,19 +434,27 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
     /**
      * Helper method that creates a declare record event for the provided file
      *
-     * @param fileId id of the file to declare as record
+     * @param fileToSchedule info of the file to declare as record
      * @param eventOutputMsg
      * @return the declare as record event for the provided file
+     * @throws EventAlreadyScheduledException if the provided file has already been scheduled
      */
-    private Event scheduleFile(String fileId, StringBuilder eventOutputMsg)
+    private Event scheduleFile(RecordData fileToSchedule, StringBuilder eventOutputMsg) throws EventAlreadyScheduledException
     {
-        eventOutputMsg.append("Sheduled file to be declared as record: " + fileId + ". ");
+        eventOutputMsg.append("Sheduled file to be declared as record: " + fileToSchedule.getId() + ". ");
 
-        //TODO save it in benchmark's database to lock it  ???
+        // Create record in database to lock it
+        try{
+            recordService.createRecord(fileToSchedule);
+        }
+        catch(DuplicateRecordException ex)
+        {
+            throw new EventAlreadyScheduledException(eventNameDeclareInPlaceRecord, fileToSchedule.getId());
+        }
 
         // Create an event
         DBObject declareData = BasicDBObjectBuilder.start()
-                .add(FIELD_ID, fileId)
+                .add(FIELD_ID, fileToSchedule.getId())
                 .add(FIELD_USERNAME, username)
                 .add(FIELD_PASSWORD, password)
                 .get();
