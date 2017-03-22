@@ -339,11 +339,11 @@
                {
                   if (!fileAccess.hasOwnProperty(index))
                   {
-                     userAccess[index] = undefined;
-                  } 
-                  else 
+                      userAccess[index] = undefined;
+                  }
+                  else
                   {
-                	 userAccess[index] = userAccess[index] && fileAccess[index];
+                     userAccess[index] = userAccess[index] && fileAccess[index];
                   }
                }
 
