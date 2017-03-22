@@ -324,7 +324,8 @@
             };
 
             // first time around fill with permissions from first node
-            userAccess = files[0].node.permissions.user;
+            // NOTE copy so we don't remove permissions from first node
+            userAccess = Alfresco.util.deepCopy(files[0].node.permissions.user);
 
             // Check each file for user permissions
             for (i = 0, ii = files.length; i < ii; i++)
