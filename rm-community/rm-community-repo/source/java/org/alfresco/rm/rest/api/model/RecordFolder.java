@@ -27,50 +27,31 @@
 
 package org.alfresco.rm.rest.api.model;
 
-import java.io.Serializable;
-import java.util.Map;
-
-import org.alfresco.rest.api.model.Node;
-import org.alfresco.rest.api.model.UserInfo;
-import org.alfresco.service.ServiceRegistry;
-import org.alfresco.service.cmr.repository.NodeRef;
-import org.alfresco.service.namespace.QName;
-
 /**
- * Concrete class carrying specific information for a record
- *
- * @author Ana Bozianu
+ * Concrete class carrying general information for a record folder
+ * 
+ * @author Ramona Popa
  * @since 2.6
  */
-public class RecordNode extends FileplanComponentNode
+public class RecordFolder extends RMNode
 {
-    private Boolean isCompleted;
+    public static final String PARAM_IS_CLOSED = "isClosed";
+    
+    private Boolean isClosed;
 
-    public RecordNode(NodeRef nodeRef, NodeRef parentNodeRef, Map<QName, Serializable> nodeProps, Map<String, UserInfo> mapUserInfo, ServiceRegistry sr)
+    public RecordFolder()
     {
-        super(nodeRef, parentNodeRef, nodeProps, mapUserInfo, sr);
+        super();
     }
 
-    public RecordNode(Node node)
+    public Boolean getIsClosed()
     {
-        super(node);
+        return isClosed;
     }
 
-    @Override
-    protected void defineType()
+    public void setIsClosed(Boolean isClosed)
     {
-        setIsFile(true);
-        setIsCategory(false);
-        setIsRecordFolder(false);
+        this.isClosed = isClosed;
     }
 
-    public Boolean getIsCompleted()
-    {
-        return isCompleted;
-    }
-
-    public void setIsCompleted(Boolean isCompleted)
-    {
-        this.isCompleted = isCompleted;
-    }
 }

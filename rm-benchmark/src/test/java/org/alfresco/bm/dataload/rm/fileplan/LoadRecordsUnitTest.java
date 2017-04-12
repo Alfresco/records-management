@@ -47,9 +47,10 @@ import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
+import org.alfresco.rest.rm.community.model.record.Record;
+import org.alfresco.rest.rm.community.model.recordfolder.RecordFolder;
+import org.alfresco.rest.rm.community.requests.gscore.api.RecordFolderAPI;
 import org.alfresco.rest.core.RestAPIFactory;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
@@ -79,7 +80,7 @@ public class LoadRecordsUnitTest implements RMEventConstants
     private RestAPIFactory mockedRestApiFactory;
 
     @Mock
-    private FilePlanComponentAPI mockedFilePlanComponentAPI;
+    private RecordFolderAPI mockedRecordFolderAPI;
 
     @Mock
     private TestFileService mockedTestFileService;
@@ -202,15 +203,12 @@ public class LoadRecordsUnitTest implements RMEventConstants
         when(mockedFolder.getContext()).thenReturn("someContext");
         when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
         when(mockedEvent.getSessionId()).thenReturn("someId");
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
-        FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
-        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
 
         mockSiteAndUserData();
         EventResult result = loadRecords.processEvent(mockedEvent, new StopWatch());
         verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
         verify(mockedTestFileService, never()).getFile();
-        verify(mockedFilePlanComponentAPI, never()).createElectronicRecord(any(FilePlanComponent.class), any(File.class), eq("folderId"));
+        verify(mockedRecordFolderAPI, never()).createRecord(any(Record.class), eq("folderId"), any(File.class));
 
         verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
         assertEquals(true, result.isSuccess());
@@ -244,14 +242,17 @@ public class LoadRecordsUnitTest implements RMEventConstants
         when(mockedFolder.getContext()).thenReturn("someContext");
         when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
         when(mockedEvent.getSessionId()).thenReturn("someId");
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
-        FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
-        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
+
+        when(mockedRestApiFactory.getRecordFolderAPI(any(UserModel.class))).thenReturn(mockedRecordFolderAPI);
+
+        RecordFolder mockedFilePlanComponent = mock(RecordFolder.class);
+        when(mockedRecordFolderAPI.getRecordFolder("folderId")).thenReturn(mockedFilePlanComponent);
+
         File mockedFile = mock(File.class);
         when(mockedTestFileService.getFile()).thenReturn(mockedFile);
         //TODO uncomment this and remove createFilePlanComponent call when RM-4564 issue is fixed
-//        Mockito.doThrow(new Exception("someError")).when(mockedFilePlanComponentAPI).createElectronicRecord(any(FilePlanComponent.class), any(File.class), any(String.class));
-        Mockito.doThrow(new Exception("someError")).when(mockedFilePlanComponentAPI).createFilePlanComponent(any(FilePlanComponent.class), any(String.class));
+//        Mockito.doThrow(new Exception("someError")).when(mockedRecordFolderAPI).createRecord(any(Record.class), any(String.class), any(File.class));
+        Mockito.doThrow(new Exception("someError")).when(mockedRecordFolderAPI).createRecord(any(Record.class), any(String.class));
 
         mockSiteAndUserData();
         EventResult result = loadRecords.processEvent(mockedEvent, new StopWatch());
@@ -259,7 +260,7 @@ public class LoadRecordsUnitTest implements RMEventConstants
 
         //TODO uncomment this when RM-4564 issue is fixed
 //        verify(mockedTestFileService, times(1)).getFile();
-        verify(mockedFilePlanComponentAPI, never()).createElectronicRecord(any(FilePlanComponent.class), any(File.class), eq("folderId"));
+        verify(mockedRecordFolderAPI, never()).createRecord(any(Record.class), eq("folderId"), any(File.class));
 
         verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
 
@@ -294,15 +295,17 @@ public class LoadRecordsUnitTest implements RMEventConstants
 //        when(mockedFolder.getContext()).thenReturn("someContext");
 //        when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
 //        when(mockedEvent.getSessionId()).thenReturn("someId");
-//        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
-//        FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
-//        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
+//
+//        when(mockedRestApiFactory.getRecordFolderAPI(any(UserModel.class))).thenReturn(mockedRecordFolderAPI);
+//
+//        RecordFolder mockedFilePlanComponent = mock(RecordFolder.class);
+//        when(mockedRecordFolderAPI.getRecordFolder("folderId")).thenReturn(mockedFilePlanComponent);
 //
 //        mockSiteAndUserData();
 //        EventResult result = loadRecords.processEvent(mockedEvent, new StopWatch());
 //        verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
 //        verify(mockedTestFileService, times(1)).getFile();
-//        verify(mockedFilePlanComponentAPI, never()).createElectronicRecord(any(FilePlanComponent.class), any(File.class), eq("folderId"));
+//        verify(mockedRecordFolderAPI, never()).createRecord(any(Record.class), eq("folderId"), any(File.class));
 //        verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
 //
 //        assertEquals(false, result.isSuccess());
@@ -333,10 +336,13 @@ public class LoadRecordsUnitTest implements RMEventConstants
         when(mockedFolder.getContext()).thenReturn("someContext");
         when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
         when(mockedEvent.getSessionId()).thenReturn("someId");
-        when(mockedRestApiFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
-        FilePlanComponent mockedFilePlanComponent = mock(FilePlanComponent.class);
+
+        when(mockedRestApiFactory.getRecordFolderAPI(any(UserModel.class))).thenReturn(mockedRecordFolderAPI);
+
+        RecordFolder mockedFilePlanComponent = mock(RecordFolder.class);
         when(mockedFilePlanComponent.getId()).thenReturn("folderId");
-        when(mockedFilePlanComponentAPI.getFilePlanComponent("folderId")).thenReturn(mockedFilePlanComponent);
+        when(mockedRecordFolderAPI.getRecordFolder("folderId")).thenReturn(mockedFilePlanComponent);
+
         File mockedFile = mock(File.class);
         when(mockedTestFileService.getFile()).thenReturn(mockedFile);
 
@@ -346,7 +352,7 @@ public class LoadRecordsUnitTest implements RMEventConstants
         verify(mockedFileFolderService, times(1)).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
         //TODO uncomment this when RM-4564 issue is fixed
 //        verify(mockedTestFileService, times(3)).getFile();
-//        verify(mockedFilePlanComponentAPI, times(3)).createElectronicRecord(any(FilePlanComponent.class), any(File.class), eq("folderId"));
+//        verify(mockedRecordFolderAPI, times(3)).createRecord(any(Record.class), eq("folderId"), any(File.class));
 //        verify(mockedFileFolderService, times(3)).incrementFileCount(any(String.class), any(String.class), any(Long.class));
 
         assertEquals(true, result.isSuccess());

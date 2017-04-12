@@ -20,7 +20,6 @@ import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_DESC;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_TITLE;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.FILE_PLAN_ALIAS;
-import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.HOLDS_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.TRANSFERS_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS;
 import static org.alfresco.rest.rm.community.model.site.RMSiteCompliance.STANDARD;
@@ -37,10 +36,11 @@ import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.rest.core.RestAPIFactory;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
+import org.alfresco.rest.rm.community.model.fileplan.FilePlan;
 import org.alfresco.rest.rm.community.model.site.RMSite;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.RMSiteAPI;
+import org.alfresco.rest.rm.community.model.transfercontainer.TransferContainer;
+import org.alfresco.rest.rm.community.model.unfiledcontainer.UnfiledContainer;
+import org.alfresco.rest.rm.community.requests.gscore.api.RMSiteAPI;
 import org.alfresco.utility.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -165,44 +165,34 @@ public class CreateRMSite extends AbstractEventProcessor
 
     private void loadSpecialContainersInDB(String siteId, String siteManager) throws Exception
     {
-        FilePlanComponentAPI filePlanComponentsAPI = restAPIFactory.getFilePlanComponentsAPI(new UserModel(siteManager, siteManager));
-        FilePlanComponent filePlanComponent = filePlanComponentsAPI.getFilePlanComponent(FILE_PLAN_ALIAS);
+        UserModel userModel = new UserModel(siteManager, siteManager);
+        FilePlan filePlanEntity = restAPIFactory.getFilePlansAPI(userModel).getFilePlan(FILE_PLAN_ALIAS);
 
         FolderData filePlan = new FolderData(
-                filePlanComponent.getId(),                                   // already unique
+                filePlanEntity.getId(),// already unique
                 "",
                 "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN,
                 0L, 0L);
         fileFolderService.createNewFolder(filePlan);
 
         //add Unfiled record container
-        filePlanComponent = filePlanComponentsAPI.getFilePlanComponent(UNFILED_RECORDS_CONTAINER_ALIAS);
+        UnfiledContainer unfiledContainer = restAPIFactory.getUnfiledContainersAPI(userModel).getUnfiledContainer(UNFILED_RECORDS_CONTAINER_ALIAS);
 
         FolderData unfiledRecordContainer = new FolderData(
-                filePlanComponent.getId(),                                   // already unique
+                unfiledContainer.getId(),// already unique
                 "unfiled",
                 "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN + "/" + PATH_SNIPPET_UNFILED_RECORD_CONTAINER,
                 0L, 0L);
         fileFolderService.createNewFolder(unfiledRecordContainer);
 
         //add Transfer container
-        filePlanComponent = filePlanComponentsAPI.getFilePlanComponent(TRANSFERS_ALIAS);
+        TransferContainer transferContainerEntity = restAPIFactory.getTransferContainerAPI(userModel).getTransferContainer(TRANSFERS_ALIAS);
 
         FolderData transferContainer = new FolderData(
-                    filePlanComponent.getId(),                                   // already unique
+                    transferContainerEntity.getId(),// already unique
                     "transfers",
                     "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN + "/" + PATH_SNIPPET_TRANSFER_CONTAINER,
                     0L, 0L);
         fileFolderService.createNewFolder(transferContainer);
-
-        //add Hold container
-        filePlanComponent = filePlanComponentsAPI.getFilePlanComponent(HOLDS_ALIAS);
-
-        FolderData holdContainer = new FolderData(
-                    filePlanComponent.getId(),                                   // already unique
-                    "holds",
-                    "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN + "/" + PATH_SNIPPET_HOLD_CONTAINER,
-                    0L, 0L);
-        fileFolderService.createNewFolder(holdContainer);
     }
 }

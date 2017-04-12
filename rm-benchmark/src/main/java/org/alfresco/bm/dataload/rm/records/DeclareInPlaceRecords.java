@@ -30,7 +30,7 @@ import org.alfresco.bm.dataload.rm.services.RecordService;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RestAPIFactory;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
+import org.alfresco.rest.rm.community.model.record.Record;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +110,7 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
 
             // Call the REST API
             super.resumeTimer();
-            FilePlanComponent record = restAPIFactory.getFilesAPI(new UserModel(username, password)).declareAsRecord(id);
+            Record record = restAPIFactory.getFilesAPI(new UserModel(username, password)).declareAsRecord(id);
             String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
             super.suspendTimer();
             TimeUnit.MILLISECONDS.sleep(declareInPlaceRecordDelay);

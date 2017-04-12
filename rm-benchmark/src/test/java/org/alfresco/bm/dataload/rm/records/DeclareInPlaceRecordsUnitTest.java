@@ -25,6 +25,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.mongodb.DBObject;
+
 import org.alfresco.bm.dataload.RMEventConstants;
 import org.alfresco.bm.dataload.rm.services.ExecutionState;
 import org.alfresco.bm.dataload.rm.services.RecordContext;
@@ -35,8 +37,8 @@ import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RMRestWrapper;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.model.RestErrorModel;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.FilesAPI;
+import org.alfresco.rest.rm.community.model.record.Record;
+import org.alfresco.rest.rm.community.requests.gscore.api.FilesAPI;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
@@ -46,8 +48,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
-
-import com.mongodb.DBObject;
 
 /**
  * Unit tests for DeclareInPlaceRecords
@@ -176,7 +176,7 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
 
         FilesAPI mockedFilesAPI = mock(FilesAPI.class);
         when(mockedRestAPIFactory.getFilesAPI(any(UserModel.class))).thenReturn(mockedFilesAPI);
-        FilePlanComponent record = mock(FilePlanComponent.class);
+        Record record = mock(Record.class);
         when(record.getName()).thenReturn("newRecordName");
         when(mockedFilesAPI.declareAsRecord(fileId)).thenReturn(record);
         RMRestWrapper mockedRmRestWrapper = mock(RMRestWrapper.class);

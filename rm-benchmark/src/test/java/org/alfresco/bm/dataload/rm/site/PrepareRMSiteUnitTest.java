@@ -40,7 +40,7 @@ import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.core.RestAPIFactory;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.RMSiteAPI;
+import org.alfresco.rest.rm.community.requests.gscore.api.RMSiteAPI;
 import org.alfresco.utility.model.UserModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -21,6 +21,9 @@ package org.alfresco.bm.dataload;
 
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.CONTENT_TYPE;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.NON_ELECTRONIC_RECORD_TYPE;
+import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.UNFILED_RECORD_FOLDER_TYPE;
+import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.RECORD_CATEGORY_TYPE;
+import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.RECORD_FOLDER_TYPE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.io.File;
@@ -47,9 +50,19 @@ import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.core.RestAPIFactory;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentProperties;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
+import org.alfresco.rest.rm.community.model.record.Record;
+import org.alfresco.rest.rm.community.model.record.RecordProperties;
+import org.alfresco.rest.rm.community.model.recordcategory.RecordCategory;
+import org.alfresco.rest.rm.community.model.recordcategory.RecordCategoryChild;
+import org.alfresco.rest.rm.community.model.recordcategory.RecordCategoryChildProperties;
+import org.alfresco.rest.rm.community.model.recordcategory.RecordCategoryProperties;
+import org.alfresco.rest.rm.community.model.unfiledcontainer.UnfiledContainerChild;
+import org.alfresco.rest.rm.community.model.unfiledcontainer.UnfiledContainerChildProperties;
+import org.alfresco.rest.rm.community.requests.gscore.api.FilePlanAPI;
+import org.alfresco.rest.rm.community.requests.gscore.api.RecordCategoryAPI;
+import org.alfresco.rest.rm.community.requests.gscore.api.RecordFolderAPI;
+import org.alfresco.rest.rm.community.requests.gscore.api.UnfiledContainerAPI;
+import org.alfresco.rest.rm.community.requests.gscore.api.UnfiledRecordFolderAPI;
 import org.alfresco.utility.model.UserModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,21 +114,18 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     }
 
     /**
-     * Helper method for creating a filePlan component of specified type that have the name starting with provided nameIdentifier and a random generated string.
+     * Helper method for creating root record categories with the name starting with provided nameIdentifier and a random generated string.
      *
-     * @param folder - container that will contain created filePlan component
+     * @param folder - container that will contain created root record categories
      * @param userModel - UserModel instance with wich rest api will be called
-     * @param parentFilePlanComponent - parent filePlan component
-     * @param componentsToCreate - number of components to create
-     * @param nameIdentifier - a string identifier that the created components will start with
-     * @param type - the type or filePlan components that are created
-     * @param context - the context for created filePlan components
-     * @param loadFilePlanComponentDelay - delay between creation of filePlan components
+     * @param componentsToCreate - number of root record categories to create
+     * @param nameIdentifier - a string identifier that the created root record categories will start with
+     * @param context - the context for created root record categories
+     * @param loadFilePlanComponentDelay - delay between creation of root record categories
      * @throws Exception
      */
-    public void createFilePlanComponent(FolderData folder, UserModel userModel,
-                FilePlanComponent parentFilePlanComponent, int componentsToCreate, String nameIdentifier, String type, String context,
-                long loadFilePlanComponentDelay) throws Exception
+    public void createRootCategory(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier, String context,
+                                              long loadFilePlanComponentDelay) throws Exception
     {
         String unique;
 
@@ -126,20 +136,20 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
             String newfilePlanComponentName = nameIdentifier + unique;
             String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
 
-            // Build filePlan component records folder properties
-            FilePlanComponent filePlanComponentModel = FilePlanComponent.builder()
+            // Build root record category properties
+            RecordCategory recordCategoryModel = RecordCategory.builder()
                         .name(newfilePlanComponentName)
-                        .nodeType(type)
-                        .properties(FilePlanComponentProperties.builder()
+                        .nodeType(RECORD_CATEGORY_TYPE)
+                        .properties(RecordCategoryProperties.builder()
                                     .title(newfilePlanComponentTitle)
                                     .description(EMPTY)
                                     .build())
                         .build();
 
-            FilePlanComponentAPI api = getRestAPIFactory().getFilePlanComponentsAPI(userModel);
-            FilePlanComponent filePlanComponent = api.createFilePlanComponent(filePlanComponentModel, parentFilePlanComponent.getId());
-            String newfilePlanComponentId = filePlanComponent.getId();
-            fileFolderService.createNewFolder(newfilePlanComponentId, context, folderPath + "/" + newfilePlanComponentName);
+            FilePlanAPI filePlansAPI = getRestAPIFactory().getFilePlansAPI(userModel);
+            RecordCategory rootRecordCategory = filePlansAPI.createRootRecordCategory(recordCategoryModel, folder.getId());
+            String newRootRecordCategoryId = rootRecordCategory.getId();
+            fileFolderService.createNewFolder(newRootRecordCategoryId, context, folderPath + "/" + newfilePlanComponentName);
             TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
         }
 
@@ -148,57 +158,17 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     }
 
     /**
-     * Helper method for creating a filePlan component with a specified name.
+     * Helper method for creating child record categories with the name starting with provided nameIdentifier and a random generated string.
      *
-     * @param folder - container that will contain created filePlan component
+     * @param folder - container that will contain created child record categories
      * @param userModel - UserModel instance with wich rest api will be called
-     * @param parentFilePlanComponent - parent filePlan component
-     * @param name - the name that created filePlan component will have
-     * @param type - the type or filePlan components that are created
-     * @param context - the context for created filePlan components
-     * @return created filePlan component with a specified name
+     * @param componentsToCreate - number of child record categories to create
+     * @param nameIdentifier - a string identifier that the created child record categories will start with
+     * @param context - the context for created child record categories
+     * @param loadFilePlanComponentDelay - delay between creation of child record categories
      * @throws Exception
      */
-    public FolderData createFilePlanComponentWithFixedName(FolderData folder, FilePlanComponentAPI api,
-                FilePlanComponent parentFilePlanComponent, String name, String type, String context) throws Exception
-    {
-        FolderData createdFolder = null;
-        String folderPath = folder.getPath();
-        String newfilePlanComponentTitle = "title: " + name;
-        // Build filePlan component records folder properties
-        FilePlanComponent filePlanComponentModel = FilePlanComponent.builder()
-                    .name(name)
-                    .nodeType(type)
-                    .properties(FilePlanComponentProperties.builder()
-                                .title(newfilePlanComponentTitle)
-                                .description(EMPTY)
-                                .build())
-                    .build();
-
-        FilePlanComponent filePlanComponent = api.createFilePlanComponent(filePlanComponentModel, parentFilePlanComponent.getId());
-
-        String newfilePlanComponentId = filePlanComponent.getId();
-        fileFolderService.createNewFolder(newfilePlanComponentId, context,
-                    folderPath + "/" + name);
-        // Increment counts
-        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, 1);
-        createdFolder = fileFolderService.getFolder(newfilePlanComponentId);
-        return createdFolder;
-    }
-
-    /**
-     * Helper method for creating specified number of non-electronic documents in specified container.
-     *
-     * @param folder - container that will contain created non-electronic document
-     * @param userModel - UserModel instance with wich rest api will be called
-     * @param parentFilePlanComponent - parent filePlan component
-     * @param componentsToCreate - number of non-electronic documents to create
-     * @param nameIdentifier - a string identifier that the created non-electronic documents will start with
-     * @param loadFilePlanComponentDelay - delay between creation of non-electronic documents
-     * @throws Exception
-     */
-    public void createRecord(FolderData folder, UserModel userModel,
-                FilePlanComponent parentFilePlanComponent, int componentsToCreate, String nameIdentifier,
+    public void createSubCategory(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier, String context,
                 long loadFilePlanComponentDelay) throws Exception
     {
         String unique;
@@ -210,19 +180,369 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
             String newfilePlanComponentName = nameIdentifier + unique;
             String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
 
-            // Build filePlan component records folder properties
-            FilePlanComponent filePlanComponentModel = FilePlanComponent.builder()
+            // Build child record category properties
+            RecordCategoryChild recordCategoryChildModel = RecordCategoryChild.builder()
                         .name(newfilePlanComponentName)
-                        .nodeType(NON_ELECTRONIC_RECORD_TYPE.toString())
-                        .properties(FilePlanComponentProperties.builder()
+                        .nodeType(RECORD_CATEGORY_TYPE)
+                        .properties(RecordCategoryChildProperties.builder()
                                     .title(newfilePlanComponentTitle)
                                     .description(EMPTY)
                                     .build())
                         .build();
 
-            FilePlanComponentAPI api = getRestAPIFactory().getFilePlanComponentsAPI(userModel);
-            String parentId = parentFilePlanComponent.getId();
-            api.createFilePlanComponent(filePlanComponentModel, parentId);
+            RecordCategoryAPI recordCategoryAPI = getRestAPIFactory().getRecordCategoryAPI(userModel);
+            RecordCategoryChild childRecordCategory = recordCategoryAPI.createRecordCategoryChild(recordCategoryChildModel, folder.getId());
+            String newChildRecordCategoryId = childRecordCategory.getId();
+            fileFolderService.createNewFolder(newChildRecordCategoryId, context, folderPath + "/" + newfilePlanComponentName);
+            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
+        }
+
+        // Increment counts
+        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, componentsToCreate);
+    }
+
+    /**
+     * Helper method for creating child record folder with the name starting with provided nameIdentifier and a random generated string.
+     *
+     * @param folder - container that will contain created child record folder
+     * @param userModel - UserModel instance with wich rest api will be called
+     * @param componentsToCreate - number of child record folder to create
+     * @param nameIdentifier - a string identifier that the created child record folders will start with
+     * @param context - the context for created child record folder
+     * @param loadFilePlanComponentDelay - delay between creation of child record folders
+     * @throws Exception
+     */
+    public void createRecordFolder(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier, String context,
+                long loadFilePlanComponentDelay) throws Exception
+    {
+        String unique;
+
+        String folderPath = folder.getPath();
+        for (int i = 0; i < componentsToCreate; i++)
+        {
+            unique = UUID.randomUUID().toString();
+            String newfilePlanComponentName = nameIdentifier + unique;
+            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+
+            // Build child record folder properties
+            RecordCategoryChild recordCategoryChildModel = RecordCategoryChild.builder()
+                        .name(newfilePlanComponentName)
+                        .nodeType(RECORD_FOLDER_TYPE)
+                        .properties(RecordCategoryChildProperties.builder()
+                                    .title(newfilePlanComponentTitle)
+                                    .description(EMPTY)
+                                    .build())
+                        .build();
+
+            RecordCategoryAPI recordCategoryAPI = getRestAPIFactory().getRecordCategoryAPI(userModel);
+            RecordCategoryChild childRecordFolder = recordCategoryAPI.createRecordCategoryChild(recordCategoryChildModel, folder.getId());
+            String newChildRecordFolderId = childRecordFolder.getId();
+            fileFolderService.createNewFolder(newChildRecordFolderId, context, folderPath + "/" + newfilePlanComponentName);
+            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
+        }
+
+        // Increment counts
+        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, componentsToCreate);
+    }
+
+    /**
+     * Helper method for creating root unfiled record folders with the name starting with provided nameIdentifier and a random generated string.
+     *
+     * @param folder - container that will contain created root unfiled record folders
+     * @param userModel - UserModel instance with wich rest api will be called
+     * @param componentsToCreate - number of root unfiled record folders to create
+     * @param nameIdentifier - a string identifier that the created root unfiled record folders will start with
+     * @param context - the context for created root unfiled record folders
+     * @param loadFilePlanComponentDelay - delay between creation of root unfiled record folders
+     * @throws Exception
+     */
+    public void createRootUnfiledRecordFolder(FolderData folder, UserModel userModel,int componentsToCreate, String nameIdentifier, String context,
+                long loadFilePlanComponentDelay) throws Exception
+    {
+        String unique;
+
+        String folderPath = folder.getPath();
+        for (int i = 0; i < componentsToCreate; i++)
+        {
+            unique = UUID.randomUUID().toString();
+            String newfilePlanComponentName = nameIdentifier + unique;
+            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+
+            // Build root unfiled records folder properties
+            UnfiledContainerChild unfiledContainerChildModel = UnfiledContainerChild.builder()
+                        .name(newfilePlanComponentName)
+                        .nodeType(UNFILED_RECORD_FOLDER_TYPE)
+                        .properties(UnfiledContainerChildProperties.builder()
+                                    .title(newfilePlanComponentTitle)
+                                    .description(EMPTY)
+                                    .build())
+                        .build();
+
+            UnfiledContainerAPI unfiledContainersAPI = getRestAPIFactory().getUnfiledContainersAPI(userModel);
+            UnfiledContainerChild unfiledContainerChild = unfiledContainersAPI.createUnfiledContainerChild(unfiledContainerChildModel, folder.getId());
+            String newUnfiledContainerChildId = unfiledContainerChild.getId();
+            fileFolderService.createNewFolder(newUnfiledContainerChildId, context, folderPath + "/" + newfilePlanComponentName);
+            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
+        }
+
+        // Increment counts
+        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, componentsToCreate);
+    }
+
+    /**
+     * Helper method for creating child unfiled record folders that have the name starting with provided nameIdentifier and a random generated string.
+     *
+     * @param folder - container that will contain created unfiled record folders
+     * @param userModel - UserModel instance with wich rest api will be called
+     * @param componentsToCreate - number of unfiled record folders to create
+     * @param nameIdentifier - a string identifier that the created unfiled record folders will start with
+     * @param context - the context for created unfiled record folders
+     * @param loadFilePlanComponentDelay - delay between creation of unfiled record folders
+     * @throws Exception
+     */
+    public void createUnfiledRecordFolder(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier, String context,
+                                          long loadFilePlanComponentDelay) throws Exception
+    {
+        String unique;
+
+        String folderPath = folder.getPath();
+        for (int i = 0; i < componentsToCreate; i++)
+        {
+            unique = UUID.randomUUID().toString();
+            String newfilePlanComponentName = nameIdentifier + unique;
+            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+
+            // Build unfiled record folder properties
+            UnfiledContainerChild unfiledRecordFolderChildModel = UnfiledContainerChild.builder()
+                        .name(newfilePlanComponentName)
+                        .nodeType(UNFILED_RECORD_FOLDER_TYPE)
+                        .properties(UnfiledContainerChildProperties.builder()
+                                    .title(newfilePlanComponentTitle)
+                                    .description(EMPTY)
+                                    .build())
+                        .build();
+
+            UnfiledRecordFolderAPI unfiledRecordFoldersAPI = getRestAPIFactory().getUnfiledRecordFoldersAPI(userModel);
+            UnfiledContainerChild unfiledRecordFolderChild = unfiledRecordFoldersAPI.createUnfiledRecordFolderChild(unfiledRecordFolderChildModel, folder.getId());
+            String newUnfiledRecordFolderChildId = unfiledRecordFolderChild.getId();
+            fileFolderService.createNewFolder(newUnfiledRecordFolderChildId, context, folderPath + "/" + newfilePlanComponentName);
+            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
+        }
+
+        // Increment counts
+        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, componentsToCreate);
+    }
+
+    /**
+     * Helper method for creating a child record category with a specified name.
+     *
+     * @param folder - container that will contain created child record category
+     * @param name - the name that created child record category will have
+     * @return created child record category with a specified name
+     * @throws Exception
+     */
+    public FolderData createRecordCategoryWithFixedName(FolderData folder, String name) throws Exception
+    {
+        FolderData createdFolder = null;
+        String folderPath = folder.getPath();
+        String newfilePlanComponentTitle = "title: " + name;
+        // Build filePlan component records folder properties
+        RecordCategoryChild recordCategoryChildModel = RecordCategoryChild.builder()
+                    .name(name)
+                    .nodeType(RECORD_CATEGORY_TYPE)
+                    .properties(RecordCategoryChildProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
+
+        RecordCategoryAPI recordCategoryAPI = getRestAPIFactory().getRecordCategoryAPI();
+        RecordCategoryChild recordCategoryChild = recordCategoryAPI.createRecordCategoryChild(recordCategoryChildModel, folder.getId());
+
+        String newRecordCategoryChildId = recordCategoryChild.getId();
+        fileFolderService.createNewFolder(newRecordCategoryChildId, RECORD_CATEGORY_CONTEXT,
+                    folderPath + "/" + name);
+        // Increment counts
+        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, 1);
+        createdFolder = fileFolderService.getFolder(newRecordCategoryChildId);
+        return createdFolder;
+    }
+
+    /**
+     * Helper method for creating a root record category with a specified name.
+     *
+     * @param folder - container that will contain created root record category
+     * @param name - the name that created root record category will have
+     * @return created root record category with a specified name
+     * @throws Exception
+     */
+    public FolderData createRootRecordCategoryWithFixedName(FolderData folder, String name) throws Exception
+    {
+        FolderData createdFolder = null;
+        String folderPath = folder.getPath();
+        String newfilePlanComponentTitle = "title: " + name;
+        // Build root category properties
+        RecordCategory recordCategoryModel = RecordCategory.builder()
+                    .name(name)
+                    .nodeType(RECORD_CATEGORY_TYPE)
+                    .properties(RecordCategoryProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
+
+        FilePlanAPI filePlansAPI = getRestAPIFactory().getFilePlansAPI();
+        RecordCategory rootCategory = filePlansAPI.createRootRecordCategory(recordCategoryModel, folder.getId());
+
+        String newRootCategoryId = rootCategory.getId();
+        fileFolderService.createNewFolder(newRootCategoryId, RECORD_CATEGORY_CONTEXT,
+                    folderPath + "/" + name);
+        // Increment counts
+        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, 1);
+        createdFolder = fileFolderService.getFolder(newRootCategoryId);
+        return createdFolder;
+    }
+
+    /**
+     * Helper method for creating a child record folder with a specified name.
+     *
+     * @param folder - container that will contain created child record folder
+     * @param name - the name that created child record folder will have
+     * @return created child record folder with a specified name
+     * @throws Exception
+     */
+    public FolderData createRecordFolderWithFixedName(FolderData folder, String name) throws Exception
+    {
+        FolderData createdFolder = null;
+        String folderPath = folder.getPath();
+        String newfilePlanComponentTitle = "title: " + name;
+        // Build filePlan component records folder properties
+        RecordCategoryChild recordCategoryChildModel = RecordCategoryChild.builder()
+                    .name(name)
+                    .nodeType(RECORD_FOLDER_TYPE)
+                    .properties(RecordCategoryChildProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
+
+        RecordCategoryAPI recordCategoryAPI = getRestAPIFactory().getRecordCategoryAPI();
+        RecordCategoryChild recordFolderChild = recordCategoryAPI.createRecordCategoryChild(recordCategoryChildModel, folder.getId());
+
+        String newRecordFolderChildId = recordFolderChild.getId();
+        fileFolderService.createNewFolder(newRecordFolderChildId, RECORD_FOLDER_CONTEXT,
+                    folderPath + "/" + name);
+        // Increment counts
+        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, 1);
+        createdFolder = fileFolderService.getFolder(newRecordFolderChildId);
+        return createdFolder;
+    }
+
+    /**
+     * Helper method for creating a root unfiled record folder with a specified name.
+     *
+     * @param folder - container that will contain created root unfiled record folder
+     * @param name - the name that created root unfiled record folder will have
+     * @return created root unfiled record folder with a specified name
+     * @throws Exception
+     */
+    public FolderData createRootUnfiledRecordFolderWithFixedName(FolderData folder, String name) throws Exception
+    {
+        FolderData createdFolder = null;
+        String folderPath = folder.getPath();
+        String newfilePlanComponentTitle = "title: " + name;
+        // Build root unfiled record folder properties
+        UnfiledContainerChild unfiledContainerChildModel = UnfiledContainerChild.builder()
+                    .name(name)
+                    .nodeType(UNFILED_RECORD_FOLDER_TYPE)
+                    .properties(UnfiledContainerChildProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
+
+        UnfiledContainerAPI unfiledContainersAPI = getRestAPIFactory().getUnfiledContainersAPI();
+        UnfiledContainerChild rootUnfiledRecordFolder = unfiledContainersAPI.createUnfiledContainerChild(unfiledContainerChildModel, folder.getId());
+
+        String newRootUnfiledRecordFolderId = rootUnfiledRecordFolder.getId();
+        fileFolderService.createNewFolder(newRootUnfiledRecordFolderId, UNFILED_CONTEXT,
+                    folderPath + "/" + name);
+        // Increment counts
+        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, 1);
+        createdFolder = fileFolderService.getFolder(newRootUnfiledRecordFolderId);
+        return createdFolder;
+    }
+
+    /**
+     * Helper method for creating a child unfiled record folder with a specified name.
+     *
+     * @param folder - container that will contain created child unfiled record folder
+     * @param name - the name that created child unfiled record folder will have
+     * @return created child unfiled record folder with a specified name
+     * @throws Exception
+     */
+    public FolderData createUnfiledRecordFolderWithFixedName(FolderData folder, String name) throws Exception
+    {
+        FolderData createdFolder = null;
+        String folderPath = folder.getPath();
+        String newfilePlanComponentTitle = "title: " + name;
+        // Build unfiled record folder properties
+        UnfiledContainerChild unfiledRecordFolderChildModel = UnfiledContainerChild.builder()
+                    .name(name)
+                    .nodeType(UNFILED_RECORD_FOLDER_TYPE)
+                    .properties(UnfiledContainerChildProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
+
+        UnfiledRecordFolderAPI unfiledRecordFoldersAPI = getRestAPIFactory().getUnfiledRecordFoldersAPI();
+        UnfiledContainerChild unfiledRecordFolderChild = unfiledRecordFoldersAPI.createUnfiledRecordFolderChild(unfiledRecordFolderChildModel, folder.getId());
+
+        String newUnfiledRecordFolderChildId = unfiledRecordFolderChild.getId();
+        fileFolderService.createNewFolder(newUnfiledRecordFolderChildId, UNFILED_CONTEXT,
+                    folderPath + "/" + name);
+        // Increment counts
+        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, 1);
+        createdFolder = fileFolderService.getFolder(newUnfiledRecordFolderChildId);
+        return createdFolder;
+    }
+
+    /**
+     * Helper method for creating specified number of non-electronic documents in specified record folder.
+     *
+     * @param folder - record folder that will contain created non-electronic document
+     * @param userModel - UserModel instance with wich rest api will be called
+     * @param componentsToCreate - number of non-electronic documents to create
+     * @param nameIdentifier - a string identifier that the created non-electronic documents will start with
+     * @param loadFilePlanComponentDelay - delay between creation of non-electronic documents
+     * @throws Exception
+     */
+    public void createNonElectonicRecordInRecordFolder(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier,
+                                                       long loadFilePlanComponentDelay) throws Exception
+    {
+        String unique;
+
+        String folderPath = folder.getPath();
+        for (int i = 0; i < componentsToCreate; i++)
+        {
+            unique = UUID.randomUUID().toString();
+            String newfilePlanComponentName = nameIdentifier + unique;
+            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+
+            // Build non electronic record properties
+            Record recordModel = Record.builder()
+                        .name(newfilePlanComponentName)
+                        .nodeType(NON_ELECTRONIC_RECORD_TYPE)
+                        .properties(RecordProperties.builder()
+                                    .title(newfilePlanComponentTitle)
+                                    .description(EMPTY)
+                                    .build())
+                        .build();
+
+            RecordFolderAPI recordFolderAPI = getRestAPIFactory().getRecordFolderAPI(userModel);
+            String parentId = folder.getId();
+            recordFolderAPI.createRecord(recordModel, parentId);
             TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
         }
 
@@ -231,19 +551,67 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     }
 
     /**
-     * Helper method for uploading specified number of records on specified container.
+     * Helper method for creating specified number of non-electronic documents in specified unfiled container or unfiled record folder.
      *
-     * @param folder - container that will contain uploaded records
-     * @param api - FilePlanComponentAPI instance
-     * @param parentFilePlanComponent - parent filePlan component
+     * @param folder - unfiled container or unfiled record folder that will contain created non-electronic document
+     * @param userModel - UserModel instance with wich rest api will be called
+     * @param componentsToCreate - number of non-electronic documents to create
+     * @param nameIdentifier - a string identifier that the created non-electronic documents will start with
+     * @param loadFilePlanComponentDelay - delay between creation of non-electronic documents
+     * @throws Exception
+     */
+    public void createNonElectonicRecordInUnfiledContext(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier,
+                long loadFilePlanComponentDelay) throws Exception
+    {
+        String unique;
+
+        boolean isUnfiledContainer = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH).equals(folder);
+        String folderPath = folder.getPath();
+        for (int i = 0; i < componentsToCreate; i++)
+        {
+            unique = UUID.randomUUID().toString();
+            String newfilePlanComponentName = nameIdentifier + unique;
+            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+
+            // Build non electronic record properties
+            UnfiledContainerChild unfiledContainerChildModel = UnfiledContainerChild.builder()
+                        .name(newfilePlanComponentName)
+                        .nodeType(NON_ELECTRONIC_RECORD_TYPE)
+                        .properties(UnfiledContainerChildProperties.builder()
+                                    .title(newfilePlanComponentTitle)
+                                    .description(EMPTY)
+                                    .build())
+                        .build();
+
+            if(isUnfiledContainer)
+            {
+                UnfiledContainerAPI unfiledContainersAPI = getRestAPIFactory().getUnfiledContainersAPI(userModel);
+                unfiledContainersAPI.createUnfiledContainerChild(unfiledContainerChildModel, folder.getId());
+            }
+            else
+            {
+                UnfiledRecordFolderAPI unfiledRecordFoldersAPI = getRestAPIFactory().getUnfiledRecordFoldersAPI(userModel);
+                unfiledRecordFoldersAPI.createUnfiledRecordFolderChild(unfiledContainerChildModel, folder.getId());
+            }
+            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
+        }
+
+        // Increment counts
+        fileFolderService.incrementFileCount(folder.getContext(), folderPath, componentsToCreate);
+    }
+
+    /**
+     * Helper method for uploading specified number of records on specified record folder.
+     *
+     * @param folder - record folder that will contain uploaded records
+     * @param userModel - UserModel instance with wich rest api will be called
      * @param componentsToCreate - number of records to be uploaded
      * @param nameIdentifier - a string identifier that the uploaded records will start with
      * @param loadFilePlanComponentDelay - delay between upload record operations
      * @throws Exception
      */
-    public void uploadElectronicRecord(FolderData folder, FilePlanComponentAPI api,
-                FilePlanComponent parentFilePlanComponent, int componentsToCreate, String nameIdentifier,
-                long loadFilePlanComponentDelay) throws Exception // to-check: type of exception
+    public void uploadElectronicRecordInRecordFolder(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier,
+                                                      long loadFilePlanComponentDelay) throws Exception // to-check: type of exception
     {
         String unique;
 
@@ -258,18 +626,70 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
             unique = UUID.randomUUID().toString();
             String newfilePlanComponentName = nameIdentifier + unique + "-" + file.getName();
             String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
-            // Build filePlan component records folder properties
-            FilePlanComponent filePlanComponentModel = FilePlanComponent.builder()
+            // Build record properties
+            Record recordModel = Record.builder()
                         .name(newfilePlanComponentName)
-                        .nodeType(CONTENT_TYPE.toString())
-                        .properties(FilePlanComponentProperties.builder()
+                        .nodeType(CONTENT_TYPE)
+                        .properties(RecordProperties.builder()
                                     .title(newfilePlanComponentTitle)
                                     .description(EMPTY)
                                     .build())
                         .build();
 
-            api.createElectronicRecord(filePlanComponentModel, file, parentFilePlanComponent.getId());
+            RecordFolderAPI recordFolderAPI = getRestAPIFactory().getRecordFolderAPI(userModel);
+            recordFolderAPI.createRecord(recordModel, folder.getId(), file);
             TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
+            fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
+        }
+    }
+
+    /**
+     * Helper method for uploading specified number of records on specified unfiled container or unfiled record folder.
+     *
+     * @param folder - unfiled container or unfiled record folder that will contain uploaded records
+     * @param userModel - UserModel instance with wich rest api will be called
+     * @param componentsToCreate - number of records to be uploaded
+     * @param nameIdentifier - a string identifier that the uploaded records will start with
+     * @param loadFilePlanComponentDelay - delay between upload record operations
+     * @throws Exception
+     */
+    public void uploadElectronicRecordInUnfiledContext(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier,
+                                                       long loadFilePlanComponentDelay) throws Exception // to-check: type of exception
+    {
+        String unique;
+
+        boolean isUnfiledContainer = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH).equals(folder);
+        String folderPath = folder.getPath();
+        for (int i = 0; i < componentsToCreate; i++)
+        {
+            File file = testFileService.getFile();
+            if (file == null)
+            {
+                throw new RuntimeException("No test files exist for upload: " + testFileService);
+            }
+            unique = UUID.randomUUID().toString();
+            String newfilePlanComponentName = nameIdentifier + unique + "-" + file.getName();
+            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+            // Build record properties
+            UnfiledContainerChild unfiledContainerChildModel = UnfiledContainerChild.builder()
+                        .name(newfilePlanComponentName)
+                        .nodeType(CONTENT_TYPE)
+                        .properties(UnfiledContainerChildProperties.builder()
+                                    .title(newfilePlanComponentTitle)
+                                    .description(EMPTY)
+                                    .build())
+                        .build();
+
+            if(isUnfiledContainer)
+            {
+                UnfiledContainerAPI unfiledContainersAPI = getRestAPIFactory().getUnfiledContainersAPI(userModel);
+                unfiledContainersAPI.uploadRecord(unfiledContainerChildModel, folder.getId(), file);
+            }
+            else
+            {
+                UnfiledRecordFolderAPI unfiledRecordFoldersAPI = getRestAPIFactory().getUnfiledRecordFoldersAPI(userModel);
+                unfiledRecordFoldersAPI.uploadRecord(unfiledContainerChildModel, folder.getId(), file);
+            }
             fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
         }
     }

@@ -24,53 +24,30 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 package org.alfresco.rm.rest.api.model;
 
-import java.io.Serializable;
-import java.util.Map;
-
-import org.alfresco.rest.api.model.Node;
-import org.alfresco.rest.api.model.UserInfo;
-import org.alfresco.service.ServiceRegistry;
-import org.alfresco.service.cmr.repository.NodeRef;
-import org.alfresco.service.namespace.QName;
-
 /**
- * Concrete class carrying specific information for a record folder
+ * Specific POJO object carrying information for an unfiled record folder child
  *
  * @author Ana Bozianu
  * @since 2.6
  */
-public class RecordFolderNode extends FileplanComponentNode
+public class UnfiledRecordFolderChild extends UnfiledChild
 {
-    private Boolean isClosed;
+    protected String relativePath;
 
-    public RecordFolderNode(NodeRef nodeRef, NodeRef parentNodeRef, Map<QName, Serializable> nodeProps, Map<String, UserInfo> mapUserInfo, ServiceRegistry sr)
+    public UnfiledRecordFolderChild()
     {
-        super(nodeRef, parentNodeRef, nodeProps, mapUserInfo, sr);
+        super();
     }
 
-    public RecordFolderNode(Node node)
+    public void setRelativePath(String relativePath)
     {
-        super(node);
+        this.relativePath = relativePath;
     }
 
-    @Override
-    protected void defineType()
+    public String getRelativePath()
     {
-        setIsRecordFolder(true);
-        setIsCategory(false);
-        setIsFile(false);
-    }
-
-    public Boolean getIsClosed()
-    {
-        return isClosed;
-    }
-
-    public void setIsClosed(Boolean isClosed)
-    {
-        this.isClosed = isClosed;
+        return relativePath;
     }
 }

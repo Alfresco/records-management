@@ -24,53 +24,42 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 package org.alfresco.rm.rest.api.model;
 
-import java.io.Serializable;
-import java.util.Map;
-
-import org.alfresco.rest.api.model.Node;
-import org.alfresco.rest.api.model.UserInfo;
-import org.alfresco.service.ServiceRegistry;
-import org.alfresco.service.cmr.repository.NodeRef;
-import org.alfresco.service.namespace.QName;
+import org.alfresco.rest.api.model.ContentInfo;
 
 /**
- * Concrete class carrying specific information for a category
+ * Concrete class carrying information for a record
  *
  * @author Ana Bozianu
  * @since 2.6
  */
-public class RecordCategoryNode extends FileplanComponentNode
+public class Record extends RMNode
 {
-    protected Boolean hasRetentionSchedule;
+    public static final String PARAM_HIDE_RECORD = "hideRecord";
+    public static final String PARAM_IS_COMPLETED = "isCompleted";
+    public static final String PARAM_CONTENT = "content";
 
-    public RecordCategoryNode(NodeRef nodeRef, NodeRef parentNodeRef, Map<QName, Serializable> nodeProps, Map<String, UserInfo> mapUserInfo, ServiceRegistry sr)
+    protected Boolean isCompleted;
+    protected ContentInfo content;
+
+    public Boolean getIsCompleted()
     {
-        super(nodeRef, parentNodeRef, nodeProps, mapUserInfo, sr);
+        return isCompleted;
     }
 
-    public RecordCategoryNode(Node node)
+    public void setIsCompleted(Boolean isCompleted)
     {
-        super(node);
+        this.isCompleted = isCompleted;
     }
 
-    @Override
-    protected void defineType()
+    public ContentInfo getContent()
     {
-        setIsCategory(true);
-        setIsRecordFolder(false);
-        setIsFile(false);
+        return content;
     }
 
-    public Boolean getHasRetentionSchedule()
+    public void setContent(ContentInfo content)
     {
-        return hasRetentionSchedule;
-    }
-
-    public void setHasRetentionSchedule(Boolean hasRetentionSchedule)
-    {
-        this.hasRetentionSchedule = hasRetentionSchedule;
+        this.content = content;
     }
 }

@@ -23,6 +23,8 @@ import static org.mockito.Mockito.when;
 
 import java.text.MessageFormat;
 
+import com.mongodb.DBObject;
+
 import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.RMEventConstants;
 import org.alfresco.bm.dataload.rm.role.RMRole;
@@ -31,7 +33,7 @@ import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.rest.core.RestAPIFactory;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.RMUserAPI;
+import org.alfresco.rest.rm.community.requests.gscore.api.RMUserAPI;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,8 +42,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
-
-import com.mongodb.DBObject;
 
 /**
  * Unit test class for CreateRMSiteMember

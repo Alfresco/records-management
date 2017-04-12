@@ -37,9 +37,6 @@ import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -303,12 +300,13 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     private FolderData createFolder(String path) throws Exception
     {
         //create inexistent elements from configured paths as admin
-        FilePlanComponentAPI api = getRestAPIFactory().getFilePlanComponentsAPI();
         List<String> pathElements = getPathElements(path);
         FolderData parentFolder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH);
-        for(String pathElement: pathElements)
+        // for(String pathElement: pathElements)
+        int pathElementsLength = pathElements.size();
+        for (int i = 0; i < pathElementsLength; i++)
         {
-            FilePlanComponent filePlanComponent = api.getFilePlanComponent(parentFolder.getId());
+            String pathElement = pathElements.get(i);
             FolderData folder = fileFolderService.getFolder(UNFILED_CONTEXT, parentFolder.getPath() + "/" + pathElement);
             if(folder != null)
             {
@@ -316,7 +314,16 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
             }
             else
             {
-                parentFolder = createFilePlanComponentWithFixedName(parentFolder, api, filePlanComponent, pathElement, FilePlanComponentType.UNFILED_RECORD_FOLDER_TYPE.toString(), parentFolder.getContext());
+                if(i == 0)
+                {
+                    //create root unfiled record folder
+                    parentFolder = createRootUnfiledRecordFolderWithFixedName(parentFolder, pathElement);
+                }
+                else
+                {
+                    //create child unfiled record folder
+                    parentFolder = createUnfiledRecordFolderWithFixedName(parentFolder, pathElement);
+                }
             }
         }
         return parentFolder;

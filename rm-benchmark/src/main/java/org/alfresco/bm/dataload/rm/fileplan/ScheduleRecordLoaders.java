@@ -36,9 +36,6 @@ import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -341,7 +338,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     private FolderData createFolder(String path) throws Exception
     {
         //create inexistent elements from configured paths as admin
-        FilePlanComponentAPI api = getRestAPIFactory().getFilePlanComponentsAPI();
         List<String> pathElements = getPathElements(path);
         FolderData parentFolder = fileFolderService.getFolder("", RECORD_CONTAINER_PATH);
         // for(String pathElement: pathElements)
@@ -349,7 +345,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
         for (int i = 0; i < pathElementsLength; i++)
         {
             String pathElement = pathElements.get(i);
-            FilePlanComponent filePlanComponent = api.getFilePlanComponent(parentFolder.getId());
             FolderData folder = fileFolderService.getFolder(RECORD_CATEGORY_CONTEXT,
                         parentFolder.getPath() + "/" + pathElement);
             if (folder != null)
@@ -358,15 +353,21 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
             }
             else
             {
-                String filePlanComponentType = FilePlanComponentType.RECORD_CATEGORY_TYPE.toString();
-                String context = RECORD_CATEGORY_CONTEXT;
-                if (i == (pathElementsLength - 1))
+                if(i == 0)
                 {
-                    filePlanComponentType = FilePlanComponentType.RECORD_FOLDER_TYPE.toString();
-                    context = RECORD_FOLDER_CONTEXT;
+                    //create root category
+                    parentFolder = createRootRecordCategoryWithFixedName(parentFolder, pathElement);
                 }
-                parentFolder = createFilePlanComponentWithFixedName(parentFolder, api, filePlanComponent, pathElement,
-                            filePlanComponentType, context);
+                else if (pathElementsLength > 1  && i == (pathElementsLength - 1))
+                {
+                    //create record folder
+                    parentFolder = createRecordFolderWithFixedName(parentFolder, pathElement);
+                }
+                else
+                {
+                    //create child category
+                    parentFolder = createRecordCategoryWithFixedName(parentFolder, pathElement);
+                }
             }
         }
         return parentFolder;

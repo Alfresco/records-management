@@ -21,7 +21,6 @@ import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_ONLY_DB_LOAD;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.FILE_PLAN_ALIAS;
-import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.HOLDS_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.TRANSFERS_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS;
 import static org.junit.Assert.assertEquals;
@@ -43,10 +42,14 @@ import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
 import org.alfresco.rest.core.RestAPIFactory;
-import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponent;
+import org.alfresco.rest.rm.community.model.fileplan.FilePlan;
 import org.alfresco.rest.rm.community.model.site.RMSite;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.FilePlanComponentAPI;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.RMSiteAPI;
+import org.alfresco.rest.rm.community.model.transfercontainer.TransferContainer;
+import org.alfresco.rest.rm.community.model.unfiledcontainer.UnfiledContainer;
+import org.alfresco.rest.rm.community.requests.gscore.api.FilePlanAPI;
+import org.alfresco.rest.rm.community.requests.gscore.api.RMSiteAPI;
+import org.alfresco.rest.rm.community.requests.gscore.api.TransferContainerAPI;
+import org.alfresco.rest.rm.community.requests.gscore.api.UnfiledContainerAPI;
 import org.alfresco.utility.model.UserModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -175,11 +178,14 @@ public class CreateRMSiteUnitTest
         SiteData mockedSiteData = mock(SiteData.class);
         RMSiteAPI mockedRMSiteAPI = mock(RMSiteAPI.class);
         RMSite mockedRMSite = mock(RMSite.class);
-        FilePlanComponentAPI mockedFilePlanComponentAPI = mock(FilePlanComponentAPI.class);
-        FilePlanComponent mockedFilePlan = mock(FilePlanComponent.class);
-        FilePlanComponent mockedUnfiledRecordsContainer = mock(FilePlanComponent.class);
-        FilePlanComponent mockedTransfers = mock(FilePlanComponent.class);
-        FilePlanComponent mockedHolds = mock(FilePlanComponent.class);
+        FilePlanAPI mockedFilePlanAPI = mock(FilePlanAPI.class);
+        UnfiledContainerAPI mockedUnfiledContainerAPI = mock(UnfiledContainerAPI.class);
+        TransferContainerAPI mockedTransferContainerAPI = mock(TransferContainerAPI.class);
+
+        FilePlan mockedFilePlan = mock(FilePlan.class);
+        UnfiledContainer mockedUnfiledRecordsContainer = mock(UnfiledContainer.class);
+        TransferContainer mockedTransfers = mock(TransferContainer.class);
+
         String siteId = randomUUID().toString();
         String siteManager = randomUUID().toString();
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
@@ -191,19 +197,21 @@ public class CreateRMSiteUnitTest
         when(mockedRMSiteAPI.createRMSite(any(RMSite.class))).thenReturn(mockedRMSite);
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(true);
 
-        when(mockedRestAPIFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(FILE_PLAN_ALIAS)).thenReturn(mockedFilePlan);
+        when(mockedRestAPIFactory.getFilePlansAPI(any(UserModel.class))).thenReturn(mockedFilePlanAPI);
+        when(mockedFilePlanAPI.getFilePlan(FILE_PLAN_ALIAS)).thenReturn(mockedFilePlan);
         when(mockedFilePlan.getId()).thenReturn(randomUUID().toString());
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(UNFILED_RECORDS_CONTAINER_ALIAS)).thenReturn(mockedFilePlan);
+
+        when(mockedRestAPIFactory.getUnfiledContainersAPI(any(UserModel.class))).thenReturn(mockedUnfiledContainerAPI);
+        when(mockedUnfiledContainerAPI.getUnfiledContainer(UNFILED_RECORDS_CONTAINER_ALIAS)).thenReturn(mockedUnfiledRecordsContainer);
         when(mockedUnfiledRecordsContainer.getId()).thenReturn(randomUUID().toString());
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(TRANSFERS_ALIAS)).thenReturn(mockedFilePlan);
+
+        when(mockedRestAPIFactory.getTransferContainerAPI(any(UserModel.class))).thenReturn(mockedTransferContainerAPI);
+        when(mockedTransferContainerAPI.getTransferContainer(TRANSFERS_ALIAS)).thenReturn(mockedTransfers);
         when(mockedTransfers.getId()).thenReturn(randomUUID().toString());
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(HOLDS_ALIAS)).thenReturn(mockedFilePlan);
-        when(mockedHolds.getId()).thenReturn(randomUUID().toString());
 
         EventResult result = createRMSite.processEvent(mockedEvent);
         verify(mockedRMSiteAPI, times(1)).createRMSite(any(RMSite.class));
-        verify(mockedFileFolderService, times(4)).createNewFolder(any(FolderData.class));
+        verify(mockedFileFolderService, times(3)).createNewFolder(any(FolderData.class));
         assertEquals(true, result.isSuccess());
         assertEquals("Created site: " + siteId + " Site creator: " + siteManager, (String) result.getData());
         List<Event> events = result.getNextEvents();
@@ -222,11 +230,15 @@ public class CreateRMSiteUnitTest
         SiteData mockedSiteData = mock(SiteData.class);
         RMSiteAPI mockedRMSiteAPI = mock(RMSiteAPI.class);
         RMSite mockedRMSite = mock(RMSite.class);
-        FilePlanComponentAPI mockedFilePlanComponentAPI = mock(FilePlanComponentAPI.class);
-        FilePlanComponent mockedFilePlan = mock(FilePlanComponent.class);
-        FilePlanComponent mockedUnfiledRecordsContainer = mock(FilePlanComponent.class);
-        FilePlanComponent mockedTransfers = mock(FilePlanComponent.class);
-        FilePlanComponent mockedHolds = mock(FilePlanComponent.class);
+
+        FilePlanAPI mockedFilePlanAPI = mock(FilePlanAPI.class);
+        UnfiledContainerAPI mockedUnfiledContainerAPI = mock(UnfiledContainerAPI.class);
+        TransferContainerAPI mockedTransferContainerAPI = mock(TransferContainerAPI.class);
+
+        FilePlan mockedFilePlan = mock(FilePlan.class);
+        UnfiledContainer mockedUnfiledRecordsContainer = mock(UnfiledContainer.class);
+        TransferContainer mockedTransfers = mock(TransferContainer.class);
+
         String siteId = randomUUID().toString();
         String siteManager = randomUUID().toString();
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
@@ -243,19 +255,21 @@ public class CreateRMSiteUnitTest
         when(mockedRMSite.getGuid()).thenReturn(guuid);
         when(mockedRMSiteAPI.getSite()).thenReturn(mockedRMSite);
 
-        when(mockedRestAPIFactory.getFilePlanComponentsAPI(any(UserModel.class))).thenReturn(mockedFilePlanComponentAPI);
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(FILE_PLAN_ALIAS)).thenReturn(mockedFilePlan);
+        when(mockedRestAPIFactory.getFilePlansAPI(any(UserModel.class))).thenReturn(mockedFilePlanAPI);
+        when(mockedFilePlanAPI.getFilePlan(FILE_PLAN_ALIAS)).thenReturn(mockedFilePlan);
         when(mockedFilePlan.getId()).thenReturn(randomUUID().toString());
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(UNFILED_RECORDS_CONTAINER_ALIAS)).thenReturn(mockedFilePlan);
+
+        when(mockedRestAPIFactory.getUnfiledContainersAPI(any(UserModel.class))).thenReturn(mockedUnfiledContainerAPI);
+        when(mockedUnfiledContainerAPI.getUnfiledContainer(UNFILED_RECORDS_CONTAINER_ALIAS)).thenReturn(mockedUnfiledRecordsContainer);
         when(mockedUnfiledRecordsContainer.getId()).thenReturn(randomUUID().toString());
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(TRANSFERS_ALIAS)).thenReturn(mockedFilePlan);
+
+        when(mockedRestAPIFactory.getTransferContainerAPI(any(UserModel.class))).thenReturn(mockedTransferContainerAPI);
+        when(mockedTransferContainerAPI.getTransferContainer(TRANSFERS_ALIAS)).thenReturn(mockedTransfers);
         when(mockedTransfers.getId()).thenReturn(randomUUID().toString());
-        when(mockedFilePlanComponentAPI.getFilePlanComponent(HOLDS_ALIAS)).thenReturn(mockedFilePlan);
-        when(mockedHolds.getId()).thenReturn(randomUUID().toString());
 
         EventResult result = createRMSite.processEvent(mockedEvent);
         verify(mockedRMSiteAPI, never()).createRMSite(any(RMSite.class));
-        verify(mockedFileFolderService, times(4)).createNewFolder(any(FolderData.class));
+        verify(mockedFileFolderService, times(3)).createNewFolder(any(FolderData.class));
         assertEquals(true, result.isSuccess());
         assertEquals("RM site already exists, just loading it in the DB.", (String) result.getData());
         List<Event> events = result.getNextEvents();

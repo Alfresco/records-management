@@ -14,18 +14,18 @@ package org.alfresco.bm.dataload.rm.site;
 
 import java.text.MessageFormat;
 
+import com.mongodb.DBObject;
+
 import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.event.selector.EventDataObject;
-import org.alfresco.bm.event.selector.EventProcessorResponse;
 import org.alfresco.bm.event.selector.EventDataObject.STATUS;
+import org.alfresco.bm.event.selector.EventProcessorResponse;
 import org.alfresco.bm.site.SiteMemberData;
-import org.alfresco.rest.rm.community.requests.igCoreAPI.RMUserAPI;
+import org.alfresco.rest.rm.community.requests.gscore.api.RMUserAPI;
 import org.apache.commons.lang.StringUtils;
-
-import com.mongodb.DBObject;
 
 /**
 * Create a RM site member.
