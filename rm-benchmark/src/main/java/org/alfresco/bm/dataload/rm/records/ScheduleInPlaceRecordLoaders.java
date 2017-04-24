@@ -35,7 +35,6 @@ import org.alfresco.bm.dataload.rm.exceptions.EventAlreadyScheduledException;
 import org.alfresco.bm.dataload.rm.services.ExecutionState;
 import org.alfresco.bm.dataload.rm.services.RecordContext;
 import org.alfresco.bm.dataload.rm.services.RecordData;
-import org.alfresco.bm.dataload.rm.services.RecordService;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
@@ -92,9 +91,6 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
 
     @Autowired
     private SessionService sessionService;
-
-    @Autowired
-    private RecordService recordService;
 
     @Autowired
     private RestWrapper restCoreAPI;

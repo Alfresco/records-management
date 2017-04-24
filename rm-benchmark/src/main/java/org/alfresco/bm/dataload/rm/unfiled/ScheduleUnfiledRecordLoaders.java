@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import com.mongodb.BasicDBObjectBuilder;
@@ -258,36 +257,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
                mapOfRecordsPerUnfiledRecordFolder = distributeNumberOfRecords(unfiledRecordFoldersThatNeedRecords, unfiledRecordsNumber);
            }
         }
-    }
-
-    /**
-     * Obtains all unfiled record folders underneath specified parent folder plus the parent folder
-     *
-     * @param parentFolder - the parent folder that we need to get unfiled record folders from
-     * @return all unfiled record folders underneath specified parent folder plus the parent folder
-     */
-    private Set<FolderData> getUnfiledRecordFolders(FolderData parentFolder)
-    {
-        LinkedHashSet<FolderData> result = new LinkedHashSet<FolderData>();
-        int skip = 0;
-        int limit = 100;
-        List<FolderData> directChildren = new ArrayList<FolderData>();
-        List<FolderData> childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
-        while(childFolders.size() > 0)
-        {
-            directChildren.addAll(childFolders);
-            skip += limit;
-            childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
-        }
-        if(directChildren.size() > 0)
-        {
-            for(FolderData childFolder : directChildren)
-            {
-                result.addAll(getUnfiledRecordFolders(childFolder));
-            }
-        }
-        result.add(parentFolder);
-        return result;
     }
 
     /**

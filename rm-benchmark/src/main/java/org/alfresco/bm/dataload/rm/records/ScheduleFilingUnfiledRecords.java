@@ -17,7 +17,7 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.alfresco.bm.dataload.rm.fileplan;
+package org.alfresco.bm.dataload.rm.records;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -27,188 +27,108 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
-
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
+import org.alfresco.bm.dataload.rm.services.ExecutionState;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
+
 /**
- * Prepare event for loading records in filePlan folder structure.
+ * Prepare event for filing unfiled records
  *
  * @author Silviu Dinuta
  * @since 2.6
- *
  */
-public class ScheduleRecordLoaders extends RMBaseEventProcessor
+public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
 {
-    public static final String EVENT_NAME_LOAD_RECORDS = "loadRecords";
-    public static final String EVENT_NAME_SCHEDULE_RECORD_LOADERS = "scheduleRecordLoaders";
-    public static final String EVENT_NAME_LOADING_COMPLETE = "loadingRecordsComplete";
-    public static final String EVENT_NAME_CONTINUE_LOADING_UNFILED_RECORD_FOLDERS = "scheduleUnfiledRecordFoldersLoaders";
+    public static final String DONE_EVENT_MSG = "Raising 'done' event.";
+    public static final String FILING_UNFILED_RECORDS_NOT_WANTED_MSG = "Filing unfiled records not wanted.";
+    private static final String DEFAULT_EVENT_NAME_RESCHEDULE_SELF = "scheduleFilingUnfiledRecords";
+    private static final String DEFAULT_EVENT_NAME_FILE_UNFILED_RECORDS = "fileUnfiledRecords";
+    private static final String DEFAULT_EVENT_NAME_COMPLETE = "filingUnfiledRecordsComplete";
+    private boolean fileUnfiledRecords = false;
+    private Integer maxActiveLoaders;
+    private long loadCheckDelay;
+    private List<String> fileToRecordFolderPaths;
+
+    private Integer recordFilingLimit;
+    private String eventNameFileUnfiledRecords = DEFAULT_EVENT_NAME_FILE_UNFILED_RECORDS;
+    private String eventNameComplete = DEFAULT_EVENT_NAME_COMPLETE;
+    private String eventNameRescheduleSelf = DEFAULT_EVENT_NAME_RESCHEDULE_SELF;
+
+    private LinkedHashMap<FolderData, Integer> mapOfRecordsPerRecordFolder = null;
 
     @Autowired
     private SessionService sessionService;
 
-    private int maxActiveLoaders;
-    private long loadCheckDelay;
-    private boolean uploadRecords;
-    private int recordsNumber;
-    private String recordFolderPaths;
-    private List<String> paths;
-    private String eventNameLoadRecords = EVENT_NAME_LOAD_RECORDS;
-    private String eventNameScheduleRecordLoaders = EVENT_NAME_SCHEDULE_RECORD_LOADERS;
-    private String eventNameLoadingComplete = EVENT_NAME_LOADING_COMPLETE;
-    private String eventNameContinueLoadingUnfiledRecordFolders = EVENT_NAME_CONTINUE_LOADING_UNFILED_RECORD_FOLDERS;
-
-    private LinkedHashMap<FolderData, Integer> mapOfRecordsPerRecordFolder = null;
-
-    /**
-     * @return the uploadRecords
-     */
-    public boolean isUploadRecords()
+    public void setFileUnfiledRecords(boolean fileUnfiledRecords)
     {
-        return uploadRecords;
+        this.fileUnfiledRecords = fileUnfiledRecords;
     }
 
-    /**
-     * @param uploadRecords the uploadRecords to set
-     */
-    public void setUploadRecords(boolean uploadRecords)
+    public void setMaxActiveLoaders(Integer maxActiveLoaders)
     {
-        this.uploadRecords = uploadRecords;
+        this.maxActiveLoaders = maxActiveLoaders;
     }
 
-    /**
-     * @return the recordFolderPaths
-     */
-    public String getRecordFolderPaths()
-    {
-        return recordFolderPaths;
-    }
-
-    /**
-     * @param recordFolderPaths the recordFolderPaths to set
-     */
-    public void setRecordFolderPaths(String recordFolderPaths)
-    {
-        this.recordFolderPaths = recordFolderPaths;
-        if (isNotBlank(this.recordFolderPaths))
-        {
-            paths = Arrays.asList(this.recordFolderPaths.split(","));
-        }
-    }
-
-    /**
-     * @return the recordsNumber
-     */
-    public int getRecordsNumber()
-    {
-        return recordsNumber;
-    }
-
-    /**
-     * @param recordsNumber the recordsNumber to set
-     */
-    public void setRecordsNumber(int recordsNumber)
-    {
-        this.recordsNumber = recordsNumber;
-    }
-
-    /**
-     * @return the loadCheckDelay
-     */
-    public long getLoadCheckDelay()
-    {
-        return loadCheckDelay;
-    }
-
-    /**
-     * @param loadCheckDelay the loadCheckDelay to set
-     */
     public void setLoadCheckDelay(long loadCheckDelay)
     {
         this.loadCheckDelay = loadCheckDelay;
     }
 
-
-
-    /**
-     * @return the maxActiveLoaders
-     */
-    public int getMaxActiveLoaders()
+    public void setFileToRecordFolderPaths(String fileToRecordFolderPathsStr)
     {
-        return maxActiveLoaders;
+        if(isNotBlank(fileToRecordFolderPathsStr))
+        {
+            this.fileToRecordFolderPaths = Arrays.asList(fileToRecordFolderPathsStr.split(","));
+        }
     }
 
-    /**
-     * @param maxActiveLoaders the maxActiveLoaders to set
-     */
-    public void setMaxActiveLoaders(int maxActiveLoaders)
+    public void setRecordFilingLimit(String recordFilingLimitString)
     {
-        this.maxActiveLoaders = maxActiveLoaders;
+        if(isNotBlank(recordFilingLimitString))
+        {
+            this.recordFilingLimit = Integer.parseInt(recordFilingLimitString);
+        }
+        else
+        {
+            this.recordFilingLimit = 0;
+        }
     }
 
-    /**
-     * @return the eventNameLoadRecords
-     */
-    public String getEventNameLoadRecords()
+    public void setEventNameFileUnfiledRecords(String eventNameFileUnfiledRecords)
     {
-        return eventNameLoadRecords;
+        this.eventNameFileUnfiledRecords = eventNameFileUnfiledRecords;
     }
 
-    /**
-     * @param eventNameLoadRecords the eventNameLoadRecords to set
-     */
-    public void setEventNameLoadRecords(String eventNameLoadRecords)
+    public String getEventNameFileUnfiledRecords()
     {
-        this.eventNameLoadRecords = eventNameLoadRecords;
+        return eventNameFileUnfiledRecords;
     }
 
-    /**
-     * @return the eventNameScheduleRecordLoaders
-     */
-    public String getEventNameScheduleRecordLoaders()
+    public void setEventNameComplete(String eventNameComplete)
     {
-        return eventNameScheduleRecordLoaders;
+        this.eventNameComplete = eventNameComplete;
     }
 
-    /**
-     * @param eventNameScheduleRecordLoaders the eventNameScheduleRecordLoaders to set
-     */
-    public void setEventNameScheduleRecordLoaders(String eventNameScheduleRecordLoaders)
+    public String getEventNameComplete()
     {
-        this.eventNameScheduleRecordLoaders = eventNameScheduleRecordLoaders;
+        return eventNameComplete;
     }
 
-    /**
-     * @return the eventNameLoadingComplete
-     */
-    public String getEventNameLoadingComplete()
+    public void setEventNameRescheduleSelf(String eventNameRescheduleSelf)
     {
-        return eventNameLoadingComplete;
+        this.eventNameRescheduleSelf = eventNameRescheduleSelf;
     }
 
-    /**
-     * @param eventNameLoadingComplete the eventNameLoadingComplete to set
-     */
-    public void setEventNameLoadingComplete(String eventNameLoadingComplete)
+    public String getEventNameRescheduleSelf()
     {
-        this.eventNameLoadingComplete = eventNameLoadingComplete;
-    }
-
-    public String getEventNameContinueLoadingUnfiledRecordFolders()
-    {
-        return eventNameContinueLoadingUnfiledRecordFolders;
-    }
-
-    public void setEventNameContinueLoadingUnfiledRecordFolders(String eventNameContinueLoadingUnfiledRecordFolders)
-    {
-        this.eventNameContinueLoadingUnfiledRecordFolders = eventNameContinueLoadingUnfiledRecordFolders;
+        return eventNameRescheduleSelf;
     }
 
     @Override
@@ -219,16 +139,14 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
         int loaderSessionsToCreate = maxActiveLoaders - (int) sessionCount;
         List<Event> nextEvents = new ArrayList<Event>(maxActiveLoaders);
 
-        // Do we actually need to do anything
-        if (!isUploadRecords())
+        if (!fileUnfiledRecords)
         {
-            return new EventResult("Uploading of records into File Plan not wanted, continue with loading unfiled record folders structure.",
-                                   new Event(getEventNameContinueLoadingUnfiledRecordFolders(), null));
+            return new EventResult(FILING_UNFILED_RECORDS_NOT_WANTED_MSG, new Event(getEventNameComplete(), null));
         }
-        if (recordsNumber > 0)
+        if(recordFilingLimit >= 0)
         {
-            // Prepare Records
-            prepareRecords(loaderSessionsToCreate, nextEvents);
+            //Prepare Records
+            prepareUnfiledRecords(loaderSessionsToCreate, nextEvents);
         }
 
         // If there are no events, then we have finished
@@ -237,15 +155,14 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
         {
             // There are no records to load even though there are sessions available
             mapOfRecordsPerRecordFolder = null;
-            Event nextEvent = new Event(eventNameLoadingComplete, null);
+            Event nextEvent = new Event(getEventNameComplete(), null);
             nextEvents.add(nextEvent);
-            msg = "Loading completed.  Raising 'done' event.";
+            msg = "Filing completed.  Raising 'done' event.";
         }
         else
         {
             // Reschedule self
-            Event nextEvent = new Event(eventNameScheduleRecordLoaders, System.currentTimeMillis() + loadCheckDelay,
-                        null);
+            Event nextEvent = new Event(getEventNameRescheduleSelf(), System.currentTimeMillis() + loadCheckDelay, null);
             nextEvents.add(nextEvent);
             msg = "Raised further " + (nextEvents.size() - 1) + " events and rescheduled self.";
         }
@@ -260,14 +177,25 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * Helper method for preparing events for loading records randomly in the record folders structure or in specified record folder paths.
+     * Helper method for preparing events for filing unfiled records randomly in the record folders structure or in specified record folder paths.
      *
      * @param loaderSessionsToCreate - the number of still active loader sessions
      * @param nextEvents - list of prepared events
      */
-    private void prepareRecords(int loaderSessionsToCreate, List<Event> nextEvents)
+    private void prepareUnfiledRecords(int loaderSessionsToCreate, List<Event> nextEvents)
     {
-        mapOfRecordsPerRecordFolder = calculateListOfEmptyFolders(mapOfRecordsPerRecordFolder, paths, recordsNumber);
+        int numberOfRecords = recordFilingLimit;
+        //initialiaze the number of records to file to all only once if the limit is set to 0
+        if(mapOfRecordsPerRecordFolder == null && recordFilingLimit == 0)
+        {
+            numberOfRecords = (int) recordService.getRecordCountInSpecifiedPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null);
+        }
+        //if the number of records to load is not greater than 0, nothing to file
+        if(numberOfRecords == 0)
+        {
+            return;
+        }
+        mapOfRecordsPerRecordFolder = calculateListOfEmptyFolders(mapOfRecordsPerRecordFolder, fileToRecordFolderPaths, numberOfRecords);
         List<FolderData> emptyFolders = new ArrayList<FolderData>();
         emptyFolders.addAll(mapOfRecordsPerRecordFolder.keySet());
         while (nextEvents.size() < loaderSessionsToCreate)
@@ -300,7 +228,7 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
                                     .add(FIELD_PATH, emptyFolder.getPath())
                                     .add(FIELD_RECORDS_TO_CREATE, Integer.valueOf(recordsToCreate))
                                     .get();
-                        Event loadEvent = new Event(eventNameLoadRecords, loadData);
+                        Event loadEvent = new Event(getEventNameFileUnfiledRecords(), loadData);
                         // Each load event must be associated with a session
                         String sessionId = sessionService.startSession(loadData);
                         loadEvent.setSessionId(sessionId);

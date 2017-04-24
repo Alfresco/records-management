@@ -21,7 +21,7 @@ import com.mongodb.DB;
 
 /**
  * Integration test for RecordService
- * 
+ *
  * @author Ana Bozianu
  * @since 2.6
  */
@@ -46,7 +46,7 @@ public class RecordServiceTest
         RecordData record1 = new RecordData(duplicateId, RecordContext.IN_PLACE_RECORD, "test_name_1", "test_parentPath_1", "test_inPlacePath_1" , ExecutionState.SCHEDULED);
         recordService.createRecord(record1);
 
-        RecordData record2 = new RecordData(duplicateId, RecordContext.RECORD, "test_name_2", "test_parentPath_2", "test_inPlacePath_2", ExecutionState.SUCCESS);
+        RecordData record2 = new RecordData(duplicateId, RecordContext.RECORD, "test_name_2", "test_parentPath_2", "test_inPlacePath_2", ExecutionState.UNFILED_RECORD_DECLARED);
         recordService.createRecord(record2);
 
         doubleCheckOverwrittenMethods_notEqual(record1, record2);
@@ -58,7 +58,7 @@ public class RecordServiceTest
         RecordData record1 = new RecordData("test_id_1", RecordContext.IN_PLACE_RECORD, "test_name_1", "test_parentPath_1", "test_inPlacePath_1", ExecutionState.SCHEDULED);
         recordService.createRecord(record1);
 
-        RecordData record2 = new RecordData("test_id_2", RecordContext.IN_PLACE_RECORD, "test_name_2", "test_parentPath_2", "test_inPlacePath_2", ExecutionState.SUCCESS);
+        RecordData record2 = new RecordData("test_id_2", RecordContext.IN_PLACE_RECORD, "test_name_2", "test_parentPath_2", "test_inPlacePath_2", ExecutionState.UNFILED_RECORD_DECLARED);
         recordService.createRecord(record2);
 
         doubleCheckOverwrittenMethods_notEqual(record1, record2);
@@ -72,7 +72,7 @@ public class RecordServiceTest
         RecordData record1 = new RecordData("test_id_1", RecordContext.IN_PLACE_RECORD, duplicateName, "test_parentPath_1", "test_inPlacePath_1", ExecutionState.SCHEDULED);
         recordService.createRecord(record1);
 
-        RecordData record2 = new RecordData("test_id_2", RecordContext.RECORD, duplicateName, "test_parentPath_2", "test_inPlacePath_2", ExecutionState.SUCCESS);
+        RecordData record2 = new RecordData("test_id_2", RecordContext.RECORD, duplicateName, "test_parentPath_2", "test_inPlacePath_2", ExecutionState.UNFILED_RECORD_DECLARED);
         recordService.createRecord(record2);
 
         doubleCheckOverwrittenMethods_notEqual(record1, record2);
@@ -86,7 +86,7 @@ public class RecordServiceTest
         RecordData record1 = new RecordData("test_id_1", RecordContext.IN_PLACE_RECORD, "test_name_1", duplicateParentPath, "test_inPlacePath_1", ExecutionState.SCHEDULED);
         recordService.createRecord(record1);
 
-        RecordData record2 = new RecordData("test_id_2", RecordContext.RECORD, "test_name_2", duplicateParentPath, "test_inPlacePath_2", ExecutionState.SUCCESS);
+        RecordData record2 = new RecordData("test_id_2", RecordContext.RECORD, "test_name_2", duplicateParentPath, "test_inPlacePath_2", ExecutionState.UNFILED_RECORD_DECLARED);
         recordService.createRecord(record2);
 
         doubleCheckOverwrittenMethods_notEqual(record1, record2);
@@ -100,7 +100,7 @@ public class RecordServiceTest
         RecordData record1 = new RecordData("test_id_1", RecordContext.IN_PLACE_RECORD, "test_name_1", "test_parentPath_1", duplicateInPlacePath, ExecutionState.SCHEDULED);
         recordService.createRecord(record1);
 
-        RecordData record2 = new RecordData("test_id_2", RecordContext.RECORD, "test_name_2", "test_parentPath_2", duplicateInPlacePath, ExecutionState.SUCCESS);
+        RecordData record2 = new RecordData("test_id_2", RecordContext.RECORD, "test_name_2", "test_parentPath_2", duplicateInPlacePath, ExecutionState.UNFILED_RECORD_DECLARED);
         recordService.createRecord(record2);
 
         doubleCheckOverwrittenMethods_notEqual(record1, record2);
@@ -157,14 +157,14 @@ public class RecordServiceTest
     @Test
     public void testUpdateNonExistingRecord()
     {
-        RecordData nonExistingRecord = new RecordData("non_existing_id", RecordContext.IN_PLACE_RECORD, "test_name", "test_parentPath", "test_inPlaceRecord", ExecutionState.SUCCESS);
+        RecordData nonExistingRecord = new RecordData("non_existing_id", RecordContext.IN_PLACE_RECORD, "test_name", "test_parentPath", "test_inPlaceRecord", ExecutionState.UNFILED_RECORD_DECLARED);
         recordService.updateRecord(nonExistingRecord);
         assertNull(recordService.getRecordOrNull(nonExistingRecord.getId()));
     }
 
     /**
      * Double check equals, hashCode and toString methods behave correctly for non equal records
-     * 
+     *
      * @param record1
      * @param record2
      */
@@ -178,7 +178,7 @@ public class RecordServiceTest
 
     /**
      * Double check equals, hashCode and toString methods behave correctly for equal records
-     * 
+     *
      * @param record1
      * @param record2
      */

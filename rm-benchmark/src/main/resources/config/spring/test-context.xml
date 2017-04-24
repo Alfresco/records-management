@@ -287,6 +287,32 @@
 
   <bean id="producer.inPlaceRecordDeclared" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
-  <bean id="producer.declaringInPlaceRecordsComplete" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+  <!-- -->
+  <!-- Filing Unfiled Records-->
+  <!-- -->
 
+  <bean id="producer.declaringInPlaceRecordsComplete" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base">
+    <constructor-arg name="newEventName" value="scheduleFilingUnfiledRecords" />
+  </bean>
+
+  <bean id="event.scheduleFilingUnfiledRecords" class="org.alfresco.bm.dataload.rm.records.ScheduleFilingUnfiledRecords" parent="rmBaseEventProcessor">
+    <property name="fileUnfiledRecords" value="${rm.fileUnfiledRecords}" />
+    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
+    <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
+    <property name="fileToRecordFolderPaths" value="${rm.fileToRecordFolderPaths}" />
+    <property name="recordFilingLimit" value="${rm.recordFilingLimit}" />
+    <property name="eventNameFileUnfiledRecords" value="fileUnfiledRecords"/>
+    <property name="eventNameComplete" value="filingUnfiledRecordsComplete"/>
+    <property name="eventNameRescheduleSelf" value="scheduleFilingUnfiledRecords"/>
+  </bean>
+
+  <bean id="event.fileUnfiledRecords" class="org.alfresco.bm.dataload.rm.records.FileUnfiledRecords" parent="rmBaseEventProcessor">
+    <property name="fileFromUnfiledPaths" value="${rm.fileFromUnfiledPaths}" />
+    <property name="recordFilingLimit" value="${rm.recordFilingLimit}" />
+    <property name="eventNameUnfiledRecordsFiled" value="unfiledRecordsFiled"/>
+  </bean>
+
+  <bean id="producer.unfiledRecordsFiled" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <bean id="producer.filingUnfiledRecordsComplete" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 </beans>

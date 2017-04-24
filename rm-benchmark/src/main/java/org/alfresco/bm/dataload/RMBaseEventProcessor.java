@@ -42,6 +42,10 @@ import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.rm.role.RMRole;
+import org.alfresco.bm.dataload.rm.services.ExecutionState;
+import org.alfresco.bm.dataload.rm.services.RecordContext;
+import org.alfresco.bm.dataload.rm.services.RecordData;
+import org.alfresco.bm.dataload.rm.services.RecordService;
 import org.alfresco.bm.event.AbstractEventProcessor;
 import org.alfresco.bm.file.TestFileService;
 import org.alfresco.bm.site.SiteData;
@@ -91,6 +95,9 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
 
     @Autowired
     protected SiteDataService siteDataService;
+
+    @Autowired
+    protected RecordService recordService;
 
     public RestAPIFactory getRestAPIFactory()
     {
@@ -583,16 +590,25 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                                     .build())
                         .build();
 
+            String newRecordId;
+            String newRecordName;
             if(isUnfiledContainer)
             {
                 UnfiledContainerAPI unfiledContainersAPI = getRestAPIFactory().getUnfiledContainersAPI(userModel);
-                unfiledContainersAPI.createUnfiledContainerChild(unfiledContainerChildModel, folder.getId());
+                UnfiledContainerChild createdRecord = unfiledContainersAPI.createUnfiledContainerChild(unfiledContainerChildModel, folder.getId());
+                newRecordId = createdRecord.getId();
+                newRecordName = createdRecord.getName();
             }
             else
             {
                 UnfiledRecordFolderAPI unfiledRecordFoldersAPI = getRestAPIFactory().getUnfiledRecordFoldersAPI(userModel);
-                unfiledRecordFoldersAPI.createUnfiledRecordFolderChild(unfiledContainerChildModel, folder.getId());
+                UnfiledContainerChild createdRecord = unfiledRecordFoldersAPI.createUnfiledRecordFolderChild(unfiledContainerChildModel, folder.getId());
+                newRecordId = createdRecord.getId();
+                newRecordName = createdRecord.getName();
             }
+
+            RecordData record = new RecordData(newRecordId, RecordContext.RECORD, newRecordName, folderPath, null, ExecutionState.UNFILED_RECORD_DECLARED);
+            recordService.createRecord(record);
             TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
         }
 
@@ -680,16 +696,24 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                                     .build())
                         .build();
 
+            String newRecordId;
+            String newRecordName;
             if(isUnfiledContainer)
             {
                 UnfiledContainerAPI unfiledContainersAPI = getRestAPIFactory().getUnfiledContainersAPI(userModel);
-                unfiledContainersAPI.uploadRecord(unfiledContainerChildModel, folder.getId(), file);
+                UnfiledContainerChild uploadedRecord = unfiledContainersAPI.uploadRecord(unfiledContainerChildModel, folder.getId(), file);
+                newRecordId = uploadedRecord.getId();
+                newRecordName = uploadedRecord.getName();
             }
             else
             {
                 UnfiledRecordFolderAPI unfiledRecordFoldersAPI = getRestAPIFactory().getUnfiledRecordFoldersAPI(userModel);
-                unfiledRecordFoldersAPI.uploadRecord(unfiledContainerChildModel, folder.getId(), file);
+                UnfiledContainerChild uploadedRecord = unfiledRecordFoldersAPI.uploadRecord(unfiledContainerChildModel, folder.getId(), file);
+                newRecordId = uploadedRecord.getId();
+                newRecordName = uploadedRecord.getName();
             }
+            RecordData record = new RecordData(newRecordId, RecordContext.RECORD, newRecordName, folderPath, null, ExecutionState.UNFILED_RECORD_DECLARED);
+            recordService.createRecord(record);
             fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
         }
     }
@@ -874,5 +898,153 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         // Done
         logger.debug("Found RM site member '" + username + "'");
         return user;
+    }
+
+    /**
+     * Helper method used for creating in alfresco repo and in mongo DB, record root categories, record categories and record folders from configured path elements.
+     *
+     * @param path - path element
+     * @return created record folder, or existent record folder, if it already created
+     * @throws Exception
+     */
+    public FolderData createRecordCategoryOrRecordFolder(String path) throws Exception
+    {
+        //create inexistent elements from configured paths as admin
+        List<String> pathElements = getPathElements(path);
+        FolderData parentFolder = fileFolderService.getFolder("", RECORD_CONTAINER_PATH);
+        // for(String pathElement: pathElements)
+        int pathElementsLength = pathElements.size();
+        for (int i = 0; i < pathElementsLength; i++)
+        {
+            String pathElement = pathElements.get(i);
+            FolderData folder = fileFolderService.getFolder(RECORD_CATEGORY_CONTEXT,
+                        parentFolder.getPath() + "/" + pathElement);
+            if (folder != null)
+            {
+                parentFolder = folder;
+            }
+            else
+            {
+                if(i == 0)
+                {
+                    //create root category
+                    parentFolder = createRootRecordCategoryWithFixedName(parentFolder, pathElement);
+                }
+                else if (pathElementsLength > 1  && i == (pathElementsLength - 1))
+                {
+                    //create record folder
+                    parentFolder = createRecordFolderWithFixedName(parentFolder, pathElement);
+                }
+                else
+                {
+                    //create child category
+                    parentFolder = createRecordCategoryWithFixedName(parentFolder, pathElement);
+                }
+            }
+        }
+        return parentFolder;
+    }
+
+    /**
+     * Helper method that initialize the record folders that can receive records.
+     * This method, also calculates the number of records to  add to the initialized record folders.
+     *
+     * @param mapOfRecordsPerRecordFolder - linked hash map with available record folders as keys and calculated number of records to load/file in each record folder
+     * @param record category or record folder paths to load/file records in
+     * @param number of records to load/file
+     */
+    public LinkedHashMap<FolderData, Integer> calculateListOfEmptyFolders(LinkedHashMap<FolderData, Integer> mapOfRecordsPerRecordFolder, List<String> paths, int numberOrRecords)
+    {
+        if (mapOfRecordsPerRecordFolder == null)
+        {
+            mapOfRecordsPerRecordFolder = new LinkedHashMap<FolderData, Integer>();
+            List<FolderData> recordFoldersThatNeedRecords = new ArrayList<FolderData>();
+            if (paths == null || paths.size() == 0)
+            {
+                // get the existing file plan folder structure
+                recordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(RECORD_FOLDER_CONTEXT));
+            }
+            else
+            {
+                LinkedHashSet<FolderData> structureFromExistentProvidedPaths = new LinkedHashSet<FolderData>();
+                for (String path : paths)
+                {
+                    if(!path.startsWith("/"))
+                    {
+                        path = "/" + path;
+                    }
+                    //if the path is category and exists
+                    FolderData folder = fileFolderService.getFolder(RECORD_CATEGORY_CONTEXT,
+                                RECORD_CONTAINER_PATH + path);
+                    if(folder == null)//if folder is not a category verify if it is a record folder and exists
+                    {
+                        folder = fileFolderService.getFolder(RECORD_FOLDER_CONTEXT,
+                                    RECORD_CONTAINER_PATH + path);
+                    }
+                    if (folder != null)// if folder exists
+                    {
+                        structureFromExistentProvidedPaths.addAll(getRecordFolders(folder));
+                    }
+                    else
+                    {
+                        try
+                        {
+                            folder = createRecordCategoryOrRecordFolder(path);
+                            recordFoldersThatNeedRecords.add(folder);
+                        }
+                        catch (Exception e)
+                        {
+                            // something went wrong on creating current path structure, not all required paths will be created
+                        }
+                    }
+                }
+                // add record folders from existent paths
+                if (structureFromExistentProvidedPaths.size() > 0)
+                {
+                    recordFoldersThatNeedRecords.addAll(structureFromExistentProvidedPaths);
+                }
+                // configured paths did not existed in db and something went wrong with creation for all of them,
+                // initialize to existing structure in this case
+                if (recordFoldersThatNeedRecords.size() == 0)
+                {
+                    recordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(RECORD_FOLDER_CONTEXT));
+                }
+            }
+            if (recordFoldersThatNeedRecords.size() > 0)
+            {
+                mapOfRecordsPerRecordFolder = distributeNumberOfRecords(recordFoldersThatNeedRecords, numberOrRecords);
+            }
+        }
+        return mapOfRecordsPerRecordFolder;
+    }
+
+    /**
+     * Obtains all unfiled record folders underneath specified parent folder plus the parent folder
+     *
+     * @param parentFolder - the parent folder that we need to get unfiled record folders from
+     * @return all unfiled record folders underneath specified parent folder plus the parent folder
+     */
+    public Set<FolderData> getUnfiledRecordFolders(FolderData parentFolder)
+    {
+        LinkedHashSet<FolderData> result = new LinkedHashSet<FolderData>();
+        int skip = 0;
+        int limit = 100;
+        List<FolderData> directChildren = new ArrayList<FolderData>();
+        List<FolderData> childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
+        while(childFolders.size() > 0)
+        {
+            directChildren.addAll(childFolders);
+            skip += limit;
+            childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
+        }
+        if(directChildren.size() > 0)
+        {
+            for(FolderData childFolder : directChildren)
+            {
+                result.addAll(getUnfiledRecordFolders(childFolder));
+            }
+        }
+        result.add(parentFolder);
+        return result;
     }
 }
