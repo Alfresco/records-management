@@ -1047,4 +1047,24 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         result.add(parentFolder);
         return result;
     }
+
+    /**
+     * Helper method for obtaining all unfiled records from records MongoDb.
+     *
+     * @return all unfiled records from records MongoDb
+     */
+    public List<RecordData> getAllUnfiledRecords()
+    {
+        List<RecordData> existingRecords = new ArrayList<RecordData>();
+        int skip = 0;
+        int limit = 100;
+        List<RecordData> recordsList = recordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, skip, limit);
+        while(recordsList.size() > 0)
+        {
+            existingRecords.addAll(recordsList);
+            skip += limit;
+            recordsList =  recordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, skip, limit);
+        }
+        return existingRecords;
+    }
 }

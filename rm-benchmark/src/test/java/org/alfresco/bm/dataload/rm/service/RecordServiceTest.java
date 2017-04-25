@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Random;
+
 import static org.junit.Assert.assertNull;
 
 import org.alfresco.bm.dataload.rm.exceptions.DuplicateRecordException;
@@ -36,6 +39,7 @@ public class RecordServiceTest
         MongoDBForTestsFactory mongoFactory = new MongoDBForTestsFactory();
         DB db = mongoFactory.getObject();
         recordService = new RecordService(db, "records");
+        recordService.afterPropertiesSet();
     }
 
     @Test(expected = DuplicateRecordException.class)
@@ -160,6 +164,36 @@ public class RecordServiceTest
         RecordData nonExistingRecord = new RecordData("non_existing_id", RecordContext.IN_PLACE_RECORD, "test_name", "test_parentPath", "test_inPlaceRecord", ExecutionState.UNFILED_RECORD_DECLARED);
         recordService.updateRecord(nonExistingRecord);
         assertNull(recordService.getRecordOrNull(nonExistingRecord.getId()));
+    }
+
+    @Test
+    public void testCountRecords()
+    {
+        Random rand = new Random();
+        for(int j=0;j < 50; j++)
+        {
+            for (int i=0;i < 50; i++)
+            {
+                RecordData record = new RecordData("test_id(" + j + ")(" + i +")", RecordContext.values()[rand.nextInt(2)], "test_name", "test_parentPath" + rand.nextInt(i+1), null, ExecutionState.UNFILED_RECORD_DECLARED);
+                recordService.createRecord(record);
+            }
+            assertEquals((j+1) * 50, recordService.getRecordCountInSpecifiedPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null));
+        }
+    }
+
+    @Test
+    public void testGetRecordsInPaths()
+    {
+        Random rand = new Random();
+        for(int j=0;j < 50; j++)
+        {
+            for (int i=0;i < 50; i++)
+            {
+                RecordData record = new RecordData("test_id(" + j + ")(" + i +")", RecordContext.values()[rand.nextInt(2)], "test_name", "test_parentPath" + rand.nextInt(i+1), null, ExecutionState.UNFILED_RECORD_DECLARED);
+                recordService.createRecord(record);
+            }
+        }
+        assertEquals(50 * 50, recordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, 0, 2500).size());
     }
 
     /**

@@ -191,7 +191,7 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
             numberOfRecords = (int) recordService.getRecordCountInSpecifiedPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null);
         }
         //if the number of records to load is not greater than 0, nothing to file
-        if(numberOfRecords == 0)
+        if(mapOfRecordsPerRecordFolder == null && numberOfRecords == 0)
         {
             return;
         }
@@ -226,7 +226,7 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
                         // The loader will remove the lock when it completes
                         DBObject loadData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, emptyFolder.getContext())
                                     .add(FIELD_PATH, emptyFolder.getPath())
-                                    .add(FIELD_RECORDS_TO_CREATE, Integer.valueOf(recordsToCreate))
+                                    .add(FIELD_RECORDS_TO_FILE, Integer.valueOf(recordsToCreate))
                                     .get();
                         Event loadEvent = new Event(getEventNameFileUnfiledRecords(), loadData);
                         // Each load event must be associated with a session

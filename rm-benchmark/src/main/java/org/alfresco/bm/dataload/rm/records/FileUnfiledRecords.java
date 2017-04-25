@@ -118,8 +118,8 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
 
         String context = (String) dataObj.get(FIELD_CONTEXT);
         String path = (String) dataObj.get(FIELD_PATH);
-        Integer recordsToCreate = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-        if (context == null || path == null || recordsToCreate == null)
+        Integer recordsToFile = (Integer) dataObj.get(FIELD_RECORDS_TO_FILE);
+        if (context == null || path == null || recordsToFile == null)
         {
             return new EventResult("Request data not complete for filing unfiled records: " + dataObj, false);
         }
@@ -137,7 +137,7 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
             return new EventResult("Load scheduling should create a session for each loader.", false);
         }
 
-        return fileRecords(folder, recordsToCreate);
+        return fileRecords(folder, recordsToFile);
     }
 
     /**
@@ -287,16 +287,7 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
      */
     private Set<String> getAllUnfiledParentPaths()
     {
-        List<RecordData> existingRecords = new ArrayList<RecordData>();
-        int skip = 0;
-        int limit = 100;
-        List<RecordData> recordsList = recordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, skip, limit);
-        while(recordsList.size() > 0)
-        {
-            existingRecords.addAll(recordsList);
-            skip += limit;
-            recordsList =  recordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, skip, limit);
-        }
+        List<RecordData> existingRecords = getAllUnfiledRecords();
         Set<String> existingPaths = new HashSet<>();
         for(RecordData record : existingRecords)
         {

@@ -36,6 +36,7 @@ public interface RMEventConstants
     public static final String FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE = "rootFoldersToCreate";
     public static final String FIELD_UNFILED_FOLDERS_TO_CREATE = "foldersToCreate";
     public static final String FIELD_RECORDS_TO_CREATE = "recordsToCreate";
+    public static final String FIELD_RECORDS_TO_FILE = "recordsToFile";
 
     public static final String RECORD_FOLDER_NAME_IDENTIFIER = "bmFolder";
     public static final String CATEGORY_NAME_IDENTIFIER = "bmCateg";

@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.alfresco.bm.dataload.rm.exceptions.DuplicateRecordException;
 import org.alfresco.bm.dataload.rm.exceptions.RecordNotFoundException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -42,6 +40,26 @@ public class RecordService extends BaseMongoService
     protected void setupIndexes()
     {
         createMongoIndex("uidIdCtx", false, Arrays.asList(FIELD_CONTEXT, FIELD_PARENT_PATH));
+        DBObject idxRecordStateParentPathCount = BasicDBObjectBuilder.start()
+                    .add(FIELD_STATE, 1)
+                    .add(FIELD_PARENT_PATH, 1)
+                    .get();
+            DBObject optRecordStateParentPathCount = BasicDBObjectBuilder.start()
+                    .add("name", "idxRecordStateParentPathCount")
+                    .add("unique", Boolean.FALSE)
+                    .get();
+            collection.createIndex(idxRecordStateParentPathCount, optRecordStateParentPathCount);
+
+            DBObject idxRecordRand = BasicDBObjectBuilder.start()
+                        .add(FIELD_STATE, 1)
+                        .add(FIELD_PARENT_PATH, 1)
+                        .add(FIELD_RANDOMIZER, 1)
+                        .get();
+            DBObject optRecordRand = BasicDBObjectBuilder.start()
+                        .add("name", "idxRecordRand")
+                        .add("unique", Boolean.FALSE)
+                        .get();
+            collection.createIndex(idxRecordRand, optRecordRand);
     }
 
     /**
@@ -167,8 +185,13 @@ public class RecordService extends BaseMongoService
      */
     public RecordData getRandomRecord(String state, List<String> listOfParentPaths)
     {
-        QueryBuilder queryObjBuilder = QueryBuilder
-                    .start(FIELD_STATE).is(state);
+        if (state == null)
+        {
+            throw new IllegalArgumentException();
+        }
+        QueryBuilder queryObjBuilder = QueryBuilder.start();
+
+        queryObjBuilder.and(FIELD_STATE).is(state);
         if (listOfParentPaths != null && listOfParentPaths.size() > 0)
         {
             queryObjBuilder.and(FIELD_PARENT_PATH).in(listOfParentPaths);
@@ -201,8 +224,13 @@ public class RecordService extends BaseMongoService
      */
     public long getRecordCountInSpecifiedPaths(String state, List<String> listOfParentPaths)
     {
-        QueryBuilder queryObjBuilder = QueryBuilder
-                    .start(FIELD_STATE).is(state);
+        if (state == null)
+        {
+            throw new IllegalArgumentException();
+        }
+        QueryBuilder queryObjBuilder = QueryBuilder.start();
+
+        queryObjBuilder.and(FIELD_STATE).is(state);
         if (listOfParentPaths != null && listOfParentPaths.size() > 0)
         {
             queryObjBuilder.and(FIELD_PARENT_PATH).in(listOfParentPaths);
@@ -225,8 +253,13 @@ public class RecordService extends BaseMongoService
      */
     public List<RecordData> getRecordsInPaths(String state, List<String> listOfParentPaths, int skip, int limit)
     {
-        QueryBuilder queryObjBuilder = QueryBuilder
-                    .start(FIELD_STATE).is(state);
+        if (state == null)
+        {
+            throw new IllegalArgumentException();
+        }
+        QueryBuilder queryObjBuilder = QueryBuilder.start();
+
+        queryObjBuilder.and(FIELD_STATE).is(state);
         if (listOfParentPaths != null && listOfParentPaths.size() > 0)
         {
             queryObjBuilder.and(FIELD_PARENT_PATH).in(listOfParentPaths);
