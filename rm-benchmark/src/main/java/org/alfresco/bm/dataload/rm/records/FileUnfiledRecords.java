@@ -24,10 +24,8 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.alfresco.bm.cm.FolderData;
@@ -53,17 +51,12 @@ import com.mongodb.DBObject;
  */
 public class FileUnfiledRecords extends RMBaseEventProcessor
 {
-    public static final String EVENT_NAME_UNFILED_RECORDS_FILED = "unfiledRecordsLoaded";
+    public static final String EVENT_NAME_UNFILED_RECORDS_FILED = "unfiledRecordsFiled";
     public static final long DEFAULT_FILE_UNFILED_RECORD_DELAY = 100L;
     private long fileUnfiledRecordDelay = DEFAULT_FILE_UNFILED_RECORD_DELAY;
     private List<String> fileFromUnfiledPaths;
     private Integer recordFilingLimit;
     String eventNameUnfiledRecordsFiled = EVENT_NAME_UNFILED_RECORDS_FILED;
-
-    public long getFileUnfiledRecordDelay()
-    {
-        return fileUnfiledRecordDelay;
-    }
 
     public void setFileUnfiledRecordDelay(long fileUnfiledRecordDelay)
     {
@@ -247,7 +240,7 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
      */
     private List<String> getListOfUnfiledRecordFoldersPaths()
     {
-        Set<String> allUnfiledParentPaths = getAllUnfiledParentPaths();
+        LinkedHashSet<String> allUnfiledParentPaths = getAllUnfiledParentPaths();
         List<String> availableUnfiledRecordFolderPaths = new ArrayList<>();
         LinkedHashSet<FolderData> unfiledFolderStructerFromExistentProvidedPaths = new LinkedHashSet<FolderData>();
         for(String path : fileFromUnfiledPaths)
@@ -291,10 +284,10 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
      *
      * @return all unfiled unfiled parent paths.
      */
-    private Set<String> getAllUnfiledParentPaths()
+    private LinkedHashSet<String> getAllUnfiledParentPaths()
     {
         List<RecordData> existingRecords = getAllUnfiledRecords();
-        Set<String> existingPaths = new HashSet<>();
+        LinkedHashSet<String> existingPaths = new LinkedHashSet<>();
         for(RecordData record : existingRecords)
         {
             existingPaths.add(record.getParentPath());
