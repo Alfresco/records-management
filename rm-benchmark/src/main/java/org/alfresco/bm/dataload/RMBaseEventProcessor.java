@@ -869,7 +869,16 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                         null, null,
                         skip, limit);
         }
-        return existingFolderStructure;
+        //check for locked folders
+        List<FolderData> result = new ArrayList<>();
+        for(FolderData folder : existingFolderStructure)
+        {
+            if(!folder.getPath().endsWith("locked"))
+            {
+                result.add(folder);
+            }
+        }
+        return result;
     }
 
     /**
@@ -1044,7 +1053,10 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                 result.addAll(getUnfiledRecordFolders(childFolder));
             }
         }
-        result.add(parentFolder);
+        if(!parentFolder.getPath().endsWith("locked"))
+        {
+            result.add(parentFolder);
+        }
         return result;
     }
 

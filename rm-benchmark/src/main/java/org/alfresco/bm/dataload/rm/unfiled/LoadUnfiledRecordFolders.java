@@ -139,8 +139,6 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
                 super.resumeTimer();
                 createRootUnfiledRecordFolder(container, userModel, rootFoldersToCreate, ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, container.getContext(), loadUnfiledRecordFolderDelay);
                 super.suspendTimer();
-                String lockedPath = container.getPath() + "/locked";
-                fileFolderService.deleteFolder(container.getContext(), lockedPath, false);
             }
 
             //Create unfiled record folder children
@@ -149,10 +147,10 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
                 super.resumeTimer();
                 createUnfiledRecordFolder(container, userModel, foldersToCreate, UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, container.getContext(), loadUnfiledRecordFolderDelay);
                 super.suspendTimer();
-                // Clean up the lock
-                String lockedPath = container.getPath() + "/locked";
-                fileFolderService.deleteFolder(container.getContext(), lockedPath, false);
             }
+            // Clean up the lock
+            String lockedPath = container.getPath() + "/locked";
+            fileFolderService.deleteFolder(container.getContext(), lockedPath, false);
 
             DBObject eventData = BasicDBObjectBuilder.start()
                         .add(FIELD_CONTEXT, container.getContext())
@@ -170,6 +168,10 @@ public class LoadUnfiledRecordFolders extends RMBaseEventProcessor
         }
         catch (Exception e)
         {
+            // Clean up the lock
+            String lockedPath = container.getPath() + "/locked";
+            fileFolderService.deleteFolder(container.getContext(), lockedPath, false);
+
             String error = e.getMessage();
             String stack = ExceptionUtils.getStackTrace(e);
             // Grab REST API information

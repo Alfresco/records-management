@@ -160,7 +160,7 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
             // FileRecords records
             if (recordsToFile > 0)
             {
-                fileRecord(container, userModel, recordsToFile, fileUnfiledRecordDelay);
+                recordsToFile = fileRecord(container, userModel, recordsToFile, fileUnfiledRecordDelay);
                 // Clean up the lock
                 String lockedPath = container.getPath() + "/locked";
                 fileFolderService.deleteFolder(container.getContext(), lockedPath, false);
@@ -195,9 +195,10 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
      * @param userModel - UserModel instance with which rest api will be called
      * @param recordsToFile - number of unfiled records to file
      * @param delay - delay between filing records
+     * @return the number of filed records.
      * @throws Exception
      */
-    public void fileRecord(FolderData folder, UserModel userModel, int recordsToFile, long delay) throws Exception
+    public int fileRecord(FolderData folder, UserModel userModel, int recordsToFile, long delay) throws Exception
     {
         String folderPath = folder.getPath();
         String parentId = folder.getId();
@@ -215,6 +216,10 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
         {
             RecordData randomRecord = recordService.getRandomRecord(ExecutionState.UNFILED_RECORD_DECLARED.name(), listOfUnfiledRecordFoldersPaths);
 
+            if(randomRecord == null)
+            {
+                return i;
+            }
             super.resumeTimer();
             RecordsAPI recordsAPI = getRestAPIFactory().getRecordsAPI(userModel);
             recordsAPI.fileRecord(recordBodyFileModel, randomRecord.getId());
@@ -232,6 +237,7 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
             recordService.updateRecord(randomRecord);
             TimeUnit.MILLISECONDS.sleep(delay);
         }
+        return recordsToFile;
     }
 
     /**
