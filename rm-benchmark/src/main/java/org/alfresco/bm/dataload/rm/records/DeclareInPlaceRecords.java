@@ -114,6 +114,7 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
                 dbRecord.setExecutionState(ExecutionState.UNFILED_RECORD_DECLARED);
                 dbRecord.setName(record.getName());
                 String parentPath = fileFolderService.getFolder(record.getParentId()).getPath();
+                fileFolderService.incrementFileCount(UNFILED_CONTEXT, parentPath, 1);
                 dbRecord.setParentPath(parentPath);
             }
             else
