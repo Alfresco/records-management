@@ -19,6 +19,9 @@ import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_DESC;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_TITLE;
+import static org.alfresco.bm.dataload.RMEventConstants.FILEPLAN_CONTEXT;
+import static org.alfresco.bm.dataload.RMEventConstants.UNFILED_CONTEXT;
+import static org.alfresco.bm.dataload.RMEventConstants.TRANSFER_CONTEXT;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.FILE_PLAN_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.TRANSFERS_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS;
@@ -170,7 +173,7 @@ public class CreateRMSite extends AbstractEventProcessor
 
         FolderData filePlan = new FolderData(
                 filePlanEntity.getId(),// already unique
-                "",
+                FILEPLAN_CONTEXT,
                 "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN,
                 0L, 0L);
         fileFolderService.createNewFolder(filePlan);
@@ -180,7 +183,7 @@ public class CreateRMSite extends AbstractEventProcessor
 
         FolderData unfiledRecordContainer = new FolderData(
                 unfiledContainer.getId(),// already unique
-                "unfiled",
+                UNFILED_CONTEXT,
                 "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN + "/" + PATH_SNIPPET_UNFILED_RECORD_CONTAINER,
                 0L, 0L);
         fileFolderService.createNewFolder(unfiledRecordContainer);
@@ -190,7 +193,7 @@ public class CreateRMSite extends AbstractEventProcessor
 
         FolderData transferContainer = new FolderData(
                     transferContainerEntity.getId(),// already unique
-                    "transfers",
+                    TRANSFER_CONTEXT,
                     "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN + "/" + PATH_SNIPPET_TRANSFER_CONTAINER,
                     0L, 0L);
         fileFolderService.createNewFolder(transferContainer);

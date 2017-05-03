@@ -339,7 +339,7 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     {
         //create inexistent elements from configured paths as admin
         List<String> pathElements = getPathElements(path);
-        FolderData parentFolder = fileFolderService.getFolder("", RECORD_CONTAINER_PATH);
+        FolderData parentFolder = fileFolderService.getFolder(FILEPLAN_CONTEXT, RECORD_CONTAINER_PATH);
         // for(String pathElement: pathElements)
         int pathElementsLength = pathElements.size();
         for (int i = 0; i < pathElementsLength; i++)

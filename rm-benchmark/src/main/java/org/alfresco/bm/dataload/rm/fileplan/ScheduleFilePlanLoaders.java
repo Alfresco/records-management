@@ -280,7 +280,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         {
             // Get categories needing loading
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
-                        "",
+                        FILEPLAN_CONTEXT,
                         Long.valueOf(FILE_PLAN_LEVEL), Long.valueOf(FILE_PLAN_LEVEL),//we need only file plan level here since we load root categories on filePlan
                         0L, Long.valueOf((categoryNumber - 1)),//limit the maximum number of child folders to number of needed root categories - 1
                         null, null, // Ignore file limits
