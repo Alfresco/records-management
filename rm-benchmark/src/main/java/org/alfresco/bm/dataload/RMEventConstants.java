@@ -27,44 +27,44 @@ package org.alfresco.bm.dataload;
  */
 public interface RMEventConstants
 {
-    public static final String FIELD_CONTEXT = "context";
-    public static final String FIELD_PATH = "path";
-    public static final String FIELD_ID = "id";
-    public static final String FIELD_USERNAME = "username";
-    public static final String FIELD_PASSWORD = "password";
+    String FIELD_CONTEXT = "context";
+    String FIELD_PATH = "path";
+    String FIELD_ID = "id";
+    String FIELD_USERNAME = "username";
+    String FIELD_PASSWORD = "password";
 
-    public static final String FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE = "rootFoldersToCreate";
-    public static final String FIELD_UNFILED_FOLDERS_TO_CREATE = "foldersToCreate";
-    public static final String FIELD_RECORDS_TO_CREATE = "recordsToCreate";
+    String FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE = "rootFoldersToCreate";
+    String FIELD_UNFILED_FOLDERS_TO_CREATE = "foldersToCreate";
+    String FIELD_RECORDS_TO_CREATE = "recordsToCreate";
 
-    public static final String RECORD_FOLDER_NAME_IDENTIFIER = "bmFolder";
-    public static final String CATEGORY_NAME_IDENTIFIER = "bmCateg";
-    public static final String ROOT_CATEGORY_NAME_IDENTIFIER = "bmRootCateg";
-    public static final String ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER = "UnfiledRoot";
-    public static final String UNFILED_RECORD_FOLDER_NAME_IDENTIFIER = "UnfiledFolder";
-    public static final String RECORD_NAME_IDENTIFIER = "Record";
+    String RECORD_FOLDER_NAME_IDENTIFIER = "bmFolder";
+    String CATEGORY_NAME_IDENTIFIER = "bmCateg";
+    String ROOT_CATEGORY_NAME_IDENTIFIER = "bmRootCateg";
+    String ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER = "UnfiledRoot";
+    String UNFILED_RECORD_FOLDER_NAME_IDENTIFIER = "UnfiledFolder";
+    String RECORD_NAME_IDENTIFIER = "Record";
 
-    public static final String FIELD_ROOT_CATEGORIES_TO_CREATE = "rootCategoriesToCreate";
-    public static final String FIELD_CATEGORIES_TO_CREATE = "categoriesToCreate";
-    public static final String FIELD_FOLDERS_TO_CREATE = "foldersToCreate";
+    String FIELD_ROOT_CATEGORIES_TO_CREATE = "rootCategoriesToCreate";
+    String FIELD_CATEGORIES_TO_CREATE = "categoriesToCreate";
+    String FIELD_FOLDERS_TO_CREATE = "foldersToCreate";
 
-    public static final int FILE_PLAN_LEVEL = 3;
-    public static final int UNFILED_RECORD_CONTAINER_LEVEL = 4;
-    public static final String UNFILED_CONTEXT = "unfiled";
-    public static final String TRANSFER_CONTEXT = "transfers";
-    public static final String FILEPLAN_CONTEXT = "filePlan";
-    public static final String RECORD_FOLDER_CONTEXT = "recordFolder";
-    public static final String RECORD_CATEGORY_CONTEXT = "recordCategory";
+    int FILE_PLAN_LEVEL = 3;
+    int UNFILED_RECORD_CONTAINER_LEVEL = 4;
+    String UNFILED_CONTEXT = "unfiled";
+    String TRANSFER_CONTEXT = "transfers";
+    String FILEPLAN_CONTEXT = "filePlan";
+    String RECORD_FOLDER_CONTEXT = "recordFolder";
+    String RECORD_CATEGORY_CONTEXT = "recordCategory";
 
-    public static final String PATH_SNIPPET_SITES = "Sites";
-    public static final String PATH_SNIPPET_FILE_PLAN = "documentLibrary";
-    public static final String PATH_SNIPPET_RM_SITE_ID = "rm";
-    public static final String PATH_SNIPPET_UNFILED_RECORD_CONTAINER = "Unfiled Records";
+    String PATH_SNIPPET_SITES = "Sites";
+    String PATH_SNIPPET_FILE_PLAN = "documentLibrary";
+    String PATH_SNIPPET_RM_SITE_ID = "rm";
+    String PATH_SNIPPET_UNFILED_RECORD_CONTAINER = "Unfiled Records";
 
-    public static final String RECORD_CONTAINER_PATH = "/" + PATH_SNIPPET_SITES +
+    String RECORD_CONTAINER_PATH = "/" + PATH_SNIPPET_SITES +
                                                         "/" + PATH_SNIPPET_RM_SITE_ID +
                                                         "/" + PATH_SNIPPET_FILE_PLAN;
 
-    public static final String UNFILED_RECORD_CONTAINER_PATH = RECORD_CONTAINER_PATH +
+    String UNFILED_RECORD_CONTAINER_PATH = RECORD_CONTAINER_PATH +
                                                         "/" + PATH_SNIPPET_UNFILED_RECORD_CONTAINER;
 }

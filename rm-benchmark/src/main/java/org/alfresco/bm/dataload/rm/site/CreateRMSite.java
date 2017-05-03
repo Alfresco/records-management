@@ -19,6 +19,9 @@ import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_DESC;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_TITLE;
+import static org.alfresco.bm.dataload.RMEventConstants.FILEPLAN_CONTEXT;
+import static org.alfresco.bm.dataload.RMEventConstants.UNFILED_CONTEXT;
+import static org.alfresco.bm.dataload.RMEventConstants.TRANSFER_CONTEXT;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.FILE_PLAN_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.TRANSFERS_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS;
@@ -30,7 +33,6 @@ import com.mongodb.DBObject;
 
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
-import org.alfresco.bm.dataload.RMEventConstants;
 import org.alfresco.bm.event.AbstractEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
@@ -51,7 +53,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Tuna Aksoy
  * @since 2.6
  */
-public class CreateRMSite extends AbstractEventProcessor implements RMEventConstants
+public class CreateRMSite extends AbstractEventProcessor
 {
     @Autowired
     private RestAPIFactory restAPIFactory;
