@@ -38,8 +38,10 @@ import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.core.RestAPIFactory;
+import org.alfresco.rest.core.RestWrapper;
 import org.alfresco.utility.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 /**
  * Prepare event for RM Site creation
@@ -74,6 +76,9 @@ public class PrepareRMSite extends AbstractEventProcessor
 
     @Autowired
     private RestAPIFactory restAPIFactory;
+
+    @Autowired
+    private RestWrapper restCoreAPI;
 
     private String eventNameRMSitePrepared = DEFAULT_EVENT_NAME_RM_SITE_PREPARED;
     private String eventNameLoadRMSiteIntoDB = "loadRMSiteIntoDB";
@@ -158,6 +163,15 @@ public class PrepareRMSite extends AbstractEventProcessor
         StringBuilder msg = new StringBuilder("Preparing Records Management: \n");
         List<Event> events = new ArrayList<Event>(10);
 
+        //authenticate with provided credentials and verify that they are valid
+        restCoreAPI.authenticateUser(new UserModel(getUsername(), getPassword()));
+        restCoreAPI.withCoreAPI().usingUser(new UserModel(getUsername(), getPassword())).getPerson();
+        String statusCode = restCoreAPI.getStatusCode();
+        if(HttpStatus.valueOf(Integer.parseInt(statusCode)) != HttpStatus.OK)
+        {
+            return new EventResult("Provided RM Site Creator does not exist, or provided credentials are not valid.", false);
+        }
+
         UserData rmAdmin = userDataService.findUserByUsername(getUsername());
         if (rmAdmin == null)
         {
@@ -209,7 +223,7 @@ public class PrepareRMSite extends AbstractEventProcessor
         builder.add(FIELD_SITE_ID, rmSite.getSiteId())
                .add(FIELD_SITE_MANAGER, getUsername());
 
-        boolean existsRMSite = restAPIFactory.getRMSiteAPI(new UserModel(getUsername(), getUsername())).existsRMSite();
+        boolean existsRMSite = restAPIFactory.getRMSiteAPI(new UserModel(getUsername(), getPassword())).existsRMSite();
 
         // RM site exists and it is loaded in MongoDB
         if (existsRMSite && rmSite.getCreationState() == Created)
