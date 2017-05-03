@@ -51,6 +51,8 @@ public interface RMEventConstants
     public static final int FILE_PLAN_LEVEL = 3;
     public static final int UNFILED_RECORD_CONTAINER_LEVEL = 4;
     public static final String UNFILED_CONTEXT = "unfiled";
+    public static final String TRANSFER_CONTEXT = "transfers";
+    public static final String FILEPLAN_CONTEXT = "filePlan";
     public static final String RECORD_FOLDER_CONTEXT = "recordFolder";
     public static final String RECORD_CATEGORY_CONTEXT = "recordCategory";
 

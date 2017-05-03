@@ -30,6 +30,7 @@ import com.mongodb.DBObject;
 
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
+import org.alfresco.bm.dataload.RMEventConstants;
 import org.alfresco.bm.event.AbstractEventProcessor;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
@@ -50,7 +51,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Tuna Aksoy
  * @since 2.6
  */
-public class CreateRMSite extends AbstractEventProcessor
+public class CreateRMSite extends AbstractEventProcessor implements RMEventConstants
 {
     @Autowired
     private RestAPIFactory restAPIFactory;
@@ -170,7 +171,7 @@ public class CreateRMSite extends AbstractEventProcessor
 
         FolderData filePlan = new FolderData(
                 filePlanEntity.getId(),// already unique
-                "",
+                FILEPLAN_CONTEXT,
                 "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN,
                 0L, 0L);
         fileFolderService.createNewFolder(filePlan);
@@ -180,7 +181,7 @@ public class CreateRMSite extends AbstractEventProcessor
 
         FolderData unfiledRecordContainer = new FolderData(
                 unfiledContainer.getId(),// already unique
-                "unfiled",
+                UNFILED_CONTEXT,
                 "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN + "/" + PATH_SNIPPET_UNFILED_RECORD_CONTAINER,
                 0L, 0L);
         fileFolderService.createNewFolder(unfiledRecordContainer);
@@ -190,7 +191,7 @@ public class CreateRMSite extends AbstractEventProcessor
 
         FolderData transferContainer = new FolderData(
                     transferContainerEntity.getId(),// already unique
-                    "transfers",
+                    TRANSFER_CONTEXT,
                     "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN + "/" + PATH_SNIPPET_TRANSFER_CONTAINER,
                     0L, 0L);
         fileFolderService.createNewFolder(transferContainer);
