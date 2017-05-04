@@ -24,12 +24,14 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.dataload.rm.services.ExecutionState;
+import org.alfresco.bm.dataload.rm.services.RecordData;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
@@ -55,6 +57,7 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
     private Integer maxActiveLoaders;
     private long loadCheckDelay;
     private List<String> fileToRecordFolderPaths;
+    private List<String> fileFromUnfiledPaths;
 
     private Integer recordFilingLimit;
     private String eventNameFileUnfiledRecords = DEFAULT_EVENT_NAME_FILE_UNFILED_RECORDS;
@@ -98,6 +101,14 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
         else
         {
             this.recordFilingLimit = 0;
+        }
+    }
+
+    public void setFileFromUnfiledPaths(String fileFromUnfiledPathsStr)
+    {
+        if(isNotBlank(fileFromUnfiledPathsStr))
+        {
+            this.fileFromUnfiledPaths = Arrays.asList(fileFromUnfiledPathsStr.split(","));
         }
     }
 
@@ -216,6 +227,14 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
                 {
                     try
                     {
+                        List<String> recordIdsToLoad = getRecordIdsToLoad(recordsToCreate);
+                        int availableRecordsToLoad = recordIdsToLoad.size();
+                        // no other records found for filing, break here
+                        if(availableRecordsToLoad == 0)
+                        {
+                            mapOfRecordsPerRecordFolder = null;
+                            break;
+                        }
                         // Create a lock folder that has too many files and folders so that it won't be picked up
                         // by this process in subsequent trawls
                         String lockPath = emptyFolder.getPath() + "/locked";
@@ -226,7 +245,7 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
                         // The loader will remove the lock when it completes
                         DBObject loadData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, emptyFolder.getContext())
                                     .add(FIELD_PATH, emptyFolder.getPath())
-                                    .add(FIELD_RECORDS_TO_FILE, Integer.valueOf(recordsToCreate))
+                                    .add(FIELD_RECORDS_TO_FILE, recordIdsToLoad)
                                     .get();
                         Event loadEvent = new Event(getEventNameFileUnfiledRecords(), loadData);
                         // Each load event must be associated with a session
@@ -234,6 +253,12 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
                         loadEvent.setSessionId(sessionId);
                         // Add the event to the list
                         nextEvents.add(loadEvent);
+                        // found less than requested unfiled records for filing, break here, after the event for loading existing ones was scheduled for filing
+                        if(availableRecordsToLoad > 0 && availableRecordsToLoad < recordsToCreate)
+                        {
+                            mapOfRecordsPerRecordFolder = null;
+                            break;
+                        }
                         mapOfRecordsPerRecordFolder.remove(emptyFolder);
                     }
                     catch (Exception e)
@@ -250,5 +275,96 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
                 }
             }
         }
+    }
+
+    /**
+     * Helper method for obtaining the id's of the random unfiled records to be filed in one record folder.
+     *
+     * @param recordsToFile the number ot unfiled record to file in one folder
+     * @return the list of id's of random unfiled records to file
+     */
+    private List<String> getRecordIdsToLoad(int recordsToFile)
+    {
+        List<String> unfiledRecordsIdsToFile = new ArrayList<>();
+        List<String> listOfUnfiledRecordFoldersPaths = null;
+        if(recordFilingLimit > 0 && fileFromUnfiledPaths !=null && fileFromUnfiledPaths.size() > 0)
+        {
+            listOfUnfiledRecordFoldersPaths = getListOfUnfiledRecordFoldersPaths();
+        }
+        for (int i = 0; i < recordsToFile; i++)
+        {
+            RecordData randomRecord = recordService.getRandomRecord(ExecutionState.UNFILED_RECORD_DECLARED.name(), listOfUnfiledRecordFoldersPaths);
+
+            if(randomRecord == null)
+            {
+                break;
+            }
+            unfiledRecordsIdsToFile.add(randomRecord.getId());
+            randomRecord.setExecutionState(ExecutionState.UNFILED_RECORD_SCHEDULED_FOR_FILING);
+            recordService.updateRecord(randomRecord);
+        }
+        return unfiledRecordsIdsToFile;
+    }
+
+    /**
+     * Helper method for obtaining parent paths to file unfiled records from.
+     *
+     * @return all parent paths to file unfiled records from.
+     */
+    private List<String> getListOfUnfiledRecordFoldersPaths()
+    {
+        LinkedHashSet<String> allUnfiledParentPaths = getAllUnfiledParentPaths();
+        List<String> availableUnfiledRecordFolderPaths = new ArrayList<>();
+        LinkedHashSet<FolderData> unfiledFolderStructerFromExistentProvidedPaths = new LinkedHashSet<FolderData>();
+        for(String path : fileFromUnfiledPaths)
+        {
+            if(!path.startsWith("/"))
+            {
+                path = "/" + path;
+            }
+            FolderData folder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH + path);
+            if(folder != null)//if folder exists
+            {
+                unfiledFolderStructerFromExistentProvidedPaths.addAll(getUnfiledRecordFolders(folder));
+            }
+            else
+            {
+                //unfiledRecordFolder with specified path does not exist
+            }
+        }
+        //add unfiled record folders from existent paths
+        if(unfiledFolderStructerFromExistentProvidedPaths.size() > 0)
+        {
+            for(FolderData availableFolder : unfiledFolderStructerFromExistentProvidedPaths)
+            {
+                String availableFolderPath = availableFolder.getPath();
+                if(allUnfiledParentPaths.contains(availableFolderPath))
+                {
+                    availableUnfiledRecordFolderPaths.add(availableFolderPath);
+                }
+            }
+        }
+        // configured paths did not existed in db and something went wrong with creation for all of them, initialize to existing structure in this case
+        if(availableUnfiledRecordFolderPaths.size() == 0)
+        {
+            availableUnfiledRecordFolderPaths.addAll(allUnfiledParentPaths);
+        }
+        return availableUnfiledRecordFolderPaths;
+    }
+
+    /**
+     * Helper method to obtain all parent paths for unfiled records present on db.
+     *
+     * @return all unfiled unfiled parent paths.
+     */
+    private LinkedHashSet<String> getAllUnfiledParentPaths()
+    {
+        List<RecordData> existingRecords = getAllUnfiledRecords();
+        LinkedHashSet<String> existingPaths = new LinkedHashSet<>();
+        for(RecordData record : existingRecords)
+        {
+            existingPaths.add(record.getParentPath());
+        }
+        return existingPaths;
     }
 }

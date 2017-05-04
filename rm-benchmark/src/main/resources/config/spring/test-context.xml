@@ -301,14 +301,13 @@
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
     <property name="fileToRecordFolderPaths" value="${rm.fileToRecordFolderPaths}" />
     <property name="recordFilingLimit" value="${rm.recordFilingLimit}" />
+    <property name="fileFromUnfiledPaths" value="${rm.fileFromUnfiledPaths}" />
     <property name="eventNameFileUnfiledRecords" value="fileUnfiledRecords"/>
     <property name="eventNameComplete" value="filingUnfiledRecordsComplete"/>
     <property name="eventNameRescheduleSelf" value="scheduleFilingUnfiledRecords"/>
   </bean>
 
   <bean id="event.fileUnfiledRecords" class="org.alfresco.bm.dataload.rm.records.FileUnfiledRecords" parent="rmBaseEventProcessor">
-    <property name="fileFromUnfiledPaths" value="${rm.fileFromUnfiledPaths}" />
-    <property name="recordFilingLimit" value="${rm.recordFilingLimit}" />
     <property name="eventNameUnfiledRecordsFiled" value="unfiledRecordsFiled"/>
   </bean>
 

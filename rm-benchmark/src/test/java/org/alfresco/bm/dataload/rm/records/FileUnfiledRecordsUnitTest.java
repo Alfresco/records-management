@@ -36,7 +36,6 @@ import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.RMEventConstants;
 import org.alfresco.bm.dataload.rm.role.RMRole;
-import org.alfresco.bm.dataload.rm.services.ExecutionState;
 import org.alfresco.bm.dataload.rm.services.RecordData;
 import org.alfresco.bm.dataload.rm.services.RecordService;
 import org.alfresco.bm.event.Event;
@@ -161,7 +160,7 @@ public class FileUnfiledRecordsUnitTest implements RMEventConstants
         DBObject mockedData = mock(DBObject.class);
         when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-        when(mockedData.get(FIELD_RECORDS_TO_FILE)).thenReturn(Integer.valueOf(0));
+        when(mockedData.get(FIELD_RECORDS_TO_FILE)).thenReturn(new ArrayList<String>());
         when(mockedEvent.getData()).thenReturn(mockedData);
         when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(null);
 
@@ -175,7 +174,7 @@ public class FileUnfiledRecordsUnitTest implements RMEventConstants
         DBObject mockedData = mock(DBObject.class);
         when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-        when(mockedData.get(FIELD_RECORDS_TO_FILE)).thenReturn(Integer.valueOf(0));
+        when(mockedData.get(FIELD_RECORDS_TO_FILE)).thenReturn(new ArrayList<String>());
         when(mockedEvent.getData()).thenReturn(mockedData);
         FolderData mockedFolder = mock(FolderData.class);
         when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
@@ -196,7 +195,7 @@ public class FileUnfiledRecordsUnitTest implements RMEventConstants
         DBObject mockedData = mock(DBObject.class);
         when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-        when(mockedData.get(FIELD_RECORDS_TO_FILE)).thenReturn(Integer.valueOf(recordsToFile));
+        when(mockedData.get(FIELD_RECORDS_TO_FILE)).thenReturn(new ArrayList<String>());
         when(mockedEvent.getData()).thenReturn(mockedData);
 
         FolderData mockedFolder = mock(FolderData.class);
@@ -227,14 +226,12 @@ public class FileUnfiledRecordsUnitTest implements RMEventConstants
     @Test
     public void testFileRecordsWithRestAPiException() throws Exception
     {
-        int recordsToFile = 3;
         fileUnfiledRecords.setEventNameUnfiledRecordsFiled("unfiledRecordsFiled");
-        fileUnfiledRecords.setRecordFilingLimit("0");
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
         when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-        when(mockedData.get(FIELD_RECORDS_TO_FILE)).thenReturn(Integer.valueOf(recordsToFile));
+        when(mockedData.get(FIELD_RECORDS_TO_FILE)).thenReturn(Arrays.asList("recordId1", "recordId2", "recordId3"));
         when(mockedEvent.getData()).thenReturn(mockedData);
 
         FolderData mockedFolder = mock(FolderData.class);
@@ -245,7 +242,7 @@ public class FileUnfiledRecordsUnitTest implements RMEventConstants
         when(mockedEvent.getSessionId()).thenReturn("someId");
 
         RecordData mockedRecordData = mock(RecordData.class);
-        when(mockedRecordService.getRandomRecord(ExecutionState.UNFILED_RECORD_DECLARED.name(), null)).thenReturn(mockedRecordData);
+        when(mockedRecordService.getRecord("recordId1")).thenReturn(mockedRecordData);
         Mockito.doThrow(new Exception("someError")).when(mockedRecordsAPI).fileRecord(any(RecordBodyFile.class), any(String.class));
 
         mockSiteAndUserData();
@@ -270,13 +267,12 @@ public class FileUnfiledRecordsUnitTest implements RMEventConstants
     {
         int recordsToFile = 3;
         fileUnfiledRecords.setEventNameUnfiledRecordsFiled("unfiledRecordsFiled");
-        fileUnfiledRecords.setRecordFilingLimit("0");
         fileUnfiledRecords.setFileUnfiledRecordDelay(1L);
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
         when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-        when(mockedData.get(FIELD_RECORDS_TO_FILE)).thenReturn(Integer.valueOf(recordsToFile));
+        when(mockedData.get(FIELD_RECORDS_TO_FILE)).thenReturn(Arrays.asList("recordId1", "recordId2", "recordId3"));
         when(mockedEvent.getData()).thenReturn(mockedData);
 
         FolderData mockedFolder = mock(FolderData.class);
@@ -304,9 +300,9 @@ public class FileUnfiledRecordsUnitTest implements RMEventConstants
         when(mockedRecordData3.getId()).thenReturn(recordId3);
         when(mockedRecordData3.getParentPath()).thenReturn(recordParentPath3);
 
-        when(mockedRecordService.getRandomRecord(ExecutionState.UNFILED_RECORD_DECLARED.name(), null)).thenReturn(mockedRecordData1)
-                                                                                                      .thenReturn(mockedRecordData2)
-                                                                                                      .thenReturn(mockedRecordData3);
+        when(mockedRecordService.getRecord(recordId1)).thenReturn(mockedRecordData1);
+        when(mockedRecordService.getRecord(recordId2)).thenReturn(mockedRecordData2);
+        when(mockedRecordService.getRecord(recordId3)).thenReturn(mockedRecordData3);
 
         mockSiteAndUserData();
         EventResult result = fileUnfiledRecords.processEvent(mockedEvent, new StopWatch());
@@ -320,138 +316,6 @@ public class FileUnfiledRecordsUnitTest implements RMEventConstants
         assertEquals(true, result.isSuccess());
         DBObject data = (DBObject) result.getData();
         assertEquals("Filed " + recordsToFile + " records.", data.get("msg"));
-        assertEquals("/aPath", data.get(FIELD_PATH));
-        assertEquals("aUser", data.get("username"));
-        assertEquals(1, result.getNextEvents().size());
-        Event event = result.getNextEvents().get(0);
-        assertEquals("unfiledRecordsFiled", event.getName());
-        DBObject eventData = (DBObject) event.getData();
-        assertEquals("someContext", eventData.get(FIELD_CONTEXT));
-        assertEquals("/aPath", eventData.get(FIELD_PATH));
-    }
-
-    @Test
-    public void testFileAllRecordsWithLimit() throws Exception
-    {
-        int recordsToFile = 3;
-        String recordId1 = "recordId1";
-        String recordParentPath1 = "/recordParentPath1";
-        String recordParentFullPath1 = UNFILED_RECORD_CONTAINER_PATH + recordParentPath1;
-        String recordId2 = "recordId2";
-        String recordParentPath2 = "/recordParentPath2";
-        String recordParentFullPath2 = UNFILED_RECORD_CONTAINER_PATH + recordParentPath2;
-        String recordId3 = "recordId3";
-        String recordParentPath3 = "/recordParentPath3";
-        String recordParentFullPath3 = UNFILED_RECORD_CONTAINER_PATH + recordParentPath3;
-        String fileFromPathsStr = recordParentPath1 + "," + recordParentPath2 + "," + recordParentPath3;
-
-        fileUnfiledRecords.setEventNameUnfiledRecordsFiled("unfiledRecordsFiled");
-        fileUnfiledRecords.setRecordFilingLimit("4");
-        fileUnfiledRecords.setFileFromUnfiledPaths(fileFromPathsStr);
-        fileUnfiledRecords.setFileUnfiledRecordDelay(1L);
-        Event mockedEvent = mock(Event.class);
-        DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
-        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-        when(mockedData.get(FIELD_RECORDS_TO_FILE)).thenReturn(Integer.valueOf(recordsToFile));
-        when(mockedEvent.getData()).thenReturn(mockedData);
-
-        FolderData mockedFolder = mock(FolderData.class);
-        when(mockedFolder.getId()).thenReturn("folderId");
-        when(mockedFolder.getPath()).thenReturn("/aPath");
-        when(mockedFolder.getContext()).thenReturn("someContext");
-        when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
-        when(mockedEvent.getSessionId()).thenReturn("someId");
-
-        RecordData mockedRecordData1 = mock(RecordData.class);
-        when(mockedRecordData1.getId()).thenReturn(recordId1);
-        when(mockedRecordData1.getParentPath()).thenReturn(recordParentFullPath1);
-
-        RecordData mockedRecordData2 = mock(RecordData.class);
-        when(mockedRecordData2.getId()).thenReturn(recordId2);
-        when(mockedRecordData2.getParentPath()).thenReturn(recordParentFullPath2);
-
-        RecordData mockedRecordData3 = mock(RecordData.class);
-        when(mockedRecordData3.getId()).thenReturn(recordId3);
-        when(mockedRecordData3.getParentPath()).thenReturn(recordParentFullPath3);
-
-        when(mockedRecordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, 0, 100))
-                  .thenReturn(Arrays.asList(mockedRecordData1, mockedRecordData2, mockedRecordData3));
-        when(mockedRecordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, 100, 100)).thenReturn(new ArrayList<>());
-
-        when(mockedRecordService.getRandomRecord(ExecutionState.UNFILED_RECORD_DECLARED.name(), Arrays.asList(recordParentFullPath1, recordParentFullPath2, recordParentFullPath3))).thenReturn(mockedRecordData1)
-        .thenReturn(mockedRecordData2)
-        .thenReturn(mockedRecordData3);
-
-        mockSiteAndUserData();
-        EventResult result = fileUnfiledRecords.processEvent(mockedEvent, new StopWatch());
-        verify(mockedFileFolderService, times(1)).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
-        verify(mockedFileFolderService, times(3)).incrementFileCount(mockedFolder.getContext(), mockedFolder.getPath(), 1);
-        verify(mockedFileFolderService, times(1)).incrementFileCount(UNFILED_CONTEXT, mockedRecordData1.getParentPath(), -1);
-        verify(mockedFileFolderService, times(1)).incrementFileCount(UNFILED_CONTEXT, mockedRecordData2.getParentPath(), -1);
-        verify(mockedFileFolderService, times(1)).incrementFileCount(UNFILED_CONTEXT, mockedRecordData3.getParentPath(), -1);
-        verify(mockedRecordService, times(3)).updateRecord(any(RecordData.class));
-
-        assertEquals(true, result.isSuccess());
-        DBObject data = (DBObject) result.getData();
-        assertEquals("Filed " + recordsToFile + " records.", data.get("msg"));
-        assertEquals("/aPath", data.get(FIELD_PATH));
-        assertEquals("aUser", data.get("username"));
-        assertEquals(1, result.getNextEvents().size());
-        Event event = result.getNextEvents().get(0);
-        assertEquals("unfiledRecordsFiled", event.getName());
-        DBObject eventData = (DBObject) event.getData();
-        assertEquals("someContext", eventData.get(FIELD_CONTEXT));
-        assertEquals("/aPath", eventData.get(FIELD_PATH));
-    }
-
-    @Test
-    public void testFileAvailableRecords() throws Exception
-    {
-        int recordsToFile = 3;
-        fileUnfiledRecords.setEventNameUnfiledRecordsFiled("unfiledRecordsFiled");
-        fileUnfiledRecords.setRecordFilingLimit("0");
-        Event mockedEvent = mock(Event.class);
-        DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
-        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-        when(mockedData.get(FIELD_RECORDS_TO_FILE)).thenReturn(Integer.valueOf(recordsToFile));
-        when(mockedEvent.getData()).thenReturn(mockedData);
-
-        FolderData mockedFolder = mock(FolderData.class);
-        when(mockedFolder.getId()).thenReturn("folderId");
-        when(mockedFolder.getPath()).thenReturn("/aPath");
-        when(mockedFolder.getContext()).thenReturn("someContext");
-        when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
-        when(mockedEvent.getSessionId()).thenReturn("someId");
-
-        String recordId1 = "recordId1";
-        String recordParentPath1 = "/recordParentPath1";
-        RecordData mockedRecordData1 = mock(RecordData.class);
-        when(mockedRecordData1.getId()).thenReturn(recordId1);
-        when(mockedRecordData1.getParentPath()).thenReturn(recordParentPath1);
-
-        String recordId2 = "recordId2";
-        String recordParentPath2 = "/recordParentPath2";
-        RecordData mockedRecordData2 = mock(RecordData.class);
-        when(mockedRecordData2.getId()).thenReturn(recordId2);
-        when(mockedRecordData2.getParentPath()).thenReturn(recordParentPath2);
-
-        when(mockedRecordService.getRandomRecord(ExecutionState.UNFILED_RECORD_DECLARED.name(), null)).thenReturn(mockedRecordData1)
-                                                                                                      .thenReturn(mockedRecordData2)
-                                                                                                      .thenReturn(null);
-
-        mockSiteAndUserData();
-        EventResult result = fileUnfiledRecords.processEvent(mockedEvent, new StopWatch());
-        verify(mockedFileFolderService, times(1)).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
-        verify(mockedFileFolderService, times(2)).incrementFileCount(mockedFolder.getContext(), mockedFolder.getPath(), 1);
-        verify(mockedFileFolderService, times(1)).incrementFileCount(UNFILED_CONTEXT, mockedRecordData1.getParentPath(), -1);
-        verify(mockedFileFolderService, times(1)).incrementFileCount(UNFILED_CONTEXT, mockedRecordData2.getParentPath(), -1);
-        verify(mockedRecordService, times(2)).updateRecord(any(RecordData.class));
-
-        assertEquals(true, result.isSuccess());
-        DBObject data = (DBObject) result.getData();
-        assertEquals("Filed " + (recordsToFile - 1) + " records.", data.get("msg"));
         assertEquals("/aPath", data.get(FIELD_PATH));
         assertEquals("aUser", data.get("username"));
         assertEquals(1, result.getNextEvents().size());

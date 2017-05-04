@@ -19,12 +19,8 @@
 
 package org.alfresco.bm.dataload.rm.records;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -54,8 +50,6 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
     public static final String EVENT_NAME_UNFILED_RECORDS_FILED = "unfiledRecordsFiled";
     public static final long DEFAULT_FILE_UNFILED_RECORD_DELAY = 100L;
     private long fileUnfiledRecordDelay = DEFAULT_FILE_UNFILED_RECORD_DELAY;
-    private List<String> fileFromUnfiledPaths;
-    private Integer recordFilingLimit;
     String eventNameUnfiledRecordsFiled = EVENT_NAME_UNFILED_RECORDS_FILED;
 
     public void setFileUnfiledRecordDelay(long fileUnfiledRecordDelay)
@@ -71,26 +65,6 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
     public void setEventNameUnfiledRecordsFiled(String eventNameUnfiledRecordsFiled)
     {
         this.eventNameUnfiledRecordsFiled = eventNameUnfiledRecordsFiled;
-    }
-
-    public void setFileFromUnfiledPaths(String fileFromUnfiledPathsStr)
-    {
-        if(isNotBlank(fileFromUnfiledPathsStr))
-        {
-            this.fileFromUnfiledPaths = Arrays.asList(fileFromUnfiledPathsStr.split(","));
-        }
-    }
-
-    public void setRecordFilingLimit(String recordFilingLimitString)
-    {
-        if(isNotBlank(recordFilingLimitString))
-        {
-            this.recordFilingLimit = Integer.parseInt(recordFilingLimitString);
-        }
-        else
-        {
-            this.recordFilingLimit = 0;
-        }
     }
 
     @Override
@@ -111,8 +85,10 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
 
         String context = (String) dataObj.get(FIELD_CONTEXT);
         String path = (String) dataObj.get(FIELD_PATH);
-        Integer recordsToFile = (Integer) dataObj.get(FIELD_RECORDS_TO_FILE);
-        if (context == null || path == null || recordsToFile == null)
+
+        @SuppressWarnings("unchecked")
+        List<String> recordsToFileIds = (List<String>) dataObj.get(FIELD_RECORDS_TO_FILE);
+        if (context == null || path == null || recordsToFileIds == null)
         {
             return new EventResult("Request data not complete for filing unfiled records: " + dataObj, false);
         }
@@ -130,18 +106,18 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
             return new EventResult("Load scheduling should create a session for each loader.", false);
         }
 
-        return fileRecords(folder, recordsToFile);
+        return fileRecords(folder, recordsToFileIds);
     }
 
     /**
      * Helper method that file specified numbers of records in specified record folder.
      *
      * @param container - record folder
-     * @param recordsToFile - number of records to file
+     * @param recordsToFileIds - list of the id's of unfiled records to file
      * @return EventResult - the filing result or error if there was an exception on filing
      * @throws IOException
      */
-    private EventResult fileRecords(FolderData container, int recordsToFile) throws IOException
+    private EventResult fileRecords(FolderData container, List<String> recordsToFileIds) throws IOException
     {
         UserData user = getRandomUser(logger);
         String username = user.getUsername();
@@ -151,9 +127,10 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
             // FileRecords records
-            if (recordsToFile > 0)
+            int numberOfRecordsToFile = recordsToFileIds.size();
+            if (numberOfRecordsToFile > 0)
             {
-                recordsToFile = fileRecord(container, userModel, recordsToFile, fileUnfiledRecordDelay);
+                fileRecord(container, userModel, recordsToFileIds, fileUnfiledRecordDelay);
                 // Clean up the lock
                 String lockedPath = container.getPath() + "/locked";
                 fileFolderService.deleteFolder(container.getContext(), lockedPath, false);
@@ -164,7 +141,7 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
             Event nextEvent = new Event(getEventNameUnfiledRecordsFiled(), eventData);
 
             scheduleEvents.add(nextEvent);
-            DBObject resultData = BasicDBObjectBuilder.start().add("msg", "Filed " + recordsToFile + " records.")
+            DBObject resultData = BasicDBObjectBuilder.start().add("msg", "Filed " + numberOfRecordsToFile + " records.")
                         .add("path", container.getPath()).add("username", username).get();
 
             return new EventResult(resultData, scheduleEvents);
@@ -186,12 +163,11 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
      *
      * @param folder - record folder in which the unfiled records will be filed
      * @param userModel - UserModel instance with which rest api will be called
-     * @param recordsToFile - number of unfiled records to file
+     * @param recordsToFileIds - list of the id's of unfiled records to file
      * @param delay - delay between filing records
-     * @return the number of filed records.
      * @throws Exception
      */
-    public int fileRecord(FolderData folder, UserModel userModel, int recordsToFile, long delay) throws Exception
+    public void fileRecord(FolderData folder, UserModel userModel, List<String> recordsToFileIds, long delay) throws Exception
     {
         String folderPath = folder.getPath();
         String parentId = folder.getId();
@@ -200,19 +176,9 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
                     .targetParentId(parentId)
                     .build();
 
-        List<String> listOfUnfiledRecordFoldersPaths = null;
-        if(recordFilingLimit > 0 && fileFromUnfiledPaths !=null && fileFromUnfiledPaths.size() > 0)
+        for (String recordId : recordsToFileIds)
         {
-            listOfUnfiledRecordFoldersPaths = getListOfUnfiledRecordFoldersPaths();
-        }
-        for (int i = 0; i < recordsToFile; i++)
-        {
-            RecordData randomRecord = recordService.getRandomRecord(ExecutionState.UNFILED_RECORD_DECLARED.name(), listOfUnfiledRecordFoldersPaths);
-
-            if(randomRecord == null)
-            {
-                return i;
-            }
+            RecordData randomRecord = recordService.getRecord(recordId);
             super.resumeTimer();
             RecordsAPI recordsAPI = getRestAPIFactory().getRecordsAPI(userModel);
             recordsAPI.fileRecord(recordBodyFileModel, randomRecord.getId());
@@ -230,68 +196,5 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
             recordService.updateRecord(randomRecord);
             TimeUnit.MILLISECONDS.sleep(delay);
         }
-        return recordsToFile;
-    }
-
-    /**
-     * Helper method for obtaining parent paths to file unfiled records from.
-     *
-     * @return all parent paths to file unfiled records from.
-     */
-    private List<String> getListOfUnfiledRecordFoldersPaths()
-    {
-        LinkedHashSet<String> allUnfiledParentPaths = getAllUnfiledParentPaths();
-        List<String> availableUnfiledRecordFolderPaths = new ArrayList<>();
-        LinkedHashSet<FolderData> unfiledFolderStructerFromExistentProvidedPaths = new LinkedHashSet<FolderData>();
-        for(String path : fileFromUnfiledPaths)
-        {
-            if(!path.startsWith("/"))
-            {
-                path = "/" + path;
-            }
-            FolderData folder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH + path);
-            if(folder != null)//if folder exists
-            {
-                unfiledFolderStructerFromExistentProvidedPaths.addAll(getUnfiledRecordFolders(folder));
-            }
-            else
-            {
-                //unfiledRecordFolder with specified path does not exist
-            }
-        }
-        //add unfiled record folders from existent paths
-        if(unfiledFolderStructerFromExistentProvidedPaths.size() > 0)
-        {
-            for(FolderData availableFolder : unfiledFolderStructerFromExistentProvidedPaths)
-            {
-                String availableFolderPath = availableFolder.getPath();
-                if(allUnfiledParentPaths.contains(availableFolderPath))
-                {
-                    availableUnfiledRecordFolderPaths.add(availableFolderPath);
-                }
-            }
-        }
-        // configured paths did not existed in db and something went wrong with creation for all of them, initialize to existing structure in this case
-        if(availableUnfiledRecordFolderPaths.size() == 0)
-        {
-            availableUnfiledRecordFolderPaths.addAll(allUnfiledParentPaths);
-        }
-        return availableUnfiledRecordFolderPaths;
-    }
-
-    /**
-     * Helper method to obtain all parent paths for unfiled records present on db.
-     *
-     * @return all unfiled unfiled parent paths.
-     */
-    private LinkedHashSet<String> getAllUnfiledParentPaths()
-    {
-        List<RecordData> existingRecords = getAllUnfiledRecords();
-        LinkedHashSet<String> existingPaths = new LinkedHashSet<>();
-        for(RecordData record : existingRecords)
-        {
-            existingPaths.add(record.getParentPath());
-        }
-        return existingPaths;
     }
 }
