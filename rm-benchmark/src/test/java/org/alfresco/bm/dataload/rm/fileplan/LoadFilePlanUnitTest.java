@@ -235,7 +235,7 @@ public class LoadFilePlanUnitTest implements RMEventConstants
 
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_CONTEXT)).thenReturn("");
+        when(mockedData.get(FIELD_CONTEXT)).thenReturn(FILEPLAN_CONTEXT);
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
         when(mockedData.get(FIELD_ROOT_CATEGORIES_TO_CREATE)).thenReturn(Integer.valueOf(rootCategoriesNumber));
         when(mockedData.get(FIELD_CATEGORIES_TO_CREATE)).thenReturn(Integer.valueOf(childCategoriesNumber));
@@ -244,7 +244,7 @@ public class LoadFilePlanUnitTest implements RMEventConstants
         FolderData mockedFolder = mock(FolderData.class);
         when(mockedFolder.getId()).thenReturn("folderId");
         when(mockedFolder.getPath()).thenReturn("/aPath");
-        when(mockedFileFolderService.getFolder("", "/aPath")).thenReturn(mockedFolder);
+        when(mockedFileFolderService.getFolder(FILEPLAN_CONTEXT, "/aPath")).thenReturn(mockedFolder);
         loadFilePlan.setEventNameRecordCategoryLoaded("recordCategoriesLoaded");
         loadFilePlan.setFileFolderService(mockedFileFolderService);
         when(mockedEvent.getSessionId()).thenReturn("someId");
@@ -270,7 +270,7 @@ public class LoadFilePlanUnitTest implements RMEventConstants
 
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_CONTEXT)).thenReturn("");
+        when(mockedData.get(FIELD_CONTEXT)).thenReturn(FILEPLAN_CONTEXT);
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
         when(mockedData.get(FIELD_ROOT_CATEGORIES_TO_CREATE)).thenReturn(Integer.valueOf(rootCategoriesNumber));
         when(mockedData.get(FIELD_CATEGORIES_TO_CREATE)).thenReturn(Integer.valueOf(childCategoriesNumber));
@@ -279,7 +279,7 @@ public class LoadFilePlanUnitTest implements RMEventConstants
         FolderData mockedFolder = mock(FolderData.class);
         when(mockedFolder.getId()).thenReturn("folderId");
         when(mockedFolder.getPath()).thenReturn("/aPath");
-        when(mockedFileFolderService.getFolder("", "/aPath")).thenReturn(mockedFolder);
+        when(mockedFileFolderService.getFolder(FILEPLAN_CONTEXT, "/aPath")).thenReturn(mockedFolder);
         loadFilePlan.setEventNameRecordCategoryLoaded("recordCategoriesLoaded");
         loadFilePlan.setFileFolderService(mockedFileFolderService);
         when(mockedEvent.getSessionId()).thenReturn("someId");
@@ -314,7 +314,7 @@ public class LoadFilePlanUnitTest implements RMEventConstants
 
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_CONTEXT)).thenReturn("");
+        when(mockedData.get(FIELD_CONTEXT)).thenReturn(FILEPLAN_CONTEXT);
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
         when(mockedData.get(FIELD_ROOT_CATEGORIES_TO_CREATE)).thenReturn(Integer.valueOf(rootCategoriesNumber));
         when(mockedData.get(FIELD_CATEGORIES_TO_CREATE)).thenReturn(Integer.valueOf(childCategoriesNumber));
@@ -323,7 +323,7 @@ public class LoadFilePlanUnitTest implements RMEventConstants
         FolderData mockedFolder = mock(FolderData.class);
         when(mockedFolder.getId()).thenReturn("folderId");
         when(mockedFolder.getPath()).thenReturn("/aPath");
-        when(mockedFileFolderService.getFolder("", "/aPath")).thenReturn(mockedFolder);
+        when(mockedFileFolderService.getFolder(FILEPLAN_CONTEXT, "/aPath")).thenReturn(mockedFolder);
         loadFilePlan.setEventNameRecordCategoryLoaded("recordCategoriesLoaded");
         loadFilePlan.setFileFolderService(mockedFileFolderService);
         when(mockedEvent.getSessionId()).thenReturn("someId");
@@ -361,7 +361,7 @@ public class LoadFilePlanUnitTest implements RMEventConstants
 
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_CONTEXT)).thenReturn("");
+        when(mockedData.get(FIELD_CONTEXT)).thenReturn(FILEPLAN_CONTEXT);
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
         when(mockedData.get(FIELD_ROOT_CATEGORIES_TO_CREATE)).thenReturn(Integer.valueOf(rootCategoriesNumber));
         when(mockedData.get(FIELD_CATEGORIES_TO_CREATE)).thenReturn(Integer.valueOf(childCategoriesNumber));
@@ -370,7 +370,7 @@ public class LoadFilePlanUnitTest implements RMEventConstants
         FolderData mockedFolder = mock(FolderData.class);
         when(mockedFolder.getId()).thenReturn("folderId");
         when(mockedFolder.getPath()).thenReturn("/aPath");
-        when(mockedFileFolderService.getFolder("", "/aPath")).thenReturn(mockedFolder);
+        when(mockedFileFolderService.getFolder(FILEPLAN_CONTEXT, "/aPath")).thenReturn(mockedFolder);
         loadFilePlan.setEventNameRecordCategoryLoaded("recordCategoriesLoaded");
         loadFilePlan.setFileFolderService(mockedFileFolderService);
         when(mockedEvent.getSessionId()).thenReturn("someId");
@@ -408,7 +408,7 @@ public class LoadFilePlanUnitTest implements RMEventConstants
 
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_CONTEXT)).thenReturn("");
+        when(mockedData.get(FIELD_CONTEXT)).thenReturn(FILEPLAN_CONTEXT);
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
         when(mockedData.get(FIELD_ROOT_CATEGORIES_TO_CREATE)).thenReturn(Integer.valueOf(rootCategoriesNumber));
         when(mockedData.get(FIELD_CATEGORIES_TO_CREATE)).thenReturn(Integer.valueOf(childCategoriesNumber));
@@ -417,7 +417,7 @@ public class LoadFilePlanUnitTest implements RMEventConstants
         FolderData mockedFolder = mock(FolderData.class);
         when(mockedFolder.getId()).thenReturn("folderId");
         when(mockedFolder.getPath()).thenReturn("/aPath");
-        when(mockedFileFolderService.getFolder("", "/aPath")).thenReturn(mockedFolder);
+        when(mockedFileFolderService.getFolder(FILEPLAN_CONTEXT, "/aPath")).thenReturn(mockedFolder);
         loadFilePlan.setEventNameRecordCategoryLoaded("recordCategoriesLoaded");
         loadFilePlan.setFileFolderService(mockedFileFolderService);
         when(mockedEvent.getSessionId()).thenReturn("someId");

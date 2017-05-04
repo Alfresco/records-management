@@ -63,8 +63,6 @@ import com.mongodb.DBObject;
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 {
-    private static final String EMPTY_CONTEXT = "";
-
     @Mock
     private SessionService mockedSessionService;
 
@@ -130,7 +128,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
     {
         int maxActiveLoaders = 8;
         int recordsNumber = 4;
-        String paths = EMPTY_CONTEXT;
+        String paths = "";
 
         scheduleRecordLoaders.setUploadRecords(true);
         scheduleRecordLoaders.setMaxActiveLoaders(maxActiveLoaders);
@@ -405,9 +403,9 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         //file plan should be always there
         FolderData mockedFilePlanContainer = mock(FolderData.class);
         when(mockedFilePlanContainer.getId()).thenReturn("filePlanId");
-        when(mockedFilePlanContainer.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedFilePlanContainer.getContext()).thenReturn(FILEPLAN_CONTEXT);
         when(mockedFilePlanContainer.getPath()).thenReturn(RECORD_CONTAINER_PATH);
-        when(mockedFileFolderService.getFolder(EMPTY_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(mockedFilePlanContainer);
+        when(mockedFileFolderService.getFolder(FILEPLAN_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(mockedFilePlanContainer);
 
         when(mockedRestApiFactory.getFilePlansAPI()).thenReturn(mockedFilePlanAPI);
         when(mockedRestApiFactory.getRecordCategoryAPI()).thenReturn(mockedRecordCategoryAPI);
@@ -542,9 +540,9 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         //file plan should be always there
         FolderData mockedFilePlanContainer = mock(FolderData.class);
         when(mockedFilePlanContainer.getId()).thenReturn("filePlanId");
-        when(mockedFilePlanContainer.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedFilePlanContainer.getContext()).thenReturn(FILEPLAN_CONTEXT);
         when(mockedFilePlanContainer.getPath()).thenReturn(RECORD_CONTAINER_PATH);
-        when(mockedFileFolderService.getFolder(EMPTY_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(mockedFilePlanContainer);
+        when(mockedFileFolderService.getFolder(FILEPLAN_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(mockedFilePlanContainer);
 
         when(mockedRestApiFactory.getFilePlansAPI()).thenReturn(mockedFilePlanAPI);
         when(mockedRestApiFactory.getRecordCategoryAPI()).thenReturn(mockedRecordCategoryAPI);
@@ -642,9 +640,9 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         //file plan should be always there
         FolderData mockedFilePlanContainer = mock(FolderData.class);
         when(mockedFilePlanContainer.getId()).thenReturn("filePlanId");
-        when(mockedFilePlanContainer.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedFilePlanContainer.getContext()).thenReturn(FILEPLAN_CONTEXT);
         when(mockedFilePlanContainer.getPath()).thenReturn(RECORD_CONTAINER_PATH);
-        when(mockedFileFolderService.getFolder(EMPTY_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(mockedFilePlanContainer);
+        when(mockedFileFolderService.getFolder(FILEPLAN_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(mockedFilePlanContainer);
 
         //2 existent record folders
         String path1 = RECORD_CONTAINER_PATH + "/categ1/folder1";
