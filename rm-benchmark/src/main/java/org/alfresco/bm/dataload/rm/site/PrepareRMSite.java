@@ -163,9 +163,10 @@ public class PrepareRMSite extends AbstractEventProcessor
         StringBuilder msg = new StringBuilder("Preparing Records Management: \n");
         List<Event> events = new ArrayList<Event>(10);
 
+        UserModel userModel = new UserModel(getUsername(), getPassword());
         //authenticate with provided credentials and verify that they are valid
-        restCoreAPI.authenticateUser(new UserModel(getUsername(), getPassword()));
-        restCoreAPI.withCoreAPI().usingUser(new UserModel(getUsername(), getPassword())).getPerson();
+        restCoreAPI.authenticateUser(userModel);
+        restCoreAPI.withCoreAPI().usingAuthUser().getPerson();
         String statusCode = restCoreAPI.getStatusCode();
         if(HttpStatus.valueOf(Integer.parseInt(statusCode)) != HttpStatus.OK)
         {
@@ -223,7 +224,7 @@ public class PrepareRMSite extends AbstractEventProcessor
         builder.add(FIELD_SITE_ID, rmSite.getSiteId())
                .add(FIELD_SITE_MANAGER, getUsername());
 
-        boolean existsRMSite = restAPIFactory.getRMSiteAPI(new UserModel(getUsername(), getPassword())).existsRMSite();
+        boolean existsRMSite = restAPIFactory.getRMSiteAPI(userModel).existsRMSite();
 
         // RM site exists and it is loaded in MongoDB
         if (existsRMSite && rmSite.getCreationState() == Created)

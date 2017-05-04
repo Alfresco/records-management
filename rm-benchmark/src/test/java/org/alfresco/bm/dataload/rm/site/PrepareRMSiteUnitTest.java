@@ -41,7 +41,6 @@ import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.core.RestWrapper;
-import org.alfresco.rest.model.RestPersonModel;
 import org.alfresco.rest.requests.People;
 import org.alfresco.rest.requests.coreAPI.RestCoreAPI;
 import org.alfresco.rest.rm.community.requests.gscore.api.RMSiteAPI;
@@ -93,11 +92,9 @@ public class PrepareRMSiteUnitTest
         when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(false);
 
-        RestPersonModel mockedRestPersonModel = mock(RestPersonModel.class);
         People mockedPeople = mock(People.class);
-        when(mockedPeople.getPerson()).thenReturn(mockedRestPersonModel);
         RestCoreAPI mockedCoreAPI = mock(RestCoreAPI.class);
-        when(mockedCoreAPI.usingUser(any(UserModel.class))).thenReturn(mockedPeople);
+        when(mockedCoreAPI.usingAuthUser()).thenReturn(mockedPeople);
         when(mockedRestCoreAPI.withCoreAPI()).thenReturn(mockedCoreAPI);
         when(mockedRestCoreAPI.getStatusCode()).thenReturn(HttpStatus.OK.toString());
 
@@ -148,11 +145,9 @@ public class PrepareRMSiteUnitTest
         when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(true);
 
-        RestPersonModel mockedRestPersonModel = mock(RestPersonModel.class);
         People mockedPeople = mock(People.class);
-        when(mockedPeople.getPerson()).thenReturn(mockedRestPersonModel);
         RestCoreAPI mockedCoreAPI = mock(RestCoreAPI.class);
-        when(mockedCoreAPI.usingUser(any(UserModel.class))).thenReturn(mockedPeople);
+        when(mockedCoreAPI.usingAuthUser()).thenReturn(mockedPeople);
         when(mockedRestCoreAPI.withCoreAPI()).thenReturn(mockedCoreAPI);
         when(mockedRestCoreAPI.getStatusCode()).thenReturn(HttpStatus.OK.toString());
 
@@ -207,11 +202,9 @@ public class PrepareRMSiteUnitTest
         when(mockedSiteData.getCreationState()).thenReturn(Created);
         when(mockedSiteDataService.getSite(RM_SITE_ID)).thenReturn(mockedSiteData);
 
-        RestPersonModel mockedRestPersonModel = mock(RestPersonModel.class);
         People mockedPeople = mock(People.class);
-        when(mockedPeople.getPerson()).thenReturn(mockedRestPersonModel);
         RestCoreAPI mockedCoreAPI = mock(RestCoreAPI.class);
-        when(mockedCoreAPI.usingUser(any(UserModel.class))).thenReturn(mockedPeople);
+        when(mockedCoreAPI.usingAuthUser()).thenReturn(mockedPeople);
         when(mockedRestCoreAPI.withCoreAPI()).thenReturn(mockedCoreAPI);
         when(mockedRestCoreAPI.getStatusCode()).thenReturn(HttpStatus.OK.toString());
 
@@ -253,11 +246,9 @@ public class PrepareRMSiteUnitTest
         when(mockedSiteData.getCreationState()).thenReturn(Created);
         when(mockedSiteDataService.getSite(RM_SITE_ID)).thenReturn(mockedSiteData);
 
-        RestPersonModel mockedRestPersonModel = mock(RestPersonModel.class);
         People mockedPeople = mock(People.class);
-        when(mockedPeople.getPerson()).thenReturn(mockedRestPersonModel);
         RestCoreAPI mockedCoreAPI = mock(RestCoreAPI.class);
-        when(mockedCoreAPI.usingUser(any(UserModel.class))).thenReturn(mockedPeople);
+        when(mockedCoreAPI.usingAuthUser()).thenReturn(mockedPeople);
         when(mockedRestCoreAPI.withCoreAPI()).thenReturn(mockedCoreAPI);
         when(mockedRestCoreAPI.getStatusCode()).thenReturn(HttpStatus.OK.toString());
         EventResult result = prepareRMSite.processEvent(null);
@@ -295,13 +286,11 @@ public class PrepareRMSiteUnitTest
         prepareRMSite.setUsername(username);
         prepareRMSite.setPassword(password);
 
-        RestPersonModel mockedRestPersonModel = mock(RestPersonModel.class);
         People mockedPeople = mock(People.class);
-        when(mockedPeople.getPerson()).thenReturn(mockedRestPersonModel);
         RestCoreAPI mockedCoreAPI = mock(RestCoreAPI.class);
-        when(mockedCoreAPI.usingUser(any(UserModel.class))).thenReturn(mockedPeople);
+        when(mockedCoreAPI.usingAuthUser()).thenReturn(mockedPeople);
         when(mockedRestCoreAPI.withCoreAPI()).thenReturn(mockedCoreAPI);
-        when(mockedRestCoreAPI.getStatusCode()).thenReturn(HttpStatus.NOT_FOUND.toString());
+        when(mockedRestCoreAPI.getStatusCode()).thenReturn(HttpStatus.UNAUTHORIZED.toString());
         EventResult result = prepareRMSite.processEvent(null);
         assertEquals(false, result.isSuccess());
         assertEquals("Provided RM Site Creator does not exist, or provided credentials are not valid.", result.getData());
