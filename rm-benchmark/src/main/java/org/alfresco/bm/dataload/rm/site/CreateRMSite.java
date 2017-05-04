@@ -19,6 +19,9 @@ import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_DESC;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_TITLE;
+import static org.alfresco.bm.dataload.RMEventConstants.FILEPLAN_CONTEXT;
+import static org.alfresco.bm.dataload.RMEventConstants.UNFILED_CONTEXT;
+import static org.alfresco.bm.dataload.RMEventConstants.TRANSFER_CONTEXT;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.FILE_PLAN_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.TRANSFERS_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS;
@@ -117,43 +120,31 @@ public class CreateRMSite extends AbstractEventProcessor
         siteDataService.setSiteMemberCreationState(siteId, siteManager, Failed);
 
         String msg = null;
-        try
+        RMSiteAPI rmSiteAPI = restAPIFactory.getRMSiteAPI(new UserModel(siteManager, siteManager));
+        String guid = null;
+        if (onlyLoadInDb == null)
         {
-            RMSiteAPI rmSiteAPI = restAPIFactory.getRMSiteAPI(new UserModel(siteManager, siteManager));
-            String guid = null;
-            if (onlyLoadInDb == null)
-            {
-                RMSite siteModel = RMSite.builder().compliance(STANDARD).build();
-                siteModel.setTitle(RM_SITE_TITLE);
-                siteModel.setDescription(RM_SITE_DESC);
+            RMSite siteModel = RMSite.builder().compliance(STANDARD).build();
+            siteModel.setTitle(RM_SITE_TITLE);
+            siteModel.setDescription(RM_SITE_DESC);
 
-                RMSite rmSite = rmSiteAPI.createRMSite(siteModel);
-                guid = rmSite.getGuid();
-                msg = "Created site: " + siteId + " Site creator: " + siteManager;
-            }
-            else
-            {
-                RMSite alreadyCreatedRMSite = rmSiteAPI.getSite();
-                guid = alreadyCreatedRMSite.getGuid();
-                msg = "RM site already exists, just loading it in the DB.";
-            }
-
-            // Mark the site.
-            siteDataService.setSiteCreationState(siteId, guid, Created);
-            siteDataService.setSiteMemberCreationState(siteId, siteManager, Created);
-
-//            while (!restAPIFactory.getRMSiteAPI(siteManager).existsRMSite()) {
-//                continue;
-//            }
-
-            loadSpecialContainersInDB(siteId, siteManager);
-            event = new Event(eventNameSiteCreated, null);
+            RMSite rmSite = rmSiteAPI.createRMSite(siteModel);
+            guid = rmSite.getGuid();
+            msg = "Created site: " + siteId + " Site creator: " + siteManager;
         }
-        catch (Exception e)
+        else
         {
-            // The creation failed
-            throw e;
+            RMSite alreadyCreatedRMSite = rmSiteAPI.getSite();
+            guid = alreadyCreatedRMSite.getGuid();
+            msg = "RM site already exists, just loading it in the DB.";
         }
+
+        // Mark the site.
+        siteDataService.setSiteCreationState(siteId, guid, Created);
+        siteDataService.setSiteMemberCreationState(siteId, siteManager, Created);
+
+        loadSpecialContainersInDB(siteId, siteManager);
+        event = new Event(eventNameSiteCreated, null);
 
         if (logger.isDebugEnabled())
         {
@@ -170,7 +161,7 @@ public class CreateRMSite extends AbstractEventProcessor
 
         FolderData filePlan = new FolderData(
                 filePlanEntity.getId(),// already unique
-                "",
+                FILEPLAN_CONTEXT,
                 "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN,
                 0L, 0L);
         fileFolderService.createNewFolder(filePlan);
@@ -180,7 +171,7 @@ public class CreateRMSite extends AbstractEventProcessor
 
         FolderData unfiledRecordContainer = new FolderData(
                 unfiledContainer.getId(),// already unique
-                "unfiled",
+                UNFILED_CONTEXT,
                 "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN + "/" + PATH_SNIPPET_UNFILED_RECORD_CONTAINER,
                 0L, 0L);
         fileFolderService.createNewFolder(unfiledRecordContainer);
@@ -190,7 +181,7 @@ public class CreateRMSite extends AbstractEventProcessor
 
         FolderData transferContainer = new FolderData(
                     transferContainerEntity.getId(),// already unique
-                    "transfers",
+                    TRANSFER_CONTEXT,
                     "/" + PATH_SNIPPET_SITES + "/" + siteId + "/" + PATH_SNIPPET_FILE_PLAN + "/" + PATH_SNIPPET_TRANSFER_CONTAINER,
                     0L, 0L);
         fileFolderService.createNewFolder(transferContainer);
