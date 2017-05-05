@@ -48,7 +48,7 @@ import com.mongodb.DBObject;
  */
 public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
 {
-    public static final String DONE_EVENT_MSG = "Raising 'done' event.";
+    public static final String DONE_EVENT_MSG = "Filing completed.  Raising 'done' event.";
     public static final String FILING_UNFILED_RECORDS_NOT_WANTED_MSG = "Filing unfiled records not wanted.";
     private static final String DEFAULT_EVENT_NAME_RESCHEDULE_SELF = "scheduleFilingUnfiledRecords";
     private static final String DEFAULT_EVENT_NAME_FILE_UNFILED_RECORDS = "fileUnfiledRecords";
@@ -145,15 +145,16 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
     @Override
     protected EventResult processEvent(Event event) throws Exception
     {
+        if (!fileUnfiledRecords)
+        {
+            return new EventResult(FILING_UNFILED_RECORDS_NOT_WANTED_MSG, new Event(getEventNameComplete(), null));
+        }
+
         // Are there still sessions active?
         long sessionCount = sessionService.getActiveSessionsCount();
         int loaderSessionsToCreate = maxActiveLoaders - (int) sessionCount;
         List<Event> nextEvents = new ArrayList<Event>(maxActiveLoaders);
 
-        if (!fileUnfiledRecords)
-        {
-            return new EventResult(FILING_UNFILED_RECORDS_NOT_WANTED_MSG, new Event(getEventNameComplete(), null));
-        }
         if(recordFilingLimit >= 0)
         {
             //Prepare Records
@@ -168,7 +169,7 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
             mapOfRecordsPerRecordFolder = null;
             Event nextEvent = new Event(getEventNameComplete(), null);
             nextEvents.add(nextEvent);
-            msg = "Filing completed.  Raising 'done' event.";
+            msg = DONE_EVENT_MSG;
         }
         else
         {
