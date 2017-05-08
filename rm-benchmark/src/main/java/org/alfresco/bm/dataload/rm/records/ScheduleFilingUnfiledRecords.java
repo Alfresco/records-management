@@ -319,7 +319,11 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
         LinkedHashSet<FolderData> unfiledFolderStructerFromExistentProvidedPaths = new LinkedHashSet<FolderData>();
         for(String path : fileFromUnfiledPaths)
         {
-            if(!path.startsWith("/"))
+            if(path.equals("/"))
+            {
+                path = "";
+            }
+            else if(!path.startsWith("/"))
             {
                 path = "/" + path;
             }
