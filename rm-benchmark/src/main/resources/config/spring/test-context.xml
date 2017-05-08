@@ -311,9 +311,17 @@
   </bean>
 
   <bean id="event.fileUnfiledRecords" class="org.alfresco.bm.dataload.rm.records.FileUnfiledRecords" parent="rmBaseEventProcessor">
+    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
     <property name="eventNameUnfiledRecordsFiled" value="unfiledRecordsFiled"/>
+    <property name="chart" value="false" />
+  </bean>
+
+  <bean id="event.fileUnfiledRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameCompleted" value="unfiledRecordFiled"/>
     <property name="chart" value="true" />
   </bean>
+
+  <bean id="producer.unfiledRecordFiled" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
   <bean id="producer.unfiledRecordsFiled" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
