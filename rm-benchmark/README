@@ -9,3 +9,8 @@ mvn clean install -Pstart-benchmark -Dmongo.config.host=127.0.0.1
 Running tests:
 -------------
 mvn clean install -Dskip.automationtests=false
+
+Install lombok plugin for IDEs:
+-------------------------------
+
+Follow the instructions here http://jnb.ociweb.com/jnb/jnbJan2010.html to install lombok plugin for IDEs.
