@@ -20,6 +20,7 @@
 package org.alfresco.bm.dataload.rm.unfiled;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.split;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -269,7 +270,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     private FolderData createFolder(String path) throws Exception
     {
         //create inexistent elements from configured paths as admin
-        List<String> pathElements = getPathElements(path);
+        List<String> pathElements = Arrays.asList(split(path, "/"));
         FolderData parentFolder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH);
         // for(String pathElement: pathElements)
         int pathElementsLength = pathElements.size();

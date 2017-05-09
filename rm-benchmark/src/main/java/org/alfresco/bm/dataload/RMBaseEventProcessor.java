@@ -19,6 +19,8 @@
 
 package org.alfresco.bm.dataload;
 
+import static org.apache.commons.lang3.StringUtils.split;
+
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.CONTENT_TYPE;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.NON_ELECTRONIC_RECORD_TYPE;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.UNFILED_RECORD_FOLDER_TYPE;
@@ -29,12 +31,12 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -822,26 +824,6 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     }
 
     /**
-     * Helper method that parses a string representing a file path and returns a list of element names
-     * @param path the file path represented as a string
-     * @return a list of file path element names
-     */
-    public List<String> getPathElements(String path)
-    {
-        final List<String> pathElements = new ArrayList<>();
-        if (path != null && path.trim().length() > 0)
-        {
-            // There is no need to check for leading and trailing "/"
-            final StringTokenizer tokenizer = new StringTokenizer(path, "/");
-            while (tokenizer.hasMoreTokens())
-            {
-                pathElements.add(tokenizer.nextToken().trim());
-            }
-        }
-        return pathElements;
-    }
-
-    /**
      * Helper method to obtain all folders with specified context.
      *
      * @param context - context of the wanted folders
@@ -870,15 +852,16 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                         skip, limit);
         }
         //check for locked folders
-        List<FolderData> result = new ArrayList<>();
-        for(FolderData folder : existingFolderStructure)
+        Iterator<FolderData> iterator = existingFolderStructure.iterator();
+        while(iterator.hasNext())
         {
-            if(!folder.getPath().endsWith("locked"))
+            FolderData folder = iterator.next();
+            if(folder.getPath().endsWith("locked"))
             {
-                result.add(folder);
+                iterator.remove();
             }
         }
-        return result;
+        return existingFolderStructure;
     }
 
     /**
@@ -910,16 +893,16 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     }
 
     /**
-     * Helper method used for creating in alfresco repo and in mongo DB, record root categories, record categories and record folders from configured path elements.
+     * Helper method used for creating in alfresco repo and in mongo DB, root record categories, record categories and record folders from configured path elements.
      *
      * @param path - path element
-     * @return created record folder, or existent record folder, if it already created
+     * @return created record folder, or existing record folder, if already created
      * @throws Exception
      */
     public FolderData createRecordCategoryOrRecordFolder(String path) throws Exception
     {
         //create inexistent elements from configured paths as admin
-        List<String> pathElements = getPathElements(path);
+        List<String> pathElements = Arrays.asList(split(path, "/"));
         FolderData parentFolder = fileFolderService.getFolder(FILEPLAN_CONTEXT, RECORD_CONTAINER_PATH);
         // for(String pathElement: pathElements)
         int pathElementsLength = pathElements.size();
@@ -959,8 +942,8 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
      * This method, also calculates the number of records to  add to the initialized record folders.
      *
      * @param mapOfRecordsPerRecordFolder - linked hash map with available record folders as keys and calculated number of records to load/file in each record folder
-     * @param record category or record folder paths to load/file records in
-     * @param number of records to load/file
+     * @param paths - record category or record folder paths to load/file records in
+     * @param numberOrRecords - number of records to load/file
      */
     public LinkedHashMap<FolderData, Integer> calculateListOfEmptyFolders(LinkedHashMap<FolderData, Integer> mapOfRecordsPerRecordFolder, List<String> paths, int numberOrRecords)
     {
