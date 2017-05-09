@@ -614,4 +614,115 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
         Event event = result.getNextEvents().get(0);
         assertEquals(TEST_EVENT_COMPLETE, event.getName());
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testFileRecordsFromUnfiledRecordContainer() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        String configuredPath1 = "/e1/e2/e3";
+        String entirePath1 = RECORD_CONTAINER_PATH + configuredPath1;
+        String paths = configuredPath1;
+        String recordId1 = "recordId1";
+        String recordParentPath1 = "/";
+        String recordParentFullPath1 = UNFILED_RECORD_CONTAINER_PATH;
+        String recordId2 = "recordId2";
+        String recordParentPath2 = "/recordParentPath2";
+        String recordParentFullPath2 = UNFILED_RECORD_CONTAINER_PATH + recordParentPath2;
+        String recordId3 = "recordId3";
+        String recordParentPath3 = "/recordParentPath3";
+        String recordParentFullPath3 = UNFILED_RECORD_CONTAINER_PATH + recordParentPath3;
+        String recordId4 = "recordId4";
+        String recordParentPath4 = "/recordParentPath4";
+        String recordParentFullPath4 = UNFILED_RECORD_CONTAINER_PATH + recordParentPath4;
+
+        String fileFromPathsStr = recordParentPath1;
+
+        scheduleFilingUnfiledRecords.setFileUnfiledRecords(true);
+        scheduleFilingUnfiledRecords.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilingUnfiledRecords.setRecordFilingLimit("4");
+        scheduleFilingUnfiledRecords.setFileToRecordFolderPaths(paths);
+        scheduleFilingUnfiledRecords.setFileFromUnfiledPaths(fileFromPathsStr);
+
+        FolderData mockedRecordFolder1 = mock(FolderData.class);
+        when(mockedRecordFolder1.getId()).thenReturn("recordFolder1Id");
+        when(mockedRecordFolder1.getContext()).thenReturn(RECORD_FOLDER_CONTEXT);
+        when(mockedRecordFolder1.getPath()).thenReturn(entirePath1);
+        when(mockedFileFolderService.getFolder(RECORD_FOLDER_CONTEXT, entirePath1)).thenReturn(mockedRecordFolder1);
+
+        RecordData mockedRecordData1 = mock(RecordData.class);
+        when(mockedRecordData1.getId()).thenReturn(recordId1);
+        when(mockedRecordData1.getParentPath()).thenReturn(recordParentFullPath1);
+
+        RecordData mockedRecordData2 = mock(RecordData.class);
+        when(mockedRecordData2.getId()).thenReturn(recordId2);
+        when(mockedRecordData2.getParentPath()).thenReturn(recordParentFullPath2);
+
+        RecordData mockedRecordData3 = mock(RecordData.class);
+        when(mockedRecordData3.getId()).thenReturn(recordId3);
+        when(mockedRecordData3.getParentPath()).thenReturn(recordParentFullPath3);
+
+        RecordData mockedRecordData4 = mock(RecordData.class);
+        when(mockedRecordData4.getId()).thenReturn(recordId4);
+        when(mockedRecordData4.getParentPath()).thenReturn(recordParentFullPath4);
+
+        when(mockedRecordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, 0, 100))
+        .thenReturn(Arrays.asList(mockedRecordData1, mockedRecordData2, mockedRecordData3, mockedRecordData4));
+        when(mockedRecordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, 100, 100)).thenReturn(new ArrayList<>());
+
+        when(mockedRecordService.getRandomRecord(ExecutionState.UNFILED_RECORD_DECLARED.name(), Arrays.asList(recordParentFullPath2, recordParentFullPath3, recordParentFullPath4, recordParentFullPath1)))
+        .thenReturn(mockedRecordData1)
+        .thenReturn(mockedRecordData2)
+        .thenReturn(mockedRecordData3)
+        .thenReturn(mockedRecordData4)
+        .thenReturn(null);
+
+        FolderData mockedUnfiledRecordFolder = mock(FolderData.class);
+        when(mockedUnfiledRecordFolder.getId()).thenReturn("folderId1");
+        when(mockedUnfiledRecordFolder.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedUnfiledRecordFolder.getPath()).thenReturn(recordParentFullPath1);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, recordParentFullPath1)).thenReturn(mockedUnfiledRecordFolder);
+
+        FolderData mockedUnfiledRecordFolder1 = mock(FolderData.class);
+        when(mockedUnfiledRecordFolder1.getId()).thenReturn("newfolderId2");
+        when(mockedUnfiledRecordFolder1.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedUnfiledRecordFolder1.getPath()).thenReturn(recordParentFullPath2);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, recordParentFullPath2)).thenReturn(mockedUnfiledRecordFolder1);
+
+        FolderData mockedUnfiledRecordFolder2 = mock(FolderData.class);
+        when(mockedUnfiledRecordFolder2.getId()).thenReturn("newfolderId3");
+        when(mockedUnfiledRecordFolder2.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedUnfiledRecordFolder2.getPath()).thenReturn(recordParentFullPath3);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, recordParentFullPath3)).thenReturn(mockedUnfiledRecordFolder2);
+
+        FolderData mockedUnfiledRecordFolder3 = mock(FolderData.class);
+        when(mockedUnfiledRecordFolder3.getId()).thenReturn("newfolderId4");
+        when(mockedUnfiledRecordFolder3.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedUnfiledRecordFolder3.getPath()).thenReturn(recordParentFullPath4);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, recordParentFullPath4)).thenReturn(mockedUnfiledRecordFolder3);
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, recordParentFullPath1, 0, 100))
+        .thenReturn(Arrays.asList(mockedUnfiledRecordFolder1, mockedUnfiledRecordFolder2, mockedUnfiledRecordFolder3))
+        .thenReturn(new ArrayList<>());
+
+        EventResult result = scheduleFilingUnfiledRecords.processEvent(null, new StopWatch());
+        verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
+        verify(mockedRecordService, times(4)).updateRecord(any(RecordData.class));
+        assertEquals(true, result.isSuccess());
+        assertEquals(2, result.getNextEvents().size());
+
+        verify(mockedFileFolderService, times(1)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(1)).startSession(any(DBObject.class));
+        assertEquals("Raised further 1 events and rescheduled self.", result.getData());
+
+        Event firstEvent = result.getNextEvents().get(0);
+        assertEquals(TEST_EVENT_FILE_UNFILED_RECORDS, firstEvent.getName());
+        DBObject dataObj = (DBObject)firstEvent.getData();
+        assertNotNull(dataObj);
+        assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
+        List<String> ids = (List<String>) dataObj.get(FIELD_RECORDS_TO_FILE);
+        assertEquals(4, ids.size());
+
+        assertEquals(TEST_EVENT_RESCHEDULE_SELF, result.getNextEvents().get(1).getName());
+    }
 }

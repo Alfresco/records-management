@@ -200,7 +200,12 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
         //initialiaze the number of records to file to all only once if the limit is set to 0
         if(mapOfRecordsPerRecordFolder == null && recordFilingLimit == 0)
         {
-            numberOfRecords = (int) recordService.getRecordCountInSpecifiedPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null);
+            List<String> listOfUnfiledRecordFoldersPaths = null;
+            if(fileFromUnfiledPaths !=null && fileFromUnfiledPaths.size() > 0)
+            {
+                listOfUnfiledRecordFoldersPaths = getListOfUnfiledRecordFoldersPaths();
+            }
+            numberOfRecords = (int) recordService.getRecordCountInSpecifiedPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), listOfUnfiledRecordFoldersPaths);
         }
         //if the number of records to load is not greater than 0, nothing to file
         if(mapOfRecordsPerRecordFolder == null && numberOfRecords == 0)
@@ -288,7 +293,7 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
     {
         List<String> unfiledRecordsIdsToFile = new ArrayList<>();
         List<String> listOfUnfiledRecordFoldersPaths = null;
-        if(recordFilingLimit > 0 && fileFromUnfiledPaths !=null && fileFromUnfiledPaths.size() > 0)
+        if(fileFromUnfiledPaths !=null && fileFromUnfiledPaths.size() > 0)
         {
             listOfUnfiledRecordFoldersPaths = getListOfUnfiledRecordFoldersPaths();
         }
@@ -319,7 +324,11 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
         LinkedHashSet<FolderData> unfiledFolderStructerFromExistentProvidedPaths = new LinkedHashSet<FolderData>();
         for(String path : fileFromUnfiledPaths)
         {
-            if(!path.startsWith("/"))
+            if(path.equals("/"))
+            {
+                path = "";
+            }
+            else if(!path.startsWith("/"))
             {
                 path = "/" + path;
             }
