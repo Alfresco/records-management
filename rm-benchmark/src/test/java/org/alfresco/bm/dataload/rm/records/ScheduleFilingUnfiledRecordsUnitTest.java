@@ -670,8 +670,11 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
         .thenReturn(Arrays.asList(mockedRecordData1, mockedRecordData2, mockedRecordData3, mockedRecordData4));
         when(mockedRecordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, 100, 100)).thenReturn(new ArrayList<>());
 
-        when(mockedRecordService.getRandomRecord(ExecutionState.UNFILED_RECORD_DECLARED.name(), Arrays.asList(recordParentFullPath1)))
+        when(mockedRecordService.getRandomRecord(ExecutionState.UNFILED_RECORD_DECLARED.name(), Arrays.asList(recordParentFullPath2, recordParentFullPath3, recordParentFullPath4, recordParentFullPath1)))
         .thenReturn(mockedRecordData1)
+        .thenReturn(mockedRecordData2)
+        .thenReturn(mockedRecordData3)
+        .thenReturn(mockedRecordData4)
         .thenReturn(null);
 
         FolderData mockedUnfiledRecordFolder = mock(FolderData.class);
@@ -692,9 +695,18 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
         when(mockedUnfiledRecordFolder2.getPath()).thenReturn(recordParentFullPath3);
         when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, recordParentFullPath3)).thenReturn(mockedUnfiledRecordFolder2);
 
+        FolderData mockedUnfiledRecordFolder3 = mock(FolderData.class);
+        when(mockedUnfiledRecordFolder3.getId()).thenReturn("newfolderId4");
+        when(mockedUnfiledRecordFolder3.getContext()).thenReturn(UNFILED_CONTEXT);
+        when(mockedUnfiledRecordFolder3.getPath()).thenReturn(recordParentFullPath4);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, recordParentFullPath4)).thenReturn(mockedUnfiledRecordFolder3);
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, recordParentFullPath1, 0, 100))
+        .thenReturn(Arrays.asList(mockedUnfiledRecordFolder1, mockedUnfiledRecordFolder2, mockedUnfiledRecordFolder3))
+        .thenReturn(new ArrayList<>());
+
         EventResult result = scheduleFilingUnfiledRecords.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
-        verify(mockedRecordService, times(1)).updateRecord(any(RecordData.class));
+        verify(mockedRecordService, times(4)).updateRecord(any(RecordData.class));
         assertEquals(true, result.isSuccess());
         assertEquals(2, result.getNextEvents().size());
 
@@ -709,7 +721,7 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
         assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
         List<String> ids = (List<String>) dataObj.get(FIELD_RECORDS_TO_FILE);
-        assertEquals(1, ids.size());
+        assertEquals(4, ids.size());
 
         assertEquals(TEST_EVENT_RESCHEDULE_SELF, result.getNextEvents().get(1).getName());
     }
