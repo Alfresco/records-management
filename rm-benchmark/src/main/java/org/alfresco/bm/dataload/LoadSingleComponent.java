@@ -110,6 +110,10 @@ public class LoadSingleComponent extends RMBaseEventProcessor
         {
             return fileRecordOperation(folder, dataObj);
         }
+        else if(LOAD_UNFILED_RECORD_OPERATION.equals(operation))
+        {
+            return loadUnfiledRecordOperation(folder, dataObj);
+        }
         return null;
     }
 
@@ -170,6 +174,52 @@ public class LoadSingleComponent extends RMBaseEventProcessor
             // Grab REST API information
             DBObject data = BasicDBObjectBuilder.start().append("error", error).append("username", username)
                         .append("path", folder.getPath()).append("stack", stack).get();
+            // Build failure result
+            return new EventResult(data, false);
+        }
+    }
+
+    private EventResult loadUnfiledRecordOperation(FolderData folder, DBObject dataObj)
+    {
+        UserData user = getRandomUser(logger);
+        String username = user.getUsername();
+        String password = user.getPassword();
+        UserModel userModel = new UserModel(username, password);
+        try
+        {
+            List<Event> scheduleEvents = new ArrayList<Event>();
+            //Create record
+            super.resumeTimer();
+            //TODO uncomment this and remove createRecord when RM-4564 issue is fixed
+            //uploadElectronicRecordInUnfiledContext(folder, userModel, RECORD_NAME_IDENTIFIER, delay);
+            createNonElectonicRecordInUnfiledContext(folder, userModel, RECORD_NAME_IDENTIFIER, delay);
+            super.suspendTimer();
+
+            DBObject eventData = BasicDBObjectBuilder.start()
+                        .add(FIELD_CONTEXT, folder.getContext())
+                        .add(FIELD_PATH, folder.getPath()).get();
+           Event nextEvent = new Event(getEventNameComplete(), eventData);
+
+           scheduleEvents.add(nextEvent);
+            DBObject resultData = BasicDBObjectBuilder.start()
+                        .add("msg", "Created 1 record.")
+                        .add("path", folder.getPath())
+                        .add("username", username)
+                        .get();
+
+            return new EventResult(resultData, scheduleEvents);
+        }
+        catch (Exception e)
+        {
+            String error = e.getMessage();
+            String stack = ExceptionUtils.getStackTrace(e);
+            // Grab REST API information
+            DBObject data = BasicDBObjectBuilder.start()
+                        .append("error", error)
+                        .append("username", username)
+                        .append("path", folder.getPath())
+                        .append("stack", stack)
+                        .get();
             // Build failure result
             return new EventResult(data, false);
         }

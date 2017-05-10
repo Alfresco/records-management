@@ -41,6 +41,7 @@ public interface RMEventConstants
 
     String FIELD_LOAD_OPERATION = "loadOperation";
     String FILE_RECORD_OPERATION = "fileRecord";
+    String LOAD_UNFILED_RECORD_OPERATION = "loadUnfiledRecord";
 
     String RECORD_FOLDER_NAME_IDENTIFIER = "bmFolder";
     String CATEGORY_NAME_IDENTIFIER = "bmCateg";

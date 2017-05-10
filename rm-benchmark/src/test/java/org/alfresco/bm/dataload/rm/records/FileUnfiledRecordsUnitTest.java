@@ -172,7 +172,6 @@ public class FileUnfiledRecordsUnitTest implements RMEventConstants
         verify(mockedFileFolderService, times(1)).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
         verify(mockedSessionService, never()).startSession(any(DBObject.class));
 
-        verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
         assertEquals(true, result.isSuccess());
         assertEquals(ScheduleFilingUnfiledRecords.DONE_EVENT_MSG, result.getData());
         assertEquals(1, result.getNextEvents().size());

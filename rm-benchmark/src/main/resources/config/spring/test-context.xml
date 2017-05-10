@@ -253,9 +253,19 @@
   </bean>
 
   <bean id="event.loadUnfiledRecords" class="org.alfresco.bm.dataload.rm.unfiled.LoadUnfiledRecords" parent="rmBaseEventProcessor">
-    <property name="eventNameUnfiledRecordsLoaded" value="unfiledRecordsLoaded" />
+    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
+    <property name="eventNameComplete" value="unfiledRecordsLoaded"/>
+    <property name="eventNameRescheduleSelf" value="loadUnfiledRecords"/>
+    <property name="eventNameLoadUnfiledRecord" value="loadUnfiledRecord" />
+    <property name="chart" value="false" />
+  </bean>
+
+  <bean id="event.loadUnfiledRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameComplete" value="unfiledRecordLoaded"/>
     <property name="chart" value="true" />
   </bean>
+
+  <bean id="producer.unfiledRecordLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
   <bean id="producer.unfiledRecordsLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
