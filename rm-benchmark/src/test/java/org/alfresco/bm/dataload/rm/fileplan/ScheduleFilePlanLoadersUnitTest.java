@@ -57,8 +57,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
 {
-    private static final String EMPTY_CONTEXT = "";
-
     @Mock
     private SessionService mockedSessionService;
 
@@ -79,10 +77,10 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
         scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
         FolderData mockedFilePlanFolder = mock(FolderData.class);
-        when(mockedFilePlanFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedFilePlanFolder.getContext()).thenReturn(FILEPLAN_CONTEXT);
         when(mockedFilePlanFolder.getPath()).thenReturn("/a");
         List<FolderData> folders = Arrays.asList(mockedFilePlanFolder);
-        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT, 3L, 3L, 0L, Long.valueOf(rootCategoriesNumber-1), null, null, 0, 100)).thenReturn(folders);
+        when(mockedFileFolderService.getFoldersByCounts(FILEPLAN_CONTEXT, 3L, 3L, 0L, Long.valueOf(rootCategoriesNumber-1), null, null, 0, 100)).thenReturn(folders);
 
         EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
 
@@ -97,7 +95,7 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertEquals("loadRecordCategories", firstEvent.getName());
         DBObject dataObj = (DBObject)firstEvent.getData();
         assertNotNull(dataObj);
-        assertEquals(EMPTY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+        assertEquals(FILEPLAN_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals("/a", (String) dataObj.get(FIELD_PATH));
         assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
@@ -117,10 +115,10 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
         scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
         FolderData mockedFilePlanFolder = mock(FolderData.class);
-        when(mockedFilePlanFolder.getContext()).thenReturn(EMPTY_CONTEXT);
+        when(mockedFilePlanFolder.getContext()).thenReturn(FILEPLAN_CONTEXT);
         when(mockedFilePlanFolder.getPath()).thenReturn("/a");
         List<FolderData> folders = Arrays.asList(mockedFilePlanFolder);
-        when(mockedFileFolderService.getFoldersByCounts(EMPTY_CONTEXT, 3L, 3L, 0L, Long.valueOf(rootCategoriesNumber-1), null, null, 0, 100)).thenReturn(folders);
+        when(mockedFileFolderService.getFoldersByCounts(FILEPLAN_CONTEXT, 3L, 3L, 0L, Long.valueOf(rootCategoriesNumber-1), null, null, 0, 100)).thenReturn(folders);
 
         EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
 
