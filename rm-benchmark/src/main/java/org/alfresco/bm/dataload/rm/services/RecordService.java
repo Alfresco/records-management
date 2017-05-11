@@ -248,7 +248,7 @@ public class RecordService extends BaseMongoService
      * @param listOfParentPaths - list of parent paths to search in
      * @param skip - the number of entries to skip
      * @param limit - the number of entries to return
-     * @return to return a list or records with specified execution state that are in specified parent paths. If listOfParentPaths is null or empty then all records with
+     * @return to return a list of records with specified execution state that are in specified parent paths. If listOfParentPaths is null or empty then all records with
      * specified execution state will be returned.
      */
     public List<RecordData> getRecordsInPaths(String state, List<String> listOfParentPaths, int skip, int limit)

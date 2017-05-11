@@ -286,7 +286,7 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
     /**
      * Helper method for obtaining the id's of the random unfiled records to be filed in one record folder.
      *
-     * @param recordsToFile the number ot unfiled record to file in one folder
+     * @param recordsToFile the number of unfiled record to file in one folder
      * @return the list of id's of random unfiled records to file
      */
     private List<String> getRecordIdsToLoad(int recordsToFile)

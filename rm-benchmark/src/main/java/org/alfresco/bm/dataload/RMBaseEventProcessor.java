@@ -76,6 +76,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.http.HttpStatus;
 
 /**
  * Base helper class for RM events.
@@ -765,12 +766,24 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
             List<FolderData> directRecordFolderChildren = getDirectChildrenByContext(parentFolder, RECORD_FOLDER_CONTEXT);
             if (directRecordFolderChildren.size() > 0)
             {
+                Iterator<FolderData> iterator = directRecordFolderChildren.iterator();
+                while(iterator.hasNext())
+                {
+                    FolderData childFolder = iterator.next();
+                    if(childFolder.getPath().endsWith("locked") && !isIdValid(childFolder.getId(), RECORD_FOLDER_CONTEXT))
+                    {
+                        iterator.remove();
+                    }
+                }
                 result.addAll(directRecordFolderChildren);
             }
         }
         else if(RECORD_FOLDER_CONTEXT.equals(context))
         {
-            result.add(parentFolder);
+            if(!parentFolder.getPath().endsWith("locked") || (parentFolder.getPath().endsWith("locked") && isIdValid(parentFolder.getId(), RECORD_FOLDER_CONTEXT)))
+            {
+                result.add(parentFolder);
+            }
         }
         return result;
     }
@@ -856,7 +869,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         while(iterator.hasNext())
         {
             FolderData folder = iterator.next();
-            if(folder.getPath().endsWith("locked"))
+            if(folder.getPath().endsWith("locked") && !isIdValid(folder.getId(), context))
             {
                 iterator.remove();
             }
@@ -987,6 +1000,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                         catch (Exception e)
                         {
                             // something went wrong on creating current path structure, not all required paths will be created
+                            logger.debug("Path elements of " + path + "could not be created.", e);
                         }
                     }
                 }
@@ -1036,7 +1050,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                 result.addAll(getUnfiledRecordFolders(childFolder));
             }
         }
-        if(!parentFolder.getPath().endsWith("locked"))
+        if(!parentFolder.getPath().endsWith("locked") || (parentFolder.getPath().endsWith("locked") && isIdValid(parentFolder.getId(), UNFILED_CONTEXT)))
         {
             result.add(parentFolder);
         }
@@ -1061,5 +1075,47 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
             recordsList =  recordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, skip, limit);
         }
         return existingRecords;
+    }
+
+    /**
+     * Helper method to check if one id is a valid record folder, unfiled container, or unfiled record folder id.
+     *
+     * @param id - folder id that is checked
+     * @param context - context of the checked folder id
+     * @return <code>true</code> if the id is valid, or <code>false</code> otherwhise.
+     */
+    private boolean isIdValid(String id, String context)
+    {
+        boolean result = false;
+        if(RECORD_FOLDER_CONTEXT.equals(context))
+        {
+            RestAPIFactory restAPIFactory = getRestAPIFactory();
+            restAPIFactory.getRecordFolderAPI().getRecordFolder(id);
+            String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
+            if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.OK)
+            {
+                return true;
+            }
+        }
+        else if (UNFILED_CONTEXT.equals(context))
+        {
+            RestAPIFactory restAPIFactory = getRestAPIFactory();
+            restAPIFactory.getUnfiledRecordFoldersAPI().getUnfiledRecordFolder(id);
+            String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
+            if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.OK)
+            {
+                return true;
+            }
+            else
+            {
+                restAPIFactory.getUnfiledContainersAPI().getUnfiledContainer(id);
+                statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
+                if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.OK)
+                {
+                    return true;
+                }
+            }
+        }
+        return result;
     }
 }
