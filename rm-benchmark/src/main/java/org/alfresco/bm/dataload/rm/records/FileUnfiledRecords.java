@@ -22,19 +22,13 @@ package org.alfresco.bm.dataload.rm.records;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
-import org.alfresco.bm.dataload.rm.services.ExecutionState;
-import org.alfresco.bm.dataload.rm.services.RecordData;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
-import org.alfresco.bm.user.UserData;
-import org.alfresco.rest.rm.community.model.record.RecordBodyFile;
-import org.alfresco.rest.rm.community.requests.gscore.api.RecordsAPI;
-import org.alfresco.utility.model.UserModel;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.alfresco.bm.session.SessionService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
@@ -47,24 +41,58 @@ import com.mongodb.DBObject;
  */
 public class FileUnfiledRecords extends RMBaseEventProcessor
 {
-    public static final String EVENT_NAME_UNFILED_RECORDS_FILED = "unfiledRecordsFiled";
+    public static final String DONE_EVENT_MSG = "Filing completed.  Raising 'done' event.";
+    public static final String EVENT_NAME_FILE_UNFILED_RECORD= "fileUnfiledRecord";
     public static final long DEFAULT_FILE_UNFILED_RECORD_DELAY = 100L;
     private long fileUnfiledRecordDelay = DEFAULT_FILE_UNFILED_RECORD_DELAY;
-    String eventNameUnfiledRecordsFiled = EVENT_NAME_UNFILED_RECORDS_FILED;
+    String eventNameFileUnfiledRecord = EVENT_NAME_FILE_UNFILED_RECORD;
+    private static final String DEFAULT_EVENT_NAME_RESCHEDULE_SELF = "fileUnfiledRecords";
+    private static final String DEFAULT_EVENT_NAME_COMPLETE = "unfiledRecordsFiled";
+    private String eventNameComplete = DEFAULT_EVENT_NAME_COMPLETE;
+    private String eventNameRescheduleSelf = DEFAULT_EVENT_NAME_RESCHEDULE_SELF;
+    private Integer maxActiveLoaders;
+
+    @Autowired
+    private SessionService sessionService;
 
     public void setFileUnfiledRecordDelay(long fileUnfiledRecordDelay)
     {
         this.fileUnfiledRecordDelay = fileUnfiledRecordDelay;
     }
 
-    public String getEventNameUnfiledRecordsFiled()
+    public String getEventNameFileUnfiledRecord()
     {
-        return eventNameUnfiledRecordsFiled;
+        return eventNameFileUnfiledRecord;
     }
 
-    public void setEventNameUnfiledRecordsFiled(String eventNameUnfiledRecordsFiled)
+    public void setEventNameFileUnfiledRecord(String eventNameFileUnfiledRecord)
     {
-        this.eventNameUnfiledRecordsFiled = eventNameUnfiledRecordsFiled;
+        this.eventNameFileUnfiledRecord = eventNameFileUnfiledRecord;
+    }
+
+    public void setEventNameComplete(String eventNameComplete)
+    {
+        this.eventNameComplete = eventNameComplete;
+    }
+
+    public String getEventNameComplete()
+    {
+        return eventNameComplete;
+    }
+
+    public void setEventNameRescheduleSelf(String eventNameRescheduleSelf)
+    {
+        this.eventNameRescheduleSelf = eventNameRescheduleSelf;
+    }
+
+    public String getEventNameRescheduleSelf()
+    {
+        return eventNameRescheduleSelf;
+    }
+
+    public void setMaxActiveLoaders(Integer maxActiveLoaders)
+    {
+        this.maxActiveLoaders = maxActiveLoaders;
     }
 
     @Override
@@ -99,102 +127,95 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
         {
             throw new IllegalStateException("No such folder recorded: " + dataObj);
         }
-        // Get the session
-        String sessionId = event.getSessionId();
-        if (sessionId == null)
+
+        long sessionCount = sessionService.getActiveSessionsCount();
+        int loaderSessionsToCreate = maxActiveLoaders - (int) sessionCount;
+        List<Event> nextEvents = new ArrayList<Event>(maxActiveLoaders);
+
+        fileRecords(loaderSessionsToCreate, nextEvents, folder, recordsToFileIds);
+        // If there are no events, then we have finished
+        String msg = null;
+        if (loaderSessionsToCreate > 0 && nextEvents.size() == 0)
         {
-            return new EventResult("Load scheduling should create a session for each loader.", false);
+            // There are no records to load even though there are sessions available
+
+            // Clean up the lock
+            String lockedPath = folder.getPath() + "/locked";
+            fileFolderService.deleteFolder(folder.getContext(), lockedPath, false);
+
+            Event nextEvent = new Event(getEventNameComplete(), null);
+            nextEvents.add(nextEvent);
+            msg = DONE_EVENT_MSG;
+        }
+        else
+        {
+            // Reschedule self
+            DBObject dbObj = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, context)
+                        .add(FIELD_PATH, path)
+                        .add(FIELD_RECORDS_TO_FILE, recordsToFileIds)
+                        .get();
+            Event nextEvent = new Event(getEventNameRescheduleSelf(), System.currentTimeMillis() + fileUnfiledRecordDelay, dbObj);
+            nextEvents.add(nextEvent);
+            msg = "Raised further " + (nextEvents.size() - 1) + " events and rescheduled self.";
         }
 
-        return fileRecords(folder, recordsToFileIds);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug(msg);
+        }
+
+        EventResult result = new EventResult(msg, nextEvents);
+        return result;
     }
 
     /**
      * Helper method that file specified numbers of records in specified record folder.
      *
+     * @param loaderSessionsToCreate - the number of still active loader sessions
+     * @param nextEvents - list of prepared events
      * @param container - record folder
      * @param recordsToFileIds - list of the id's of unfiled records to file
-     * @return EventResult - the filing result or error if there was an exception on filing
      * @throws IOException
      */
-    private EventResult fileRecords(FolderData container, List<String> recordsToFileIds) throws IOException
+    private void fileRecords(int loaderSessionsToCreate, List<Event> nextEvents, FolderData container, List<String> recordsToFileIds) throws IOException
     {
-        UserData user = getRandomUser(logger);
-        String username = user.getUsername();
-        String password = user.getPassword();
-        UserModel userModel = new UserModel(username, password);
-        try
+        List<String> recordIds = new ArrayList<String>();
+        recordIds.addAll(recordsToFileIds);
+        while (nextEvents.size() < loaderSessionsToCreate)
         {
-            List<Event> scheduleEvents = new ArrayList<Event>();
-            // FileRecords records
-            int numberOfRecordsToFile = recordsToFileIds.size();
-            if (numberOfRecordsToFile > 0)
+            if(recordsToFileIds.size() == 0)
             {
-                fileRecord(container, userModel, recordsToFileIds, fileUnfiledRecordDelay);
-                // Clean up the lock
-                String lockedPath = container.getPath() + "/locked";
-                fileFolderService.deleteFolder(container.getContext(), lockedPath, false);
+                break;
             }
-
-            DBObject eventData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, container.getContext())
-                        .add(FIELD_PATH, container.getPath()).get();
-            Event nextEvent = new Event(getEventNameUnfiledRecordsFiled(), eventData);
-
-            scheduleEvents.add(nextEvent);
-            DBObject resultData = BasicDBObjectBuilder.start().add("msg", "Filed " + numberOfRecordsToFile + " records.")
-                        .add("path", container.getPath()).add("username", username).get();
-
-            return new EventResult(resultData, scheduleEvents);
-        }
-        catch (Exception e)
-        {
-            String error = e.getMessage();
-            String stack = ExceptionUtils.getStackTrace(e);
-            // Grab REST API information
-            DBObject data = BasicDBObjectBuilder.start().append("error", error).append("username", username)
-                        .append("path", container.getPath()).append("stack", stack).get();
-            // Build failure result
-            return new EventResult(data, false);
-        }
-    }
-
-    /**
-     * Helper method for filing specified number of unfiled records in specified record folder.
-     *
-     * @param folder - record folder in which the unfiled records will be filed
-     * @param userModel - UserModel instance with which rest api will be called
-     * @param recordsToFileIds - list of the id's of unfiled records to file
-     * @param delay - delay between filing records
-     * @throws Exception
-     */
-    public void fileRecord(FolderData folder, UserModel userModel, List<String> recordsToFileIds, long delay) throws Exception
-    {
-        String folderPath = folder.getPath();
-        String parentId = folder.getId();
-
-        RecordBodyFile recordBodyFileModel = RecordBodyFile.builder()
-                    .targetParentId(parentId)
-                    .build();
-
-        for (String recordId : recordsToFileIds)
-        {
-            RecordData randomRecord = recordService.getRecord(recordId);
-            super.resumeTimer();
-            RecordsAPI recordsAPI = getRestAPIFactory().getRecordsAPI(userModel);
-            recordsAPI.fileRecord(recordBodyFileModel, randomRecord.getId());
-            super.suspendTimer();
-            // Increment counts
-            fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
-
-            // Decrement counts for unfiled record folder or unfiled container
-            String unfiledParentPath = randomRecord.getParentPath();
-            fileFolderService.incrementFileCount(UNFILED_CONTEXT, unfiledParentPath, -1);
-
-            //change parent path to the new parent
-            randomRecord.setParentPath(folderPath);
-            randomRecord.setExecutionState(ExecutionState.RECORD_FILED);
-            recordService.updateRecord(randomRecord);
-            TimeUnit.MILLISECONDS.sleep(delay);
+            for (String recordId : recordIds)
+            {
+                try
+                {
+                    DBObject eventData = BasicDBObjectBuilder.start()
+                                .add(FIELD_CONTEXT, container.getContext())
+                                .add(FIELD_PATH, container.getPath())
+                                .add(FIELD_LOAD_OPERATION, FILE_RECORD_OPERATION)
+                                .add(FIELD_RECORD_ID, recordId)
+                                .get();
+                    Event nextEvent = new Event(getEventNameFileUnfiledRecord(), eventData);
+                    // Each load event must be associated with a session
+                    String sessionId = sessionService.startSession(eventData);
+                    nextEvent.setSessionId(sessionId);
+                    // Add the event to the list
+                    nextEvents.add(nextEvent);
+                    recordsToFileIds.remove(recordId);
+                }
+                catch (Exception e)
+                {
+                    recordsToFileIds.remove(recordId);
+                    continue;
+                }
+                // Check if we have enough
+                if (nextEvents.size() >= loaderSessionsToCreate)
+                {
+                    break;
+                }
+            }
         }
     }
 }

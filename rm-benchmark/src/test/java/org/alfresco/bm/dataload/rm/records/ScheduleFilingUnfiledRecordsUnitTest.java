@@ -94,7 +94,6 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
 
         verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
-        verify(mockedSessionService, never()).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
         assertEquals(ScheduleFilingUnfiledRecords.FILING_UNFILED_RECORDS_NOT_WANTED_MSG, result.getData());
@@ -116,7 +115,6 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
 
         verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
-        verify(mockedSessionService, never()).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
         assertEquals(ScheduleFilingUnfiledRecords.DONE_EVENT_MSG, result.getData());
@@ -130,7 +128,6 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
 
         verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
-        verify(mockedSessionService, never()).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
         assertEquals(ScheduleFilingUnfiledRecords.DONE_EVENT_MSG, result.getData());
@@ -144,7 +141,6 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
 
         verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
-        verify(mockedSessionService, never()).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
         assertEquals(ScheduleFilingUnfiledRecords.DONE_EVENT_MSG, result.getData());
@@ -215,7 +211,6 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
         // and if the number of records to create is 0 the event for loading will not be scheduled
         int nextEventsSize = result.getNextEvents().size();
         verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
         assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
@@ -311,7 +306,6 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
         // and if the number of records to create is 0 the event for loading will not be scheduled
         int nextEventsSize = result.getNextEvents().size();
         verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
         assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
 
         Event firstEvent = result.getNextEvents().get(0);
@@ -383,7 +377,6 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
         assertEquals(2, result.getNextEvents().size());
 
         verify(mockedFileFolderService, times(1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(1)).startSession(any(DBObject.class));
         assertEquals("Raised further 1 events and rescheduled self.", result.getData());
 
         Event firstEvent = result.getNextEvents().get(0);
@@ -466,7 +459,6 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
         assertEquals(2, result.getNextEvents().size());
 
         verify(mockedFileFolderService, times(1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(1)).startSession(any(DBObject.class));
         assertEquals("Raised further 1 events and rescheduled self.", result.getData());
 
         Event firstEvent = result.getNextEvents().get(0);
@@ -567,7 +559,6 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
         assertEquals(2, result.getNextEvents().size());
 
         verify(mockedFileFolderService, times(1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(1)).startSession(any(DBObject.class));
         assertEquals("Raised further 1 events and rescheduled self.", result.getData());
 
         Event firstEvent = result.getNextEvents().get(0);
@@ -606,7 +597,6 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
         EventResult result = scheduleFilingUnfiledRecords.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
-        verify(mockedSessionService, never()).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
         assertEquals(ScheduleFilingUnfiledRecords.DONE_EVENT_MSG, result.getData());
@@ -711,7 +701,6 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
         assertEquals(2, result.getNextEvents().size());
 
         verify(mockedFileFolderService, times(1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(1)).startSession(any(DBObject.class));
         assertEquals("Raised further 1 events and rescheduled self.", result.getData());
 
         Event firstEvent = result.getNextEvents().get(0);

@@ -344,9 +344,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
                                 .add(FIELD_RECORDS_TO_CREATE, Integer.valueOf(recordsToCreate))
                                 .get();
                         Event loadEvent = new Event(eventNameLoadUnfiledRecords, loadData);
-                        // Each load event must be associated with a session
-                        String sessionId = sessionService.startSession(loadData);
-                        loadEvent.setSessionId(sessionId);
                         // Add the event to the list
                         nextEvents.add(loadEvent);
                         mapOfRecordsPerUnfiledRecordFolder.remove(emptyFolder);

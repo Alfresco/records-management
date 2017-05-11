@@ -253,9 +253,19 @@
   </bean>
 
   <bean id="event.loadUnfiledRecords" class="org.alfresco.bm.dataload.rm.unfiled.LoadUnfiledRecords" parent="rmBaseEventProcessor">
-    <property name="eventNameUnfiledRecordsLoaded" value="unfiledRecordsLoaded" />
+    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
+    <property name="eventNameComplete" value="unfiledRecordsLoaded"/>
+    <property name="eventNameRescheduleSelf" value="loadUnfiledRecords"/>
+    <property name="eventNameLoadUnfiledRecord" value="loadUnfiledRecord" />
+    <property name="chart" value="false" />
+  </bean>
+
+  <bean id="event.loadUnfiledRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameComplete" value="unfiledRecordLoaded"/>
     <property name="chart" value="true" />
   </bean>
+
+  <bean id="producer.unfiledRecordLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
   <bean id="producer.unfiledRecordsLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
@@ -311,9 +321,19 @@
   </bean>
 
   <bean id="event.fileUnfiledRecords" class="org.alfresco.bm.dataload.rm.records.FileUnfiledRecords" parent="rmBaseEventProcessor">
-    <property name="eventNameUnfiledRecordsFiled" value="unfiledRecordsFiled"/>
+    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
+    <property name="eventNameComplete" value="unfiledRecordsFiled"/>
+    <property name="eventNameRescheduleSelf" value="fileUnfiledRecords"/>
+    <property name="eventNameFileUnfiledRecord" value="fileUnfiledRecord"/>
+    <property name="chart" value="false" />
+  </bean>
+
+  <bean id="event.fileUnfiledRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameComplete" value="unfiledRecordFiled"/>
     <property name="chart" value="true" />
   </bean>
+
+  <bean id="producer.unfiledRecordFiled" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
   <bean id="producer.unfiledRecordsFiled" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 

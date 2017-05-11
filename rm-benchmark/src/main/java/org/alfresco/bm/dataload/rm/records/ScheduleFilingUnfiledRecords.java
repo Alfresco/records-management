@@ -254,9 +254,6 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
                                     .add(FIELD_RECORDS_TO_FILE, recordIdsToLoad)
                                     .get();
                         Event loadEvent = new Event(getEventNameFileUnfiledRecords(), loadData);
-                        // Each load event must be associated with a session
-                        String sessionId = sessionService.startSession(loadData);
-                        loadEvent.setSessionId(sessionId);
                         // Add the event to the list
                         nextEvents.add(loadEvent);
                         // found less than requested unfiled records for filing, break here, after the event for loading existing ones was scheduled for filing

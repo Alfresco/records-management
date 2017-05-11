@@ -90,7 +90,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
 
         verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
-        verify(mockedSessionService, never()).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
         assertEquals("Uploading of Unfiled Records not wanted.",result.getData());
@@ -111,7 +110,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
 
         verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
-        verify(mockedSessionService, never()).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
         assertEquals("Loading completed.  Raising 'done' event.",result.getData());
@@ -158,7 +156,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         // and if the number of records to create is 0 the event for loading will not be scheduled
         int nextEventsSize = result.getNextEvents().size();
         verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
         assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
@@ -231,7 +228,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         // and if the number of records to create is 0 the event for loading will not be scheduled
         int nextEventsSize = result.getNextEvents().size();
         verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
         assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
 
         Event firstEvent = result.getNextEvents().get(0);
@@ -307,7 +303,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         // and if the number of records to create is 0 the event for loading will not be scheduled
         int nextEventsSize = result.getNextEvents().size();
         verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
         assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
 
         Event firstEvent = result.getNextEvents().get(0);
@@ -383,7 +378,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         // and if the number of records to create is 0 the event for loading will not be scheduled
         int nextEventsSize = result.getNextEvents().size();
         verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
         assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
 
         Event firstEvent = result.getNextEvents().get(0);
@@ -514,7 +508,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         // and if the number of records to create is 0 the event for loading will not be scheduled
         int nextEventsSize = result.getNextEvents().size();
         verify(mockedFileFolderService, times(nextEventsSize -1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
 
         assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
 
@@ -624,7 +617,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         verify(mockedFileFolderService, times(3)).incrementFolderCount(any(String.class), any(String.class), eq(1L));
         verify(mockedFileFolderService, times(3)).getFolder(any(String.class));
         verify(mockedFileFolderService, times(1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(1)).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
         assertEquals("Raised further 1 events and rescheduled self.", result.getData());
@@ -681,7 +673,6 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         // and if the number of records to create is 0 the event for loading will not be scheduled
         int nextEventsSize = result.getNextEvents().size();
         verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
         assertEquals("Raised further " + (nextEventsSize -1) + " events and rescheduled self.", result.getData());
