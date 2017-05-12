@@ -46,10 +46,12 @@ import org.alfresco.rest.rm.community.model.unfiledcontainer.UnfiledContainerChi
 import org.alfresco.rest.rm.community.requests.gscore.api.UnfiledContainerAPI;
 import org.alfresco.rest.rm.community.requests.gscore.api.UnfiledRecordFolderAPI;
 import org.apache.commons.lang3.time.StopWatch;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
 
@@ -61,6 +63,12 @@ import org.springframework.context.ApplicationContext;
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
 {
+    private static final String EVENT_COMPLETE = "testLoadingUnfiledRecordsComplete";
+
+    private static final String EVENT_LOAD_UNFILED_RECORD = "testLoadUnfiledRecord";
+
+    private static final String EVENT_SCHEDULE_UNFILED_RECORD_LOADERS = "testScheduleUnfiledRecordLoaders";
+
     @Mock
     private SessionService mockedSessionService;
 
@@ -82,6 +90,15 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
     @InjectMocks
     private ScheduleUnfiledRecordLoaders scheduleUnfiledRecordLoaders;
 
+    @Before
+    public void before()
+    {
+        MockitoAnnotations.initMocks(this);
+        scheduleUnfiledRecordLoaders.setEventNameLoadingComplete(EVENT_COMPLETE);
+        scheduleUnfiledRecordLoaders.setEventNameLoadUnfiledRecords(EVENT_LOAD_UNFILED_RECORD);
+        scheduleUnfiledRecordLoaders.setEventNameScheduleLoaders(EVENT_SCHEDULE_UNFILED_RECORD_LOADERS);
+        scheduleUnfiledRecordLoaders.setLoadCheckDelay(0L);
+    }
     @Test
     public void testUploadRecordsNotWanted() throws Exception
     {
@@ -114,7 +131,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         assertEquals(true, result.isSuccess());
         assertEquals("Loading completed.  Raising 'done' event.",result.getData());
         assertEquals(1, result.getNextEvents().size());
-        assertEquals("loadingUnfiledRecordsComplete", result.getNextEvents().get(0).getName());
+        assertEquals(EVENT_COMPLETE, result.getNextEvents().get(0).getName());
     }
 
     @Test
@@ -152,41 +169,22 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
 
         verify(mockedFileFolderService, times(2)).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
 
-        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
-        // and if the number of records to create is 0 the event for loading will not be scheduled
-        int nextEventsSize = result.getNextEvents().size();
-        verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(4)).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
-        assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
+        assertEquals("Raised further " + (unfiledRecordsNumber) + " events and rescheduled self.", result.getData());
+        assertEquals(unfiledRecordsNumber + 1, result.getNextEvents().size());
 
-        Event firstEvent = result.getNextEvents().get(0);
-        if(nextEventsSize - 1 == 2)
+        for(int i = 0; i< unfiledRecordsNumber ; i++)
         {
-            assertEquals("loadUnfiledRecords", firstEvent.getName());
-            DBObject dataObj = (DBObject)firstEvent.getData();
+            Event event = result.getNextEvents().get(0);
+            assertEquals(EVENT_LOAD_UNFILED_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(UNFILED_RECORD_CONTAINER_PATH, (String) dataObj.get(FIELD_PATH));
-            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-
-            Event secondEvent = result.getNextEvents().get(1);
-            assertEquals("loadUnfiledRecords", secondEvent.getName());
-            dataObj = (DBObject)secondEvent.getData();
-            assertNotNull(dataObj);
-            assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(UNFILED_RECORD_CONTAINER_PATH + "/folder1", (String) dataObj.get(FIELD_PATH));
-            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(unfiledRecordsNumber, value1 + value2);
+            assertEquals(LOAD_UNFILED_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
         }
-        else
-        {
-            //in case that one of generated values is 0 we check that the scheduled event had created all records
-            DBObject dataObj = (DBObject)firstEvent.getData();
-            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(unfiledRecordsNumber, value);
-        }
-        assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+        assertEquals(EVENT_SCHEDULE_UNFILED_RECORD_LOADERS, result.getNextEvents().get(unfiledRecordsNumber).getName());
     }
 
     @Test
@@ -194,7 +192,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
     {
         int maxActiveLoaders = 8;
         int unfiledRecordsNumber = 4;
-        String configuredPath1 = "/e1/e2/e3";
+        String configuredPath1 = "e1/e2/e3";
         String configuredPath2 = "/e1/e2/e4";
         String entirePath1 = UNFILED_RECORD_CONTAINER_PATH + configuredPath1;
         String entirePath2 = UNFILED_RECORD_CONTAINER_PATH + configuredPath2;
@@ -222,41 +220,22 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
 
         EventResult result = scheduleUnfiledRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
+        verify(mockedSessionService, times(4)).startSession(any(DBObject.class));
         assertEquals(true, result.isSuccess());
 
-        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
-        // and if the number of records to create is 0 the event for loading will not be scheduled
-        int nextEventsSize = result.getNextEvents().size();
-        verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
+        assertEquals("Raised further 4 events and rescheduled self.", result.getData());
+        assertEquals(5,result.getNextEvents().size());
 
-        Event firstEvent = result.getNextEvents().get(0);
-        if(nextEventsSize - 1 == 2)
+        for(int i = 0; i< unfiledRecordsNumber ; i++)
         {
-            assertEquals("loadUnfiledRecords", firstEvent.getName());
-            DBObject dataObj = (DBObject)firstEvent.getData();
+            Event event = result.getNextEvents().get(0);
+            assertEquals(EVENT_LOAD_UNFILED_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
-            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-
-            Event secondEvent = result.getNextEvents().get(1);
-            assertEquals("loadUnfiledRecords", secondEvent.getName());
-            dataObj = (DBObject)secondEvent.getData();
-            assertNotNull(dataObj);
-            assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(entirePath2, (String) dataObj.get(FIELD_PATH));
-            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(unfiledRecordsNumber, value1 + value2);
+            assertEquals(LOAD_UNFILED_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
         }
-        else
-        {
-            //in case that one of generated values is 0 we check that the scheduled event had created all records
-            DBObject dataObj = (DBObject)firstEvent.getData();
-            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(unfiledRecordsNumber, value);
-        }
-        assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+        assertEquals(EVENT_SCHEDULE_UNFILED_RECORD_LOADERS, result.getNextEvents().get(4).getName());
     }
 
     @Test
@@ -299,39 +278,20 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         verify(mockedFileFolderService, times(4)).getChildFolders(any(String.class), any(String.class), any(Integer.class), any(Integer.class));
         assertEquals(true, result.isSuccess());
 
-        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
-        // and if the number of records to create is 0 the event for loading will not be scheduled
-        int nextEventsSize = result.getNextEvents().size();
-        verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
+        verify(mockedSessionService, times(4)).startSession(any(DBObject.class));
+        assertEquals("Raised further " + (unfiledRecordsNumber) + " events and rescheduled self.", result.getData());
+        assertEquals(unfiledRecordsNumber+1, result.getNextEvents().size());
 
-        Event firstEvent = result.getNextEvents().get(0);
-        if(nextEventsSize - 1 == 2)
+        for(int i = 0; i< unfiledRecordsNumber ; i++)
         {
-            assertEquals("loadUnfiledRecords", firstEvent.getName());
-            DBObject dataObj = (DBObject)firstEvent.getData();
+            Event event = result.getNextEvents().get(0);
+            assertEquals(EVENT_LOAD_UNFILED_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(entirePath2, (String) dataObj.get(FIELD_PATH));
-            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-
-            Event secondEvent = result.getNextEvents().get(1);
-            assertEquals("loadUnfiledRecords", secondEvent.getName());
-            dataObj = (DBObject)secondEvent.getData();
-            assertNotNull(dataObj);
-            assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
-            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(unfiledRecordsNumber, value1 + value2);
+            assertEquals(LOAD_UNFILED_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
         }
-        else
-        {
-            //in case that one of generated values is 0 we check that the scheduled event had created all records
-            DBObject dataObj = (DBObject)firstEvent.getData();
-            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(unfiledRecordsNumber, value);
-        }
-        assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+        assertEquals(EVENT_SCHEDULE_UNFILED_RECORD_LOADERS, result.getNextEvents().get(unfiledRecordsNumber).getName());
     }
 
     @Test
@@ -374,45 +334,26 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         verify(mockedFileFolderService, times(3)).getChildFolders(any(String.class), any(String.class), any(Integer.class), any(Integer.class));
         assertEquals(true, result.isSuccess());
 
-        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
-        // and if the number of records to create is 0 the event for loading will not be scheduled
-        int nextEventsSize = result.getNextEvents().size();
-        verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
+        verify(mockedSessionService, times(4)).startSession(any(DBObject.class));
+        assertEquals("Raised further 4 events and rescheduled self.", result.getData());
+        assertEquals(5, result.getNextEvents().size());
 
-        Event firstEvent = result.getNextEvents().get(0);
-        if(nextEventsSize - 1 == 2)
+        for(int i = 0; i< unfiledRecordsNumber ; i++)
         {
-            assertEquals("loadUnfiledRecords", firstEvent.getName());
-            DBObject dataObj = (DBObject)firstEvent.getData();
+            Event event = result.getNextEvents().get(0);
+            assertEquals(EVENT_LOAD_UNFILED_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(childPath, (String) dataObj.get(FIELD_PATH));
-            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-
-            Event secondEvent = result.getNextEvents().get(1);
-            assertEquals("loadUnfiledRecords", secondEvent.getName());
-            dataObj = (DBObject)secondEvent.getData();
-            assertNotNull(dataObj);
-            assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
-            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(unfiledRecordsNumber, value1 + value2);
+            assertEquals(LOAD_UNFILED_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
         }
-        else
-        {
-            //in case that one of generated values is 0 we check that the scheduled event had created all records
-            DBObject dataObj = (DBObject)firstEvent.getData();
-            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(unfiledRecordsNumber, value);
-        }
-        assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+        assertEquals(EVENT_SCHEDULE_UNFILED_RECORD_LOADERS, result.getNextEvents().get(unfiledRecordsNumber).getName());
     }
 
     @Test
     public void testUploadRecordsWithNotExistentPreconfiguredPaths() throws Exception
     {
-        int maxActiveLoaders = 8;
+        int maxActiveLoaders = 3;
         int unfiledRecordsNumber = 4;
         String configuredPath1 = "/e1/e2/e3";
         String configuredPath2 = "/e1/e2/e4";
@@ -502,42 +443,22 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         verify(mockedFileFolderService, times(4)).createNewFolder(any(String.class), any(String.class), any(String.class));
         verify(mockedFileFolderService, times(4)).incrementFolderCount(any(String.class), any(String.class), eq(1L));
         verify(mockedFileFolderService, times(4)).getFolder(any(String.class));
+        verify(mockedSessionService, times(3)).startSession(any(DBObject.class));
         assertEquals(true, result.isSuccess());
 
-        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
-        // and if the number of records to create is 0 the event for loading will not be scheduled
-        int nextEventsSize = result.getNextEvents().size();
-        verify(mockedFileFolderService, times(nextEventsSize -1)).createNewFolder(any(FolderData.class));
+        assertEquals("Raised further " + (maxActiveLoaders) + " events and rescheduled self.", result.getData());
+        assertEquals(maxActiveLoaders + 1, result.getNextEvents().size());
 
-        assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
-
-        Event firstEvent = result.getNextEvents().get(0);
-        if(nextEventsSize - 1 == 2)
+        for(int i = 0; i < maxActiveLoaders ; i++)
         {
-            assertEquals("loadUnfiledRecords", firstEvent.getName());
-            DBObject dataObj = (DBObject)firstEvent.getData();
+            Event event = result.getNextEvents().get(0);
+            assertEquals(EVENT_LOAD_UNFILED_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(e3Path, (String) dataObj.get(FIELD_PATH));
-            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-
-            Event secondEvent = result.getNextEvents().get(1);
-            assertEquals("loadUnfiledRecords", secondEvent.getName());
-            dataObj = (DBObject)secondEvent.getData();
-            assertNotNull(dataObj);
-            assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(e4Path, (String) dataObj.get(FIELD_PATH));
-            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(unfiledRecordsNumber, value1 + value2);
+            assertEquals(LOAD_UNFILED_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
         }
-        else
-        {
-            //in case that one of generated values is 0 we check that the scheduled event had created all records
-            DBObject dataObj = (DBObject)firstEvent.getData();
-            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(unfiledRecordsNumber, value);
-        }
-        assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+        assertEquals(EVENT_SCHEDULE_UNFILED_RECORD_LOADERS, result.getNextEvents().get(maxActiveLoaders).getName());
     }
 
     @Test
@@ -616,21 +537,23 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         verify(mockedFileFolderService, times(3)).createNewFolder(any(String.class), any(String.class), any(String.class));
         verify(mockedFileFolderService, times(3)).incrementFolderCount(any(String.class), any(String.class), eq(1L));
         verify(mockedFileFolderService, times(3)).getFolder(any(String.class));
-        verify(mockedFileFolderService, times(1)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(4)).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
-        assertEquals("Raised further 1 events and rescheduled self.", result.getData());
-        assertEquals(2, result.getNextEvents().size());
+        assertEquals("Raised further 4 events and rescheduled self.", result.getData());
+        assertEquals(5, result.getNextEvents().size());
 
-        Event firstEvent = result.getNextEvents().get(0);
-        assertEquals("loadUnfiledRecords", firstEvent.getName());
-        DBObject dataObj = (DBObject)firstEvent.getData();
-        assertNotNull(dataObj);
-        assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-        assertEquals(e3Path, (String) dataObj.get(FIELD_PATH));
-        int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-        assertEquals(unfiledRecordsNumber, value);
-        assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(1).getName());
+        for(int i = 0; i< unfiledRecordsNumber ; i++)
+        {
+            Event event = result.getNextEvents().get(0);
+            assertEquals(EVENT_LOAD_UNFILED_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
+            assertNotNull(dataObj);
+            assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+            assertEquals(e3Path, (String) dataObj.get(FIELD_PATH));
+            assertEquals(LOAD_UNFILED_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
+        }
+        assertEquals(EVENT_SCHEDULE_UNFILED_RECORD_LOADERS, result.getNextEvents().get(4).getName());
     }
 
     @Test
@@ -669,40 +592,21 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         EventResult result = scheduleUnfiledRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, times(2)).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
 
-        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
-        // and if the number of records to create is 0 the event for loading will not be scheduled
-        int nextEventsSize = result.getNextEvents().size();
-        verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, times(4)).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
-        assertEquals("Raised further " + (nextEventsSize -1) + " events and rescheduled self.", result.getData());
+        assertEquals("Raised further " + (unfiledRecordsNumber) + " events and rescheduled self.", result.getData());
+        assertEquals(unfiledRecordsNumber + 1, result.getNextEvents().size());
 
-        Event firstEvent = result.getNextEvents().get(0);
-        if(nextEventsSize - 1 == 2)
+        for(int i = 0; i < unfiledRecordsNumber ; i++)
         {
-            assertEquals("loadUnfiledRecords", firstEvent.getName());
-            DBObject dataObj = (DBObject)firstEvent.getData();
+            Event event = result.getNextEvents().get(0);
+            assertEquals(EVENT_LOAD_UNFILED_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
             assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(UNFILED_RECORD_CONTAINER_PATH, (String) dataObj.get(FIELD_PATH));
-            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-
-            Event secondEvent = result.getNextEvents().get(1);
-            assertEquals("loadUnfiledRecords", secondEvent.getName());
-            dataObj = (DBObject)secondEvent.getData();
-            assertNotNull(dataObj);
-            assertEquals(UNFILED_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(UNFILED_RECORD_CONTAINER_PATH + "/folder1", (String) dataObj.get(FIELD_PATH));
-            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(unfiledRecordsNumber, value1 + value2);
+            assertEquals(LOAD_UNFILED_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
         }
-        else
-        {
-            //in case that one of generated values is 0 we check that the scheduled event had created all records
-            DBObject dataObj = (DBObject)firstEvent.getData();
-            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(unfiledRecordsNumber, value);
-        }
-        assertEquals("scheduleUnfiledRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+        assertEquals(EVENT_SCHEDULE_UNFILED_RECORD_LOADERS, result.getNextEvents().get(unfiledRecordsNumber).getName());
     }
 }

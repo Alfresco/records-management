@@ -50,7 +50,7 @@ import com.mongodb.DBObject;
 public class LoadSingleComponent extends RMBaseEventProcessor
 {
     private String eventNameComplete;
-    public static final long DEFAULT_DELAY = 100L;
+    public static final long DEFAULT_DELAY = 0L;
     private long delay = DEFAULT_DELAY;
 
     public void setEventNameComplete(String eventNameComplete)

@@ -98,8 +98,6 @@ public class FileUnfiledRecords extends RMBaseEventProcessor
     @Override
     protected EventResult processEvent(Event event) throws Exception
     {
-        super.suspendTimer();
-
         if (event == null)
         {
             throw new IllegalStateException("This processor requires an event.");
