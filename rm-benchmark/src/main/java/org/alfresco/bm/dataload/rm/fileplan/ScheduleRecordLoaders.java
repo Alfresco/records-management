@@ -24,7 +24,6 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -261,119 +260,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * Helper method that initialize the record folders that can receive loaded unfiled records.
-     * This method, also calculates the number of records to  add to the initialized record folders.
-     */
-    private void calculateListOfEmptyFolders()
-    {
-        if (mapOfRecordsPerRecordFolder == null)
-        {
-            mapOfRecordsPerRecordFolder = new LinkedHashMap<FolderData, Integer>();
-            List<FolderData> recordFoldersThatNeedRecords = new ArrayList<FolderData>();
-            if (paths == null || paths.size() == 0)
-            {
-                // get the existing file plan folder structure
-                recordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(RECORD_FOLDER_CONTEXT));
-            }
-            else
-            {
-                LinkedHashSet<FolderData> structureFromExistentProvidedPaths = new LinkedHashSet<FolderData>();
-                for (String path : paths)
-                {
-                    if(!path.startsWith("/"))
-                    {
-                        path = "/" + path;
-                    }
-                    //if the path is category and exists
-                    FolderData folder = fileFolderService.getFolder(RECORD_CATEGORY_CONTEXT,
-                                RECORD_CONTAINER_PATH + path);
-                    if(folder == null)//if folder is not a category verify if it is a record folder and exists
-                    {
-                        folder = fileFolderService.getFolder(RECORD_FOLDER_CONTEXT,
-                                    RECORD_CONTAINER_PATH + path);
-                    }
-                    if (folder != null)// if folder exists
-                    {
-                        structureFromExistentProvidedPaths.addAll(getRecordFolders(folder));
-                    }
-                    else
-                    {
-                        try
-                        {
-                            folder = createFolder(path);
-                            recordFoldersThatNeedRecords.add(folder);
-                        }
-                        catch (Exception e)
-                        {
-                            // something went wrong on creating current path structure, not all required paths will be created
-                        }
-                    }
-                }
-                // add record folders from existent paths
-                if (structureFromExistentProvidedPaths.size() > 0)
-                {
-                    recordFoldersThatNeedRecords.addAll(structureFromExistentProvidedPaths);
-                }
-                // configured paths did not existed in db and something went wrong with creation for all of them,
-                // initialize to existing structure in this case
-                if (recordFoldersThatNeedRecords.size() == 0)
-                {
-                    recordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(RECORD_FOLDER_CONTEXT));
-                }
-            }
-            if (recordFoldersThatNeedRecords.size() > 0)
-            {
-                mapOfRecordsPerRecordFolder = distributeNumberOfRecords(recordFoldersThatNeedRecords, recordsNumber);
-            }
-        }
-    }
-
-    /**
-     * Helper method used for creating in alfresco repo and in mongo DB, record root categories, record categories and record folders from configured path elements.
-     *
-     * @param path - path element
-     * @return created record folder, or existent record folder, if it already created
-     * @throws Exception
-     */
-    private FolderData createFolder(String path) throws Exception
-    {
-        //create inexistent elements from configured paths as admin
-        List<String> pathElements = getPathElements(path);
-        FolderData parentFolder = fileFolderService.getFolder(FILEPLAN_CONTEXT, RECORD_CONTAINER_PATH);
-        // for(String pathElement: pathElements)
-        int pathElementsLength = pathElements.size();
-        for (int i = 0; i < pathElementsLength; i++)
-        {
-            String pathElement = pathElements.get(i);
-            FolderData folder = fileFolderService.getFolder(RECORD_CATEGORY_CONTEXT,
-                        parentFolder.getPath() + "/" + pathElement);
-            if (folder != null)
-            {
-                parentFolder = folder;
-            }
-            else
-            {
-                if(i == 0)
-                {
-                    //create root category
-                    parentFolder = createRootRecordCategoryWithFixedName(parentFolder, pathElement);
-                }
-                else if (pathElementsLength > 1  && i == (pathElementsLength - 1))
-                {
-                    //create record folder
-                    parentFolder = createRecordFolderWithFixedName(parentFolder, pathElement);
-                }
-                else
-                {
-                    //create child category
-                    parentFolder = createRecordCategoryWithFixedName(parentFolder, pathElement);
-                }
-            }
-        }
-        return parentFolder;
-    }
-
-    /**
      * Helper method for preparing events for loading records randomly in the record folders structure or in specified record folder paths.
      *
      * @param loaderSessionsToCreate - the number of still active loader sessions
@@ -381,7 +267,7 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
      */
     private void prepareRecords(int loaderSessionsToCreate, List<Event> nextEvents)
     {
-        calculateListOfEmptyFolders();
+        mapOfRecordsPerRecordFolder = calculateListOfEmptyFolders(mapOfRecordsPerRecordFolder, paths, recordsNumber);
         List<FolderData> emptyFolders = new ArrayList<FolderData>();
         emptyFolders.addAll(mapOfRecordsPerRecordFolder.keySet());
         while (nextEvents.size() < loaderSessionsToCreate)

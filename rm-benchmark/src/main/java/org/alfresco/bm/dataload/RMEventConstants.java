@@ -36,6 +36,7 @@ public interface RMEventConstants
     String FIELD_UNFILED_ROOT_FOLDERS_TO_CREATE = "rootFoldersToCreate";
     String FIELD_UNFILED_FOLDERS_TO_CREATE = "foldersToCreate";
     String FIELD_RECORDS_TO_CREATE = "recordsToCreate";
+    String FIELD_RECORDS_TO_FILE = "recordsToFile";
 
     String RECORD_FOLDER_NAME_IDENTIFIER = "bmFolder";
     String CATEGORY_NAME_IDENTIFIER = "bmCateg";

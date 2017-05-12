@@ -20,13 +20,13 @@
 package org.alfresco.bm.dataload.rm.unfiled;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.split;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import com.mongodb.BasicDBObjectBuilder;
@@ -261,36 +261,6 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * Obtains all unfiled record folders underneath specified parent folder plus the parent folder
-     *
-     * @param parentFolder - the parent folder that we need to get unfiled record folders from
-     * @return all unfiled record folders underneath specified parent folder plus the parent folder
-     */
-    private Set<FolderData> getUnfiledRecordFolders(FolderData parentFolder)
-    {
-        LinkedHashSet<FolderData> result = new LinkedHashSet<FolderData>();
-        int skip = 0;
-        int limit = 100;
-        List<FolderData> directChildren = new ArrayList<FolderData>();
-        List<FolderData> childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
-        while(childFolders.size() > 0)
-        {
-            directChildren.addAll(childFolders);
-            skip += limit;
-            childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
-        }
-        if(directChildren.size() > 0)
-        {
-            for(FolderData childFolder : directChildren)
-            {
-                result.addAll(getUnfiledRecordFolders(childFolder));
-            }
-        }
-        result.add(parentFolder);
-        return result;
-    }
-
-    /**
      * Helper method used for creating in alfresco repo and in mongo DB, unfiled record folders from configured path elements.
      *
      * @param path - path element
@@ -300,7 +270,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     private FolderData createFolder(String path) throws Exception
     {
         //create inexistent elements from configured paths as admin
-        List<String> pathElements = getPathElements(path);
+        List<String> pathElements = Arrays.asList(split(path, "/"));
         FolderData parentFolder = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH);
         // for(String pathElement: pathElements)
         int pathElementsLength = pathElements.size();

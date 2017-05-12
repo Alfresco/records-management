@@ -1,0 +1,200 @@
+/*
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
+ *
+ * This file is part of Alfresco
+ *
+ * Alfresco is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Alfresco is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.alfresco.bm.dataload.rm.records;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.alfresco.bm.cm.FolderData;
+import org.alfresco.bm.dataload.RMBaseEventProcessor;
+import org.alfresco.bm.dataload.rm.services.ExecutionState;
+import org.alfresco.bm.dataload.rm.services.RecordData;
+import org.alfresco.bm.event.Event;
+import org.alfresco.bm.event.EventResult;
+import org.alfresco.bm.user.UserData;
+import org.alfresco.rest.rm.community.model.record.RecordBodyFile;
+import org.alfresco.rest.rm.community.requests.gscore.api.RecordsAPI;
+import org.alfresco.utility.model.UserModel;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
+
+/**
+ * Filing unfiled records event
+ *
+ * @author Silviu Dinuta
+ * @since 2.6
+ */
+public class FileUnfiledRecords extends RMBaseEventProcessor
+{
+    public static final String EVENT_NAME_UNFILED_RECORDS_FILED = "unfiledRecordsFiled";
+    public static final long DEFAULT_FILE_UNFILED_RECORD_DELAY = 100L;
+    private long fileUnfiledRecordDelay = DEFAULT_FILE_UNFILED_RECORD_DELAY;
+    String eventNameUnfiledRecordsFiled = EVENT_NAME_UNFILED_RECORDS_FILED;
+
+    public void setFileUnfiledRecordDelay(long fileUnfiledRecordDelay)
+    {
+        this.fileUnfiledRecordDelay = fileUnfiledRecordDelay;
+    }
+
+    public String getEventNameUnfiledRecordsFiled()
+    {
+        return eventNameUnfiledRecordsFiled;
+    }
+
+    public void setEventNameUnfiledRecordsFiled(String eventNameUnfiledRecordsFiled)
+    {
+        this.eventNameUnfiledRecordsFiled = eventNameUnfiledRecordsFiled;
+    }
+
+    @Override
+    protected EventResult processEvent(Event event) throws Exception
+    {
+        super.suspendTimer();
+
+        if (event == null)
+        {
+            throw new IllegalStateException("This processor requires an event.");
+        }
+
+        DBObject dataObj = (DBObject) event.getData();
+        if (dataObj == null)
+        {
+            throw new IllegalStateException("This processor requires data with field " + FIELD_PATH);
+        }
+
+        String context = (String) dataObj.get(FIELD_CONTEXT);
+        String path = (String) dataObj.get(FIELD_PATH);
+
+        @SuppressWarnings("unchecked")
+        List<String> recordsToFileIds = (List<String>) dataObj.get(FIELD_RECORDS_TO_FILE);
+        if (context == null || path == null || recordsToFileIds == null)
+        {
+            return new EventResult("Request data not complete for filing unfiled records: " + dataObj, false);
+        }
+
+        // Get the folder
+        FolderData folder = fileFolderService.getFolder(context, path);
+        if (folder == null)
+        {
+            throw new IllegalStateException("No such folder recorded: " + dataObj);
+        }
+        // Get the session
+        String sessionId = event.getSessionId();
+        if (sessionId == null)
+        {
+            return new EventResult("Load scheduling should create a session for each loader.", false);
+        }
+
+        return fileRecords(folder, recordsToFileIds);
+    }
+
+    /**
+     * Helper method that file specified numbers of records in specified record folder.
+     *
+     * @param container - record folder
+     * @param recordsToFileIds - list of the id's of unfiled records to file
+     * @return EventResult - the filing result or error if there was an exception on filing
+     * @throws IOException
+     */
+    private EventResult fileRecords(FolderData container, List<String> recordsToFileIds) throws IOException
+    {
+        UserData user = getRandomUser(logger);
+        String username = user.getUsername();
+        String password = user.getPassword();
+        UserModel userModel = new UserModel(username, password);
+        try
+        {
+            List<Event> scheduleEvents = new ArrayList<Event>();
+            // FileRecords records
+            int numberOfRecordsToFile = recordsToFileIds.size();
+            if (numberOfRecordsToFile > 0)
+            {
+                fileRecord(container, userModel, recordsToFileIds, fileUnfiledRecordDelay);
+                // Clean up the lock
+                String lockedPath = container.getPath() + "/locked";
+                fileFolderService.deleteFolder(container.getContext(), lockedPath, false);
+            }
+
+            DBObject eventData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, container.getContext())
+                        .add(FIELD_PATH, container.getPath()).get();
+            Event nextEvent = new Event(getEventNameUnfiledRecordsFiled(), eventData);
+
+            scheduleEvents.add(nextEvent);
+            DBObject resultData = BasicDBObjectBuilder.start().add("msg", "Filed " + numberOfRecordsToFile + " records.")
+                        .add("path", container.getPath()).add("username", username).get();
+
+            return new EventResult(resultData, scheduleEvents);
+        }
+        catch (Exception e)
+        {
+            String error = e.getMessage();
+            String stack = ExceptionUtils.getStackTrace(e);
+            // Grab REST API information
+            DBObject data = BasicDBObjectBuilder.start().append("error", error).append("username", username)
+                        .append("path", container.getPath()).append("stack", stack).get();
+            // Build failure result
+            return new EventResult(data, false);
+        }
+    }
+
+    /**
+     * Helper method for filing specified number of unfiled records in specified record folder.
+     *
+     * @param folder - record folder in which the unfiled records will be filed
+     * @param userModel - UserModel instance with which rest api will be called
+     * @param recordsToFileIds - list of the id's of unfiled records to file
+     * @param delay - delay between filing records
+     * @throws Exception
+     */
+    public void fileRecord(FolderData folder, UserModel userModel, List<String> recordsToFileIds, long delay) throws Exception
+    {
+        String folderPath = folder.getPath();
+        String parentId = folder.getId();
+
+        RecordBodyFile recordBodyFileModel = RecordBodyFile.builder()
+                    .targetParentId(parentId)
+                    .build();
+
+        for (String recordId : recordsToFileIds)
+        {
+            RecordData randomRecord = recordService.getRecord(recordId);
+            super.resumeTimer();
+            RecordsAPI recordsAPI = getRestAPIFactory().getRecordsAPI(userModel);
+            recordsAPI.fileRecord(recordBodyFileModel, randomRecord.getId());
+            super.suspendTimer();
+            // Increment counts
+            fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
+
+            // Decrement counts for unfiled record folder or unfiled container
+            String unfiledParentPath = randomRecord.getParentPath();
+            fileFolderService.incrementFileCount(UNFILED_CONTEXT, unfiledParentPath, -1);
+
+            //change parent path to the new parent
+            randomRecord.setParentPath(folderPath);
+            randomRecord.setExecutionState(ExecutionState.RECORD_FILED);
+            recordService.updateRecord(randomRecord);
+            TimeUnit.MILLISECONDS.sleep(delay);
+        }
+    }
+}

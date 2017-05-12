@@ -26,14 +26,12 @@ import java.util.concurrent.TimeUnit;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
 import org.alfresco.bm.dataload.rm.services.ExecutionState;
 import org.alfresco.bm.dataload.rm.services.RecordData;
-import org.alfresco.bm.dataload.rm.services.RecordService;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.record.Record;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import com.mongodb.BasicDBObjectBuilder;
@@ -52,12 +50,6 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
     private long declareInPlaceRecordDelay = DEFAULT_DECLARE_RECORDS_DELAY;
     public static final String DEFAULT_EVENT_NAME_IN_PLACE_RECORD_DECLARED = "inPlaceRecordDeclared";
     private String eventNameInPlaceRecordsDeclared = DEFAULT_EVENT_NAME_IN_PLACE_RECORD_DECLARED;
-
-    @Autowired
-    private RestAPIFactory restAPIFactory;
-
-    @Autowired
-    private RecordService recordService;
 
     public void setEventNameInPlaceRecordsDeclared(String eventNameInPlaceRecordsDeclared)
     {
@@ -110,6 +102,7 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
 
             // Call the REST API
             super.resumeTimer();
+            RestAPIFactory restAPIFactory = getRestAPIFactory();
             Record record = restAPIFactory.getFilesAPI(new UserModel(username, password)).declareAsRecord(id);
             String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
             super.suspendTimer();
@@ -118,8 +111,11 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
             if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.CREATED)
             {
                 eventOutputMsg.append("success");
-                dbRecord.setExecutionState(ExecutionState.SUCCESS);
+                dbRecord.setExecutionState(ExecutionState.UNFILED_RECORD_DECLARED);
                 dbRecord.setName(record.getName());
+                String parentPath = fileFolderService.getFolder(record.getParentId()).getPath();
+                fileFolderService.incrementFileCount(UNFILED_CONTEXT, parentPath, 1);
+                dbRecord.setParentPath(parentPath);
             }
             else
             {
