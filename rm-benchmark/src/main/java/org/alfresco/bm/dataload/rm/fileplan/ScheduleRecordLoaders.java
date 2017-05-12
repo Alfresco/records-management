@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.UUID;
 
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
@@ -46,7 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ScheduleRecordLoaders extends RMBaseEventProcessor
 {
-    public static final String EVENT_NAME_LOAD_RECORDS = "loadRecords";
+    public static final String EVENT_NAME_LOAD_RECORDS = "loadRecord";
     public static final String EVENT_NAME_SCHEDULE_RECORD_LOADERS = "scheduleRecordLoaders";
     public static final String EVENT_NAME_LOADING_COMPLETE = "loadingRecordsComplete";
     public static final String EVENT_NAME_CONTINUE_LOADING_UNFILED_RECORD_FOLDERS = "scheduleUnfiledRecordFoldersLoaders";
@@ -84,14 +83,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @return the recordFolderPaths
-     */
-    public String getRecordFolderPaths()
-    {
-        return recordFolderPaths;
-    }
-
-    /**
      * @param recordFolderPaths the recordFolderPaths to set
      */
     public void setRecordFolderPaths(String recordFolderPaths)
@@ -104,14 +95,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @return the recordsNumber
-     */
-    public int getRecordsNumber()
-    {
-        return recordsNumber;
-    }
-
-    /**
      * @param recordsNumber the recordsNumber to set
      */
     public void setRecordsNumber(int recordsNumber)
@@ -120,29 +103,11 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @return the loadCheckDelay
-     */
-    public long getLoadCheckDelay()
-    {
-        return loadCheckDelay;
-    }
-
-    /**
      * @param loadCheckDelay the loadCheckDelay to set
      */
     public void setLoadCheckDelay(long loadCheckDelay)
     {
         this.loadCheckDelay = loadCheckDelay;
-    }
-
-
-
-    /**
-     * @return the maxActiveLoaders
-     */
-    public int getMaxActiveLoaders()
-    {
-        return maxActiveLoaders;
     }
 
     /**
@@ -237,14 +202,14 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
         {
             // There are no records to load even though there are sessions available
             mapOfRecordsPerRecordFolder = null;
-            Event nextEvent = new Event(eventNameLoadingComplete, null);
+            Event nextEvent = new Event(getEventNameLoadingComplete(), null);
             nextEvents.add(nextEvent);
             msg = "Loading completed.  Raising 'done' event.";
         }
         else
         {
             // Reschedule self
-            Event nextEvent = new Event(eventNameScheduleRecordLoaders, System.currentTimeMillis() + loadCheckDelay,
+            Event nextEvent = new Event(getEventNameScheduleRecordLoaders(), System.currentTimeMillis() + loadCheckDelay,
                         null);
             nextEvents.add(nextEvent);
             msg = "Raised further " + (nextEvents.size() - 1) + " events and rescheduled self.";
@@ -288,25 +253,35 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
                 {
                     try
                     {
-                        // Create a lock folder that has too many files and folders so that it won't be picked up
-                        // by this process in subsequent trawls
-                        String lockPath = emptyFolder.getPath() + "/locked";
-                        FolderData lockFolder = new FolderData(UUID.randomUUID().toString(), emptyFolder.getContext(),
-                                    lockPath, Long.MAX_VALUE, Long.MAX_VALUE);
-                        fileFolderService.createNewFolder(lockFolder);
-                        // We locked this, so the load can be scheduled.
-                        // The loader will remove the lock when it completes
-                        DBObject loadData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, emptyFolder.getContext())
+                        DBObject loadData = BasicDBObjectBuilder.start()
+                                    .add(FIELD_CONTEXT, emptyFolder.getContext())
                                     .add(FIELD_PATH, emptyFolder.getPath())
-                                    .add(FIELD_RECORDS_TO_CREATE, Integer.valueOf(recordsToCreate))
+                                    .add(FIELD_LOAD_OPERATION, LOAD_RECORD_OPERATION)
                                     .get();
-                        Event loadEvent = new Event(eventNameLoadRecords, loadData);
-                        // Each load event must be associated with a session
-                        String sessionId = sessionService.startSession(loadData);
-                        loadEvent.setSessionId(sessionId);
-                        // Add the event to the list
-                        nextEvents.add(loadEvent);
-                        mapOfRecordsPerRecordFolder.remove(emptyFolder);
+                        int i;
+                        for(i = 0; i < recordsToCreate; i++)
+                        {
+                            Event loadEvent = new Event(getEventNameLoadRecords(), loadData);
+                            // Each load event must be associated with a session
+                            String sessionId = sessionService.startSession(loadData);
+                            loadEvent.setSessionId(sessionId);
+                            // Add the event to the list
+                            nextEvents.add(loadEvent);
+
+                            // Check if we have enough
+                            if (nextEvents.size() >= loaderSessionsToCreate)
+                            {
+                                break;
+                            }
+                        }
+                        if (i == recordsToCreate)
+                        {
+                            mapOfRecordsPerRecordFolder.remove(emptyFolder);
+                        }
+                        else
+                        {
+                            mapOfRecordsPerRecordFolder.put(emptyFolder, mapOfRecordsPerRecordFolder.get(emptyFolder) - i-1);
+                        }
                     }
                     catch (Exception e)
                     {

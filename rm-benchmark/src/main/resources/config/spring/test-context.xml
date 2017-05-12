@@ -190,19 +190,18 @@
     <property name="recordsNumber" value="${rm.recordsNumber}" />
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
     <property name="chart" value="false" />
-    <property name="eventNameLoadRecords" value="loadRecords" />
+    <property name="eventNameLoadRecords" value="loadRecord" />
     <property name="eventNameScheduleRecordLoaders" value="scheduleRecordLoaders" />
     <property name="eventNameLoadingComplete" value="loadingRecordsComplete" />
     <property name="eventNameContinueLoadingUnfiledRecordFolders" value="scheduleUnfiledRecordFoldersLoaders" />
   </bean>
 
-  <bean id="event.loadRecords" class="org.alfresco.bm.dataload.rm.fileplan.LoadRecords" parent="rmBaseEventProcessor">
-    <property name="eventNameRecordsLoaded" value="recordsLoaded" />
+  <bean id="event.loadRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameComplete" value="recordLoaded"/>
     <property name="chart" value="true" />
   </bean>
 
-  <bean id="producer.recordsLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer"
-    parent="producer.base" />
+  <bean id="producer.recordLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
   <!-- -->
   <!-- Unfiled Record Folders structure Creation -->

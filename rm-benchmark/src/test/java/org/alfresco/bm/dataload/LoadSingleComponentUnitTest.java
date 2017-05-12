@@ -41,6 +41,7 @@ import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.core.RestAPIFactory;
+import org.alfresco.rest.rm.community.requests.gscore.api.RecordFolderAPI;
 import org.alfresco.rest.rm.community.requests.gscore.api.RecordsAPI;
 import org.alfresco.rest.rm.community.requests.gscore.api.UnfiledContainerAPI;
 import org.alfresco.rest.rm.community.requests.gscore.api.UnfiledRecordFolderAPI;
@@ -96,6 +97,9 @@ public class LoadSingleComponentUnitTest implements RMEventConstants
 
     @Mock
     protected TestFileService mockedTestFileService;
+
+    @Mock
+    protected RecordFolderAPI mockedRecordFolderAPI;
 
 
     /**

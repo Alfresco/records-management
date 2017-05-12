@@ -519,45 +519,40 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     }
 
     /**
-     * Helper method for creating specified number of non-electronic documents in specified record folder.
+     * Helper method for creating a non-electronic document in specified record folder.
      *
      * @param folder - record folder that will contain created non-electronic document
      * @param userModel - UserModel instance with wich rest api will be called
-     * @param componentsToCreate - number of non-electronic documents to create
-     * @param nameIdentifier - a string identifier that the created non-electronic documents will start with
+     * @param nameIdentifier - a string identifier that the created non-electronic document will start with
      * @param loadFilePlanComponentDelay - delay between creation of non-electronic documents
      * @throws Exception
      */
-    public void createNonElectonicRecordInRecordFolder(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier,
-                                                       long loadFilePlanComponentDelay) throws Exception
+    public void createNonElectonicRecordInRecordFolder(FolderData folder, UserModel userModel, String nameIdentifier, long loadFilePlanComponentDelay) throws Exception
     {
         String unique;
 
         String folderPath = folder.getPath();
-        for (int i = 0; i < componentsToCreate; i++)
-        {
-            unique = UUID.randomUUID().toString();
-            String newfilePlanComponentName = nameIdentifier + unique;
-            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+        unique = UUID.randomUUID().toString();
+        String newfilePlanComponentName = nameIdentifier + unique;
+        String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
 
-            // Build non electronic record properties
-            Record recordModel = Record.builder()
-                        .name(newfilePlanComponentName)
-                        .nodeType(NON_ELECTRONIC_RECORD_TYPE)
-                        .properties(RecordProperties.builder()
-                                    .title(newfilePlanComponentTitle)
-                                    .description(EMPTY)
-                                    .build())
-                        .build();
+        // Build non electronic record properties
+        Record recordModel = Record.builder()
+                    .name(newfilePlanComponentName)
+                    .nodeType(NON_ELECTRONIC_RECORD_TYPE)
+                    .properties(RecordProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
 
-            RecordFolderAPI recordFolderAPI = getRestAPIFactory().getRecordFolderAPI(userModel);
-            String parentId = folder.getId();
-            recordFolderAPI.createRecord(recordModel, parentId);
-            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
-        }
+        RecordFolderAPI recordFolderAPI = getRestAPIFactory().getRecordFolderAPI(userModel);
+        String parentId = folder.getId();
+        recordFolderAPI.createRecord(recordModel, parentId);
+        TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
 
         // Increment counts
-        fileFolderService.incrementFileCount(folder.getContext(), folderPath, componentsToCreate);
+        fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
     }
 
     /**
@@ -615,46 +610,41 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     }
 
     /**
-     * Helper method for uploading specified number of records on specified record folder.
+     * Helper method for uploading one record on specified record folder.
      *
-     * @param folder - record folder that will contain uploaded records
+     * @param folder - record folder that will contain uploaded record
      * @param userModel - UserModel instance with wich rest api will be called
-     * @param componentsToCreate - number of records to be uploaded
-     * @param nameIdentifier - a string identifier that the uploaded records will start with
+     * @param nameIdentifier - a string identifier that the uploaded record will start with
      * @param loadFilePlanComponentDelay - delay between upload record operations
      * @throws Exception
      */
-    public void uploadElectronicRecordInRecordFolder(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier,
-                                                      long loadFilePlanComponentDelay) throws Exception // to-check: type of exception
+    public void uploadElectronicRecordInRecordFolder(FolderData folder, UserModel userModel, String nameIdentifier, long loadFilePlanComponentDelay) throws Exception
     {
         String unique;
 
         String folderPath = folder.getPath();
-        for (int i = 0; i < componentsToCreate; i++)
+        File file = testFileService.getFile();
+        if (file == null)
         {
-            File file = testFileService.getFile();
-            if (file == null)
-            {
-                throw new RuntimeException("No test files exist for upload: " + testFileService);
-            }
-            unique = UUID.randomUUID().toString();
-            String newfilePlanComponentName = nameIdentifier + unique + "-" + file.getName();
-            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
-            // Build record properties
-            Record recordModel = Record.builder()
-                        .name(newfilePlanComponentName)
-                        .nodeType(CONTENT_TYPE)
-                        .properties(RecordProperties.builder()
-                                    .title(newfilePlanComponentTitle)
-                                    .description(EMPTY)
-                                    .build())
-                        .build();
-
-            RecordFolderAPI recordFolderAPI = getRestAPIFactory().getRecordFolderAPI(userModel);
-            recordFolderAPI.createRecord(recordModel, folder.getId(), file);
-            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
-            fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
+            throw new RuntimeException("No test files exist for upload: " + testFileService);
         }
+        unique = UUID.randomUUID().toString();
+        String newfilePlanComponentName = nameIdentifier + unique + "-" + file.getName();
+        String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+        // Build record properties
+        Record recordModel = Record.builder()
+                    .name(newfilePlanComponentName)
+                    .nodeType(CONTENT_TYPE)
+                    .properties(RecordProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
+
+        RecordFolderAPI recordFolderAPI = getRestAPIFactory().getRecordFolderAPI(userModel);
+        recordFolderAPI.createRecord(recordModel, folder.getId(), file);
+        TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
+        fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
     }
 
     /**

@@ -99,6 +99,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         scheduleUnfiledRecordLoaders.setEventNameScheduleLoaders(EVENT_SCHEDULE_UNFILED_RECORD_LOADERS);
         scheduleUnfiledRecordLoaders.setLoadCheckDelay(0L);
     }
+
     @Test
     public void testUploadRecordsNotWanted() throws Exception
     {
