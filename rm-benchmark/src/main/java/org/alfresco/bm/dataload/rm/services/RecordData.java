@@ -5,7 +5,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Data object representing a record
- * 
+ *
  * @author Ana Bozianu
  * @since 2.6
  */
@@ -20,6 +20,7 @@ public class RecordData
     private String name;
     private String parentPath;
     private ExecutionState executionState;
+    private int randomizer;
 
     public RecordData(String id, RecordContext context, String name, String parentPath, String inPlacePath, ExecutionState executionState)
     {
@@ -28,6 +29,7 @@ public class RecordData
         ParameterCheck.mandatoryString("name", name);
 //      ParameterCheck.mandatoryString("parentPath or inPlacePath", parentPath + inPlacePath);
 
+        randomizer = (int)(Math.random() * 1E6);
         this.id = id;
         this.context = context;
         this.name = name;
@@ -119,5 +121,15 @@ public class RecordData
     public void setExecutionState(ExecutionState executionState)
     {
         this.executionState = executionState;
+    }
+
+    public int getRandomizer()
+    {
+        return randomizer;
+    }
+
+    public void setRandomizer(int randomizer)
+    {
+        this.randomizer = randomizer;
     }
 }

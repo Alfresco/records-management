@@ -38,6 +38,7 @@ import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.RMEventConstants;
 import org.alfresco.bm.dataload.rm.role.RMRole;
+import org.alfresco.bm.dataload.rm.services.RecordService;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.file.TestFileService;
@@ -95,6 +96,9 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
 
     @Mock
     private ApplicationContext mockedApplicationContext;
+
+    @Mock
+    private RecordService mockedReocodService;
 
     @InjectMocks
     private LoadUnfiledRecords loadUnfiledRecords;
@@ -432,7 +436,7 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
 //    }
 
     @Test
-    public void testUploadRecordsInUnfiledContainer() throws Exception
+    public void testUploadRecordsInUnfiledRecordFolder() throws Exception
     {
         int recordsToCreate = 3;
         loadUnfiledRecords.setEventNameUnfiledRecordsLoaded("unfiledRecordsLoaded");
@@ -455,6 +459,28 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
 
         FolderData mockedFolder1 = mock(FolderData.class);
         when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH)).thenReturn(mockedFolder1);
+
+        UnfiledContainerChild mockRecord1 = mock(UnfiledContainerChild.class);
+        String recordId1 = "recordId1";
+        String recordName1= "recordName1";
+        when(mockRecord1.getId()).thenReturn(recordId1);
+        when(mockRecord1.getName()).thenReturn(recordName1);
+
+        UnfiledContainerChild mockRecord2 = mock(UnfiledContainerChild.class);
+        String recordId2 = "recordId2";
+        String recordName2= "recordName2";
+        when(mockRecord2.getId()).thenReturn(recordId2);
+        when(mockRecord2.getName()).thenReturn(recordName2);
+
+        UnfiledContainerChild mockRecord3 = mock(UnfiledContainerChild.class);
+        String recordId3 = "recordId3";
+        String recordName3= "recordName3";
+        when(mockRecord3.getId()).thenReturn(recordId3);
+        when(mockRecord3.getName()).thenReturn(recordName3);
+
+        when(mockedUnfiledRecordFolderAPI.createUnfiledRecordFolderChild(any(UnfiledContainerChild.class), eq("folderId"))).thenReturn(mockRecord1)
+                                                                                                                           .thenReturn(mockRecord2)
+                                                                                                                           .thenReturn(mockRecord3);
 
         File mockedFile = mock(File.class);
         when(mockedTestFileService.getFile()).thenReturn(mockedFile);
@@ -482,7 +508,7 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
     }
 
     @Test
-    public void testUploadRecordsInUnfiledRecordFolder() throws Exception
+    public void testUploadRecordsInUnfiledContainer() throws Exception
     {
         int recordsToCreate = 3;
         loadUnfiledRecords.setEventNameUnfiledRecordsLoaded("unfiledRecordsLoaded");
@@ -508,6 +534,28 @@ public class LoadUnfiledRecordsUnitTest implements RMEventConstants
         UnfiledContainer mockedFilePlanComponent = mock(UnfiledContainer.class);
         when(mockedFilePlanComponent.getId()).thenReturn("folderId");
         when(mockedUnfiledContainerAPI.getUnfiledContainer("folderId")).thenReturn(mockedFilePlanComponent);
+
+        UnfiledContainerChild mockRecord1 = mock(UnfiledContainerChild.class);
+        String recordId1 = "recordId1";
+        String recordName1= "recordName1";
+        when(mockRecord1.getId()).thenReturn(recordId1);
+        when(mockRecord1.getName()).thenReturn(recordName1);
+
+        UnfiledContainerChild mockRecord2 = mock(UnfiledContainerChild.class);
+        String recordId2 = "recordId2";
+        String recordName2= "recordName2";
+        when(mockRecord2.getId()).thenReturn(recordId2);
+        when(mockRecord2.getName()).thenReturn(recordName2);
+
+        UnfiledContainerChild mockRecord3 = mock(UnfiledContainerChild.class);
+        String recordId3 = "recordId3";
+        String recordName3= "recordName3";
+        when(mockRecord3.getId()).thenReturn(recordId3);
+        when(mockRecord3.getName()).thenReturn(recordName3);
+
+        when(mockedUnfiledContainerAPI.createUnfiledContainerChild(any(UnfiledContainerChild.class), eq("folderId"))).thenReturn(mockRecord1)
+                                                                                                                     .thenReturn(mockRecord2)
+                                                                                                                     .thenReturn(mockRecord3);
 
         File mockedFile = mock(File.class);
         when(mockedTestFileService.getFile()).thenReturn(mockedFile);
