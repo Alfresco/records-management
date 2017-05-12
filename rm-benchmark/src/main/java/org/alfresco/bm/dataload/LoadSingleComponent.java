@@ -241,7 +241,7 @@ public class LoadSingleComponent extends RMBaseEventProcessor
             // Create record
             super.resumeTimer();
             //TODO uncomment this and remove createRecord when RM-4564 issue is fixed
-            //uploadElectronicRecordInRecordFolder(container, userModel, RECORD_NAME_IDENTIFIER, delay);
+            //uploadElectronicRecordInRecordFolder(folder, userModel, RECORD_NAME_IDENTIFIER, delay);
             createNonElectonicRecordInRecordFolder(folder, userModel, RECORD_NAME_IDENTIFIER, delay);
             super.suspendTimer();
 

@@ -25,6 +25,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+//import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -88,6 +89,8 @@ public class LoadRecordUnitTest extends LoadSingleComponentUnitTest
 
         //TODO uncomment this when RM-4564 issue is fixed
 //        verify(mockedTestFileService, times(1)).getFile();
+//        verify(mockedRecordFolderAPI, times(1)).createRecord(any(Record.class), eq("folderId"), any(File.class));
+
         verify(mockedRecordFolderAPI, never()).createRecord(any(Record.class), eq("folderId"), any(File.class));
 
         verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
@@ -175,9 +178,9 @@ public class LoadRecordUnitTest extends LoadSingleComponentUnitTest
         EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
 
         //TODO uncomment this when RM-4564 issue is fixed
-//        verify(mockedTestFileService, times(3)).getFile();
-//        verify(mockedRecordFolderAPI, times(3)).createRecord(any(Record.class), eq("folderId"), any(File.class));
-//        verify(mockedFileFolderService, times(3)).incrementFileCount(any(String.class), any(String.class), any(Long.class));
+//        verify(mockedTestFileService, times(1)).getFile();
+//        verify(mockedRecordFolderAPI, times(1)).createRecord(any(Record.class), eq("folderId"), any(File.class));
+//        verify(mockedFileFolderService, times(1)).incrementFileCount(any(String.class), any(String.class), any(Long.class));
 
         assertEquals(true, result.isSuccess());
         DBObject data = (DBObject) result.getData();
