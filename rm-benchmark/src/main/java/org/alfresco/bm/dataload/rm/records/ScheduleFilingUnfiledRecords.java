@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.UUID;
 
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
@@ -51,7 +50,7 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
     public static final String DONE_EVENT_MSG = "Filing completed.  Raising 'done' event.";
     public static final String FILING_UNFILED_RECORDS_NOT_WANTED_MSG = "Filing unfiled records not wanted.";
     private static final String DEFAULT_EVENT_NAME_RESCHEDULE_SELF = "scheduleFilingUnfiledRecords";
-    private static final String DEFAULT_EVENT_NAME_FILE_UNFILED_RECORDS = "fileUnfiledRecords";
+    private static final String DEFAULT_EVENT_NAME_FILE_UNFILED_RECORD = "fileUnfiledRecord";
     private static final String DEFAULT_EVENT_NAME_COMPLETE = "filingUnfiledRecordsComplete";
     private boolean fileUnfiledRecords = false;
     private Integer maxActiveLoaders;
@@ -60,7 +59,7 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
     private List<String> fileFromUnfiledPaths;
 
     private Integer recordFilingLimit;
-    private String eventNameFileUnfiledRecords = DEFAULT_EVENT_NAME_FILE_UNFILED_RECORDS;
+    private String eventNameFileUnfiledRecords = DEFAULT_EVENT_NAME_FILE_UNFILED_RECORD;
     private String eventNameComplete = DEFAULT_EVENT_NAME_COMPLETE;
     private String eventNameRescheduleSelf = DEFAULT_EVENT_NAME_RESCHEDULE_SELF;
 
@@ -224,8 +223,8 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
             // Schedule a load for each folder
             for (FolderData emptyFolder : emptyFolders)
             {
-                int recordsToCreate = mapOfRecordsPerRecordFolder.get(emptyFolder) - (int) emptyFolder.getFileCount();
-                if (recordsToCreate <= 0)
+                int recordsToFile = mapOfRecordsPerRecordFolder.get(emptyFolder) - (int) emptyFolder.getFileCount();
+                if (recordsToFile <= 0)
                 {
                     mapOfRecordsPerRecordFolder.remove(emptyFolder);
                 }
@@ -233,41 +232,63 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
                 {
                     try
                     {
-                        List<String> recordIdsToLoad = getRecordIdsToLoad(recordsToCreate);
-                        int availableRecordsToLoad = recordIdsToLoad.size();
-                        // no other records found for filing, break here
-                        if(availableRecordsToLoad == 0)
+                        List<String> listOfUnfiledRecordFoldersPaths = null;
+                        if(fileFromUnfiledPaths !=null && fileFromUnfiledPaths.size() > 0)
                         {
-                            mapOfRecordsPerRecordFolder = null;
-                            break;
+                            listOfUnfiledRecordFoldersPaths = getListOfUnfiledRecordFoldersPaths();
                         }
-                        // Create a lock folder that has too many files and folders so that it won't be picked up
-                        // by this process in subsequent trawls
-                        String lockPath = emptyFolder.getPath() + "/locked";
-                        FolderData lockFolder = new FolderData(UUID.randomUUID().toString(), emptyFolder.getContext(),
-                                    lockPath, Long.MAX_VALUE, Long.MAX_VALUE);
-                        fileFolderService.createNewFolder(lockFolder);
-                        // We locked this, so the load can be scheduled.
-                        // The loader will remove the lock when it completes
-                        DBObject loadData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, emptyFolder.getContext())
-                                    .add(FIELD_PATH, emptyFolder.getPath())
-                                    .add(FIELD_RECORDS_TO_FILE, recordIdsToLoad)
-                                    .get();
-                        Event loadEvent = new Event(getEventNameFileUnfiledRecords(), loadData);
-                        // Add the event to the list
-                        nextEvents.add(loadEvent);
-                        // found less than requested unfiled records for filing, break here, after the event for loading existing ones was scheduled for filing
-                        if(availableRecordsToLoad > 0 && availableRecordsToLoad < recordsToCreate)
+                        boolean notEnoughRecordsInDb = false;
+                        int i;
+                        for (i = 0; i < recordsToFile; i++)
                         {
-                            mapOfRecordsPerRecordFolder = null;
-                            break;
+                            RecordData randomRecord = recordService.getRandomRecord(ExecutionState.UNFILED_RECORD_DECLARED.name(), listOfUnfiledRecordFoldersPaths);
+
+                            if(randomRecord == null)
+                            {
+                                notEnoughRecordsInDb = true;
+                                break;
+                            }
+                            DBObject loadData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, emptyFolder.getContext())
+                                        .add(FIELD_PATH, emptyFolder.getPath())
+                                        .add(FIELD_LOAD_OPERATION, FILE_RECORD_OPERATION)
+                                        .add(FIELD_RECORD_ID, randomRecord.getId())
+                                        .get();
+                            Event loadEvent = new Event(getEventNameFileUnfiledRecords(), loadData);
+                            // Each load event must be associated with a session
+                            String sessionId = sessionService.startSession(loadData);
+                            loadEvent.setSessionId(sessionId);
+                            // Add the event to the list
+                            nextEvents.add(loadEvent);
+
+                            randomRecord.setExecutionState(ExecutionState.UNFILED_RECORD_SCHEDULED_FOR_FILING);
+                            recordService.updateRecord(randomRecord);
+                            // Check if we have enough
+                            if (nextEvents.size() >= loaderSessionsToCreate)
+                            {
+                                break;
+                            }
                         }
-                        mapOfRecordsPerRecordFolder.remove(emptyFolder);
+
+                        if (i == recordsToFile) // all records prepared for this folder
+                        {
+                            mapOfRecordsPerRecordFolder.remove(emptyFolder);
+                        }
+                        else//did not reached the end of the for
+                        {
+                            if(notEnoughRecordsInDb)//exited because there are no more records to file in mongoDB
+                            {
+                                mapOfRecordsPerRecordFolder = null;
+                                break;
+                            }
+                            else//exited because reached maximum active loaders
+                            {
+                                mapOfRecordsPerRecordFolder.put(emptyFolder, mapOfRecordsPerRecordFolder.get(emptyFolder) - i-1);
+                            }
+                        }
                     }
                     catch (Exception e)
                     {
                         mapOfRecordsPerRecordFolder.remove(emptyFolder);
-                        // The lock was already applied; find another
                         continue;
                     }
                 }
@@ -278,35 +299,6 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
                 }
             }
         }
-    }
-
-    /**
-     * Helper method for obtaining the id's of the random unfiled records to be filed in one record folder.
-     *
-     * @param recordsToFile the number of unfiled record to file in one folder
-     * @return the list of id's of random unfiled records to file
-     */
-    private List<String> getRecordIdsToLoad(int recordsToFile)
-    {
-        List<String> unfiledRecordsIdsToFile = new ArrayList<>();
-        List<String> listOfUnfiledRecordFoldersPaths = null;
-        if(fileFromUnfiledPaths !=null && fileFromUnfiledPaths.size() > 0)
-        {
-            listOfUnfiledRecordFoldersPaths = getListOfUnfiledRecordFoldersPaths();
-        }
-        for (int i = 0; i < recordsToFile; i++)
-        {
-            RecordData randomRecord = recordService.getRandomRecord(ExecutionState.UNFILED_RECORD_DECLARED.name(), listOfUnfiledRecordFoldersPaths);
-
-            if(randomRecord == null)
-            {
-                break;
-            }
-            unfiledRecordsIdsToFile.add(randomRecord.getId());
-            randomRecord.setExecutionState(ExecutionState.UNFILED_RECORD_SCHEDULED_FOR_FILING);
-            recordService.updateRecord(randomRecord);
-        }
-        return unfiledRecordsIdsToFile;
     }
 
     /**

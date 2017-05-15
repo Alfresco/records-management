@@ -118,7 +118,10 @@ public class LoadSingleComponent extends RMBaseEventProcessor
         {
             return loadRecordOperation(folder);
         }
-        return null;
+        else
+        {
+            throw new IllegalStateException("Unsuported operation: " + operation);
+        }
     }
 
     private EventResult fileRecordOperation(FolderData folder, DBObject dataObj)

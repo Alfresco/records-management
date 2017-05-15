@@ -304,17 +304,9 @@
     <property name="recordFilingLimit" value="${rm.recordFilingLimit}" />
     <property name="fileFromUnfiledPaths" value="${rm.fileFromUnfiledPaths}" />
     <property name="chart" value="false" />
-    <property name="eventNameFileUnfiledRecords" value="fileUnfiledRecords"/>
+    <property name="eventNameFileUnfiledRecords" value="fileUnfiledRecord"/>
     <property name="eventNameComplete" value="filingUnfiledRecordsComplete"/>
     <property name="eventNameRescheduleSelf" value="scheduleFilingUnfiledRecords"/>
-  </bean>
-
-  <bean id="event.fileUnfiledRecords" class="org.alfresco.bm.dataload.rm.records.FileUnfiledRecords" parent="rmBaseEventProcessor">
-    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
-    <property name="eventNameComplete" value="unfiledRecordsFiled"/>
-    <property name="eventNameRescheduleSelf" value="fileUnfiledRecords"/>
-    <property name="eventNameFileUnfiledRecord" value="fileUnfiledRecord"/>
-    <property name="chart" value="false" />
   </bean>
 
   <bean id="event.fileUnfiledRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
@@ -323,8 +315,6 @@
   </bean>
 
   <bean id="producer.unfiledRecordFiled" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
-
-  <bean id="producer.unfiledRecordsFiled" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
   <bean id="producer.filingUnfiledRecordsComplete" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 </beans>

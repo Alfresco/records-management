@@ -165,13 +165,29 @@ public class LoadSingleComponentUnitTest implements RMEventConstants
     }
 
     @Test(expected=IllegalStateException.class)
+    public void testWithUnsuportedOperation() throws Exception
+    {
+        Event mockedEvent = mock(Event.class);
+        DBObject mockedData = mock(DBObject.class);
+        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
+        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
+        when(mockedData.get(FIELD_LOAD_OPERATION)).thenReturn("unsuportedOperation");
+        FolderData mockedFolder = mock(FolderData.class);
+        when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
+        when(mockedEvent.getData()).thenReturn(mockedData);
+        when(mockedEvent.getSessionId()).thenReturn("someSessionId");
+        loadSingleComponent.processEvent(mockedEvent, new StopWatch());
+    }
+
+
+    @Test(expected=IllegalStateException.class)
     public void testInexistentFolderForContextAndPath() throws Exception
     {
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
         when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-        when(mockedData.get(FIELD_LOAD_OPERATION)).thenReturn("someOperation");
+        when(mockedData.get(FIELD_LOAD_OPERATION)).thenReturn(LOAD_RECORD_OPERATION);
         when(mockedEvent.getData()).thenReturn(mockedData);
         when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(null);
 
@@ -185,7 +201,7 @@ public class LoadSingleComponentUnitTest implements RMEventConstants
         DBObject mockedData = mock(DBObject.class);
         when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
         when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-        when(mockedData.get(FIELD_LOAD_OPERATION)).thenReturn("someOperation");
+        when(mockedData.get(FIELD_LOAD_OPERATION)).thenReturn(LOAD_RECORD_OPERATION);
         when(mockedEvent.getData()).thenReturn(mockedData);
         FolderData mockedFolder = mock(FolderData.class);
         when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);

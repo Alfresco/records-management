@@ -185,7 +185,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         for(int i = 0; i < recordsNumber ; i++)
         {
-            Event event = result.getNextEvents().get(0);
+            Event event = result.getNextEvents().get(i);
             assertEquals(EVENT_LOAD_RECORD, event.getName());
             DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
@@ -236,7 +236,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         for(int i = 0; i < recordsNumber ; i++)
         {
-            Event event = result.getNextEvents().get(0);
+            Event event = result.getNextEvents().get(i);
             assertEquals(EVENT_LOAD_RECORD, event.getName());
             DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
@@ -293,7 +293,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         for(int i = 0; i < recordsNumber ; i++)
         {
-            Event event = result.getNextEvents().get(0);
+            Event event = result.getNextEvents().get(i);
             assertEquals(EVENT_LOAD_RECORD, event.getName());
             DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
@@ -351,7 +351,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         for(int i = 0; i < recordsNumber ; i++)
         {
-            Event event = result.getNextEvents().get(0);
+            Event event = result.getNextEvents().get(i);
             assertEquals(EVENT_LOAD_RECORD, event.getName());
             DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
@@ -468,7 +468,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         for(int i = 0; i < maxActiveLoaders ; i++)
         {
-            Event event = result.getNextEvents().get(0);
+            Event event = result.getNextEvents().get(i);
             assertEquals(EVENT_LOAD_RECORD, event.getName());
             DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
@@ -568,7 +568,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         for(int i = 0; i < recordsNumber ; i++)
         {
-            Event event = result.getNextEvents().get(0);
+            Event event = result.getNextEvents().get(i);
             assertEquals(EVENT_LOAD_RECORD, event.getName());
             DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
@@ -640,7 +640,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         for(int i = 0; i < recordsNumber ; i++)
         {
-            Event event = result.getNextEvents().get(0);
+            Event event = result.getNextEvents().get(i);
             assertEquals(EVENT_LOAD_RECORD, event.getName());
             DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
@@ -695,7 +695,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         for(int i = 0; i < recordsNumber ; i++)
         {
-            Event event = result.getNextEvents().get(0);
+            Event event = result.getNextEvents().get(i);
             assertEquals(EVENT_LOAD_RECORD, event.getName());
             DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);

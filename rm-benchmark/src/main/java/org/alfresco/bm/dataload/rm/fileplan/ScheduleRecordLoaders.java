@@ -286,7 +286,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
                     catch (Exception e)
                     {
                         mapOfRecordsPerRecordFolder.remove(emptyFolder);
-                        // The lock was already applied; find another
                         continue;
                     }
                 }
