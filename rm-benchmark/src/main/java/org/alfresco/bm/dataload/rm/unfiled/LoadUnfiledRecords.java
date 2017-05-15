@@ -128,12 +128,10 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
             //Create records
-            if(recordsToCreate > 0)
+            if (recordsToCreate > 0)
             {
                 super.resumeTimer();
-                //TODO uncomment this and remove createRecord when RM-4564 issue is fixed
-                //uploadElectronicRecordInUnfiledContext(container, userModel, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
-                createNonElectonicRecordInUnfiledContext(container, userModel, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
+                uploadElectronicRecordInUnfiledContext(container, userModel, recordsToCreate, RECORD_NAME_IDENTIFIER, loadUnfiledRecordDelay);
                 super.suspendTimer();
                 // Clean up the lock
                 String lockedPath = container.getPath() + "/locked";
@@ -143,9 +141,9 @@ public class LoadUnfiledRecords extends RMBaseEventProcessor
             DBObject eventData = BasicDBObjectBuilder.start()
                         .add(FIELD_CONTEXT, container.getContext())
                         .add(FIELD_PATH, container.getPath()).get();
-           Event nextEvent = new Event(eventNameUnfiledRecordsLoaded, eventData);
+            Event nextEvent = new Event(eventNameUnfiledRecordsLoaded, eventData);
 
-           scheduleEvents.add(nextEvent);
+            scheduleEvents.add(nextEvent);
             DBObject resultData = BasicDBObjectBuilder.start()
                         .add("msg", "Created " + recordsToCreate + " records.")
                         .add("path", container.getPath())
