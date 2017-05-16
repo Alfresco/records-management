@@ -40,8 +40,10 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 
 /**
- * Common event for loading one single rm component. This event can load: one root record category, one sub-category, one record folder, one record, one root unfiled record folder,
- * one child unfiled record folder, one unfiled record. The event can also file one unfiled record.
+ * Common event for loading one single rm component. This event will load: one root record category, one sub-category, one record folder, one record, one root unfiled record folder,
+ * one child unfiled record folder, one unfiled record. The will also file one unfiled record.
+ *
+ * At the moment only loading unfiled record, loading record and filing unfiled record operations are supported.
  *
  * @author Silviu Dinuta
  * @since 2.6
@@ -124,6 +126,13 @@ public class LoadSingleComponent extends RMBaseEventProcessor
         }
     }
 
+    /**
+     * Helper method to file the unfiled record with specified id in specified record folder.
+     *
+     * @param folder - the record folded to file unfiled record in
+     * @param dataObj DBObject - query object that contains the id of the unfiled record to be filed
+     * @return EventResult - the filing result or error if there was an exception on filing
+     */
     private EventResult fileRecordOperation(FolderData folder, DBObject dataObj)
     {
         String recordId = (String) dataObj.get(FIELD_RECORD_ID);
@@ -186,6 +195,12 @@ public class LoadSingleComponent extends RMBaseEventProcessor
         }
     }
 
+    /**
+     * Helper method to load one unfiled record in specified unfiled record folder, or record container.
+     *
+     * @param folder - the unfiled record container or unfiled record folded to load record in
+     * @return EventResult - the loading result or error if there was an exception on loading
+     */
     private EventResult loadUnfiledRecordOperation(FolderData folder)
     {
         UserData user = getRandomUser(logger);
@@ -230,6 +245,12 @@ public class LoadSingleComponent extends RMBaseEventProcessor
         }
     }
 
+    /**
+     * Helper method to load one record in specified record folder.
+     *
+     * @param folder - the record folded to load record in
+     * @return EventResult - the loading result or error if there was an exception on loading
+     */
     private EventResult loadRecordOperation(FolderData folder)
     {
         UserData user = getRandomUser(logger);
