@@ -197,9 +197,7 @@ public class LoadSingleComponent extends RMBaseEventProcessor
             List<Event> scheduleEvents = new ArrayList<Event>();
             //Create record
             super.resumeTimer();
-            //TODO uncomment this and remove createRecord when RM-4564 issue is fixed
-            //uploadElectronicRecordInUnfiledContext(folder, userModel, RECORD_NAME_IDENTIFIER, delay);
-            createNonElectonicRecordInUnfiledContext(folder, userModel, RECORD_NAME_IDENTIFIER, delay);
+            uploadElectronicRecordInUnfiledContext(folder, userModel, RECORD_NAME_IDENTIFIER, delay);
             super.suspendTimer();
 
             DBObject eventData = BasicDBObjectBuilder.start()
@@ -243,9 +241,7 @@ public class LoadSingleComponent extends RMBaseEventProcessor
             List<Event> scheduleEvents = new ArrayList<Event>();
             // Create record
             super.resumeTimer();
-            //TODO uncomment this and remove createRecord when RM-4564 issue is fixed
-            //uploadElectronicRecordInRecordFolder(folder, userModel, RECORD_NAME_IDENTIFIER, delay);
-            createNonElectonicRecordInRecordFolder(folder, userModel, RECORD_NAME_IDENTIFIER, delay);
+            uploadElectronicRecordInRecordFolder(folder, userModel, RECORD_NAME_IDENTIFIER, delay);
             super.suspendTimer();
 
             DBObject eventData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, folder.getContext())

@@ -25,7 +25,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-//import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -85,15 +85,12 @@ public class LoadUnfiledRecordUnitTest extends LoadSingleComponentUnitTest
 
         File mockedFile = mock(File.class);
         when(mockedTestFileService.getFile()).thenReturn(mockedFile);
-        //TODO uncomment this and remove createFilePlanComponent call when RM-4564 issue is fixed
-//        Mockito.doThrow(new Exception("someError")).when(mockedUnfiledContainerAPI).uploadRecord(any(UnfiledContainerChild.class), any(String.class), any(File.class));
-        Mockito.doThrow(new Exception("someError")).when(mockedUnfiledContainerAPI).createUnfiledContainerChild(any(UnfiledContainerChild.class), any(String.class));
+        Mockito.doThrow(new Exception("someError")).when(mockedUnfiledContainerAPI).uploadRecord(any(UnfiledContainerChild.class), any(String.class), any(File.class));
 
         mockSiteAndUserData();
         EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
-        //TODO uncomment this when RM-4564 issue is fixed
-//        verify(mockedTestFileService, times(1)).getFile();
-//        verify(mockedUnfiledContainerAPI, times(1)).uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class));
+        verify(mockedTestFileService, times(1)).getFile();
+        verify(mockedUnfiledContainerAPI, times(1)).uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class));
 
         verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
 
@@ -135,16 +132,13 @@ public class LoadUnfiledRecordUnitTest extends LoadSingleComponentUnitTest
 
         File mockedFile = mock(File.class);
         when(mockedTestFileService.getFile()).thenReturn(mockedFile);
-        //TODO uncomment this and remove createFilePlanComponent call when RM-4564 issue is fixed
-//        Mockito.doThrow(new Exception("someError")).when(mockedUnfiledRecordFolderAPI).uploadRecord(any(UnfiledContainerChild.class), any(String.class), any(File.class));
-        Mockito.doThrow(new Exception("someError")).when(mockedUnfiledRecordFolderAPI).createUnfiledRecordFolderChild(any(UnfiledContainerChild.class), any(String.class));
+        Mockito.doThrow(new Exception("someError")).when(mockedUnfiledRecordFolderAPI).uploadRecord(any(UnfiledContainerChild.class), any(String.class), any(File.class));
 
         mockSiteAndUserData();
         EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
 
-        //TODO uncomment this when RM-4564 issue is fixed
-//        verify(mockedTestFileService, times(1)).getFile();
-//        verify(mockedUnfiledRecordFolderAPI, times(1)).uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class));
+        verify(mockedTestFileService, times(1)).getFile();
+        verify(mockedUnfiledRecordFolderAPI, times(1)).uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class));
 
         verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
 
@@ -160,91 +154,89 @@ public class LoadUnfiledRecordUnitTest extends LoadSingleComponentUnitTest
         assertEquals(0, result.getNextEvents().size());
     }
 
-    //TODO uncomment this when RM-4564 issue is fixed
-//    @Test
-//    public void testLoadUnfiledRecordOperationInUnfiledContainerWithNoFileException() throws Exception
-//    {
-//        loadSingleComponent.setEventNameComplete(EVENT_UNFILED_RECORD_LOADED);
-//        Event mockedEvent = mock(Event.class);
-//        DBObject mockedData = mock(DBObject.class);
-//        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
-//        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-//        when(mockedData.get(FIELD_LOAD_OPERATION)).thenReturn(LOAD_UNFILED_RECORD_OPERATION);
-//        when(mockedEvent.getData()).thenReturn(mockedData);
-//
-//        FolderData mockedFolder = mock(FolderData.class);
-//        when(mockedFolder.getId()).thenReturn("folderId");
-//        when(mockedFolder.getPath()).thenReturn("/aPath");
-//        when(mockedFolder.getContext()).thenReturn("someContext");
-//        when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
-//        when(mockedEvent.getSessionId()).thenReturn("someId");
-//
-//        when(mockedRestApiFactory.getUnfiledContainersAPI(any(UserModel.class))).thenReturn(mockedUnfiledContainerAPI);
-//        when(mockedRestApiFactory.getUnfiledRecordFoldersAPI(any(UserModel.class))).thenReturn(mockedUnfiledRecordFolderAPI);
-//
-//        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH)).thenReturn(mockedFolder);
-//
-//        UnfiledContainer mockedFilePlanComponent = mock(UnfiledContainer.class);
-//        when(mockedUnfiledContainerAPI.getUnfiledContainer("folderId")).thenReturn(mockedFilePlanComponent);
-//
-//        mockSiteAndUserData();
-//        EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
-//        verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
-//        verify(mockedTestFileService, times(1)).getFile();
-//        verify(mockedUnfiledContainerAPI, never()).uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class));
-//        verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
-//
-//        assertEquals(false, result.isSuccess());
-//        DBObject data = (DBObject) result.getData();
-//        assertNotNull(data.get("error"));
-//        assertEquals("No test files exist for upload: mockedTestFileService", data.get("error"));
-//        assertEquals("aUser", data.get("username"));
-//        assertEquals(mockedFolder.getPath(), data.get("path"));
-//        assertNotNull(data.get("stack"));
-//        assertEquals(0, result.getNextEvents().size());
-//    }
+    @Test
+    public void testLoadUnfiledRecordOperationInUnfiledContainerWithNoFileException() throws Exception
+    {
+        loadSingleComponent.setEventNameComplete(EVENT_UNFILED_RECORD_LOADED);
+        Event mockedEvent = mock(Event.class);
+        DBObject mockedData = mock(DBObject.class);
+        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
+        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
+        when(mockedData.get(FIELD_LOAD_OPERATION)).thenReturn(LOAD_UNFILED_RECORD_OPERATION);
+        when(mockedEvent.getData()).thenReturn(mockedData);
 
-    //TODO uncomment this when RM-4564 issue is fixed
-//    @Test
-//    public void testLoadUnfiledRecordOperationInUnfiledRecordFolderWithNoFileException() throws Exception
-//    {
-//        loadSingleComponent.setEventNameComplete(EVENT_UNFILED_RECORD_LOADED);
-//        Event mockedEvent = mock(Event.class);
-//        DBObject mockedData = mock(DBObject.class);
-//        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
-//        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
-//        when(mockedData.get(FIELD_LOAD_OPERATION)).thenReturn(LOAD_UNFILED_RECORD_OPERATION);
-//        when(mockedEvent.getData()).thenReturn(mockedData);
-//
-//        FolderData mockedFolder = mock(FolderData.class);
-//        when(mockedFolder.getId()).thenReturn("folderId");
-//        when(mockedFolder.getPath()).thenReturn("/aPath");
-//        when(mockedFolder.getContext()).thenReturn("someContext");
-//        when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
-//        when(mockedEvent.getSessionId()).thenReturn("someId");
-//
-//        when(mockedRestApiFactory.getUnfiledContainersAPI(any(UserModel.class))).thenReturn(mockedUnfiledContainerAPI);
-//        when(mockedRestApiFactory.getUnfiledRecordFoldersAPI(any(UserModel.class))).thenReturn(mockedUnfiledRecordFolderAPI);
-//
-//        FolderData mockedFolder1 = mock(FolderData.class);
-//        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH)).thenReturn(mockedFolder1);
-//
-//        mockSiteAndUserData();
-//        EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
-//        verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
-//        verify(mockedTestFileService, times(1)).getFile();
-//        verify(mockedUnfiledRecordFolderAPI, never()).uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class));
-//        verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
-//
-//        assertEquals(false, result.isSuccess());
-//        DBObject data = (DBObject) result.getData();
-//        assertNotNull(data.get("error"));
-//        assertEquals("No test files exist for upload: mockedTestFileService", data.get("error"));
-//        assertEquals("aUser", data.get("username"));
-//        assertEquals(mockedFolder.getPath(), data.get("path"));
-//        assertNotNull(data.get("stack"));
-//        assertEquals(0, result.getNextEvents().size());
-//    }
+        FolderData mockedFolder = mock(FolderData.class);
+        when(mockedFolder.getId()).thenReturn("folderId");
+        when(mockedFolder.getPath()).thenReturn("/aPath");
+        when(mockedFolder.getContext()).thenReturn("someContext");
+        when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
+        when(mockedEvent.getSessionId()).thenReturn("someId");
+
+        when(mockedRestApiFactory.getUnfiledContainersAPI(any(UserModel.class))).thenReturn(mockedUnfiledContainerAPI);
+        when(mockedRestApiFactory.getUnfiledRecordFoldersAPI(any(UserModel.class))).thenReturn(mockedUnfiledRecordFolderAPI);
+
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH)).thenReturn(mockedFolder);
+
+        UnfiledContainer mockedFilePlanComponent = mock(UnfiledContainer.class);
+        when(mockedUnfiledContainerAPI.getUnfiledContainer("folderId")).thenReturn(mockedFilePlanComponent);
+
+        mockSiteAndUserData();
+        EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
+        verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
+        verify(mockedTestFileService, times(1)).getFile();
+        verify(mockedUnfiledContainerAPI, never()).uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class));
+        verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
+
+        assertEquals(false, result.isSuccess());
+        DBObject data = (DBObject) result.getData();
+        assertNotNull(data.get("error"));
+        assertEquals("No test files exist for upload: mockedTestFileService", data.get("error"));
+        assertEquals("aUser", data.get("username"));
+        assertEquals(mockedFolder.getPath(), data.get("path"));
+        assertNotNull(data.get("stack"));
+        assertEquals(0, result.getNextEvents().size());
+    }
+
+    @Test
+    public void testLoadUnfiledRecordOperationInUnfiledRecordFolderWithNoFileException() throws Exception
+    {
+        loadSingleComponent.setEventNameComplete(EVENT_UNFILED_RECORD_LOADED);
+        Event mockedEvent = mock(Event.class);
+        DBObject mockedData = mock(DBObject.class);
+        when(mockedData.get(FIELD_CONTEXT)).thenReturn("someContext");
+        when(mockedData.get(FIELD_PATH)).thenReturn("/aPath");
+        when(mockedData.get(FIELD_LOAD_OPERATION)).thenReturn(LOAD_UNFILED_RECORD_OPERATION);
+        when(mockedEvent.getData()).thenReturn(mockedData);
+
+        FolderData mockedFolder = mock(FolderData.class);
+        when(mockedFolder.getId()).thenReturn("folderId");
+        when(mockedFolder.getPath()).thenReturn("/aPath");
+        when(mockedFolder.getContext()).thenReturn("someContext");
+        when(mockedFileFolderService.getFolder("someContext", "/aPath")).thenReturn(mockedFolder);
+        when(mockedEvent.getSessionId()).thenReturn("someId");
+
+        when(mockedRestApiFactory.getUnfiledContainersAPI(any(UserModel.class))).thenReturn(mockedUnfiledContainerAPI);
+        when(mockedRestApiFactory.getUnfiledRecordFoldersAPI(any(UserModel.class))).thenReturn(mockedUnfiledRecordFolderAPI);
+
+        FolderData mockedFolder1 = mock(FolderData.class);
+        when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH)).thenReturn(mockedFolder1);
+
+        mockSiteAndUserData();
+        EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
+        verify(mockedFileFolderService, never()).deleteFolder(mockedFolder.getContext(), mockedFolder.getPath() + "/locked", false);
+        verify(mockedTestFileService, times(1)).getFile();
+        verify(mockedUnfiledRecordFolderAPI, never()).uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class));
+        verify(mockedFileFolderService, never()).incrementFileCount(any(String.class), any(String.class), any(Long.class));
+
+        assertEquals(false, result.isSuccess());
+        DBObject data = (DBObject) result.getData();
+        assertNotNull(data.get("error"));
+        assertEquals("No test files exist for upload: mockedTestFileService", data.get("error"));
+        assertEquals("aUser", data.get("username"));
+        assertEquals(mockedFolder.getPath(), data.get("path"));
+        assertNotNull(data.get("stack"));
+        assertEquals(0, result.getNextEvents().size());
+    }
 
     @Test
     public void testLoadUnfiledRecordOperationInUnfiledRecordFolder() throws Exception
@@ -277,11 +269,8 @@ public class LoadUnfiledRecordUnitTest extends LoadSingleComponentUnitTest
         when(mockRecord1.getId()).thenReturn(recordId1);
         when(mockRecord1.getName()).thenReturn(recordName1);
 
-        when(mockedUnfiledRecordFolderAPI.createUnfiledRecordFolderChild(any(UnfiledContainerChild.class), eq("folderId"))).thenReturn(mockRecord1)
-                                                                                                                           .thenReturn(null);
-      //TODO uncomment this when RM-4564 issue is fixed
-//        when(mockedUnfiledRecordFolderAPI.uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class))).thenReturn(mockRecord1)
-//                                                                                                                          .thenReturn(null);
+        when(mockedUnfiledRecordFolderAPI.uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class))).thenReturn(mockRecord1)
+                                                                                                                          .thenReturn(null);
 
 
         File mockedFile = mock(File.class);
@@ -289,10 +278,9 @@ public class LoadUnfiledRecordUnitTest extends LoadSingleComponentUnitTest
 
         mockSiteAndUserData();
         EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
-        //TODO uncomment this when RM-4564 issue is fixed
-//        verify(mockedTestFileService, times(1)).getFile();
-//        verify(mockedUnfiledRecordFolderAPI, times(1)).uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class));
-//        verify(mockedFileFolderService, times(1)).incrementFileCount(any(String.class), any(String.class), any(Long.class));
+        verify(mockedTestFileService, times(1)).getFile();
+        verify(mockedUnfiledRecordFolderAPI, times(1)).uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class));
+        verify(mockedFileFolderService, times(1)).incrementFileCount(any(String.class), any(String.class), any(Long.class));
 
         assertEquals(true, result.isSuccess());
         DBObject data = (DBObject) result.getData();
@@ -342,11 +330,8 @@ public class LoadUnfiledRecordUnitTest extends LoadSingleComponentUnitTest
         when(mockRecord1.getName()).thenReturn(recordName1);
 
 
-        when(mockedUnfiledContainerAPI.createUnfiledContainerChild(any(UnfiledContainerChild.class), eq("folderId"))).thenReturn(mockRecord1)
-                                                                                                                     .thenReturn(null);
-      //TODO uncomment this when RM-4564 issue is fixed
-//        when(mockedUnfiledContainerAPI.uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class))).thenReturn(mockRecord1)
-//        .thenReturn(null);
+        when(mockedUnfiledContainerAPI.uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class))).thenReturn(mockRecord1)
+        .thenReturn(null);
 
         File mockedFile = mock(File.class);
         when(mockedTestFileService.getFile()).thenReturn(mockedFile);
@@ -354,10 +339,9 @@ public class LoadUnfiledRecordUnitTest extends LoadSingleComponentUnitTest
         mockSiteAndUserData();
         EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
 
-        //TODO uncomment this when RM-4564 issue is fixed
-//        verify(mockedTestFileService, times(1)).getFile();
-//        verify(mockedUnfiledContainerAPI, times(1)).uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class));
-//        verify(mockedFileFolderService, times(1)).incrementFileCount(any(String.class), any(String.class), any(Long.class));
+        verify(mockedTestFileService, times(1)).getFile();
+        verify(mockedUnfiledContainerAPI, times(1)).uploadRecord(any(UnfiledContainerChild.class), eq("folderId"), any(File.class));
+        verify(mockedFileFolderService, times(1)).incrementFileCount(any(String.class), any(String.class), any(Long.class));
 
         assertEquals(true, result.isSuccess());
         DBObject data = (DBObject) result.getData();
