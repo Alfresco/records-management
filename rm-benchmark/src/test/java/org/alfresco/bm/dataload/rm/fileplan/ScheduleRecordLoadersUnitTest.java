@@ -45,10 +45,12 @@ import org.alfresco.rest.rm.community.model.recordcategory.RecordCategoryChild;
 import org.alfresco.rest.rm.community.requests.gscore.api.FilePlanAPI;
 import org.alfresco.rest.rm.community.requests.gscore.api.RecordCategoryAPI;
 import org.apache.commons.lang3.time.StopWatch;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
 
@@ -63,6 +65,12 @@ import com.mongodb.DBObject;
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 {
+    private static final String EVENT_COMPLETE = "loadingRecordsComplete";
+
+    private static final String EVENT_LOAD_RECORD = "loadRecord";
+
+    private static final String EVENT_SCHEDULE_RECORD_LOADERS = "scheduleRecordLoaders";
+
     @Mock
     private SessionService mockedSessionService;
 
@@ -83,6 +91,16 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
     @InjectMocks
     private ScheduleRecordLoaders scheduleRecordLoaders;
+
+    @Before
+    public void before()
+    {
+        MockitoAnnotations.initMocks(this);
+        scheduleRecordLoaders.setEventNameLoadingComplete(EVENT_COMPLETE);
+        scheduleRecordLoaders.setEventNameLoadRecords(EVENT_LOAD_RECORD);
+        scheduleRecordLoaders.setEventNameScheduleRecordLoaders(EVENT_SCHEDULE_RECORD_LOADERS);
+        scheduleRecordLoaders.setLoadCheckDelay(0L);
+    }
 
     @Test
     public void testUploadRecordsNotWanted() throws Exception
@@ -120,7 +138,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         assertEquals(true, result.isSuccess());
         assertEquals("Loading completed.  Raising 'done' event.",result.getData());
         assertEquals(1, result.getNextEvents().size());
-        assertEquals("loadingRecordsComplete", result.getNextEvents().get(0).getName());
+        assertEquals(EVENT_COMPLETE, result.getNextEvents().get(0).getName());
     }
 
     @Test
@@ -160,42 +178,21 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         verify(mockedFileFolderService, times(2)).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
 
-        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
-        // and if the number of records to create is 0 the event for loading will not be scheduled
-        int nextEventsSize = result.getNextEvents().size();
-        verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
-
         assertEquals(true, result.isSuccess());
-        assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
+        verify(mockedSessionService, times(recordsNumber)).startSession(any(DBObject.class));
+        assertEquals("Raised further " + (recordsNumber) + " events and rescheduled self.", result.getData());
+        assertEquals(recordsNumber + 1, result.getNextEvents().size());
 
-        Event firstEvent = result.getNextEvents().get(0);
-        if(nextEventsSize - 1 == 2)
+        for(int i = 0; i < recordsNumber ; i++)
         {
-            assertEquals("loadRecords", firstEvent.getName());
-            DBObject dataObj = (DBObject)firstEvent.getData();
+            Event event = result.getNextEvents().get(i);
+            assertEquals(EVENT_LOAD_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(path1, (String) dataObj.get(FIELD_PATH));
-            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-
-            Event secondEvent = result.getNextEvents().get(1);
-            assertEquals("loadRecords", secondEvent.getName());
-            dataObj = (DBObject)secondEvent.getData();
-            assertNotNull(dataObj);
-            assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(path2, (String) dataObj.get(FIELD_PATH));
-            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(recordsNumber, value1 + value2);
+            assertEquals(LOAD_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
         }
-        else
-        {
-            //in case that one of generated values is 0 we check that the scheduled event had created all records
-            DBObject dataObj = (DBObject)firstEvent.getData();
-            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(recordsNumber, value);
-        }
-        assertEquals("scheduleRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+        assertEquals(EVENT_SCHEDULE_RECORD_LOADERS, result.getNextEvents().get(recordsNumber).getName());
     }
 
     @Test
@@ -231,42 +228,22 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
+
         assertEquals(true, result.isSuccess());
+        verify(mockedSessionService, times(recordsNumber)).startSession(any(DBObject.class));
+        assertEquals("Raised further " + (recordsNumber) + " events and rescheduled self.", result.getData());
+        assertEquals(recordsNumber + 1, result.getNextEvents().size());
 
-        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
-        // and if the number of records to create is 0 the event for loading will not be scheduled
-        int nextEventsSize = result.getNextEvents().size();
-        verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
-        assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
-
-        Event firstEvent = result.getNextEvents().get(0);
-        if(nextEventsSize - 1 == 2)
+        for(int i = 0; i < recordsNumber ; i++)
         {
-            assertEquals("loadRecords", firstEvent.getName());
-            DBObject dataObj = (DBObject)firstEvent.getData();
+            Event event = result.getNextEvents().get(i);
+            assertEquals(EVENT_LOAD_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(entirePath1, (String) dataObj.get(FIELD_PATH));
-            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-
-            Event secondEvent = result.getNextEvents().get(1);
-            assertEquals("loadRecords", secondEvent.getName());
-            dataObj = (DBObject)secondEvent.getData();
-            assertNotNull(dataObj);
-            assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(entirePath2, (String) dataObj.get(FIELD_PATH));
-            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(recordsNumber, value1 + value2);
+            assertEquals(LOAD_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
         }
-        else
-        {
-            //in case that one of generated values is 0 we check that the scheduled event had created all records
-            DBObject dataObj = (DBObject)firstEvent.getData();
-            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(recordsNumber, value);
-        }
-        assertEquals("scheduleRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+        assertEquals(EVENT_SCHEDULE_RECORD_LOADERS, result.getNextEvents().get(recordsNumber).getName());
     }
 
     @Test
@@ -308,23 +285,22 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
         verify(mockedFileFolderService, times(1)).getChildFolders(eq(RECORD_CATEGORY_CONTEXT), any(String.class), any(Integer.class), any(Integer.class));
         verify(mockedFileFolderService, times(2)).getChildFolders(eq(RECORD_FOLDER_CONTEXT), any(String.class), any(Integer.class), any(Integer.class));
+
         assertEquals(true, result.isSuccess());
-        assertEquals(2, result.getNextEvents().size());
+        verify(mockedSessionService, times(recordsNumber)).startSession(any(DBObject.class));
+        assertEquals("Raised further " + (recordsNumber) + " events and rescheduled self.", result.getData());
+        assertEquals(recordsNumber + 1, result.getNextEvents().size());
 
-        verify(mockedFileFolderService, times(1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(1)).startSession(any(DBObject.class));
-        assertEquals("Raised further 1 events and rescheduled self.", result.getData());
-
-        Event firstEvent = result.getNextEvents().get(0);
-        assertEquals("loadRecords", firstEvent.getName());
-        DBObject dataObj = (DBObject)firstEvent.getData();
-        assertNotNull(dataObj);
-        assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-        assertEquals(entirePath2, (String) dataObj.get(FIELD_PATH));
-        int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-        assertEquals(recordsNumber, value);
-
-        assertEquals("scheduleRecordLoaders", result.getNextEvents().get(1).getName());
+        for(int i = 0; i < recordsNumber ; i++)
+        {
+            Event event = result.getNextEvents().get(i);
+            assertEquals(EVENT_LOAD_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
+            assertNotNull(dataObj);
+            assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+            assertEquals(LOAD_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
+        }
+        assertEquals(EVENT_SCHEDULE_RECORD_LOADERS, result.getNextEvents().get(recordsNumber).getName());
     }
 
     @Test
@@ -367,29 +343,28 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         verify(mockedFileFolderService, never()).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
         verify(mockedFileFolderService, times(1)).getChildFolders(eq(RECORD_CATEGORY_CONTEXT), any(String.class), any(Integer.class), any(Integer.class));
         verify(mockedFileFolderService, times(2)).getChildFolders(eq(RECORD_FOLDER_CONTEXT), any(String.class), any(Integer.class), any(Integer.class));
+
         assertEquals(true, result.isSuccess());
-        assertEquals(2, result.getNextEvents().size());
+        verify(mockedSessionService, times(recordsNumber)).startSession(any(DBObject.class));
+        assertEquals("Raised further " + (recordsNumber) + " events and rescheduled self.", result.getData());
+        assertEquals(recordsNumber + 1, result.getNextEvents().size());
 
-        verify(mockedFileFolderService, times(1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(1)).startSession(any(DBObject.class));
-        assertEquals("Raised further 1 events and rescheduled self.", result.getData());
-
-        Event firstEvent = result.getNextEvents().get(0);
-        assertEquals("loadRecords", firstEvent.getName());
-        DBObject dataObj = (DBObject)firstEvent.getData();
-        assertNotNull(dataObj);
-        assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-        assertEquals(childPath, (String) dataObj.get(FIELD_PATH));
-        int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-        assertEquals(recordsNumber, value);
-
-        assertEquals("scheduleRecordLoaders", result.getNextEvents().get(1).getName());
+        for(int i = 0; i < recordsNumber ; i++)
+        {
+            Event event = result.getNextEvents().get(i);
+            assertEquals(EVENT_LOAD_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
+            assertNotNull(dataObj);
+            assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+            assertEquals(LOAD_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
+        }
+        assertEquals(EVENT_SCHEDULE_RECORD_LOADERS, result.getNextEvents().get(recordsNumber).getName());
     }
 
     @Test
     public void testUploadRecordsWithNotExistentPreconfiguredPaths() throws Exception
     {
-        int maxActiveLoaders = 8;
+        int maxActiveLoaders = 3;
         int recordsNumber = 4;
         String configuredPath1 = "/e1/e2/e3";
         String configuredPath2 = "/e1/e2/e4";
@@ -487,41 +462,20 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         verify(mockedFileFolderService, times(4)).getFolder(any(String.class));
         assertEquals(true, result.isSuccess());
 
-        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
-        // and if the number of records to create is 0 the event for loading will not be scheduled
-        int nextEventsSize = result.getNextEvents().size();
-        verify(mockedFileFolderService, times(nextEventsSize -1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
+        verify(mockedSessionService, times(maxActiveLoaders)).startSession(any(DBObject.class));
+        assertEquals("Raised further " + (maxActiveLoaders) + " events and rescheduled self.", result.getData());
+        assertEquals(maxActiveLoaders + 1, result.getNextEvents().size());
 
-        assertEquals("Raised further " + (nextEventsSize - 1) + " events and rescheduled self.", result.getData());
-
-        Event firstEvent = result.getNextEvents().get(0);
-        if(nextEventsSize - 1 == 2)
+        for(int i = 0; i < maxActiveLoaders ; i++)
         {
-            assertEquals("loadRecords", firstEvent.getName());
-            DBObject dataObj = (DBObject)firstEvent.getData();
+            Event event = result.getNextEvents().get(i);
+            assertEquals(EVENT_LOAD_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(e3Path, (String) dataObj.get(FIELD_PATH));
-            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-
-            Event secondEvent = result.getNextEvents().get(1);
-            assertEquals("loadRecords", secondEvent.getName());
-            dataObj = (DBObject)secondEvent.getData();
-            assertNotNull(dataObj);
-            assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(e4Path, (String) dataObj.get(FIELD_PATH));
-            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(recordsNumber, value1 + value2);
+            assertEquals(LOAD_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
         }
-        else
-        {
-            //in case that one of generated values is 0 we check that the scheduled event had created all records
-            DBObject dataObj = (DBObject)firstEvent.getData();
-            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(recordsNumber, value);
-        }
-        assertEquals("scheduleRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+        assertEquals(EVENT_SCHEDULE_RECORD_LOADERS, result.getNextEvents().get(maxActiveLoaders).getName());
     }
 
     @Test
@@ -606,22 +560,22 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         verify(mockedFileFolderService, times(3)).createNewFolder(any(String.class), any(String.class), any(String.class));
         verify(mockedFileFolderService, times(3)).incrementFolderCount(any(String.class), any(String.class), eq(1L));
         verify(mockedFileFolderService, times(3)).getFolder(any(String.class));
-        verify(mockedFileFolderService, times(1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(1)).startSession(any(DBObject.class));
+        verify(mockedSessionService, times(recordsNumber)).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
-        assertEquals("Raised further 1 events and rescheduled self.", result.getData());
-        assertEquals(2, result.getNextEvents().size());
+        assertEquals("Raised further " + (recordsNumber) + " events and rescheduled self.", result.getData());
+        assertEquals(recordsNumber + 1, result.getNextEvents().size());
 
-        Event firstEvent = result.getNextEvents().get(0);
-        assertEquals("loadRecords", firstEvent.getName());
-        DBObject dataObj = (DBObject)firstEvent.getData();
-        assertNotNull(dataObj);
-        assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-        assertEquals(e3Path, (String) dataObj.get(FIELD_PATH));
-        int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-        assertEquals(recordsNumber, value);
-        assertEquals("scheduleRecordLoaders", result.getNextEvents().get(1).getName());
+        for(int i = 0; i < recordsNumber ; i++)
+        {
+            Event event = result.getNextEvents().get(i);
+            assertEquals(EVENT_LOAD_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
+            assertNotNull(dataObj);
+            assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+            assertEquals(LOAD_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
+        }
+        assertEquals(EVENT_SCHEDULE_RECORD_LOADERS, result.getNextEvents().get(recordsNumber).getName());
     }
 
     @Test
@@ -679,42 +633,21 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         verify(mockedFileFolderService, never()).createNewFolder(any(String.class), any(String.class), any(String.class));
         verify(mockedFileFolderService, times(2)).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
 
-        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
-        // and if the number of records to create is 0 the event for loading will not be scheduled
-        int nextEventsSize = result.getNextEvents().size();
-        verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
-
         assertEquals(true, result.isSuccess());
-        assertEquals("Raised further " + (nextEventsSize -1) + " events and rescheduled self.", result.getData());
+        verify(mockedSessionService, times(recordsNumber)).startSession(any(DBObject.class));
+        assertEquals("Raised further " + (recordsNumber) + " events and rescheduled self.", result.getData());
+        assertEquals(recordsNumber + 1, result.getNextEvents().size());
 
-        Event firstEvent = result.getNextEvents().get(0);
-        if(nextEventsSize - 1 == 2)
+        for(int i = 0; i < recordsNumber ; i++)
         {
-            assertEquals("loadRecords", firstEvent.getName());
-            DBObject dataObj = (DBObject)firstEvent.getData();
+            Event event = result.getNextEvents().get(i);
+            assertEquals(EVENT_LOAD_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(path1, (String) dataObj.get(FIELD_PATH));
-            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-
-            Event secondEvent = result.getNextEvents().get(1);
-            assertEquals("loadRecords", secondEvent.getName());
-            dataObj = (DBObject)secondEvent.getData();
-            assertNotNull(dataObj);
-            assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(path2, (String) dataObj.get(FIELD_PATH));
-            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(recordsNumber, value1 + value2);
+            assertEquals(LOAD_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
         }
-        else
-        {
-            //in case that one of generated values is 0 we check that the scheduled event had created all records
-            DBObject dataObj = (DBObject)firstEvent.getData();
-            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(recordsNumber, value);
-        }
-        assertEquals("scheduleRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+        assertEquals(EVENT_SCHEDULE_RECORD_LOADERS, result.getNextEvents().get(recordsNumber).getName());
     }
 
     @Test
@@ -755,41 +688,20 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, times(2)).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
 
-        // using the number of events here because the algorithm for distributing records to folders in this test, 2 folders can generate (0,4),(1,3),(2,2),(3,1) or (4,0)
-        // and if the number of records to create is 0 the event for loading will not be scheduled
-        int nextEventsSize = result.getNextEvents().size();
-        verify(mockedFileFolderService, times(nextEventsSize - 1)).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, times(nextEventsSize - 1)).startSession(any(DBObject.class));
-
         assertEquals(true, result.isSuccess());
-        assertEquals("Raised further " + (nextEventsSize -1) + " events and rescheduled self.", result.getData());
+        verify(mockedSessionService, times(recordsNumber)).startSession(any(DBObject.class));
+        assertEquals("Raised further " + (recordsNumber) + " events and rescheduled self.", result.getData());
+        assertEquals(recordsNumber + 1, result.getNextEvents().size());
 
-        Event firstEvent = result.getNextEvents().get(0);
-        if(nextEventsSize - 1 == 2)
+        for(int i = 0; i < recordsNumber ; i++)
         {
-            assertEquals("loadRecords", firstEvent.getName());
-            DBObject dataObj = (DBObject)firstEvent.getData();
+            Event event = result.getNextEvents().get(i);
+            assertEquals(EVENT_LOAD_RECORD, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
             assertNotNull(dataObj);
             assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(path1, (String) dataObj.get(FIELD_PATH));
-            int value1 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-
-            Event secondEvent = result.getNextEvents().get(1);
-            assertEquals("loadRecords", secondEvent.getName());
-            dataObj = (DBObject)secondEvent.getData();
-            assertNotNull(dataObj);
-            assertEquals(RECORD_FOLDER_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
-            assertEquals(path2, (String) dataObj.get(FIELD_PATH));
-            int value2 = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(recordsNumber, value1 + value2);
+            assertEquals(LOAD_RECORD_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
         }
-        else
-        {
-            //in case that one of generated values is 0 we check that the scheduled event had created all records
-            DBObject dataObj = (DBObject)firstEvent.getData();
-            int value = (Integer) dataObj.get(FIELD_RECORDS_TO_CREATE);
-            assertEquals(recordsNumber, value);
-        }
-        assertEquals("scheduleRecordLoaders", result.getNextEvents().get(nextEventsSize - 1).getName());
+        assertEquals(EVENT_SCHEDULE_RECORD_LOADERS, result.getNextEvents().get(recordsNumber).getName());
     }
 }

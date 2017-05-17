@@ -46,7 +46,7 @@ import com.mongodb.DBObject;
 public class DeclareInPlaceRecords extends RMBaseEventProcessor
 {
     public static final String INVALID_DATA_MSG_TEMPLATE = "This processor requires data with fields: {0}, {1}, {2}.";
-    public static final long DEFAULT_DECLARE_RECORDS_DELAY = 10000L;
+    public static final long DEFAULT_DECLARE_RECORDS_DELAY = 0L;
     private long declareInPlaceRecordDelay = DEFAULT_DECLARE_RECORDS_DELAY;
     public static final String DEFAULT_EVENT_NAME_IN_PLACE_RECORD_DECLARED = "inPlaceRecordDeclared";
     private String eventNameInPlaceRecordsDeclared = DEFAULT_EVENT_NAME_IN_PLACE_RECORD_DECLARED;

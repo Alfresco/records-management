@@ -190,19 +190,18 @@
     <property name="recordsNumber" value="${rm.recordsNumber}" />
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
     <property name="chart" value="false" />
-    <property name="eventNameLoadRecords" value="loadRecords" />
+    <property name="eventNameLoadRecords" value="loadRecord" />
     <property name="eventNameScheduleRecordLoaders" value="scheduleRecordLoaders" />
     <property name="eventNameLoadingComplete" value="loadingRecordsComplete" />
     <property name="eventNameContinueLoadingUnfiledRecordFolders" value="scheduleUnfiledRecordFoldersLoaders" />
   </bean>
 
-  <bean id="event.loadRecords" class="org.alfresco.bm.dataload.rm.fileplan.LoadRecords" parent="rmBaseEventProcessor">
-    <property name="eventNameRecordsLoaded" value="recordsLoaded" />
+  <bean id="event.loadRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameComplete" value="recordLoaded"/>
     <property name="chart" value="true" />
   </bean>
 
-  <bean id="producer.recordsLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer"
-    parent="producer.base" />
+  <bean id="producer.recordLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
   <!-- -->
   <!-- Unfiled Record Folders structure Creation -->
@@ -247,17 +246,17 @@
     <property name="unfiledRecordFolderPaths" value="${rm.unfiledRecordFolderPaths}" />
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
     <property name="chart" value="false" />
-    <property name="eventNameLoadUnfiledRecords" value="loadUnfiledRecords" />
+    <property name="eventNameLoadUnfiledRecords" value="loadUnfiledRecord" />
     <property name="eventNameScheduleLoaders" value="scheduleUnfiledRecordLoaders" />
     <property name="eventNameLoadingComplete" value="loadingUnfiledRecordsComplete" />
   </bean>
 
-  <bean id="event.loadUnfiledRecords" class="org.alfresco.bm.dataload.rm.unfiled.LoadUnfiledRecords" parent="rmBaseEventProcessor">
-    <property name="eventNameUnfiledRecordsLoaded" value="unfiledRecordsLoaded" />
+  <bean id="event.loadUnfiledRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameComplete" value="unfiledRecordLoaded"/>
     <property name="chart" value="true" />
   </bean>
 
-  <bean id="producer.unfiledRecordsLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+  <bean id="producer.unfiledRecordLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
   <!-- -->
   <!-- In Place Records-->
@@ -305,17 +304,17 @@
     <property name="recordFilingLimit" value="${rm.recordFilingLimit}" />
     <property name="fileFromUnfiledPaths" value="${rm.fileFromUnfiledPaths}" />
     <property name="chart" value="false" />
-    <property name="eventNameFileUnfiledRecords" value="fileUnfiledRecords"/>
+    <property name="eventNameFileUnfiledRecords" value="fileUnfiledRecord"/>
     <property name="eventNameComplete" value="filingUnfiledRecordsComplete"/>
     <property name="eventNameRescheduleSelf" value="scheduleFilingUnfiledRecords"/>
   </bean>
 
-  <bean id="event.fileUnfiledRecords" class="org.alfresco.bm.dataload.rm.records.FileUnfiledRecords" parent="rmBaseEventProcessor">
-    <property name="eventNameUnfiledRecordsFiled" value="unfiledRecordsFiled"/>
+  <bean id="event.fileUnfiledRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameComplete" value="unfiledRecordFiled"/>
     <property name="chart" value="true" />
   </bean>
 
-  <bean id="producer.unfiledRecordsFiled" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+  <bean id="producer.unfiledRecordFiled" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
   <bean id="producer.filingUnfiledRecordsComplete" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 </beans>
