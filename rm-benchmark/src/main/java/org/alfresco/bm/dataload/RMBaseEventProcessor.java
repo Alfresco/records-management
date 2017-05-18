@@ -900,6 +900,12 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         FolderData parentFolder = fileFolderService.getFolder(FILEPLAN_CONTEXT, RECORD_CONTAINER_PATH);
         // for(String pathElement: pathElements)
         int pathElementsLength = pathElements.size();
+
+        // when one path does not exist it must have at least path elements, one for root record category and one for record folder
+        if (pathElementsLength == 1)
+        {
+            throw new Exception("At least 2 path elemets needed for creating record folders in which we can create records");
+        }
         for (int i = 0; i < pathElementsLength; i++)
         {
             String pathElement = pathElements.get(i);
