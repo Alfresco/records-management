@@ -19,6 +19,8 @@
 
 package org.alfresco.bm.dataload;
 
+import static org.apache.commons.lang3.StringUtils.split;
+
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.CONTENT_TYPE;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.NON_ELECTRONIC_RECORD_TYPE;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentType.UNFILED_RECORD_FOLDER_TYPE;
@@ -29,12 +31,12 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +44,10 @@ import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.rm.role.RMRole;
+import org.alfresco.bm.dataload.rm.services.ExecutionState;
+import org.alfresco.bm.dataload.rm.services.RecordContext;
+import org.alfresco.bm.dataload.rm.services.RecordData;
+import org.alfresco.bm.dataload.rm.services.RecordService;
 import org.alfresco.bm.event.AbstractEventProcessor;
 import org.alfresco.bm.file.TestFileService;
 import org.alfresco.bm.site.SiteData;
@@ -70,6 +76,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.http.HttpStatus;
 
 /**
  * Base helper class for RM events.
@@ -91,6 +98,9 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
 
     @Autowired
     protected SiteDataService siteDataService;
+
+    @Autowired
+    protected RecordService recordService;
 
     public RestAPIFactory getRestAPIFactory()
     {
@@ -509,45 +519,40 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     }
 
     /**
-     * Helper method for creating specified number of non-electronic documents in specified record folder.
+     * Helper method for creating a non-electronic document in specified record folder.
      *
      * @param folder - record folder that will contain created non-electronic document
      * @param userModel - UserModel instance with wich rest api will be called
-     * @param componentsToCreate - number of non-electronic documents to create
-     * @param nameIdentifier - a string identifier that the created non-electronic documents will start with
+     * @param nameIdentifier - a string identifier that the created non-electronic document will start with
      * @param loadFilePlanComponentDelay - delay between creation of non-electronic documents
      * @throws Exception
      */
-    public void createNonElectonicRecordInRecordFolder(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier,
-                                                       long loadFilePlanComponentDelay) throws Exception
+    public void createNonElectonicRecordInRecordFolder(FolderData folder, UserModel userModel, String nameIdentifier, long loadFilePlanComponentDelay) throws Exception
     {
         String unique;
 
         String folderPath = folder.getPath();
-        for (int i = 0; i < componentsToCreate; i++)
-        {
-            unique = UUID.randomUUID().toString();
-            String newfilePlanComponentName = nameIdentifier + unique;
-            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+        unique = UUID.randomUUID().toString();
+        String newfilePlanComponentName = nameIdentifier + unique;
+        String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
 
-            // Build non electronic record properties
-            Record recordModel = Record.builder()
-                        .name(newfilePlanComponentName)
-                        .nodeType(NON_ELECTRONIC_RECORD_TYPE)
-                        .properties(RecordProperties.builder()
-                                    .title(newfilePlanComponentTitle)
-                                    .description(EMPTY)
-                                    .build())
-                        .build();
+        // Build non electronic record properties
+        Record recordModel = Record.builder()
+                    .name(newfilePlanComponentName)
+                    .nodeType(NON_ELECTRONIC_RECORD_TYPE)
+                    .properties(RecordProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
 
-            RecordFolderAPI recordFolderAPI = getRestAPIFactory().getRecordFolderAPI(userModel);
-            String parentId = folder.getId();
-            recordFolderAPI.createRecord(recordModel, parentId);
-            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
-        }
+        RecordFolderAPI recordFolderAPI = getRestAPIFactory().getRecordFolderAPI(userModel);
+        String parentId = folder.getId();
+        recordFolderAPI.createRecord(recordModel, parentId);
+        TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
 
         // Increment counts
-        fileFolderService.incrementFileCount(folder.getContext(), folderPath, componentsToCreate);
+        fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
     }
 
     /**
@@ -555,143 +560,146 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
      *
      * @param folder - unfiled container or unfiled record folder that will contain created non-electronic document
      * @param userModel - UserModel instance with wich rest api will be called
-     * @param componentsToCreate - number of non-electronic documents to create
      * @param nameIdentifier - a string identifier that the created non-electronic documents will start with
      * @param loadFilePlanComponentDelay - delay between creation of non-electronic documents
      * @throws Exception
      */
-    public void createNonElectonicRecordInUnfiledContext(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier,
+    public void createNonElectonicRecordInUnfiledContext(FolderData folder, UserModel userModel, String nameIdentifier,
                 long loadFilePlanComponentDelay) throws Exception
     {
         String unique;
 
         boolean isUnfiledContainer = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH).equals(folder);
         String folderPath = folder.getPath();
-        for (int i = 0; i < componentsToCreate; i++)
+        unique = UUID.randomUUID().toString();
+        String newfilePlanComponentName = nameIdentifier + unique;
+        String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+
+        // Build non electronic record properties
+        UnfiledContainerChild unfiledContainerChildModel = UnfiledContainerChild.builder()
+                    .name(newfilePlanComponentName)
+                    .nodeType(NON_ELECTRONIC_RECORD_TYPE)
+                    .properties(UnfiledContainerChildProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
+
+        String newRecordId;
+        String newRecordName;
+        if(isUnfiledContainer)
         {
-            unique = UUID.randomUUID().toString();
-            String newfilePlanComponentName = nameIdentifier + unique;
-            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
-
-            // Build non electronic record properties
-            UnfiledContainerChild unfiledContainerChildModel = UnfiledContainerChild.builder()
-                        .name(newfilePlanComponentName)
-                        .nodeType(NON_ELECTRONIC_RECORD_TYPE)
-                        .properties(UnfiledContainerChildProperties.builder()
-                                    .title(newfilePlanComponentTitle)
-                                    .description(EMPTY)
-                                    .build())
-                        .build();
-
-            if(isUnfiledContainer)
-            {
-                UnfiledContainerAPI unfiledContainersAPI = getRestAPIFactory().getUnfiledContainersAPI(userModel);
-                unfiledContainersAPI.createUnfiledContainerChild(unfiledContainerChildModel, folder.getId());
-            }
-            else
-            {
-                UnfiledRecordFolderAPI unfiledRecordFoldersAPI = getRestAPIFactory().getUnfiledRecordFoldersAPI(userModel);
-                unfiledRecordFoldersAPI.createUnfiledRecordFolderChild(unfiledContainerChildModel, folder.getId());
-            }
-            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
+            UnfiledContainerAPI unfiledContainersAPI = getRestAPIFactory().getUnfiledContainersAPI(userModel);
+            UnfiledContainerChild createdRecord = unfiledContainersAPI.createUnfiledContainerChild(unfiledContainerChildModel, folder.getId());
+            newRecordId = createdRecord.getId();
+            newRecordName = createdRecord.getName();
+        }
+        else
+        {
+            UnfiledRecordFolderAPI unfiledRecordFoldersAPI = getRestAPIFactory().getUnfiledRecordFoldersAPI(userModel);
+            UnfiledContainerChild createdRecord = unfiledRecordFoldersAPI.createUnfiledRecordFolderChild(unfiledContainerChildModel, folder.getId());
+            newRecordId = createdRecord.getId();
+            newRecordName = createdRecord.getName();
         }
 
+        RecordData record = new RecordData(newRecordId, RecordContext.RECORD, newRecordName, folderPath, null, ExecutionState.UNFILED_RECORD_DECLARED);
+        recordService.createRecord(record);
+        TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
         // Increment counts
-        fileFolderService.incrementFileCount(folder.getContext(), folderPath, componentsToCreate);
+        fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
     }
 
     /**
-     * Helper method for uploading specified number of records on specified record folder.
+     * Helper method for uploading one record on specified record folder.
      *
-     * @param folder - record folder that will contain uploaded records
+     * @param folder - record folder that will contain uploaded record
      * @param userModel - UserModel instance with wich rest api will be called
-     * @param componentsToCreate - number of records to be uploaded
-     * @param nameIdentifier - a string identifier that the uploaded records will start with
+     * @param nameIdentifier - a string identifier that the uploaded record will start with
      * @param loadFilePlanComponentDelay - delay between upload record operations
      * @throws Exception
      */
-    public void uploadElectronicRecordInRecordFolder(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier,
-                                                      long loadFilePlanComponentDelay) throws Exception // to-check: type of exception
+    public void uploadElectronicRecordInRecordFolder(FolderData folder, UserModel userModel, String nameIdentifier, long loadFilePlanComponentDelay) throws Exception
     {
         String unique;
 
         String folderPath = folder.getPath();
-        for (int i = 0; i < componentsToCreate; i++)
+        File file = testFileService.getFile();
+        if (file == null)
         {
-            File file = testFileService.getFile();
-            if (file == null)
-            {
-                throw new RuntimeException("No test files exist for upload: " + testFileService);
-            }
-            unique = UUID.randomUUID().toString();
-            String newfilePlanComponentName = nameIdentifier + unique + "-" + file.getName();
-            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
-            // Build record properties
-            Record recordModel = Record.builder()
-                        .name(newfilePlanComponentName)
-                        .nodeType(CONTENT_TYPE)
-                        .properties(RecordProperties.builder()
-                                    .title(newfilePlanComponentTitle)
-                                    .description(EMPTY)
-                                    .build())
-                        .build();
-
-            RecordFolderAPI recordFolderAPI = getRestAPIFactory().getRecordFolderAPI(userModel);
-            recordFolderAPI.createRecord(recordModel, folder.getId(), file);
-            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
-            fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
+            throw new RuntimeException("No test files exist for upload: " + testFileService);
         }
+        unique = UUID.randomUUID().toString();
+        String newfilePlanComponentName = nameIdentifier + unique + "-" + file.getName();
+        String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+        // Build record properties
+        Record recordModel = Record.builder()
+                    .name(newfilePlanComponentName)
+                    .nodeType(CONTENT_TYPE)
+                    .properties(RecordProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
+
+        RecordFolderAPI recordFolderAPI = getRestAPIFactory().getRecordFolderAPI(userModel);
+        recordFolderAPI.createRecord(recordModel, folder.getId(), file);
+        TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
+        fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
     }
 
     /**
-     * Helper method for uploading specified number of records on specified unfiled container or unfiled record folder.
+     * Helper method for uploading one record on specified unfiled container or unfiled record folder.
      *
      * @param folder - unfiled container or unfiled record folder that will contain uploaded records
      * @param userModel - UserModel instance with wich rest api will be called
-     * @param componentsToCreate - number of records to be uploaded
      * @param nameIdentifier - a string identifier that the uploaded records will start with
      * @param loadFilePlanComponentDelay - delay between upload record operations
      * @throws Exception
      */
-    public void uploadElectronicRecordInUnfiledContext(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier,
+    public void uploadElectronicRecordInUnfiledContext(FolderData folder, UserModel userModel, String nameIdentifier,
                                                        long loadFilePlanComponentDelay) throws Exception // to-check: type of exception
     {
         String unique;
 
         boolean isUnfiledContainer = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH).equals(folder);
         String folderPath = folder.getPath();
-        for (int i = 0; i < componentsToCreate; i++)
+        File file = testFileService.getFile();
+        if (file == null)
         {
-            File file = testFileService.getFile();
-            if (file == null)
-            {
-                throw new RuntimeException("No test files exist for upload: " + testFileService);
-            }
-            unique = UUID.randomUUID().toString();
-            String newfilePlanComponentName = nameIdentifier + unique + "-" + file.getName();
-            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
-            // Build record properties
-            UnfiledContainerChild unfiledContainerChildModel = UnfiledContainerChild.builder()
-                        .name(newfilePlanComponentName)
-                        .nodeType(CONTENT_TYPE)
-                        .properties(UnfiledContainerChildProperties.builder()
-                                    .title(newfilePlanComponentTitle)
-                                    .description(EMPTY)
-                                    .build())
-                        .build();
-
-            if(isUnfiledContainer)
-            {
-                UnfiledContainerAPI unfiledContainersAPI = getRestAPIFactory().getUnfiledContainersAPI(userModel);
-                unfiledContainersAPI.uploadRecord(unfiledContainerChildModel, folder.getId(), file);
-            }
-            else
-            {
-                UnfiledRecordFolderAPI unfiledRecordFoldersAPI = getRestAPIFactory().getUnfiledRecordFoldersAPI(userModel);
-                unfiledRecordFoldersAPI.uploadRecord(unfiledContainerChildModel, folder.getId(), file);
-            }
-            fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
+            throw new RuntimeException("No test files exist for upload: " + testFileService);
         }
+        unique = UUID.randomUUID().toString();
+        String newfilePlanComponentName = nameIdentifier + unique + "-" + file.getName();
+        String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+        // Build record properties
+        UnfiledContainerChild unfiledContainerChildModel = UnfiledContainerChild.builder()
+                    .name(newfilePlanComponentName)
+                    .nodeType(CONTENT_TYPE)
+                    .properties(UnfiledContainerChildProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
+
+        String newRecordId;
+        String newRecordName;
+        if(isUnfiledContainer)
+        {
+            UnfiledContainerAPI unfiledContainersAPI = getRestAPIFactory().getUnfiledContainersAPI(userModel);
+            UnfiledContainerChild uploadedRecord = unfiledContainersAPI.uploadRecord(unfiledContainerChildModel, folder.getId(), file);
+            newRecordId = uploadedRecord.getId();
+            newRecordName = uploadedRecord.getName();
+        }
+        else
+        {
+            UnfiledRecordFolderAPI unfiledRecordFoldersAPI = getRestAPIFactory().getUnfiledRecordFoldersAPI(userModel);
+            UnfiledContainerChild uploadedRecord = unfiledRecordFoldersAPI.uploadRecord(unfiledContainerChildModel, folder.getId(), file);
+            newRecordId = uploadedRecord.getId();
+            newRecordName = uploadedRecord.getName();
+        }
+        RecordData record = new RecordData(newRecordId, RecordContext.RECORD, newRecordName, folderPath, null, ExecutionState.UNFILED_RECORD_DECLARED);
+        recordService.createRecord(record);
+        fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
     }
 
     /**
@@ -739,12 +747,24 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
             List<FolderData> directRecordFolderChildren = getDirectChildrenByContext(parentFolder, RECORD_FOLDER_CONTEXT);
             if (directRecordFolderChildren.size() > 0)
             {
+                Iterator<FolderData> iterator = directRecordFolderChildren.iterator();
+                while(iterator.hasNext())
+                {
+                    FolderData childFolder = iterator.next();
+                    if(childFolder.getPath().endsWith("locked") && !isIdValid(childFolder.getId(), RECORD_FOLDER_CONTEXT))
+                    {
+                        iterator.remove();
+                    }
+                }
                 result.addAll(directRecordFolderChildren);
             }
         }
         else if(RECORD_FOLDER_CONTEXT.equals(context))
         {
-            result.add(parentFolder);
+            if(!parentFolder.getPath().endsWith("locked") || (parentFolder.getPath().endsWith("locked") && isIdValid(parentFolder.getId(), RECORD_FOLDER_CONTEXT)))
+            {
+                result.add(parentFolder);
+            }
         }
         return result;
     }
@@ -798,26 +818,6 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     }
 
     /**
-     * Helper method that parses a string representing a file path and returns a list of element names
-     * @param path the file path represented as a string
-     * @return a list of file path element names
-     */
-    public List<String> getPathElements(String path)
-    {
-        final List<String> pathElements = new ArrayList<>();
-        if (path != null && path.trim().length() > 0)
-        {
-            // There is no need to check for leading and trailing "/"
-            final StringTokenizer tokenizer = new StringTokenizer(path, "/");
-            while (tokenizer.hasMoreTokens())
-            {
-                pathElements.add(tokenizer.nextToken().trim());
-            }
-        }
-        return pathElements;
-    }
-
-    /**
      * Helper method to obtain all folders with specified context.
      *
      * @param context - context of the wanted folders
@@ -844,6 +844,16 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                         null, null,
                         null, null,
                         skip, limit);
+        }
+        //check for locked folders
+        Iterator<FolderData> iterator = existingFolderStructure.iterator();
+        while(iterator.hasNext())
+        {
+            FolderData folder = iterator.next();
+            if(folder.getPath().endsWith("locked") && !isIdValid(folder.getId(), context))
+            {
+                iterator.remove();
+            }
         }
         return existingFolderStructure;
     }
@@ -874,5 +884,219 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         // Done
         logger.debug("Found RM site member '" + username + "'");
         return user;
+    }
+
+    /**
+     * Helper method used for creating in alfresco repo and in mongo DB, root record categories, record categories and record folders from configured path elements.
+     *
+     * @param path - path element
+     * @return created record folder, or existing record folder, if already created
+     * @throws Exception
+     */
+    public FolderData createRecordCategoryOrRecordFolder(String path) throws Exception
+    {
+        //create inexistent elements from configured paths as admin
+        List<String> pathElements = Arrays.asList(split(path, "/"));
+        FolderData parentFolder = fileFolderService.getFolder(FILEPLAN_CONTEXT, RECORD_CONTAINER_PATH);
+        // for(String pathElement: pathElements)
+        int pathElementsLength = pathElements.size();
+        for (int i = 0; i < pathElementsLength; i++)
+        {
+            String pathElement = pathElements.get(i);
+            FolderData folder = fileFolderService.getFolder(RECORD_CATEGORY_CONTEXT,
+                        parentFolder.getPath() + "/" + pathElement);
+            if (folder != null)
+            {
+                parentFolder = folder;
+            }
+            else
+            {
+                if(i == 0)
+                {
+                    //create root category
+                    parentFolder = createRootRecordCategoryWithFixedName(parentFolder, pathElement);
+                }
+                else if (pathElementsLength > 1  && i == (pathElementsLength - 1))
+                {
+                    //create record folder
+                    parentFolder = createRecordFolderWithFixedName(parentFolder, pathElement);
+                }
+                else
+                {
+                    //create child category
+                    parentFolder = createRecordCategoryWithFixedName(parentFolder, pathElement);
+                }
+            }
+        }
+        return parentFolder;
+    }
+
+    /**
+     * Helper method that initialize the record folders that can receive records.
+     * This method, also calculates the number of records to  add to the initialized record folders.
+     *
+     * @param mapOfRecordsPerRecordFolder - linked hash map with available record folders as keys and calculated number of records to load/file in each record folder
+     * @param paths - record category or record folder paths to load/file records in
+     * @param numberOrRecords - number of records to load/file
+     */
+    public LinkedHashMap<FolderData, Integer> calculateListOfEmptyFolders(LinkedHashMap<FolderData, Integer> mapOfRecordsPerRecordFolder, List<String> paths, int numberOrRecords)
+    {
+        if (mapOfRecordsPerRecordFolder == null)
+        {
+            mapOfRecordsPerRecordFolder = new LinkedHashMap<FolderData, Integer>();
+            List<FolderData> recordFoldersThatNeedRecords = new ArrayList<FolderData>();
+            if (paths == null || paths.size() == 0)
+            {
+                // get the existing file plan folder structure
+                recordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(RECORD_FOLDER_CONTEXT));
+            }
+            else
+            {
+                LinkedHashSet<FolderData> structureFromExistentProvidedPaths = new LinkedHashSet<FolderData>();
+                for (String path : paths)
+                {
+                    if(!path.startsWith("/"))
+                    {
+                        path = "/" + path;
+                    }
+                    //if the path is category and exists
+                    FolderData folder = fileFolderService.getFolder(RECORD_CATEGORY_CONTEXT,
+                                RECORD_CONTAINER_PATH + path);
+                    if(folder == null)//if folder is not a category verify if it is a record folder and exists
+                    {
+                        folder = fileFolderService.getFolder(RECORD_FOLDER_CONTEXT,
+                                    RECORD_CONTAINER_PATH + path);
+                    }
+                    if (folder != null)// if folder exists
+                    {
+                        structureFromExistentProvidedPaths.addAll(getRecordFolders(folder));
+                    }
+                    else
+                    {
+                        try
+                        {
+                            folder = createRecordCategoryOrRecordFolder(path);
+                            recordFoldersThatNeedRecords.add(folder);
+                        }
+                        catch (Exception e)
+                        {
+                            // something went wrong on creating current path structure, not all required paths will be created
+                            logger.debug("Path elements of " + path + "could not be created.", e);
+                        }
+                    }
+                }
+                // add record folders from existent paths
+                if (structureFromExistentProvidedPaths.size() > 0)
+                {
+                    recordFoldersThatNeedRecords.addAll(structureFromExistentProvidedPaths);
+                }
+                // configured paths did not existed in db and something went wrong with creation for all of them,
+                // initialize to existing structure in this case
+                if (recordFoldersThatNeedRecords.size() == 0)
+                {
+                    recordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(RECORD_FOLDER_CONTEXT));
+                }
+            }
+            if (recordFoldersThatNeedRecords.size() > 0)
+            {
+                mapOfRecordsPerRecordFolder = distributeNumberOfRecords(recordFoldersThatNeedRecords, numberOrRecords);
+            }
+        }
+        return mapOfRecordsPerRecordFolder;
+    }
+
+    /**
+     * Obtains all unfiled record folders underneath specified parent folder plus the parent folder
+     *
+     * @param parentFolder - the parent folder that we need to get unfiled record folders from
+     * @return all unfiled record folders underneath specified parent folder plus the parent folder
+     */
+    public Set<FolderData> getUnfiledRecordFolders(FolderData parentFolder)
+    {
+        LinkedHashSet<FolderData> result = new LinkedHashSet<FolderData>();
+        int skip = 0;
+        int limit = 100;
+        List<FolderData> directChildren = new ArrayList<FolderData>();
+        List<FolderData> childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
+        while(childFolders.size() > 0)
+        {
+            directChildren.addAll(childFolders);
+            skip += limit;
+            childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
+        }
+        if(directChildren.size() > 0)
+        {
+            for(FolderData childFolder : directChildren)
+            {
+                result.addAll(getUnfiledRecordFolders(childFolder));
+            }
+        }
+        if(!parentFolder.getPath().endsWith("locked") || (parentFolder.getPath().endsWith("locked") && isIdValid(parentFolder.getId(), UNFILED_CONTEXT)))
+        {
+            result.add(parentFolder);
+        }
+        return result;
+    }
+
+    /**
+     * Helper method for obtaining all unfiled records from records MongoDb.
+     *
+     * @return all unfiled records from records MongoDb
+     */
+    public List<RecordData> getAllUnfiledRecords()
+    {
+        List<RecordData> existingRecords = new ArrayList<RecordData>();
+        int skip = 0;
+        int limit = 100;
+        List<RecordData> recordsList = recordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, skip, limit);
+        while(recordsList.size() > 0)
+        {
+            existingRecords.addAll(recordsList);
+            skip += limit;
+            recordsList =  recordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, skip, limit);
+        }
+        return existingRecords;
+    }
+
+    /**
+     * Helper method to check if one id is a valid record folder, unfiled container, or unfiled record folder id.
+     *
+     * @param id - folder id that is checked
+     * @param context - context of the checked folder id
+     * @return <code>true</code> if the id is valid, or <code>false</code> otherwhise.
+     */
+    private boolean isIdValid(String id, String context)
+    {
+        boolean result = false;
+        if(RECORD_FOLDER_CONTEXT.equals(context))
+        {
+            RestAPIFactory restAPIFactory = getRestAPIFactory();
+            restAPIFactory.getRecordFolderAPI().getRecordFolder(id);
+            String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
+            if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.OK)
+            {
+                return true;
+            }
+        }
+        else if (UNFILED_CONTEXT.equals(context))
+        {
+            RestAPIFactory restAPIFactory = getRestAPIFactory();
+            restAPIFactory.getUnfiledRecordFoldersAPI().getUnfiledRecordFolder(id);
+            String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
+            if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.OK)
+            {
+                return true;
+            }
+            else
+            {
+                restAPIFactory.getUnfiledContainersAPI().getUnfiledContainer(id);
+                statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
+                if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.OK)
+                {
+                    return true;
+                }
+            }
+        }
+        return result;
     }
 }

@@ -27,6 +27,8 @@ import static org.mockito.Mockito.when;
 
 import com.mongodb.DBObject;
 
+import org.alfresco.bm.cm.FileFolderService;
+import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMEventConstants;
 import org.alfresco.bm.dataload.rm.services.ExecutionState;
 import org.alfresco.bm.dataload.rm.services.RecordContext;
@@ -47,6 +49,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -65,6 +68,12 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
 
     @Mock
     private RecordService mockedRecordService;
+
+    @Mock
+    private FileFolderService mockedFileFolderService;
+
+    @Mock
+    private ApplicationContext mockedApplicationContext;
 
     @InjectMocks
     private DeclareInPlaceRecords declareInPlaceRecords;
@@ -178,10 +187,16 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
         when(mockedRestAPIFactory.getFilesAPI(any(UserModel.class))).thenReturn(mockedFilesAPI);
         Record record = mock(Record.class);
         when(record.getName()).thenReturn("newRecordName");
+        when(record.getParentId()).thenReturn("unfiledContainerID");
         when(mockedFilesAPI.declareAsRecord(fileId)).thenReturn(record);
         RMRestWrapper mockedRmRestWrapper = mock(RMRestWrapper.class);
         when(mockedRmRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.CREATED.value()));
         when(mockedRestAPIFactory.getRmRestWrapper()).thenReturn(mockedRmRestWrapper);
+
+        FolderData mockedParentFolder = mock(FolderData.class);
+        when(mockedParentFolder.getPath()).thenReturn(UNFILED_RECORD_CONTAINER_PATH);
+        when(mockedFileFolderService.getFolder("unfiledContainerID")).thenReturn(mockedParentFolder);
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestAPIFactory);
         EventResult result = declareInPlaceRecords.processEvent(mockedEvent, new StopWatch());
         assertEquals(true, result.isSuccess());
         assertEquals("Declaring file as record: \nsuccess", result.getData());
@@ -221,6 +236,7 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
         when(mockedRmRestWrapper.assertLastError()).thenReturn(mockedRestErrorModel);
         when(mockedRestAPIFactory.getRmRestWrapper()).thenReturn(mockedRmRestWrapper);
 
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestAPIFactory);
         EventResult result = declareInPlaceRecords.processEvent(mockedEvent, new StopWatch());
         assertEquals(true, result.isSuccess());
         assertEquals("Declaring file as record: \nFailed with code 401.\n " + summary + ". \n" + stack, result.getData());
@@ -248,6 +264,7 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
         FilesAPI mockedFilesAPI = mock(FilesAPI.class);
         when(mockedRestAPIFactory.getFilesAPI(any(UserModel.class))).thenReturn(mockedFilesAPI);
         Mockito.doThrow(new Exception("someError")).when(mockedFilesAPI).declareAsRecord(any(String.class));
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestAPIFactory);
         EventResult result = declareInPlaceRecords.processEvent(mockedEvent, new StopWatch());
 
         assertEquals(false, result.isSuccess());
