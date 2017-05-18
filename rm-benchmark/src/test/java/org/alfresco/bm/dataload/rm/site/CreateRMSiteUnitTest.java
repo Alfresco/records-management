@@ -20,8 +20,8 @@ import static org.alfresco.bm.dataload.rm.role.RMRole.Administrator;
 import static org.alfresco.bm.dataload.rm.site.CreateRMSite.DEFAULT_EVENT_NAME_SITE_CREATED;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_ONLY_DB_LOAD;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
-import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
-import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGERS_PASSWORD;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER_NAME;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER_PASSWORD;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.FILE_PLAN_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.TRANSFERS_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS;
@@ -117,7 +117,7 @@ public class CreateRMSiteUnitTest
     {
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(null);
+        when(mockedData.get(FIELD_SITE_MANAGER_NAME)).thenReturn(null);
         when(mockedEvent.getData()).thenReturn(mockedData);
         EventResult result = createRMSite.processEvent(mockedEvent);
         assertEquals(false, result.isSuccess());
@@ -130,18 +130,18 @@ public class CreateRMSiteUnitTest
     {
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn("someUserName");
+        when(mockedData.get(FIELD_SITE_MANAGER_NAME)).thenReturn("someUserName");
         when(mockedEvent.getData()).thenReturn(mockedData);
 
         //null password
-        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn(null);
+        when(mockedData.get(FIELD_SITE_MANAGER_PASSWORD)).thenReturn(null);
         EventResult result = createRMSite.processEvent(mockedEvent);
         assertEquals(false, result.isSuccess());
         assertEquals("Requests data not complete for site creation: " + mockedData, result.getData());
         assertEquals(0, result.getNextEvents().size());
 
         //empty password
-        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn("");
+        when(mockedData.get(FIELD_SITE_MANAGER_PASSWORD)).thenReturn("");
         result = createRMSite.processEvent(mockedEvent);
         assertEquals(false, result.isSuccess());
         assertEquals("Requests data not complete for site creation: " + mockedData, result.getData());
@@ -156,8 +156,8 @@ public class CreateRMSiteUnitTest
         SiteData mockedSiteData = mock(SiteData.class);
         String siteId = randomUUID().toString();
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(randomUUID().toString());
-        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn("password");
+        when(mockedData.get(FIELD_SITE_MANAGER_NAME)).thenReturn(randomUUID().toString());
+        when(mockedData.get(FIELD_SITE_MANAGER_PASSWORD)).thenReturn("password");
         when(mockedEvent.getData()).thenReturn(mockedData);
         when(mockedSiteDataService.getSite(siteId)).thenReturn(mockedSiteData);
         when(mockedSiteData.getCreationState()).thenReturn(Failed);
@@ -178,8 +178,8 @@ public class CreateRMSiteUnitTest
         SiteData mockedSiteData = mock(SiteData.class);
         String siteId = randomUUID().toString();
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(randomUUID().toString());
-        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn("password");
+        when(mockedData.get(FIELD_SITE_MANAGER_NAME)).thenReturn(randomUUID().toString());
+        when(mockedData.get(FIELD_SITE_MANAGER_PASSWORD)).thenReturn("password");
         when(mockedEvent.getData()).thenReturn(mockedData);
         when(mockedSiteDataService.getSite(siteId)).thenReturn(mockedSiteData);
         when(mockedSiteData.getCreationState()).thenReturn(Created);
@@ -211,8 +211,8 @@ public class CreateRMSiteUnitTest
         String siteManager = randomUUID().toString();
         String password = "password";
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(siteManager);
-        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn(password);
+        when(mockedData.get(FIELD_SITE_MANAGER_NAME)).thenReturn(siteManager);
+        when(mockedData.get(FIELD_SITE_MANAGER_PASSWORD)).thenReturn(password);
         when(mockedEvent.getData()).thenReturn(mockedData);
         when(mockedSiteDataService.getSite(siteId)).thenReturn(null);
 
@@ -287,8 +287,8 @@ public class CreateRMSiteUnitTest
         String siteManager = randomUUID().toString();
         String password = "password";
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(siteManager);
-        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn(password);
+        when(mockedData.get(FIELD_SITE_MANAGER_NAME)).thenReturn(siteManager);
+        when(mockedData.get(FIELD_SITE_MANAGER_PASSWORD)).thenReturn(password);
         when(mockedData.get(FIELD_ONLY_DB_LOAD)).thenReturn(true);
         when(mockedEvent.getData()).thenReturn(mockedData);
 
@@ -337,8 +337,8 @@ public class CreateRMSiteUnitTest
         String siteManager = randomUUID().toString();
         String password = "password";
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(siteManager);
-        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn(password);
+        when(mockedData.get(FIELD_SITE_MANAGER_NAME)).thenReturn(siteManager);
+        when(mockedData.get(FIELD_SITE_MANAGER_PASSWORD)).thenReturn(password);
         when(mockedEvent.getData()).thenReturn(mockedData);
         when(mockedSiteDataService.getSite(siteId)).thenReturn(null);
         when(mockedRestAPIFactory.getRMSiteAPI(new UserModel(siteManager, siteManager))).thenThrow(mockedException);
@@ -359,8 +359,8 @@ public class CreateRMSiteUnitTest
         String siteManager = randomUUID().toString();
         String password = "password";
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(siteManager);
-        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn(password);
+        when(mockedData.get(FIELD_SITE_MANAGER_NAME)).thenReturn(siteManager);
+        when(mockedData.get(FIELD_SITE_MANAGER_PASSWORD)).thenReturn(password);
         when(mockedEvent.getData()).thenReturn(mockedData);
         when(mockedSiteDataService.getSite(siteId)).thenReturn(null);
         when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);

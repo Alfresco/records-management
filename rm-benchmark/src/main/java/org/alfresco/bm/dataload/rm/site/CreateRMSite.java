@@ -17,8 +17,8 @@ import static org.alfresco.bm.data.DataCreationState.Scheduled;
 import static org.alfresco.bm.dataload.rm.role.RMRole.Administrator;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_ONLY_DB_LOAD;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
-import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
-import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGERS_PASSWORD;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER_NAME;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER_PASSWORD;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_DESC;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_ID;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_TITLE;
@@ -99,12 +99,12 @@ public class CreateRMSite extends AbstractEventProcessor
         DBObject dataObj = (DBObject) event.getData();
         if (dataObj == null)
         {
-            throw new IllegalStateException("This processor requires data object with fields '" + FIELD_SITE_ID + ", " + FIELD_SITE_MANAGER + "'.");
+            throw new IllegalStateException("This processor requires data object with fields '" + FIELD_SITE_ID + ", " + FIELD_SITE_MANAGER_NAME + "'.");
         }
 
         String siteId = (String) dataObj.get(FIELD_SITE_ID);
-        String siteManager = (String) dataObj.get(FIELD_SITE_MANAGER);
-        String siteManagersPassword = (String) dataObj.get(FIELD_SITE_MANAGERS_PASSWORD);
+        String siteManager = (String) dataObj.get(FIELD_SITE_MANAGER_NAME);
+        String siteManagersPassword = (String) dataObj.get(FIELD_SITE_MANAGER_PASSWORD);
         Boolean onlyLoadInDb = (Boolean) dataObj.get(FIELD_ONLY_DB_LOAD);
 
         if (isBlank(siteId) || isBlank(siteManager) || isBlank(siteManagersPassword))

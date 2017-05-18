@@ -15,8 +15,8 @@ import static org.alfresco.bm.data.DataCreationState.Created;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.DEFAULT_EVENT_NAME_RM_SITE_PREPARED;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_ONLY_DB_LOAD;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
-import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
-import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGERS_PASSWORD;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER_NAME;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER_PASSWORD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentCaptor.forClass;
@@ -109,8 +109,8 @@ public class PrepareRMSiteUnitTest
         DBObject data = (DBObject) event.getData();
         notNull(data);
         assertEquals(RM_SITE_ID, (String) data.get(FIELD_SITE_ID));
-        assertEquals(username, (String) data.get(FIELD_SITE_MANAGER));
-        assertEquals(password, (String) data.get(FIELD_SITE_MANAGERS_PASSWORD));
+        assertEquals(username, (String) data.get(FIELD_SITE_MANAGER_NAME));
+        assertEquals(password, (String) data.get(FIELD_SITE_MANAGER_PASSWORD));
         assertEquals(null, (String) data.get(FIELD_ONLY_DB_LOAD));
     }
 
@@ -148,8 +148,8 @@ public class PrepareRMSiteUnitTest
         DBObject data = (DBObject) event.getData();
         notNull(data);
         assertEquals(RM_SITE_ID, (String) data.get(FIELD_SITE_ID));
-        assertEquals(username, (String) data.get(FIELD_SITE_MANAGER));
-        assertEquals(password, (String) data.get(FIELD_SITE_MANAGERS_PASSWORD));
+        assertEquals(username, (String) data.get(FIELD_SITE_MANAGER_NAME));
+        assertEquals(password, (String) data.get(FIELD_SITE_MANAGER_PASSWORD));
         assertEquals(true, (Boolean) data.get(FIELD_ONLY_DB_LOAD));
     }
 
@@ -231,8 +231,8 @@ public class PrepareRMSiteUnitTest
         DBObject data = (DBObject) event.getData();
         notNull(data);
         assertEquals(mockedSiteData.getSiteId(), (String) data.get(FIELD_SITE_ID));
-        assertEquals(username, (String) data.get(FIELD_SITE_MANAGER));
-        assertEquals(password, (String) data.get(FIELD_SITE_MANAGERS_PASSWORD));
+        assertEquals(username, (String) data.get(FIELD_SITE_MANAGER_NAME));
+        assertEquals(password, (String) data.get(FIELD_SITE_MANAGER_PASSWORD));
         assertEquals(null, (String) data.get(FIELD_ONLY_DB_LOAD));
     }
 

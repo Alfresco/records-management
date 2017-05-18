@@ -60,8 +60,8 @@ public class PrepareRMSite extends AbstractEventProcessor
     public static final String RM_SITE_VISIBILITY = PUBLIC.toString();
 
     public static final String FIELD_SITE_ID = "siteId";
-    public static final String FIELD_SITE_MANAGER = "siteManager";
-    public static final String FIELD_SITE_MANAGERS_PASSWORD = "siteManagersPassword";
+    public static final String FIELD_SITE_MANAGER_NAME = "siteManagerName";
+    public static final String FIELD_SITE_MANAGER_PASSWORD = "siteManagerPassword";
     public static final String FIELD_ONLY_DB_LOAD = "onlyDbLoad";
 
     public static final String DEFAULT_EVENT_NAME_RM_SITE_PREPARED = "rmSitePrepared";
@@ -195,8 +195,8 @@ public class PrepareRMSite extends AbstractEventProcessor
 
         BasicDBObjectBuilder builder = BasicDBObjectBuilder.start();
         builder.add(FIELD_SITE_ID, RM_SITE_ID)
-               .add(FIELD_SITE_MANAGER, getUsername())
-               .add(FIELD_SITE_MANAGERS_PASSWORD, getPassword());
+               .add(FIELD_SITE_MANAGER_NAME, getUsername())
+               .add(FIELD_SITE_MANAGER_PASSWORD, getPassword());
 
         boolean existsRMSite = restAPIFactory.getRMSiteAPI(userModel).existsRMSite();
 
