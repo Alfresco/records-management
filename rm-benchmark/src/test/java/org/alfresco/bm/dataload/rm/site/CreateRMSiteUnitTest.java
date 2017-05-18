@@ -16,14 +16,17 @@ import static java.util.UUID.randomUUID;
 import static org.alfresco.bm.data.DataCreationState.Created;
 import static org.alfresco.bm.data.DataCreationState.Failed;
 import static org.alfresco.bm.data.DataCreationState.Scheduled;
+import static org.alfresco.bm.dataload.rm.role.RMRole.Administrator;
 import static org.alfresco.bm.dataload.rm.site.CreateRMSite.DEFAULT_EVENT_NAME_SITE_CREATED;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_ONLY_DB_LOAD;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGERS_PASSWORD;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.FILE_PLAN_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.TRANSFERS_ALIAS;
 import static org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -41,6 +44,8 @@ import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
+import org.alfresco.bm.site.SiteMemberData;
+import org.alfresco.rest.core.RMRestWrapper;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplan.FilePlan;
 import org.alfresco.rest.rm.community.model.site.RMSite;
@@ -53,9 +58,11 @@ import org.alfresco.rest.rm.community.requests.gscore.api.UnfiledContainerAPI;
 import org.alfresco.utility.model.UserModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 
 /**
  * Unit test for prepare RM site event processor
@@ -119,23 +126,30 @@ public class CreateRMSiteUnitTest
     }
 
     @Test
-    public void testWithNullSiteData() throws Exception
+    public void testWithNullOrEmptyPassword() throws Exception
     {
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        String siteId = randomUUID().toString();
-        when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
-        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(randomUUID().toString());
+        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn("someUserName");
         when(mockedEvent.getData()).thenReturn(mockedData);
-        when(mockedSiteDataService.getSite(siteId)).thenReturn(null);
+
+        //null password
+        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn(null);
         EventResult result = createRMSite.processEvent(mockedEvent);
         assertEquals(false, result.isSuccess());
-        assertEquals("Site has been removed: " + siteId, result.getData());
+        assertEquals("Requests data not complete for site creation: " + mockedData, result.getData());
+        assertEquals(0, result.getNextEvents().size());
+
+        //empty password
+        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn("");
+        result = createRMSite.processEvent(mockedEvent);
+        assertEquals(false, result.isSuccess());
+        assertEquals("Requests data not complete for site creation: " + mockedData, result.getData());
         assertEquals(0, result.getNextEvents().size());
     }
 
     @Test
-    public void testCreationStateNotScheduled() throws Exception
+    public void testCreationStateNotCreated() throws Exception
     {
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
@@ -143,11 +157,15 @@ public class CreateRMSiteUnitTest
         String siteId = randomUUID().toString();
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
         when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(randomUUID().toString());
+        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn("password");
         when(mockedEvent.getData()).thenReturn(mockedData);
         when(mockedSiteDataService.getSite(siteId)).thenReturn(mockedSiteData);
         when(mockedSiteData.getCreationState()).thenReturn(Failed);
         EventResult result = createRMSite.processEvent(mockedEvent);
         assertEquals(false, result.isSuccess());
+        verify(mockedSiteDataService, never()).addSite(any(SiteData.class));
+
+        verify(mockedSiteDataService, never()).addSiteMember(any(SiteMemberData.class));
         assertEquals("Site state has changed: " + mockedSiteData, result.getData());
         assertEquals(0, result.getNextEvents().size());
     }
@@ -161,10 +179,14 @@ public class CreateRMSiteUnitTest
         String siteId = randomUUID().toString();
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
         when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(randomUUID().toString());
+        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn("password");
         when(mockedEvent.getData()).thenReturn(mockedData);
         when(mockedSiteDataService.getSite(siteId)).thenReturn(mockedSiteData);
         when(mockedSiteData.getCreationState()).thenReturn(Created);
         EventResult result = createRMSite.processEvent(mockedEvent);
+        verify(mockedSiteDataService, never()).addSite(any(SiteData.class));
+
+        verify(mockedSiteDataService, never()).addSiteMember(any(SiteMemberData.class));
         assertEquals(false, result.isSuccess());
         assertEquals("RM Site already exists in DB: " + mockedSiteData, result.getData());
         assertEquals(0, result.getNextEvents().size());
@@ -175,7 +197,6 @@ public class CreateRMSiteUnitTest
     {
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        SiteData mockedSiteData = mock(SiteData.class);
         RMSiteAPI mockedRMSiteAPI = mock(RMSiteAPI.class);
         RMSite mockedRMSite = mock(RMSite.class);
         FilePlanAPI mockedFilePlanAPI = mock(FilePlanAPI.class);
@@ -188,11 +209,13 @@ public class CreateRMSiteUnitTest
 
         String siteId = randomUUID().toString();
         String siteManager = randomUUID().toString();
+        String password = "password";
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
         when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(siteManager);
+        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn(password);
         when(mockedEvent.getData()).thenReturn(mockedData);
-        when(mockedSiteDataService.getSite(siteId)).thenReturn(mockedSiteData);
-        when(mockedSiteData.getCreationState()).thenReturn(Scheduled);
+        when(mockedSiteDataService.getSite(siteId)).thenReturn(null);
+
         when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
         when(mockedRMSiteAPI.createRMSite(any(RMSite.class))).thenReturn(mockedRMSite);
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(true);
@@ -209,7 +232,29 @@ public class CreateRMSiteUnitTest
         when(mockedTransferContainerAPI.getTransferContainer(TRANSFERS_ALIAS)).thenReturn(mockedTransfers);
         when(mockedTransfers.getId()).thenReturn(randomUUID().toString());
 
+        RMRestWrapper mockedRmRestWrapper = mock(RMRestWrapper.class);
+        when(mockedRmRestWrapper.getStatusCode()).thenReturn(HttpStatus.CREATED.toString());
+        when(mockedRestAPIFactory.getRmRestWrapper()).thenReturn(mockedRmRestWrapper);
+
         EventResult result = createRMSite.processEvent(mockedEvent);
+
+
+        ArgumentCaptor<SiteData> siteData = forClass(SiteData.class);
+        verify(mockedSiteDataService).addSite(siteData.capture());
+
+        ArgumentCaptor<SiteMemberData> siteMemberData = forClass(SiteMemberData.class);
+        verify(mockedSiteDataService).addSiteMember(siteMemberData.capture());
+
+
+        // Check RM site
+        SiteData siteDataValue = siteData.getValue();
+        assertEquals(Scheduled, siteDataValue.getCreationState());
+
+        // Check RM admin member
+        SiteMemberData siteMemberDataValue = siteMemberData.getValue();
+        assertEquals(Created, siteMemberDataValue.getCreationState());
+        assertEquals(Administrator.toString(), siteMemberDataValue.getRole());
+
         verify(mockedRMSiteAPI, times(1)).createRMSite(any(RMSite.class));
         verify(mockedFileFolderService, times(3)).createNewFolder(any(FolderData.class));
         assertEquals(true, result.isSuccess());
@@ -223,11 +268,10 @@ public class CreateRMSiteUnitTest
     }
 
     @Test
-    public void testLoadingInDbExistendRmSite() throws Exception
+    public void testLoadingInDbExistentRmSite() throws Exception
     {
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        SiteData mockedSiteData = mock(SiteData.class);
         RMSiteAPI mockedRMSiteAPI = mock(RMSiteAPI.class);
         RMSite mockedRMSite = mock(RMSite.class);
 
@@ -241,13 +285,13 @@ public class CreateRMSiteUnitTest
 
         String siteId = randomUUID().toString();
         String siteManager = randomUUID().toString();
+        String password = "password";
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
         when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(siteManager);
+        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn(password);
         when(mockedData.get(FIELD_ONLY_DB_LOAD)).thenReturn(true);
         when(mockedEvent.getData()).thenReturn(mockedData);
 
-        when(mockedSiteDataService.getSite(siteId)).thenReturn(mockedSiteData);
-        when(mockedSiteData.getCreationState()).thenReturn(Scheduled);
         when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
         when(mockedRMSiteAPI.existsRMSite()).thenReturn(true);
 
@@ -269,6 +313,9 @@ public class CreateRMSiteUnitTest
 
         EventResult result = createRMSite.processEvent(mockedEvent);
         verify(mockedRMSiteAPI, never()).createRMSite(any(RMSite.class));
+        verify(mockedSiteDataService, never()).addSite(any(SiteData.class));
+        verify(mockedSiteDataService, never()).addSiteMember(any(SiteMemberData.class));
+
         verify(mockedFileFolderService, times(3)).createNewFolder(any(FolderData.class));
         assertEquals(true, result.isSuccess());
         assertEquals("RM site already exists, just loading it in the DB.", (String) result.getData());
@@ -285,17 +332,48 @@ public class CreateRMSiteUnitTest
     {
         Event mockedEvent = mock(Event.class);
         DBObject mockedData = mock(DBObject.class);
-        SiteData mockedSiteData = mock(SiteData.class);
         Exception mockedException = mock(RuntimeException.class);
         String siteId = randomUUID().toString();
         String siteManager = randomUUID().toString();
+        String password = "password";
         when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
         when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(siteManager);
+        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn(password);
         when(mockedEvent.getData()).thenReturn(mockedData);
-        when(mockedSiteDataService.getSite(siteId)).thenReturn(mockedSiteData);
-        when(mockedSiteData.getCreationState()).thenReturn(Scheduled);
+        when(mockedSiteDataService.getSite(siteId)).thenReturn(null);
         when(mockedRestAPIFactory.getRMSiteAPI(new UserModel(siteManager, siteManager))).thenThrow(mockedException);
         when(mockedException.getMessage()).thenReturn(randomUUID().toString());
         createRMSite.processEvent(mockedEvent);
+        verify(mockedSiteDataService, never()).addSite(any(SiteData.class));
+
+        verify(mockedSiteDataService, never()).addSiteMember(any(SiteMemberData.class));
+    }
+
+    @Test
+    public void testRMSiteCreationNotPossible() throws Exception
+    {
+        Event mockedEvent = mock(Event.class);
+        DBObject mockedData = mock(DBObject.class);
+        RMSiteAPI mockedRMSiteAPI = mock(RMSiteAPI.class);
+        String siteId = randomUUID().toString();
+        String siteManager = randomUUID().toString();
+        String password = "password";
+        when(mockedData.get(FIELD_SITE_ID)).thenReturn(siteId);
+        when(mockedData.get(FIELD_SITE_MANAGER)).thenReturn(siteManager);
+        when(mockedData.get(FIELD_SITE_MANAGERS_PASSWORD)).thenReturn(password);
+        when(mockedEvent.getData()).thenReturn(mockedData);
+        when(mockedSiteDataService.getSite(siteId)).thenReturn(null);
+        when(mockedRestAPIFactory.getRMSiteAPI(any(UserModel.class))).thenReturn(mockedRMSiteAPI);
+
+        RMRestWrapper mockedRmRestWrapper = mock(RMRestWrapper.class);
+        when(mockedRmRestWrapper.getStatusCode()).thenReturn(HttpStatus.FORBIDDEN.toString());
+        when(mockedRestAPIFactory.getRmRestWrapper()).thenReturn(mockedRmRestWrapper);
+
+        EventResult result = createRMSite.processEvent(mockedEvent);
+        verify(mockedSiteDataService, never()).addSite(any(SiteData.class));
+        verify(mockedSiteDataService, never()).addSiteMember(any(SiteMemberData.class));
+        assertEquals(false, result.isSuccess());
+        assertEquals("RM site could not be created.", result.getData());
+        assertEquals(0, result.getNextEvents().size());
     }
 }

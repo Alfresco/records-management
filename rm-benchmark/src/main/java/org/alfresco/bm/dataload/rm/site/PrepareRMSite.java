@@ -19,8 +19,6 @@
 package org.alfresco.bm.dataload.rm.site;
 
 import static org.alfresco.bm.data.DataCreationState.Created;
-import static org.alfresco.bm.data.DataCreationState.Scheduled;
-import static org.alfresco.bm.dataload.rm.role.RMRole.Administrator;
 import static org.alfresco.bm.site.SiteVisibility.PUBLIC;
 
 import java.util.ArrayList;
@@ -34,7 +32,6 @@ import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
-import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.core.RestAPIFactory;
@@ -64,6 +61,7 @@ public class PrepareRMSite extends AbstractEventProcessor
 
     public static final String FIELD_SITE_ID = "siteId";
     public static final String FIELD_SITE_MANAGER = "siteManager";
+    public static final String FIELD_SITE_MANAGERS_PASSWORD = "siteManagersPassword";
     public static final String FIELD_ONLY_DB_LOAD = "onlyDbLoad";
 
     public static final String DEFAULT_EVENT_NAME_RM_SITE_PREPARED = "rmSitePrepared";
@@ -194,46 +192,22 @@ public class PrepareRMSite extends AbstractEventProcessor
         }
 
         SiteData rmSite = siteDataService.getSite(RM_SITE_ID);
-        if (rmSite == null)
-        {
-            // Create data
-            rmSite = new SiteData();
-            rmSite.setSiteId(RM_SITE_ID);
-            rmSite.setTitle(RM_SITE_TITLE);
-            rmSite.setGuid(RM_SITE_GUID);
-            rmSite.setDomain(RM_SITE_DOMAIN);
-            rmSite.setDescription(RM_SITE_DESC);
-            rmSite.setSitePreset(RM_SITE_PRESET);
-            rmSite.setVisibility(RM_SITE_VISIBILITY);
-            rmSite.setType(RM_SITE_TYPE);
-            rmSite.setCreationState(Scheduled);
-            siteDataService.addSite(rmSite);
-            msg.append("   Added RM site '" + RM_SITE_ID + "' as created.\n");
-
-            // Record the administrator
-            SiteMemberData rmAdminMember = new SiteMemberData();
-            rmAdminMember.setCreationState(Created);
-            rmAdminMember.setRole(Administrator.toString());
-            rmAdminMember.setSiteId(RM_SITE_ID);
-            rmAdminMember.setUsername(getUsername());
-            siteDataService.addSiteMember(rmAdminMember);
-            msg.append("   Added user '" + getUsername() + "' RM administrator.\n");
-        }
 
         BasicDBObjectBuilder builder = BasicDBObjectBuilder.start();
-        builder.add(FIELD_SITE_ID, rmSite.getSiteId())
-               .add(FIELD_SITE_MANAGER, getUsername());
+        builder.add(FIELD_SITE_ID, RM_SITE_ID)
+               .add(FIELD_SITE_MANAGER, getUsername())
+               .add(FIELD_SITE_MANAGERS_PASSWORD, getPassword());
 
         boolean existsRMSite = restAPIFactory.getRMSiteAPI(userModel).existsRMSite();
 
         // RM site exists and it is loaded in MongoDB
-        if (existsRMSite && rmSite.getCreationState() == Created)
+        if (existsRMSite && rmSite != null && rmSite.getCreationState() == Created)
         {
             return new EventResult("RM Site already created, continue loading data.", new Event(getEventNameContinueLoadingData(), null));
         }
 
         // RM site exists and it is not loaded in MongoDB
-        if (existsRMSite && rmSite.getCreationState() != Created)
+        if (existsRMSite && rmSite == null)
         {
             builder.add(FIELD_ONLY_DB_LOAD, true);
             DBObject data = builder.get();

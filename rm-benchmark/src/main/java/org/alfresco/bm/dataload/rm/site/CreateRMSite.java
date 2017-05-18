@@ -14,11 +14,19 @@ package org.alfresco.bm.dataload.rm.site;
 import static org.alfresco.bm.data.DataCreationState.Created;
 import static org.alfresco.bm.data.DataCreationState.Failed;
 import static org.alfresco.bm.data.DataCreationState.Scheduled;
+import static org.alfresco.bm.dataload.rm.role.RMRole.Administrator;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_ONLY_DB_LOAD;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGERS_PASSWORD;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_DESC;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_ID;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_TITLE;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_DOMAIN;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_GUID;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_PRESET;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_VISIBILITY;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.RM_SITE_TYPE;
 import static org.alfresco.bm.dataload.RMEventConstants.FILEPLAN_CONTEXT;
 import static org.alfresco.bm.dataload.RMEventConstants.UNFILED_CONTEXT;
 import static org.alfresco.bm.dataload.RMEventConstants.TRANSFER_CONTEXT;
@@ -38,6 +46,7 @@ import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
+import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.rm.community.model.fileplan.FilePlan;
 import org.alfresco.rest.rm.community.model.site.RMSite;
@@ -46,6 +55,7 @@ import org.alfresco.rest.rm.community.model.unfiledcontainer.UnfiledContainer;
 import org.alfresco.rest.rm.community.requests.gscore.api.RMSiteAPI;
 import org.alfresco.utility.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 /**
  * RM Site creation event
@@ -94,33 +104,29 @@ public class CreateRMSite extends AbstractEventProcessor
 
         String siteId = (String) dataObj.get(FIELD_SITE_ID);
         String siteManager = (String) dataObj.get(FIELD_SITE_MANAGER);
+        String siteManagersPassword = (String) dataObj.get(FIELD_SITE_MANAGERS_PASSWORD);
         Boolean onlyLoadInDb = (Boolean) dataObj.get(FIELD_ONLY_DB_LOAD);
 
-        if (isBlank(siteId) || isBlank(siteManager))
+        if (isBlank(siteId) || isBlank(siteManager) || isBlank(siteManagersPassword))
         {
             return new EventResult("Requests data not complete for site creation: " + dataObj, false);
         }
 
         SiteData site = siteDataService.getSite(siteId);
-        if (site == null)
+        if(site !=null )
         {
-            return new EventResult("Site has been removed: " + siteId, false);
+            if (site.getCreationState() == Created)
+            {
+                return new EventResult("RM Site already exists in DB: " + site, false);
+            }
+            if (site.getCreationState() != Created)
+            {
+                return new EventResult("Site state has changed: " + site, false);
+            }
         }
-        if (site.getCreationState() == Created)
-        {
-            return new EventResult("RM Site already exists in DB: " + site, false);
-        }
-        if (site.getCreationState() != Created && site.getCreationState() != Scheduled)
-        {
-            return new EventResult("Site state has changed: " + site, false);
-        }
-
-        // Start by marking them as failures in order to handle all eventualities
-        siteDataService.setSiteCreationState(siteId, null, Failed);
-        siteDataService.setSiteMemberCreationState(siteId, siteManager, Failed);
 
         String msg = null;
-        RMSiteAPI rmSiteAPI = restAPIFactory.getRMSiteAPI(new UserModel(siteManager, siteManager));
+        RMSiteAPI rmSiteAPI = restAPIFactory.getRMSiteAPI(new UserModel(siteManager, siteManagersPassword));
         String guid = null;
         if (onlyLoadInDb == null)
         {
@@ -129,6 +135,40 @@ public class CreateRMSite extends AbstractEventProcessor
             siteModel.setDescription(RM_SITE_DESC);
 
             RMSite rmSite = rmSiteAPI.createRMSite(siteModel);
+            String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
+            if(HttpStatus.valueOf(Integer.parseInt(statusCode)) != HttpStatus.CREATED)
+            {
+                return new EventResult("RM site could not be created.", false);
+            }
+
+            if (site == null)
+            {
+                // Create data
+                site = new SiteData();
+                site.setSiteId(siteId);
+                site.setTitle(RM_SITE_TITLE);
+                site.setGuid(RM_SITE_GUID);
+                site.setDomain(RM_SITE_DOMAIN);
+                site.setDescription(RM_SITE_DESC);
+                site.setSitePreset(RM_SITE_PRESET);
+                site.setVisibility(RM_SITE_VISIBILITY);
+                site.setType(RM_SITE_TYPE);
+                site.setCreationState(Scheduled);
+                siteDataService.addSite(site);
+
+                // Record the administrator
+                SiteMemberData rmAdminMember = new SiteMemberData();
+                rmAdminMember.setCreationState(Created);
+                rmAdminMember.setRole(Administrator.toString());
+                rmAdminMember.setSiteId(RM_SITE_ID);
+                rmAdminMember.setUsername(siteManager);
+                siteDataService.addSiteMember(rmAdminMember);
+            }
+
+            // Start by marking them as failures in order to handle all eventualities
+            siteDataService.setSiteCreationState(siteId, null, Failed);
+            siteDataService.setSiteMemberCreationState(siteId, siteManager, Failed);
+
             guid = rmSite.getGuid();
             msg = "Created site: " + siteId + " Site creator: " + siteManager;
         }
@@ -143,7 +183,7 @@ public class CreateRMSite extends AbstractEventProcessor
         siteDataService.setSiteCreationState(siteId, guid, Created);
         siteDataService.setSiteMemberCreationState(siteId, siteManager, Created);
 
-        loadSpecialContainersInDB(siteId, siteManager);
+        loadSpecialContainersInDB(siteId, siteManager, siteManagersPassword);
         event = new Event(eventNameSiteCreated, null);
 
         if (logger.isDebugEnabled())
@@ -154,9 +194,9 @@ public class CreateRMSite extends AbstractEventProcessor
         return new EventResult(msg, event);
     }
 
-    private void loadSpecialContainersInDB(String siteId, String siteManager) throws Exception
+    private void loadSpecialContainersInDB(String siteId, String siteManager, String password) throws Exception
     {
-        UserModel userModel = new UserModel(siteManager, siteManager);
+        UserModel userModel = new UserModel(siteManager, password);
         FilePlan filePlanEntity = restAPIFactory.getFilePlansAPI(userModel).getFilePlan(FILE_PLAN_ALIAS);
 
         FolderData filePlan = new FolderData(

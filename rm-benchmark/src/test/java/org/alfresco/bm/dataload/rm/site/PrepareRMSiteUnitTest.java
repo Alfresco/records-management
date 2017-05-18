@@ -12,18 +12,16 @@
 package org.alfresco.bm.dataload.rm.site;
 
 import static org.alfresco.bm.data.DataCreationState.Created;
-import static org.alfresco.bm.data.DataCreationState.Scheduled;
-import static org.alfresco.bm.dataload.rm.role.RMRole.Administrator;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.DEFAULT_EVENT_NAME_RM_SITE_PREPARED;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_ONLY_DB_LOAD;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_ID;
 import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGER;
+import static org.alfresco.bm.dataload.rm.site.PrepareRMSite.FIELD_SITE_MANAGERS_PASSWORD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.util.Assert.notNull;
@@ -36,7 +34,6 @@ import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
-import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.bm.user.UserData;
 import org.alfresco.bm.user.UserDataService;
 import org.alfresco.rest.core.RestAPIFactory;
@@ -103,24 +100,6 @@ public class PrepareRMSiteUnitTest
         ArgumentCaptor<UserData> userData = forClass(UserData.class);
         verify(mockedUserDataService).createNewUser(userData.capture());
 
-        ArgumentCaptor<SiteData> siteData = forClass(SiteData.class);
-        verify(mockedSiteDataService).addSite(siteData.capture());
-
-        ArgumentCaptor<SiteMemberData> siteMemberData = forClass(SiteMemberData.class);
-        verify(mockedSiteDataService).addSiteMember(siteMemberData.capture());
-
-        // Check RM admin user
-        assertEquals(Created, userData.getValue().getCreationState());
-
-        // Check RM site
-        SiteData siteDataValue = siteData.getValue();
-        assertEquals(Scheduled, siteDataValue.getCreationState());
-
-        // Check RM admin member
-        SiteMemberData siteMemberDataValue = siteMemberData.getValue();
-        assertEquals(Created, siteMemberDataValue.getCreationState());
-        assertEquals(Administrator.toString(), siteMemberDataValue.getRole());
-
         // Check events
         assertEquals(true, result.isSuccess());
         List<Event> events = result.getNextEvents();
@@ -129,8 +108,9 @@ public class PrepareRMSiteUnitTest
         assertEquals(DEFAULT_EVENT_NAME_RM_SITE_PREPARED, event.getName());
         DBObject data = (DBObject) event.getData();
         notNull(data);
-        assertEquals(siteDataValue.getSiteId(), (String) data.get(FIELD_SITE_ID));
+        assertEquals(RM_SITE_ID, (String) data.get(FIELD_SITE_ID));
         assertEquals(username, (String) data.get(FIELD_SITE_MANAGER));
+        assertEquals(password, (String) data.get(FIELD_SITE_MANAGERS_PASSWORD));
         assertEquals(null, (String) data.get(FIELD_ONLY_DB_LOAD));
     }
 
@@ -156,23 +136,8 @@ public class PrepareRMSiteUnitTest
         ArgumentCaptor<UserData> userData = forClass(UserData.class);
         verify(mockedUserDataService).createNewUser(userData.capture());
 
-        ArgumentCaptor<SiteData> siteData = forClass(SiteData.class);
-        verify(mockedSiteDataService).addSite(siteData.capture());
-
-        ArgumentCaptor<SiteMemberData> siteMemberData = forClass(SiteMemberData.class);
-        verify(mockedSiteDataService).addSiteMember(siteMemberData.capture());
-
         // Check RM admin user
         assertEquals(Created, userData.getValue().getCreationState());
-
-        // Check RM site
-        SiteData siteDataValue = siteData.getValue();
-        assertEquals(Scheduled, siteDataValue.getCreationState());
-
-        // Check RM admin member
-        SiteMemberData siteMemberDataValue = siteMemberData.getValue();
-        assertEquals(Created, siteMemberDataValue.getCreationState());
-        assertEquals(Administrator.toString(), siteMemberDataValue.getRole());
 
         // Check events
         assertEquals(true, result.isSuccess());
@@ -182,8 +147,9 @@ public class PrepareRMSiteUnitTest
         assertEquals("loadRMSiteIntoDB", event.getName());
         DBObject data = (DBObject) event.getData();
         notNull(data);
-        assertEquals(siteDataValue.getSiteId(), (String) data.get(FIELD_SITE_ID));
+        assertEquals(RM_SITE_ID, (String) data.get(FIELD_SITE_ID));
         assertEquals(username, (String) data.get(FIELD_SITE_MANAGER));
+        assertEquals(password, (String) data.get(FIELD_SITE_MANAGERS_PASSWORD));
         assertEquals(true, (Boolean) data.get(FIELD_ONLY_DB_LOAD));
     }
 
@@ -212,10 +178,6 @@ public class PrepareRMSiteUnitTest
 
         ArgumentCaptor<UserData> userData = forClass(UserData.class);
         verify(mockedUserDataService).createNewUser(userData.capture());
-
-        verify(mockedSiteDataService, never()).addSite(any(SiteData.class));
-
-        verify(mockedSiteDataService, never()).addSiteMember(any(SiteMemberData.class));
 
         // Check RM admin user
         assertEquals(Created, userData.getValue().getCreationState());
@@ -256,10 +218,6 @@ public class PrepareRMSiteUnitTest
         ArgumentCaptor<UserData> userData = forClass(UserData.class);
         verify(mockedUserDataService).createNewUser(userData.capture());
 
-        verify(mockedSiteDataService, never()).addSite(any(SiteData.class));
-
-        verify(mockedSiteDataService, never()).addSiteMember(any(SiteMemberData.class));
-
         // Check RM admin user
         assertEquals(Created, userData.getValue().getCreationState());
 
@@ -274,6 +232,7 @@ public class PrepareRMSiteUnitTest
         notNull(data);
         assertEquals(mockedSiteData.getSiteId(), (String) data.get(FIELD_SITE_ID));
         assertEquals(username, (String) data.get(FIELD_SITE_MANAGER));
+        assertEquals(password, (String) data.get(FIELD_SITE_MANAGERS_PASSWORD));
         assertEquals(null, (String) data.get(FIELD_ONLY_DB_LOAD));
     }
 
