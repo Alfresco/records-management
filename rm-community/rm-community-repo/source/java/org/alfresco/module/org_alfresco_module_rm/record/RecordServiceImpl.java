@@ -28,6 +28,7 @@
 package org.alfresco.module.org_alfresco_module_rm.record;
 
 import static org.alfresco.module.org_alfresco_module_rm.record.RecordUtils.appendIdentifierToName;
+import static org.alfresco.module.org_alfresco_module_rm.record.RecordUtils.generateRecordIdentifier;
 import static org.alfresco.repo.policy.Behaviour.NotificationFrequency.FIRST_EVENT;
 import static org.alfresco.repo.policy.Behaviour.NotificationFrequency.TRANSACTION_COMMIT;
 import static org.alfresco.repo.policy.annotation.BehaviourKind.ASSOCIATION;
@@ -79,6 +80,7 @@ import org.alfresco.repo.content.ContentServicePolicies;
 import org.alfresco.repo.node.NodeServicePolicies;
 import org.alfresco.repo.policy.ClassPolicyDelegate;
 import org.alfresco.repo.policy.PolicyComponent;
+import org.alfresco.repo.policy.Behaviour.NotificationFrequency;
 import org.alfresco.repo.policy.annotation.Behaviour;
 import org.alfresco.repo.policy.annotation.BehaviourBean;
 import org.alfresco.repo.policy.annotation.BehaviourKind;
@@ -486,7 +488,7 @@ public class RecordServiceImpl extends BaseBehaviourBean
                             }
                         }
 
-                        // create and file the content as a record
+                        //create and file the content as a record
                         file(nodeRef);
                         // recalculate disposition schedule for the record when linking it
                         dispositionService.recalculateNextDispositionStep(nodeRef);
@@ -835,7 +837,7 @@ public class RecordServiceImpl extends BaseBehaviourBean
 
                         // make the document a record
                         makeRecord(nodeRef);
-                        appendIdentifierToName(nodeService, nodeRef);
+                        generateRecordIdentifier(nodeService, identifierService, nodeRef);
 
                         if (latestVersionRecord != null)
                         {
@@ -1045,7 +1047,7 @@ public class RecordServiceImpl extends BaseBehaviourBean
 
                     // make record
                     makeRecord(record);
-                    appendIdentifierToName(nodeService, record);
+                    generateRecordIdentifier(nodeService, identifierService, record);
 
                     // remove added copy assocs
                     List<AssociationRef> recordAssocs = nodeService.getTargetAssocs(record, ContentModel.ASSOC_ORIGINAL);
@@ -1180,7 +1182,7 @@ public class RecordServiceImpl extends BaseBehaviourBean
                     {
                         // make record
                         makeRecord(record);
-                        appendIdentifierToName(nodeService, record);
+                        generateRecordIdentifier(nodeService, identifierService, record);
                     }
 
                     return record;
@@ -1210,29 +1212,22 @@ public class RecordServiceImpl extends BaseBehaviourBean
         disablePropertyEditableCheck();
         try
         {
-            // get the record id
-            String recordId = identifierService.generateIdentifier(ASPECT_RECORD,
-                                                                   nodeService.getPrimaryParent(document).getParentRef());
-
-            // get the record name
-            String name = (String)nodeService.getProperty(document, ContentModel.PROP_NAME);
-
-            // add the record aspect
-            Map<QName, Serializable> props = new HashMap<QName, Serializable>(2);
-            props.put(PROP_IDENTIFIER, recordId);
-            props.put(PROP_ORIGIONAL_NAME, name);
-            nodeService.addAspect(document, RecordsManagementModel.ASPECT_RECORD, props);
-
-            // remove versionable aspect(s)
-            nodeService.removeAspect(document, RecordableVersionModel.ASPECT_VERSIONABLE);
-
-            // remove the owner
-            ownableService.setOwner(document, OwnableService.NO_OWNER);
-
-            if (TYPE_NON_ELECTRONIC_DOCUMENT.equals(nodeService.getType(document)))
+            authenticationUtil.runAsSystem(new RunAsWork<Void>()
             {
-                appendIdentifierToName(nodeService, document);
-            }
+                @Override
+                public Void doWork() throws Exception 
+                {
+                    nodeService.addAspect(document, RecordsManagementModel.ASPECT_RECORD, null);
+
+                    // remove versionable aspect(s)
+                    nodeService.removeAspect(document, RecordableVersionModel.ASPECT_VERSIONABLE);
+
+                    // remove the owner
+                    ownableService.setOwner(document, OwnableService.NO_OWNER);
+
+                    return null;
+                }
+            });
         }
         finally
         {
@@ -1800,7 +1795,7 @@ public class RecordServiceImpl extends BaseBehaviourBean
     {
         if (nodeService.exists(nodeRef) && !nodeService.hasAspect(nodeRef, ContentModel.ASPECT_HIDDEN) && !nodeService.hasAspect(nodeRef, ContentModel.ASPECT_LOCKABLE))
         {
-            appendIdentifierToName(nodeService, nodeRef);
+            generateRecordIdentifier(nodeService, identifierService, nodeRef);
         }
     }
 

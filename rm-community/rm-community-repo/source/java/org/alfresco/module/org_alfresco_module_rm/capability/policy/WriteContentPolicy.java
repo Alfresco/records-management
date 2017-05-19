@@ -32,9 +32,8 @@ import org.aopalliance.intercept.MethodInvocation;
 
 public class WriteContentPolicy extends AbstractBasePolicy
 {
-
     @SuppressWarnings("rawtypes")
-	public int evaluate(
+    public int evaluate(
             MethodInvocation invocation,
             Class[] params,
             ConfigAttributeDefinition cad)

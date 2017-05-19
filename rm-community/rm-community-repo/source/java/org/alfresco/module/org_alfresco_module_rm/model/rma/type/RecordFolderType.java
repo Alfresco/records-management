@@ -27,11 +27,14 @@
 
 package org.alfresco.module.org_alfresco_module_rm.model.rma.type;
 
+import static org.alfresco.module.org_alfresco_module_rm.record.RecordUtils.generateRecordIdentifier;
+
 import java.io.Serializable;
 import java.util.Map;
 
 import org.alfresco.error.AlfrescoRuntimeException;
 import org.alfresco.model.ContentModel;
+import org.alfresco.module.org_alfresco_module_rm.identifier.IdentifierService;
 import org.alfresco.module.org_alfresco_module_rm.model.RecordsManagementModel;
 import org.alfresco.module.org_alfresco_module_rm.model.behaviour.AbstractDisposableItem;
 import org.alfresco.module.org_alfresco_module_rm.record.RecordService;
@@ -77,6 +80,9 @@ public class RecordFolderType extends    AbstractDisposableItem
     /** vital record service */
     protected VitalRecordService vitalRecordService;
 
+    /** identifier service */
+    protected IdentifierService identifierService;
+
     /** I18N */
     private static final String MSG_CANNOT_CREATE_RECORD_FOLDER_CHILD = "rm.action.create.record.folder.child-error-message";
 
@@ -104,6 +110,11 @@ public class RecordFolderType extends    AbstractDisposableItem
     public void setVitalRecordService(VitalRecordService vitalRecordService)
     {
         this.vitalRecordService = vitalRecordService;
+    }
+
+    public void setIdentifierService(IdentifierService identifierService)
+    {
+        this.identifierService = identifierService;
     }
 
     /**
@@ -255,13 +266,15 @@ public class RecordFolderType extends    AbstractDisposableItem
     )
     public void onCreateChildAssociationOnCommit(ChildAssociationRef childAssocRef, boolean bNew)
     {
-        final NodeRef recordFolder = childAssocRef.getChildRef();
+        final NodeRef child = childAssocRef.getChildRef();
 
         // only records can be added in a record folder or hidden folders(is the case of e-mail attachments)
-        if (instanceOf(recordFolder, ContentModel.TYPE_FOLDER) && !nodeService.hasAspect(recordFolder, ContentModel.ASPECT_HIDDEN))
+        if (instanceOf(child, ContentModel.TYPE_FOLDER) && !nodeService.hasAspect(child, ContentModel.ASPECT_HIDDEN))
         {
-            throw new IntegrityException(I18NUtil.getMessage(MSG_CANNOT_CREATE_RECORD_FOLDER_CHILD, nodeService.getType(recordFolder)), null);
+            throw new IntegrityException(I18NUtil.getMessage(MSG_CANNOT_CREATE_RECORD_FOLDER_CHILD, nodeService.getType(child)), null);
         }
+
+        generateRecordIdentifier(nodeService, identifierService, child);
 
         behaviourFilter.disableBehaviour();
         try
@@ -272,7 +285,7 @@ public class RecordFolderType extends    AbstractDisposableItem
                 public Void doWork()
                 {
                     // setup vital record definition
-                    vitalRecordService.setupVitalRecordDefinition(recordFolder);
+                    vitalRecordService.setupVitalRecordDefinition(child);
 
                     return null;
                 }
