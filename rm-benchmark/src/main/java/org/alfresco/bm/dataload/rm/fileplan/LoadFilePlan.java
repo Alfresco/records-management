@@ -94,11 +94,9 @@ public class LoadFilePlan extends RMBaseEventProcessor
 
         String context = (String) dataObj.get(FIELD_CONTEXT);
         String path = (String) dataObj.get(FIELD_PATH);
-        Integer rootCategoriesToCreate = (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE);
         Integer categoriesToCreate = (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE);
         Integer foldersToCreate = (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE);
-        if (context == null || path == null || foldersToCreate == null || categoriesToCreate == null
-                    || rootCategoriesToCreate == null)
+        if (context == null || path == null || foldersToCreate == null || categoriesToCreate == null)
         {
             return new EventResult("Request data not complete for folder loading: " + dataObj, false);
         }
@@ -116,22 +114,20 @@ public class LoadFilePlan extends RMBaseEventProcessor
             return new EventResult("Load scheduling should create a session for each loader.", false);
         }
 
-        return loadCategory(folder, rootCategoriesToCreate, categoriesToCreate, foldersToCreate);
+        return loadCategory(folder, categoriesToCreate, foldersToCreate);
     }
 
     /**
-     * Helper method that creates specified number of root record categories if the specified container is the filePlan,
-     * specified number of record categories and record folder children if the container is a record category,
+     * Helper method that creates specified number of record categories and record folder children if the container is a record category,
      * or only specified number of record folders if we are on the last level or record categories.
      *
-     * @param container - filePlan, root record category, or ordinary record category
-     * @param rootFoldersToCreate - number of root record categories to create
+     * @param container - root record category, or ordinary record category
      * @param categoriesToCreate - number of record category children
      * @param foldersToCreate - number of record folder children
      * @return EventResult - the loading result or error if there was an exception on loading
      * @throws IOException
      */
-    private EventResult loadCategory(FolderData container, int rootCategoriesToCreate, int categoriesToCreate,
+    private EventResult loadCategory(FolderData container, int categoriesToCreate,
                 int foldersToCreate) throws IOException
     {
         UserData user = getRandomUser(logger);
@@ -141,16 +137,6 @@ public class LoadFilePlan extends RMBaseEventProcessor
         try
         {
             List<Event> scheduleEvents = new ArrayList<Event>();
-            // Create root categories
-            if(rootCategoriesToCreate > 0)
-            {
-                super.resumeTimer();
-                createRootCategory(container, userModel, rootCategoriesToCreate,
-                            ROOT_CATEGORY_NAME_IDENTIFIER, RECORD_CATEGORY_CONTEXT, loadFilePlanDelay);
-                super.suspendTimer();
-                String lockedPath = container.getPath() + "/locked";
-                fileFolderService.deleteFolder(container.getContext(), lockedPath, false);
-            }
 
             // Create categories
             if(categoriesToCreate > 0)
@@ -181,8 +167,7 @@ public class LoadFilePlan extends RMBaseEventProcessor
             scheduleEvents.add(event);
 
             DBObject resultData = BasicDBObjectBuilder.start()
-                        .add("msg", "Created " + rootCategoriesToCreate + " root categories, " + categoriesToCreate + " categories and " + foldersToCreate
-                                    + " record folders.")
+                        .add("msg", "Created " + categoriesToCreate + " categories and " + foldersToCreate + " record folders.")
                         .add("path", container.getPath())
                         .add("username", username).get();
 

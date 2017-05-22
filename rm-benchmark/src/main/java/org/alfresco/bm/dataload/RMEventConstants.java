@@ -43,6 +43,11 @@ public interface RMEventConstants
     String FILE_RECORD_OPERATION = "fileRecord";
     String LOAD_UNFILED_RECORD_OPERATION = "loadUnfiledRecord";
     String LOAD_RECORD_OPERATION = "loadRecord";
+    String LOAD_ROOT_CATEGORY_OPERATION = "loadRootCategory";
+    String LOAD_SUB_CATEGORY_OPERATION = "loadSubCategory";
+    String LOAD_RECORD_FOLDER_OPERATION = "loadRecordFolder";
+    String LOAD_ROOT_UNFILED_RECORD_FOLDER_OPERATION = "loadRootUnfiledRecordFolder";
+    String LOAD_UNFILED_RECORD_FOLDER_OPERATION = "loadUnfiledRecordFolder";
 
     String RECORD_FOLDER_NAME_IDENTIFIER = "bmFolder";
     String CATEGORY_NAME_IDENTIFIER = "bmCateg";

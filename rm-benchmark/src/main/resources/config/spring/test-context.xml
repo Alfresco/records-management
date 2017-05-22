@@ -31,6 +31,11 @@
     <constructor-arg name="collection" value="${mirror.fileFolders}" />
   </bean>
 
+  <bean id="auxFileFolderService" class="org.alfresco.bm.dataload.rm.services.ExtendedFileFolderService">
+    <constructor-arg name="db" ref="testMongoDB" />
+    <constructor-arg name="collection" value="${mirror.auxFileFolders}" />
+  </bean>
+
   <bean id="fileDataService" class="org.alfresco.bm.file.FileDataServiceImpl">
     <constructor-arg name="db" ref="testMongoDB" />
     <constructor-arg name="collection" value="${files.collection.name}" />
@@ -60,6 +65,7 @@
   <bean id="rmBaseEventProcessor" class="org.alfresco.bm.dataload.RMBaseEventProcessor"
     abstract="true" parent="event.base">
     <property name="fileFolderService" ref="fileFolderService" />
+    <property name="auxFileFolderService" ref="auxFileFolderService" />
     <property name="testFileService" ref="testFileService" />
   </bean>
 
@@ -161,20 +167,33 @@
     <property name="categoryNumber" value="${rm.categoryNumber}" />
     <property name="folderCategoryMix" value="${rm.folderCategoryMix}" />
     <property name="chart" value="false" />
-    <property name="eventNameLoadRecordCategories" value="loadRecordCategories" />
+    <property name="eventNameLoadRootRecordCategory" value="loadRootRecordCategory" />
+    <property name="eventNameLoadSubCategory" value="loadSubCategory" />
+    <property name="eventNameLoadRecordFolder" value="loadRecordFolder" />
     <property name="eventNameScheduleLoaders" value="scheduleFilePlanLoaders" />
     <property name="eventNameLoadingComplete" value="filePlanloadingComplete" />
   </bean>
 
-
-  <bean id="event.loadRecordCategories" class="org.alfresco.bm.dataload.rm.fileplan.LoadFilePlan"
-    parent="rmBaseEventProcessor">
-    <property name="eventNameRecordCategoryLoaded" value="recordCategoriesLoaded" />
+  <bean id="event.loadRootRecordCategory" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameComplete" value="rootRecordCategoryLoaded"/>
     <property name="chart" value="true" />
   </bean>
 
-  <bean id="producer.recordCategoriesLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer"
-    parent="producer.base" />
+  <bean id="producer.rootRecordCategoryLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <bean id="event.loadSubCategory" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameComplete" value="subCategoryLoaded"/>
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.subCategoryLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <bean id="event.loadRecordFolder" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameComplete" value="recordFolderLoaded"/>
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.recordFolderLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
   <!-- -->
   <!-- Upload Records -->

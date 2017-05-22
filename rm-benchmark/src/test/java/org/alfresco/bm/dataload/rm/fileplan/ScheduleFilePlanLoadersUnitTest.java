@@ -38,6 +38,7 @@ import com.mongodb.DBObject;
 import org.alfresco.bm.cm.FileFolderService;
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMEventConstants;
+import org.alfresco.bm.dataload.rm.services.ExtendedFileFolderService;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
@@ -62,6 +63,9 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
 
     @Mock
     private FileFolderService mockedFileFolderService;
+
+    @Mock
+    private ExtendedFileFolderService mockedAuxFileFolderService;
 
     @InjectMocks
     private ScheduleFilePlanLoaders scheduleFilePlanLoaders;
@@ -97,7 +101,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertNotNull(dataObj);
         assertEquals(FILEPLAN_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals("/a", (String) dataObj.get(FIELD_PATH));
-        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
 
@@ -180,7 +183,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertNotNull(dataObj);
         assertEquals(RECORD_CATEGORY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals("/a", (String) dataObj.get(FIELD_PATH));
-        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(categoriesChildrenNumber), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(foldersChildrenNumber), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
 
@@ -190,7 +192,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertNotNull(dataObj);
         assertEquals(RECORD_CATEGORY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals("/b", (String) dataObj.get(FIELD_PATH));
-        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(categoriesChildrenNumber), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(foldersChildrenNumber), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
 
@@ -330,7 +331,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertNotNull(dataObj);
         assertEquals(RECORD_CATEGORY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals("/a", (String) dataObj.get(FIELD_PATH));
-        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(categoriesChildrenNumber), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(foldersChildrenNumber), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
 
@@ -340,7 +340,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertNotNull(dataObj);
         assertEquals(RECORD_CATEGORY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals("/b", (String) dataObj.get(FIELD_PATH));
-        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(categoriesChildrenNumber), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(foldersChildrenNumber), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
 
@@ -394,7 +393,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertNotNull(dataObj);
         assertEquals(RECORD_CATEGORY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals("/a", (String) dataObj.get(FIELD_PATH));
-        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(categoriesChildrenNumber), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
 
@@ -404,7 +402,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertNotNull(dataObj);
         assertEquals(RECORD_CATEGORY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
         assertEquals("/b", (String) dataObj.get(FIELD_PATH));
-        assertEquals(Integer.valueOf(rootCategoriesNumber), (Integer) dataObj.get(FIELD_ROOT_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(categoriesChildrenNumber), (Integer) dataObj.get(FIELD_CATEGORIES_TO_CREATE));
         assertEquals(Integer.valueOf(0), (Integer) dataObj.get(FIELD_FOLDERS_TO_CREATE));
 

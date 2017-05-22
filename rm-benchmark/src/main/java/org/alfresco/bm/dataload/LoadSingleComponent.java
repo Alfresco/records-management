@@ -120,6 +120,26 @@ public class LoadSingleComponent extends RMBaseEventProcessor
         {
             return loadRecordOperation(folder);
         }
+        else if(LOAD_ROOT_CATEGORY_OPERATION.equals(operation))
+        {
+            return loadRootCategoryOperation(folder);
+        }
+        else if(LOAD_SUB_CATEGORY_OPERATION.equals(operation))
+        {
+            return loadSubCategoryOperation(folder);
+        }
+        else if(LOAD_RECORD_FOLDER_OPERATION.equals(operation))
+        {
+            return loadRecordFolderOperation(folder);
+        }
+        else if(LOAD_ROOT_UNFILED_RECORD_FOLDER_OPERATION.equals(operation))
+        {
+            return loadRootUnfiledRecordFolderOperation(folder);
+        }
+        else if(LOAD_UNFILED_RECORD_FOLDER_OPERATION.equals(operation))
+        {
+            return loadUnfiledRecordFolderOperation(folder);
+        }
         else
         {
             throw new IllegalStateException("Unsuported operation: " + operation);
@@ -291,5 +311,138 @@ public class LoadSingleComponent extends RMBaseEventProcessor
             // Build failure result
             return new EventResult(data, false);
         }
+    }
+
+    /**
+     * Helper method to load one root record category in filePlan.
+     *
+     * @param folder - the filePlan folder to load record in
+     * @return EventResult - the loading result or error if there was an exception on loading
+     */
+    private EventResult loadRootCategoryOperation(FolderData folder)
+    {
+        UserData user = getRandomUser(logger);
+        String username = user.getUsername();
+        String password = user.getPassword();
+        UserModel userModel = new UserModel(username, password);
+        try
+        {
+            List<Event> scheduleEvents = new ArrayList<Event>();
+            // Create root category
+            super.resumeTimer();
+            createRootCategory(folder, userModel, ROOT_CATEGORY_NAME_IDENTIFIER, RECORD_CATEGORY_CONTEXT, delay);
+            super.suspendTimer();
+
+            DBObject eventData = BasicDBObjectBuilder.start()
+                        .add(FIELD_CONTEXT, folder.getContext())
+                        .add(FIELD_PATH, folder.getPath()).get();
+            Event event = new Event(getEventNameComplete(), eventData);
+            scheduleEvents.add(event);
+
+            DBObject resultData = BasicDBObjectBuilder.start()
+                        .add("msg", "Created 1 root category.")
+                        .add("path", folder.getPath())
+                        .add("username", username).get();
+
+            return new EventResult(resultData, scheduleEvents);
+        }
+        catch (Exception e)
+        {
+            String error = e.getMessage();
+            String stack = ExceptionUtils.getStackTrace(e);
+            // Grab REST API information
+            DBObject data = BasicDBObjectBuilder.start().append("error", error).append("username", username)
+                        .append("path", folder.getPath()).append("stack", stack).get();
+            // Build failure result
+            return new EventResult(data, false);
+        }
+    }
+
+    private EventResult loadSubCategoryOperation(FolderData folder)
+    {
+        UserData user = getRandomUser(logger);
+        String username = user.getUsername();
+        String password = user.getPassword();
+        UserModel userModel = new UserModel(username, password);
+        try
+        {
+            List<Event> scheduleEvents = new ArrayList<Event>();
+            // Create sub-category
+            super.resumeTimer();
+            createSubCategory(folder, userModel, 1, CATEGORY_NAME_IDENTIFIER, RECORD_CATEGORY_CONTEXT, delay);
+            super.suspendTimer();
+
+            DBObject eventData = BasicDBObjectBuilder.start()
+                        .add(FIELD_CONTEXT, folder.getContext())
+                        .add(FIELD_PATH, folder.getPath()).get();
+            Event event = new Event(getEventNameComplete(), eventData);
+            scheduleEvents.add(event);
+
+            DBObject resultData = BasicDBObjectBuilder.start()
+                        .add("msg", "Created 1 sub-category")
+                        .add("path", folder.getPath())
+                        .add("username", username).get();
+
+            return new EventResult(resultData, scheduleEvents);
+        }
+        catch (Exception e)
+        {
+            String error = e.getMessage();
+            String stack = ExceptionUtils.getStackTrace(e);
+            // Grab REST API information
+            DBObject data = BasicDBObjectBuilder.start().append("error", error).append("username", username)
+                        .append("path", folder.getPath()).append("stack", stack).get();
+            // Build failure result
+            return new EventResult(data, false);
+        }
+    }
+
+    private EventResult loadRecordFolderOperation(FolderData folder)
+    {
+        UserData user = getRandomUser(logger);
+        String username = user.getUsername();
+        String password = user.getPassword();
+        UserModel userModel = new UserModel(username, password);
+        try
+        {
+            List<Event> scheduleEvents = new ArrayList<Event>();
+            // Create record folder
+            super.resumeTimer();
+            createRecordFolder(folder, userModel, 1, RECORD_FOLDER_NAME_IDENTIFIER, RECORD_FOLDER_CONTEXT, delay);
+            super.suspendTimer();
+
+            DBObject eventData = BasicDBObjectBuilder.start()
+                        .add(FIELD_CONTEXT, folder.getContext())
+                        .add(FIELD_PATH, folder.getPath()).get();
+            Event nextEvent = new Event(getEventNameComplete(), eventData);
+
+            scheduleEvents.add(nextEvent);
+            DBObject resultData = BasicDBObjectBuilder.start()
+                        .add("msg", "Created 1 record folder.")
+                        .add("path", folder.getPath())
+                        .add("username", username).get();
+
+            return new EventResult(resultData, scheduleEvents);
+        }
+        catch (Exception e)
+        {
+            String error = e.getMessage();
+            String stack = ExceptionUtils.getStackTrace(e);
+            // Grab REST API information
+            DBObject data = BasicDBObjectBuilder.start().append("error", error).append("username", username)
+                        .append("path", folder.getPath()).append("stack", stack).get();
+            // Build failure result
+            return new EventResult(data, false);
+        }
+    }
+
+    private EventResult loadRootUnfiledRecordFolderOperation(FolderData folder)
+    {
+        return null;
+    }
+
+    private EventResult loadUnfiledRecordFolderOperation(FolderData folder)
+    {
+        return null;
     }
 }

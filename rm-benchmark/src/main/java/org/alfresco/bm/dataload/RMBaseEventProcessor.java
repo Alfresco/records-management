@@ -45,6 +45,7 @@ import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.data.DataCreationState;
 import org.alfresco.bm.dataload.rm.role.RMRole;
 import org.alfresco.bm.dataload.rm.services.ExecutionState;
+import org.alfresco.bm.dataload.rm.services.ExtendedFileFolderService;
 import org.alfresco.bm.dataload.rm.services.RecordContext;
 import org.alfresco.bm.dataload.rm.services.RecordData;
 import org.alfresco.bm.dataload.rm.services.RecordService;
@@ -90,6 +91,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     /** Resource for derived classes to use for logging */
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     protected FileFolderService fileFolderService;
+    protected ExtendedFileFolderService auxFileFolderService;
     protected TestFileService testFileService;
     private ApplicationContext applicationContext;
 
@@ -118,53 +120,53 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         this.fileFolderService = fileFolderService;
     }
 
+    public void setAuxFileFolderService(ExtendedFileFolderService auxFileFolderService)
+    {
+        this.auxFileFolderService = auxFileFolderService;
+    }
+
     public void setTestFileService(TestFileService testFileService)
     {
         this.testFileService = testFileService;
     }
 
     /**
-     * Helper method for creating root record categories with the name starting with provided nameIdentifier and a random generated string.
+     * Helper method for creating one root record category with the name starting with provided nameIdentifier and a random generated string.
      *
      * @param folder - container that will contain created root record categories
-     * @param userModel - UserModel instance with wich rest api will be called
-     * @param componentsToCreate - number of root record categories to create
+     * @param userModel - UserModel instance with which rest api will be called
      * @param nameIdentifier - a string identifier that the created root record categories will start with
      * @param context - the context for created root record categories
      * @param loadFilePlanComponentDelay - delay between creation of root record categories
      * @throws Exception
      */
-    public void createRootCategory(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier, String context,
-                                              long loadFilePlanComponentDelay) throws Exception
+    public void createRootCategory(FolderData folder, UserModel userModel, String nameIdentifier, String context, long loadFilePlanComponentDelay) throws Exception
     {
         String unique;
 
         String folderPath = folder.getPath();
-        for (int i = 0; i < componentsToCreate; i++)
-        {
-            unique = UUID.randomUUID().toString();
-            String newfilePlanComponentName = nameIdentifier + unique;
-            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+        unique = UUID.randomUUID().toString();
+        String newfilePlanComponentName = nameIdentifier + unique;
+        String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
 
-            // Build root record category properties
-            RecordCategory recordCategoryModel = RecordCategory.builder()
-                        .name(newfilePlanComponentName)
-                        .nodeType(RECORD_CATEGORY_TYPE)
-                        .properties(RecordCategoryProperties.builder()
-                                    .title(newfilePlanComponentTitle)
-                                    .description(EMPTY)
-                                    .build())
-                        .build();
+        // Build root record category properties
+        RecordCategory recordCategoryModel = RecordCategory.builder()
+                    .name(newfilePlanComponentName)
+                    .nodeType(RECORD_CATEGORY_TYPE)
+                    .properties(RecordCategoryProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
 
-            FilePlanAPI filePlansAPI = getRestAPIFactory().getFilePlansAPI(userModel);
-            RecordCategory rootRecordCategory = filePlansAPI.createRootRecordCategory(recordCategoryModel, folder.getId());
-            String newRootRecordCategoryId = rootRecordCategory.getId();
-            fileFolderService.createNewFolder(newRootRecordCategoryId, context, folderPath + "/" + newfilePlanComponentName);
-            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
-        }
+        FilePlanAPI filePlansAPI = getRestAPIFactory().getFilePlansAPI(userModel);
+        RecordCategory rootRecordCategory = filePlansAPI.createRootRecordCategory(recordCategoryModel, folder.getId());
+        String newRootRecordCategoryId = rootRecordCategory.getId();
+        fileFolderService.createNewFolder(newRootRecordCategoryId, context, folderPath + "/" + newfilePlanComponentName);
+        TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
 
         // Increment counts
-        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, componentsToCreate);
+        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, 1);
     }
 
     /**
@@ -776,7 +778,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
      * @param context - the context of the needed children
      * @return all direct children of specified context from provided folder.
      */
-    private List<FolderData> getDirectChildrenByContext(FolderData parentFolder, String context)
+    public List<FolderData> getDirectChildrenByContext(FolderData parentFolder, String context)
     {
         int skip = 0;
         int limit = 100;
