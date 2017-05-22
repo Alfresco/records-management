@@ -221,6 +221,18 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
 
         if(unscheduledFilesCache.size() == 0)
         {
+            // Make sure there are no files in process of being declared.
+            int scheduledInPlaceRecords = (int) recordService.getRecordCountInSpecifiedPaths(ExecutionState.SCHEDULED.name(), null);
+            if(scheduledInPlaceRecords > 0)
+            {
+                // Reschedule self. Allow events to finish before raising the done event
+                Event nextEvent = new Event(getEventNameRescheduleSelf(), System.currentTimeMillis() + loadCheckDelay, null);
+                nextEvents.add(nextEvent);
+                eventOutputMsg.append("Waiting for " + scheduledInPlaceRecords + " in progress declare in place records events. Rescheduled self.");
+
+                return new EventResult(eventOutputMsg.toString(), nextEvents);
+            }
+
             // no more files to declare, raise done event
             return new EventResult(DONE_EVENT_MSG, new Event(getEventNameComplete(), null));
         }
