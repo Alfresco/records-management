@@ -41,7 +41,7 @@ import com.mongodb.DBObject;
 public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
 {
     public static final String EVENT_NAME_SCHEDULE_LOADERS = "scheduleFilePlanLoaders";
-    public static final String EVENT_NAME_LOADING_COMPLETE = "scheduleUnfiledRecordFoldersLoaders";
+    public static final String EVENT_NAME_LOADING_COMPLETE = "filePlanloadingComplete";
     public static final String EVENT_NAME_LOAD_ROOT_RECORD_CATEGORY = "loadRootRecordCategory";
     public static final String EVENT_NAME_LOAD_SUB_CATEGORY = "loadSubCategory";
     public static final String EVENT_NAME_LOAD_RECORD_FOLDER = "loadRecordFolder";
@@ -114,27 +114,11 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @return the maxActiveLoaders
-     */
-    public int getMaxActiveLoaders()
-    {
-        return maxActiveLoaders;
-    }
-
-    /**
      * @param maxActiveLoaders the maxActiveLoaders to set
      */
     public void setMaxActiveLoaders(int maxActiveLoaders)
     {
         this.maxActiveLoaders = maxActiveLoaders;
-    }
-
-    /**
-     * @return the loadCheckDelay
-     */
-    public long getLoadCheckDelay()
-    {
-        return loadCheckDelay;
     }
 
     /**
@@ -146,27 +130,11 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @return the childCategNumber
-     */
-    public int getChildCategNumber()
-    {
-        return childCategNumber;
-    }
-
-    /**
      * @param childCategNumber the childCategNumber to set
      */
     public void setChildCategNumber(int childCategNumber)
     {
         this.childCategNumber = childCategNumber;
-    }
-
-    /**
-     * @return the folderNumber
-     */
-    public int getFolderNumber()
-    {
-        return folderNumber;
     }
 
     /**
@@ -178,14 +146,6 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @return the categoryNumber
-     */
-    public int getCategoryNumber()
-    {
-        return categoryNumber;
-    }
-
-    /**
      * @param categoryNumber the categoryNumber to set
      */
     public void setCategoryNumber(int categoryNumber)
@@ -194,27 +154,11 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @return the folderCategoryMix
-     */
-    public boolean isFolderCategoryMix()
-    {
-        return folderCategoryMix;
-    }
-
-    /**
      * @param folderCategoryMix the folderCategoryMix to set
      */
     public void setFolderCategoryMix(boolean folderCategoryMix)
     {
         this.folderCategoryMix = folderCategoryMix;
-    }
-
-    /**
-     * @return the filePlanDepth
-     */
-    public int getCategoryStructureDepth()
-    {
-        return categoryStructureDepth;
     }
 
     /**
