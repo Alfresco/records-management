@@ -237,19 +237,26 @@
     <property name="unfiledRecordFolderNumber" value="${rm.unfiledRecordFolderNumber}" />
     <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
     <property name="chart" value="false" />
-    <property name="eventNameLoadUnfiledRecordFolders" value="loadUnfiledRecordFolders" />
+    <property name="eventNameLoadRootUnfiledRecordFolder" value="loadRootUnfiledRecordFolder" />
+    <property name="eventNameLoadUnfiledRecordFolder" value="loadUnfiledRecordFolder" />
     <property name="eventNameScheduleLoaders" value="scheduleUnfiledRecordFoldersLoaders" />
     <property name="eventNameLoadingComplete" value="loadingUnfiledRecordFoldersComplete" />
     <property name="eventNameContinueLoadingUnfiledRecords" value="scheduleUnfiledRecordLoaders" />
   </bean>
 
-  <bean id="event.loadUnfiledRecordFolders" class="org.alfresco.bm.dataload.rm.unfiled.LoadUnfiledRecordFolders" parent="rmBaseEventProcessor">
-    <property name="eventNameUnfiledRecordFoldersLoaded" value="unfiledRecordFoldersLoaded" />
+  <bean id="event.loadRootUnfiledRecordFolder" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameComplete" value="rootUnfiledRecordFolderLoaded"/>
     <property name="chart" value="true" />
   </bean>
 
-  <bean id="producer.unfiledRecordFoldersLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+  <bean id="producer.rootUnfiledRecordFolderLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
 
+  <bean id="event.loadUnfiledRecordFolder" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmBaseEventProcessor">
+    <property name="eventNameComplete" value="unfiledRecordFolderLoaded"/>
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.unfiledRecordFolderLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
   <!-- -->
   <!-- Upload Unfiled Records -->
   <!-- -->

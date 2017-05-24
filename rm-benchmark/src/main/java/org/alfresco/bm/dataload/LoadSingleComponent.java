@@ -448,13 +448,105 @@ public class LoadSingleComponent extends RMBaseEventProcessor
         }
     }
 
+    /**
+     * Helper method to load one root unfiled record folder in unfiled record container.
+     *
+     * @param folder - the unfiled record container folder to load root unfiled record folder in
+     * @return EventResult - the loading result or error if there was an exception on loading
+     */
     private EventResult loadRootUnfiledRecordFolderOperation(FolderData folder)
     {
-        return null;
+        UserData user = getRandomUser(logger);
+        String username = user.getUsername();
+        String password = user.getPassword();
+        UserModel userModel = new UserModel(username, password);
+
+        try
+        {
+            List<Event> scheduleEvents = new ArrayList<Event>();
+            //Create one root unfiled record folder
+            super.resumeTimer();
+            createRootUnfiledRecordFolder(folder, userModel, ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, folder.getContext(), delay);
+            super.suspendTimer();
+
+            DBObject eventData = BasicDBObjectBuilder.start()
+                        .add(FIELD_CONTEXT, folder.getContext())
+                        .add(FIELD_PATH, folder.getPath()).get();
+           Event nextEvent = new Event(getEventNameComplete(), eventData);
+
+           scheduleEvents.add(nextEvent);
+            DBObject resultData = BasicDBObjectBuilder.start()
+                        .add("msg", "Created 1 root unfiled record folder.")
+                        .add("path", folder.getPath())
+                        .add("username", username)
+                        .get();
+
+            return new EventResult(resultData, scheduleEvents);
+        }
+        catch (Exception e)
+        {
+            String error = e.getMessage();
+            String stack = ExceptionUtils.getStackTrace(e);
+            // Grab REST API information
+            DBObject data = BasicDBObjectBuilder.start()
+                        .append("error", error)
+                        .append("username", username)
+                        .append("path", folder.getPath())
+                        .append("stack", stack)
+                        .get();
+            // Build failure result
+            return new EventResult(data, false);
+        }
     }
 
+    /**
+     * Helper method to load one unfiled record folder in specified container.
+     *
+     * @param folder - the unfiled record folder to load unfiled record folder in
+     * @return EventResult - the loading result or error if there was an exception on loading
+     */
     private EventResult loadUnfiledRecordFolderOperation(FolderData folder)
     {
-        return null;
+        UserData user = getRandomUser(logger);
+        String username = user.getUsername();
+        String password = user.getPassword();
+        UserModel userModel = new UserModel(username, password);
+
+        try
+        {
+            List<Event> scheduleEvents = new ArrayList<Event>();
+            //Create one unfiled record folder
+            super.resumeTimer();
+            createUnfiledRecordFolder(folder, userModel, UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, folder.getContext(), delay);
+            super.suspendTimer();
+
+            DBObject eventData = BasicDBObjectBuilder.start()
+                        .add(FIELD_CONTEXT, folder.getContext())
+                        .add(FIELD_PATH, folder.getPath()).get();
+           Event nextEvent = new Event(getEventNameComplete(), eventData);
+
+           scheduleEvents.add(nextEvent);
+            DBObject resultData = BasicDBObjectBuilder.start()
+                        .add("msg", "Created 1 unfiled record folder.")
+                        .add("path", folder.getPath())
+                        .add("username", username)
+                        .get();
+
+            return new EventResult(resultData, scheduleEvents);
+        }
+        catch (Exception e)
+        {
+            String error = e.getMessage();
+            String stack = ExceptionUtils.getStackTrace(e);
+            // Grab REST API information
+            DBObject data = BasicDBObjectBuilder.start()
+                        .append("error", error)
+                        .append("username", username)
+                        .append("path", folder.getPath())
+                        .append("stack", stack)
+                        .get();
+            // Build failure result
+            return new EventResult(data, false);
+        }
     }
 }

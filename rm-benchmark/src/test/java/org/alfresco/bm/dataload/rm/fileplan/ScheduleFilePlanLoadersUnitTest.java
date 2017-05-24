@@ -104,11 +104,6 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
         scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
         scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
-        FolderData mockedFilePlanFolder = mock(FolderData.class);
-        when(mockedFilePlanFolder.getContext()).thenReturn(FILEPLAN_CONTEXT);
-        when(mockedFilePlanFolder.getPath()).thenReturn("/a");
-        List<FolderData> folders = Arrays.asList(mockedFilePlanFolder);
-        when(mockedFileFolderService.getFoldersByCounts(FILEPLAN_CONTEXT, 3L, 3L, 0L, Long.valueOf(rootCategoriesNumber-1), null, null, 0, 100)).thenReturn(folders);
 
         FolderData filePlanFolder = mock(FolderData.class);
         when(filePlanFolder.getContext()).thenReturn(FILEPLAN_CONTEXT);
