@@ -286,6 +286,181 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         }
         assertEquals(EVENT_SCHEDULE_SELF, result.getNextEvents().get(4).getName());
     }
+
+    @Test
+    public void testCalculateMaxChildrenWithMix() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 0;
+        int categoriesChildrenNumber = 2;
+        int foldersChildrenNumber= 0;
+        int categoryStructureDepth = 4;
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        scheduleFilePlanLoaders.setChildCategNumber(categoriesChildrenNumber);
+
+        scheduleFilePlanLoaders.setFolderNumber(foldersChildrenNumber);
+        scheduleFilePlanLoaders.setFolderCategoryMix(true);
+
+        FolderData mockedRootCategoryFolder = mock(FolderData.class);
+        when(mockedRootCategoryFolder.getContext()).thenReturn(RECORD_CATEGORY_CONTEXT);
+        when(mockedRootCategoryFolder.getPath()).thenReturn("/a");
+        String name1 = ROOT_CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedRootCategoryFolder.getName()).thenReturn(name1);
+
+        FolderData mockedChildCategoryFolder = mock(FolderData.class);
+        when(mockedChildCategoryFolder.getContext()).thenReturn(RECORD_CATEGORY_CONTEXT);
+        when(mockedChildCategoryFolder.getPath()).thenReturn("/b");
+        String name2 = CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedChildCategoryFolder.getName()).thenReturn(name2);
+
+        FolderData filePlanFolder = mock(FolderData.class);
+        when(filePlanFolder.getContext()).thenReturn(FILEPLAN_CONTEXT);
+        when(filePlanFolder.getPath()).thenReturn(RECORD_CONTAINER_PATH);
+        when(mockedFileFolderService.getFolder(FILEPLAN_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(filePlanFolder);
+
+        String id1 = UUID.randomUUID().toString();
+        FolderData auxFolder1 = mock(FolderData.class);
+        when(auxFolder1.getFolderCount()).thenReturn(1L)
+        .thenReturn(0L);
+        when(mockedRootCategoryFolder.getId()).thenReturn(id1);
+        when(mockedAuxFileFolderService.getFolder(id1)).thenReturn(auxFolder1);
+
+        String id2 = UUID.randomUUID().toString();
+        FolderData auxFolder2 = mock(FolderData.class);
+        when(auxFolder2.getFolderCount()).thenReturn(1L)
+        .thenReturn(0L);
+        when(mockedChildCategoryFolder.getId()).thenReturn(id2);
+        when(mockedAuxFileFolderService.getFolder(id2)).thenReturn(auxFolder2);
+
+
+        List<FolderData> folders = Arrays.asList(mockedRootCategoryFolder, mockedChildCategoryFolder);
+        when(mockedFileFolderService.getFoldersByCounts(RECORD_CATEGORY_CONTEXT, Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1), 0L, Long.valueOf(categoriesChildrenNumber-1), null, null, 0, 100)).thenReturn(folders);
+
+        FolderData mockedExitingCategory1 = mock(FolderData.class);
+        FolderData mockedExitingCategory2 = mock(FolderData.class);
+        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, "/a", 0, 100)).thenReturn(Arrays.asList(mockedExitingCategory1));
+        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, "/b", 0, 100)).thenReturn(Arrays.asList(mockedExitingCategory2));
+        when(mockedRootCategoryFolder.getFolderCount()).thenReturn(1L);
+
+        when(mockedFileFolderService.getFoldersByCounts(RECORD_CATEGORY_CONTEXT, null, null, null, null, null, null, 0, 1)).thenReturn(Arrays.asList(mockedRootCategoryFolder));
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedSessionService, times(2)).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Raised further 2 events and rescheduled self.",result.getData());
+        assertEquals(3, result.getNextEvents().size());
+
+        for(int i=0; i<2; i++)
+        {
+            Event event = result.getNextEvents().get(i);
+            assertEquals(EVENT_LOAD_SUB_CATEGORY, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
+            assertNotNull(dataObj);
+            assertEquals(RECORD_CATEGORY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+            if(i == 0)
+            {
+                assertEquals("/a", (String) dataObj.get(FIELD_PATH));
+            }
+            else
+            {
+                assertEquals("/b", (String) dataObj.get(FIELD_PATH));
+            }
+            assertEquals(LOAD_SUB_CATEGORY_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
+        }
+        assertEquals(EVENT_SCHEDULE_SELF, result.getNextEvents().get(2).getName());
+    }
+
+    @Test
+    public void testCalculateMaxChildrenWithoutMix() throws Exception
+    {
+        int maxActiveLoaders = 8;
+        int rootCategoriesNumber = 0;
+        int categoriesChildrenNumber = 2;
+        int foldersChildrenNumber= 0;
+        int categoryStructureDepth = 4;
+
+        scheduleFilePlanLoaders.setMaxActiveLoaders(maxActiveLoaders);
+        scheduleFilePlanLoaders.setCategoryNumber(rootCategoriesNumber);
+        scheduleFilePlanLoaders.setCategoryStructureDepth(categoryStructureDepth);
+        scheduleFilePlanLoaders.setChildCategNumber(categoriesChildrenNumber);
+
+        scheduleFilePlanLoaders.setFolderNumber(foldersChildrenNumber);
+        scheduleFilePlanLoaders.setFolderCategoryMix(false);
+
+        FolderData mockedRootCategoryFolder = mock(FolderData.class);
+        when(mockedRootCategoryFolder.getContext()).thenReturn(RECORD_CATEGORY_CONTEXT);
+        when(mockedRootCategoryFolder.getPath()).thenReturn("/a");
+        String name1 = ROOT_CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedRootCategoryFolder.getName()).thenReturn(name1);
+
+        FolderData mockedChildCategoryFolder = mock(FolderData.class);
+        when(mockedChildCategoryFolder.getContext()).thenReturn(RECORD_CATEGORY_CONTEXT);
+        when(mockedChildCategoryFolder.getPath()).thenReturn("/b");
+        String name2 = CATEGORY_NAME_IDENTIFIER + UUID.randomUUID().toString();
+        when(mockedChildCategoryFolder.getName()).thenReturn(name2);
+
+        FolderData filePlanFolder = mock(FolderData.class);
+        when(filePlanFolder.getContext()).thenReturn(FILEPLAN_CONTEXT);
+        when(filePlanFolder.getPath()).thenReturn(RECORD_CONTAINER_PATH);
+        when(mockedFileFolderService.getFolder(FILEPLAN_CONTEXT, RECORD_CONTAINER_PATH)).thenReturn(filePlanFolder);
+
+        String id1 = UUID.randomUUID().toString();
+        FolderData auxFolder1 = mock(FolderData.class);
+        when(auxFolder1.getFolderCount()).thenReturn(1L)
+        .thenReturn(0L);
+        when(mockedRootCategoryFolder.getId()).thenReturn(id1);
+        when(mockedAuxFileFolderService.getFolder(id1)).thenReturn(auxFolder1);
+
+        String id2 = UUID.randomUUID().toString();
+        FolderData auxFolder2 = mock(FolderData.class);
+        when(auxFolder2.getFolderCount()).thenReturn(1L)
+        .thenReturn(0L);
+        when(mockedChildCategoryFolder.getId()).thenReturn(id2);
+        when(mockedAuxFileFolderService.getFolder(id2)).thenReturn(auxFolder2);
+
+
+        List<FolderData> folders = Arrays.asList(mockedRootCategoryFolder, mockedChildCategoryFolder);
+        when(mockedFileFolderService.getFoldersByCounts(RECORD_CATEGORY_CONTEXT, Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1), 0L, Long.valueOf(categoriesChildrenNumber-1), null, null, 0, 100)).thenReturn(folders);
+
+        FolderData mockedExitingCategory1 = mock(FolderData.class);
+        FolderData mockedExitingCategory2 = mock(FolderData.class);
+        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, "/a", 0, 100)).thenReturn(Arrays.asList(mockedExitingCategory1));
+        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, "/b", 0, 100)).thenReturn(Arrays.asList(mockedExitingCategory2));
+        when(mockedRootCategoryFolder.getFolderCount()).thenReturn(1L);
+
+        when(mockedFileFolderService.getFoldersByCounts(RECORD_CATEGORY_CONTEXT, null, null, null, null, null, null, 0, 1)).thenReturn(Arrays.asList(mockedRootCategoryFolder));
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedSessionService, times(2)).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("Raised further 2 events and rescheduled self.",result.getData());
+        assertEquals(3, result.getNextEvents().size());
+
+        for(int i=0; i<2; i++)
+        {
+            Event event = result.getNextEvents().get(i);
+            assertEquals(EVENT_LOAD_SUB_CATEGORY, event.getName());
+            DBObject dataObj = (DBObject)event.getData();
+            assertNotNull(dataObj);
+            assertEquals(RECORD_CATEGORY_CONTEXT, (String) dataObj.get(FIELD_CONTEXT));
+            if(i == 0)
+            {
+                assertEquals("/a", (String) dataObj.get(FIELD_PATH));
+            }
+            else
+            {
+                assertEquals("/b", (String) dataObj.get(FIELD_PATH));
+            }
+            assertEquals(LOAD_SUB_CATEGORY_OPERATION, dataObj.get(FIELD_LOAD_OPERATION));
+        }
+        assertEquals(EVENT_SCHEDULE_SELF, result.getNextEvents().get(2).getName());
+    }
+
     @Test
     public void testSchedule4ChildrenCategoriesWithMaxActiveLoaders3() throws Exception
     {
