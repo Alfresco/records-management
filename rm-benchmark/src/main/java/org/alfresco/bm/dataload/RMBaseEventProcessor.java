@@ -170,91 +170,82 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     }
 
     /**
-     * Helper method for creating child record categories with the name starting with provided nameIdentifier and a random generated string.
+     * Helper method for creating one sub-category with the name starting with provided nameIdentifier and a random generated string.
      *
-     * @param folder - container that will contain created child record categories
+     * @param folder - container that will contain created sub-category
      * @param userModel - UserModel instance with wich rest api will be called
-     * @param componentsToCreate - number of child record categories to create
-     * @param nameIdentifier - a string identifier that the created child record categories will start with
-     * @param context - the context for created child record categories
-     * @param loadFilePlanComponentDelay - delay between creation of child record categories
+     * @param nameIdentifier - a string identifier that the created sub-category will start with
+     * @param context - the context for created sub-category
+     * @param loadFilePlanComponentDelay - delay between creation of sub-categories
      * @throws Exception
      */
-    public void createSubCategory(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier, String context,
+    public void createSubCategory(FolderData folder, UserModel userModel, String nameIdentifier, String context,
                 long loadFilePlanComponentDelay) throws Exception
     {
         String unique;
 
         String folderPath = folder.getPath();
-        for (int i = 0; i < componentsToCreate; i++)
-        {
-            unique = UUID.randomUUID().toString();
-            String newfilePlanComponentName = nameIdentifier + unique;
-            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+        unique = UUID.randomUUID().toString();
+        String newfilePlanComponentName = nameIdentifier + unique;
+        String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
 
-            // Build child record category properties
-            RecordCategoryChild recordCategoryChildModel = RecordCategoryChild.builder()
-                        .name(newfilePlanComponentName)
-                        .nodeType(RECORD_CATEGORY_TYPE)
-                        .properties(RecordCategoryChildProperties.builder()
-                                    .title(newfilePlanComponentTitle)
-                                    .description(EMPTY)
-                                    .build())
-                        .build();
+        // Build child record category properties
+        RecordCategoryChild recordCategoryChildModel = RecordCategoryChild.builder()
+                    .name(newfilePlanComponentName)
+                    .nodeType(RECORD_CATEGORY_TYPE)
+                    .properties(RecordCategoryChildProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
 
-            RecordCategoryAPI recordCategoryAPI = getRestAPIFactory().getRecordCategoryAPI(userModel);
-            RecordCategoryChild childRecordCategory = recordCategoryAPI.createRecordCategoryChild(recordCategoryChildModel, folder.getId());
-            String newChildRecordCategoryId = childRecordCategory.getId();
-            fileFolderService.createNewFolder(newChildRecordCategoryId, context, folderPath + "/" + newfilePlanComponentName);
-            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
-        }
+        RecordCategoryAPI recordCategoryAPI = getRestAPIFactory().getRecordCategoryAPI(userModel);
+        RecordCategoryChild childRecordCategory = recordCategoryAPI.createRecordCategoryChild(recordCategoryChildModel, folder.getId());
+        String newChildRecordCategoryId = childRecordCategory.getId();
+        fileFolderService.createNewFolder(newChildRecordCategoryId, context, folderPath + "/" + newfilePlanComponentName);
+        TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
 
         // Increment counts
-        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, componentsToCreate);
+        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, 1);
     }
 
     /**
      * Helper method for creating child record folder with the name starting with provided nameIdentifier and a random generated string.
      *
-     * @param folder - container that will contain created child record folder
+     * @param folder - container that will contain created record folder
      * @param userModel - UserModel instance with wich rest api will be called
-     * @param componentsToCreate - number of child record folder to create
-     * @param nameIdentifier - a string identifier that the created child record folders will start with
+     * @param nameIdentifier - a string identifier that the created child record folder will start with
      * @param context - the context for created child record folder
      * @param loadFilePlanComponentDelay - delay between creation of child record folders
      * @throws Exception
      */
-    public void createRecordFolder(FolderData folder, UserModel userModel, int componentsToCreate, String nameIdentifier, String context,
+    public void createRecordFolder(FolderData folder, UserModel userModel, String nameIdentifier, String context,
                 long loadFilePlanComponentDelay) throws Exception
     {
         String unique;
 
         String folderPath = folder.getPath();
-        for (int i = 0; i < componentsToCreate; i++)
-        {
-            unique = UUID.randomUUID().toString();
-            String newfilePlanComponentName = nameIdentifier + unique;
-            String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
+        unique = UUID.randomUUID().toString();
+        String newfilePlanComponentName = nameIdentifier + unique;
+        String newfilePlanComponentTitle = "title: " + newfilePlanComponentName;
 
-            // Build child record folder properties
-            RecordCategoryChild recordCategoryChildModel = RecordCategoryChild.builder()
-                        .name(newfilePlanComponentName)
-                        .nodeType(RECORD_FOLDER_TYPE)
-                        .properties(RecordCategoryChildProperties.builder()
-                                    .title(newfilePlanComponentTitle)
-                                    .description(EMPTY)
-                                    .build())
-                        .build();
+        // Build child record folder properties
+        RecordCategoryChild recordCategoryChildModel = RecordCategoryChild.builder()
+                    .name(newfilePlanComponentName)
+                    .nodeType(RECORD_FOLDER_TYPE)
+                    .properties(RecordCategoryChildProperties.builder()
+                                .title(newfilePlanComponentTitle)
+                                .description(EMPTY)
+                                .build())
+                    .build();
 
-            RecordCategoryAPI recordCategoryAPI = getRestAPIFactory().getRecordCategoryAPI(userModel);
-            RecordCategoryChild childRecordFolder = recordCategoryAPI.createRecordCategoryChild(recordCategoryChildModel, folder.getId());
-            String newChildRecordFolderId = childRecordFolder.getId();
-            fileFolderService.createNewFolder(newChildRecordFolderId, context, folderPath + "/" + newfilePlanComponentName);
-            TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
-        }
-
+        RecordCategoryAPI recordCategoryAPI = getRestAPIFactory().getRecordCategoryAPI(userModel);
+        RecordCategoryChild childRecordFolder = recordCategoryAPI.createRecordCategoryChild(recordCategoryChildModel, folder.getId());
+        String newChildRecordFolderId = childRecordFolder.getId();
+        fileFolderService.createNewFolder(newChildRecordFolderId, context, folderPath + "/" + newfilePlanComponentName);
+        TimeUnit.MILLISECONDS.sleep(loadFilePlanComponentDelay);
         // Increment counts
-        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, componentsToCreate);
+        fileFolderService.incrementFolderCount(folder.getContext(), folderPath, 1);
     }
 
     /**

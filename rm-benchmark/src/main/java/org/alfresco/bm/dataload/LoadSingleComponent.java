@@ -316,7 +316,7 @@ public class LoadSingleComponent extends RMBaseEventProcessor
     /**
      * Helper method to load one root record category in filePlan.
      *
-     * @param folder - the filePlan folder to load record in
+     * @param folder - the filePlan folder to load root category in
      * @return EventResult - the loading result or error if there was an exception on loading
      */
     private EventResult loadRootCategoryOperation(FolderData folder)
@@ -358,6 +358,12 @@ public class LoadSingleComponent extends RMBaseEventProcessor
         }
     }
 
+    /**
+     * Helper method to load one sub-category in specified record category.
+     *
+     * @param folder - the record category folder to load sub-category in
+     * @return EventResult - the loading result or error if there was an exception on loading
+     */
     private EventResult loadSubCategoryOperation(FolderData folder)
     {
         UserData user = getRandomUser(logger);
@@ -369,7 +375,7 @@ public class LoadSingleComponent extends RMBaseEventProcessor
             List<Event> scheduleEvents = new ArrayList<Event>();
             // Create sub-category
             super.resumeTimer();
-            createSubCategory(folder, userModel, 1, CATEGORY_NAME_IDENTIFIER, RECORD_CATEGORY_CONTEXT, delay);
+            createSubCategory(folder, userModel, CATEGORY_NAME_IDENTIFIER, RECORD_CATEGORY_CONTEXT, delay);
             super.suspendTimer();
 
             DBObject eventData = BasicDBObjectBuilder.start()
@@ -397,6 +403,12 @@ public class LoadSingleComponent extends RMBaseEventProcessor
         }
     }
 
+    /**
+     * Helper method to load one record folder in specified record category.
+     *
+     * @param folder - the record category folder to load record folder in
+     * @return EventResult - the loading result or error if there was an exception on loading
+     */
     private EventResult loadRecordFolderOperation(FolderData folder)
     {
         UserData user = getRandomUser(logger);
@@ -408,7 +420,7 @@ public class LoadSingleComponent extends RMBaseEventProcessor
             List<Event> scheduleEvents = new ArrayList<Event>();
             // Create record folder
             super.resumeTimer();
-            createRecordFolder(folder, userModel, 1, RECORD_FOLDER_NAME_IDENTIFIER, RECORD_FOLDER_CONTEXT, delay);
+            createRecordFolder(folder, userModel, RECORD_FOLDER_NAME_IDENTIFIER, RECORD_FOLDER_CONTEXT, delay);
             super.suspendTimer();
 
             DBObject eventData = BasicDBObjectBuilder.start()
