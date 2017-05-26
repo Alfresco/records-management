@@ -66,8 +66,6 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
 
     private static final String EVENT_LOAD_ROOT_UNFILED_RECORD_FOLDER = "testLoadRootUnfiledRecordFolder";
 
-    private static final String EVENT_CONTINUE_LOADING_DATA = "testScheduleUnfiledRecordLoaders";
-
     @Mock
     private SessionService mockedSessionService;
 
@@ -87,7 +85,6 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
         scheduleUnfiledRecordFolderLoaders.setEventNameLoadingComplete(EVENT_COMPLETE);
         scheduleUnfiledRecordFolderLoaders.setEventNameLoadRootUnfiledRecordFolder(EVENT_LOAD_ROOT_UNFILED_RECORD_FOLDER);
         scheduleUnfiledRecordFolderLoaders.setEventNameLoadUnfiledRecordFolder(EVENT_LOAD_UNFILED_RECORD_FOLDER);
-        scheduleUnfiledRecordFolderLoaders.setEventNameContinueLoadingUnfiledRecords(EVENT_CONTINUE_LOADING_DATA);
         scheduleUnfiledRecordFolderLoaders.setEventNameScheduleLoaders(EVENT_SCHEDULE_SELF);
         scheduleUnfiledRecordFolderLoaders.setLoadCheckDelay(0L);
     }
@@ -102,26 +99,8 @@ public class ScheduleUnfiledRecordFolderLoadersUnitTest implements RMEventConsta
         verify(mockedSessionService, never()).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
-        assertEquals("Unfiled Record Folders structure creation not wanted.",result.getData());
+        assertEquals("Unfiled Record Folders structure creation not wanted, continue with loading data.",result.getData());
         assertEquals(1, result.getNextEvents().size());
-    }
-
-    @Test
-    public void testUnfiledRecordFoldersNotWantedAndContinueLoadingData() throws Exception
-    {
-        scheduleUnfiledRecordFolderLoaders.setCreateUnfiledRecordFolderStructure(false);
-        FolderData mockedFolder = mock(FolderData.class);
-        List<FolderData> unfiledContainerChildren = Arrays.asList(mockedFolder);
-        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH, 0, 1)).thenReturn(unfiledContainerChildren);
-        EventResult result = scheduleUnfiledRecordFolderLoaders.processEvent(null, new StopWatch());
-
-        verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
-        verify(mockedSessionService, never()).startSession(any(DBObject.class));
-
-        assertEquals(true, result.isSuccess());
-        assertEquals("Unfiled Record Folders structure creation not wanted, continue with loading unfiled records.",result.getData());
-        assertEquals(1, result.getNextEvents().size());
-        assertEquals(EVENT_CONTINUE_LOADING_DATA, result.getNextEvents().get(0).getName());
     }
 
     @Test

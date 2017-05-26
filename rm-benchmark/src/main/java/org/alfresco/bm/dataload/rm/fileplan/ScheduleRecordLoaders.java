@@ -48,7 +48,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     public static final String EVENT_NAME_LOAD_RECORDS = "loadRecord";
     public static final String EVENT_NAME_SCHEDULE_RECORD_LOADERS = "scheduleRecordLoaders";
     public static final String EVENT_NAME_LOADING_COMPLETE = "loadingRecordsComplete";
-    public static final String EVENT_NAME_CONTINUE_LOADING_UNFILED_RECORD_FOLDERS = "scheduleUnfiledRecordFoldersLoaders";
 
     @Autowired
     private SessionService sessionService;
@@ -62,7 +61,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     private String eventNameLoadRecords = EVENT_NAME_LOAD_RECORDS;
     private String eventNameScheduleRecordLoaders = EVENT_NAME_SCHEDULE_RECORD_LOADERS;
     private String eventNameLoadingComplete = EVENT_NAME_LOADING_COMPLETE;
-    private String eventNameContinueLoadingUnfiledRecordFolders = EVENT_NAME_CONTINUE_LOADING_UNFILED_RECORD_FOLDERS;
 
     private LinkedHashMap<FolderData, Integer> mapOfRecordsPerRecordFolder = null;
 
@@ -166,16 +164,6 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
         this.eventNameLoadingComplete = eventNameLoadingComplete;
     }
 
-    public String getEventNameContinueLoadingUnfiledRecordFolders()
-    {
-        return eventNameContinueLoadingUnfiledRecordFolders;
-    }
-
-    public void setEventNameContinueLoadingUnfiledRecordFolders(String eventNameContinueLoadingUnfiledRecordFolders)
-    {
-        this.eventNameContinueLoadingUnfiledRecordFolders = eventNameContinueLoadingUnfiledRecordFolders;
-    }
-
     @Override
     protected EventResult processEvent(Event event) throws Exception
     {
@@ -187,8 +175,8 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
         // Do we actually need to do anything
         if (!isUploadRecords())
         {
-            return new EventResult("Uploading of records into File Plan not wanted, continue with loading unfiled record folders structure.",
-                                   new Event(getEventNameContinueLoadingUnfiledRecordFolders(), null));
+            return new EventResult("Uploading of records into File Plan not wanted, continue with loading data.",
+                                   new Event(getEventNameLoadingComplete(), null));
         }
         if (recordsNumber > 0)
         {
