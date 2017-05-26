@@ -313,8 +313,8 @@ public class CreateRMSiteUnitTest
 
         EventResult result = createRMSite.processEvent(mockedEvent);
         verify(mockedRMSiteAPI, never()).createRMSite(any(RMSite.class));
-        verify(mockedSiteDataService, never()).addSite(any(SiteData.class));
-        verify(mockedSiteDataService, never()).addSiteMember(any(SiteMemberData.class));
+        verify(mockedSiteDataService, times(1)).addSite(any(SiteData.class));
+        verify(mockedSiteDataService, times(1)).addSiteMember(any(SiteMemberData.class));
 
         verify(mockedFileFolderService, times(3)).createNewFolder(any(FolderData.class));
         assertEquals(true, result.isSuccess());
