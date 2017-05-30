@@ -92,6 +92,7 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         scheduleFilePlanLoaders.setEventNameLoadSubCategory(EVENT_LOAD_SUB_CATEGORY);
         scheduleFilePlanLoaders.setEventNameScheduleLoaders(EVENT_SCHEDULE_SELF);
         scheduleFilePlanLoaders.setLoadCheckDelay(0L);
+        scheduleFilePlanLoaders.setCreateFileplanFolderStructure(true);
     }
 
     @Test
@@ -1010,5 +1011,19 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         assertEquals("Loading completed.  Raising 'done' event.",result.getData());
         assertEquals(1, result.getNextEvents().size());
         assertEquals(EVENT_FILE_PLANLOADING_COMPLETE, result.getNextEvents().get(0).getName());
+    }
+
+    @Test
+    public void testFilePlanFoldersStructureNotWanted() throws Exception
+    {
+        scheduleFilePlanLoaders.setCreateFileplanFolderStructure(false);
+        EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
+
+        verify(mockedFileFolderService, never()).createNewFolder(any(FolderData.class));
+        verify(mockedSessionService, never()).startSession(any(DBObject.class));
+
+        assertEquals(true, result.isSuccess());
+        assertEquals("FilePlan folders structure creation not wanted, continue with loading data.",result.getData());
+        assertEquals(1, result.getNextEvents().size());
     }
 }

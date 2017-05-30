@@ -161,6 +161,7 @@
 
   <bean id="event.scheduleFilePlanLoaders" class="org.alfresco.bm.dataload.rm.fileplan.ScheduleFilePlanLoaders"
     parent="rmBaseEventProcessor">
+    <property name="createFileplanFolderStructure" value="${rm.createFileplanFolderStructure}" />
     <property name="categoryStructureDepth" value="${rm.categoryStructureDepth}" />
     <property name="childCategNumber" value="${rm.childCategNumber}" />
     <property name="folderNumber" value="${rm.folderNumber}" />
@@ -214,7 +215,6 @@
     <property name="eventNameLoadRecords" value="loadRecord" />
     <property name="eventNameScheduleRecordLoaders" value="scheduleRecordLoaders" />
     <property name="eventNameLoadingComplete" value="loadingRecordsComplete" />
-    <property name="eventNameContinueLoadingUnfiledRecordFolders" value="scheduleUnfiledRecordFoldersLoaders" />
   </bean>
 
   <bean id="event.loadRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmAbstractLoadComponent">
@@ -243,7 +243,6 @@
     <property name="eventNameLoadUnfiledRecordFolder" value="loadUnfiledRecordFolder" />
     <property name="eventNameScheduleLoaders" value="scheduleUnfiledRecordFoldersLoaders" />
     <property name="eventNameLoadingComplete" value="loadingUnfiledRecordFoldersComplete" />
-    <property name="eventNameContinueLoadingUnfiledRecords" value="scheduleUnfiledRecordLoaders" />
   </bean>
 
   <bean id="event.loadRootUnfiledRecordFolder" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmAbstractLoadComponent">

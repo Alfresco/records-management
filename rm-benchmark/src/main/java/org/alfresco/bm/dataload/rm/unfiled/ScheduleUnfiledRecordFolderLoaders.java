@@ -43,7 +43,6 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
 {
     public static final String EVENT_NAME_SCHEDULE_LOADERS = "scheduleUnfiledFoldersLoaders";
     public static final String EVENT_NAME_LOADING_COMPLETE = "loadingUnfiledRecordFoldersComplete";
-    public static final String EVENT_NAME_CONTINUE_LOADING_UNFILED_RECORDS = "scheduleUnfiledRecordLoaders";
 
     @Autowired
     private SessionService sessionService;
@@ -57,7 +56,6 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
     private int maxLevel;
     private String eventNameScheduleLoaders = EVENT_NAME_SCHEDULE_LOADERS;
     private String eventNameLoadingComplete = EVENT_NAME_LOADING_COMPLETE;
-    private String eventNameContinueLoadingUnfiledRecords = EVENT_NAME_CONTINUE_LOADING_UNFILED_RECORDS;
     private String eventNameLoadRootUnfiledRecordFolder = "loadRootUnfiledRecordFolder";
     private String eventNameLoadUnfiledRecordFolder = "loadUnfiledRecordFolder";
     private Integer rootUnfiledRecordFoldersToLoad = null;
@@ -124,16 +122,6 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
         this.eventNameLoadingComplete = eventNameLoadingComplete;
     }
 
-    public String getEventNameContinueLoadingUnfiledRecords()
-    {
-        return eventNameContinueLoadingUnfiledRecords;
-    }
-
-    public void setEventNameContinueLoadingUnfiledRecords(String eventNameContinueLoadingUnfiledRecords)
-    {
-        this.eventNameContinueLoadingUnfiledRecords = eventNameContinueLoadingUnfiledRecords;
-    }
-
     public String getEventNameLoadRootUnfiledRecordFolder()
     {
         return eventNameLoadRootUnfiledRecordFolder;
@@ -165,15 +153,7 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
         // Do we actually need to do anything
         if (!createUnfiledRecordFolderStructure)
         {
-            List<FolderData> unfiledRecordContainer = fileFolderService.getChildFolders(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH, 0, 1);
-            if(unfiledRecordContainer.size() == 0)
-            {
-                return new EventResult("Unfiled Record Folders structure creation not wanted.",  new Event(getEventNameLoadingComplete(), null));
-            }
-            else
-            {
-                return new EventResult("Unfiled Record Folders structure creation not wanted, continue with loading unfiled records.", new Event(getEventNameContinueLoadingUnfiledRecords(), null));
-            }
+            return new EventResult("Unfiled Record Folders structure creation not wanted, continue with loading data.", new Event(getEventNameLoadingComplete(), null));
         }
         if(unfiledRecordFolderDepth > 0)
         {
@@ -226,7 +206,7 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
         FolderData unfiledRecordContainer = fileFolderService.getFolder(UNFILED_CONTEXT, UNFILED_RECORD_CONTAINER_PATH);
         if(rootUnfiledRecordFoldersToLoad == null)
         {
-            rootUnfiledRecordFoldersToLoad = rootUnfiledRecordFolderNumber - (int)unfiledRecordContainer.getFolderCount();
+            rootUnfiledRecordFoldersToLoad = Math.max(rootUnfiledRecordFolderNumber - (int)unfiledRecordContainer.getFolderCount(), 0);
         }
         while (nextEvents.size() < loaderSessionsToCreate)
         {

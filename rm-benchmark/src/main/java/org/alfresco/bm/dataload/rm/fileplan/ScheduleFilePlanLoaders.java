@@ -49,6 +49,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     @Autowired
     private SessionService sessionService;
 
+    private boolean createFileplanFolderStructure;
     private int maxActiveLoaders;
     private long loadCheckDelay;
     private int childCategNumber;
@@ -66,6 +67,10 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     private Integer rootCategoriesToLoad = null;
     private Integer maxChildren = null;
 
+    public void setCreateFileplanFolderStructure(boolean createFileplanFolderStructure)
+    {
+        this.createFileplanFolderStructure = createFileplanFolderStructure;
+    }
 
     /**
      * Override the {@link #EVENT_NAME_SCHEDULE_LOADERS default} output event name
@@ -187,6 +192,12 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
 
         List<Event> nextEvents = new ArrayList<Event>(maxActiveLoaders);
 
+        // Do we actually need to do anything
+        if (!createFileplanFolderStructure)
+        {
+            return new EventResult("FilePlan folders structure creation not wanted, continue with loading data.",  new Event(eventNameLoadingComplete, null));
+        }
+
         //load root categories
         if(categoryStructureDepth > 0)
         {
@@ -244,7 +255,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         FolderData filePlan = fileFolderService.getFolder(FILEPLAN_CONTEXT, RECORD_CONTAINER_PATH);
         if(rootCategoriesToLoad == null)
         {
-            rootCategoriesToLoad = categoryNumber - (int)filePlan.getFolderCount();
+            rootCategoriesToLoad = Math.max(categoryNumber - (int)filePlan.getFolderCount(), 0);
         }
 
         while (nextEvents.size() < loaderSessionsToCreate)
