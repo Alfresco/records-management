@@ -21,10 +21,6 @@ package org.alfresco.bm.dataload.rm.fileplan;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
 
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.RMBaseEventProcessor;
@@ -32,6 +28,9 @@ import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
 
 /**
  * Prepare event for loading root categories, record categories and record folders.
@@ -41,13 +40,16 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
 {
-    public static final String EVENT_NAME_LOAD_RECORD_CATEGORIES = "loadRecordCategories";
     public static final String EVENT_NAME_SCHEDULE_LOADERS = "scheduleFilePlanLoaders";
-    public static final String EVENT_NAME_LOADING_COMPLETE = "scheduleUnfiledRecordFoldersLoaders";
+    public static final String EVENT_NAME_LOADING_COMPLETE = "filePlanloadingComplete";
+    public static final String EVENT_NAME_LOAD_ROOT_RECORD_CATEGORY = "loadRootRecordCategory";
+    public static final String EVENT_NAME_LOAD_SUB_CATEGORY = "loadSubCategory";
+    public static final String EVENT_NAME_LOAD_RECORD_FOLDER = "loadRecordFolder";
 
     @Autowired
     private SessionService sessionService;
 
+    private boolean createFileplanFolderStructure;
     private int maxActiveLoaders;
     private long loadCheckDelay;
     private int childCategNumber;
@@ -55,19 +57,19 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     private int categoryStructureDepth;
     private int maxLevel;
     private int categoryNumber;
-    private int childCategNumberVariance;
     private boolean folderCategoryMix;
 
-    private String eventNameLoadRecordCategories = EVENT_NAME_LOAD_RECORD_CATEGORIES;
     private String eventNameScheduleLoaders = EVENT_NAME_SCHEDULE_LOADERS;
     private String eventNameLoadingComplete = EVENT_NAME_LOADING_COMPLETE;
+    private String eventNameLoadRootRecordCategory = EVENT_NAME_LOAD_ROOT_RECORD_CATEGORY;
+    private String eventNameLoadSubCategory = EVENT_NAME_LOAD_SUB_CATEGORY;
+    private String eventNameLoadRecordFolder = EVENT_NAME_LOAD_RECORD_FOLDER;
+    private Integer rootCategoriesToLoad = null;
+    private Integer maxChildren = null;
 
-    /**
-     * Override the {@link #EVENT_NAME_LOAD_SITE_FILES default} output event name
-     */
-    public void setEventNameLoadRecordCategories(String eventNameLoadSiteCategories)
+    public void setCreateFileplanFolderStructure(boolean createFileplanFolderStructure)
     {
-        this.eventNameLoadRecordCategories = eventNameLoadSiteCategories;
+        this.createFileplanFolderStructure = createFileplanFolderStructure;
     }
 
     /**
@@ -86,12 +88,34 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         this.eventNameLoadingComplete = eventNameLoadingComplete;
     }
 
-    /**
-     * @return the maxActiveLoaders
-     */
-    public int getMaxActiveLoaders()
+    public String getEventNameLoadRootRecordCategory()
     {
-        return maxActiveLoaders;
+        return eventNameLoadRootRecordCategory;
+    }
+
+    public void setEventNameLoadRootRecordCategory(String eventNameLoadRootRecordCategory)
+    {
+        this.eventNameLoadRootRecordCategory = eventNameLoadRootRecordCategory;
+    }
+
+    public String getEventNameLoadSubCategory()
+    {
+        return eventNameLoadSubCategory;
+    }
+
+    public void setEventNameLoadSubCategory(String eventNameLoadSubCategory)
+    {
+        this.eventNameLoadSubCategory = eventNameLoadSubCategory;
+    }
+
+    public String getEventNameLoadRecordFolder()
+    {
+        return eventNameLoadRecordFolder;
+    }
+
+    public void setEventNameLoadRecordFolder(String eventNameLoadRecordFolder)
+    {
+        this.eventNameLoadRecordFolder = eventNameLoadRecordFolder;
     }
 
     /**
@@ -103,27 +127,11 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @return the loadCheckDelay
-     */
-    public long getLoadCheckDelay()
-    {
-        return loadCheckDelay;
-    }
-
-    /**
      * @param loadCheckDelay the loadCheckDelay to set
      */
     public void setLoadCheckDelay(long loadCheckDelay)
     {
         this.loadCheckDelay = loadCheckDelay;
-    }
-
-    /**
-     * @return the childCategNumber
-     */
-    public int getChildCategNumber()
-    {
-        return childCategNumber;
     }
 
     /**
@@ -135,27 +143,11 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @return the folderNumber
-     */
-    public int getFolderNumber()
-    {
-        return folderNumber;
-    }
-
-    /**
      * @param folderNumber the folderNumber to set
      */
     public void setFolderNumber(int folderNumberAverage)
     {
         this.folderNumber = folderNumberAverage;
-    }
-
-    /**
-     * @return the categoryNumber
-     */
-    public int getCategoryNumber()
-    {
-        return categoryNumber;
     }
 
     /**
@@ -167,35 +159,11 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @return the childCategNumberVariance
-     */
-    public int getChildCategNumberVariance()
-    {
-        return childCategNumberVariance;
-    }
-
-    /**
-     * @return the folderCategoryMix
-     */
-    public boolean isFolderCategoryMix()
-    {
-        return folderCategoryMix;
-    }
-
-    /**
      * @param folderCategoryMix the folderCategoryMix to set
      */
     public void setFolderCategoryMix(boolean folderCategoryMix)
     {
         this.folderCategoryMix = folderCategoryMix;
-    }
-
-    /**
-     * @return the filePlanDepth
-     */
-    public int getCategoryStructureDepth()
-    {
-        return categoryStructureDepth;
     }
 
     /**
@@ -224,6 +192,12 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
 
         List<Event> nextEvents = new ArrayList<Event>(maxActiveLoaders);
 
+        // Do we actually need to do anything
+        if (!createFileplanFolderStructure)
+        {
+            return new EventResult("FilePlan folders structure creation not wanted, continue with loading data.",  new Event(eventNameLoadingComplete, null));
+        }
+
         //load root categories
         if(categoryStructureDepth > 0)
         {
@@ -244,6 +218,9 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         String msg = null;
         if (loaderSessionsToCreate > 0 && nextEvents.size() == 0)
         {
+            rootCategoriesToLoad = null;
+            maxChildren = null;
+            auxFileFolderService.drop();
             // There are no files or folders to load even though there are sessions available
             Event nextEvent = new Event(eventNameLoadingComplete, null);
             nextEvents.add(nextEvent);
@@ -274,61 +251,41 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
      */
     private void prepareRootCategories(int loaderSessionsToCreate, List<Event> nextEvents)
     {
-        int skip = 0;
-        int limit = 100;
+        //get filePlan folder
+        FolderData filePlan = fileFolderService.getFolder(FILEPLAN_CONTEXT, RECORD_CONTAINER_PATH);
+        if(rootCategoriesToLoad == null)
+        {
+            rootCategoriesToLoad = Math.max(categoryNumber - (int)filePlan.getFolderCount(), 0);
+        }
+
         while (nextEvents.size() < loaderSessionsToCreate)
         {
-            // Get categories needing loading
-            List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
-                        FILEPLAN_CONTEXT,
-                        Long.valueOf(FILE_PLAN_LEVEL), Long.valueOf(FILE_PLAN_LEVEL),//we need only file plan level here since we load root categories on filePlan
-                        0L, Long.valueOf((categoryNumber - 1)),//limit the maximum number of child folders to number of needed root categories - 1
-                        null, null, // Ignore file limits
-                        skip, limit);
-            if (emptyFolders.size() == 0)
+            if (rootCategoriesToLoad == 0)
             {
-                // The folders were populated in the mean time
+                // No root record categories needed
                 break;
             }
-            // Schedule a load for each folder
-            for (FolderData emptyFolder : emptyFolders)
+            for (int i = 0; i < rootCategoriesToLoad; i++)
             {
-                int rootCategoriesToCreate = categoryNumber - (int)emptyFolder.getFolderCount();
-                try
-                {
-                    // Create a lock folder that has too many files and folders so that it won't be picked up
-                    // by this process in subsequent trawls
-                    String lockPath = emptyFolder.getPath() + "/locked";
-                    FolderData lockFolder = new FolderData(UUID.randomUUID().toString(), emptyFolder.getContext(), lockPath, Long.MAX_VALUE,
-                                Long.MAX_VALUE);
-                    fileFolderService.createNewFolder(lockFolder);
-                    // We locked this, so the load can be scheduled.
-                    // The loader will remove the lock when it completes
-                    DBObject loadData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, emptyFolder.getContext())
-                                .add(FIELD_PATH, emptyFolder.getPath())
-                                .add(FIELD_ROOT_CATEGORIES_TO_CREATE, Integer.valueOf(rootCategoriesToCreate))
-                                .add(FIELD_CATEGORIES_TO_CREATE, Integer.valueOf(0))
-                                .add(FIELD_FOLDERS_TO_CREATE, Integer.valueOf(0))
-                                .get();
-                    Event loadEvent = new Event(eventNameLoadRecordCategories, loadData);
-                    // Each load event must be associated with a session
-                    String sessionId = sessionService.startSession(loadData);
-                    loadEvent.setSessionId(sessionId);
-                    // Add the event to the list
-                    nextEvents.add(loadEvent);
-                }
-                catch (Exception e)
-                {
-                    // The lock was already applied; find another
-                    continue;
-                }
+                DBObject loadData = BasicDBObjectBuilder.start()
+                            .add(FIELD_CONTEXT, filePlan.getContext())
+                            .add(FIELD_PATH, filePlan.getPath())
+                            .add(FIELD_LOAD_OPERATION, LOAD_ROOT_CATEGORY_OPERATION)
+                            .get();
+                Event loadEvent = new Event(getEventNameLoadRootRecordCategory(), loadData);
+                // Each load event must be associated with a session
+                String sessionId = sessionService.startSession(loadData);
+                loadEvent.setSessionId(sessionId);
+                // Add the event to the list
+                nextEvents.add(loadEvent);
+                rootCategoriesToLoad--;
+
                 // Check if we have enough
                 if (nextEvents.size() >= loaderSessionsToCreate)
                 {
                     break;
                 }
             }
-            skip += limit;
         }
     }
 
@@ -346,7 +303,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         {
             // Get categories needing loading
             // the maximum number of children a folder should contain so that it will be picked up for further loading
-            int maxChildren = folderNumber + childCategNumber - 1;
+            calculateMaxChildren();
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
                         RECORD_CATEGORY_CONTEXT,
                         Long.valueOf(FILE_PLAN_LEVEL + 1),//min level FILE_PLAN_LEVEL + 1 = 4, root categories
@@ -362,45 +319,81 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
             // Schedule a load for each folder
             for (FolderData emptyFolder : emptyFolders)
             {
-                int categoryCount = fileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, emptyFolder.getPath(), skip, limit).size();
-                int folderCount = fileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, emptyFolder.getPath(), skip, limit).size();
-
-                int categoriesToCreate = childCategNumber - categoryCount;
-
-                int foldersToCreate = 0;
-                if (this.folderCategoryMix)
+                FolderData folder = auxFileFolderService.getFolder(emptyFolder.getContext(), emptyFolder.getPath());
+                if (folder == null)
                 {
-                    foldersToCreate = folderNumber - folderCount;
+                    auxFileFolderService.createNewFolder(emptyFolder.getId(), emptyFolder.getContext(), emptyFolder.getPath());
+                    int toCreateCateg = childCategNumber - getDirectChildrenByContext(emptyFolder, RECORD_CATEGORY_CONTEXT).size();
+                    auxFileFolderService.incrementFolderCount(emptyFolder.getContext(), emptyFolder.getPath(), toCreateCateg);
+                    if (this.folderCategoryMix)
+                    {
+                        int toCreateFolders = folderNumber - getDirectChildrenByContext(emptyFolder, RECORD_FOLDER_CONTEXT).size();
+                        auxFileFolderService.incrementFileCount(emptyFolder.getContext(), emptyFolder.getPath(), toCreateFolders);
+                    }
+                    folder = auxFileFolderService.getFolder(emptyFolder.getId());
                 }
+                int categoriesToCreate = (int) folder.getFolderCount();
 
-                try
+                DBObject loadData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, emptyFolder.getContext())
+                            .add(FIELD_PATH, emptyFolder.getPath())
+                            .add(FIELD_LOAD_OPERATION, LOAD_SUB_CATEGORY_OPERATION)
+                            .get();
+                int i;
+                for(i = 0; i < categoriesToCreate; i++)
                 {
-                    // Create a lock folder that has too many files and folders so that it won't be picked up
-                    // by this process in subsequent trawls
-                    String lockPath = emptyFolder.getPath() + "/locked";
-                    FolderData lockFolder = new FolderData(UUID.randomUUID().toString(), emptyFolder.getContext(), lockPath, Long.MAX_VALUE,
-                                Long.MAX_VALUE);
-                    fileFolderService.createNewFolder(lockFolder);
-                    // We locked this, so the load can be scheduled.
-                    // The loader will remove the lock when it completes
-                    DBObject loadData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, emptyFolder.getContext())
-                                .add(FIELD_PATH, emptyFolder.getPath())
-                                .add(FIELD_ROOT_CATEGORIES_TO_CREATE, Integer.valueOf(0))
-                                .add(FIELD_CATEGORIES_TO_CREATE, Integer.valueOf(categoriesToCreate))
-                                .add(FIELD_FOLDERS_TO_CREATE, Integer.valueOf(foldersToCreate))
-                                .get();
-                    Event loadEvent = new Event(eventNameLoadRecordCategories, loadData);
+                    Event loadEvent = new Event(getEventNameLoadSubCategory(), loadData);
                     // Each load event must be associated with a session
                     String sessionId = sessionService.startSession(loadData);
                     loadEvent.setSessionId(sessionId);
                     // Add the event to the list
                     nextEvents.add(loadEvent);
+                    // Check if we have enough
+                    if (nextEvents.size() >= loaderSessionsToCreate)
+                    {
+                        break;
+                    }
                 }
-                catch (Exception e)
+                if(i == categoriesToCreate)
                 {
-                    // The lock was already applied; find another
-                    continue;
+                    auxFileFolderService.incrementFolderCount(emptyFolder.getContext(), emptyFolder.getPath(), -categoriesToCreate);
                 }
+                else
+                {
+                    auxFileFolderService.incrementFolderCount(emptyFolder.getContext(), emptyFolder.getPath(), - i-1);
+                }
+
+                if (this.folderCategoryMix)
+                {
+                    int foldersToCreate  = (int) folder.getFileCount();
+                    DBObject loadRecordFolderData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, emptyFolder.getContext())
+                                .add(FIELD_PATH, emptyFolder.getPath())
+                                .add(FIELD_LOAD_OPERATION, LOAD_RECORD_FOLDER_OPERATION)
+                                .get();
+                    int j;
+                    for(j = 0; j < foldersToCreate; j++)
+                    {
+                        Event loadRecordFolderEvent = new Event(getEventNameLoadRecordFolder(), loadRecordFolderData);
+                        // Each load event must be associated with a session
+                        String recordFolderSessionId = sessionService.startSession(loadRecordFolderData);
+                        loadRecordFolderEvent.setSessionId(recordFolderSessionId);
+                        // Add the event to the list
+                        nextEvents.add(loadRecordFolderEvent);
+                        // Check if we have enough
+                        if (nextEvents.size() >= loaderSessionsToCreate)
+                        {
+                            break;
+                        }
+                    }
+                    if(j == foldersToCreate)
+                    {
+                        auxFileFolderService.incrementFileCount(emptyFolder.getContext(), emptyFolder.getPath(), -foldersToCreate);
+                    }
+                    else
+                    {
+                        auxFileFolderService.incrementFileCount(emptyFolder.getContext(), emptyFolder.getPath(), -j -1);
+                    }
+                }
+
                 // Check if we have enough
                 if (nextEvents.size() >= loaderSessionsToCreate)
                 {
@@ -440,39 +433,41 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
             // Schedule a load for each folder
             for (FolderData emptyFolder : emptyFolders)
             {
-                int folderCount = fileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, emptyFolder.getPath(), skip, limit).size();
-                int foldersToCreate = folderNumber - folderCount;
-
-                try
+                FolderData folder = auxFileFolderService.getFolder(emptyFolder.getContext(), emptyFolder.getPath());
+                if (folder == null)
                 {
-                    // Create a lock folder that has too many files and folders so that it won't be picked up
-                    // by this process in subsequent trawls
-                    String lockPath = emptyFolder.getPath() + "/locked";
-                    FolderData lockFolder = new FolderData(
-                                UUID.randomUUID().toString(),
-                                emptyFolder.getContext(), lockPath,
-                                Long.MAX_VALUE, Long.MAX_VALUE);
-                    fileFolderService.createNewFolder(lockFolder);
-                    // We locked this, so the load can be scheduled.
-                    // The loader will remove the lock when it completes
-                    DBObject loadData = BasicDBObjectBuilder.start()
-                                .add(FIELD_CONTEXT, emptyFolder.getContext())
-                                .add(FIELD_PATH, emptyFolder.getPath())
-                                .add(FIELD_ROOT_CATEGORIES_TO_CREATE, Integer.valueOf(0))
-                                .add(FIELD_CATEGORIES_TO_CREATE, Integer.valueOf(0))
-                                .add(FIELD_FOLDERS_TO_CREATE, Integer.valueOf(foldersToCreate))
-                                .get();
-                    Event loadEvent = new Event(eventNameLoadRecordCategories, loadData);
-                    // Each load event must be associated with a session
-                    String sessionId = sessionService.startSession(loadData);
-                    loadEvent.setSessionId(sessionId);
-                    // Add the event to the list
-                    nextEvents.add(loadEvent);
+                    auxFileFolderService.createNewFolder(emptyFolder.getId(), emptyFolder.getContext(), emptyFolder.getPath());
+                    int toCreateFolders = folderNumber - getDirectChildrenByContext(emptyFolder, RECORD_FOLDER_CONTEXT).size();
+                    auxFileFolderService.incrementFileCount(emptyFolder.getContext(), emptyFolder.getPath(), toCreateFolders);
+                    folder = auxFileFolderService.getFolder(emptyFolder.getId());
                 }
-                catch (Exception e)
+                int foldersToCreate  = (int) folder.getFileCount();
+                DBObject loadRecordFolderData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, emptyFolder.getContext())
+                            .add(FIELD_PATH, emptyFolder.getPath())
+                            .add(FIELD_LOAD_OPERATION, LOAD_RECORD_FOLDER_OPERATION)
+                            .get();
+                int j;
+                for(j = 0; j < foldersToCreate; j++)
                 {
-                    // The lock was already applied; find another
-                    continue;
+                    Event loadRecordFolderEvent = new Event(getEventNameLoadRecordFolder(), loadRecordFolderData);
+                    // Each load event must be associated with a session
+                    String recordFolderSessionId = sessionService.startSession(loadRecordFolderData);
+                    loadRecordFolderEvent.setSessionId(recordFolderSessionId);
+                    // Add the event to the list
+                    nextEvents.add(loadRecordFolderEvent);
+                    // Check if we have enough
+                    if (nextEvents.size() >= loaderSessionsToCreate)
+                    {
+                        break;
+                    }
+                }
+                if(j == foldersToCreate)
+                {
+                    auxFileFolderService.incrementFileCount(emptyFolder.getContext(), emptyFolder.getPath(), -foldersToCreate);
+                }
+                else
+                {
+                    auxFileFolderService.incrementFileCount(emptyFolder.getContext(), emptyFolder.getPath(), -j -1);
                 }
                 // Check if we have enough
                 if (nextEvents.size() >= loaderSessionsToCreate)
@@ -481,6 +476,45 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
                 }
             }
             skip += limit;
+        }
+    }
+
+    /**
+     * Helper method to calculate maximum children that one category should have in order to be returned in search result for categories that still need sub-categories and record folders.
+     */
+    private void calculateMaxChildren()
+    {
+        if (maxChildren == null)
+        {
+            //get one category to check existing number of categories and record folders
+            List<FolderData> categories = fileFolderService.getFoldersByCounts(
+                        RECORD_CATEGORY_CONTEXT,
+                        null, null,//ignore levels
+                        null, null,//ignore folder limits
+                        null, null, // Ignore file limits
+                        0, 1);
+            if (folderCategoryMix)
+            {
+                maxChildren = folderNumber + childCategNumber - 1;
+                if (categories.size() > 0)
+                {
+                    FolderData existentRecordCategory = categories.get(0);
+                    int childCategoriesNumber = getDirectChildrenByContext(existentRecordCategory, RECORD_CATEGORY_CONTEXT).size();
+                    int childRecordFoldersNumber = getDirectChildrenByContext(existentRecordCategory, RECORD_FOLDER_CONTEXT).size();
+                    maxChildren = Math.max(folderNumber, childRecordFoldersNumber) + Math.max(childCategNumber, childCategoriesNumber) - 1;
+                }
+            }
+            else
+            {
+                maxChildren = childCategNumber - 1;
+                if (categories.size() > 0)
+                {
+                    FolderData existentRecordCategory = categories.get(0);
+                    int childCategoriesNumber = getDirectChildrenByContext(existentRecordCategory, RECORD_CATEGORY_CONTEXT).size();
+                    int folderCount = (int)existentRecordCategory.getFolderCount();
+                    maxChildren = Math.max(folderCount, folderCount + childCategNumber - childCategoriesNumber) -1;
+                }
+            }
         }
     }
 }

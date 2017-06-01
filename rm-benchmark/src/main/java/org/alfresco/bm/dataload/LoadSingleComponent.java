@@ -19,277 +19,208 @@
 
 package org.alfresco.bm.dataload;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.alfresco.bm.cm.FolderData;
 import org.alfresco.bm.dataload.rm.services.ExecutionState;
 import org.alfresco.bm.dataload.rm.services.RecordData;
-import org.alfresco.bm.event.Event;
-import org.alfresco.bm.event.EventResult;
-import org.alfresco.bm.user.UserData;
 import org.alfresco.rest.rm.community.model.record.RecordBodyFile;
 import org.alfresco.rest.rm.community.requests.gscore.api.RecordsAPI;
 import org.alfresco.utility.model.UserModel;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 
 /**
  * Common event for loading one single rm component. This event will load: one root record category, one sub-category, one record folder, one record, one root unfiled record folder,
  * one child unfiled record folder, one unfiled record. The will also file one unfiled record.
  *
- * At the moment only loading unfiled record, loading record and filing unfiled record operations are supported.
- *
  * @author Silviu Dinuta
  * @since 2.6
  *
  */
-public class LoadSingleComponent extends RMBaseEventProcessor
+public class LoadSingleComponent extends RMAbstractLoadComponent
 {
-    private String eventNameComplete;
-    public static final long DEFAULT_DELAY = 0L;
-    private long delay = DEFAULT_DELAY;
-
-    public void setEventNameComplete(String eventNameComplete)
-    {
-        this.eventNameComplete = eventNameComplete;
-    }
-
-    public String getEventNameComplete()
-    {
-        return eventNameComplete;
-    }
-
-    public void setDelay(long delay)
-    {
-        this.delay = delay;
-    }
-
-    @Override
-    protected EventResult processEvent(Event event) throws Exception
-    {
-        super.suspendTimer();
-
-        if (event == null)
-        {
-            throw new IllegalStateException("This processor requires an event.");
-        }
-
-        DBObject dataObj = (DBObject) event.getData();
-        if (dataObj == null)
-        {
-            throw new IllegalStateException("This processor requires data with field " + FIELD_PATH);
-        }
-
-        String context = (String) dataObj.get(FIELD_CONTEXT);
-        String path = (String) dataObj.get(FIELD_PATH);
-        String operation = (String) dataObj.get(FIELD_LOAD_OPERATION);
-
-        if (context == null || path == null || isBlank(operation))
-        {
-            return new EventResult("Request data not complete for filing unfiled record: " + dataObj, false);
-        }
-
-        // Get the folder
-        FolderData folder = fileFolderService.getFolder(context, path);
-        if (folder == null)
-        {
-            throw new IllegalStateException("No such folder recorded: " + dataObj);
-        }
-
-        // Get the session
-        String sessionId = event.getSessionId();
-        if (sessionId == null)
-        {
-            return new EventResult("Load scheduling should create a session for each loader.", false);
-        }
-        if(FILE_RECORD_OPERATION.equals(operation))
-        {
-            return fileRecordOperation(folder, dataObj);
-        }
-        else if(LOAD_UNFILED_RECORD_OPERATION.equals(operation))
-        {
-            return loadUnfiledRecordOperation(folder);
-        }
-        else if(LOAD_RECORD_OPERATION.equals(operation))
-        {
-            return loadRecordOperation(folder);
-        }
-        else
-        {
-            throw new IllegalStateException("Unsuported operation: " + operation);
-        }
-    }
-
     /**
      * Helper method to file the unfiled record with specified id in specified record folder.
      *
      * @param folder - the record folded to file unfiled record in
-     * @param dataObj DBObject - query object that contains the id of the unfiled record to be filed
-     * @return EventResult - the filing result or error if there was an exception on filing
+     * @param recordId - the id of the unfiled record to be filed
+     * @param userModel - the user model with which the unfiled record will be filed
+     * @return String - the filing message
+     * @throws Exception
      */
-    private EventResult fileRecordOperation(FolderData folder, DBObject dataObj)
+    private String fileRecordOperation(FolderData folder, String recordId, UserModel userModel) throws Exception
     {
-        String recordId = (String) dataObj.get(FIELD_RECORD_ID);
-        if (isBlank(recordId))
-        {
-            return new EventResult("Request data not complete for filing unfiled record: " + dataObj, false);
-        }
-        UserData user = getRandomUser(logger);
-        String username = user.getUsername();
-        String password = user.getPassword();
-        UserModel userModel = new UserModel(username, password);
-        try
-        {
-            List<Event> scheduleEvents = new ArrayList<Event>();
-            // FileRecords records
-            String folderPath = folder.getPath();
-            String parentId = folder.getId();
+        // FileRecords records
+        String folderPath = folder.getPath();
+        String parentId = folder.getId();
 
-            RecordBodyFile recordBodyFileModel = RecordBodyFile.builder()
-                        .targetParentId(parentId)
-                        .build();
+        RecordBodyFile recordBodyFileModel = RecordBodyFile.builder()
+                    .targetParentId(parentId)
+                    .build();
 
-            RecordData randomRecord = recordService.getRecord(recordId);
-            super.resumeTimer();
-            RecordsAPI recordsAPI = getRestAPIFactory().getRecordsAPI(userModel);
-            recordsAPI.fileRecord(recordBodyFileModel, randomRecord.getId());
-            super.suspendTimer();
-            // Increment counts
-            fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
+        RecordData randomRecord = recordService.getRecord(recordId);
+        super.resumeTimer();
+        RecordsAPI recordsAPI = getRestAPIFactory().getRecordsAPI(userModel);
+        recordsAPI.fileRecord(recordBodyFileModel, randomRecord.getId());
+        super.suspendTimer();
+        // Increment counts
+        fileFolderService.incrementFileCount(folder.getContext(), folderPath, 1);
 
-            // Decrement counts for unfiled record folder or unfiled container
-            String unfiledParentPath = randomRecord.getParentPath();
-            fileFolderService.incrementFileCount(UNFILED_CONTEXT, unfiledParentPath, -1);
+        // Decrement counts for unfiled record folder or unfiled container
+        String unfiledParentPath = randomRecord.getParentPath();
+        fileFolderService.incrementFileCount(UNFILED_CONTEXT, unfiledParentPath, -1);
 
-            //change parent path to the new parent
-            randomRecord.setParentPath(folderPath);
-            randomRecord.setExecutionState(ExecutionState.RECORD_FILED);
-            recordService.updateRecord(randomRecord);
-            TimeUnit.MILLISECONDS.sleep(delay);
-
-            DBObject eventData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, folder.getContext())
-                        .add(FIELD_PATH, folder.getPath()).get();
-            Event nextEvent = new Event(getEventNameComplete(), eventData);
-
-            scheduleEvents.add(nextEvent);
-            DBObject resultData = BasicDBObjectBuilder.start().add("msg", "Filed record with id " + recordId + ".")
-                        .add("path", folder.getPath()).add("username", username).get();
-
-            return new EventResult(resultData, scheduleEvents);
-        }
-        catch (Exception e)
-        {
-            String error = e.getMessage();
-            String stack = ExceptionUtils.getStackTrace(e);
-            // Grab REST API information
-            DBObject data = BasicDBObjectBuilder.start().append("error", error).append("username", username)
-                        .append("path", folder.getPath()).append("stack", stack).get();
-            // Build failure result
-            return new EventResult(data, false);
-        }
+        //change parent path to the new parent
+        randomRecord.setParentPath(folderPath);
+        randomRecord.setExecutionState(ExecutionState.RECORD_FILED);
+        recordService.updateRecord(randomRecord);
+        TimeUnit.MILLISECONDS.sleep(getDelay());
+        return "Filed record with id " + recordId + ".";
     }
 
     /**
      * Helper method to load one unfiled record in specified unfiled record folder, or record container.
      *
      * @param folder - the unfiled record container or unfiled record folded to load record in
-     * @return EventResult - the loading result or error if there was an exception on loading
+     * @param userModel - the user model with which the unfiled record will be loaded
+     * @return String - the loading message
+     * @throws Exception
      */
-    private EventResult loadUnfiledRecordOperation(FolderData folder)
+    private String loadUnfiledRecordOperation(FolderData folder, UserModel userModel) throws Exception
     {
-        UserData user = getRandomUser(logger);
-        String username = user.getUsername();
-        String password = user.getPassword();
-        UserModel userModel = new UserModel(username, password);
-        try
-        {
-            List<Event> scheduleEvents = new ArrayList<Event>();
-            //Create record
-            super.resumeTimer();
-            uploadElectronicRecordInUnfiledContext(folder, userModel, RECORD_NAME_IDENTIFIER, delay);
-            super.suspendTimer();
-
-            DBObject eventData = BasicDBObjectBuilder.start()
-                        .add(FIELD_CONTEXT, folder.getContext())
-                        .add(FIELD_PATH, folder.getPath()).get();
-           Event nextEvent = new Event(getEventNameComplete(), eventData);
-
-           scheduleEvents.add(nextEvent);
-            DBObject resultData = BasicDBObjectBuilder.start()
-                        .add("msg", "Created 1 record.")
-                        .add("path", folder.getPath())
-                        .add("username", username)
-                        .get();
-
-            return new EventResult(resultData, scheduleEvents);
-        }
-        catch (Exception e)
-        {
-            String error = e.getMessage();
-            String stack = ExceptionUtils.getStackTrace(e);
-            // Grab REST API information
-            DBObject data = BasicDBObjectBuilder.start()
-                        .append("error", error)
-                        .append("username", username)
-                        .append("path", folder.getPath())
-                        .append("stack", stack)
-                        .get();
-            // Build failure result
-            return new EventResult(data, false);
-        }
+        //Create record
+        super.resumeTimer();
+        uploadElectronicRecordInUnfiledContext(folder, userModel, RECORD_NAME_IDENTIFIER, getDelay());
+        super.suspendTimer();
+        return "Created 1 record.";
     }
 
     /**
      * Helper method to load one record in specified record folder.
      *
      * @param folder - the record folded to load record in
-     * @return EventResult - the loading result or error if there was an exception on loading
+     * @param userModel - the user model with which the record  will be loaded
+     * @return String - the loading message
+     * @throws Exception
      */
-    private EventResult loadRecordOperation(FolderData folder)
+    private String loadRecordOperation(FolderData folder, UserModel userModel) throws Exception
     {
-        UserData user = getRandomUser(logger);
-        String username = user.getUsername();
-        String password = user.getPassword();
-        UserModel userModel = new UserModel(username, password);
-        try
+        // Create record
+        super.resumeTimer();
+        uploadElectronicRecordInRecordFolder(folder, userModel, RECORD_NAME_IDENTIFIER, getDelay());
+        super.suspendTimer();
+        return "Created 1 record.";
+    }
+
+    /**
+     * Helper method to load one root record category in filePlan.
+     *
+     * @param folder - the filePlan folder to load root category in
+     * @param userModel - the user model with which the root record category will be loaded
+     * @return String - the loading message
+     * @throws Exception
+     */
+    private String loadRootCategoryOperation(FolderData folder, UserModel userModel) throws Exception
+    {
+        // Create root category
+        super.resumeTimer();
+        createRootCategory(folder, userModel, ROOT_CATEGORY_NAME_IDENTIFIER, RECORD_CATEGORY_CONTEXT, getDelay());
+        super.suspendTimer();
+        return "Created 1 root category.";
+    }
+
+    /**
+     * Helper method to load one sub-category in specified record category.
+     *
+     * @param folder - the record category folder to load sub-category in
+     * @param userModel - the user model with which the sub-category will be loaded
+     * @return String - the loading message
+     * @throws Exception
+     */
+    private String loadSubCategoryOperation(FolderData folder, UserModel userModel) throws Exception
+    {
+        // Create sub-category
+        super.resumeTimer();
+        createSubCategory(folder, userModel, CATEGORY_NAME_IDENTIFIER, RECORD_CATEGORY_CONTEXT, getDelay());
+        super.suspendTimer();
+        return "Created 1 sub-category";
+    }
+
+    /**
+     * Helper method to load one record folder in specified record category.
+     *
+     * @param folder - the record category folder to load record folder in
+     * @param userModel - the user model with which the  record folder will be loaded
+     * @return String - the loading message
+     * @throws Exception
+     */
+    private String loadRecordFolderOperation(FolderData folder, UserModel userModel) throws Exception
+    {
+        // Create record folder
+        super.resumeTimer();
+        createRecordFolder(folder, userModel, RECORD_FOLDER_NAME_IDENTIFIER, RECORD_FOLDER_CONTEXT, getDelay());
+        super.suspendTimer();
+        return "Created 1 record folder.";
+    }
+
+    /**
+     * Helper method to load one root unfiled record folder in unfiled record container.
+     *
+     * @param folder - the unfiled record container folder to load root unfiled record folder in
+     * @param userModel - the user model with which the root unfiled record folder will be loaded
+     * @return String - the loading message
+     * @throws Exception
+     */
+    private String loadRootUnfiledRecordFolderOperation(FolderData folder, UserModel userModel) throws Exception
+    {
+        //Create one root unfiled record folder
+        super.resumeTimer();
+        createRootUnfiledRecordFolder(folder, userModel, ROOT_UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, folder.getContext(), getDelay());
+        super.suspendTimer();
+        return "Created 1 root unfiled record folder.";
+    }
+
+    /**
+     * Helper method to load one unfiled record folder in specified container.
+     *
+     * @param folder - the unfiled record folder to load unfiled record folder in
+     * @param userModel - the user model with which the unfiled record folder will be loaded
+     * @return String - the loading message
+     * @throws Exception
+     */
+    private String loadUnfiledRecordFolderOperation(FolderData folder, UserModel userModel) throws Exception
+    {
+        //Create one unfiled record folder
+        super.resumeTimer();
+        createUnfiledRecordFolder(folder, userModel, UNFILED_RECORD_FOLDER_NAME_IDENTIFIER, folder.getContext(), getDelay());
+        super.suspendTimer();
+        return "Created 1 unfiled record folder.";
+    }
+
+    @Override
+    String executeOperation(FolderData folder, DBObject dataObj, String operation, UserModel userModel) throws Exception
+    {
+        switch (operation)
         {
-            List<Event> scheduleEvents = new ArrayList<Event>();
-            // Create record
-            super.resumeTimer();
-            uploadElectronicRecordInRecordFolder(folder, userModel, RECORD_NAME_IDENTIFIER, delay);
-            super.suspendTimer();
-
-            DBObject eventData = BasicDBObjectBuilder.start().add(FIELD_CONTEXT, folder.getContext())
-                        .add(FIELD_PATH, folder.getPath()).get();
-            Event nextEvent = new Event(getEventNameComplete(), eventData);
-
-            scheduleEvents.add(nextEvent);
-            DBObject resultData = BasicDBObjectBuilder.start()
-                                .add("msg", "Created 1 record.")
-                                .add("path", folder.getPath())
-                                .add("username", username)
-                                .get();
-
-            return new EventResult(resultData, scheduleEvents);
+            case FILE_RECORD_OPERATION:
+                String recordId = (String) dataObj.get(FIELD_RECORD_ID);
+                return fileRecordOperation(folder, recordId, userModel);
+            case LOAD_UNFILED_RECORD_OPERATION:
+                return loadUnfiledRecordOperation(folder, userModel);
+            case LOAD_RECORD_OPERATION:
+                return loadRecordOperation(folder, userModel);
+            case LOAD_ROOT_CATEGORY_OPERATION:
+                return loadRootCategoryOperation(folder, userModel);
+            case LOAD_SUB_CATEGORY_OPERATION:
+                return loadSubCategoryOperation(folder, userModel);
+            case LOAD_RECORD_FOLDER_OPERATION:
+                return loadRecordFolderOperation(folder, userModel);
+            case LOAD_ROOT_UNFILED_RECORD_FOLDER_OPERATION:
+                return loadRootUnfiledRecordFolderOperation(folder, userModel);
+            case LOAD_UNFILED_RECORD_FOLDER_OPERATION:
+                return loadUnfiledRecordFolderOperation(folder, userModel);
         }
-        catch (Exception e)
-        {
-            String error = e.getMessage();
-            String stack = ExceptionUtils.getStackTrace(e);
-            // Grab REST API information
-            DBObject data = BasicDBObjectBuilder.start()
-                        .append("error", error)
-                        .append("username", username)
-                        .append("path", folder.getPath())
-                        .append("stack", stack).get();
-            // Build failure result
-            return new EventResult(data, false);
-        }
+        return "";
     }
 }

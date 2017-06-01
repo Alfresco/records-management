@@ -113,10 +113,10 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         verify(mockedSessionService, never()).startSession(any(DBObject.class));
 
         assertEquals(true, result.isSuccess());
-        assertEquals("Uploading of records into File Plan not wanted, continue with loading unfiled record folders structure.",result.getData());
+        assertEquals("Uploading of records into File Plan not wanted, continue with loading data.",result.getData());
         assertEquals(1, result.getNextEvents().size());
         Event event = result.getNextEvents().get(0);
-        assertEquals("scheduleUnfiledRecordFoldersLoaders", event.getName());
+        assertEquals("loadingRecordsComplete", event.getName());
     }
 
     @Test

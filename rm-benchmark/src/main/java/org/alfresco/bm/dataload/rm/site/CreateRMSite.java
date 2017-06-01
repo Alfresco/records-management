@@ -141,34 +141,6 @@ public class CreateRMSite extends AbstractEventProcessor
                 return new EventResult("RM site could not be created.", false);
             }
 
-            if (site == null)
-            {
-                // Create data
-                site = new SiteData();
-                site.setSiteId(siteId);
-                site.setTitle(RM_SITE_TITLE);
-                site.setGuid(RM_SITE_GUID);
-                site.setDomain(RM_SITE_DOMAIN);
-                site.setDescription(RM_SITE_DESC);
-                site.setSitePreset(RM_SITE_PRESET);
-                site.setVisibility(RM_SITE_VISIBILITY);
-                site.setType(RM_SITE_TYPE);
-                site.setCreationState(Scheduled);
-                siteDataService.addSite(site);
-
-                // Record the administrator
-                SiteMemberData rmAdminMember = new SiteMemberData();
-                rmAdminMember.setCreationState(Created);
-                rmAdminMember.setRole(Administrator.toString());
-                rmAdminMember.setSiteId(RM_SITE_ID);
-                rmAdminMember.setUsername(siteManager);
-                siteDataService.addSiteMember(rmAdminMember);
-            }
-
-            // Start by marking them as failures in order to handle all eventualities
-            siteDataService.setSiteCreationState(siteId, null, Failed);
-            siteDataService.setSiteMemberCreationState(siteId, siteManager, Failed);
-
             guid = rmSite.getGuid();
             msg = "Created site: " + siteId + " Site creator: " + siteManager;
         }
@@ -177,6 +149,38 @@ public class CreateRMSite extends AbstractEventProcessor
             RMSite alreadyCreatedRMSite = rmSiteAPI.getSite();
             guid = alreadyCreatedRMSite.getGuid();
             msg = "RM site already exists, just loading it in the DB.";
+        }
+
+        if (site == null)
+        {
+            // Create data
+            site = new SiteData();
+            site.setSiteId(siteId);
+            site.setTitle(RM_SITE_TITLE);
+            site.setGuid(RM_SITE_GUID);
+            site.setDomain(RM_SITE_DOMAIN);
+            site.setDescription(RM_SITE_DESC);
+            site.setSitePreset(RM_SITE_PRESET);
+            site.setVisibility(RM_SITE_VISIBILITY);
+            site.setType(RM_SITE_TYPE);
+            site.setCreationState(Scheduled);
+            siteDataService.addSite(site);
+        }
+
+        // Start by marking them as failures in order to handle all eventualities
+        siteDataService.setSiteCreationState(siteId, null, Failed);
+        siteDataService.setSiteMemberCreationState(siteId, siteManager, Failed);
+
+        SiteMemberData siteMember = siteDataService.getSiteMember(RM_SITE_ID, siteManager);
+        if(siteMember == null)
+        {
+            // Record the administrator
+            SiteMemberData rmAdminMember = new SiteMemberData();
+            rmAdminMember.setCreationState(Created);
+            rmAdminMember.setRole(Administrator.toString());
+            rmAdminMember.setSiteId(RM_SITE_ID);
+            rmAdminMember.setUsername(siteManager);
+            siteDataService.addSiteMember(rmAdminMember);
         }
 
         // Mark the site.
