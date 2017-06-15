@@ -29,6 +29,7 @@ import org.alfresco.bm.dataload.rm.services.RecordData;
 import org.alfresco.bm.event.Event;
 import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RestAPIFactory;
+import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias;
 import org.alfresco.rest.rm.community.model.record.Record;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -110,10 +111,18 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
 
             if(HttpStatus.valueOf(Integer.parseInt(statusCode)) == HttpStatus.CREATED)
             {
+                String recordParentId = record.getParentId();
+                String unfiledContainerId = getRestAPIFactory().getUnfiledContainersAPI().getUnfiledContainer(FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS).getId();
+                if(!unfiledContainerId.equals(recordParentId))
+                {
+                    dbRecord.setExecutionState(ExecutionState.FAILED);
+                    recordService.updateRecord(dbRecord);
+                    return new EventResult("Declaring record with id=" + id + " didn't took place.", false);
+                }
                 eventOutputMsg.append("success");
                 dbRecord.setExecutionState(ExecutionState.UNFILED_RECORD_DECLARED);
                 dbRecord.setName(record.getName());
-                String parentPath = fileFolderService.getFolder(record.getParentId()).getPath();
+                String parentPath = fileFolderService.getFolder(recordParentId).getPath();
                 fileFolderService.incrementFileCount(UNFILED_CONTEXT, parentPath, 1);
                 dbRecord.setParentPath(parentPath);
             }
