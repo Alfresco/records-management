@@ -251,7 +251,7 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
         when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestAPIFactory);
         EventResult result = declareInPlaceRecords.processEvent(mockedEvent, new StopWatch());
         assertEquals(false, result.isSuccess());
-        assertEquals("Declaring record with id=" + fileId + " didn't took place.", result.getData());
+        assertEquals("Declaring record with id=" + fileId + " didn't take place.", result.getData());
     }
 
     @Test

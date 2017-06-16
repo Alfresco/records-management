@@ -117,7 +117,7 @@ public class DeclareInPlaceRecords extends RMBaseEventProcessor
                 {
                     dbRecord.setExecutionState(ExecutionState.FAILED);
                     recordService.updateRecord(dbRecord);
-                    return new EventResult("Declaring record with id=" + id + " didn't took place.", false);
+                    return new EventResult("Declaring record with id=" + id + " didn't take place.", false);
                 }
                 eventOutputMsg.append("success");
                 dbRecord.setExecutionState(ExecutionState.UNFILED_RECORD_DECLARED);
