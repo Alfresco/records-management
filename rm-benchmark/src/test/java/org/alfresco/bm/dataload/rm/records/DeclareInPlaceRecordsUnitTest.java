@@ -39,8 +39,11 @@ import org.alfresco.bm.event.EventResult;
 import org.alfresco.rest.core.RMRestWrapper;
 import org.alfresco.rest.core.RestAPIFactory;
 import org.alfresco.rest.model.RestErrorModel;
+import org.alfresco.rest.rm.community.model.fileplancomponents.FilePlanComponentAlias;
 import org.alfresco.rest.rm.community.model.record.Record;
+import org.alfresco.rest.rm.community.model.unfiledcontainer.UnfiledContainer;
 import org.alfresco.rest.rm.community.requests.gscore.api.FilesAPI;
+import org.alfresco.rest.rm.community.requests.gscore.api.UnfiledContainerAPI;
 import org.alfresco.utility.model.UserModel;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
@@ -193,6 +196,12 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
         when(mockedRmRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.CREATED.value()));
         when(mockedRestAPIFactory.getRmRestWrapper()).thenReturn(mockedRmRestWrapper);
 
+        UnfiledContainer mockedUnfiledContainer = mock(UnfiledContainer.class);
+        when(mockedUnfiledContainer.getId()).thenReturn("unfiledContainerID");
+        UnfiledContainerAPI mockedUnfiledContainerAPI = mock(UnfiledContainerAPI.class);
+        when(mockedUnfiledContainerAPI.getUnfiledContainer(FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS)).thenReturn(mockedUnfiledContainer);
+        when(mockedRestAPIFactory.getUnfiledContainersAPI()).thenReturn(mockedUnfiledContainerAPI);
+
         FolderData mockedParentFolder = mock(FolderData.class);
         when(mockedParentFolder.getPath()).thenReturn(UNFILED_RECORD_CONTAINER_PATH);
         when(mockedFileFolderService.getFolder("unfiledContainerID")).thenReturn(mockedParentFolder);
@@ -202,6 +211,47 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
         assertEquals("Declaring file as record: \nsuccess", result.getData());
         assertEquals(1, result.getNextEvents().size());
         assertEquals(declareInPlaceRecords.getEventNameInPlaceRecordsDeclared(), result.getNextEvents().get(0).getName());
+    }
+
+    @Test
+    public void testDeclareAsRecordWithNotDeclaredFail() throws Exception
+    {
+        String fileId = "testFileId";
+        String username = "testUserName";
+        String password = "testPassword";
+        long delay = 10L;
+
+        declareInPlaceRecords.setDeclareInPlaceRecordDelay(delay);
+        Event mockedEvent = mock(Event.class);
+        DBObject mockedData = mock(DBObject.class);
+        when(mockedData.get(FIELD_ID)).thenReturn(fileId);
+        when(mockedData.get(FIELD_USERNAME)).thenReturn(username);
+        when(mockedData.get(FIELD_PASSWORD)).thenReturn(password);
+        when(mockedEvent.getData()).thenReturn(mockedData);
+
+        RecordData dbRecord = new RecordData(fileId, RecordContext.IN_PLACE_RECORD, "testFileName", "testFilePath", "testInPlacePath", ExecutionState.SCHEDULED);
+        when(mockedRecordService.getRecord(fileId)).thenReturn(dbRecord);
+
+        FilesAPI mockedFilesAPI = mock(FilesAPI.class);
+        when(mockedRestAPIFactory.getFilesAPI(any(UserModel.class))).thenReturn(mockedFilesAPI);
+        Record record = mock(Record.class);
+        when(record.getName()).thenReturn("newRecordName");
+        when(record.getParentId()).thenReturn("recordParentId");
+        when(mockedFilesAPI.declareAsRecord(fileId)).thenReturn(record);
+        RMRestWrapper mockedRmRestWrapper = mock(RMRestWrapper.class);
+        when(mockedRmRestWrapper.getStatusCode()).thenReturn(Integer.toString(HttpStatus.CREATED.value()));
+        when(mockedRestAPIFactory.getRmRestWrapper()).thenReturn(mockedRmRestWrapper);
+
+        UnfiledContainer mockedUnfiledContainer = mock(UnfiledContainer.class);
+        when(mockedUnfiledContainer.getId()).thenReturn("unfiledContainerID");
+        UnfiledContainerAPI mockedUnfiledContainerAPI = mock(UnfiledContainerAPI.class);
+        when(mockedUnfiledContainerAPI.getUnfiledContainer(FilePlanComponentAlias.UNFILED_RECORDS_CONTAINER_ALIAS)).thenReturn(mockedUnfiledContainer);
+        when(mockedRestAPIFactory.getUnfiledContainersAPI()).thenReturn(mockedUnfiledContainerAPI);
+
+        when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestAPIFactory);
+        EventResult result = declareInPlaceRecords.processEvent(mockedEvent, new StopWatch());
+        assertEquals(false, result.isSuccess());
+        assertEquals("Declaring record with id=" + fileId + " didn't take place.", result.getData());
     }
 
     @Test
