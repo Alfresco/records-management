@@ -24,7 +24,7 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-if (model.item != null && (model.site != (model.item.location.site != null ? model.item.location.site.name : null) && model.node.isRmNode))
+if (model.item != null && (model.site != (model.item.location.site != null ? model.item.location.site.name : null) && (model.node != null && model.node.isRmNode)))
 {
    model.paths = getPaths();
    model.widgets = getWidgets();
@@ -97,4 +97,4 @@ function getWidgets()
 }
 
 // Hide quickShare link for records
-model.showQuickShare = (!model.node.isRmNode).toString();
+model.showQuickShare = (model.node != null ? (!model.node.isRmNode).toString() : "true");
