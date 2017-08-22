@@ -1,6 +1,7 @@
 <extension>
     <modules>
 
+        <!-- RM Global header customisations -->
         <module>
             <id>Alfresco :: Records Management Global Header Customizations</id>
             <auto-deploy-index>10</auto-deploy-index>
@@ -24,6 +25,7 @@
             </customizations>
         </module>
 
+        <!-- RM Global extensions -->
         <module>
             <id>Alfresco :: Records Management Global (1)</id>
             <auto-deploy-index>10</auto-deploy-index>
@@ -55,6 +57,7 @@
             </customizations>
         </module>
 
+        <!-- Extensions apply to RM site only -->
         <module>
             <id>Alfresco :: Records Management Site (2)</id>
             <auto-deploy-index>20</auto-deploy-index>
@@ -686,6 +689,7 @@
 
         </module>
 
+        <!-- RM Config to apply everywhere -->
         <module>
             <id>Alfresco :: Records Management Config (3)</id>
             <auto-deploy-index>30</auto-deploy-index>
