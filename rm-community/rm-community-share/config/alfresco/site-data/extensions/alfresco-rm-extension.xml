@@ -1,6 +1,31 @@
 <extension>
     <modules>
 
+        <!-- RM Global header customisations -->
+        <module>
+            <id>Alfresco :: Records Management Global Header Customizations</id>
+            <auto-deploy-index>10</auto-deploy-index>
+            <auto-deploy>true</auto-deploy>
+
+            <!-- These customizations should be applied to the header on
+                 all pages (both Aikau and non-Aikau) through out Share. -->
+            <customizations>
+                <customization>
+                    <targetPackageRoot>org.alfresco</targetPackageRoot>
+                    <sourcePackageRoot>org.alfresco.share.pages.rm-customizations</sourcePackageRoot>
+                </customization>
+
+                <customization>
+                    <targetPackageRoot>org.alfresco.share.pages</targetPackageRoot>
+                    <sourcePackageRoot>org.alfresco.share.pages.rm-customizations.share.header</sourcePackageRoot>
+                    <alwaysApply>
+                      <webscript>share-header</webscript>
+                    </alwaysApply>
+                  </customization>
+            </customizations>
+        </module>
+
+        <!-- RM Global extensions -->
         <module>
             <id>Alfresco :: Records Management Global (1)</id>
             <auto-deploy-index>10</auto-deploy-index>
@@ -21,9 +46,18 @@
                     <targetPackageRoot>org.alfresco</targetPackageRoot>
                     <sourcePackageRoot>org.alfresco.rm.customizations</sourcePackageRoot>
                 </customization>
+
+                <customization>
+                    <targetPackageRoot>org.alfresco.share.pages</targetPackageRoot>
+                    <sourcePackageRoot>org.alfresco.rm.customizations.share.header</sourcePackageRoot>
+                    <alwaysApply>
+                      <webscript>share-header</webscript>
+                    </alwaysApply>
+                  </customization>
             </customizations>
         </module>
 
+        <!-- Extensions apply to RM site only -->
         <module>
             <id>Alfresco :: Records Management Site (2)</id>
             <auto-deploy-index>20</auto-deploy-index>
@@ -655,6 +689,7 @@
 
         </module>
 
+        <!-- RM Config to apply everywhere -->
         <module>
             <id>Alfresco :: Records Management Config (3)</id>
             <auto-deploy-index>30</auto-deploy-index>

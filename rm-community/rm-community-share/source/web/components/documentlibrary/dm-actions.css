@@ -1,6 +1,7 @@
 .info-banner a.item-rejected-record-info
 {
-   /* FIXME: Change image */
+   /* FIXME: Change image
+   See RM-RM-3967 */
    background-image: url("../../rm/components/documentlibrary/images/file-document-16.png");
    background-repeat: no-repeat;
    float: right;
@@ -14,7 +15,8 @@
 
 .info-banner a.item-rejected-record-close
 {
-   /* FIXME: Change image */
+   /* FIXME: Change image
+   See RM-RM-3967 */
    background-image: url("../../rm/components/documentlibrary/images/select-none-rm-16.png");
    background-repeat: no-repeat;
    float: right;

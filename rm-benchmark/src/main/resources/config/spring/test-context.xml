@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+  xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/data/mongo
+          http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+  <context:annotation-config />
+  <context:component-scan base-package="org.alfresco" />
+
+  <import resource="classpath:alfresco-restapi-context.xml" />
+  <import resource="classpath:config/spring/test-common-context.xml" />
+
+  <bean id="userDataService" class="org.alfresco.bm.user.UserDataServiceImpl">
+    <constructor-arg name="db" ref="testMongoDB" />
+    <constructor-arg name="collection" value="${mirror.users}" />
+  </bean>
+
+  <bean id="siteDataService" class="org.alfresco.bm.site.SiteDataServiceImpl">
+    <constructor-arg name="db" ref="testMongoDB" />
+    <constructor-arg name="sites" value="${mirror.sites}" />
+    <constructor-arg name="siteMembers" value="${mirror.siteMembers}" />
+  </bean>
+
+  <bean id="fileFolderService" class="org.alfresco.bm.cm.FileFolderService">
+    <constructor-arg name="db" ref="testMongoDB" />
+    <constructor-arg name="collection" value="${mirror.fileFolders}" />
+  </bean>
+
+  <bean id="auxFileFolderService" class="org.alfresco.bm.dataload.rm.services.ExtendedFileFolderService">
+    <constructor-arg name="db" ref="testMongoDB" />
+    <constructor-arg name="collection" value="${mirror.auxFileFolders}" />
+  </bean>
+
+  <bean id="fileDataService" class="org.alfresco.bm.file.FileDataServiceImpl">
+    <constructor-arg name="db" ref="testMongoDB" />
+    <constructor-arg name="collection" value="${files.collection.name}" />
+  </bean>
+
+  <bean id="recordService" class="org.alfresco.bm.dataload.rm.services.RecordService">
+        <constructor-arg name="db" ref="testMongoDB" />
+        <constructor-arg name="collection" value="${mirror.records}" />
+    </bean>
+
+  <!-- -->
+  <!-- Test Files -->
+  <!-- -->
+  <!-- Contrived example in order to demonstrate how test files can be obtained.
+    The LocalTestFileService can also be used but it limits how your tests can
+    be distributed. -->
+  <bean id="testFileService" class="org.alfresco.bm.file.FtpTestFileService">
+    <constructor-arg name="fileDataService" ref="fileDataService" />
+    <constructor-arg name="localDir" value="${files.cache.dir}" />
+    <constructor-arg name="ftpHost" value="${files.ftp.host}" />
+    <constructor-arg name="ftpPort" value="${files.ftp.port}" />
+    <constructor-arg name="ftpUsername" value="${files.ftp.username}" />
+    <constructor-arg name="ftpPassword" value="${files.ftp.password}" />
+    <constructor-arg name="ftpPath" value="${files.ftp.path}" />
+  </bean>
+
+  <bean id="rmBaseEventProcessor" class="org.alfresco.bm.dataload.RMBaseEventProcessor"
+    abstract="true" parent="event.base">
+    <property name="fileFolderService" ref="fileFolderService" />
+    <property name="auxFileFolderService" ref="auxFileFolderService" />
+    <property name="testFileService" ref="testFileService" />
+  </bean>
+
+  <bean id="rmAbstractLoadComponent" class="org.alfresco.bm.dataload.RMAbstractLoadComponent" abstract="true" parent="rmBaseEventProcessor" />
+
+  <!-- -->
+  <!-- EventProcessors -->
+  <!-- -->
+  <!-- The event processors will handle events based on their bean names after
+    removal of the 'event.' prefix. So, for example: bean "event.start" will
+    handle events named "start" bean "event.invite" will handle events named
+    "invite" This behavior can be overridden. See the javadocs of AbstractEventProcessor.
+    The 'producer.process' bean shows how an event can be redirected with an
+    optional delay: in this case, to 'event.doProcess'. The 'producer.users.ready'
+    renames the 'users.ready' event to 'scheduleProcesses' without any other
+    modification. The 'producer.processDone' effectively absorbs the 'processDone'
+    events. -->
+
+  <!-- Events -->
+  <bean id="event.start" class="org.alfresco.bm.event.RenameEventProcessor"
+    parent="event.base">
+    <constructor-arg name="outputEventName" value="prepareRMSite" />
+    <property name="chart" value="false" />
+  </bean>
+
+  <!-- -->
+  <!-- RM Site Creation -->
+  <!-- -->
+  <bean id="event.prepareRMSite" class="org.alfresco.bm.dataload.rm.site.PrepareRMSite"
+    parent="event.base">
+    <property name="username" value="${rm.username}" />
+    <property name="password" value="${rm.password}" />
+    <property name="chart" value="false" />
+    <property name="eventNameRMSitePrepared" value="createRMSite" />
+    <property name="eventNameLoadRMSiteIntoDB" value="loadRMSiteIntoDB" />
+    <property name="eventNameContinueLoadingData" value="prepareRMSiteMembers" />
+  </bean>
+
+  <bean id="event.createRMSite" class="org.alfresco.bm.dataload.rm.site.CreateRMSite"
+    parent="event.base">
+    <property name="eventNameSiteCreated" value="rmSiteCreated" />
+  </bean>
+
+  <bean id="event.loadRMSiteIntoDB" class="org.alfresco.bm.dataload.rm.site.CreateRMSite"
+    parent="event.base">
+    <property name="eventNameSiteCreated" value="rmSiteCreated" />
+  </bean>
+
+  <!--                    -->
+  <!-- Site Membership    -->
+  <!--                    -->
+
+  <bean id="producer.rmSiteCreated" class="org.alfresco.bm.event.producer.RedirectEventProducer"
+    parent="producer.base">
+    <constructor-arg name="newEventName" value="prepareRMSiteMembers" />
+  </bean>
+
+  <bean id="event.prepareRMSiteMembers" class="org.alfresco.bm.dataload.rm.site.PrepareRMSiteMembers" parent="rmBaseEventProcessor" >
+      <property name="assignRMRoleToUsers" value="${rm.assignRMRoleToUsers}" />
+      <property name="userCount" value="${rm.userCount}" />
+      <property name="role" value="${rm.role}" />
+      <property name="eventNameSiteMembersPrepared" value="rmSiteMembersPrepared" />
+      <property name="eventNameContinueLoadingData" value="scheduleFilePlanLoaders" />
+      <property name="chart" value="false"/>
+  </bean>
+
+  <bean id="producer.rmSiteMembersPrepared" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base" >
+      <constructor-arg name="newEventName" value="createRMSiteMembers" />
+  </bean>
+
+  <bean id="event.createRMSiteMembers" class="org.alfresco.bm.dataload.rm.site.CreateRMSiteMembers" parent="rmBaseEventProcessor" >
+      <property name="memberCreationDelay" value="${rm.siteMemberCreationDelay}" />
+      <property name="batchSize" value="${rm.batch.size}" />
+      <property name="eventNameRMSiteMembersCreated" value="rmSiteMembersCreated" />
+      <property name="eventNameCreateRMSiteMembers" value="createRMSiteMembers" />
+      <property name="eventNameCreateRMSiteMember" value="createRMSiteMember" />
+      <property name="chart" value="false"/>
+  </bean>
+
+  <bean id="event.createRMSiteMember" class="org.alfresco.bm.dataload.rm.site.CreateRMSiteMember" parent="rmBaseEventProcessor">
+      <property name="eventNameRMSiteMemberCreated" value="rmSiteMemberCreated" />
+  </bean>
+
+  <bean id="producer.rmSiteMemberCreated" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <!-- -->
+  <!-- File Plan structure Creation -->
+  <!-- -->
+
+  <bean id="producer.rmSiteMembersCreated" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base">
+    <constructor-arg name="newEventName" value="scheduleFilePlanLoaders" />
+  </bean>
+
+  <bean id="event.scheduleFilePlanLoaders" class="org.alfresco.bm.dataload.rm.fileplan.ScheduleFilePlanLoaders"
+    parent="rmBaseEventProcessor">
+    <property name="createFileplanFolderStructure" value="${rm.createFileplanFolderStructure}" />
+    <property name="categoryStructureDepth" value="${rm.categoryStructureDepth}" />
+    <property name="childCategNumber" value="${rm.childCategNumber}" />
+    <property name="folderNumber" value="${rm.folderNumber}" />
+    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
+    <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
+    <property name="categoryNumber" value="${rm.categoryNumber}" />
+    <property name="folderCategoryMix" value="${rm.folderCategoryMix}" />
+    <property name="chart" value="false" />
+    <property name="eventNameLoadRootRecordCategory" value="loadRootRecordCategory" />
+    <property name="eventNameLoadSubCategory" value="loadSubCategory" />
+    <property name="eventNameLoadRecordFolder" value="loadRecordFolder" />
+    <property name="eventNameScheduleLoaders" value="scheduleFilePlanLoaders" />
+    <property name="eventNameLoadingComplete" value="filePlanloadingComplete" />
+  </bean>
+
+  <bean id="event.loadRootRecordCategory" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmAbstractLoadComponent">
+    <property name="eventNameComplete" value="rootRecordCategoryLoaded"/>
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.rootRecordCategoryLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <bean id="event.loadSubCategory" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmAbstractLoadComponent">
+    <property name="eventNameComplete" value="subCategoryLoaded"/>
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.subCategoryLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <bean id="event.loadRecordFolder" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmAbstractLoadComponent">
+    <property name="eventNameComplete" value="recordFolderLoaded"/>
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.recordFolderLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <!-- -->
+  <!-- Upload Records -->
+  <!-- -->
+  <bean id="producer.filePlanloadingComplete" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base">
+    <constructor-arg name="newEventName" value="scheduleRecordLoaders" />
+  </bean>
+
+  <bean id="event.scheduleRecordLoaders" class="org.alfresco.bm.dataload.rm.fileplan.ScheduleRecordLoaders" parent="rmBaseEventProcessor">
+    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
+    <property name="uploadRecords" value="${rm.uploadRecords}" />
+    <property name="recordFolderPaths" value="${rm.recordFolderPaths}" />
+    <property name="recordsNumber" value="${rm.recordsNumber}" />
+    <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
+    <property name="chart" value="false" />
+    <property name="eventNameLoadRecords" value="loadRecord" />
+    <property name="eventNameScheduleRecordLoaders" value="scheduleRecordLoaders" />
+    <property name="eventNameLoadingComplete" value="loadingRecordsComplete" />
+  </bean>
+
+  <bean id="event.loadRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmAbstractLoadComponent">
+    <property name="eventNameComplete" value="recordLoaded"/>
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.recordLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <!-- -->
+  <!-- Unfiled Record Folders structure Creation -->
+  <!-- -->
+  <bean id="producer.loadingRecordsComplete" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base" >
+    <constructor-arg name="newEventName" value="scheduleUnfiledRecordFoldersLoaders" />
+  </bean>
+
+  <bean id="event.scheduleUnfiledRecordFoldersLoaders" class="org.alfresco.bm.dataload.rm.unfiled.ScheduleUnfiledRecordFolderLoaders" parent="rmBaseEventProcessor">
+    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
+    <property name="createUnfiledRecordFolderStructure" value="${rm.createUnfiledRecordFolderStructure}" />
+    <property name="rootUnfiledRecordFolderNumber" value="${rm.rootUnfiledRecordFolderNumber}" />
+    <property name="unfiledRecordFolderDepth" value="${rm.unfiledRecordFolderDepth}" />
+    <property name="unfiledRecordFolderNumber" value="${rm.unfiledRecordFolderNumber}" />
+    <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
+    <property name="chart" value="false" />
+    <property name="eventNameLoadRootUnfiledRecordFolder" value="loadRootUnfiledRecordFolder" />
+    <property name="eventNameLoadUnfiledRecordFolder" value="loadUnfiledRecordFolder" />
+    <property name="eventNameScheduleLoaders" value="scheduleUnfiledRecordFoldersLoaders" />
+    <property name="eventNameLoadingComplete" value="loadingUnfiledRecordFoldersComplete" />
+  </bean>
+
+  <bean id="event.loadRootUnfiledRecordFolder" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmAbstractLoadComponent">
+    <property name="eventNameComplete" value="rootUnfiledRecordFolderLoaded"/>
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.rootUnfiledRecordFolderLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <bean id="event.loadUnfiledRecordFolder" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmAbstractLoadComponent">
+    <property name="eventNameComplete" value="unfiledRecordFolderLoaded"/>
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.unfiledRecordFolderLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+  <!-- -->
+  <!-- Upload Unfiled Records -->
+  <!-- -->
+
+  <bean id="producer.loadingUnfiledRecordFoldersComplete" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base" >
+    <constructor-arg name="newEventName" value="scheduleUnfiledRecordLoaders" />
+  </bean>
+
+  <bean id="event.scheduleUnfiledRecordLoaders" class="org.alfresco.bm.dataload.rm.unfiled.ScheduleUnfiledRecordLoaders" parent="rmBaseEventProcessor">
+    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
+    <property name="uploadUnfiledRecords" value="${rm.uploadUnfiledRecords}" />
+    <property name="unfiledRecordsNumber" value="${rm.unfiledRecordsNumber}" />
+    <property name="unfiledRecordFolderPaths" value="${rm.unfiledRecordFolderPaths}" />
+    <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
+    <property name="chart" value="false" />
+    <property name="eventNameLoadUnfiledRecords" value="loadUnfiledRecord" />
+    <property name="eventNameScheduleLoaders" value="scheduleUnfiledRecordLoaders" />
+    <property name="eventNameLoadingComplete" value="loadingUnfiledRecordsComplete" />
+  </bean>
+
+  <bean id="event.loadUnfiledRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmAbstractLoadComponent">
+    <property name="eventNameComplete" value="unfiledRecordLoaded"/>
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.unfiledRecordLoaded" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <!-- -->
+  <!-- In Place Records-->
+  <!-- -->
+
+  <bean id="producer.loadingUnfiledRecordsComplete" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base">
+    <constructor-arg name="newEventName" value="scheduleInPlaceRecordLoaders" />
+  </bean>
+
+  <bean id="event.scheduleInPlaceRecordLoaders" class="org.alfresco.bm.dataload.rm.records.ScheduleInPlaceRecordLoaders" parent="rmBaseEventProcessor">
+    <property name="enabled" value="${rm.inPlaceRecords.enabled}" />
+    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
+    <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
+    <property name="collabSiteId" value="${rm.inPlaceRecords.collabSiteId}" />
+    <property name="collabSitePaths" value="${rm.inPlaceRecords.collabSitePaths}" />
+    <property name="recordDeclarationLimit" value="${rm.inPlaceRecords.recordDeclarationLimit}" />
+    <property name="username" value="${rm.username}" />
+    <property name="password" value="${rm.password}" />
+    <property name="chart" value="false" />
+    <property name="eventNameDeclareInPlaceRecord" value="declareInPlaceRecord"/>
+    <property name="eventNameComplete" value="declaringInPlaceRecordsComplete"/>
+    <property name="eventNameRescheduleSelf" value="scheduleInPlaceRecordLoaders"/>
+  </bean>
+
+  <bean id="event.declareInPlaceRecord" class="org.alfresco.bm.dataload.rm.records.DeclareInPlaceRecords" parent="rmBaseEventProcessor">
+    <property name="eventNameInPlaceRecordsDeclared" value="inPlaceRecordDeclared"/>
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.inPlaceRecordDeclared" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <!-- -->
+  <!-- Filing Unfiled Records-->
+  <!-- -->
+
+  <bean id="producer.declaringInPlaceRecordsComplete" class="org.alfresco.bm.event.producer.RedirectEventProducer" parent="producer.base">
+    <constructor-arg name="newEventName" value="scheduleFilingUnfiledRecords" />
+  </bean>
+
+  <bean id="event.scheduleFilingUnfiledRecords" class="org.alfresco.bm.dataload.rm.records.ScheduleFilingUnfiledRecords" parent="rmBaseEventProcessor">
+    <property name="fileUnfiledRecords" value="${rm.fileUnfiledRecords}" />
+    <property name="maxActiveLoaders" value="${rm.maxActiveLoaders}" />
+    <property name="loadCheckDelay" value="${rm.loadCheckDelay}" />
+    <property name="fileToRecordFolderPaths" value="${rm.fileToRecordFolderPaths}" />
+    <property name="recordFilingLimit" value="${rm.recordFilingLimit}" />
+    <property name="fileFromUnfiledPaths" value="${rm.fileFromUnfiledPaths}" />
+    <property name="chart" value="false" />
+    <property name="eventNameFileUnfiledRecords" value="fileUnfiledRecord"/>
+    <property name="eventNameComplete" value="filingUnfiledRecordsComplete"/>
+    <property name="eventNameRescheduleSelf" value="scheduleFilingUnfiledRecords"/>
+  </bean>
+
+  <bean id="event.fileUnfiledRecord" class="org.alfresco.bm.dataload.LoadSingleComponent" parent="rmAbstractLoadComponent">
+    <property name="eventNameComplete" value="unfiledRecordFiled"/>
+    <property name="chart" value="true" />
+  </bean>
+
+  <bean id="producer.unfiledRecordFiled" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+
+  <bean id="producer.filingUnfiledRecordsComplete" class="org.alfresco.bm.event.producer.TerminateEventProducer" parent="producer.base" />
+</beans>

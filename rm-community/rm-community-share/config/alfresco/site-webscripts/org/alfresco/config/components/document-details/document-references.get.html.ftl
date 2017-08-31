@@ -2,7 +2,7 @@
  #%L
  Alfresco Records Management Module
  %%
- Copyright (C) 2005 - 2016 Alfresco Software Limited
+ Copyright (C) 2005 - 2017 Alfresco Software Limited
  %%
  This file is part of the Alfresco software.
  -
@@ -30,8 +30,8 @@
    <script type="text/javascript">//<![CDATA[
       new Alfresco.rm.component.DocumentReferences("${el}").setOptions(
       {
-         siteId: "${site?js_string}",
-         containerId: "${container?js_string}",
+         siteId: "${(site!"")?js_string}",
+         containerId: "${(container!"")?js_string}",
          nodeRef : "${nodeRef?js_string}"
       }).setMessages(
          ${messages}

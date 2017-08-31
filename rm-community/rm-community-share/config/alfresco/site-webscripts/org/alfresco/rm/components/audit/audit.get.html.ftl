@@ -2,7 +2,7 @@
  #%L
  Alfresco Records Management Module
  %%
- Copyright (C) 2005 - 2016 Alfresco Software Limited
+ Copyright (C) 2005 - 2017 Alfresco Software Limited
  %%
  This file is part of the Alfresco software.
  -
@@ -94,7 +94,11 @@
                   <#else>
                      <td>${msg('label.no-previous')?html}</td>
                   </#if>
+                  <#if (v.new?? && v.new != "")>
                      <td>${v.new?html}</td>
+                  <#else>
+                     <td>${msg('label.no-next')?html}</td>
+                  </#if>
                   </tr>
                   </#list>
                </tbody>

@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2016 Alfresco Software Limited
+ * Copyright (C) 2005 - 2017 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -58,9 +58,9 @@
    Alfresco.rm.component.DocumentList = function(htmlId)
    {
       Alfresco.rm.component.DocumentList.superclass.constructor.call(this, htmlId);
-      
+
       this.dataSourceUrl = $combine(Alfresco.constants.URL_SERVICECONTEXT, "rm/components/documentlibrary/data/doclist/");
-      
+
       return this;
    };
 
@@ -520,6 +520,12 @@
          {
             var hash = window.location.hash;
             hash = hash.replace(/(filter=)[^\&]+/, '$1' + filterId);
+            window.location.hash = hash;
+         }
+         if (currentFilter === "path" && args[1].filterData === "/Unfiled Records")
+         {
+            var hash = window.location.hash;
+            hash = hash.replace(/(filter=)[^\&]+/, '$1' + "unfiledRecords") + "&page=" + this.currentPage;
             window.location.hash = hash;
          }
       }

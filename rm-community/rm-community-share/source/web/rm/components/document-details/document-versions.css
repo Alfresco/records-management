@@ -1,6 +1,7 @@
 .document-versions .version-panel-left .document-recorded-version-history
 {
-   /* FIXME: Change image */
+   /* FIXME: Change image
+   See RM-RM-3967 */
    background-image: url("../documentlibrary/images/record-16.png");
    background-position: center;
    background-repeat: no-repeat;

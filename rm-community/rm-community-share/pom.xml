@@ -3,21 +3,22 @@
    <modelVersion>4.0.0</modelVersion>
    <artifactId>alfresco-rm-community-share</artifactId>
    <name>Alfresco Records Management Community Share</name>
+   <description>Alfresco Record Management Community Share Extension</description>
    <packaging>amp</packaging>
 
    <parent>
       <groupId>org.alfresco</groupId>
       <artifactId>alfresco-rm-community</artifactId>
-      <version>2.5-SNAPSHOT</version>
+      <version>2.6-SNAPSHOT</version>
    </parent>
 
    <properties>
       <app.amp.client.war.artifactId>${alfresco.share.artifactId}</app.amp.client.war.artifactId>
-      <maven.tomcat.port>8081</maven.tomcat.port>
+      <maven.tomcat.port>8181</maven.tomcat.port>
       <alfresco.repo.url>http://localhost:8080/alfresco</alfresco.repo.url>
       <alfresco.share.artifactId>share</alfresco.share.artifactId>
       <alfresco.rm.artifactId>alfresco-rm-community-share</alfresco.rm.artifactId>
-      <alfresco.aikau.version>1.0.63</alfresco.aikau.version>
+      <alfresco.aikau.version>1.0.101.5</alfresco.aikau.version>
    </properties>
 
    <build>
@@ -99,7 +100,7 @@
                            <groupId>${alfresco.groupId}</groupId>
                            <artifactId>${app.amp.client.war.artifactId}</artifactId>
                            <type>war</type>
-                           <version>${alfresco.version}</version>
+                           <version>${share.version}</version>
                         </artifactItem>
                      </artifactItems>
                   </configuration>
@@ -117,18 +118,8 @@
                   </goals>
                   <configuration>
                      <attachClasses>true</attachClasses>
+                     <attachConfig>true</attachConfig>
                      <includeDependencies>true</includeDependencies>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>install-rm-amp</id>
-                  <goals>
-                     <goal>install</goal>
-                  </goals>
-                  <phase>package</phase>
-                  <configuration>
-                     <backup>true</backup>
-                     <ampLocation>${project.build.directory}/${alfresco.rm.artifactId}-${alfresco.rm.version}.amp</ampLocation>
                   </configuration>
                </execution>
                <execution>
@@ -225,7 +216,7 @@
       <dependency>
          <groupId>${alfresco.groupId}</groupId>
          <artifactId>share</artifactId>
-         <version>${alfresco.version}</version>
+         <version>${share.version}</version>
          <classifier>classes</classifier>
          <scope>provided</scope>
       </dependency>

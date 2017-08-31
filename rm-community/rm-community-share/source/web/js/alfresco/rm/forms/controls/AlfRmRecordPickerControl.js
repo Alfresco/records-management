@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2016 Alfresco Software Limited
+ * Copyright (C) 2005 - 2017 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -211,6 +211,15 @@ define(["dojo/_base/declare",
          }];
 
          return this.processWidgets(widgetsForControl, this._controlNode);
+      },
+
+      /**
+       * Extended this method in order to hide the validation errors for the select record button.
+       * In this case we don't need the errors displayed, we only need the create button disabled if we didn't selected the target record.
+       */
+      validate: function alfresco_rm_forms_controls_AlfRmRecordPickerControl__validate() {
+         this.inherited(arguments);
+         this.hideValidationFailure();
       },
 
       /**

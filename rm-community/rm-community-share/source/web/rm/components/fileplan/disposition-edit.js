@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2016 Alfresco Software Limited
+ * Copyright (C) 2005 - 2017 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -548,6 +548,12 @@
             }, saveActionEl),
             cancelEl = Dom.getElementsByClassName("cancel", "span", actionEl)[0],
             cancelActionButton = Alfresco.util.createYUIButton(this, "cancel-button", null, {}, cancelEl);
+         
+         this.widgets.saveActionButton = saveActionButton;
+         saveActionButton.on("click", function()
+         {
+            this.widgets.saveActionButton.set("disabled", true);
+         }, null, this);
 
          cancelActionButton.on("click", this.onCancelActionButtonClick,
          {
@@ -663,6 +669,7 @@
 
                   // Display add step button
                   Dom.removeClass(this.widgets.flowButtons, "hidden");
+
                },
                obj:
                {
