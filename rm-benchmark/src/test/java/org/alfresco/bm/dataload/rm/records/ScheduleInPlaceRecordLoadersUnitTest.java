@@ -46,6 +46,7 @@ import org.alfresco.bm.event.EventResult;
 import org.alfresco.bm.session.SessionService;
 import org.alfresco.bm.site.SiteData;
 import org.alfresco.bm.site.SiteDataService;
+import org.alfresco.dataprep.SiteService.Visibility;
 import org.alfresco.rest.core.RestWrapper;
 import org.alfresco.rest.model.RestNodeModel;
 import org.alfresco.rest.model.RestNodeModelsCollection;
@@ -67,7 +68,7 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.social.alfresco.api.entities.Site.Visibility;
+
 
 import com.mongodb.DBObject;
 
