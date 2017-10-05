@@ -57,7 +57,7 @@
    /**
     * Augment prototype with RecordActions module, ensuring overwrite is enabled
     */
-   YAHOO.lang.augmentProto(Alfresco.rm.doclib.FolderActions, Alfresco.rm.doclib.Actions, true);
+   YAHOO.lang.augmentProto(Alfresco.rm.doclib.FolderActions, Alfresco.rm.doclib.FolderActions, true);
 
    YAHOO.lang.augmentObject(Alfresco.rm.doclib.FolderActions.prototype, {
       /**
