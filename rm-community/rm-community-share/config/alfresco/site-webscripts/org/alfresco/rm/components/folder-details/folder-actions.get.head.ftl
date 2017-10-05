@@ -24,7 +24,9 @@
  along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  #L%
 -->
-
-<#-- PLEASE NOTE:
-<#-- Use of .head.ftl WebScript files has now been deprecated from WebScripts that render Share Components.    -->
-<#-- Dependencies are now loaded through the use of the <@script> and <@link> tags in the main .html.ftl file.  -->
+<#include "/org/alfresco/components/component.head.inc">
+<!-- Folder Details Actions -->
+<@link rel="stylesheet" type="text/css" href="${url.context}/res/components/folder-details/folder-actions.css" />
+<@script type="text/javascript" src="${url.context}/res/components/folder-details/folder-actions.js"></@script>
+<!-- Records Management Folder Details Actions -->
+<@script type="text/javascript" src="${url.context}/res/rm/components/folder-details/folder-actions.js"></@script>

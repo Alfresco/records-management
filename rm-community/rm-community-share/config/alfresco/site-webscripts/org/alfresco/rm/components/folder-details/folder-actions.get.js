@@ -27,6 +27,7 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 function main()
 {
    AlfrescoUtil.param('nodeRef');
@@ -42,31 +43,6 @@ function main()
       model.folderDetailsJSON = jsonUtils.toJSONString(folderDetails);
       doclibCommon();
    }
-   
-   model.syncMode = syncMode.getValue();
-
-   // Widget instantiation metadata...
-   var folderActions = {
-      id : "rmFolderActions", 
-      name : "Alfresco.rm.doclib.FolderActions",
-      options : {
-         nodeRef : model.nodeRef,
-         siteId : (model.site != null) ? model.site : null,
-         containerId : model.container,
-         rootNode : model.rootNode,
-         repositoryRoot : AlfrescoUtil.getRootNode(),
-         replicationUrlMapping : (model.replicationUrlMapping != null) ? model.replicationUrlMapping : "{}",
-         repositoryBrowsing : (model.rootNode != null),
-         folderDetails : folderDetails,
-         syncMode : model.syncMode != null ? model.syncMode : ""
-      }
-   };
-   if (model.repositoryUrl != null)
-   {
-      folderActions.options.repositoryUrl = model.repositoryUrl;
-   }
-   
-   model.widgets = [folderActions];
 }
 
 main();

@@ -24,43 +24,34 @@
  along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  #L%
 -->
+<#if folderDetailsJSON??>
+   <#assign el=args.htmlid?js_string>
+   <script type="text/javascript">//<![CDATA[
+      new Alfresco.rm.doclib.FolderActions("${el}").setOptions(
+      {
+         nodeRef: "${nodeRef?js_string}",
+         siteId: <#if site??>"${site?js_string}"<#else>null</#if>,
+         containerId: "${container?js_string}",
+         rootNode: "${rootNode}",
+         <#if repositoryUrl??>repositoryUrl: "${repositoryUrl}",</#if>
+         replicationUrlMapping: ${jsonUtils.toJSONString(replicationUrlMappingJSON)!"{}"},
+         repositoryBrowsing: ${(rootNode??)?string},
+         folderDetails: ${folderDetailsJSON}
+      }).setMessages(
+         ${messages}
+      );
+   //]]></script>
 
-<#include "/org/alfresco/components/component.head.inc">
+   <div id="${el}-body" class="folder-actions folder-details-panel">
+      <h2 id="${el}-heading" class="thin dark">
+         ${msg("heading")}
+      </h2>
+      <div class="doclist">
+         <div id="${el}-actionSet" class="action-set"></div>
+      </div>
+   </div>
 
-<@standalone>
-   <@markup id="css" >
-      <#-- CSS Dependencies -->
-      <@link href="${url.context}/res/components/folder-details/folder-actions.css" group="folder-details"/>
-   </@>
-   
-   <@markup id="js">
-      <#-- JavaScript Dependencies -->
-      <@script src="${url.context}/res/components/folder-details/folder-actions.js" group="folder-details"/>
-      <@script src="${url.context}/res/rm/components/folder-details/folder-actions.js" group="folder-details"/>
-   </@>
-   
-   <@markup id="widgets">
-      <@createWidgets group="folder-details"/>
-      <@inlineScript group="folder-details">
-         YAHOO.util.Event.onContentReady("${args.htmlid?js_string}-heading", function() {
-            Alfresco.util.createTwister("${args.htmlid?js_string}-heading", "FolderActions");
-         });
-      </@>
-   </@>
-   
-   <@markup id="html">
-      <@uniqueIdDiv>
-         <#if folderDetailsJSON??>
-            <#assign el=args.htmlid?html>
-            <div id="${el}-body" class="folder-actions folder-details-panel">
-               <h2 id="${el}-heading" class="thin dark">
-                  ${msg("heading")}
-               </h2>
-               <div class="doclist">
-                  <div id="${el}-actionSet" class="action-set"></div>
-               </div>
-            </div>
-         </#if>
-      </@>
-   </@>
-</@>
+   <script type="text/javascript">//<![CDATA[
+      Alfresco.util.createTwister("${el}-heading", "FolderActions");
+   //]]></script>
+</#if>
