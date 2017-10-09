@@ -98,6 +98,19 @@
          return Alfresco.util.message.call(this, this.options.mode + "." + messageId, this.name, Array.prototype.slice.call(arguments).slice(1));
       },
 
+      /**
+       * Gets a custom message for the current file
+       *
+       * @method fileMsg
+       * @param fileName {string} The name of the current file
+       * @param error {object} The error returned for the current file
+       * @return {string} The custom message
+       * @override
+       */
+      fileMsg: function RMCMFT_fileMsg(fileName, error)
+      {
+         return "<br>" + fileName + "&nbsp;-&nbsp;" + error;
+      },
 
       /**
        * YUI WIDGET EVENT HANDLERS
@@ -149,7 +162,7 @@
                   result = p_data.json.results[i];
                   if (!result.success)
                   {
-                     errorMessage += "<br>" + result.name + "&nbsp;-&nbsp;" + result.error;
+                     errorMessage += this.fileMsg(result.name, result.error);
                   }
                }
             
