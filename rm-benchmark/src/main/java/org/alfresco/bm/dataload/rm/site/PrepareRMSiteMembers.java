@@ -143,7 +143,7 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
         int userSkip = 0;
         final int userPageSize = 100;
         List<UserData> users = userDataService.getUsersByCreationState(DataCreationState.Created, userSkip, userPageSize);
-        if (users.size() == 0L)
+        if (users.isEmpty())
         {
             return new EventResult(NO_USERS_AVAILABLE_MSG, new Event(getEventNameContinueLoadingData(), null));
         }
@@ -154,7 +154,7 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
         int siteUsersToCreate = getUserCount() - currentSiteUsersCount;
 
         // Keep going while we attempt to find a user to use
-        while(users.size() > 0 && membersCount < siteUsersToCreate)
+        while(!users.isEmpty() && membersCount < siteUsersToCreate)
         {
             for(UserData user : users)
             {

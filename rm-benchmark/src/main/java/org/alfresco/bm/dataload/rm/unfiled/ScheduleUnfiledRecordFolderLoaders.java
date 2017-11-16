@@ -168,7 +168,7 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
         }
         // If there are no events, then we have finished
         String msg = null;
-        if (loaderSessionsToCreate > 0 && nextEvents.size() == 0)
+        if (loaderSessionsToCreate > 0 && nextEvents.isEmpty())
         {
             rootUnfiledRecordFoldersToLoad = null;
             auxFileFolderService.drop();
@@ -260,7 +260,7 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
                     0L, Long.valueOf(unfiledRecordFolderNumber - 1),//limit the maximum number of child folders to rootUnfiledRecordFolderNumber - 1
                     null, null,                                 // Ignore file limits
                     skip, limit);
-            if (emptyFolders.size() == 0)
+            if (emptyFolders.isEmpty())
             {
                 // The folders were populated in the mean time
                 break;

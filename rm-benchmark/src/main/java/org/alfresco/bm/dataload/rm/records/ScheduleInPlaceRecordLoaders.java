@@ -219,7 +219,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
         restCoreAPI.authenticateUser(new UserModel(username, password));
         prepareFilesToBeDeclared(eventOutputMsg);
 
-        if(unscheduledFilesCache.size() == 0)
+        if(unscheduledFilesCache.isEmpty())
         {
             // Make sure there are no files in process of being declared.
             int scheduledInPlaceRecords = (int) recordService.getRecordCountInSpecifiedPaths(ExecutionState.SCHEDULED.name(), null);
