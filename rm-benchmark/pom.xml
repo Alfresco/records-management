@@ -14,7 +14,7 @@
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <server.version>2.1.4</server.version>
-      <rm.community.rest.api.version>2.6.1-SNAPSHOT</rm.community.rest.api.version>
+      <rm.community.rest.api.version>${project.version}</rm.community.rest.api.version>
       <httpclient.version>4.5.2</httpclient.version>
       <mongo.config.host>localhost</mongo.config.host>
       <suiteXmlFile>testng.xml</suiteXmlFile>
