@@ -111,7 +111,7 @@ public class CreateRMSiteMembers extends RMBaseEventProcessor
         int numSitesMembers = 0;
 
         List<SiteMemberData> pendingSiteMembers = siteDataService.getSiteMembers(PATH_SNIPPET_RM_SITE_ID, DataCreationState.NotScheduled, null, 0, batchSize);
-        if (pendingSiteMembers.size() == 0)
+        if (pendingSiteMembers.isEmpty())
         {
             // There is nothing more to do
             Event doneEvent = new Event(eventNameRMSiteMembersCreated, System.currentTimeMillis(), null);

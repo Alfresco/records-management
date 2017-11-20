@@ -719,7 +719,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         if(RECORD_CATEGORY_CONTEXT.equals(context))
         {
             List<FolderData> directCategoryChildren = getDirectChildrenByContext(parentFolder, RECORD_CATEGORY_CONTEXT);
-            if (directCategoryChildren.size() > 0)
+            if (!directCategoryChildren.isEmpty())
             {
                 for (FolderData childFolder : directCategoryChildren)
                 {
@@ -728,7 +728,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
             }
 
             List<FolderData> directRecordFolderChildren = getDirectChildrenByContext(parentFolder, RECORD_FOLDER_CONTEXT);
-            if (directRecordFolderChildren.size() > 0)
+            if (!directRecordFolderChildren.isEmpty())
             {
                 Iterator<FolderData> iterator = directRecordFolderChildren.iterator();
                 while(iterator.hasNext())
@@ -765,7 +765,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         int limit = 100;
         List<FolderData> directChildren = new ArrayList<FolderData>();
         List<FolderData> childFolders = fileFolderService.getChildFolders(context, parentFolder.getPath(), skip, limit);
-        while (childFolders.size() > 0)
+        while (!childFolders.isEmpty())
         {
             directChildren.addAll(childFolders);
             skip += limit;
@@ -817,7 +817,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                     null, null,
                     null, null,
                     skip, limit);
-        while(emptyFolders.size() > 0)
+        while(!emptyFolders.isEmpty())
         {
             existingFolderStructure.addAll(emptyFolders);
             skip += limit;
@@ -934,7 +934,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         {
             mapOfRecordsPerRecordFolder = new LinkedHashMap<FolderData, Integer>();
             List<FolderData> recordFoldersThatNeedRecords = new ArrayList<FolderData>();
-            if (paths == null || paths.size() == 0)
+            if (paths == null || paths.isEmpty())
             {
                 // get the existing file plan folder structure
                 recordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(RECORD_FOLDER_CONTEXT));
@@ -975,18 +975,18 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                     }
                 }
                 // add record folders from existent paths
-                if (structureFromExistentProvidedPaths.size() > 0)
+                if (!structureFromExistentProvidedPaths.isEmpty())
                 {
                     recordFoldersThatNeedRecords.addAll(structureFromExistentProvidedPaths);
                 }
                 // configured paths did not existed in db and something went wrong with creation for all of them,
                 // initialize to existing structure in this case
-                if (recordFoldersThatNeedRecords.size() == 0)
+                if (recordFoldersThatNeedRecords.isEmpty())
                 {
                     recordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(RECORD_FOLDER_CONTEXT));
                 }
             }
-            if (recordFoldersThatNeedRecords.size() > 0)
+            if (!recordFoldersThatNeedRecords.isEmpty())
             {
                 mapOfRecordsPerRecordFolder = distributeNumberOfRecords(recordFoldersThatNeedRecords, numberOrRecords);
             }
@@ -1007,13 +1007,13 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         int limit = 100;
         List<FolderData> directChildren = new ArrayList<FolderData>();
         List<FolderData> childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
-        while(childFolders.size() > 0)
+        while(!childFolders.isEmpty())
         {
             directChildren.addAll(childFolders);
             skip += limit;
             childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
         }
-        if(directChildren.size() > 0)
+        if(!directChildren.isEmpty())
         {
             for(FolderData childFolder : directChildren)
             {
@@ -1038,7 +1038,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
         int skip = 0;
         int limit = 100;
         List<RecordData> recordsList = recordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, skip, limit);
-        while(recordsList.size() > 0)
+        while(!recordsList.isEmpty())
         {
             existingRecords.addAll(recordsList);
             skip += limit;
