@@ -548,7 +548,7 @@
             }, saveActionEl),
             cancelEl = Dom.getElementsByClassName("cancel", "span", actionEl)[0],
             cancelActionButton = Alfresco.util.createYUIButton(this, "cancel-button", null, {}, cancelEl);
-         
+
          this.widgets.saveActionButton = saveActionButton;
          saveActionButton.on("click", function()
          {
@@ -782,7 +782,7 @@
                title = this.msg(
                      "label.title.complex",
                      actionNameLabel,
-                     periodAmountEl.value,
+                     $encodeHtml(periodAmountEl.value),
                      periodUnitSelect.options[periodUnitSelect.selectedIndex].text.toLowerCase());
             }
          }
