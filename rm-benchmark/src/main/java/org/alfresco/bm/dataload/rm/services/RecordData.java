@@ -75,7 +75,7 @@ public class RecordData
                this.context.equals(other.context) &&
                this.name.equals(other.name) &&
                (this.parentPath + "|" + this.inPlacePath).equals(other.parentPath + "|" + other.inPlacePath) &&
-               this.executionState.equals(executionState);
+               this.executionState.equals(other.executionState);
     }
 
     public String getName()

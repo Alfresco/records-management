@@ -221,8 +221,9 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     private void prepareRecords(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         mapOfRecordsPerRecordFolder = calculateListOfEmptyFolders(mapOfRecordsPerRecordFolder, paths, recordsNumber);
-        List<FolderData> emptyFolders = new ArrayList<FolderData>();
-        emptyFolders.addAll(mapOfRecordsPerRecordFolder.keySet());
+        List<FolderData> emptyFolders = (mapOfRecordsPerRecordFolder == null) ?
+                    new ArrayList<>() :
+                    new ArrayList<>(mapOfRecordsPerRecordFolder.keySet());
         while (nextEvents.size() < loaderSessionsToCreate)
         {
             if (mapOfRecordsPerRecordFolder == null || mapOfRecordsPerRecordFolder.isEmpty())

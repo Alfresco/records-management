@@ -282,8 +282,9 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     private void prepareUnfiledRecords(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         calculateListOfEmptyFolders();
-        List<FolderData> emptyFolders = new ArrayList<FolderData>();
-        emptyFolders.addAll(mapOfRecordsPerUnfiledRecordFolder.keySet());
+        List<FolderData> emptyFolders = (mapOfRecordsPerUnfiledRecordFolder == null) ?
+                    new ArrayList<>() :
+                    new ArrayList<>(mapOfRecordsPerUnfiledRecordFolder.keySet());
         while (nextEvents.size() < loaderSessionsToCreate)
         {
             if(mapOfRecordsPerUnfiledRecordFolder == null || mapOfRecordsPerUnfiledRecordFolder.isEmpty())
