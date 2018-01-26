@@ -23,7 +23,7 @@
    </config>
 
    <!-- Document Library config section -->
-   <config evaluator="string-compare" condition="DocumentLibrary" replace="true">
+   <config evaluator="string-compare" condition="DocumentLibrary">
 
       <!--
          Status Indicators
