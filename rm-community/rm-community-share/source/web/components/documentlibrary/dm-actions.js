@@ -266,7 +266,7 @@
                   dataObj:
                   {
                      added: [],
-                     removed: ["rma:childClassificationComplete"]
+                     removed: ["clf:childClassificationComplete"]
                   },
                   successCallback:
                   {

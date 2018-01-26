@@ -152,7 +152,7 @@
    <bean id="evaluator.rm.doclib.isChildClassificationInProgress" class="org.alfresco.web.evaluator.HasAspectEvaluator">
       <property name="aspects">
          <list>
-            <value>rma:childClassificationInProgress</value>
+            <value>clf:childClassificationInProgress</value>
          </list>
       </property>
    </bean>
@@ -160,7 +160,7 @@
    <bean id="evaluator.rm.doclib.isChildClassificationComplete" class="org.alfresco.web.evaluator.HasAspectEvaluator">
       <property name="aspects">
          <list>
-            <value>rma:childClassificationComplete</value>
+            <value>clf:childClassificationComplete</value>
          </list>
       </property>
    </bean>
