@@ -149,6 +149,22 @@
       <property name="slingshotEvaluatorUtil" ref="slingshot.evaluator.utility" />
    </bean>
 
+   <bean id="evaluator.rm.doclib.isChildClassificationInProgress" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+      <property name="aspects">
+         <list>
+            <value>rma:childClassificationInProgress</value>
+         </list>
+      </property>
+   </bean>
+
+   <bean id="evaluator.rm.doclib.isChildClassificationComplete" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+      <property name="aspects">
+         <list>
+            <value>rma:childClassificationComplete</value>
+         </list>
+      </property>
+   </bean>
+
    <!--                             -->
    <!-- File Plan Action Evaluators -->
    <!--                             -->
