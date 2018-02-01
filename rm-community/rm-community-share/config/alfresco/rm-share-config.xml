@@ -101,10 +101,24 @@
 
       <!--
          Custom Metadata Templates for the Document Library Browse View
-
          Use view="simple" or view="detailed" to limit the display to one particular view.
       -->
       <metadata-templates>
+
+         <!-- Default (fallback) template - overriding the same template id in share-documentlibrary-config.xml -->
+         <template id="default">
+            <banner index="10" id="lockBanner" evaluator="evaluator.doclib.metadata.hasLockBanner">{lockBanner}</banner>
+            <banner index="20" id="syncTransientError" evaluator="evaluator.doclib.metadata.hasSyncTransientErrorBanner">{syncTransientError}</banner>
+            <banner index="30" id="syncFailed" evaluator="evaluator.doclib.metadata.hasSyncFailedBanner">{syncFailed}</banner>
+            <banner index="40" id="childClassificationInProgress" evaluator="evaluator.rm.doclib.isChildClassificationInProgress">{i18nLabel banner.child-classification-in-progress.info}</banner>
+            <banner index="50" id="childClassificationInComplete" evaluator="evaluator.rm.doclib.isChildClassificationComplete">{i18nLabel banner.child-classification-complete.info}{RM_childClassificationCompleteClose}</banner>
+            <line index="10" id="date">{date}{size}</line>
+            <line index="20" id="description" view="detailed">{description}</line>
+            <line index="30" id="tags" view="detailed">{tags}</line>
+            <line index="40" id="categories" view="detailed" evaluator="evaluator.doclib.metadata.hasCategories">{categories}</line>
+            <line index="50" id="social" view="detailed">{social}</line>
+         </template>
+
          <!-- Record Category -->
          <template id="rmRecordCategory">
             <evaluator>evaluator.rm.common.isRecordCategory</evaluator>
