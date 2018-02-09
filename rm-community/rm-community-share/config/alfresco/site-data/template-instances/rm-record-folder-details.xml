@@ -30,17 +30,6 @@
                   </evaluation>
                </evaluations>
             </sub-component>
-            <sub-component id="rm-enterprise-childClassificationBanner">
-               <evaluations>
-                  <evaluation id="rm-enterprise-childClassificationBanner">
-                     <url>/rm-enterprise/customizations/components/highest-child-classification</url>
-                     <properties>
-                        <nodeRef>{nodeRef}</nodeRef>
-                        <rootPage>documentlibrary</rootPage>
-                     </properties>
-                  </evaluation>
-               </evaluations>
-            </sub-component>
          </sub-components>
       </component>
 
