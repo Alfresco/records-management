@@ -21,9 +21,8 @@
    </organization>
 
    <scm>
-      <connection>scm:git:git@git.alfresco.com:records-management/records-management.git</connection>
-      <developerConnection>scm:git:git@git.alfresco.com:records-management/records-management.git</developerConnection>
-      <url>git@git.alfresco.com:records-management/records-management.git</url>
+      <developerConnection>scm:git:ssh://git.alfresco.com:records-management/records-management.git</developerConnection>
+      <url>https://git.alfresco.com/records-management/records-management</url>
      <tag>HEAD</tag>
   </scm>
 
