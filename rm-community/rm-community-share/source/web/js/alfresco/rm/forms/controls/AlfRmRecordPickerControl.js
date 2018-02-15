@@ -89,7 +89,7 @@ define(["dojo/_base/declare",
        * @type {number}
        * @default
        */
-      childrenNodesNo: 100,
+      currentPageSize: 100,
 
       /**
        *
@@ -188,7 +188,7 @@ define(["dojo/_base/declare",
                                                    // "DocumentListPicker" does not extend "ProcessWidgets" so it's not possible to use "additionalCssClasses" hence we use an id for the css selector
                                                    id: "RM_RELATIONSHIP_SELECT_RECORD_DIALOG_DOCUMENT_LIST_CONTENT",
                                                    nodeRef: this.pickerRootNode,
-                                                   currentPageSize: this.childrenNodesNo
+                                                   currentPageSize: this.currentPageSize
                                                 }
                                              }]
                                           }
