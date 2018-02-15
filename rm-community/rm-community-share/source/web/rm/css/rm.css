@@ -8,3 +8,10 @@
    z-index: 1;
    margin-left: 1.5em;
 }
+
+/* RM-5794 - allow scrolling on yui select lists that are very slow
+ */
+.rm-audit .yuimenu .yui-menu-body-scrolled
+{
+   overflow: auto;
+}
