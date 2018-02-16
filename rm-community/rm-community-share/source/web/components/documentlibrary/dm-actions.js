@@ -262,12 +262,8 @@
             handler: function DLTB_onChildClassificationCompleteClose_confirm_yes() {
                Alfresco.util.Ajax.jsonPost(
                {
-                  url: Alfresco.constants.PROXY_URI + 'slingshot/doclib/action/aspects/node/' + nodeRef.replace(":/", ""),
-                  dataObj:
-                  {
-                     added: [],
-                     removed: ["clf:childClassificationComplete"]
-                  },
+                  url: Alfresco.constants.PROXY_URI + 'api/node/' + nodeRef.replace(":/", "") + '/childclassificationcompleteddismiss',
+                  dataObj: {},
                   successCallback:
                   {
                      fn: function DLTB_onChildClassificationCompleteClose_confirm_success() {
