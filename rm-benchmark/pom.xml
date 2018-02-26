@@ -37,11 +37,6 @@
    <dependencies>
       <dependency>
          <groupId>org.alfresco</groupId>
-         <artifactId>alfresco-rm-automation-community-rest-api</artifactId>
-         <version>${project.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.alfresco</groupId>
          <artifactId>alfresco-benchmark-server</artifactId>
          <version>${server.version}</version>
          <classifier>classes</classifier>
@@ -50,6 +45,11 @@
          <groupId>org.alfresco</groupId>
          <artifactId>alfresco-benchmark-util</artifactId>
          <version>${server.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.alfresco</groupId>
+         <artifactId>alfresco-rm-automation-community-rest-api</artifactId>
+         <version>${project.version}</version>
       </dependency>
       <dependency>
          <groupId>junit</groupId>
