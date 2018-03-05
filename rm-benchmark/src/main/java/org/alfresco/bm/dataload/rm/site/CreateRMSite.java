@@ -130,10 +130,7 @@ public class CreateRMSite extends AbstractEventProcessor
         String guid = null;
         if (onlyLoadInDb == null)
         {
-            RMSite siteModel = RMSite.builder().compliance(STANDARD).build();
-            siteModel.setTitle(RM_SITE_TITLE);
-            siteModel.setDescription(RM_SITE_DESC);
-
+            RMSite siteModel = RMSite.builder().compliance(STANDARD).title(RM_SITE_TITLE).description(RM_SITE_DESC).build();
             RMSite rmSite = rmSiteAPI.createRMSite(siteModel);
             String statusCode = restAPIFactory.getRmRestWrapper().getStatusCode();
             if(HttpStatus.valueOf(Integer.parseInt(statusCode)) != HttpStatus.CREATED)
