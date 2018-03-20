@@ -343,6 +343,17 @@
                   {
                      elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + oRecordData.path.replace('/documentLibrary','') + '&nbsp;&nbsp;&nbsp;';
                   }
+                  else if (oRecordData.deletePerson === true)
+                  {
+                     if (oRecordData.nodeName != "")
+                     {
+                        elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a class="theme-color-1 site-link" href="' + Alfresco.util.profileURL(oRecordData.nodeName) + '">' + $html(oRecordData.nodeName) + '</a>';
+                     }
+                     else
+                     {
+                        elLiner.innerHTML = oRecordData.event + '&nbsp;&nbsp;&nbsp;';
+                     }
+                  }
                   else
                   {
                      if (oRecordData.nodeName != "")
