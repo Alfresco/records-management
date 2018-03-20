@@ -326,7 +326,7 @@
             YAHOO.widget.DataTable.Formatter.eventCellFormatter = function eventCellFormatter(elLiner, oRecord, oColumn, oData)
             {
                var oRecordData = oRecord._oData;
-               if (oRecordData.createPerson === true)
+               if (oRecordData.createPerson === true || oRecordData.deletePerson === true)
                {
                   if(oRecordData.nodeName != "")
                   {
@@ -342,17 +342,6 @@
                   if (oRecordData.deleteObject === true)
                   {
                      elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + oRecordData.path.replace('/documentLibrary','') + '&nbsp;&nbsp;&nbsp;';
-                  }
-                  else if (oRecordData.deletePerson === true)
-                  {
-                     if (oRecordData.nodeName != "")
-                     {
-                        elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a class="theme-color-1 site-link" href="' + Alfresco.util.profileURL(oRecordData.nodeName) + '">' + $html(oRecordData.nodeName) + '</a>';
-                     }
-                     else
-                     {
-                        elLiner.innerHTML = oRecordData.event + '&nbsp;&nbsp;&nbsp;';
-                     }
                   }
                   else
                   {
