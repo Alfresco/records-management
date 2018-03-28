@@ -96,6 +96,10 @@
                      <input type="checkbox" id="${el}-metadata-supplementalMarkingList" />
                      <label for="${el}-metadata-supplementalMarkingList">${msg("label.supplementalMarkingList")}</label>
                   </li>
+                  <li>
+                     <input type="checkbox" id="${el}-metadata-currentClassification"/>
+                     <label for="${el}-metadata-currentClassification">${msg("label.currentClassification")}</label>
+                  </li>
                   <li class="metadata-header">${msg("label.menu.disposition")}</li>
                   <li>
                      <input type="checkbox" id="${el}-metadata-dispositionEvents" />
@@ -172,6 +176,7 @@
                         <option value="rma:reviewAsOf">${msg("label.reviewDate")}</option>
                         <option value="rma:location">${msg("label.location")}</option>
                         <option value="rmc:supplementalMarkingList">${msg("label.supplementalMarkingList")}</option>
+                        <option value="sc:classification">${msg("label.currentClassification")}</option>
                         <!-- double ?html encoding required here due to YUI bug -->
                         <#list groups as group>
                         	<#list group.properties as property>
