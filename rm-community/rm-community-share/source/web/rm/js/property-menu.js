@@ -176,7 +176,8 @@
                      { text: this.msg("label.reviewDate"), value: "rma:reviewAsOf" },
                      { text: this.msg("label.location"), value: "rma:location" },
                      { text: this.msg("label.supplementalMarkingList"), value: "markings" },
-                     { text: this.msg("label.currentClassification"), value: "sc:classification" }
+                     { text: this.msg("label.currentClassification"), value: "sc:classification" },
+                     { text: this.msg("label.securityMarks"), value: "sc:securityMarksSearch" }
                   ]
                }
             });

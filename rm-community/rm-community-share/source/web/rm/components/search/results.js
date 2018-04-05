@@ -256,7 +256,8 @@
             "nodeRef", "type", "name", "title", "description", "modifiedOn", "modifiedByUser", "modifiedBy",
             "createdOn", "createdByUser", "createdBy", "author", "size", "browseUrl", "parentFolder",
             "properties.rma_identifier", "properties.rma_dateFiled", "properties.rma_location",
-            "properties.rmc_supplementalMarkingList", "properties.sc_classification", "properties.rma_reviewAsOf",
+            "properties.rmc_supplementalMarkingList", "properties.sc_classification",
+            "properties.sc_securityMarksSearch", "properties.rma_reviewAsOf",
             "properties.rma_recordSearchDispositionEvents", "properties.rma_recordSearchHasDispositionSchedule",
             "properties.rma_recordSearchDispositionActionName", "properties.rma_recordSearchDispositionActionAsOf",
             "properties.rma_recordSearchDispositionInstructions", "properties.rma_recordSearchDispositionAuthority",
@@ -489,6 +490,7 @@
             { key: "vitalRecord", label: me._msg("label.vitalRecord"), sortable: true, sortOptions: {sortFunction: sortCellVitalRecord}, resizeable: false, formatter: renderCellVitalRecord },
             { key: "location", label: me._msg("label.location"), field: "properties.rma_location", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
             { key: "supplementalMarkingList", label: me._msg("label.supplementalMarkingList"), field: "properties.rmc_supplementalMarkingList", sortable: true, resizeable: true,  formatter: renderCellSafeHTML, hidden: true },
+            { key: "securityMarksSearch", label: me._msg("label.securityMarks"), field: "properties.sc_securityMarksSearch", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
 
             { key: "dispositionEvents", label: me._msg("label.dispositionEvents"), field: "properties.rma_recordSearchDispositionEvents", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },
             { key: "dispositionActionName", label: me._msg("label.dispositionActionName"), field: "properties.rma_recordSearchDispositionActionName", sortable: true, resizeable: true, formatter: renderCellSafeHTML, hidden: true },

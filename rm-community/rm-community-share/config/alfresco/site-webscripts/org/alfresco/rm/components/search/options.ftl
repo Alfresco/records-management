@@ -38,6 +38,7 @@
                      <input type="checkbox" id="${el}-metadata-identifier" checked="checked" />
                      <label for="${el}-metadata-identifier">${msg("label.identifier")}</label>
                   </li>
+
                   <li class="metadata-header">${msg("label.menu.content")}</li>
                   <li>
                      <input type="checkbox" id="${el}-metadata-name" checked="checked" />
@@ -75,6 +76,7 @@
                      <input type="checkbox" id="${el}-metadata-author" />
                      <label for="${el}-metadata-author">${msg("label.author")}</label>
                   </li>
+
                   <li class="metadata-header">${msg("label.menu.records")}</li>
                   <li>
                      <input type="checkbox" id="${el}-metadata-dateFiled" checked="checked" />
@@ -100,6 +102,11 @@
                      <input type="checkbox" id="${el}-metadata-currentClassification"/>
                      <label for="${el}-metadata-currentClassification">${msg("label.currentClassification")}</label>
                   </li>
+                  <li>
+                     <input type="checkbox" id="${el}-metadata-securityMarksSearch"/>
+                     <label for="${el}-metadata-securityMarksSearch">${msg("label.securityMarks")}</label>
+                  </li>
+
                   <li class="metadata-header">${msg("label.menu.disposition")}</li>
                   <li>
                      <input type="checkbox" id="${el}-metadata-dispositionEvents" />
@@ -177,6 +184,7 @@
                         <option value="rma:location">${msg("label.location")}</option>
                         <option value="rmc:supplementalMarkingList">${msg("label.supplementalMarkingList")}</option>
                         <option value="sc:classification">${msg("label.currentClassification")}</option>
+                        <option value="sc:securityMarksSearch">${msg("label.securityMarks")}</option>
                         <!-- double ?html encoding required here due to YUI bug -->
                         <#list groups as group>
                         	<#list group.properties as property>
