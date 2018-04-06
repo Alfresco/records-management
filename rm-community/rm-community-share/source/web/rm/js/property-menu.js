@@ -68,6 +68,14 @@
       options:
       {
          /**
+          * Flag indicating whether to display enterprise-only features.
+          *
+          * @property isEnterprise
+          * @type boolean
+          */
+         isEnterprise: false,
+
+         /**
           * Flag indicating whether search related fields are visible or not.
           *
           * @property showSearchFields
@@ -163,6 +171,20 @@
                }
             });
 
+            var recordFields = [
+               { text: this.msg("label.dateFiled"), value: "rma:dateFiled" },
+               { text: this.msg("label.reviewDate"), value: "rma:reviewAsOf" },
+               { text: this.msg("label.location"), value: "rma:location" },
+               { text: this.msg("label.supplementalMarkingList"), value: "markings" }
+            ];
+
+            if (this.options.isEnterprise)
+            {
+               recordFields.push(
+                  { text: this.msg("label.currentClassification"), value: "sc:classification" }
+               );
+            }
+
             // add record fields
             items.push(
             {
@@ -170,14 +192,7 @@
                submenu:
                {
                   id: this.id + "_records",
-                  itemdata:
-                  [
-                     { text: this.msg("label.dateFiled"), value: "rma:dateFiled" },
-                     { text: this.msg("label.reviewDate"), value: "rma:reviewAsOf" },
-                     { text: this.msg("label.location"), value: "rma:location" },
-                     { text: this.msg("label.supplementalMarkingList"), value: "markings" },
-                     { text: this.msg("label.currentClassification"), value: "sc:classification" }
-                  ]
+                  itemdata: recordFields
                }
             });
          }
@@ -204,6 +219,20 @@
                }
             });
 
+            var recordFields = [
+               { text: this.msg("label.dateFiled"), value: "rma:dateFiled" },
+               { text: this.msg("label.reviewDate"), value: "rma:reviewAsOf" },
+               { text: this.msg("label.location"), value: "rma:location" },
+               { text: this.msg("label.supplementalMarkingList"), value: "markings" }
+            ];
+
+            if (this.options.isEnterprise)
+            {
+               recordFields.push(
+                  { text: this.msg("label.currentClassification"), value: "sc:classification" }
+               );
+            }
+
             // add record fields
             items.push(
             {
@@ -211,14 +240,7 @@
                submenu:
                {
                   id: this.id + "_records",
-                  itemdata:
-                  [
-                     { text: this.msg("label.dateFiled"), value: "rma:dateFiled" },
-                     { text: this.msg("label.reviewDate"), value: "rma:reviewAsOf" },
-                     { text: this.msg("label.location"), value: "rma:location" },
-                     { text: this.msg("label.supplementalMarkingList"), value: "rmc:supplementalMarkingList" },
-                     { text: this.msg("label.currentClassification"), value: "sc:classification" }
-                  ]
+                  itemdata: recordFields
                }
             });
          }
