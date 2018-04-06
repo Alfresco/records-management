@@ -28,6 +28,7 @@
 <script type="text/javascript">//<![CDATA[
    new Alfresco.rm.component.PropertyMenu('${el}-insertfield').setOptions(
    {
+      isEnterprise: ${isEnterprise?c},
       showSearchFields: true,
       showIdentiferField: true,
       updateButtonLabel: false,
