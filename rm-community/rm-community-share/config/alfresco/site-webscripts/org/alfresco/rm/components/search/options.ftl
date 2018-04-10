@@ -96,6 +96,10 @@
                      <input type="checkbox" id="${el}-metadata-supplementalMarkingList" />
                      <label for="${el}-metadata-supplementalMarkingList">${msg("label.supplementalMarkingList")}</label>
                   </li>
+                   <li>
+                       <input type="checkbox" id="${el}-metadata-recordCategoryIdentifier"/>
+                       <label for="${el}-metadata-recordCategoryIdentifier">${msg("label.recordCategoryIdentifier")}</label>
+                   </li>
                   <li class="metadata-header">${msg("label.menu.disposition")}</li>
                   <li>
                      <input type="checkbox" id="${el}-metadata-dispositionEvents" />
