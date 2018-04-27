@@ -181,7 +181,7 @@
             if (this.options.isEnterprise)
             {
                recordFields.push(
-                  { text: this.msg("label.currentClassification"), value: "sc:classification" },
+                  { text: this.msg("label.currentClassification"), value: "sc:classificationSearch" },
                   { text: this.msg("label.securityMarks"), value: "sc:securityMarksSearch" }
                );
             }
@@ -230,7 +230,7 @@
             if (this.options.isEnterprise)
             {
                recordFields.push(
-                  { text: this.msg("label.currentClassification"), value: "sc:classification" },
+                  { text: this.msg("label.currentClassification"), value: "sc:classificationSearch" },
                   { text: this.msg("label.securityMarks"), value: "sc:securityMarksSearch" }
                );
             }
