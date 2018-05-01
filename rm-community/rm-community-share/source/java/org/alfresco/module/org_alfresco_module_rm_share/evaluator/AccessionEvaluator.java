@@ -45,8 +45,7 @@ public class AccessionEvaluator extends BaseRMEvaluator
     public boolean evaluate(JSONObject jsonObject)
     {
         JSONObject node = (JSONObject) jsonObject.get(NODE);
-        HashMap properties = (HashMap) node.get("properties");
-        //properties.get("")
-        return false;
+        HashMap properties = (HashMap)((HashMap) node.get("rmNode")).get("properties");
+        return !properties.containsKey("incompleteDispositionEvent");
     }
 }
