@@ -32,13 +32,15 @@ import java.util.HashMap;
 import org.json.simple.JSONObject;
 
 /**
- * Check for the validity of Records Management indicators
+ * evaluate whether to show the accession action
  *
- * @author: mikeh
+ * @author: ross gale
  */
 public class AccessionEvaluator extends BaseRMEvaluator
 {
     private static final String NODE = "node";
+
+    private static final String COMBINE_DISPOSITION_STEP_CONDITIONS = "combineDispositionStepConditions";
 
 
     @Override
@@ -46,6 +48,11 @@ public class AccessionEvaluator extends BaseRMEvaluator
     {
         JSONObject node = (JSONObject) jsonObject.get(NODE);
         HashMap properties = (HashMap)((HashMap) node.get("rmNode")).get("properties");
-        return !properties.containsKey("incompleteDispositionEvent");
+
+        if(properties.containsKey(COMBINE_DISPOSITION_STEP_CONDITIONS) && properties.get(COMBINE_DISPOSITION_STEP_CONDITIONS) != null && (Boolean) properties.get(COMBINE_DISPOSITION_STEP_CONDITIONS))
+        {
+            return !properties.containsKey("incompleteDispositionEvent");
+        }
+        return true;
     }
 }
