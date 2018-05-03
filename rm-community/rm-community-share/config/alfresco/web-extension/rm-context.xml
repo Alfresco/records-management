@@ -248,7 +248,7 @@
    <bean id="evaluator.rm.action.accession" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="accession" />
    </bean>
-   <bean id="evaluator.rm.action.declassificationReview" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.AccessionEvaluator"/>
+   <bean id="evaluator.rm.action.incompleteEvent" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.IncompleteEventEvaluator"/>
 
    <bean id="evaluator.rm.action.undo-cutoff" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="undoCutoff" />

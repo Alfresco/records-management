@@ -36,13 +36,19 @@ import org.json.simple.JSONObject;
  *
  * @author: ross gale
  */
-public class AccessionEvaluator extends BaseRMEvaluator
+public class IncompleteEventEvaluator extends BaseRMEvaluator
 {
     private static final String NODE = "node";
 
     private static final String COMBINE_DISPOSITION_STEP_CONDITIONS = "combineDispositionStepConditions";
 
 
+    /**
+     * Returns false if there is an incomplete event and the combineDispositionStepConditions property is true
+     * otherwise return true.
+     * @param jsonObject
+     * @return boolean
+     */
     @Override
     public boolean evaluate(JSONObject jsonObject)
     {
