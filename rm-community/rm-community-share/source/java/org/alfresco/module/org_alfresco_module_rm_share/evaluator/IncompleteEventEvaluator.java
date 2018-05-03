@@ -32,9 +32,9 @@ import java.util.HashMap;
 import org.json.simple.JSONObject;
 
 /**
- * evaluate whether to show the accession action
+ * Check for an incomplete disposition event and the 'combineDispositionStepConditions' property
  *
- * @author: ross gale
+ * @author ross gale
  */
 public class IncompleteEventEvaluator extends BaseRMEvaluator
 {
