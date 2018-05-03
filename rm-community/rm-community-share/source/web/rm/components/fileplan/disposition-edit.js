@@ -324,16 +324,12 @@
          Dom.getElementsByClassName("ghostOnDestroy", "input", actionEl)[0].checked = (action.ghostOnDestroy == "ghost");
 
          // Combine disposition step conditions
-         var radioButtonOr =  Dom.getElementsByClassName("combineDispositionStepConditions", "input", actionEl)[0];
-         var radioButtonAnd =  Dom.getElementsByClassName("combineDispositionStepConditions", "input", actionEl)[1];
-         if (action.combineDispositionStepConditions && action.combineDispositionStepConditions === "true") {
-            radioButtonOr.checked = false;
-            radioButtonAnd.checked = true;
-         }
-         else {
-            radioButtonOr.checked = true;
-            radioButtonAnd.checked = false;
-         }
+         var radioButtonOrAnd = Dom.getElementsByClassName("combineDispositionStepConditions", "input", actionEl),
+             radioButtonOr = radioButtonOrAnd[0],
+             radioButtonAnd = radioButtonOrAnd[1];
+
+         radioButtonOr.checked = !(action.combineDispositionStepConditions && action.combineDispositionStepConditions === "true");
+         radioButtonAnd.checked = (action.combineDispositionStepConditions && action.combineDispositionStepConditions === "true");
 
          // Action name & location
          var actionName = action.name,
