@@ -138,8 +138,14 @@
                      ${msg("label.from")}
                      <select name="periodProperty" class="period-action">
                      </select>
-                     <span>${msg("label.or")}</span>
+                     <span class="action-or-step-conditions-span">${msg("label.or")}</span>
+                     <span class="action-combine-step-conditions-span">
+                        <input id="${el}-combine-or-radioButton" type="radio" name="combineDispositionStepConditions" class="combineDispositionStepConditions" value="false" checked="false" /> ${msg("label.or")}
+                        <input id="${el}-combine-and-radioButton" type="radio" name="combineDispositionStepConditions" class="combineDispositionStepConditions" value="true" /> ${msg("label.and")}
+                     </span>
+                  
                   </div>
+
                   <div class="section">
                      <input type="checkbox" class="events-enabled" checked="true" />
                      ${msg("label.when")}
