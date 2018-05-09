@@ -193,7 +193,7 @@
                         <option value="rmc:supplementalMarkingList">${msg("label.supplementalMarkingList")}</option>
 
                         <#if context.properties["editionInfo"].edition == "ENTERPRISE">
-                            <option value="sc:classification">${msg("label.currentClassification")}</option>
+                            <option value="sc:classificationSearch">${msg("label.currentClassification")}</option>
                             <option value="sc:securityMarksSearch">${msg("label.securityMarks")}</option>
                         </#if>
 

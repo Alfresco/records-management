@@ -256,7 +256,7 @@
             "nodeRef", "type", "name", "title", "description", "modifiedOn", "modifiedByUser", "modifiedBy",
             "createdOn", "createdByUser", "createdBy", "author", "size", "browseUrl", "parentFolder",
             "properties.rma_identifier", "properties.rma_dateFiled", "properties.rma_location",
-            "properties.rmc_supplementalMarkingList", "properties.sc_classification",
+            "properties.rmc_supplementalMarkingList", "properties.sc_classificationSearch",
             "properties.rma_recordCategoryIdentifier", "properties.sc_securityMarksSearch", "properties.rma_reviewAsOf",
             "properties.rma_recordSearchDispositionEvents", "properties.rma_recordSearchHasDispositionSchedule",
             "properties.rma_recordSearchDispositionActionName", "properties.rma_recordSearchDispositionActionAsOf",
@@ -471,7 +471,7 @@
          var columnDefinitions =
          [
             { key: "check", label: "<input type='checkbox'>", sortable: false, formatter: "checkbox" },
-            { key: "currentClassification", label: me._msg("label.currentClassification"), field: "properties.sc_classification", sortable: true, resizeable: true,  formatter: renderCellSafeHTML, hidden: true },
+            { key: "currentClassification", label: me._msg("label.currentClassification"), field: "properties.sc_classificationSearch", sortable: true, resizeable: true,  formatter: renderCellSafeHTML, hidden: true },
             { key: "image", label: me._msg("label.type"), sortable: false, field: "type", sortable: true, formatter: renderCellImage, width: "64px" },
             { key: "identifier", label: me._msg("label.identifier"), sortable: true, sortOptions: {sortFunction: sortCellURI}, resizeable: true, formatter: renderCellURI },
 
