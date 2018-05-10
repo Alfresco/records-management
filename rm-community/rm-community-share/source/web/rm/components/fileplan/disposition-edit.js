@@ -323,22 +323,12 @@
          // Ghost on destroy
          Dom.getElementsByClassName("ghostOnDestroy", "input", actionEl)[0].checked = (action.ghostOnDestroy == "ghost");
 
-         // Combine disposition step conditions
-         var radioButtonOrAnd = Dom.getElementsByClassName("combineDispositionStepConditions", "input", actionEl),
-             radioButtonOr = radioButtonOrAnd[0],
-             radioButtonAnd = radioButtonOrAnd[1];
-
-         radioButtonOr.checked = !(action.combineDispositionStepConditions && action.combineDispositionStepConditions === "true");
-         radioButtonAnd.checked = (action.combineDispositionStepConditions && action.combineDispositionStepConditions === "true");
-
          // Action name & location
          var actionName = action.name,
             actionNameEl = Dom.getElementsByClassName("action-name", "input", actionEl)[0],
             actionLocationEl = Dom.getElementsByClassName("action-location", "select", actionEl)[0],
             actionLocationSpan = Dom.getElementsByClassName("action-location-section", "span", actionEl)[0],
             actionGhostSpan = Dom.getElementsByClassName("action-ghost-section", "span", actionEl)[0],
-            actionOrStepConditionsSpan = Dom.getElementsByClassName("action-or-step-conditions-span", "span", actionEl)[0],
-            actionCombineStepConditionsSpan = Dom.getElementsByClassName("action-combine-step-conditions-span", "span", actionEl)[0],
             actionLocationRestrictedSpan = Dom.getElementsByClassName("action-location-restricted-section", "span", actionEl)[0];
          if (actionName == "transfer")
          {
@@ -370,16 +360,6 @@
          else
          {
             Dom.addClass(actionGhostSpan, "hidden");
-         }
-         if (actionName === "accession")
-         {
-            Dom.addClass(actionOrStepConditionsSpan, "hidden");
-            Dom.removeClass(actionCombineStepConditionsSpan, "hidden");
-         }
-         else
-         {
-            Dom.removeClass(actionOrStepConditionsSpan, "hidden");
-            Dom.addClass(actionCombineStepConditionsSpan, "hidden");
          }
          // Display the actions label and set it in the form
          actionNameEl.value = actionName;
@@ -1246,7 +1226,6 @@
             title: this.msg("label.title.new"),
             name: actionName,
             ghostOnDestroy: "ghost",
-            combineDispositionStepConditions: false,
             period : null,
             periodProperty: (noOfActions == 0 ? "rma:dateFiled": "rma:cutOffDate"),
             description: "",
