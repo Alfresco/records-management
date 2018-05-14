@@ -454,6 +454,7 @@
          <action id="rm-accession" type="javascript" label="actions.accession" icon="../../../rm/components/documentlibrary/actions/rm-accession">
             <param name="function">onActionAccession</param>
             <evaluator>evaluator.rm.action.accession</evaluator>
+            <evaluator>evaluator.rm.action.incompleteEvent</evaluator>
          </action>
 
          <!-- Undo Cutoff -->
