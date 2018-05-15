@@ -19,6 +19,8 @@
       <alfresco.share.artifactId>share</alfresco.share.artifactId>
       <alfresco.rm.artifactId>alfresco-rm-community-share</alfresco.rm.artifactId>
       <alfresco.aikau.version>1.0.104</alfresco.aikau.version>
+      <app.filtering.enabled>true</app.filtering.enabled>
+      <alfresco.share.version>6.0.a</alfresco.share.version>
    </properties>
 
    <build>
@@ -100,7 +102,7 @@
                            <groupId>${alfresco.groupId}</groupId>
                            <artifactId>${app.amp.client.war.artifactId}</artifactId>
                            <type>war</type>
-                           <version>${share.version}</version>
+                           <version>${alfresco.share.version}</version>
                         </artifactItem>
                      </artifactItems>
                   </configuration>
