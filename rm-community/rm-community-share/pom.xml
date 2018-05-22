@@ -21,6 +21,7 @@
       <alfresco.aikau.version>1.0.104</alfresco.aikau.version>
       <app.filtering.enabled>true</app.filtering.enabled>
       <alfresco.share.version>6.0.a</alfresco.share.version>
+      <dependency.alfresco-core.version>7.2</dependency.alfresco-core.version>
    </properties>
 
    <build>
@@ -221,6 +222,18 @@
          <version>${share.version}</version>
          <classifier>classes</classifier>
          <scope>provided</scope>
+         <exclusions>
+            <exclusion>
+               <groupId>${alfresco.groupId}</groupId>
+               <artifactId>alfresco-core</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>${alfresco.groupId}</groupId>
+         <artifactId>alfresco-core</artifactId>
+         <version>${dependency.alfresco-core.version}</version>
+         <scope>provided</scope>
       </dependency>
       <dependency>
          <groupId>junit</groupId>
@@ -230,6 +243,7 @@
       <dependency>
          <groupId>org.mockito</groupId>
          <artifactId>mockito-all</artifactId>
+         <version>1.10.19</version>
          <scope>test</scope>
       </dependency>
    </dependencies>
