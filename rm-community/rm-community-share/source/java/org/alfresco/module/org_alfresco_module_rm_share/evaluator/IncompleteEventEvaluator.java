@@ -46,6 +46,10 @@ public class IncompleteEventEvaluator extends BaseRMEvaluator
     //Property name for boolean value indicating if all conditions need to be fulfilled for the disposition step to be available
     private static final String COMBINE_DISPOSITION_STEP_CONDITIONS = "combineDispositionStepConditions";
 
+    private static final String DISPOSITION_EVENT_COMBINATION = "dispositionEventCombination";
+
+    private static final String INCOMPLETE_DISPOSITION_EVENT = "incompleteDispositionEvent";
+
 
     /**
      * Returns false if there is an incomplete event and the combineDispositionStepConditions property is true
@@ -63,10 +67,10 @@ public class IncompleteEventEvaluator extends BaseRMEvaluator
 
         if (combineProp.orElse(false))
         {
-            String combineEvents = (String) properties.get("dispositionEventCombination");
+            String combineEvents = (String) properties.get(DISPOSITION_EVENT_COMBINATION);
             if(combineEvents != null && combineEvents.equals("and"))
             {
-                return !properties.containsKey("incompleteDispositionEvent");
+                return !properties.containsKey(INCOMPLETE_DISPOSITION_EVENT);
             }
         }
         return true;
