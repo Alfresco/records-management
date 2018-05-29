@@ -74,7 +74,6 @@ public class IncompleteEventEvaluatorUnitTest
     @Test
     public void testEvaluateReturnsTrueWhenCombineOptionNotSelected()
     {
-        when(properties.containsKey("combineDispositionStepConditions")).thenReturn(false);
         assertTrue(incompleteEventEvaluator.evaluate(jsonObject));
     }
 
@@ -84,7 +83,6 @@ public class IncompleteEventEvaluatorUnitTest
     @Test
     public void testEvaluateReturnsTrueWhenCombineOptionSetToFalse()
     {
-        when(properties.containsKey("combineDispositionStepConditions")).thenReturn(true);
         when(properties.get("combineDispositionStepConditions")).thenReturn(false);
         assertTrue(incompleteEventEvaluator.evaluate(jsonObject));
     }
@@ -95,7 +93,6 @@ public class IncompleteEventEvaluatorUnitTest
     @Test
     public void testEvaluateReturnsTrueWhenCombineSelectedAndNoIncompleteEvents()
     {
-        when(properties.containsKey("combineDispositionStepConditions")).thenReturn(true);
         when(properties.get("combineDispositionStepConditions")).thenReturn(true);
         when(properties.containsKey("incompleteDispositionEvent")).thenReturn(false);
         assertTrue(incompleteEventEvaluator.evaluate(jsonObject));
@@ -107,9 +104,18 @@ public class IncompleteEventEvaluatorUnitTest
     @Test
     public void testEvaluateReturnsFalseWhenCombineSelectedAndIncompleteEventPresent()
     {
-        when(properties.containsKey("combineDispositionStepConditions")).thenReturn(true);
         when(properties.get("combineDispositionStepConditions")).thenReturn(true);
         when(properties.containsKey("incompleteDispositionEvent")).thenReturn(true);
         assertFalse(incompleteEventEvaluator.evaluate(jsonObject));
+    }
+
+    /**
+     * Check the evaluate method when the combine property is null
+     */
+    @Test
+    public void testEvaluateReturnsTrueWhenCombineSelectedIsNull()
+    {
+        when(properties.get("combineDispositionStepConditions")).thenReturn(null);
+        assertTrue(incompleteEventEvaluator.evaluate(jsonObject));
     }
 }

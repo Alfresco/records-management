@@ -28,11 +28,14 @@
 package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.json.simple.JSONObject;
 
 /**
  * Check for an incomplete disposition event and the 'combineDispositionStepConditions' property
+ *
+ * This will prevent an action being offered while there is an incomplete event if the user has requested to combine an event and date condition
  *
  * @author ross gale
  */
@@ -40,6 +43,7 @@ public class IncompleteEventEvaluator extends BaseRMEvaluator
 {
     private static final String NODE = "node";
 
+    //Property name for boolean value indicating if all conditions need to be fulfilled for the disposition step to be available
     private static final String COMBINE_DISPOSITION_STEP_CONDITIONS = "combineDispositionStepConditions";
 
 
@@ -55,10 +59,13 @@ public class IncompleteEventEvaluator extends BaseRMEvaluator
         JSONObject node = (JSONObject) jsonObject.get(NODE);
         HashMap properties = (HashMap)((HashMap) node.get("rmNode")).get("properties");
 
-        if(properties.containsKey(COMBINE_DISPOSITION_STEP_CONDITIONS) && properties.get(COMBINE_DISPOSITION_STEP_CONDITIONS) != null && (Boolean) properties.get(COMBINE_DISPOSITION_STEP_CONDITIONS))
+        Optional<Boolean> combineProp = Optional.ofNullable((Boolean) properties.get(COMBINE_DISPOSITION_STEP_CONDITIONS));
+
+        if (combineProp.orElse(false))
         {
             return !properties.containsKey("incompleteDispositionEvent");
         }
         return true;
+
     }
 }
