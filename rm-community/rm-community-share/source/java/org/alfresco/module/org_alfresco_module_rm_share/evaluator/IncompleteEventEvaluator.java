@@ -63,7 +63,11 @@ public class IncompleteEventEvaluator extends BaseRMEvaluator
 
         if (combineProp.orElse(false))
         {
-            return !properties.containsKey("incompleteDispositionEvent");
+            String combineEvents = (String) properties.get("dispositionEventCombination");
+            if(combineEvents != null && combineEvents.equals("and"))
+            {
+                return !properties.containsKey("incompleteDispositionEvent");
+            }
         }
         return true;
 
