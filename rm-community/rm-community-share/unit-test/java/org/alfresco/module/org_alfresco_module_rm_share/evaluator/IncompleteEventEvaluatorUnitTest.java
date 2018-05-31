@@ -106,6 +106,7 @@ public class IncompleteEventEvaluatorUnitTest
     {
         when(properties.get("combineDispositionStepConditions")).thenReturn(true);
         when(properties.containsKey("incompleteDispositionEvent")).thenReturn(true);
+        when(properties.get("dispositionEventCombination")).thenReturn("and");
         assertFalse(incompleteEventEvaluator.evaluate(jsonObject));
     }
 
