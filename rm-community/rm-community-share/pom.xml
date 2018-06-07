@@ -20,8 +20,8 @@
       <alfresco.rm.artifactId>alfresco-rm-community-share</alfresco.rm.artifactId>
       <alfresco.aikau.version>1.0.104</alfresco.aikau.version>
       <app.filtering.enabled>true</app.filtering.enabled>
-      <alfresco.share.version>6.0.a</alfresco.share.version>
-      <dependency.alfresco-core.version>7.2</dependency.alfresco-core.version>
+      <alfresco.share.version>6.0.0-rc5</alfresco.share.version>
+      <dependency.alfresco-core.version>7.3</dependency.alfresco-core.version>
    </properties>
 
    <build>
