@@ -34,7 +34,7 @@ services:
             - REPO_PORT=8080
             - "CATALINA_OPTS= -Xms500m -Xmx500m"
         ports:
-            - 8181:8181
+            - 8181:8080
 
     postgres:
         image: library/postgres:10.1
