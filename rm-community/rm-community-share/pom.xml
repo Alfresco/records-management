@@ -21,6 +21,7 @@
       <alfresco.aikau.version>1.0.104</alfresco.aikau.version>
       <app.filtering.enabled>true</app.filtering.enabled>
       <dependency.alfresco-core.version>7.3</dependency.alfresco-core.version>
+      <image.name>alfresco/ags-share-community</image.name>
    </properties>
 
    <build>
@@ -268,5 +269,50 @@
             </plugins>
          </build>
       </profile>
+       <!--Docker profiles used to build specific docker images for community share, defined in parent pom -->
+       <profile>
+           <id>buildDockerImage</id>
+           <build>
+               <plugins>
+                   <plugin>
+                       <groupId>io.fabric8</groupId>
+                       <artifactId>fabric8-maven-plugin</artifactId>
+                   </plugin>
+               </plugins>
+           </build>
+       </profile>
+       <profile>
+           <id>internal</id>
+           <build>
+               <plugins>
+                   <plugin>
+                       <groupId>io.fabric8</groupId>
+                       <artifactId>fabric8-maven-plugin</artifactId>
+                   </plugin>
+               </plugins>
+           </build>
+       </profile>
+       <profile>
+           <id>master</id>
+           <build>
+               <plugins>
+                   <plugin>
+                       <groupId>io.fabric8</groupId>
+                       <artifactId>fabric8-maven-plugin</artifactId>
+                   </plugin>
+               </plugins>
+           </build>
+       </profile>
+       <profile>
+           <id>release</id>
+           <build>
+               <plugins>
+                   <plugin>
+                       <groupId>io.fabric8</groupId>
+                       <artifactId>fabric8-maven-plugin</artifactId>
+                   </plugin>
+               </plugins>
+           </build>
+       </profile>
    </profiles>
 </project>
