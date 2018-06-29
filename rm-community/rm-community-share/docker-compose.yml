@@ -3,7 +3,6 @@ version: "2"
 services:
     alfresco:
         image: alfresco/ags-repo-community:latest
-        mem_limit: 1500m
         environment:
             JAVA_OPTS : "
                 -Ddb.driver=org.postgresql.Driver
