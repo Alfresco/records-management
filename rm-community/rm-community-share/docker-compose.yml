@@ -26,6 +26,29 @@ services:
         ports:
             - 8080:8080
 
+    alfresco-pdf-renderer:
+            image: alfresco/alfresco-pdf-renderer:1.1
+            mem_limit: 1g
+            environment:
+                JAVA_OPTS: " -Xms256m -Xmx256m"
+            ports:
+                - 8090:8090
+
+    imagemagick:
+        image: alfresco/alfresco-imagemagick:1.1
+        mem_limit: 1g
+        environment:
+            JAVA_OPTS: " -Xms256m -Xmx256m"
+        ports:
+            - 8091:8090
+
+    libreoffice:
+        image: alfresco/alfresco-libreoffice:1.1
+        mem_limit: 1g
+        environment:
+            JAVA_OPTS: " -Xms256m -Xmx256m"
+        ports:
+            - 8092:8090
     share:
         image: alfresco/ags-share-community:latest
         mem_limit: 1g
