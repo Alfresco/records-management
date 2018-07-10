@@ -20,7 +20,7 @@
       <alfresco.rm.artifactId>alfresco-rm-community-share</alfresco.rm.artifactId>
       <alfresco.aikau.version>1.0.104</alfresco.aikau.version>
       <app.filtering.enabled>true</app.filtering.enabled>
-      <image.name>alfresco/ags-share-community</image.name>
+      <image.name>alfresco/alfresco-governance-share-community</image.name>
    </properties>
 
    <build>
