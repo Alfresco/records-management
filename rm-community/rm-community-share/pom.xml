@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
    <modelVersion>4.0.0</modelVersion>
-   <artifactId>alfresco-rm-community-share</artifactId>
-   <name>Alfresco Records Management Community Share</name>
-   <description>Alfresco Record Management Community Share Extension</description>
+   <artifactId>alfresco-governance-services-community-share</artifactId>
+   <name>Alfresco Governance Services Community Share</name>
+   <description>Alfresco Governance Services Community Share Extension</description>
    <packaging>amp</packaging>
 
    <parent>
       <groupId>org.alfresco</groupId>
-      <artifactId>alfresco-rm-community</artifactId>
+      <artifactId>alfresco-governance-services-community</artifactId>
       <version>3.0.0-SNAPSHOT</version>
    </parent>
 
@@ -17,7 +17,7 @@
       <maven.tomcat.port>8181</maven.tomcat.port>
       <alfresco.repo.url>http://localhost:8080/alfresco</alfresco.repo.url>
       <alfresco.share.artifactId>share</alfresco.share.artifactId>
-      <alfresco.rm.artifactId>alfresco-rm-community-share</alfresco.rm.artifactId>
+      <ags.artifactId>alfresco-governance-services-community-share</ags.artifactId>
       <alfresco.aikau.version>1.0.104</alfresco.aikau.version>
       <app.filtering.enabled>true</app.filtering.enabled>
       <image.name>alfresco/alfresco-governance-share-community</image.name>
@@ -114,7 +114,7 @@
             <artifactId>alfresco-maven-plugin</artifactId>
             <executions>
                <execution>
-                  <id>attach-rm-jar</id>
+                  <id>attach-governance-services-jar</id>
                   <goals>
                      <goal>amp</goal>
                   </goals>
