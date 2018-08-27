@@ -76,7 +76,7 @@ public class LoadRootCategoryUnitTest extends LoadSingleComponentUnitTest
 
         when(mockedRestApiFactory.getFilePlansAPI(any(UserModel.class))).thenReturn(mockedFilePlanAPI);
 
-        Mockito.doThrow(new Exception("someError")).when(mockedFilePlanAPI).createRootRecordCategory(any(RecordCategory.class), any(String.class));
+        Mockito.doThrow(new RuntimeException("someError")).when(mockedFilePlanAPI).createRootRecordCategory(any(RecordCategory.class), any(String.class));
         mockSiteAndUserData();
 
         EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
