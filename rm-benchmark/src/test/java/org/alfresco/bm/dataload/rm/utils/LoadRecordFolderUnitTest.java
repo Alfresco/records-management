@@ -122,7 +122,8 @@ public class LoadRecordFolderUnitTest extends LoadSingleComponentUnitTest
 
         when(mockedRestApiFactory.getRecordCategoryAPI(any(UserModel.class))).thenReturn(mockedRecordCategoryAPI);
 
-        Mockito.doThrow(new Exception("someError")).when(mockedRecordCategoryAPI).createRecordCategoryChild(any(RecordCategoryChild.class), any(String.class));
+        Mockito.doThrow(new RuntimeException("someError")).when(mockedRecordCategoryAPI).createRecordCategoryChild(any
+                (RecordCategoryChild.class), any(String.class));
         mockSiteAndUserData();
 
         EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
