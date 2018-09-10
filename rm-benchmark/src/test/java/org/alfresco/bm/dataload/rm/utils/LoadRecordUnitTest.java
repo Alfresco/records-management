@@ -80,7 +80,8 @@ public class LoadRecordUnitTest extends LoadSingleComponentUnitTest
 
         File mockedFile = mock(File.class);
         when(mockedTestFileService.getFile()).thenReturn(mockedFile);
-        Mockito.doThrow(new Exception("someError")).when(mockedRecordFolderAPI).createRecord(any(Record.class), any(String.class), any(File.class));
+        Mockito.doThrow(new RuntimeException("someError")).when(mockedRecordFolderAPI).createRecord(any(Record.class),
+                any(String.class), any(File.class));
 
         mockSiteAndUserData();
         EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
