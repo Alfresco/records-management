@@ -456,7 +456,6 @@
          var resultCount = args[1].count;
          var disable = (resultCount == 0);
          this.widgets.printButton.set("disabled", disable);
-         //this.widgets.exportButton.set("disabled", disable);
       },
 
       /**
