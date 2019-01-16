@@ -456,7 +456,6 @@
          var resultCount = args[1].count;
          var disable = (resultCount == 0);
          this.widgets.printButton.set("disabled", disable);
-         this.widgets.exportButton.set("disabled", disable);
       },
 
       /**
@@ -538,7 +537,7 @@
          input.type = "hidden";
          form.appendChild(input);
          input.name = "nodeRefs";
-         input.value = this.resultNodeRefs.join(",");
+         input.value = Alfresco.rm.dataTableSelectedItems(this.widgets.dataTable);
          form.submit();
       },
 
