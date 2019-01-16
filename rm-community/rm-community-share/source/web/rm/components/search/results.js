@@ -306,6 +306,7 @@
       onDataTableHeaderCheckboxChange: function RecordsResults_onDataTableHeaderCheckboxChange(e, args)
       {
          this.widgets.addToHold.set("disabled", !args[1].headerCheckBoxChecked || this.resultsCount == 0);
+         this.widgets.exportButton.set("disabled", !args[1].headerCheckBoxChecked || this.resultsCount == 0);
       },
 
       /**
@@ -322,6 +323,7 @@
             activate = true;
          }
          this.widgets.addToHold.set("disabled", !activate);
+         this.widgets.exportButton.set("disabled", !activate);
       },
 
       _setupDataTable: function RecordsResults_setupDataTable()
