@@ -1,7 +1,8 @@
 package org.alfresco.bm.dataload.rm.services;
 
 import org.alfresco.bm.utils.ParameterCheck;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+
 
 /**
  * Data object representing a record
