@@ -14,40 +14,18 @@ services:
                 -Dsolr.secureComms=none
                 -Dsolr.base.url=/solr
                 -Dindex.subsystem.name=solr6
-                -Dalfresco-pdf-renderer.url=http://alfresco-pdf-renderer:8090/
-                -Djodconverter.url=http://libreoffice:8090/
-                -Dimg.url=http://imagemagick:8090/
-                -Ddeployment.method=DOCKER_COMPOSE
-                -Dcsrf.filter.enabled=false
                 -Dalfresco.restApi.basicAuthScheme=true
-                -Xms1g -Xmx1g
+                -Dimap.server.enabled=true
+                -Dftp.enabled=true
+                -Dftp.dataPortFrom=30000
+                -Dftp.dataPortTo=30099
+                -Dshare.host=localhost
+                -Daos.baseUrlOverwrite=http://localhost:8080/alfresco/aos
+                -Dmessaging.broker.url=\"failover:(tcp://activemq:61616)?timeout=3000&jms.useCompression=true\"
                 "
         ports:
             - 8080:8080
 
-    alfresco-pdf-renderer:
-            image: alfresco/alfresco-pdf-renderer:1.1
-            mem_limit: 1g
-            environment:
-                JAVA_OPTS: " -Xms256m -Xmx256m"
-            ports:
-                - 8090:8090
-
-    imagemagick:
-        image: alfresco/alfresco-imagemagick:1.1
-        mem_limit: 1g
-        environment:
-            JAVA_OPTS: " -Xms256m -Xmx256m"
-        ports:
-            - 8091:8090
-
-    libreoffice:
-        image: alfresco/alfresco-libreoffice:1.1
-        mem_limit: 1g
-        environment:
-            JAVA_OPTS: " -Xms256m -Xmx256m"
-        ports:
-            - 8092:8090
     share:
         image: alfresco/alfresco-governance-share-community:latest
         mem_limit: 1g
@@ -59,7 +37,7 @@ services:
             - 8181:8080
 
     postgres:
-        image: library/postgres:10.1
+        image: library/postgres:${POSTGRES_TAG}
         mem_limit: 1500m
         environment:
             - POSTGRES_PASSWORD=alfresco
@@ -70,7 +48,7 @@ services:
             - 5432:5432
 
     solr6:
-        image: alfresco/alfresco-search-services:1.1.1
+        image: alfresco/alfresco-search-services:${SOLR6_TAG}
         mem_limit: 2500m
         environment:
             #Solr needs to know how to register itself with Alfresco
@@ -84,3 +62,11 @@ services:
             - "SOLR_JAVA_MEM=-Xms2g -Xmx2g"
         ports:
             - 8083:8983 #Browser port
+
+    activemq:
+        image: alfresco/alfresco-activemq:${ACTIVEMQ_TAG}
+        ports:
+            - 8161:8161 # Web Console
+            - 5672:5672 # AMQP
+            - 61616:61616 # OpenWire
+            - 61613:61613 # STOMP
