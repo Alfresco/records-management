@@ -45,6 +45,7 @@ import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.namespace.QName;
 import org.alfresco.util.ParameterCheck;
 import org.alfresco.util.PropertyMap;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -470,7 +471,7 @@ public class ServiceBaseImpl implements RecordsManagementModel, ApplicationConte
         return instanceOf(className, ofClassName);
     }
 
-    private static Map<String, Boolean> instanceOfCache = new WeakHashMap<>();
+    private static Map<Pair<QName, QName>, Boolean> instanceOfCache = Collections.synchronizedMap(new WeakHashMap<Pair<QName, QName>, Boolean>());
 
     /**
      * Utility method to quickly determine whether one class is equal to or sub of another.
@@ -486,7 +487,7 @@ public class ServiceBaseImpl implements RecordsManagementModel, ApplicationConte
 
         boolean result = false;
 
-        String key = className.toString() + "|" + ofClassName.toString();
+        Pair<QName, QName> key = Pair.of(className, ofClassName);
         if (instanceOfCache.containsKey(key))
         {
             result = instanceOfCache.get(key);
