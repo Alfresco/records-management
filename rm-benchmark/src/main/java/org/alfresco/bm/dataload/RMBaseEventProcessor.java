@@ -88,6 +88,8 @@ import org.springframework.http.HttpStatus;
  */
 public abstract class RMBaseEventProcessor extends AbstractEventProcessor implements RMEventConstants, ApplicationContextAware
 {
+    /** Resource for derived classes to use for logging */
+    protected Logger eventProcessorLogger = LoggerFactory.getLogger(this.getClass());
     protected FileFolderService fileFolderService;
     protected ExtendedFileFolderService auxFileFolderService;
     protected TestFileService testFileService;
@@ -968,7 +970,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                         catch (Exception e)
                         {
                             // something went wrong on creating current path structure, not all required paths will be created
-                            logger.debug("Path elements of " + path + "could not be created.", e);
+                            eventProcessorLogger.debug("Path elements of " + path + "could not be created.", e);
                         }
                     }
                 }
