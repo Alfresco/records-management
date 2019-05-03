@@ -88,8 +88,6 @@ import org.springframework.http.HttpStatus;
  */
 public abstract class RMBaseEventProcessor extends AbstractEventProcessor implements RMEventConstants, ApplicationContextAware
 {
-    /** Resource for derived classes to use for logging */
-    protected Logger logger = LoggerFactory.getLogger(this.getClass());
     protected FileFolderService fileFolderService;
     protected ExtendedFileFolderService auxFileFolderService;
     protected TestFileService testFileService;
