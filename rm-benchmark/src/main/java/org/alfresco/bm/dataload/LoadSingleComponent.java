@@ -220,6 +220,8 @@ public class LoadSingleComponent extends RMAbstractLoadComponent
                 return loadRootUnfiledRecordFolderOperation(folder, userModel);
             case LOAD_UNFILED_RECORD_FOLDER_OPERATION:
                 return loadUnfiledRecordFolderOperation(folder, userModel);
+            default:
+                //do nothing
         }
         return "";
     }
