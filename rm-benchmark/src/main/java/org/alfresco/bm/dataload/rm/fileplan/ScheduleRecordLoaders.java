@@ -203,9 +203,9 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
             msg = "Raised further " + (nextEvents.size() - 1) + " events and rescheduled self.";
         }
 
-        if (logger.isDebugEnabled())
+        if (eventProcessorLogger.isDebugEnabled())
         {
-            logger.debug(msg);
+            eventProcessorLogger.debug(msg);
         }
 
         EventResult result = new EventResult(msg, nextEvents);
