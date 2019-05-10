@@ -177,6 +177,36 @@
       }
    });
 
+   YAHOO.Bubbling.fire("registerAction",
+      {
+         actionName: "onActionDeclareAndFileTo",
+         fn: function DLTB_onActionDeclareAndFileTo(assets, owner) {
+            if (!this.modules.copyMoveLinkFileTo)
+            {
+               this.modules.copyMoveLinkFileTo = new Alfresco.rm.module.CopyMoveLinkFileTo(this.id + "-copyMoveLinkFileTo");
+            }
+
+            this.modules.copyMoveLinkFileTo.setOptions(
+               {
+                  mode: "declareAndFile",
+                  siteId: "rm",
+                  containerId: this.options.containerId,
+                  path: this.currentPath,
+                  files: assets,
+                  unfiled: false,
+                  width: "40em"
+               }).showDialog();
+
+            var me = this;
+            this.modules.copyMoveLinkFileTo.onOK = function DLTB_onOK(e, p_obj) {
+               assets.path = Alfresco.util.encodeURIPath(me.modules.copyMoveLinkFileTo.selectedNode.data.path).substr(1);
+               me.onActionSimpleRepoAction(assets, owner);
+               this.widgets.dialog.hide();
+            }
+         }
+
+      });
+
    onRejectedRecordInfo = function RM_onRejectedRecordInfo(nodeRef, displayName, rejectReason, userId, date)
    {
       new Alfresco.module.SimpleDialog("rejectedRecordInfoDialog").setOptions(

@@ -263,6 +263,9 @@
    <bean id="evaluator.rm.action.declare" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="declare" />
    </bean>
+   <bean id="evaluator.rm.action.declare-file-to" parent="evaluator.rm.common.actionEvaluator">
+      <property name="action" value="declareAndFileTo" />
+   </bean>
    <bean id="evaluator.rm.action.undeclare" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="undeclare" />
    </bean>
