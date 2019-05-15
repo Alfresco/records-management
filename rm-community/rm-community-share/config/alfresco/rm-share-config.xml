@@ -632,8 +632,6 @@
          <action id="rm-declare-file-to" type="javascript" label="actions.declare-file-to"
                  icon="../../../rm/components/documentlibrary/actions/rm-file-to">
             <param name="function">onActionDeclareAndFileTo</param>
-            <!--<evaluator>evaluator.rm.action.declare-file-to</evaluator>-->
-
             <param name="action">create-record</param>
             <param name="success">onCreateRecordSuccess</param>
             <param name="successMessage">message.create-record.success</param>
@@ -642,7 +640,7 @@
             <permissions>
                <permission allow="true">Write</permission>
             </permissions>
-            <!--  Can only create the record if editable by current user, is not locked, is not a working copy, is not synced,
+            <!-- The same evaluators as for create record: editable by current user, is not locked, is not a working copy, is not synced,
                   is not reject as record and the rm site exists -->
             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
