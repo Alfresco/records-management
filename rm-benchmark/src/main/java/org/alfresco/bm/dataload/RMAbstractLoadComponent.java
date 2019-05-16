@@ -141,7 +141,7 @@ public abstract class RMAbstractLoadComponent extends RMBaseEventProcessor
             }
         }
 
-        UserData user = getRandomUser(logger);
+        UserData user = getRandomUser(eventProcessorLogger);
         String username = user.getUsername();
         String password = user.getPassword();
         UserModel userModel = new UserModel(username, password);
