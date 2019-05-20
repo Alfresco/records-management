@@ -857,7 +857,6 @@
             <action index="245" id="rm-move-unfiledrecord-to" />
             <action index="250" id="rm-link-to" />
             <action index="260" id="rm-file-to" />
-            <action index="180" id="rm-declare-file-to" />
             <action index="270" id="rm-delete" label="actions.delete" />
             <action index="280" id="rm-view-audit-log" />
             <action index="290" id="rm-manage-permissions" />
@@ -918,7 +917,6 @@
             <action index="165" id="rm-move-unfiledrecord-to" />
             <action index="170" id="rm-link-to" />
             <action index="180" id="rm-file-to" />
-            <action index="180" id="rm-declare-file-to" />
             <action index="190" id="rm-delete" label="actions.delete" icon="../../../rm/components/documentlibrary/images/delete-record" />
             <action index="200" id="rm-view-audit-log" />
             <action index="210" id="rm-reject" />
