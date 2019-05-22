@@ -72,7 +72,8 @@
                copy: "rm-copy-to",
                move: "rm-move-to",
                link: "rm-link",
-               file: "rm-move-to"
+               file: "rm-move-to",
+               declareAndFile: "create-record"
             };
 
             if (typeof dataWebScripts[obj.mode] == "undefined")
