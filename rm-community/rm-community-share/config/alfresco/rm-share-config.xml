@@ -1013,16 +1013,16 @@
 
          <!--  Extensions to the standard DM UI actions -->
          <actionGroup id="document-browse">
-            <action index="400" id="rm-create-record" />
-            <action index="410" id="rm-declare-as-version-record" />
-            <action index="420" id="dm-recorded-version-config" />
-            <action index="430" id="rm-declare-file-to" />
+            <action index="400" id="rm-declare-file-to" />
+            <action index="410" id="rm-create-record" />
+            <action index="420" id="rm-declare-as-version-record" />
+            <action index="430" id="dm-recorded-version-config" />
          </actionGroup>
          <actionGroup id="document-details">
-            <action index="400" id="rm-create-record" />
-            <action index="410" id="rm-declare-as-version-record" />
-            <action index="420" id="dm-recorded-version-config" />
-            <action index="430" id="rm-declare-file-to" />
+            <action index="400" id="rm-declare-file-to" />
+            <action index="410" id="rm-create-record" />
+            <action index="420" id="rm-declare-as-version-record" />
+            <action index="430" id="dm-recorded-version-config" />
          </actionGroup>
 
       </actionGroups>
