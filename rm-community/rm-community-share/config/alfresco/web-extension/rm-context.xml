@@ -251,6 +251,9 @@
    </bean>
    <bean id="evaluator.rm.action.incompleteEvent" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.IncompleteEventEvaluator"/>
 
+   <bean id="evaluator.rm.action.declare-file-to"
+         class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.FileToActionEvaluator" />
+
    <bean id="evaluator.rm.action.undo-cutoff" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="undoCutoff" />
    </bean>

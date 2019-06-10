@@ -650,6 +650,8 @@
             <evaluator>evaluator.doclib.action.siteBased</evaluator>
             <evaluator>evaluator.rm.doclib.action.rmSiteExists</evaluator>
             <evaluator>evaluator.rm.doclib.isUserRecordContributor</evaluator>
+            <evaluator>evaluator.rm.action.declare-file-to</evaluator>
+
          </action>
 
          <!--  Declare As Version Record -->
