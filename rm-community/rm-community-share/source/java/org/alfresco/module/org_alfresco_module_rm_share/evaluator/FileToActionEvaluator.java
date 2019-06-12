@@ -30,9 +30,11 @@ package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 import org.json.simple.JSONObject;
 
 /**
- * Checks if the user can file to a specific location
+ * Checks if the user has an RM role in order to be able
+ * to file to a specific location
  *
  * @author Roxana Lucanu
+ * @since 3.1
  */
 
 public class FileToActionEvaluator extends BaseRMEvaluator
@@ -48,12 +50,15 @@ public class FileToActionEvaluator extends BaseRMEvaluator
     private static final String IS_VISIBLE_FOR_CURRENT_USER = "isVisibleForCurrentUser";
 
     /**
-     * @see org.alfresco.module.org_alfresco_module_rm_share.evaluator.BaseRMEvaluator#evaluate(org.json.simple.JSONObject)
+     * Returns true if the user has an RM role and can File as record,
+     * false otherwise
+     *
+     * @param jsonObject
+     * @return boolean
      */
     @Override
     public boolean evaluate(JSONObject jsonObject)
     {
-        boolean result = false;
         JSONObject node = (JSONObject) jsonObject.get(NODE);
 
         if (node != null)
@@ -61,9 +66,9 @@ public class FileToActionEvaluator extends BaseRMEvaluator
             Object hasFilingPermission = node.get(IS_VISIBLE_FOR_CURRENT_USER);
             if (hasFilingPermission != null && (Boolean) hasFilingPermission)
             {
-                result = true;
+                return true;
             }
         }
-        return result;
+        return false;
     }
 }
