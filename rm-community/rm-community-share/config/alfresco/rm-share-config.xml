@@ -637,6 +637,7 @@
             <param name="successMessage">message.create-record.success</param>
             <param name="failureMessage">message.create-record.failure</param>
             <param name="path">{path}</param>
+            <param name="encoded">true</param>
             <permissions>
                <permission allow="true">Write</permission>
             </permissions>
