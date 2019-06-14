@@ -255,9 +255,9 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
             // Get folders needing loading
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
                     UNFILED_CONTEXT,
-                    Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL+1),//min level is 5, level of root unfiled record folders
-                    Long.valueOf(maxLevel-1),//max level is 4+unfiledRecordFolderDepth-1
-                    0L, (long) (unfiledRecordFolderNumber - 1),//limit the maximum number of child folders to rootUnfiledRecordFolderNumber - 1
+                    (long) UNFILED_RECORD_CONTAINER_LEVEL + 1,//min level is 5, level of root unfiled record folders
+                    (long) maxLevel - 1,//max level is 4+unfiledRecordFolderDepth-1
+                    0L, (long) unfiledRecordFolderNumber - 1,//limit the maximum number of child folders to rootUnfiledRecordFolderNumber - 1
                     null, null,                                 // Ignore file limits
                     skip, limit);
             if (emptyFolders.isEmpty())
