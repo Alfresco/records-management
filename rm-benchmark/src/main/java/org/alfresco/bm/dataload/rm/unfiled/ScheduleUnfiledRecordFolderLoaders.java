@@ -257,7 +257,7 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
                     UNFILED_CONTEXT,
                     Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL+1),//min level is 5, level of root unfiled record folders
                     Long.valueOf(maxLevel-1),//max level is 4+unfiledRecordFolderDepth-1
-                    0L, Long.valueOf(unfiledRecordFolderNumber - 1),//limit the maximum number of child folders to rootUnfiledRecordFolderNumber - 1
+                    0L, (long) (unfiledRecordFolderNumber - 1),//limit the maximum number of child folders to rootUnfiledRecordFolderNumber - 1
                     null, null,                                 // Ignore file limits
                     skip, limit);
             if (emptyFolders.isEmpty())
