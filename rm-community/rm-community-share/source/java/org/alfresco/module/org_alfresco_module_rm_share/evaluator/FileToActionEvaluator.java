@@ -59,11 +59,11 @@ public class FileToActionEvaluator extends BaseRMEvaluator
     @Override
     public boolean evaluate(JSONObject jsonObject)
     {
-        JSONObject node = (JSONObject) jsonObject.get(NODE);
+        final JSONObject node = (JSONObject) jsonObject.get(NODE);
 
         if (node != null)
         {
-            Object hasFilingPermission = node.get(IS_VISIBLE_FOR_CURRENT_USER);
+            final Object hasFilingPermission = node.get(IS_VISIBLE_FOR_CURRENT_USER);
             if (hasFilingPermission != null && (Boolean) hasFilingPermission)
             {
                 return true;
