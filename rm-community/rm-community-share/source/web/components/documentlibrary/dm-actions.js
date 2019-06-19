@@ -199,7 +199,7 @@
 
             var me = this;
             this.modules.copyMoveLinkFileTo.onOK = function DLTB_onOK(e, p_obj) {
-               assets.path = me.modules.copyMoveLinkFileTo.selectedNode.data.path;
+               assets.path = me.modules.copyMoveLinkFileTo.selectedNode.data.path.substr(1);
                me.onActionSimpleRepoAction(assets, owner);
                this.widgets.dialog.hide();
             }
