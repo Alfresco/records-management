@@ -253,7 +253,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
             }
             catch(EventAlreadyScheduledException ex)
             {
-                logger.info("File " + record.getId() + " has already been scheduled. Skip it.", ex);
+                eventProcessorLogger.info("File " + record.getId() + " has already been scheduled. Skip it.", ex);
             }
         }
         numberOfRecordsDeclared += nextEvents.size();

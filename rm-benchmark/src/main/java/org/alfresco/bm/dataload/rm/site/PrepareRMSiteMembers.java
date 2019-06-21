@@ -202,7 +202,7 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
         EventResult result = new EventResult(msg, Collections.singletonList(outputEvent));
 
         // Done
-        logger.debug(msg);
+        eventProcessorLogger.debug(msg);
         return result;
     }
 
