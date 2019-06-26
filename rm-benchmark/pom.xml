@@ -21,6 +21,7 @@
       <bm.tomcat.ip>localhost</bm.tomcat.ip>
       <bm.tomcat.url>http://${bm.tomcat.ip}:${bm.tomcat.port}/manager/text</bm.tomcat.url>
       <bm.tomcat.server>dev-tomcat</bm.tomcat.server>
+      <maven.javadoc.skip>false</maven.javadoc.skip>
    </properties>
 
    <distributionManagement>
