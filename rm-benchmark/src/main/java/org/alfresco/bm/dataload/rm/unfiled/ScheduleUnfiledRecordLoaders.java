@@ -171,8 +171,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
             eventProcessorLogger.debug(msg);
         }
 
-        EventResult result = new EventResult(msg, nextEvents);
-        return result;
+        return new EventResult(msg, nextEvents);
     }
 
     /**

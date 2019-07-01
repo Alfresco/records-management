@@ -236,8 +236,7 @@ public class RecordService extends BaseMongoService
             queryObjBuilder.and(FIELD_PARENT_PATH).in(listOfParentPaths);
         }
         DBObject queryObj = queryObjBuilder.get();
-        long count = collection.count(queryObj);
-        return count;
+        return collection.count(queryObj);
     }
 
     /**
