@@ -135,7 +135,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         // Are there still sessions active?
         long sessionCount = sessionService.getActiveSessionsCount();
         int loaderSessionsToCreate = maxActiveLoaders - (int) sessionCount;
-        List<Event> nextEvents = new ArrayList<Event>(maxActiveLoaders);
+        List<Event> nextEvents = new ArrayList<>(maxActiveLoaders);
 
         // Do we actually need to do anything
         if (!isUploadUnfiledRecords())
@@ -183,15 +183,15 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     {
         if(mapOfRecordsPerUnfiledRecordFolder == null)
         {
-            mapOfRecordsPerUnfiledRecordFolder = new LinkedHashMap<FolderData, Integer>();
-            List<FolderData> unfiledRecordFoldersThatNeedRecords = new ArrayList<FolderData>();
+            mapOfRecordsPerUnfiledRecordFolder = new LinkedHashMap<>();
+            List<FolderData> unfiledRecordFoldersThatNeedRecords = new ArrayList<>();
             if(paths == null || paths.isEmpty())
             {
                 unfiledRecordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(UNFILED_CONTEXT));
             }
             else
             {
-                LinkedHashSet<FolderData> unfiledFolderStructerFromExistentProvidedPaths = new LinkedHashSet<FolderData>();
+                LinkedHashSet<FolderData> unfiledFolderStructerFromExistentProvidedPaths = new LinkedHashSet<>();
                 for(String path : paths)
                 {
                     if(!path.startsWith("/"))

@@ -279,7 +279,7 @@ public class RecordService extends BaseMongoService
         int count = cursor.count();
         try
         {
-            List<RecordData> recordDatas = new ArrayList<RecordData>(count);
+            List<RecordData> recordDatas = new ArrayList<>(count);
             while (cursor.hasNext())
             {
                 DBObject recordDataObj = cursor.next();

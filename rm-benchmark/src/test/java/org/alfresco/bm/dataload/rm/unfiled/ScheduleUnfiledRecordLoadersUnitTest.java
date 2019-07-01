@@ -164,7 +164,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
 
         //returns unfiled record container here, this is always available plus another unfiled record folder
         when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedUnfiledRecordContainer, mockedUnfiledRecordFolder));
-        when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<>());
 
         EventResult result = scheduleUnfiledRecordLoaders.processEvent(null, new StopWatch());
 
@@ -268,8 +268,8 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
         when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, entirePath2)).thenReturn(mockedUnfiledRecordFolder1);
 
         when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath1, 0, 100)).thenReturn(Arrays.asList(mockedUnfiledRecordFolder1));
-        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<FolderData>());
-        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath2, 0, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<>());
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath2, 0, 100)).thenReturn(new ArrayList<>());
 
         when(mockedRestApiFactory.getUnfiledContainersAPI()).thenReturn(mockedUnfiledContainerAPI);
         when(mockedRestApiFactory.getUnfiledRecordFoldersAPI()).thenReturn(mockedUnfiledRecorFolderAPI);
@@ -324,8 +324,8 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
 
         when(mockedFileFolderService.getFolder(UNFILED_CONTEXT, childPath)).thenReturn(mockedUnfiledRecordFolder1);
         when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath1, 0, 100)).thenReturn(Arrays.asList(mockedUnfiledRecordFolder1));
-        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<FolderData>());
-        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, childPath, 0, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<>());
+        when(mockedFileFolderService.getChildFolders(UNFILED_CONTEXT, childPath, 0, 100)).thenReturn(new ArrayList<>());
 
         when(mockedRestApiFactory.getUnfiledContainersAPI()).thenReturn(mockedUnfiledContainerAPI);
         when(mockedRestApiFactory.getUnfiledRecordFoldersAPI()).thenReturn(mockedUnfiledRecorFolderAPI);
@@ -588,7 +588,7 @@ public class ScheduleUnfiledRecordLoadersUnitTest implements RMEventConstants
 
         //returns unfiled record container here, this is always available plus another unfiled record folder
         when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedUnfiledRecordContainer, mockedUnfiledRecordFolder));
-        when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getFoldersByCounts(UNFILED_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<>());
 
         EventResult result = scheduleUnfiledRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, times(2)).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));
