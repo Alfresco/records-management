@@ -25,7 +25,8 @@ import org.alfresco.bm.event.selector.EventDataObject.STATUS;
 import org.alfresco.bm.event.selector.EventProcessorResponse;
 import org.alfresco.bm.site.SiteMemberData;
 import org.alfresco.rest.rm.community.requests.gscore.api.RMUserAPI;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+
 
 /**
 * Create a RM site member.
