@@ -148,7 +148,7 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
         // Are there still sessions active?
         long sessionCount = sessionService.getActiveSessionsCount();
         int loaderSessionsToCreate = maxActiveLoaders - (int) sessionCount;
-        List<Event> nextEvents = new ArrayList<Event>(maxActiveLoaders);
+        List<Event> nextEvents = new ArrayList<>(maxActiveLoaders);
 
         // Do we actually need to do anything
         if (!createUnfiledRecordFolderStructure)
@@ -185,9 +185,9 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
             msg = "Raised further " + (nextEvents.size() - 1) + " events and rescheduled self.";
         }
 
-        if (logger.isDebugEnabled())
+        if (eventProcessorLogger.isDebugEnabled())
         {
-            logger.debug(msg);
+            eventProcessorLogger.debug(msg);
         }
 
         EventResult result = new EventResult(msg, nextEvents);
@@ -255,9 +255,9 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
             // Get folders needing loading
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
                     UNFILED_CONTEXT,
-                    Long.valueOf(UNFILED_RECORD_CONTAINER_LEVEL+1),//min level is 5, level of root unfiled record folders
-                    Long.valueOf(maxLevel-1),//max level is 4+unfiledRecordFolderDepth-1
-                    0L, Long.valueOf(unfiledRecordFolderNumber - 1),//limit the maximum number of child folders to rootUnfiledRecordFolderNumber - 1
+                    (long) UNFILED_RECORD_CONTAINER_LEVEL + 1,//min level is 5, level of root unfiled record folders
+                    (long) maxLevel - 1,//max level is 4+unfiledRecordFolderDepth-1
+                    0L, (long) unfiledRecordFolderNumber - 1,//limit the maximum number of child folders to rootUnfiledRecordFolderNumber - 1
                     null, null,                                 // Ignore file limits
                     skip, limit);
             if (emptyFolders.isEmpty())

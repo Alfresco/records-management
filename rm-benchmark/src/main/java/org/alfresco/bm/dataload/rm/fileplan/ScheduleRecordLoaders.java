@@ -170,7 +170,7 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
         // Are there still sessions active?
         long sessionCount = sessionService.getActiveSessionsCount();
         int loaderSessionsToCreate = maxActiveLoaders - (int) sessionCount;
-        List<Event> nextEvents = new ArrayList<Event>(maxActiveLoaders);
+        List<Event> nextEvents = new ArrayList<>(maxActiveLoaders);
 
         // Do we actually need to do anything
         if (!isUploadRecords())
@@ -203,9 +203,9 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
             msg = "Raised further " + (nextEvents.size() - 1) + " events and rescheduled self.";
         }
 
-        if (logger.isDebugEnabled())
+        if (eventProcessorLogger.isDebugEnabled())
         {
-            logger.debug(msg);
+            eventProcessorLogger.debug(msg);
         }
 
         EventResult result = new EventResult(msg, nextEvents);

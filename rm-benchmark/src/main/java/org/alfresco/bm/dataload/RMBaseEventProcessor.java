@@ -89,7 +89,7 @@ import org.springframework.http.HttpStatus;
 public abstract class RMBaseEventProcessor extends AbstractEventProcessor implements RMEventConstants, ApplicationContextAware
 {
     /** Resource for derived classes to use for logging */
-    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected Logger eventProcessorLogger = LoggerFactory.getLogger(this.getClass());
     protected FileFolderService fileFolderService;
     protected ExtendedFileFolderService auxFileFolderService;
     protected TestFileService testFileService;
@@ -694,7 +694,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
      */
     public LinkedHashMap<FolderData, Integer> distributeNumberOfRecords(List<FolderData> listOfFolders, int numberOfRecords)
     {
-        LinkedHashMap<FolderData, Integer> mapOfRecordsPerFolder = new LinkedHashMap<FolderData,Integer>();
+        LinkedHashMap<FolderData, Integer> mapOfRecordsPerFolder = new LinkedHashMap<>();
         int[] generateRandomValues = generateRandomValues(listOfFolders.size(), numberOfRecords);
         int counter = 0;
         for(FolderData folder : listOfFolders)
@@ -714,7 +714,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
      */
     protected Set<FolderData> getRecordFolders(FolderData parentFolder)
     {
-        LinkedHashSet<FolderData> result = new LinkedHashSet<FolderData>();
+        LinkedHashSet<FolderData> result = new LinkedHashSet<>();
         String context = parentFolder.getContext();
         if(RECORD_CATEGORY_CONTEXT.equals(context))
         {
@@ -763,7 +763,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     {
         int skip = 0;
         int limit = 100;
-        List<FolderData> directChildren = new ArrayList<FolderData>();
+        List<FolderData> directChildren = new ArrayList<>();
         List<FolderData> childFolders = fileFolderService.getChildFolders(context, parentFolder.getPath(), skip, limit);
         while (!childFolders.isEmpty())
         {
@@ -808,7 +808,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
      */
     public List<FolderData> initialiseFoldersToExistingStructure(String context)
     {
-        List<FolderData> existingFolderStructure = new ArrayList<FolderData>();
+        List<FolderData> existingFolderStructure = new ArrayList<>();
         int skip = 0;
         int limit = 100;
         List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
@@ -932,8 +932,8 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
     {
         if (mapOfRecordsPerRecordFolder == null)
         {
-            mapOfRecordsPerRecordFolder = new LinkedHashMap<FolderData, Integer>();
-            List<FolderData> recordFoldersThatNeedRecords = new ArrayList<FolderData>();
+            mapOfRecordsPerRecordFolder = new LinkedHashMap<>();
+            List<FolderData> recordFoldersThatNeedRecords = new ArrayList<>();
             if (paths == null || paths.isEmpty())
             {
                 // get the existing file plan folder structure
@@ -941,7 +941,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
             }
             else
             {
-                LinkedHashSet<FolderData> structureFromExistentProvidedPaths = new LinkedHashSet<FolderData>();
+                LinkedHashSet<FolderData> structureFromExistentProvidedPaths = new LinkedHashSet<>();
                 for (String path : paths)
                 {
                     if(!path.startsWith("/"))
@@ -970,7 +970,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
                         catch (Exception e)
                         {
                             // something went wrong on creating current path structure, not all required paths will be created
-                            logger.debug("Path elements of " + path + "could not be created.", e);
+                            eventProcessorLogger.debug("Path elements of " + path + "could not be created.", e);
                         }
                     }
                 }
@@ -1002,10 +1002,10 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
      */
     public Set<FolderData> getUnfiledRecordFolders(FolderData parentFolder)
     {
-        LinkedHashSet<FolderData> result = new LinkedHashSet<FolderData>();
+        LinkedHashSet<FolderData> result = new LinkedHashSet<>();
         int skip = 0;
         int limit = 100;
-        List<FolderData> directChildren = new ArrayList<FolderData>();
+        List<FolderData> directChildren = new ArrayList<>();
         List<FolderData> childFolders = fileFolderService.getChildFolders(UNFILED_CONTEXT, parentFolder.getPath(), skip, limit);
         while(!childFolders.isEmpty())
         {
@@ -1034,7 +1034,7 @@ public abstract class RMBaseEventProcessor extends AbstractEventProcessor implem
      */
     public List<RecordData> getAllUnfiledRecords()
     {
-        List<RecordData> existingRecords = new ArrayList<RecordData>();
+        List<RecordData> existingRecords = new ArrayList<>();
         int skip = 0;
         int limit = 100;
         List<RecordData> recordsList = recordService.getRecordsInPaths(ExecutionState.UNFILED_RECORD_DECLARED.name(), null, skip, limit);

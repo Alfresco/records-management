@@ -141,13 +141,13 @@ public abstract class RMAbstractLoadComponent extends RMBaseEventProcessor
             }
         }
 
-        UserData user = getRandomUser(logger);
+        UserData user = getRandomUser(eventProcessorLogger);
         String username = user.getUsername();
         String password = user.getPassword();
         UserModel userModel = new UserModel(username, password);
         try
         {
-            List<Event> scheduleEvents = new ArrayList<Event>();
+            List<Event> scheduleEvents = new ArrayList<>();
             String message = executeOperation(folder, dataObj, operation, userModel);
 
             DBObject eventData = BasicDBObjectBuilder.start()

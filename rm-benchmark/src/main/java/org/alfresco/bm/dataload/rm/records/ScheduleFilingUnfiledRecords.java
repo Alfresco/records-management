@@ -152,7 +152,7 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
         // Are there still sessions active?
         long sessionCount = sessionService.getActiveSessionsCount();
         int loaderSessionsToCreate = maxActiveLoaders - (int) sessionCount;
-        List<Event> nextEvents = new ArrayList<Event>(maxActiveLoaders);
+        List<Event> nextEvents = new ArrayList<>(maxActiveLoaders);
 
         if(recordFilingLimit >= 0)
         {
@@ -178,9 +178,9 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
             msg = "Raised further " + (nextEvents.size() - 1) + " events and rescheduled self.";
         }
 
-        if (logger.isDebugEnabled())
+        if (eventProcessorLogger.isDebugEnabled())
         {
-            logger.debug(msg);
+            eventProcessorLogger.debug(msg);
         }
 
         EventResult result = new EventResult(msg, nextEvents);
@@ -212,7 +212,7 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
             return;
         }
         mapOfRecordsPerRecordFolder = calculateListOfEmptyFolders(mapOfRecordsPerRecordFolder, fileToRecordFolderPaths, numberOfRecords);
-        List<FolderData> emptyFolders = new ArrayList<FolderData>();
+        List<FolderData> emptyFolders = new ArrayList<>();
         emptyFolders.addAll(mapOfRecordsPerRecordFolder.keySet());
         while (nextEvents.size() < loaderSessionsToCreate)
         {
@@ -310,7 +310,7 @@ public class ScheduleFilingUnfiledRecords extends RMBaseEventProcessor
     {
         LinkedHashSet<String> allUnfiledParentPaths = getAllUnfiledParentPaths();
         List<String> availableUnfiledRecordFolderPaths = new ArrayList<>();
-        LinkedHashSet<FolderData> unfiledFolderStructerFromExistentProvidedPaths = new LinkedHashSet<FolderData>();
+        LinkedHashSet<FolderData> unfiledFolderStructerFromExistentProvidedPaths = new LinkedHashSet<>();
         for(String path : fileFromUnfiledPaths)
         {
             if(path.equals("/"))

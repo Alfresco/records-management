@@ -172,7 +172,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         //returns record folders
         when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1, mockedRecordFolder2));
-        when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<>());
 
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
 
@@ -274,9 +274,9 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
         when(mockedRecordFolder1.getPath()).thenReturn(entirePath2);
         when(mockedFileFolderService.getFolder(RECORD_FOLDER_CONTEXT, entirePath2)).thenReturn(mockedRecordFolder1);
 
-        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, entirePath1, 0, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, entirePath1, 0, 100)).thenReturn(new ArrayList<>());
         when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1));
-        when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<>());
 
         when(mockedRestApiFactory.getFilePlansAPI()).thenReturn(mockedFilePlanAPI);
         when(mockedRestApiFactory.getRecordCategoryAPI()).thenReturn(mockedRecordCategoryAPI);
@@ -332,9 +332,9 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         when(mockedFileFolderService.getFolder(RECORD_FOLDER_CONTEXT, childPath)).thenReturn(mockedRecordFolder1);
 
-        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, entirePath1, 0, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, entirePath1, 0, 100)).thenReturn(new ArrayList<>());
         when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1));
-        when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getChildFolders(RECORD_FOLDER_CONTEXT, entirePath1, 100, 100)).thenReturn(new ArrayList<>());
 
         when(mockedRestApiFactory.getFilePlansAPI()).thenReturn(mockedFilePlanAPI);
         when(mockedRestApiFactory.getRecordCategoryAPI()).thenReturn(mockedRecordCategoryAPI);
@@ -615,7 +615,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         //returns available record folders
         when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1, mockedRecordFolder2));
-        when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<>());
 
         when(mockedRestApiFactory.getFilePlansAPI()).thenReturn(mockedFilePlanAPI);
         when(mockedRestApiFactory.getRecordCategoryAPI()).thenReturn(mockedRecordCategoryAPI);
@@ -683,7 +683,7 @@ public class ScheduleRecordLoadersUnitTest implements RMEventConstants
 
         //returns available record folders
         when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1, mockedRecordFolder2));
-        when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<>());
 
         EventResult result = scheduleRecordLoaders.processEvent(null, new StopWatch());
         verify(mockedFileFolderService, times(2)).getFoldersByCounts(any(String.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Long.class), any(Integer.class), any(Integer.class));

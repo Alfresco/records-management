@@ -190,7 +190,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         long sessionCount = sessionService.getActiveSessionsCount();
         int loaderSessionsToCreate = maxActiveLoaders - (int) sessionCount;
 
-        List<Event> nextEvents = new ArrayList<Event>(maxActiveLoaders);
+        List<Event> nextEvents = new ArrayList<>(maxActiveLoaders);
 
         // Do we actually need to do anything
         if (!createFileplanFolderStructure)
@@ -234,13 +234,12 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
             msg = "Raised further " + (nextEvents.size() - 1) + " events and rescheduled self.";
         }
 
-        if (logger.isDebugEnabled())
+        if (eventProcessorLogger.isDebugEnabled())
         {
-            logger.debug(msg);
+            eventProcessorLogger.debug(msg);
         }
 
-        EventResult result = new EventResult(msg, nextEvents);
-        return result;
+        return new EventResult(msg, nextEvents);
     }
 
     /**
@@ -305,12 +304,12 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
             // the maximum number of children a folder should contain so that it will be picked up for further loading
             calculateMaxChildren();
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
-                        RECORD_CATEGORY_CONTEXT,
-                        Long.valueOf(FILE_PLAN_LEVEL + 1),//min level FILE_PLAN_LEVEL + 1 = 4, root categories
-                        Long.valueOf(maxLevel -1),//last level will be for record folders, FILE_PLAN_LEVEL+depth-1 required
-                        0L, Long.valueOf(maxChildren),//maximum number of sub folders so that it will be picked up for further loading
-                        null, null,
-                        skip, limit);
+                    RECORD_CATEGORY_CONTEXT,
+                    (long) FILE_PLAN_LEVEL + 1,//min level FILE_PLAN_LEVEL + 1 = 4, root categories
+                    (long) maxLevel - 1,//last level will be for record folders, FILE_PLAN_LEVEL+depth-1 required
+                    0L, Long.valueOf(maxChildren),//maximum number of sub folders so that it will be picked up for further loading
+                    null, null,
+                    skip, limit);
             if (emptyFolders.isEmpty())
             {
                 // The folders were populated in the mean time
@@ -359,7 +358,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
                 }
                 else
                 {
-                    auxFileFolderService.incrementFolderCount(emptyFolder.getContext(), emptyFolder.getPath(), - i-1);
+                    auxFileFolderService.incrementFolderCount(emptyFolder.getContext(), emptyFolder.getPath(), - i-1L);
                 }
 
                 if (this.folderCategoryMix)
@@ -390,7 +389,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
                     }
                     else
                     {
-                        auxFileFolderService.incrementFileCount(emptyFolder.getContext(), emptyFolder.getPath(), -j -1);
+                        auxFileFolderService.incrementFileCount(emptyFolder.getContext(), emptyFolder.getPath(), -j -1L);
                     }
                 }
 
@@ -419,11 +418,11 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
         {
             // Get categories needing loading
             List<FolderData> emptyFolders = fileFolderService.getFoldersByCounts(
-                        RECORD_CATEGORY_CONTEXT,
-                        Long.valueOf(maxLevel), Long.valueOf(maxLevel),//max and min level are FILE_PLAN_LEVEL+depth, of last category, where we load lowest level of record folders
-                        0L, Long.valueOf(folderNumber - 1),//limit the maximum number of child folders to number of record folder to create - 1
-                        null, null, // Ignore file limits
-                        skip, limit);
+                    RECORD_CATEGORY_CONTEXT,
+                    (long) maxLevel, (long) maxLevel,//max and min level are FILE_PLAN_LEVEL+depth, of last category, where we load lowest level of record folders
+                    0L, (long) folderNumber - 1,//limit the maximum number of child folders to number of record folder to create - 1
+                    null, null, // Ignore file limits
+                    skip, limit);
 
             if (emptyFolders.isEmpty())
             {
@@ -467,7 +466,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
                 }
                 else
                 {
-                    auxFileFolderService.incrementFileCount(emptyFolder.getContext(), emptyFolder.getPath(), -j -1);
+                    auxFileFolderService.incrementFileCount(emptyFolder.getContext(), emptyFolder.getPath(), -j -1L);
                 }
                 // Check if we have enough
                 if (nextEvents.size() >= loaderSessionsToCreate)

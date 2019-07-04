@@ -166,7 +166,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
          */
         assertEquals(true, result.isSuccess());
         List<String> scheduledFiles = Arrays.asList(file1Id, file2Id, file3Id, file4Id);
-        validateScheduleFilesOutputMessage(new ArrayList<String>(), scheduledFiles, (String)result.getData());
+        validateScheduleFilesOutputMessage(new ArrayList<>(), scheduledFiles, (String)result.getData());
         validateFiredEvents(true, scheduledFiles, result.getNextEvents());
     }
 
@@ -198,7 +198,7 @@ public class ScheduleInPlaceRecordLoadersUnitTest
 
         Node doclibNodesEndpoint = mockNodesEndpoint(mockedRestCoreAPI, documentLibraryId);
 
-        mockListChildren(doclibNodesEndpoint, false, new ArrayList<RestNodeModel>());
+        mockListChildren(doclibNodesEndpoint, false, new ArrayList<>());
 
         // mock node builder
         NodesBuilder mockedNodeBuilder = mock(NodesBuilder.class);

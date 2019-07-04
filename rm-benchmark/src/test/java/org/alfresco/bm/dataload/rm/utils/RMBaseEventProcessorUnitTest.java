@@ -72,7 +72,7 @@ public class RMBaseEventProcessorUnitTest implements RMEventConstants
     {
         Random random = new Random();
         int k = random.nextInt(10)+1;
-        List<FolderData> listOfFolders = new ArrayList<FolderData>();
+        List<FolderData> listOfFolders = new ArrayList<>();
         int sum = 0;
         for(int i = 0;i < k;i++)
         {

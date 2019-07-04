@@ -9,5 +9,5 @@ package org.alfresco.bm.dataload.rm.services;
 public enum RecordContext
 {
     RECORD,
-    IN_PLACE_RECORD;
+    IN_PLACE_RECORD
 }

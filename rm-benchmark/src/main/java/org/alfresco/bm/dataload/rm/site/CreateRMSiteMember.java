@@ -122,8 +122,7 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
             throw new RuntimeException("Create RM site member as user: admin failed (" + e.getMessage() + "): " + siteMember, e);
         }
 
-        logger.debug(msg);
-        EventResult result = new EventResult(msg, nextEvent);
-        return result;
+        eventProcessorLogger.debug(msg);
+        return new EventResult(msg, nextEvent);
     }
 }
