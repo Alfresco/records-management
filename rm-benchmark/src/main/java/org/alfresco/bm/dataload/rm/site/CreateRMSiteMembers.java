@@ -105,7 +105,7 @@ public class CreateRMSiteMembers extends RMBaseEventProcessor
     @Override
     protected EventResult processEvent(Event event) throws Exception
     {
-        List<Event> nextEvents = new ArrayList<Event>();
+        List<Event> nextEvents = new ArrayList<>();
 
         // Schedule events for each site member to be created
         int numSitesMembers = 0;

@@ -147,7 +147,7 @@ public abstract class RMAbstractLoadComponent extends RMBaseEventProcessor
         UserModel userModel = new UserModel(username, password);
         try
         {
-            List<Event> scheduleEvents = new ArrayList<Event>();
+            List<Event> scheduleEvents = new ArrayList<>();
             String message = executeOperation(folder, dataObj, operation, userModel);
 
             DBObject eventData = BasicDBObjectBuilder.start()

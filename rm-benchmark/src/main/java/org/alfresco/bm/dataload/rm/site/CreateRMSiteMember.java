@@ -123,7 +123,6 @@ public class CreateRMSiteMember extends RMBaseEventProcessor
         }
 
         eventProcessorLogger.debug(msg);
-        EventResult result = new EventResult(msg, nextEvent);
-        return result;
+        return new EventResult(msg, nextEvent);
     }
 }

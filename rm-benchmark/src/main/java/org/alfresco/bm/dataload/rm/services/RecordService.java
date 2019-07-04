@@ -236,8 +236,7 @@ public class RecordService extends BaseMongoService
             queryObjBuilder.and(FIELD_PARENT_PATH).in(listOfParentPaths);
         }
         DBObject queryObj = queryObjBuilder.get();
-        long count = collection.count(queryObj);
-        return count;
+        return collection.count(queryObj);
     }
 
     /**
@@ -279,7 +278,7 @@ public class RecordService extends BaseMongoService
         int count = cursor.count();
         try
         {
-            List<RecordData> recordDatas = new ArrayList<RecordData>(count);
+            List<RecordData> recordDatas = new ArrayList<>(count);
             while (cursor.hasNext())
             {
                 DBObject recordDataObj = cursor.next();

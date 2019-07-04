@@ -47,7 +47,7 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
     public static final String PREPARED_INCOMPLETE_MSG_TEMPLATE = "Prepared only {0} site members, and the requested number of users was {1}.";
     private boolean assignRMRoleToUsers;
     private int userCount;
-    private List<RMRole> rolesToChoseFrom = new ArrayList<RMRole>();
+    private List<RMRole> rolesToChoseFrom = new ArrayList<>();
     private String eventNameSiteMembersPrepared = EVENT_NAME_SITE_MEMBERS_PREPARED;
     private String eventNameContinueLoadingData = EVENT_NAME_CONTINUE_LOADING_DATA;
 
@@ -98,7 +98,7 @@ public class PrepareRMSiteMembers extends RMBaseEventProcessor
 
     public void setRole(String role)
     {
-        rolesToChoseFrom = new ArrayList<RMRole>();
+        rolesToChoseFrom = new ArrayList<>();
         if (isBlank(role))
         {
             throw new IllegalArgumentException("'role' may not be null or empty.");

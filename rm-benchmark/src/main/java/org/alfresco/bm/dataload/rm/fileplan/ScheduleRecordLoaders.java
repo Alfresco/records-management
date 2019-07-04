@@ -170,7 +170,7 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
         // Are there still sessions active?
         long sessionCount = sessionService.getActiveSessionsCount();
         int loaderSessionsToCreate = maxActiveLoaders - (int) sessionCount;
-        List<Event> nextEvents = new ArrayList<Event>(maxActiveLoaders);
+        List<Event> nextEvents = new ArrayList<>(maxActiveLoaders);
 
         // Do we actually need to do anything
         if (!isUploadRecords())
