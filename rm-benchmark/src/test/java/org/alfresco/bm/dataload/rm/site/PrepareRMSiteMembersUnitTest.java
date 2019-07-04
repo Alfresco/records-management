@@ -156,7 +156,7 @@ public class PrepareRMSiteMembersUnitTest implements RMEventConstants
         prepareRMSiteMembers.setRole("Administrator");
         prepareRMSiteMembers.setAssignRMRoleToUsers(true);
         prepareRMSiteMembers.setUserCount(1);
-        when(mockedUserDataService.getUsersByCreationState(DataCreationState.Created, 0, 100)).thenReturn(new ArrayList<UserData>());
+        when(mockedUserDataService.getUsersByCreationState(DataCreationState.Created, 0, 100)).thenReturn(new ArrayList<>());
         EventResult result = prepareRMSiteMembers.processEvent(null);
         assertEquals(true, result.isSuccess());
         assertEquals(PrepareRMSiteMembers.NO_USERS_AVAILABLE_MSG, result.getData());

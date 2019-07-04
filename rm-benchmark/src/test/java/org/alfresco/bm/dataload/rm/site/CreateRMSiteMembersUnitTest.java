@@ -63,7 +63,7 @@ public class CreateRMSiteMembersUnitTest implements RMEventConstants
         int batchSize = 100;
 
         createRMSiteMembers.setBatchSize(batchSize);
-        when(mockedSiteDataService.getSiteMembers(PATH_SNIPPET_RM_SITE_ID, DataCreationState.NotScheduled, null, 0, batchSize)).thenReturn(new ArrayList<SiteMemberData>());
+        when(mockedSiteDataService.getSiteMembers(PATH_SNIPPET_RM_SITE_ID, DataCreationState.NotScheduled, null, 0, batchSize)).thenReturn(new ArrayList<>());
 
         EventResult result = createRMSiteMembers.processEvent(null);
         verify(mockedSiteDataService, never()).getSite(PATH_SNIPPET_RM_SITE_ID);

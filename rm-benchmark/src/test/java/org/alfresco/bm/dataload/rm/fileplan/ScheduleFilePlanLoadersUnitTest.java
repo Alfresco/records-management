@@ -253,8 +253,8 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         List<FolderData> folders = Arrays.asList(mockedRootCategoryFolder, mockedChildCategoryFolder);
         when(mockedFileFolderService.getFoldersByCounts(RECORD_CATEGORY_CONTEXT, Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1), 0L, Long.valueOf(categoriesChildrenNumber-1), null, null, 0, 100)).thenReturn(folders);
 
-        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, "/a", 0, 100)).thenReturn(new ArrayList<FolderData>());
-        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, "/b", 0, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, "/a", 0, 100)).thenReturn(new ArrayList<>());
+        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, "/b", 0, 100)).thenReturn(new ArrayList<>());
         EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
 
         verify(mockedSessionService, times(4)).startSession(any(DBObject.class));
@@ -509,8 +509,8 @@ public class ScheduleFilePlanLoadersUnitTest implements RMEventConstants
         List<FolderData> folders = Arrays.asList(mockedRootCategoryFolder, mockedChildCategoryFolder);
         when(mockedFileFolderService.getFoldersByCounts(RECORD_CATEGORY_CONTEXT, Long.valueOf(FILE_PLAN_LEVEL+1), Long.valueOf(scheduleFilePlanLoaders.getMaxLevel() - 1), 0L, Long.valueOf(categoriesChildrenNumber-1), null, null, 0, 100)).thenReturn(folders);
 
-        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, "/a", 0, 100)).thenReturn(new ArrayList<FolderData>());
-        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, "/b", 0, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, "/a", 0, 100)).thenReturn(new ArrayList<>());
+        when(mockedFileFolderService.getChildFolders(RECORD_CATEGORY_CONTEXT, "/b", 0, 100)).thenReturn(new ArrayList<>());
         EventResult result = scheduleFilePlanLoaders.processEvent(null, new StopWatch());
 
         verify(mockedSessionService, times(3)).startSession(any(DBObject.class));

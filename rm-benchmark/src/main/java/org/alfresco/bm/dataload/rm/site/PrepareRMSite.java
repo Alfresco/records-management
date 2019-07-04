@@ -159,7 +159,7 @@ public class PrepareRMSite extends AbstractEventProcessor
     protected EventResult processEvent(Event event) throws Exception
     {
         StringBuilder msg = new StringBuilder("Preparing Records Management: \n");
-        List<Event> events = new ArrayList<Event>(10);
+        List<Event> events = new ArrayList<>(10);
 
         UserModel userModel = new UserModel(getUsername(), getPassword());
         //authenticate with provided credentials and verify that they are valid

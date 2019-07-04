@@ -179,7 +179,7 @@ public class ScheduleFilingUnfiledRecordsUnitTest implements RMEventConstants
 
         //returns record folders
         when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 0, 100)).thenReturn(Arrays.asList(mockedRecordFolder1, mockedRecordFolder2));
-        when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<FolderData>());
+        when(mockedFileFolderService.getFoldersByCounts(RECORD_FOLDER_CONTEXT, null, null, null, null, null, null, 100, 100)).thenReturn(new ArrayList<>());
 
         RecordData mockedRecordData1 = mock(RecordData.class);
         when(mockedRecordData1.getId()).thenReturn(recordId1);
