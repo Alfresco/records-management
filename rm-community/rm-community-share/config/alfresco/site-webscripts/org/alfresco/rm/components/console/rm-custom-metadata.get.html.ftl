@@ -50,7 +50,7 @@
                <div class="object-list">
                   <ul id="${el}-object-list">
                     <#list customisable as custom>
-                       <li id="${el}-${custom.name}" class="customisable theme-bg-color-2" title="${custom.title?html}">${custom.title?html}</li>
+                       <li id="${el}-${custom.name}" class="customisable theme-bg-color-2" title="${custom.title}">${custom.title}</li>
                     </#list>
                   </ul>
                </div>
