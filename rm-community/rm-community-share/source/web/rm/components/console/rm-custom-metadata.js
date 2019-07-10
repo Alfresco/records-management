@@ -216,7 +216,7 @@
                   Dom.addClass(div, "property-item");
                   var html = '<div class="property-actions"><span id="' + editBtnContainerId + '"></span><span id="' + deleteBtnContainerId + '"></span>';
                   html += '</div><div><p class="property-title">' + $html(prop.label) + '</p><p>';
-                  html += '<b>' + parent._msg('label.label') + ':</b> ' + decodeURIComponent($html(prop.propId)) + '</br>';
+                  html += '<b>' + parent._msg('label.label') + ':</b> ' + $html(decodeURIComponent(prop.propId)) + '</br>';
                   html += '<b>' + parent._msg('label.type') + ':</b> ' + $html(parent._dataTypeLabel(prop.dataType));
                   // display any selection list constraint applied and if mandatory value
                   if (prop.constraintRefs.length !== 0)
@@ -636,7 +636,7 @@
                     {
                        pattern: /^[a-zA-Z0-9-_.]+$/
                     }, "keyup");
-            
+
             // Initialise the form
             form.init();
             this.editForm = form;
@@ -650,7 +650,7 @@
          onBeforeShow: function onBeforeShow()
          {
             var prop = parent.currentProperty,
-               propId = decodeURIComponent($html(prop.propId));
+               propId = $html(decodeURIComponent(prop.propId));
 
             // title label
             Dom.get(parent.id + "-edit-metadata-item").innerHTML = propId;
