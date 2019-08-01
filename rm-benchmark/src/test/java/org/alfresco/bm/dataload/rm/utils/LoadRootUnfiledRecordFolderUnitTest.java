@@ -72,7 +72,7 @@ public class LoadRootUnfiledRecordFolderUnitTest extends LoadSingleComponentUnit
 
         when(mockedRestApiFactory.getUnfiledContainersAPI(any(UserModel.class))).thenReturn(mockedUnfiledContainerAPI);
 
-        Mockito.doThrow(new Exception("someError")).when(mockedUnfiledContainerAPI).createUnfiledContainerChild(any(UnfiledContainerChild.class), any(String.class));
+        Mockito.doThrow(new RuntimeException("someError")).when(mockedUnfiledContainerAPI).createUnfiledContainerChild(any(UnfiledContainerChild.class), any(String.class));
         mockSiteAndUserData();
         EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
         verify(mockedFileFolderService, never()).createNewFolder(any(String.class), any(String.class), any(String.class));
