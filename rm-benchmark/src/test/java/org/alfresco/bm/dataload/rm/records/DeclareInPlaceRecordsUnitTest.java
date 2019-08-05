@@ -313,7 +313,7 @@ public class DeclareInPlaceRecordsUnitTest implements RMEventConstants
 
         FilesAPI mockedFilesAPI = mock(FilesAPI.class);
         when(mockedRestAPIFactory.getFilesAPI(any(UserModel.class))).thenReturn(mockedFilesAPI);
-        Mockito.doThrow(new Exception("someError")).when(mockedFilesAPI).declareAsRecord(any(String.class));
+        Mockito.doThrow(new RuntimeException("someError")).when(mockedFilesAPI).declareAsRecord(any(String.class));
         when(mockedApplicationContext.getBean("restAPIFactory", RestAPIFactory.class)).thenReturn(mockedRestAPIFactory);
         EventResult result = declareInPlaceRecords.processEvent(mockedEvent, new StopWatch());
 
