@@ -124,7 +124,7 @@ public class FileUnfiledRecordUnitTest extends LoadSingleComponentUnitTest
 
         RecordData mockedRecordData = mock(RecordData.class);
         when(mockedRecordService.getRecord("recordId1")).thenReturn(mockedRecordData);
-        Mockito.doThrow(new Exception("someError")).when(mockedRecordsAPI).fileRecord(any(RecordBodyFile.class), any(String.class));
+        Mockito.doThrow(new RuntimeException("someError")).when(mockedRecordsAPI).fileRecord(any(RecordBodyFile.class), any(String.class));
 
         mockSiteAndUserData();
         EventResult result = loadSingleComponent.processEvent(mockedEvent, new StopWatch());
