@@ -62,6 +62,15 @@
        */
       getActionUrls: function RDLA_getActionUrls(record, siteId)
       {
+         if (record.jsNode.properties.rma_rootNodeRef === undefined) {
+            var thisfilePlan = '';
+         }
+         else
+         {
+
+            var thisfilePlan = new Alfresco.util.NodeRef(record.jsNode.properties.rma_rootNodeRef);
+         }
+
          var jsNode = record.jsNode,
             nodeRef = jsNode.isLink ? jsNode.linkedNode.nodeRef : jsNode.nodeRef,
             strNodeRef = nodeRef.toString(),
@@ -72,7 +81,7 @@
             {
                return Alfresco.util.siteURL(page, siteObj);
             }, this),
-            filePlan = new Alfresco.util.NodeRef(jsNode.properties.rma_rootNodeRef),
+            filePlan = thisfilePlan,
             filePlanUri = filePlan.uri,
             filePlanId = filePlan.id;
 

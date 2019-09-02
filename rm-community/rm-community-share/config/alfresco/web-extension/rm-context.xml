@@ -107,9 +107,7 @@
    <bean id="evaluator.rm.indicator.destroyed" parent="evaluator.rm.common.indicatorEvaluator">
       <property name="indicator" value="destroyed" />
    </bean>
-   <bean id="evaluator.rm.indicator.frozen" parent="evaluator.rm.common.indicatorEvaluator">
-      <property name="indicator" value="frozen" />
-   </bean>
+   <bean id="evaluator.rm.indicator.frozen" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.DocLibFrozenIndicatorEvaluator"/>
    <bean id="evaluator.rm.indicator.multiParent" parent="evaluator.rm.common.indicatorEvaluator">
       <property name="indicator" value="multiParent" />
    </bean>

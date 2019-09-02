@@ -246,12 +246,21 @@
           */
          return function RDL_renderCellThumbnail(elCell, oRecord, oColumn, oData)
          {
+            if (oRecord.getData().node.rmNode === undefined)
+            {
+               var nodeuitype = 'unknown';
+            }
+            else
+            {
+               var nodeuitype = oRecord.getData().node.rmNode.uiType;
+            }
+
             var record = oRecord.getData(),
                node = record.jsNode,
                properties = node.properties,
                name = record.fileName,
                title = properties.title,
-               type = record.node.rmNode.uiType,
+               type = nodeuitype,
                isLink = node.isLink,
                locn = record.location,
                extn = name.substring(name.lastIndexOf(".")),
