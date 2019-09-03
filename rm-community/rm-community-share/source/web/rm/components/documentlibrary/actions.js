@@ -1816,8 +1816,20 @@
          {
             this.modules.removeFromHold = new Alfresco.rm.module.RemoveFromHold(this.id + "-listofholds");
          }
+         var itemNodeRef;
+         if (YAHOO.lang.isArray(assets))
+         {
+            itemNodeRef = [];
+            for (var i = 0, l = assets.length; i < l; i++)
+            {
+               itemNodeRef.push(assets[i].nodeRef);
+            }
+         } else
+         {
+            itemNodeRef = assets.nodeRef;
+         }
          this.modules.removeFromHold.setOptions({
-            itemNodeRef: assets.nodeRef
+            itemNodeRef: itemNodeRef
          }).show();
       },
 
