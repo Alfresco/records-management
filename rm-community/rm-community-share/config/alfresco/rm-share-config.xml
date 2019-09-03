@@ -268,6 +268,7 @@
       <dependencies>
          <css src="components/documentlibrary/dm-actions.css" />
          <js src="components/documentlibrary/dm-actions.js" />
+         <js src="rm/components/documentlibrary/actions.js" />
       </dependencies>
       <dependencies />
    </config>
@@ -722,6 +723,13 @@
             <param name="function">onAddRelationship</param>
             <evaluator>evaluator.rm.action.editReferences</evaluator>
          </action>
+
+          <!-- Add to Hold -->
+          <action id="dm-add-to-hold" type="javascript" label="actions.add-to-hold" icon="../../../rm/components/documentlibrary/actions/rm-add-to-hold">
+            <param name="function">onActionAddToHold</param>
+            <evaluator>evaluator.rm.action.addToHold</evaluator>
+          </action>
+
       </actions>
 
       <!--
@@ -1019,12 +1027,14 @@
             <action index="410" id="rm-create-record" />
             <action index="420" id="rm-declare-as-version-record" />
             <action index="430" id="dm-recorded-version-config" />
+            <action index="440" id="dm-add-to-hold" />
          </actionGroup>
          <actionGroup id="document-details">
             <action index="400" id="rm-declare-file-to" />
             <action index="410" id="rm-create-record" />
             <action index="420" id="rm-declare-as-version-record" />
             <action index="430" id="dm-recorded-version-config" />
+            <action index="440" id="dm-add-to-hold" />
          </actionGroup>
 
       </actionGroups>
