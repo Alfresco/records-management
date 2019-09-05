@@ -184,6 +184,10 @@
    background-image: url(../../../rm/components/documentlibrary/actions/rm-add-to-hold-folder-16.png);
 }
 
+.toolbar .onActionRemoveFromHold {
+   background-image: url(../../../rm/components/documentlibrary/actions/rm-remove-from-hold-16.png);
+}
+
 /* Messages (e.g. Delete confirmation) */
 .toolbar-file-list span.record-category,
 .toolbar-file-list span.record-folder
