@@ -44,13 +44,12 @@ public class AddToHoldEvaluator extends BaseRMEvaluator
     private static final String NODE = "node";
 
     /**
-     * Is the location visible to the current user
+     * Is any hold visible to the current user
      */
-    private static final String IS_VISIBLE_FOR_CURRENT_USER = "isVisibleForCurrentUser";
+    private static final String IS_ANY_HOLD_VISIBLE_FOR_CURRENT_USER = "isHoldVisibleForCurrentUser";
 
     /**
-     * Returns true if the user has an RM role and can File as record,
-     * false otherwise
+     * Returns true if the user can add to at least one hold.
      *
      * @param jsonObject
      * @return boolean
@@ -62,8 +61,8 @@ public class AddToHoldEvaluator extends BaseRMEvaluator
 
         if (node != null)
         {
-            final Object hasFilingPermission = node.get(IS_VISIBLE_FOR_CURRENT_USER);
-            if (hasFilingPermission != null && (Boolean) hasFilingPermission)
+            final Object canAddToHold = node.get(IS_ANY_HOLD_VISIBLE_FOR_CURRENT_USER);
+            if (canAddToHold != null && (Boolean) canAddToHold)
             {
                 return true;
             }
