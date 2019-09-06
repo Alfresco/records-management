@@ -35,9 +35,10 @@
 <!-- DoD 5015.2 File Report -->
 <@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/file-report.js" group="documentlibrary"/>
 <!-- Hold -->
-<@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/hold/hold.js"></@script>
-<@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/hold/remove-from-hold.js"></@script>
-<@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/hold/add-to-hold.js"></@script>
+<@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/hold/hold.js" group="documentlibrary" />
+<@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/hold/remove-from-hold.js" group="documentlibrary" />
+<@script type="text/javascript" src="${url.context}/res/rm/modules/documentlibrary/hold/add-to-hold.js" group="documentlibrary" />
+
 
 <#-- Common actions styles -->
 <@link rel="stylesheet" type="text/css" href="${url.context}/res/components/documentlibrary/actions.css" group="documentlibrary"/>

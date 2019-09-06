@@ -258,6 +258,7 @@
          <action type="action-link" id="onActionAddToHoldRecord" permission="addToHold" label="actions.add-to-hold" asset="record,undeclared-record" rmaction="true" />
          <action type="action-link" id="onActionRemoveFromHold" hasAspect="rma:frozen" permission="removeFromHold" label="actions.remove-from-hold" asset="record,undeclared-record,record-folder" rmaction="true" />
          <action type="action-link" id="onActionAddToHoldRecordFolder" permission="addToHold" label="actions.add-to-hold" asset="record-folder" rmaction="true" />
+         <action type="action-link" id="onActionAddToHolds" permission="addToHold" label="actions.add-to-hold" rmaction="true" />
          <action type="action-link" id="onActionExport" permission="" notAspect="rma:cutOff" label="menu.selected-items.export" asset="record,undeclared-record,record-folder,record-category" rmaction="true" />
          <action type="action-link" id="onActionDeclareAndFileTo" permission="fileTo" label="menu.selected-items.file-to" asset="record,undeclared-record" rmaction="true" />
       </multi-select>
@@ -727,8 +728,8 @@
 
           <!-- Add to Hold -->
           <action id="dm-add-to-hold" type="javascript" label="actions.add-to-hold" icon="../../../rm/components/documentlibrary/actions/rm-add-to-hold">
-            <param name="function">onActionAddToHold</param>
-            <evaluator>evaluator.rm.action.addToHold</evaluator>
+            <param name="function">onActionAddToHolds</param>
+            <evaluator>evaluator.rm.action.addToHolds</evaluator>
           </action>
 
       </actions>

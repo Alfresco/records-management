@@ -197,12 +197,42 @@
                   width: "40em"
                }).showDialog();
 
+
             var me = this;
             this.modules.copyMoveLinkFileTo.onOK = function DLTB_onOK(e, p_obj) {
                assets.path = me.modules.copyMoveLinkFileTo.selectedNode.data.path.substr(1);
                me.onActionSimpleRepoAction(assets, owner);
                this.widgets.dialog.hide();
             }
+         }
+
+      });
+
+   YAHOO.Bubbling.fire("registerAction",
+      {
+         actionName: "onActionAddToHolds",
+         fn: function DLTB_onActionAddToHolds(assets, owner) {
+            console.log("###dm-actions###");
+            if (!this.modules.addToHold)
+            {
+               this.modules.addToHold = new Alfresco.rm.module.AddToHold(this.id + "-listofholds");
+            }
+            var itemNodeRef;
+            if (YAHOO.lang.isArray(assets))
+            {
+               itemNodeRef = [];
+               for (var i = 0, l = assets.length; i < l; i++)
+               {
+                  itemNodeRef.push(assets[i].nodeRef);
+               }
+            }
+            else
+            {
+               itemNodeRef = assets.nodeRef;
+            }
+            this.modules.addToHold.setOptions({
+               itemNodeRef: itemNodeRef
+            }).show();
          }
 
       });
