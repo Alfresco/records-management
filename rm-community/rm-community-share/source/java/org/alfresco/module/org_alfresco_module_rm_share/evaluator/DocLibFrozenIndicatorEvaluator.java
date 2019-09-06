@@ -32,7 +32,8 @@ import org.json.simple.JSONObject;
 /**
  * Record indicator shown in non-RM sites that contain records
  *
- * @author: mikeh
+ * @author: Ross Gale
+ * @author: Sara Aspery
  */
 public class DocLibFrozenIndicatorEvaluator extends BaseRMEvaluator
 {
