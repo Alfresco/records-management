@@ -37,6 +37,8 @@ import org.json.simple.JSONObject;
  */
 public class FilePlanDoclistActionGroupResolver extends DefaultDoclistActionGroupResolver
 {
+
+    private static final String IS_FROZEN_ACTIVE_CONTENT = "isFrozenActiveContent";
     /**
      * Will return the action group id matching rm action group configs in rm-share-config.xml.
      *
@@ -76,9 +78,13 @@ public class FilePlanDoclistActionGroupResolver extends DefaultDoclistActionGrou
         else
         {
             JSONObject rmNode = (JSONObject) node.get("rmNode");
+            boolean isFrozenContent = (Boolean) node.get(IS_FROZEN_ACTIVE_CONTENT);
             if(rmNode != null)
             {
                 actionGroupId += (String) rmNode.get("uiType") + "-";
+            } else if (isFrozenContent)
+            {
+                actionGroupId += "frozencontent-";
             }
             else
             {
