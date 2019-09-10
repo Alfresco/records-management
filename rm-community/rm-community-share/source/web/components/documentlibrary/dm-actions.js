@@ -212,7 +212,6 @@
       {
          actionName: "onActionAddToHolds",
          fn: function DLTB_onActionAddToHolds(assets, owner) {
-            console.log("###dm-actions###");
             if (!this.modules.addToHold)
             {
                this.modules.addToHold = new Alfresco.rm.module.AddToHold(this.id + "-listofholds");
@@ -231,6 +230,33 @@
                itemNodeRef = assets.nodeRef;
             }
             this.modules.addToHold.setOptions({
+               itemNodeRef: itemNodeRef
+            }).show();
+         }
+
+      });
+
+   YAHOO.Bubbling.fire("registerAction",
+      {
+         actionName: "onActionRemoveFromHolds",
+         fn: function DLTB_onActionRemoveFromHolds(assets, owner) {
+            if (!this.modules.removeFromHold)
+            {
+               this.modules.removeFromHold = new Alfresco.rm.module.RemoveFromHold(this.id + "-listofholds");
+            }
+            var itemNodeRef;
+            if (YAHOO.lang.isArray(assets))
+            {
+               itemNodeRef = [];
+               for (var i = 0, l = assets.length; i < l; i++)
+               {
+                  itemNodeRef.push(assets[i].nodeRef);
+               }
+            } else
+            {
+               itemNodeRef = assets.nodeRef;
+            }
+            this.modules.removeFromHold.setOptions({
                itemNodeRef: itemNodeRef
             }).show();
          }

@@ -1769,7 +1769,6 @@
        */
       onActionAddToHold: function RDLA_onActionAddToHold(assets)
       {
-         alert("@@@rm-actions@@@");
          if (!this.modules.addToHold)
          {
             this.modules.addToHold = new Alfresco.rm.module.AddToHold(this.id + "-listofholds");
