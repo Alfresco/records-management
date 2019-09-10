@@ -1041,7 +1041,7 @@
 
           <actionGroup id="rm-frozencontent-browse">
               <action index="400" id="dm-document-download" />
-              <action index="410" id="document-view-content" />
+              <!--<action index="410" id="document-view-content" />-->
               <action index="420" id="dm-add-to-hold" />
               <action index="430" id="dm-remove-from-hold" />
               <action index="440" id="rm-manage-permissions" />
