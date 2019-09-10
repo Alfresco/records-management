@@ -504,7 +504,15 @@
          for (i = 0; i < len; i++)
          {
             record = recordSet.getRecord(i);
-            this.selectedFiles[record.getData("nodeRef")] = checks[i].checked = fnCheck(record.getData("node").rmNode.uiType, checks[i].checked);
+            if (record.getData("node").rmNode === undefined)
+            {
+               nodeuitype = 'unknown';
+            }
+            else
+            {
+               nodeuitype = record.getData("node").rmNode.uiType;
+            }
+            this.selectedFiles[record.getData("nodeRef")] = checks[i].checked = fnCheck(nodeuitype, checks[i].checked);
          }
 
          YAHOO.Bubbling.fire("selectedFilesChanged");
