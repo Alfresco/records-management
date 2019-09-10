@@ -78,7 +78,13 @@ public class FilePlanDoclistActionGroupResolver extends DefaultDoclistActionGrou
         else
         {
             JSONObject rmNode = (JSONObject) node.get("rmNode");
-            boolean isFrozenContent = (Boolean) node.get(IS_FROZEN_ACTIVE_CONTENT);
+            boolean isFrozenContent = false;
+            final Object isFrozen = node.get(IS_FROZEN_ACTIVE_CONTENT);
+            if (isFrozen != null && (Boolean) isFrozen)
+            {
+                isFrozenContent = true;
+            }
+
             if(rmNode != null)
             {
                 actionGroupId += (String) rmNode.get("uiType") + "-";
