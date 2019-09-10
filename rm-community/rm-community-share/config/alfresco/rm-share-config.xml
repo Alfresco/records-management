@@ -259,6 +259,7 @@
          <action type="action-link" id="onActionRemoveFromHold" hasAspect="rma:frozen" permission="removeFromHold" label="actions.remove-from-hold" asset="record,undeclared-record,record-folder" rmaction="true" />
          <action type="action-link" id="onActionAddToHoldRecordFolder" permission="addToHold" label="actions.add-to-hold" asset="record-folder" rmaction="true" />
          <action type="action-link" id="onActionAddToHolds" permission="addToHold" label="actions.add-to-hold" rmaction="true" />
+         <action type="action-link" id="onActionRemoveFromHolds" hasAspect="rma:frozen" permission="removeFromHold" label="actions.remove-from-hold" asset="record,undeclared-record,record-folder" rmaction="true" />
          <action type="action-link" id="onActionExport" permission="" notAspect="rma:cutOff" label="menu.selected-items.export" asset="record,undeclared-record,record-folder,record-category" rmaction="true" />
          <action type="action-link" id="onActionDeclareAndFileTo" permission="fileTo" label="menu.selected-items.file-to" asset="record,undeclared-record" rmaction="true" />
       </multi-select>
@@ -731,6 +732,11 @@
             <param name="function">onActionAddToHolds</param>
             <evaluator>evaluator.rm.action.addToHolds</evaluator>
           </action>
+         <!-- Remove from Hold -->
+         <action id="dm-remove-from-hold" type="javascript" label="actions.remove-from-hold" icon="../../../rm/components/documentlibrary/actions/rm-remove-from-hold">
+            <param name="function">onActionRemoveFromHolds</param>
+            <evaluator>evaluator.rm.fileplan.isHeld</evaluator>
+         </action>
 
       </actions>
 
@@ -1030,6 +1036,7 @@
             <action index="420" id="rm-declare-as-version-record" />
             <action index="430" id="dm-recorded-version-config" />
             <action index="440" id="dm-add-to-hold" />
+            <action index="450" id="dm-remove-from-hold" />
          </actionGroup>
          <actionGroup id="document-details">
             <action index="400" id="rm-declare-file-to" />
@@ -1037,6 +1044,7 @@
             <action index="420" id="rm-declare-as-version-record" />
             <action index="430" id="dm-recorded-version-config" />
             <action index="440" id="dm-add-to-hold" />
+            <action index="450" id="dm-remove-from-hold" />
          </actionGroup>
 
           <actionGroup id="rm-frozencontent-browse">
