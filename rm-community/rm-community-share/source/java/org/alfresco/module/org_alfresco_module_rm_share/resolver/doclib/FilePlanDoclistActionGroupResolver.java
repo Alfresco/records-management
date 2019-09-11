@@ -84,17 +84,18 @@ public class FilePlanDoclistActionGroupResolver extends DefaultDoclistActionGrou
             {
                 isFrozenContent = true;
             }
-
+            String uiType = (String) node.get("uiType");
             if(rmNode != null)
             {
                 actionGroupId += (String) rmNode.get("uiType") + "-";
-            } else if (isFrozenContent)
+            }
+            /*else if (isFrozenContent)
             {
                 actionGroupId += "frozencontent-";
-            }
+            }*/
             else
             {
-                actionGroupId += "unknown-";
+                actionGroupId += uiType;
             }
         }
         if (view.equals("details"))
