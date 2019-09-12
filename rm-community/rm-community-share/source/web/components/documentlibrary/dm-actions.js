@@ -197,7 +197,6 @@
                   width: "40em"
                }).showDialog();
 
-
             var me = this;
             this.modules.copyMoveLinkFileTo.onOK = function DLTB_onOK(e, p_obj) {
                assets.path = me.modules.copyMoveLinkFileTo.selectedNode.data.path.substr(1);
@@ -210,8 +209,8 @@
 
    YAHOO.Bubbling.fire("registerAction",
       {
-         actionName: "onActionAddToHolds",
-         fn: function DLTB_onActionAddToHolds(assets, owner) {
+         actionName: "onActionAddToHold",
+         fn: function DLTB_onActionAddToHold(assets, owner) {
             if (!this.modules.addToHold)
             {
                this.modules.addToHold = new Alfresco.rm.module.AddToHold(this.id + "-listofholds");
@@ -238,8 +237,8 @@
 
    YAHOO.Bubbling.fire("registerAction",
       {
-         actionName: "onActionRemoveFromHolds",
-         fn: function DLTB_onActionRemoveFromHolds(assets, owner) {
+         actionName: "onActionRemoveFromHold",
+         fn: function DLTB_onActionRemoveFromHold(assets, owner) {
             if (!this.modules.removeFromHold)
             {
                this.modules.removeFromHold = new Alfresco.rm.module.RemoveFromHold(this.id + "-listofholds");
