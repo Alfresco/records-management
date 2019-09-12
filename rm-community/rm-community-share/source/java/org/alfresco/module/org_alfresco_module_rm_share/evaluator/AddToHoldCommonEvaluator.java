@@ -27,26 +27,54 @@
 
 package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 
+import org.alfresco.web.evaluator.Evaluator;
 import org.json.simple.JSONObject;
 
 /**
- * Checks if AddToHold action is available for active content
+ * Combined evaluator for records and active content
+ * for AddToHold action
  *
  * @author Roxana Lucanu
  * @since 3.2
  */
 
-public class AddToHoldEvaluator extends BaseRMEvaluator
+public class AddToHoldCommonEvaluator extends BaseRMEvaluator
 {
     /**
      * Node attribute
      */
     private static final String NODE = "node";
-    private static final String IS_RM_SITE_CREATED = "isRmSiteCreated";
-    private static final String IS_ADD_TO_HOLD_AVAILABLE = "isAddToHoldAvailable";
+
+    /** evaluator for records */
+    private Evaluator recordEvaluator;
+
+    /** evaluator for active content */
+    private Evaluator docEvaluator;
+
+    private static final String ASPECT_FILEPLAN_COMPONENT = "rma:filePlanComponent";
 
     /**
-     * Returns true if the user can add to at least one hold.
+     * Sets the record evaluator
+     *
+     * @param recordEvaluator
+     */
+    public void setRecordEvaluator(Evaluator recordEvaluator)
+    {
+        this.recordEvaluator = recordEvaluator;
+    }
+
+    /**
+     * Sets the active content evaluator
+     *
+     * @param docEvaluator
+     */
+    public void setDocEvaluator(Evaluator docEvaluator)
+    {
+        this.docEvaluator = docEvaluator;
+    }
+
+    /**
+     * Calls specific evaluator considering the document type
      *
      * @param jsonObject
      * @return boolean
@@ -54,18 +82,10 @@ public class AddToHoldEvaluator extends BaseRMEvaluator
     @Override
     public boolean evaluate(JSONObject jsonObject)
     {
-        final JSONObject node = (JSONObject) jsonObject.get(NODE);
-
-        if (node != null)
+        if (getNodeAspects(jsonObject).contains(ASPECT_FILEPLAN_COMPONENT))
         {
-            final Object rmSiteExists = node.get(IS_RM_SITE_CREATED);
-            final Object canAddToHold = node.get(IS_ADD_TO_HOLD_AVAILABLE);
-            if (rmSiteExists != null && (Boolean) rmSiteExists &&
-                    canAddToHold != null && (Boolean) canAddToHold)
-            {
-                return true;
-            }
+            return recordEvaluator.evaluate(jsonObject);
         }
-        return false;
+        return docEvaluator.evaluate(jsonObject);
     }
 }
