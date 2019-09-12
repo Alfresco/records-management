@@ -43,7 +43,7 @@ public class AddToHoldEvaluator extends BaseRMEvaluator
      */
     private static final String NODE = "node";
     private static final String IS_RM_SITE_CREATED = "isRmSiteCreated";
-    private static final String IS_ADD_TO_HOLD_AVAILABLE = "isAddToHoldAvailable";
+    private static final String IS_ADD_TO_HOLD_VISIBLE = "isAddToHoldVisible";
 
     /**
      * Returns true if the user can add to at least one hold.
@@ -59,7 +59,7 @@ public class AddToHoldEvaluator extends BaseRMEvaluator
         if (node != null)
         {
             final Object rmSiteExists = node.get(IS_RM_SITE_CREATED);
-            final Object canAddToHold = node.get(IS_ADD_TO_HOLD_AVAILABLE);
+            final Object canAddToHold = node.get(IS_ADD_TO_HOLD_VISIBLE);
             if (rmSiteExists != null && (Boolean) rmSiteExists &&
                     canAddToHold != null && (Boolean) canAddToHold)
             {

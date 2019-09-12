@@ -582,7 +582,7 @@
          <!-- Remove from Hold -->
          <action id="rm-remove-from-hold" type="javascript" label="actions.remove-from-hold" icon="../../../rm/components/documentlibrary/actions/rm-remove-from-hold">
             <param name="function">onActionRemoveFromHold</param>
-            <evaluator>evaluator.rm.action.removeFromHold</evaluator>
+            <evaluator>evaluator.action.removeFromHold</evaluator>
          </action>
 
          <!--  File hold report -->
