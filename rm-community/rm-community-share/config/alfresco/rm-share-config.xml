@@ -576,6 +576,11 @@
          <!-- Add to Hold -->
          <action id="rm-add-to-hold" type="javascript" label="actions.add-to-hold" icon="../../../rm/components/documentlibrary/actions/rm-add-to-hold">
             <param name="function">onActionAddToHold</param>
+            <permissions>
+               <permission allow="true">Write</permission>
+            </permissions>
+            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator>evaluator.action.addToHold</evaluator>
          </action>
 
