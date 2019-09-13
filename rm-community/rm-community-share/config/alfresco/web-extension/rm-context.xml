@@ -304,8 +304,8 @@
    <bean id="evaluator.rm.action.fileTransferReport" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="fileTransferReport" />
    </bean>
-
-   <bean id="evaluator.action.addToHold" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.AddToHoldCommonEvaluator">
+   <!--  Combined Evaluators for Records and Active Content -->
+   <bean id="evaluator.action.addToHold" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.HoldsCommonEvaluator">
       <property name="docEvaluator">
          <bean class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.AddToHoldEvaluator" />
       </property>
@@ -314,9 +314,11 @@
    <bean id="evaluator.rm.action.addToHold" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="addToHold" />
    </bean>
-   <!--<bean id="evaluator.dm.action.addToHold" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.AddToHoldEvaluator" />-->
-
-
+   <bean id="evaluator.action.removeFromHold"
+         class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.HoldsCommonEvaluator">
+      <property name="docEvaluator" ref="evaluator.rm.fileplan.isHeld" />
+      <property name="recordEvaluator" ref="evaluator.rm.action.removeFromHold" />
+   </bean>
    <bean id="evaluator.rm.action.removeFromHold" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="removeFromHold" />
    </bean>

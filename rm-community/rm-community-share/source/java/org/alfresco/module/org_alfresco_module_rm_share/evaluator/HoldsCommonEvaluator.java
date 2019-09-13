@@ -32,13 +32,13 @@ import org.json.simple.JSONObject;
 
 /**
  * Combined evaluator for records and active content
- * for AddToHold action
+ * for AddTo/RemoveFrom Hold action
  *
  * @author Roxana Lucanu
  * @since 3.2
  */
 
-public class AddToHoldCommonEvaluator extends BaseRMEvaluator
+public class HoldsCommonEvaluator extends BaseRMEvaluator
 {
     /**
      * Node attribute
