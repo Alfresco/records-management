@@ -82,7 +82,7 @@ public class FilePlanDoclistActionGroupResolver extends DefaultDoclistActionGrou
             }
             else
             {
-                actionGroupId += (String) node.get("uiType")+ "-";
+                actionGroupId += (String) node.get("uiType") + "-";
             }
         }
         if (view.equals("details"))
