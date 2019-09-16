@@ -248,7 +248,7 @@
          {
             if (oRecord.getData().node.rmNode === undefined)
             {
-               var nodeuitype = 'unknown';
+               var nodeuitype = oRecord.getData().node.uiType;
             }
             else
             {
@@ -506,7 +506,7 @@
             record = recordSet.getRecord(i);
             if (record.getData("node").rmNode === undefined)
             {
-               nodeuitype = 'unknown';
+               nodeuitype = record.getData("node").uiType;
             }
             else
             {
