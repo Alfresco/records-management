@@ -576,6 +576,11 @@
          <!-- Add to Hold -->
          <action id="rm-add-to-hold" type="javascript" label="actions.add-to-hold" icon="../../../rm/components/documentlibrary/actions/rm-add-to-hold">
             <param name="function">onActionAddToHold</param>
+            <permissions>
+               <permission allow="true">Write</permission>
+            </permissions>
+            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator>evaluator.action.addToHold</evaluator>
          </action>
 
@@ -1036,25 +1041,24 @@
           <actionGroup id="rm-frozencontent-browse">
               <action index="400" id="document-view-content" />
               <action index="410" id="document-download" />
-              <action index="420" id="rm-add-to-hold" />
-              <action index="430" id="rm-remove-from-hold" />
-              <action index="440" id="document-manage-granular-permissions" />
+              <action index="420" id="document-manage-granular-permissions" />
+              <action index="430" id="rm-add-to-hold" />
+              <action index="440" id="rm-remove-from-hold" />
           </actionGroup>
 
           <actionGroup id="rm-doclib-frozencontent-browse">
               <action index="400" id="document-view-content" />
               <action index="410" id="document-download" />
-              <action index="420" id="rm-add-to-hold" />
-              <action index="430" id="rm-remove-from-hold" />
-              <action index="440" id="document-manage-granular-permissions" />
+              <action index="420" id="document-manage-granular-permissions" />
+              <action index="430" id="rm-add-to-hold" />
+              <action index="440" id="rm-remove-from-hold" />
           </actionGroup>
 
           <actionGroup id="rm-doclib-frozencontent-details">
               <action index="400" id="document-view-content" />
-              <action index="410" id="document-download" />
-              <action index="420" id="rm-add-to-hold" />
-              <action index="430" id="rm-remove-from-hold" />
-              <action index="440" id="document-manage-granular-permissions" />
+              <action index="420" id="document-manage-granular-permissions" />
+              <action index="430" id="rm-add-to-hold" />
+              <action index="440" id="rm-remove-from-hold" />
           </actionGroup>
 
       </actionGroups>

@@ -306,9 +306,7 @@
    </bean>
    <!--  Combined Evaluators for Records and Active Content -->
    <bean id="evaluator.action.addToHold" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.HoldsCommonEvaluator">
-      <property name="docEvaluator">
-         <bean class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.AddToHoldEvaluator" />
-      </property>
+      <property name="docEvaluator" ref="evaluator.rm.doclib.action.rmSiteExists" />
       <property name="recordEvaluator" ref="evaluator.rm.action.addToHold" />
    </bean>
    <bean id="evaluator.rm.action.addToHold" parent="evaluator.rm.common.actionEvaluator">

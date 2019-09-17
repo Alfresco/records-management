@@ -66,9 +66,9 @@ public class ExtendedDefaultDoclistActionGroupResolver extends DefaultDoclistAct
         JSONObject node = (org.json.simple.JSONObject)jsonObject.get("node");
 
         // determine whether we are dealing with a RM node or not
-        Boolean isRMNode = (Boolean)node.get("isRmNode");
+        Boolean isRMNode = (Boolean) node.get("isRmNode");
         String nodeType = (String) node.get("uiType");
-        if ((isRMNode != null && isRMNode.booleanValue()) || FROZEN_ACTIVE_CONTENT.equals(nodeType) )
+        if ((isRMNode != null && isRMNode.booleanValue()) || FROZEN_ACTIVE_CONTENT.equals(nodeType))
         {
             // use the file plan resolver
             result = filePlanDoclistActionGroupResolver.resolve(jsonObject, view, true);

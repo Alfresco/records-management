@@ -40,11 +40,6 @@ import org.json.simple.JSONObject;
 
 public class HoldsCommonEvaluator extends BaseRMEvaluator
 {
-    /**
-     * Node attribute
-     */
-    private static final String NODE = "node";
-
     /** evaluator for records */
     private Evaluator recordEvaluator;
 

@@ -76,7 +76,7 @@ public class FilePlanDoclistActionGroupResolver extends DefaultDoclistActionGrou
         else
         {
             JSONObject rmNode = (JSONObject) node.get("rmNode");
-            if(rmNode != null)
+            if (rmNode != null)
             {
                 actionGroupId += (String) rmNode.get("uiType") + "-";
             }
