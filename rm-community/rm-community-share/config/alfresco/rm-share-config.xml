@@ -255,7 +255,7 @@
          <action type="action-link" id="onActionDeleteRecord" permission="delete" label="menu.selected-items.delete" asset="record,undeclared-record" notAspect="rma:frozen" notProperty="rma:holdReason" rmaction="true" />
          <action type="action-link" id="onActionDeleteRecordFolder" permission="delete" label="menu.selected-items.delete" asset="record-folder,unfiled-record-folder,metadata-stub-folder" notAspect="rma:frozen" notProperty="rma:holdReason" rmaction="true" />
          <action type="action-link" id="onActionDeleteRecordCategory" permission="delete" label="menu.selected-items.delete" asset="record-category" notAspect="rma:frozen" notProperty="rma:holdReason" rmaction="true" />
-         <action type="dese" id="onActionAddToHoldRecord" permission="addToHold" label="actions.add-to-hold" asset="record,undeclared-record" rmaction="true" />
+         <action type="action-link" id="onActionAddToHoldRecord" permission="addToHold" label="actions.add-to-hold" asset="record,undeclared-record" rmaction="true" />
          <action type="action-link" id="onActionRemoveFromHold" hasAspect="rma:frozen" permission="removeFromHold" label="actions.remove-from-hold" asset="record,undeclared-record,record-folder,frozencontent" rmaction="true" />
          <action type="action-link" id="onActionAddToHoldRecordFolder" permission="addToHold" label="actions.add-to-hold" asset="record-folder" rmaction="true" />
          <action type="action-link" id="onActionExport" permission="" notAspect="rma:cutOff" label="menu.selected-items.export" asset="record,undeclared-record,record-folder,record-category" rmaction="true" />
