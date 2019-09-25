@@ -314,5 +314,37 @@
             </plugins>
          </build>
       </profile>
+      <!-- Always skip the database start/stop execution for Share. -->
+      <profile>
+         <id>start-db</id>
+         <activation>
+            <property>
+               <name>skip.integrationtests</name>
+               <value>false</value>
+            </property>
+         </activation>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>io.fabric8</groupId>
+                  <artifactId>docker-maven-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>start</id>
+                        <configuration>
+                           <skip>true</skip>
+                        </configuration>
+                     </execution>
+                     <execution>
+                        <id>stop</id>
+                        <configuration>
+                           <skip>true</skip>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
    </profiles>
 </project>
