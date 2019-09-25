@@ -237,6 +237,34 @@
 
    YAHOO.Bubbling.fire("registerAction",
       {
+         actionName: "onActionAddToHoldDm",
+         fn: function DLTB_onActionAddToHoldDm(assets, owner)
+         {
+            if (!this.modules.addToHold)
+            {
+               this.modules.addToHold = new Alfresco.rm.module.AddToHold(this.id + "-listofholds");
+            }
+            var itemNodeRef;
+            if (YAHOO.lang.isArray(assets))
+            {
+               itemNodeRef = [];
+               for (var i = 0, l = assets.length; i < l; i++)
+               {
+                  itemNodeRef.push(assets[i].nodeRef);
+               }
+            }
+            else
+            {
+               itemNodeRef = assets.nodeRef;
+            }
+            this.modules.addToHold.setOptions({
+               itemNodeRef: itemNodeRef
+            }).show();
+         }
+      });
+
+   YAHOO.Bubbling.fire("registerAction",
+      {
          actionName: "onActionRemoveFromHold",
          fn: function DLTB_onActionRemoveFromHold(assets, owner) {
             if (!this.modules.removeFromHold)
