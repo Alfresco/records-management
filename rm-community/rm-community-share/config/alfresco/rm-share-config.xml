@@ -260,7 +260,8 @@
          <action type="action-link" id="onActionAddToHoldRecordFolder" permission="addToHold" label="actions.add-to-hold" asset="record-folder" rmaction="true" />
          <action type="action-link" id="onActionExport" permission="" notAspect="rma:cutOff" label="menu.selected-items.export" asset="record,undeclared-record,record-folder,record-category" rmaction="true" />
          <action type="action-link" id="onActionDeclareAndFileTo" permission="fileTo" label="menu.selected-items.file-to" asset="record,undeclared-record" rmaction="true" />
-         <action type="action-link" id="onActionAddToHoldDm" label="actions.add-to-hold" asset="document,undeclared-record" />
+         <action type="action-link" id="onActionAddToHold" permission="Write" label="actions.add-to-hold"
+                 asset="document,undeclared-record" notAspect="cm:workingcopy,cm:checkedOut,cm:lockable" />
       </multi-select>
 
    </config>

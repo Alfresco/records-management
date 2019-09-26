@@ -132,3 +132,7 @@
 .site-folder .selected {
    background-color: #dceaf4;
 }
+/** Css style for the Add to Hold action from the Selected Items Menu from Document Library */
+.toolbar .onActionAddToHold {
+   background-image: url("../../rm/components/documentlibrary/actions/rm-add-to-hold-16.png");
+}
