@@ -308,6 +308,18 @@
                   }
                }
             }
+            if (file.node.rmNode === undefined)
+            {
+               //Add in permission to non-rm nodes to bulk remove from hold if the node has the remove from hold single item action available
+               for (count = 0, actionsCount = file.actions.length; count < actionsCount; count++)
+               {
+                  if (file.actions[count].id === 'rm-remove-from-hold')
+                  {
+                     file.node.permissions.user['removeFromHold'] = true;
+                     break;
+                  }
+               }
+            }
          }
 
          if (this.modules.docList)
@@ -321,7 +333,15 @@
 
             var fnFileType = function fnFileType(file)
             {
-               return file.node.rmNode.uiType;
+               //Add check to make the selected items dropdown responsive to active content
+               if (file.node.rmNode === undefined)
+               {
+                  return file.node.uiType;
+               }
+               else
+               {
+                  return file.node.rmNode.uiType;
+               }
             };
 
             // first time around fill with permissions from first node
@@ -966,7 +986,7 @@
 
          window.location.href = $siteURL(page);
       },
-     
+
 
       /**
        * Delete Multiple Records confirmation.
@@ -982,18 +1002,18 @@
          {
             multipleRecords.push(records[i].jsNode.nodeRef.nodeRef);
          }
-         
+
          // Success callback function
          var fnSuccess = function DLTB__oADC_success(data, records)
          {
             var result;
             var successFileCount = 0;
             var successFolderCount = 0;
-            
+
             for (i = 0, ii = data.json.totalResults; i < ii; i++)
             {
                result = data.json.results[i];
-               
+
                if (result.success)
                {
                   if (result.type === "folder")
@@ -1004,7 +1024,7 @@
                   {
                      successFileCount++;
                   }
-                  
+
                   YAHOO.Bubbling.fire(result.type === "folder" ? "folderDeleted" : "fileDeleted",
                   {
                      multiple: true,
@@ -1017,13 +1037,13 @@
             {
                Alfresco.util.PopupManager.displayMessage(
                {
-            	   text: this.msg("message.multiple-delete.failure", data.json.successCount, data.json.failureCount)        	   
+            	   text: this.msg("message.multiple-delete.failure", data.json.successCount, data.json.failureCount)
                });
                // not automatically fired
                YAHOO.Bubbling.fire("filesDeleted");
                return;
             }
-            
+
             this.modules.docList.totalRecords -= data.json.totalResults;
             YAHOO.Bubbling.fire("filesDeleted");
             // Activities, in Site mode only
@@ -1031,7 +1051,7 @@
             if (Alfresco.util.isValueSet(this.options.siteId))
             {
                var activityData;
-               
+
                if (successCount > 0)
                {
                   if (successCount < this.options.groupActivitiesAt)
@@ -1046,7 +1066,7 @@
                            path: this.currentPath,
                            parentNodeRef : this.doclistMetadata.parent.nodeRef
                         };
-                        
+
                         if (data.json.results[i].type === "folder")
                         {
                            this.modules.actions.postActivity(this.options.siteId, "folder-deleted", "documentlibrary", activityData);
@@ -1090,7 +1110,7 @@
                text: this.msg("message.multiple-delete.success", successCount)
             });
          };
-         
+
          // Construct the data object for the genericAction call
          this.modules.actions.genericAction(
          {
@@ -1126,7 +1146,7 @@
             }
          });
       }
-      
-      
+
+
    }, true);
 })();
