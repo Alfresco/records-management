@@ -107,7 +107,7 @@
          });
          this.widgets.newButton = Alfresco.util.createYUIButton(this, "newsearch-button", this.onNewSearch);
          var btnDisabled = { disabled: true };
-         this.widgets.addToHold = Alfresco.util.createYUIButton(this, "add-to-hold-button", this.onAddToHold);
+         this.widgets.addToHold = Alfresco.util.createYUIButton(this, "add-to-hold-button", this.onAddToHold, btnDisabled);
          this.widgets.printButton = Alfresco.util.createYUIButton(this, "print-button", this.onPrint, btnDisabled);
          this.widgets.exportButton = Alfresco.util.createYUIButton(this, "export-button", this.onExport, btnDisabled);
 

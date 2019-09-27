@@ -1130,6 +1130,10 @@
             <js src="/rm/js/alfresco-rm.js" />
             <js src="/rm/js/event-delegator.js" />
             <js src="/rm/modules/create-site.js" />
+            <js src="/rm/modules/documentlibrary/hold/hold.css" />
+            <js src="/rm/modules/documentlibrary/hold/hold.js" />
+            <js src="/rm/modules/documentlibrary/hold/add-to-hold.js" />
+
          </dependencies>
       </header>
    </config>

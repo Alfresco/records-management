@@ -464,12 +464,4 @@
          }
       });
    });
-
-   // require(["rm/services/AlfRmActionBridge"], function (Bridge) {
-   //    var bridge = new Bridge();
-   //    bridge.alfSubscribe("RM_ADD_TO_HOLD_PAGE", function () {
-   //       alert("&&&&&" + payload);
-   //       console.log("RRRRR" + payload);
-   //    });
-   // });
 })();
