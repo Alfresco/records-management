@@ -186,7 +186,8 @@
             renderLoopSize: 32,
             scrollable: true,
             height: "200px",
-            MSG_EMPTY: this.msg("message.empty.holds")
+            MSG_EMPTY: this.msg("message.empty.holds"),
+            MSG_ERROR: this.msg("message.empty.holds")
          });
 
          this.widgets.listDataTable.on('theadCellClickEvent', Alfresco.rm.dataTableHeaderCheckboxClick);
