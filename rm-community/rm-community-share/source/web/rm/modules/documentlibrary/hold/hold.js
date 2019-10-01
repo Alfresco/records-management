@@ -254,7 +254,7 @@
          }
          else
          {
-            this._reset()
+            this._reset();
          }
       },
 
