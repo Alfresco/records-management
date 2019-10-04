@@ -45,7 +45,7 @@ public class DocLibFrozenIndicatorEvaluator extends BaseRMEvaluator
     {
         boolean result = false;
 
-        if (!isDocLibRecord(jsonObject) && getNodeAspects(jsonObject).contains(ASPECT_FROZEN))
+        if (getNodeAspects(jsonObject).contains(ASPECT_FROZEN))
         {
             result = true;
         }
