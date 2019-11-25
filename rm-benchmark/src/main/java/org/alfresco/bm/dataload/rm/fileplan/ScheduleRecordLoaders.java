@@ -186,7 +186,7 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
 
         // If there are no events, then we have finished
         String msg = null;
-        if (loaderSessionsToCreate > 0 && nextEvents.size() == 0)
+        if (loaderSessionsToCreate > 0 && nextEvents.isEmpty())
         {
             // There are no records to load even though there are sessions available
             mapOfRecordsPerRecordFolder = null;
@@ -221,11 +221,12 @@ public class ScheduleRecordLoaders extends RMBaseEventProcessor
     private void prepareRecords(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         mapOfRecordsPerRecordFolder = calculateListOfEmptyFolders(mapOfRecordsPerRecordFolder, paths, recordsNumber);
-        List<FolderData> emptyFolders = new ArrayList<FolderData>();
-        emptyFolders.addAll(mapOfRecordsPerRecordFolder.keySet());
+        List<FolderData> emptyFolders = (mapOfRecordsPerRecordFolder == null) ?
+                    new ArrayList<>() :
+                    new ArrayList<>(mapOfRecordsPerRecordFolder.keySet());
         while (nextEvents.size() < loaderSessionsToCreate)
         {
-            if (mapOfRecordsPerRecordFolder == null || mapOfRecordsPerRecordFolder.size() == 0)
+            if (mapOfRecordsPerRecordFolder == null || mapOfRecordsPerRecordFolder.isEmpty())
             {
                 break;
             }

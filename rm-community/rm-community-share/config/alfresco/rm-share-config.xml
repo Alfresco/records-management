@@ -101,13 +101,29 @@
 
       <!--
          Custom Metadata Templates for the Document Library Browse View
-
          Use view="simple" or view="detailed" to limit the display to one particular view.
       -->
       <metadata-templates>
+
+         <!-- Default (fallback) template - overriding the same template id in share-documentlibrary-config.xml -->
+         <template id="default">
+            <banner index="10" id="lockBanner" evaluator="evaluator.doclib.metadata.hasLockBanner">{lockBanner}</banner>
+            <banner index="20" id="syncTransientError" evaluator="evaluator.doclib.metadata.hasSyncTransientErrorBanner">{syncTransientError}</banner>
+            <banner index="30" id="syncFailed" evaluator="evaluator.doclib.metadata.hasSyncFailedBanner">{syncFailed}</banner>
+            <banner index="40" id="childClassificationInProgress" evaluator="evaluator.rm.doclib.isChildClassificationInProgress">{i18nLabel banner.child-classification-in-progress.info}</banner>
+            <banner index="50" id="childClassificationInComplete" evaluator="evaluator.rm.doclib.isChildClassificationComplete">{i18nLabel banner.child-classification-complete.info}{RM_childClassificationCompleteClose}</banner>
+            <line index="10" id="date">{date}{size}</line>
+            <line index="20" id="description" view="detailed">{description}</line>
+            <line index="30" id="tags" view="detailed">{tags}</line>
+            <line index="40" id="categories" view="detailed" evaluator="evaluator.doclib.metadata.hasCategories">{categories}</line>
+            <line index="50" id="social" view="detailed">{social}</line>
+         </template>
+
          <!-- Record Category -->
          <template id="rmRecordCategory">
             <evaluator>evaluator.rm.common.isRecordCategory</evaluator>
+            <banner index="10" id="childClassificationInProgress" evaluator="evaluator.rm.doclib.isChildClassificationInProgress">{i18nLabel banner.child-classification-in-progress.info}</banner>
+            <banner index="20" id="childClassificationInComplete" evaluator="evaluator.rm.doclib.isChildClassificationComplete">{i18nLabel banner.child-classification-complete.info}{RM_childClassificationCompleteClose}</banner>
             <line index="10" id="identifier">{rma_identifier details.category.identifier}</line>
             <line index="20" id="dispositionAuthority" view="detailed">{rma_dispositionAuthority details.category.disposition-authority}</line>
             <line index="30" id="dispositionInstructions" view="detailed">{rma_dispositionInstructions details.category.disposition-instructions}</line>
@@ -118,6 +134,8 @@
          <!-- Record Folder -->
          <template id="rmRecordFolder">
             <evaluator>evaluator.rm.common.isRecordFolder</evaluator>
+            <banner index="10" id="childClassificationInProgress" evaluator="evaluator.rm.doclib.isChildClassificationInProgress">{i18nLabel banner.child-classification-in-progress.info}</banner>
+            <banner index="20" id="childClassificationInComplete" evaluator="evaluator.rm.doclib.isChildClassificationComplete">{i18nLabel banner.child-classification-complete.info}{RM_childClassificationCompleteClose}</banner>
             <line index="10" id="identifier">{rma_identifier details.folder.identifier}</line>
             <line index="20" id="vitalRecord" view="detailed">{RM_vitalRecordIndicator details.folder.vital-record-indicator}</line>
             <line index="30" id="createdByModifiedOn">{RM_createdBy details.created.by}{RM_modifiedOn details.modified.on}</line>
@@ -152,6 +170,8 @@
          <!-- Metadata Stub Folder -->
          <template id="rmMetadataStubFolder">
             <evaluator>evaluator.rm.common.isMetadataStubFolder</evaluator>
+            <banner index="10" id="childClassificationInProgress" evaluator="evaluator.rm.doclib.isChildClassificationInProgress">{i18nLabel banner.child-classification-in-progress.info}</banner>
+            <banner index="20" id="childClassificationInComplete" evaluator="evaluator.rm.doclib.isChildClassificationComplete">{i18nLabel banner.child-classification-complete.info}{RM_childClassificationCompleteClose}</banner>
             <line index="10" id="identifier">{rma_identifier details.folder.identifier}</line>
             <line index="20" id="vitalRecord" view="detailed">{RM_vitalRecordIndicator details.folder.vital-record-indicator}</line>
             <line index="30" id="createdByModifiedOn">{RM_createdBy details.created.by}{RM_modifiedOn details.modified.on}</line>
@@ -161,6 +181,8 @@
          <template id="rmTransferContainer">
             <evaluator>evaluator.rm.common.isTransferContainer</evaluator>
             <title>{RM_transferContainer}</title>
+            <banner index="10" id="childClassificationInProgress" evaluator="evaluator.rm.doclib.isChildClassificationInProgress">{i18nLabel banner.child-classification-in-progress.info}</banner>
+            <banner index="20" id="childClassificationInComplete" evaluator="evaluator.rm.doclib.isChildClassificationComplete">{i18nLabel banner.child-classification-complete.info}{RM_childClassificationCompleteClose}</banner>
             <line index="10" id="createdByModifiedOn">{RM_createdBy details.created.by}{RM_modifiedOn details.modified.on}</line>
             <line index="20" id="accessionIndicator">{rma_transferAccessionIndicator details.transfer-container.is-accession}</line>
          </template>
@@ -169,6 +191,8 @@
          <template id="rmHold">
             <evaluator>evaluator.rm.common.isHold</evaluator>
             <title>{RM_hold}</title>
+            <banner index="10" id="childClassificationInProgress" evaluator="evaluator.rm.doclib.isChildClassificationInProgress">{i18nLabel banner.child-classification-in-progress.info}</banner>
+            <banner index="20" id="childClassificationInComplete" evaluator="evaluator.rm.doclib.isChildClassificationComplete">{i18nLabel banner.child-classification-complete.info}{RM_childClassificationCompleteClose}</banner>
             <line index="10" id="holdReason">{RM_holdReason details.hold.reason}</line>
          </template>
 
@@ -176,6 +200,8 @@
          <template id="rmUnfiledRecordFolder">
             <evaluator>evaluator.rm.unfiledRecordFolder</evaluator>
             <title>{RM_unfiledRecordFolder}</title>
+            <banner index="10" id="childClassificationInProgress" evaluator="evaluator.rm.doclib.isChildClassificationInProgress">{i18nLabel banner.child-classification-in-progress.info}</banner>
+            <banner index="20" id="childClassificationInComplete" evaluator="evaluator.rm.doclib.isChildClassificationComplete">{i18nLabel banner.child-classification-complete.info}{RM_childClassificationCompleteClose}</banner>
             <line index="10" id="identifier">{rma_identifier details.unfiled-record-folder.identifier}</line>
             <line index="20" id="createdByModifiedOn">{RM_createdBy details.created.by}{RM_modifiedOn details.modified.on}</line>
          </template>
@@ -428,6 +454,7 @@
          <action id="rm-accession" type="javascript" label="actions.accession" icon="../../../rm/components/documentlibrary/actions/rm-accession">
             <param name="function">onActionAccession</param>
             <evaluator>evaluator.rm.action.accession</evaluator>
+            <evaluator>evaluator.rm.action.incompleteEvent</evaluator>
          </action>
 
          <!-- Undo Cutoff -->

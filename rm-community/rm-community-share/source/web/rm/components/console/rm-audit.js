@@ -326,7 +326,7 @@
             YAHOO.widget.DataTable.Formatter.eventCellFormatter = function eventCellFormatter(elLiner, oRecord, oColumn, oData)
             {
                var oRecordData = oRecord._oData;
-               if (oRecordData.createPerson === true)
+               if (oRecordData.createPerson === true || oRecordData.deletePerson === true)
                {
                   if(oRecordData.nodeName != "")
                   {

@@ -9,7 +9,7 @@
    <parent>
       <groupId>org.alfresco</groupId>
       <artifactId>alfresco-rm-community</artifactId>
-      <version>2.6.3-SNAPSHOT</version>
+      <version>2.7.3-SNAPSHOT</version>
    </parent>
 
    <properties>
@@ -18,7 +18,7 @@
       <alfresco.repo.url>http://localhost:8080/alfresco</alfresco.repo.url>
       <alfresco.share.artifactId>share</alfresco.share.artifactId>
       <alfresco.rm.artifactId>alfresco-rm-community-share</alfresco.rm.artifactId>
-      <alfresco.aikau.version>1.0.103</alfresco.aikau.version>
+      <alfresco.aikau.version>1.0.104</alfresco.aikau.version>
    </properties>
 
    <build>

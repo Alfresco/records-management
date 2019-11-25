@@ -251,6 +251,50 @@
       });
    };
 
+   onChildClassificationCompleteClose = function RM_onChildClassificationCompleteClose(nodeRef, title, text, buttonYes, buttonNo) {
+      Alfresco.util.PopupManager.displayPrompt(
+      {
+         title: title,
+         text: text,
+         buttons: [
+         {
+            text: buttonYes,
+            handler: function DLTB_onChildClassificationCompleteClose_confirm_yes() {
+               Alfresco.util.Ajax.jsonPost(
+               {
+                  url: Alfresco.constants.PROXY_URI + 'api/node/' + nodeRef.replace(":/", "") + '/childclassificationcompleteddismiss',
+                  dataObj: {},
+                  successCallback:
+                  {
+                     fn: function DLTB_onChildClassificationCompleteClose_confirm_success() {
+                        YAHOO.Bubbling.fire("metadataRefresh");
+                     },
+                     scope: this
+                  },
+                  failureCallback:
+                  {
+                     fn: function DLTB_onChildClassificationCompleteClose_confirm_failure(response) {
+                        Alfresco.util.PopupManager.displayMessage(
+                        {
+                           text: Alfresco.util.Ajax.sanitizeMarkup(response.serverResponse.responseText)
+                        });
+                     }
+                  }
+               });
+
+               this.destroy();
+            }
+         },
+         {
+            text: buttonNo,
+            handler: function DLTB_onChildClassificationCompleteClose_confirm_no() {
+               this.destroy();
+            },
+            isDefault: true
+         }]
+      });
+   };
+
    YAHOO.Bubbling.fire("registerRenderer",
    {
       propertyName: "RM_rejectedRecordInfo",
@@ -291,6 +335,26 @@
          funcArgs += "\"";
 
          return '<a href="#" onclick="onRejectedRecordClose(' + $html(funcArgs) + ');return false;" title="' + this.msg("banner.rejected-record.close") + '" class="item item-rejected-record-close">&nbsp;</a>';
+      }
+   });
+
+   YAHOO.Bubbling.fire("registerRenderer",
+   {
+      propertyName: "RM_childClassificationCompleteClose",
+      renderer: function RM_childClassificationCompleteClose_renderer(record, label) {
+         var funcArgs = "\"";
+         funcArgs += record.nodeRef;
+         funcArgs += "\",\"";
+         funcArgs += this.msg("message.confirm.close-child-classification-complete.title");
+         funcArgs += "\",\"";
+         funcArgs += this.msg("message.confirm.close-child-classification-complete");
+         funcArgs += "\",\"";
+         funcArgs += this.msg("button.yes");
+         funcArgs += "\",\"";
+         funcArgs += this.msg("button.no");
+         funcArgs += "\"";
+
+         return '<a href="#" onclick="onChildClassificationCompleteClose(' + $html(funcArgs) + ');return false;" title="' + this.msg("banner.child-classification-complete.close") + '" class="item item-rejected-record-close">&nbsp;</a>';
       }
    });
 

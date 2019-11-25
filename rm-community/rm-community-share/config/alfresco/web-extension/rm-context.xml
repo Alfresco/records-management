@@ -149,6 +149,22 @@
       <property name="slingshotEvaluatorUtil" ref="slingshot.evaluator.utility" />
    </bean>
 
+   <bean id="evaluator.rm.doclib.isChildClassificationInProgress" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+      <property name="aspects">
+         <list>
+            <value>clf:childClassificationInProgress</value>
+         </list>
+      </property>
+   </bean>
+
+   <bean id="evaluator.rm.doclib.isChildClassificationComplete" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+      <property name="aspects">
+         <list>
+            <value>clf:childClassificationComplete</value>
+         </list>
+      </property>
+   </bean>
+
    <!--                             -->
    <!-- File Plan Action Evaluators -->
    <!--                             -->
@@ -232,6 +248,8 @@
    <bean id="evaluator.rm.action.accession" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="accession" />
    </bean>
+   <bean id="evaluator.rm.action.incompleteEvent" class="org.alfresco.module.org_alfresco_module_rm_share.evaluator.IncompleteEventEvaluator"/>
+
    <bean id="evaluator.rm.action.undo-cutoff" parent="evaluator.rm.common.actionEvaluator">
       <property name="action" value="undoCutoff" />
    </bean>

@@ -143,7 +143,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @param folderNumber the folderNumber to set
+     * @param folderNumberAverage the folderNumber to set
      */
     public void setFolderNumber(int folderNumberAverage)
     {
@@ -167,7 +167,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
     }
 
     /**
-     * @param filePlanDepth the filePlanDepth to set
+     * @param categoryStructureDepth the filePlanDepth to set
      */
     public void setCategoryStructureDepth(int categoryStructureDepth)
     {
@@ -216,7 +216,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
 
         // If there are no events, then we have finished
         String msg = null;
-        if (loaderSessionsToCreate > 0 && nextEvents.size() == 0)
+        if (loaderSessionsToCreate > 0 && nextEvents.isEmpty())
         {
             rootCategoriesToLoad = null;
             maxChildren = null;
@@ -311,7 +311,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
                         0L, Long.valueOf(maxChildren),//maximum number of sub folders so that it will be picked up for further loading
                         null, null,
                         skip, limit);
-            if (emptyFolders.size() == 0)
+            if (emptyFolders.isEmpty())
             {
                 // The folders were populated in the mean time
                 break;
@@ -425,7 +425,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
                         null, null, // Ignore file limits
                         skip, limit);
 
-            if (emptyFolders.size() == 0)
+            if (emptyFolders.isEmpty())
             {
                 // The folders were populated in the mean time
                 break;
@@ -496,7 +496,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
             if (folderCategoryMix)
             {
                 maxChildren = folderNumber + childCategNumber - 1;
-                if (categories.size() > 0)
+                if (!categories.isEmpty())
                 {
                     FolderData existentRecordCategory = categories.get(0);
                     int childCategoriesNumber = getDirectChildrenByContext(existentRecordCategory, RECORD_CATEGORY_CONTEXT).size();
@@ -507,7 +507,7 @@ public class ScheduleFilePlanLoaders extends RMBaseEventProcessor
             else
             {
                 maxChildren = childCategNumber - 1;
-                if (categories.size() > 0)
+                if (!categories.isEmpty())
                 {
                     FolderData existentRecordCategory = categories.get(0);
                     int childCategoriesNumber = getDirectChildrenByContext(existentRecordCategory, RECORD_CATEGORY_CONTEXT).size();

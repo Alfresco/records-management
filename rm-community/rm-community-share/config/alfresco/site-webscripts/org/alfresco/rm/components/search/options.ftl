@@ -38,6 +38,7 @@
                      <input type="checkbox" id="${el}-metadata-identifier" checked="checked" />
                      <label for="${el}-metadata-identifier">${msg("label.identifier")}</label>
                   </li>
+
                   <li class="metadata-header">${msg("label.menu.content")}</li>
                   <li>
                      <input type="checkbox" id="${el}-metadata-name" checked="checked" />
@@ -75,6 +76,7 @@
                      <input type="checkbox" id="${el}-metadata-author" />
                      <label for="${el}-metadata-author">${msg("label.author")}</label>
                   </li>
+
                   <li class="metadata-header">${msg("label.menu.records")}</li>
                   <li>
                      <input type="checkbox" id="${el}-metadata-dateFiled" checked="checked" />
@@ -96,6 +98,23 @@
                      <input type="checkbox" id="${el}-metadata-supplementalMarkingList" />
                      <label for="${el}-metadata-supplementalMarkingList">${msg("label.supplementalMarkingList")}</label>
                   </li>
+
+                  <#if context.properties["editionInfo"].edition == "ENTERPRISE">
+                      <li>
+                         <input type="checkbox" id="${el}-metadata-currentClassification"/>
+                         <label for="${el}-metadata-currentClassification">${msg("label.currentClassification")}</label>
+                      </li>
+                      <li>
+                          <input type="checkbox" id="${el}-metadata-securityMarksSearch"/>
+                          <label for="${el}-metadata-securityMarksSearch">${msg("label.securityMarks")}</label>
+                      </li>
+                  </#if>
+
+                  <li>
+                     <input type="checkbox" id="${el}-metadata-recordCategoryIdentifier"/>
+                     <label for="${el}-metadata-recordCategoryIdentifier">${msg("label.recordCategoryIdentifier")}</label>
+                  </li>
+
                   <li class="metadata-header">${msg("label.menu.disposition")}</li>
                   <li>
                      <input type="checkbox" id="${el}-metadata-dispositionEvents" />
@@ -172,6 +191,12 @@
                         <option value="rma:reviewAsOf">${msg("label.reviewDate")}</option>
                         <option value="rma:location">${msg("label.location")}</option>
                         <option value="rmc:supplementalMarkingList">${msg("label.supplementalMarkingList")}</option>
+
+                        <#if context.properties["editionInfo"].edition == "ENTERPRISE">
+                            <option value="sc:classificationSearch">${msg("label.currentClassification")}</option>
+                            <option value="sc:securityMarksSearch">${msg("label.securityMarks")}</option>
+                        </#if>
+
                         <!-- double ?html encoding required here due to YUI bug -->
                         <#list groups as group>
                         	<#list group.properties as property>

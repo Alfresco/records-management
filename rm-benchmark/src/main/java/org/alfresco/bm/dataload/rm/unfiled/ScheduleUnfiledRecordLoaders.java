@@ -150,7 +150,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
 
         // If there are no events, then we have finished
         String msg = null;
-        if (loaderSessionsToCreate > 0 && nextEvents.size() == 0)
+        if (loaderSessionsToCreate > 0 && nextEvents.isEmpty())
         {
             // There are no records to load even though there are sessions available
             mapOfRecordsPerUnfiledRecordFolder = null;
@@ -185,7 +185,7 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
         {
             mapOfRecordsPerUnfiledRecordFolder = new LinkedHashMap<FolderData, Integer>();
             List<FolderData> unfiledRecordFoldersThatNeedRecords = new ArrayList<FolderData>();
-            if(paths == null || paths.size() == 0)
+            if(paths == null || paths.isEmpty())
             {
                 unfiledRecordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(UNFILED_CONTEXT));
             }
@@ -217,17 +217,17 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
                     }
                 }
                 //add unfiled record folders from existent paths
-                if(unfiledFolderStructerFromExistentProvidedPaths.size() > 0)
+                if(!unfiledFolderStructerFromExistentProvidedPaths.isEmpty())
                 {
                     unfiledRecordFoldersThatNeedRecords.addAll(unfiledFolderStructerFromExistentProvidedPaths);
                 }
                 // configured paths did not existed in db and something went wrong with creation for all of them, initialize to existing structure in this case
-                if(unfiledRecordFoldersThatNeedRecords.size() == 0)
+                if(unfiledRecordFoldersThatNeedRecords.isEmpty())
                 {
                     unfiledRecordFoldersThatNeedRecords.addAll(initialiseFoldersToExistingStructure(UNFILED_CONTEXT));
                 }
             }
-           if(unfiledRecordFoldersThatNeedRecords.size() > 0)
+           if(!unfiledRecordFoldersThatNeedRecords.isEmpty())
            {
                mapOfRecordsPerUnfiledRecordFolder = distributeNumberOfRecords(unfiledRecordFoldersThatNeedRecords, unfiledRecordsNumber);
            }
@@ -282,11 +282,12 @@ public class ScheduleUnfiledRecordLoaders extends RMBaseEventProcessor
     private void prepareUnfiledRecords(int loaderSessionsToCreate, List<Event> nextEvents)
     {
         calculateListOfEmptyFolders();
-        List<FolderData> emptyFolders = new ArrayList<FolderData>();
-        emptyFolders.addAll(mapOfRecordsPerUnfiledRecordFolder.keySet());
+        List<FolderData> emptyFolders = (mapOfRecordsPerUnfiledRecordFolder == null) ?
+                    new ArrayList<>() :
+                    new ArrayList<>(mapOfRecordsPerUnfiledRecordFolder.keySet());
         while (nextEvents.size() < loaderSessionsToCreate)
         {
-            if(mapOfRecordsPerUnfiledRecordFolder == null || mapOfRecordsPerUnfiledRecordFolder.size() == 0)
+            if(mapOfRecordsPerUnfiledRecordFolder == null || mapOfRecordsPerUnfiledRecordFolder.isEmpty())
             {
                 break;
             }
