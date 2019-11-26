@@ -1,9 +1,12 @@
-version: "2"
+version: "3"
 
 services:
     alfresco:
         image: alfresco/alfresco-governance-repository-community:latest
         environment:
+            CATALINA_OPTS : "
+                -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
+                "
             JAVA_OPTS : "
                 -Ddb.driver=org.postgresql.Driver
                 -Ddb.username=alfresco
@@ -22,23 +25,78 @@ services:
                 -Dshare.host=localhost
                 -Daos.baseUrlOverwrite=http://localhost:8080/alfresco/aos
                 -Dmessaging.broker.url=\"failover:(tcp://activemq:61616)?timeout=3000&jms.useCompression=true\"
+
+                -Dlocal.transform.service.enabled=${LOCAL_TRANSFORM_SERVICE_ENABLED}
+                -DlocalTransform.pdfrenderer.url=http://alfresco-pdf-renderer:8090/
+                -DlocalTransform.imagemagick.url=http://imagemagick:8090/
+                -DlocalTransform.libreoffice.url=http://libreoffice:8090/
+                -DlocalTransform.tika.url=http://tika:8090/
+                -DlocalTransform.misc.url=http://transform-misc:8090/
+
+                -Dlegacy.transform.service.enabled=${LEGACY_TRANSFORM_SERVICE_ENABLED}
+                -Dalfresco-pdf-renderer.url=http://alfresco-pdf-renderer:8090/
+                -Djodconverter.url=http://libreoffice:8090/
+                -Dimg.url=http://imagemagick:8090/
+                -Dtika.url=http://tika:8090/
+                -Dtransform.misc.url=http://transform-misc:8090/
+
+                -Dimap.server.port=1143
+                -Dftp.port=1221
+                -Dcors.enabled=true
+                -Dcors.allowed.origins=http://localhost:4200
                 "
         ports:
             - 8080:8080
+            - 8000:8000
+            - 143:1143
+            - "21:1221"
+            - "30000-30099:30000-30099"
+
+    alfresco-pdf-renderer:
+        image: alfresco/alfresco-pdf-renderer:${TRANSFORMERS_TAG}
+        environment:
+            JAVA_OPTS: " -Xms256m -Xmx256m"
+        ports:
+            - 8090:8090
+
+    imagemagick:
+        image: alfresco/alfresco-imagemagick:${TRANSFORMERS_TAG}
+        environment:
+            JAVA_OPTS: " -Xms256m -Xmx256m"
+        ports:
+            - 8091:8090
+
+    libreoffice:
+        image: alfresco/alfresco-libreoffice:${TRANSFORMERS_TAG}
+        environment:
+            JAVA_OPTS: " -Xms256m -Xmx256m"
+        ports:
+            - 8092:8090
+
+    tika:
+        image: alfresco/alfresco-tika:${TRANSFORMERS_TAG}
+        environment:
+            JAVA_OPTS: " -Xms256m -Xmx256m"
+        ports:
+            - 8093:8090
+
+    transform-misc:
+        image: alfresco/alfresco-transform-misc:${TRANSFORMERS_TAG}
+        environment:
+            JAVA_OPTS: " -Xms256m -Xmx256m"
+        ports:
+            - 8094:8090
 
     share:
         image: alfresco/alfresco-governance-share-community:latest
-        mem_limit: 1g
         environment:
             - REPO_HOST=alfresco
             - REPO_PORT=8080
-            - "CATALINA_OPTS= -Xms500m -Xmx500m"
         ports:
             - 8181:8080
 
     postgres:
         image: library/postgres:${POSTGRES_TAG}
-        mem_limit: 1500m
         environment:
             - POSTGRES_PASSWORD=alfresco
             - POSTGRES_USER=alfresco
@@ -49,7 +107,6 @@ services:
 
     solr6:
         image: alfresco/alfresco-search-services:${SOLR6_TAG}
-        mem_limit: 2500m
         environment:
             #Solr needs to know how to register itself with Alfresco
             - SOLR_ALFRESCO_HOST=alfresco
@@ -59,7 +116,6 @@ services:
             - SOLR_SOLR_PORT=8983
             #Create the default alfresco and archive cores
             - SOLR_CREATE_ALFRESCO_DEFAULTS=alfresco,archive
-            - "SOLR_JAVA_MEM=-Xms2g -Xmx2g"
         ports:
             - 8083:8983 #Browser port
 
