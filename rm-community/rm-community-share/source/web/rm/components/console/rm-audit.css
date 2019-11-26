@@ -310,3 +310,13 @@ body { font-family: arial,verdana; font-size: 81%; color: #333; }
 .changed-values-table { margin-left: 6px; margin-bottom: 2px;width: 99%; }
 .changed-values-table th { text-align: left; background-color: #eee; padding: 4px; }
 .changed-values-table td { width: 33%; padding: 4px; border-top: 1px solid #eee; }
+
+.audit-link-item a, .audit-link-item a:visited {
+    color: #0C79BF;
+    text-decoration: none;
+}
+
+.audit-link-item a:hover {
+    color: #0C79BF;
+    text-decoration: underline;
+}

@@ -330,7 +330,7 @@
                {
                   if(oRecordData.nodeName != "")
                   {
-                      elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a class="theme-color-1 site-link" href="' + Alfresco.util.profileURL(oRecordData.nodeName) + '">' + $html(oRecordData.nodeName) + '</a>';
+                      elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<span class="audit-link-item"><a class="theme-color-1 site-link" href="' + Alfresco.util.profileURL(oRecordData.nodeName) + '">' + $html(oRecordData.nodeName) + '</a></span>';
                   }
                   else
                   {
@@ -349,7 +349,8 @@
                      {
                         if (oRecordData.nodeName != "documentLibrary")
                         {
-                           elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a href="' + Alfresco.constants.URL_PAGECONTEXT + 'site/' + me.options.siteId + '/document-details?nodeRef=' + oRecordData.nodeRef + '">' + oRecordData.nodeName + '</a>&nbsp;&nbsp;&nbsp;';
+                           var linkPath = me.getNodeDetailsLink(oRecordData);
+                           elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<span class="audit-link-item"><a href="' + linkPath + '">' + $html(oRecordData.nodeName) + '</a></span>&nbsp;&nbsp;&nbsp;';
                         }
                         else
                         {
@@ -912,6 +913,7 @@
       {
          var el = Event.getTarget(e);
          var data = this.widgets.auditDataTable.getRecord(el).getData();
+         var me = this;
 
          if (!this.widgets.auditDialog)
          {
@@ -950,6 +952,8 @@
 
          if (data.path)
          {
+            var displayPath = data.path.substring(data.path.indexOf("/documentLibrary"));
+
             body+='<table id="auditEntry-nodeDetails">'+
                '<tr>'+
                   '<th>' + this.msg('label.identifier') + ':</th>'+
@@ -961,7 +965,7 @@
                '</tr>'+
                '<tr>'+
                   '<th>' + this.msg('label.location') + ':</th>'+
-                  '<td>' + data.path.replace('/documentLibrary','') + '</td>'+
+                '<td class="audit-link-item"><a href="' + me.getNodeDetailsLink(data) + '">' + $html(displayPath.replace('/documentLibrary', '')) + '</a></td>'+
                '</tr>'+
             '</table>';
          }
@@ -1073,6 +1077,38 @@
          this.toggleUI();
          //update caption
          this.widgets['auditDataTable']._elCaption.innerHTML = this.msg('label.pagination', response.results.length);
+      },
+
+      /**
+       * Compute the node details link based on site and nodeType
+       *
+       */
+      getNodeDetailsLink: function RM_Audit_getNodeDetailsLink(data) {
+         var nodeDetailsLink = Alfresco.constants.URL_PAGECONTEXT;
+         var details;
+
+         if (data.nodeType === "Record Folder" || data.nodeType === "Unfiled Record Folder")
+         {
+            details = "site/rm/rm-record-folder-details?nodeRef=";
+         }
+         else if (data.nodeType === "Record Category")
+         {
+            details = "site/rm/rm-record-category-details?nodeRef=";
+         }
+         else
+         {
+            var siteId = "rm";
+            //example: /Company Home/Sites/siteId/documentLibrary/folderName/nodeName
+            if (data.path.includes('/Sites/'))
+            {
+               var res = data.path.split("/");
+               siteId = res[3];
+            }
+
+            details = 'site/' + siteId + '/document-details?nodeRef=';
+         }
+         nodeDetailsLink += details + data.nodeRef;
+         return nodeDetailsLink;
       }
    });
 })();
