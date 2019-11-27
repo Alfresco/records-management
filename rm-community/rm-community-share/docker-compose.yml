@@ -5,7 +5,7 @@ services:
         image: alfresco/alfresco-governance-repository-community:latest
         environment:
             CATALINA_OPTS : "
-                -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
+                -agentlib:jdwp=transport=dt_socket,address=*:8000,server=y,suspend=n
                 "
             JAVA_OPTS : "
                 -Ddb.driver=org.postgresql.Driver
@@ -42,9 +42,8 @@ services:
 
                 -Dimap.server.port=1143
                 -Dftp.port=1221
-                -Dcors.enabled=true
-                -Dcors.allowed.origins=http://localhost:4200
                 "
+
         ports:
             - 8080:8080
             - 8000:8000
@@ -116,6 +115,8 @@ services:
             - SOLR_SOLR_PORT=8983
             #Create the default alfresco and archive cores
             - SOLR_CREATE_ALFRESCO_DEFAULTS=alfresco,archive
+             #HTTP by default
+            - ALFRESCO_SECURE_COMMS=none
         ports:
             - 8083:8983 #Browser port
 
