@@ -314,7 +314,7 @@
                }
             };
 
-            var renderCellFullName = function RecordsResults_renderCellFullname(elCell, oRecord, oColumn, oData)
+            var renderCellSafeHTML = function RecordsResults_renderCellSafeHTML(elCell, oRecord, oColumn, oData)
             {
                if (oData)
                {
@@ -381,8 +381,8 @@
             this.widgets['auditDataTable'] = new YAHOO.widget.DataTable(this.id+"-auditDT",
                 [
                   {key:"timestamp", label:this.msg('label.timestamp'), formatter: renderCellDate, sortable:true, resizeable:true},
-                  {key:"fullName", label:this.msg('label.user'), formatter: renderCellFullName, sortable:true, resizeable:true},
-                  {key:"userRole", label:this.msg('label.role'),  sortable:true, resizeable:true},
+                  {key:"fullName", label:this.msg('label.user'), formatter: renderCellSafeHTML, sortable:true, resizeable:true},
+                  {key:"userRole", label:this.msg('label.role'), formatter: renderCellSafeHTML, sortable:true, resizeable:true},
                   {key:"event", label:this.msg('label.event'),  formatter:"eventCellFormatter", sortable:true, resizeable:true}
                ],
                DS,
@@ -936,7 +936,7 @@
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.user') + ':</th>'+
-               '<td>' + Alfresco.util.encodeHTML(data.fullName) + '</td>'+
+               '<td>' + $html(data.fullName) + '</td>'+
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.timestamp') + ':</th>'+
@@ -944,7 +944,7 @@
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.role') + ':</th>'+
-               '<td>' + data.userRole + '</td>'+
+               '<td>' + $html(data.userRole) + '</td>'+
             '</tr>'+
          '</table>';
 
