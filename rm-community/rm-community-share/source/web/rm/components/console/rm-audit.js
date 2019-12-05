@@ -326,7 +326,7 @@
             YAHOO.widget.DataTable.Formatter.eventCellFormatter = function eventCellFormatter(elLiner, oRecord, oColumn, oData)
             {
                var oRecordData = oRecord._oData;
-               if (oRecordData.createPerson === true || oRecordData.deletePerson === true)
+               if (oRecordData.createPerson === true)
                {
                   if(oRecordData.nodeName != "")
                   {
@@ -339,9 +339,9 @@
                }
                else
                {
-                  if (oRecordData.deleteObject === true)
+                  if (oRecordData.noAvailableLink === true)
                   {
-                     elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + oRecordData.path.replace('/documentLibrary','') + '&nbsp;&nbsp;&nbsp;';
+                     elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + $html(oRecordData.nodeName) + '&nbsp;&nbsp;&nbsp;';
                   }
                   else
                   {
