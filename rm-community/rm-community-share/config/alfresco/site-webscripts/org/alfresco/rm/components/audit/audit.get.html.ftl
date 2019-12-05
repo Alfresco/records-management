@@ -65,7 +65,7 @@
       <div class="audit-entry">
          <div class="audit-entry-header">
             <span class="label">${msg('label.timestamp')}:</span>
-            <span class="value">${x.timestampDate?datetime?string("EEE MMM dd yyyy HH:mm:ss 'GMT'Z")}</span>
+            <span class="value">${x.timestampDate?datetime?string("EEE MMM dd HH:mm:ss zzz yyyy")}</span>
             <span class="label">${msg('label.user')}:</span>
             <span class="value">${x.fullName?html}</span>
             <span class="label">${msg('label.event')}:</span>
@@ -74,7 +74,7 @@
          <div class="audit-entry-node">
             <span class="label">${msg('label.identifier')}:</span><span class="value">${x.identifier?html}</span>
             <span class="label">${msg('label.type')}:</span><span class="value">${x.nodeType?html}</span>
-            <span class="label">${msg('label.location')}:</span><span class="value">${x.path?html}</span>
+            <span class="label">${msg('label.location')}:</span><span class="value">${x.displayPath?html}</span>
          </div>
          <#if (x.changedValues?size >0)>
             <table class="changed-values-table" cellspacing="0">
