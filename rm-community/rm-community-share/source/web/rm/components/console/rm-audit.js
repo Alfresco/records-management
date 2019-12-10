@@ -1099,7 +1099,7 @@
          {
             var siteId = "rm";
             //example: /Company Home/Sites/siteId/documentLibrary/folderName/nodeName
-            if (data.path.includes('/Sites/'))
+            if (data.path.indexOf('/Sites/') !== -1)
             {
                var res = data.path.split("/");
                siteId = res[3];
