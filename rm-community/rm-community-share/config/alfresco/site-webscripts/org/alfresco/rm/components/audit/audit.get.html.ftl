@@ -72,9 +72,15 @@
             <span class="value">${x.event?html}</span>
          </div>
          <div class="audit-entry-node">
-            <span class="label">${msg('label.identifier')}:</span><span class="value">${x.identifier?html}</span>
-            <span class="label">${msg('label.type')}:</span><span class="value">${x.nodeType?html}</span>
-            <span class="label">${msg('label.location')}:</span><span class="value">${x.displayPath?html}</span>
+            <#if (x.identifier?? && x.identifier != "")>
+               <span class="label">${msg('label.identifier')}:</span><span class="value">${x.identifier?html}</span>
+            </#if>
+            <#if (x.nodeType?? && x.nodeType != "")>
+               <span class="label">${msg('label.type')}:</span><span class="value">${x.nodeType?html}</span>
+            </#if>
+            <#if (x.displayPath?? && x.displayPath != "")>
+               <span class="label">${msg('label.location')}:</span><span class="value">${x.displayPath?html}</span>
+            </#if>
          </div>
          <#if (x.changedValues?size >0)>
             <table class="changed-values-table" cellspacing="0">

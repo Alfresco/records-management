@@ -952,7 +952,7 @@
 
          if (data.path)
          {
-            var displayPath = data.path.substring(data.path.indexOf("/documentLibrary"));
+            var displayPath = data.path.substring(data.path.indexOf("/Sites"));
 
             body+='<table id="auditEntry-nodeDetails">'+
                '<tr>'+
@@ -965,7 +965,7 @@
                '</tr>'+
                '<tr>'+
                   '<th>' + this.msg('label.location') + ':</th>'+
-                '<td class="audit-link-item"><a href="' + me.getNodeDetailsLink(data) + '">' + $html(displayPath.replace('/documentLibrary', '')) + '</a></td>'+
+                  '<td class="audit-link-item"><a href="' + me.getNodeDetailsLink(data) + '">' + $html(displayPath.replace('/Sites', '')) + '</a></td>'+
                '</tr>'+
             '</table>';
          }
