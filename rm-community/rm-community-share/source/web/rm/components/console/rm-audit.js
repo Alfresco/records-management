@@ -39,12 +39,12 @@
       Event = YAHOO.util.Event,
       Sel = YAHOO.util.Selector;
 
-    /**
-     * Alfresco Slingshot aliases
-     */
-    var $html = Alfresco.util.encodeHTML,
-       formatDate = Alfresco.util.formatDate,
-       fromISO8601 = Alfresco.util.fromISO8601;
+   /**
+    * Alfresco Slingshot aliases
+    */
+   var $html = Alfresco.util.encodeHTML,
+      $formatDate = Alfresco.util.formatDate,
+      $fromISO8601 = Alfresco.util.fromISO8601;
 
    /**
     * RM Audit componentconstructor.
@@ -310,7 +310,7 @@
             {
                if (oData)
                {
-                  elCell.innerHTML = Alfresco.util.formatDate(Alfresco.util.fromISO8601(oData));
+                  elCell.innerHTML = $formatDate($fromISO8601(oData));
                }
             };
 
@@ -318,7 +318,7 @@
             {
                if (oData)
                {
-                  elCell.innerHTML = Alfresco.util.encodeHTML(oData);
+                  elCell.innerHTML = $html(oData);
                }
             };
 
@@ -326,7 +326,7 @@
             YAHOO.widget.DataTable.Formatter.eventCellFormatter = function eventCellFormatter(elLiner, oRecord, oColumn, oData)
             {
                var oRecordData = oRecord._oData;
-               if (oRecordData.createPerson === true || oRecordData.deletePerson === true)
+               if (oRecordData.createPerson === true)
                {
                   if(oRecordData.nodeName != "")
                   {
@@ -339,9 +339,9 @@
                }
                else
                {
-                  if (oRecordData.deleteObject === true)
+                  if (oRecordData.noAvailableLink === true)
                   {
-                     elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + oRecordData.path.replace('/documentLibrary','') + '&nbsp;&nbsp;&nbsp;';
+                     elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + $html(oRecordData.nodeName) + '&nbsp;&nbsp;&nbsp;';
                   }
                   else
                   {
@@ -734,7 +734,7 @@
       {
          Dom.addClass(Sel.query('.personFilter',this.id)[0], 'active');
          var person = args[1];
-         this._changeFilterText(Alfresco.util.encodeHTML(person.firstName + ' ' + person.lastName));
+         this._changeFilterText($html(person.firstName + ' ' + person.lastName));
          this.widgets.specifyfilterButton.set('label',this.msg('label.button-specify'));
          Dom.removeClass(this.widgets['people-finder'],'active');
          this.showingFilter = false;
@@ -940,7 +940,7 @@
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.timestamp') + ':</th>'+
-               '<td>' + Alfresco.util.formatDate(Alfresco.util.fromISO8601(data.timestamp)) + '</td>'+
+               '<td>' + $formatDate($fromISO8601(data.timestamp)) + '</td>'+
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.role') + ':</th>'+
@@ -952,7 +952,7 @@
 
          if (data.path)
          {
-            var displayPath = data.path.substring(data.path.indexOf("/documentLibrary"));
+            var displayPath = data.path.substring(data.path.indexOf("/Sites"));
 
             body+='<table id="auditEntry-nodeDetails">'+
                '<tr>'+
@@ -965,7 +965,7 @@
                '</tr>'+
                '<tr>'+
                   '<th>' + this.msg('label.location') + ':</th>'+
-                '<td class="audit-link-item"><a href="' + me.getNodeDetailsLink(data) + '">' + $html(displayPath.replace('/documentLibrary', '')) + '</a></td>'+
+                  '<td class="audit-link-item"><a href="' + me.getNodeDetailsLink(data) + '">' + $html(displayPath.replace('/Sites', '')) + '</a></td>'+
                '</tr>'+
             '</table>';
          }
@@ -1099,7 +1099,7 @@
          {
             var siteId = "rm";
             //example: /Company Home/Sites/siteId/documentLibrary/folderName/nodeName
-            if (data.path.includes('/Sites/'))
+            if (data.path.indexOf('/Sites/') !== -1)
             {
                var res = data.path.split("/");
                siteId = res[3];
