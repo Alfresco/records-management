@@ -957,11 +957,11 @@
             body+='<table id="auditEntry-nodeDetails">'+
                '<tr>'+
                   '<th>' + this.msg('label.identifier') + ':</th>'+
-                  '<td>' + data.identifier + '</td>'+
+                  '<td>' + $html(data.identifier) + '</td>'+
                '</tr>'+
                '<tr>'+
                   '<th>' + this.msg('label.type') + ':</th>'+
-                  '<td>' + data.nodeType + '</td>'+
+                  '<td>' + $html(data.nodeType) + '</td>'+
                '</tr>'+
                '<tr>'+
                   '<th>' + this.msg('label.location') + ':</th>'+
