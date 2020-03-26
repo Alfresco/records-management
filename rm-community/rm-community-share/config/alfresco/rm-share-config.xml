@@ -845,6 +845,8 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
+            <action index="210" id="rm-add-to-hold" />
+            <action index="220" id="rm-remove-from-hold" />
          </actionGroup>
 
          <actionGroup id="rm-record-details">
@@ -879,6 +881,8 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
+            <action index="210" id="rm-add-to-hold" />
+            <action index="220" id="rm-remove-from-hold" />
          </actionGroup>
 
          <actionGroup id="rm-undeclared-record-browse">
@@ -911,6 +915,8 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
+            <action index="210" id="rm-add-to-hold" />
+            <action index="220" id="rm-remove-from-hold" />
          </actionGroup>
 
          <actionGroup id="rm-undeclared-record-details">
@@ -941,6 +947,8 @@
             <action index="110" id="rm-edit-details" />
             <action index="120" id="rm-hide-record" />
             <action index="130" id="dm-move-record" />
+            <action index="210" id="rm-add-to-hold" />
+            <action index="220" id="rm-remove-from-hold" />
          </actionGroup>
 
          <actionGroup id="rm-metadata-stub-folder-browse">
