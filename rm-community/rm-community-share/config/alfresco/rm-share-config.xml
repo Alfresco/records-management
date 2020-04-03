@@ -693,6 +693,7 @@
             <param name="successMessage">message.hide-record.success</param>
             <param name="failureMessage">message.hide-record.failure</param>
             <evaluator>evaluator.rm.action.hide</evaluator>
+            <evaluator negate="true">evaluator.rm.indicator.frozen</evaluator>
          </action>
 
          <!-- Move record in a collab site -->
@@ -703,6 +704,7 @@
             <param name="failureMessage">message.moveDmRecord.failure</param>
             <param name="targetNodeRef">{targetNodeRef}</param>
             <evaluator>evaluator.rm.action.moveDmRecord</evaluator>
+            <evaluator negate="true">evaluator.rm.indicator.frozen</evaluator>
          </action>
 
          <!-- Recorded version configuration -->
