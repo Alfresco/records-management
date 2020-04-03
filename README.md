@@ -4,7 +4,7 @@
 Please refer to our [How to contribute](/CONTRIBUTING.md) guide and our [Contributor Covenant Code of Conduct](/CODE_OF_CONDUCT.md).
 
 ## Configuring and starting Alfresco/Share
-* Clone the project (e.g. `git clone git@gitlab.alfresco.com:records-management/records-management.git`)
+* Clone the project (e.g. `git clone git@github.com:Alfresco/governance-services.git`)
 * Import the project as a maven project
 * Start the Alfresco/Share instances with the following commands:
 
@@ -170,3 +170,10 @@ docker-compose up
 > Be aware of the fact that the Share images can not be started independently from Repo
 
 e.g. In order to start an instance of rm-enterprise-repo and rm-enterprise-share, the above command must be run in rm-enterprise-share after the images have been built.
+
+## Start the Docker images with jRebel in remote server mode
+
+If you have a license for jRebel then this can be used from the rm-community-share or rm-enterprise-share directories with:
+```
+docker-compose -f docker-compose.yml -f jrebel-docker-compose.yml --project-name agsdev up --build --force-recreate
+```

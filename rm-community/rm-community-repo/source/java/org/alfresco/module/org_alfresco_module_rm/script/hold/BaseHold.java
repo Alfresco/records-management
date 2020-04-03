@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2019 Alfresco Software Limited
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -35,7 +35,6 @@ import java.util.Map;
 
 import org.alfresco.model.ContentModel;
 import org.alfresco.module.org_alfresco_module_rm.hold.HoldService;
-import org.alfresco.module.org_alfresco_module_rm.record.RecordService;
 import org.alfresco.module.org_alfresco_module_rm.recordfolder.RecordFolderService;
 import org.alfresco.module.org_alfresco_module_rm.util.NodeTypeUtility;
 import org.alfresco.service.cmr.repository.NodeRef;
@@ -60,9 +59,6 @@ public abstract class BaseHold extends DeclarativeWebScript
 {
     /** Hold Service */
     private HoldService holdService;
-
-    /** record service */
-    private RecordService recordService;
 
     /** record folder service */
     private RecordFolderService recordFolderService;
@@ -89,14 +85,6 @@ public abstract class BaseHold extends DeclarativeWebScript
     public void setRecordFolderService(RecordFolderService recordFolderService)
     {
         this.recordFolderService = recordFolderService;
-    }
-
-    /**
-     * @param recordService record service
-     */
-    public void setRecordService(RecordService recordService)
-    {
-        this.recordService = recordService;
     }
 
     /**

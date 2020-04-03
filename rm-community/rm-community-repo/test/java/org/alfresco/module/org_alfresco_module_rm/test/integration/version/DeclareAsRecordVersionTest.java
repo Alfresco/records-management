@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2019 Alfresco Software Limited
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -81,6 +81,10 @@ public class DeclareAsRecordVersionTest extends RecordableVersionsBaseTest
                 versionProperties = new HashMap<>(4);
                 versionProperties.put(Version.PROP_DESCRIPTION, DESCRIPTION);
                 versionProperties.put(VersionModel.PROP_VERSION_TYPE, VersionType.MINOR);
+
+                //remove the content property as ContentPropertyRestrictionInterceptor will not allow update of
+                // content property via NodeService.addProperties
+                nodeService.removeProperty(dmDocument, ContentModel.PROP_CONTENT);
 
                 // create version
                 versionService.createVersion(dmDocument, versionProperties);
@@ -184,7 +188,9 @@ public class DeclareAsRecordVersionTest extends RecordableVersionsBaseTest
                 versionProperties = new HashMap<>(2);
                 versionProperties.put(Version.PROP_DESCRIPTION, DESCRIPTION);
                 versionProperties.put(VersionModel.PROP_VERSION_TYPE, VersionType.MINOR);
-
+                //remove the content property as ContentPropertyRestrictionInterceptor will not allow update of
+                // content property via NodeService.addProperties
+                nodeService.removeProperty(customDocument, PROP_CONTENT);
                 // create version
                 versionService.createVersion(customDocument, versionProperties);
 

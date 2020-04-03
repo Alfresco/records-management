@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2019 Alfresco Software Limited
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -236,6 +236,14 @@ public interface DispositionService
      * @param nodeRef   node reference
      */
     void updateNextDispositionAction(NodeRef nodeRef);
+
+    /**
+     * Updates the next disposition action
+     *
+     * @param nodeRef             node reference
+     * @param dispositionSchedule the schedule to be applied
+     */
+    void updateNextDispositionAction(NodeRef nodeRef, DispositionSchedule dispositionSchedule);
 
     /**
      * Refreshes the disposition action details of the given node.

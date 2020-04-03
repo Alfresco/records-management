@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2019 Alfresco Software Limited
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -39,12 +39,12 @@
       Event = YAHOO.util.Event,
       Sel = YAHOO.util.Selector;
 
-    /**
-     * Alfresco Slingshot aliases
-     */
-    var $html = Alfresco.util.encodeHTML,
-       formatDate = Alfresco.util.formatDate,
-       fromISO8601 = Alfresco.util.fromISO8601;
+   /**
+    * Alfresco Slingshot aliases
+    */
+   var $html = Alfresco.util.encodeHTML,
+      $formatDate = Alfresco.util.formatDate,
+      $fromISO8601 = Alfresco.util.fromISO8601;
 
    /**
     * RM Audit componentconstructor.
@@ -310,15 +310,15 @@
             {
                if (oData)
                {
-                  elCell.innerHTML = Alfresco.util.formatDate(Alfresco.util.fromISO8601(oData));
+                  elCell.innerHTML = $formatDate($fromISO8601(oData));
                }
             };
 
-            var renderCellFullName = function RecordsResults_renderCellFullname(elCell, oRecord, oColumn, oData)
+            var renderCellSafeHTML = function RecordsResults_renderCellSafeHTML(elCell, oRecord, oColumn, oData)
             {
                if (oData)
                {
-                  elCell.innerHTML = Alfresco.util.encodeHTML(oData);
+                  elCell.innerHTML = $html(oData);
                }
             };
 
@@ -326,11 +326,11 @@
             YAHOO.widget.DataTable.Formatter.eventCellFormatter = function eventCellFormatter(elLiner, oRecord, oColumn, oData)
             {
                var oRecordData = oRecord._oData;
-               if (oRecordData.createPerson === true || oRecordData.deletePerson === true)
+               if (oRecordData.createPerson === true)
                {
                   if(oRecordData.nodeName != "")
                   {
-                      elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a class="theme-color-1 site-link" href="' + Alfresco.util.profileURL(oRecordData.nodeName) + '">' + $html(oRecordData.nodeName) + '</a>';
+                      elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<span class="audit-link-item"><a class="theme-color-1 site-link" href="' + Alfresco.util.profileURL(oRecordData.nodeName) + '">' + $html(oRecordData.nodeName) + '</a></span>';
                   }
                   else
                   {
@@ -339,9 +339,9 @@
                }
                else
                {
-                  if (oRecordData.deleteObject === true)
+                  if (oRecordData.noAvailableLink === true)
                   {
-                     elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + oRecordData.path.replace('/documentLibrary','') + '&nbsp;&nbsp;&nbsp;';
+                     elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;' + $html(oRecordData.nodeName) + '&nbsp;&nbsp;&nbsp;';
                   }
                   else
                   {
@@ -349,7 +349,8 @@
                      {
                         if (oRecordData.nodeName != "documentLibrary")
                         {
-                           elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<a href="' + Alfresco.constants.URL_PAGECONTEXT + 'site/' + me.options.siteId + '/document-details?nodeRef=' + oRecordData.nodeRef + '">' + oRecordData.nodeName + '</a>&nbsp;&nbsp;&nbsp;';
+                           var linkPath = me.getNodeDetailsLink(oRecordData);
+                           elLiner.innerHTML = oRecordData.event + '&nbsp;-&nbsp;<span class="audit-link-item"><a href="' + linkPath + '">' + $html(oRecordData.nodeName) + '</a></span>&nbsp;&nbsp;&nbsp;';
                         }
                         else
                         {
@@ -380,8 +381,8 @@
             this.widgets['auditDataTable'] = new YAHOO.widget.DataTable(this.id+"-auditDT",
                 [
                   {key:"timestamp", label:this.msg('label.timestamp'), formatter: renderCellDate, sortable:true, resizeable:true},
-                  {key:"fullName", label:this.msg('label.user'), formatter: renderCellFullName, sortable:true, resizeable:true},
-                  {key:"userRole", label:this.msg('label.role'),  sortable:true, resizeable:true},
+                  {key:"fullName", label:this.msg('label.user'), formatter: renderCellSafeHTML, sortable:true, resizeable:true},
+                  {key:"userRole", label:this.msg('label.role'), formatter: renderCellSafeHTML, sortable:true, resizeable:true},
                   {key:"event", label:this.msg('label.event'),  formatter:"eventCellFormatter", sortable:true, resizeable:true}
                ],
                DS,
@@ -733,7 +734,7 @@
       {
          Dom.addClass(Sel.query('.personFilter',this.id)[0], 'active');
          var person = args[1];
-         this._changeFilterText(Alfresco.util.encodeHTML(person.firstName + ' ' + person.lastName));
+         this._changeFilterText($html(person.firstName + ' ' + person.lastName));
          this.widgets.specifyfilterButton.set('label',this.msg('label.button-specify'));
          Dom.removeClass(this.widgets['people-finder'],'active');
          this.showingFilter = false;
@@ -912,6 +913,7 @@
       {
          var el = Event.getTarget(e);
          var data = this.widgets.auditDataTable.getRecord(el).getData();
+         var me = this;
 
          if (!this.widgets.auditDialog)
          {
@@ -934,15 +936,15 @@
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.user') + ':</th>'+
-               '<td>' + Alfresco.util.encodeHTML(data.fullName) + '</td>'+
+               '<td>' + $html(data.fullName) + '</td>'+
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.timestamp') + ':</th>'+
-               '<td>' + Alfresco.util.formatDate(Alfresco.util.fromISO8601(data.timestamp)) + '</td>'+
+               '<td>' + $formatDate($fromISO8601(data.timestamp)) + '</td>'+
             '</tr>'+
             '<tr>'+
                '<th>' + this.msg('label.role') + ':</th>'+
-               '<td>' + data.userRole + '</td>'+
+               '<td>' + $html(data.userRole) + '</td>'+
             '</tr>'+
          '</table>';
 
@@ -950,18 +952,20 @@
 
          if (data.path)
          {
+            var displayPath = data.path.substring(data.path.indexOf("/Sites"));
+
             body+='<table id="auditEntry-nodeDetails">'+
                '<tr>'+
                   '<th>' + this.msg('label.identifier') + ':</th>'+
-                  '<td>' + data.identifier + '</td>'+
+                  '<td>' + $html(data.identifier) + '</td>'+
                '</tr>'+
                '<tr>'+
                   '<th>' + this.msg('label.type') + ':</th>'+
-                  '<td>' + data.nodeType + '</td>'+
+                  '<td>' + $html(data.nodeType) + '</td>'+
                '</tr>'+
                '<tr>'+
                   '<th>' + this.msg('label.location') + ':</th>'+
-                  '<td>' + data.path.replace('/documentLibrary','') + '</td>'+
+                  '<td class="audit-link-item"><a href="' + me.getNodeDetailsLink(data) + '">' + $html(displayPath.replace('/Sites', '')) + '</a></td>'+
                '</tr>'+
             '</table>';
          }
@@ -1073,6 +1077,38 @@
          this.toggleUI();
          //update caption
          this.widgets['auditDataTable']._elCaption.innerHTML = this.msg('label.pagination', response.results.length);
+      },
+
+      /**
+       * Compute the node details link based on site and nodeType
+       *
+       */
+      getNodeDetailsLink: function RM_Audit_getNodeDetailsLink(data) {
+         var nodeDetailsLink = Alfresco.constants.URL_PAGECONTEXT;
+         var details;
+
+         if (data.nodeType === "Record Folder" || data.nodeType === "Unfiled Record Folder")
+         {
+            details = "site/rm/rm-record-folder-details?nodeRef=";
+         }
+         else if (data.nodeType === "Record Category")
+         {
+            details = "site/rm/rm-record-category-details?nodeRef=";
+         }
+         else
+         {
+            var siteId = "rm";
+            //example: /Company Home/Sites/siteId/documentLibrary/folderName/nodeName
+            if (data.path.indexOf('/Sites/') !== -1)
+            {
+               var res = data.path.split("/");
+               siteId = res[3];
+            }
+
+            details = 'site/' + siteId + '/document-details?nodeRef=';
+         }
+         nodeDetailsLink += details + data.nodeRef;
+         return nodeDetailsLink;
       }
    });
 })();

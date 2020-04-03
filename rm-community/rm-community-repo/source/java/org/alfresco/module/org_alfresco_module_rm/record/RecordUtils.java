@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2019 Alfresco Software Limited
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -32,7 +32,7 @@ import static org.alfresco.module.org_alfresco_module_rm.model.RecordsManagement
 import static org.alfresco.module.org_alfresco_module_rm.model.RecordsManagementModel.PROP_ORIGIONAL_NAME;
 import static org.alfresco.module.org_alfresco_module_rm.record.RecordUtils.appendIdentifierToName;
 import static org.alfresco.util.ParameterCheck.mandatory;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.io.Serializable;
 import java.util.HashMap;

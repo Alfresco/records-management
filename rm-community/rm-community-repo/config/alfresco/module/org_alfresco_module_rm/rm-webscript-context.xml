@@ -630,7 +630,6 @@
    <!-- Abstract parent bean for many POST and PUT Hold beans -->
    <bean id="rmBaseHold" parent="webscript" abstract="true">
       <property name="holdService" ref="HoldService" />
-      <property name="recordService" ref="RecordService" />
       <property name="recordFolderService" ref="RecordFolderService" />
       <property name="nodeService" ref="NodeService" />
       <property name="nodeTypeUtility" ref="nodeTypeUtility" />
@@ -681,4 +680,21 @@
       parent="rmBaseWebscript">
       <property name="relationshipService" ref="RelationshipService" />
    </bean>
+   
+    <!-- Update record schedule GET webscript -->
+   <bean id="webscript.org.alfresco.repository.schedules.rm-updaterecordschedule.get"
+         class="org.alfresco.repo.web.scripts.schedule.UpdateRecordScheduleGet"
+         parent="webscript">
+      <property name="nodeDAO" ref="nodeDAO"/>
+      <property name="qnameDAO" ref="qnameDAO"/>
+      <property name="nodeService" ref="nodeService"/>
+      <property name="transactionService" ref="transactionService"/>
+      <property name="dispositionService" ref="dispositionService"/>
+      <property name="recordService" ref="recordService"/>
+      <property name="recordsManagementQueryDAO" ref="recordsManagementQueryDAO"/>
+      <property name="behaviourFilter" ref="policyBehaviourFilter" />
+      <property name="frozenAspect" ref="rma.freeze"/>
+      <property name="recordsManagementSearchBehaviour" ref="recordsManagementSearchBehaviour"/>
+   </bean>
+   
 </beans>

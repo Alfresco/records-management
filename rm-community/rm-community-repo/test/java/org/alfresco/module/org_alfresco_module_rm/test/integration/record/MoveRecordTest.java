@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2019 Alfresco Software Limited
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -120,7 +120,7 @@ public class MoveRecordTest extends BaseRMTestCase
                 assertNull(dispositionService.getNextDispositionAction(record));
    
                 // check the search aspect properties
-                assertFalse(nodeService.hasAspect(record, ASPECT_RM_SEARCH));                       
+                assertTrue(nodeService.hasAspect(record, ASPECT_RM_SEARCH));
 
             }            
         });                 

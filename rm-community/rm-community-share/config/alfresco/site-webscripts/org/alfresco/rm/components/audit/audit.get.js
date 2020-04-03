@@ -4,7 +4,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2019 Alfresco Software Limited
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -135,6 +135,8 @@ function main()
       for (var i=0,len=data.entries.length;i<len;i++)
       {
          data.entries[i].timestampDate = fromISO8601(data.entries[i].timestamp);
+         var displayPath = data.entries[i].path.substring(data.entries[i].path.indexOf("/Sites"));
+         data.entries[i].displayPath = displayPath.replace('/Sites', '');
       }
       model.auditStatus = data;
    }

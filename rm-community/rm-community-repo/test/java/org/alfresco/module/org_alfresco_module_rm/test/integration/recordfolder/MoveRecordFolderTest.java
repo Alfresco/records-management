@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2019 Alfresco Software Limited
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -218,7 +218,7 @@ public class MoveRecordFolderTest extends BaseRMTestCase
                         assertNull(dispositionService.getNextDispositionAction(recordFolder));
 
                         // check the search aspect properties
-                        assertFalse(nodeService.hasAspect(recordFolder, ASPECT_RM_SEARCH));
+                        assertTrue(nodeService.hasAspect(recordFolder, ASPECT_RM_SEARCH));
                     }
                 });
             }

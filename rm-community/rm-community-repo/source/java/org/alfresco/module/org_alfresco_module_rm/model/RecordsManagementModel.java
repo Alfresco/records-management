@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2019 Alfresco Software Limited
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -288,9 +288,9 @@ public interface RecordsManagementModel extends RecordsManagementCustomModel
     QName PROP_COUNT = QName.createQName(RM_URI, "count");
 
     QName ASPECT_SAVED_SEARCH = QName.createQName(RM_URI, "savedSearch");
-
     //Workaround for RM-6788
     String GL_URI = "http://www.alfresco.org/model/glacier/1.0";
     QName ASPECT_ARCHIVED = QName.createQName(GL_URI, "archived");
 
+    QName ASPECT_DISPOSITION_PROCESSED = QName.createQName(RM_URI, "dispositionProcessed");
 }

@@ -2,7 +2,7 @@
  #%L
  Alfresco Records Management Module
  %%
- Copyright (C) 2005 - 2019 Alfresco Software Limited
+ Copyright (C) 2005 - 2020 Alfresco Software Limited
  %%
  This file is part of the Alfresco software.
  -
@@ -65,16 +65,22 @@
       <div class="audit-entry">
          <div class="audit-entry-header">
             <span class="label">${msg('label.timestamp')}:</span>
-            <span class="value">${x.timestampDate?datetime?string("EEE MMM dd yyyy HH:mm:ss 'GMT'Z")}</span>
+            <span class="value">${x.timestampDate?datetime?string("EEE MMM dd HH:mm:ss zzz yyyy")}</span>
             <span class="label">${msg('label.user')}:</span>
             <span class="value">${x.fullName?html}</span>
             <span class="label">${msg('label.event')}:</span>
             <span class="value">${x.event?html}</span>
          </div>
          <div class="audit-entry-node">
-            <span class="label">${msg('label.identifier')}:</span><span class="value">${x.identifier?html}</span>
-            <span class="label">${msg('label.type')}:</span><span class="value">${x.nodeType?html}</span>
-            <span class="label">${msg('label.location')}:</span><span class="value">${x.path?html}</span>
+            <#if (x.identifier?? && x.identifier != "")>
+               <span class="label">${msg('label.identifier')}:</span><span class="value">${x.identifier?html}</span>
+            </#if>
+            <#if (x.nodeType?? && x.nodeType != "")>
+               <span class="label">${msg('label.type')}:</span><span class="value">${x.nodeType?html}</span>
+            </#if>
+            <#if (x.displayPath?? && x.displayPath != "")>
+               <span class="label">${msg('label.location')}:</span><span class="value">${x.displayPath?html}</span>
+            </#if>
          </div>
          <#if (x.changedValues?size >0)>
             <table class="changed-values-table" cellspacing="0">

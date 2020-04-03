@@ -8,7 +8,7 @@
    <parent>
       <groupId>org.alfresco</groupId>
       <artifactId>alfresco-governance-services</artifactId>
-      <version>3.3.0-SNAPSHOT</version>
+      <version>3.4.0-SNAPSHOT</version>
    </parent>
 
    <licenses>
@@ -57,7 +57,7 @@
          <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
+            <version>${jackson-databind.version}</version>
          </dependency>
          <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -73,10 +73,11 @@
    </dependencyManagement>
 
    <properties>
-      <spring.version>5.1.1.RELEASE</spring.version>
+      <spring.version>5.1.8.RELEASE</spring.version>
 
-      <alfresco.version>6.1.2-ga</alfresco.version>
-      <share.version>6.1.0</share.version>
+      <alfresco.version>6.2.0-ga</alfresco.version>
+      <alfresco.min.version>6.1</alfresco.min.version>
+      <share.version>6.2.0</share.version>
       <!-- The properties app.amp.* need to be set for share to work. -->
       <app.filtering.enabled>true</app.filtering.enabled>
    </properties>

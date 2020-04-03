@@ -2,7 +2,7 @@
  * #%L
  * Alfresco Records Management Module
  * %%
- * Copyright (C) 2005 - 2019 Alfresco Software Limited
+ * Copyright (C) 2005 - 2020 Alfresco Software Limited
  * %%
  * This file is part of the Alfresco software.
  * -
@@ -38,6 +38,11 @@ import org.alfresco.service.cmr.repository.NodeRef;
  */
 public class RetainAction extends RMDispositionActionExecuterAbstractBase
 {
+    /**
+     * Action name
+     */
+    public static final String NAME = "retain";
+
     @Override
     protected void executeRecordFolderLevelDisposition(Action action, NodeRef recordFolder)
     {
