@@ -474,7 +474,7 @@
          [
             { key: "check", label: "<input type='checkbox'>", sortable: false, formatter: "checkbox" },
             { key: "currentClassification", label: me._msg("label.currentClassification"), field: "properties.sc_classificationSearch", sortable: true, resizeable: true,  formatter: renderCellSafeHTML, hidden: true },
-            { key: "image", label: me._msg("label.type"), sortable: false, field: "type", sortable: true, formatter: renderCellImage, width: "64px" },
+            { key: "image", label: me._msg("label.type"), field: "type", sortable: true, formatter: renderCellImage, width: "64px" },
             { key: "identifier", label: me._msg("label.identifier"), sortable: true, sortOptions: {sortFunction: sortCellURI}, resizeable: true, formatter: renderCellURI },
 
             { key: "name", label: me._msg("label.name"), field: "name", sortable: true, resizeable: true, formatter: renderCellSafeHTML },
