@@ -35,10 +35,10 @@
          <action name="sendEmail"/>
          <action name="setPropertyValue"/>
       </group>
-       <group>
-           <action name="archiveAction"/>
-           <action name="restoreAction"/>
-       </group>
+      <group>
+         <action name="archive" />
+         <action name="restore" />
+      </group>
       <group>
          <action name="*"/>
       </group>
