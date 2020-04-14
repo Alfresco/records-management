@@ -1345,7 +1345,7 @@
             if (selectedValueName)
             {
                // Note: extra manual encoding of %2F ("/") to enable correct HTTP request generation
-               this.widgets.accessDataSource.sendRequest("/" + parent.constraintName + "/values/" + encodeURIComponent(selectedValueName).replace("%2F", "%252F"),
+               this.widgets.accessDataSource.sendRequest("/" + parent.constraintName + "/values/" + encodeURIComponent(selectedValueName).replace(/%2F/g, "%252F"),
                {
                   success: successHandler,
                   failure: failureHandler,
