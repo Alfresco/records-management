@@ -31,10 +31,13 @@
          <action name="addRecordTypes"/>
       </group>
       <group>
-
          <action name="executeScript"/>
          <action name="sendEmail"/>
          <action name="setPropertyValue"/>
+      </group>
+      <group>
+         <action name="archive" />
+         <action name="restore" />
       </group>
       <group>
          <action name="*"/>
