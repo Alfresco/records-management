@@ -40,7 +40,7 @@ function getRMActionSet(myConfig)
       multiSelectAction = multiSelectActions.get(i);
       attr = multiSelectAction.attributes;
 
-      if(attr["rmaction"] == "true" && (!attr["syncMode"] || attr["syncMode"].toString() == syncMode.value))
+      if(attr["rmaction"] == "true")
       {
          // Multi-Select Actions
          action = {
@@ -71,8 +71,6 @@ function rm_main()
    getRMActionSet(myConfig);
    getCreateContent(myConfig);
    getRepositoryBrowserRoot();
-
-   toolbar.syncMode = syncMode.value;
 }
 
 rm_main();

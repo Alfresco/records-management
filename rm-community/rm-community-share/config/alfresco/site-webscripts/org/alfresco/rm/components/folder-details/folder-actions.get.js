@@ -42,8 +42,6 @@ function main()
       model.folderDetailsJSON = jsonUtils.toJSONString(folderDetails);
       doclibCommon();
    }
-   
-   model.syncMode = syncMode.getValue();
 
    // Widget instantiation metadata...
    var folderActions = {
@@ -57,8 +55,7 @@ function main()
          repositoryRoot : AlfrescoUtil.getRootNode(),
          replicationUrlMapping : (model.replicationUrlMapping != null) ? model.replicationUrlMapping : "{}",
          repositoryBrowsing : (model.rootNode != null),
-         folderDetails : folderDetails,
-         syncMode : model.syncMode != null ? model.syncMode : ""
+         folderDetails : folderDetails
       }
    };
    if (model.repositoryUrl != null)
