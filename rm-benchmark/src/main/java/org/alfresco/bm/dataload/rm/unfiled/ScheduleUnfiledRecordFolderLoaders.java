@@ -303,7 +303,7 @@ public class ScheduleUnfiledRecordFolderLoaders extends RMBaseEventProcessor
                 }
                 else
                 {
-                    auxFileFolderService.incrementFolderCount(emptyFolder.getContext(), emptyFolder.getPath(), -j -1);
+                    auxFileFolderService.incrementFolderCount(emptyFolder.getContext(), emptyFolder.getPath(), -j -1L);
                 }
 
                 // Check if we have enough

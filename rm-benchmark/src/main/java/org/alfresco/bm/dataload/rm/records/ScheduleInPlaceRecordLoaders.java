@@ -130,7 +130,7 @@ public class ScheduleInPlaceRecordLoaders extends RMBaseEventProcessor implement
         else
         {
             collabSitePaths = new ArrayList<>();
-            collabSitePaths.add(new String("")); // If no paths specified use the document library
+            collabSitePaths.add(""); // If no paths specified use the document library
         }
     }
 
