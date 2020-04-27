@@ -108,8 +108,6 @@
          <!-- Default (fallback) template - overriding the same template id in share-documentlibrary-config.xml -->
          <template id="default">
             <banner index="10" id="lockBanner" evaluator="evaluator.doclib.metadata.hasLockBanner">{lockBanner}</banner>
-            <banner index="20" id="syncTransientError" evaluator="evaluator.doclib.metadata.hasSyncTransientErrorBanner">{syncTransientError}</banner>
-            <banner index="30" id="syncFailed" evaluator="evaluator.doclib.metadata.hasSyncFailedBanner">{syncFailed}</banner>
             <banner index="40" id="childClassificationInProgress" evaluator="evaluator.rm.doclib.isChildClassificationInProgress">{i18nLabel banner.child-classification-in-progress.info}</banner>
             <banner index="50" id="childClassificationInComplete" evaluator="evaluator.rm.doclib.isChildClassificationComplete">{i18nLabel banner.child-classification-complete.info}{RM_childClassificationCompleteClose}</banner>
             <line index="10" id="date">{date}{size}</line>
@@ -630,7 +628,6 @@
             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
-            <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
             <evaluator negate="true">evaluator.rm.doclib.isRejectedRecord</evaluator>
             <evaluator>evaluator.doclib.action.siteBased</evaluator>
             <evaluator>evaluator.rm.doclib.action.rmSiteExists</evaluator>
@@ -654,7 +651,6 @@
             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
-            <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
             <evaluator negate="true">evaluator.rm.doclib.isRejectedRecord</evaluator>
             <evaluator>evaluator.doclib.action.siteBased</evaluator>
             <evaluator>evaluator.rm.doclib.action.rmSiteExists</evaluator>
@@ -678,7 +674,6 @@
             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
-            <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
             <evaluator negate="true">evaluator.rm.doclib.isRejectedRecord</evaluator>
             <evaluator>evaluator.rm.doclib.action.hasVersionableAspect</evaluator>
             <evaluator>evaluator.doclib.action.siteBased</evaluator>
@@ -718,7 +713,6 @@
             <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
             <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
-            <evaluator negate="true">evaluator.doclib.indicator.isSynced</evaluator>
             <evaluator negate="true">evaluator.rm.doclib.isRejectedRecord</evaluator>
             <evaluator>evaluator.rm.doclib.action.hasVersionableAspect</evaluator>
             <evaluator>evaluator.doclib.action.siteBased</evaluator>
