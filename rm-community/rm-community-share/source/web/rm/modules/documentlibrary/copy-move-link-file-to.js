@@ -73,7 +73,8 @@
                move: "rm-move-to",
                link: "rm-link",
                file: "rm-move-to",
-               declareAndFile: "create-record"
+               declareAndFile: "create-record",
+               declareVersionAndFile: "declare-as-version-record"
             };
 
             if (typeof dataWebScripts[obj.mode] == "undefined")
