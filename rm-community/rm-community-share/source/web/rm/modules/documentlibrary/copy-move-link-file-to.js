@@ -326,6 +326,30 @@
           // Turn dynamic loading on for entire tree
           tree.setDynamicLoad(this.fnLoadNodeData);
 
+          // Add Unfiled Records container as default selected node for dm actions
+          if (this.options.mode === "declareVersionAndFile")
+          {
+             var unfiledRecordsNode = new YAHOO.widget.TextNode(
+                {
+                   label: this.msg("node.unfiledroot"),
+                   path: "/",
+                   nodeRef: ""
+                }, tree.getRoot(), false);
+
+             //disable expand for this node because items aren't declared to an unfiled record folder
+             tree.subscribe("expand", function (node)
+             {
+                if (node === unfiledRecordsNode)
+                {
+                   return false;
+                }
+             }, this, true);
+
+             //need to subscribe to labelClick event otherwise clicking on the other expandable node labels won't
+             // trigger the expand event
+             tree.subscribe("labelClick", function(node) {node.toggle()}, this, true);
+          }
+
           // Add default top-level node
           var tempNode = new YAHOO.widget.TextNode(
           {
