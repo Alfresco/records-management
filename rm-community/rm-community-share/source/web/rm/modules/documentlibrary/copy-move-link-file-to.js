@@ -347,7 +347,10 @@
 
              //need to subscribe to labelClick event otherwise clicking on the other expandable node labels won't
              // trigger the expand event
-             tree.subscribe("labelClick", function(node) {node.toggle()}, this, true);
+             tree.subscribe("labelClick", function(node) {
+                node.toggle();
+                this.onNodeClicked;
+             }, this, true);
           }
 
           // Add default top-level node
