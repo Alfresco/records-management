@@ -336,7 +336,16 @@
                    nodeRef: ""
                 }, tree.getRoot(), false);
 
-             //disable expand for this node because items aren't declared to an unfiled record folder
+             // Add file plan top-level node
+             var filePlanNode = new YAHOO.widget.TextNode(
+                {
+                   label: "",
+                   path: "/",
+                   hasIcon: false,
+                   nodeRef: ""
+                }, tree.getRoot(), true);
+
+             //disable expand for unfiledRecordsNode node because items aren't declared to an unfiled record folder
              tree.subscribe("expand", function (node)
              {
                 if (node === unfiledRecordsNode)
@@ -351,15 +360,32 @@
                 node.toggle();
                 this.onNodeClicked;
              }, this, true);
-          }
 
-          // Add default top-level node
-          var tempNode = new YAHOO.widget.TextNode(
+             //remove filePlanNode if it hasn't children
+             tree.subscribe("expandComplete", function(node)
+             {
+                if (node === filePlanNode && filePlanNode.getNodeCount() === 1)
+                {
+                   tree.removeNode(filePlanNode);
+                }
+                else
+                {
+                   filePlanNode.label = this.msg("node.root");
+                   filePlanNode.hasIcon = true;
+                   this.onExpandComplete;
+                }
+             }, this, true);
+          }
+          else
           {
-             label: (this.options.unfiled ? this.msg("node.unfiledroot") : this.msg("node.root")),
-             path: (this.options.unfiled ? "/Unfiled Records" : "/"),
-             nodeRef: ""
-          }, tree.getRoot(), false);
+             // Add default top-level node
+             var tempNode = new YAHOO.widget.TextNode(
+                {
+                   label: (this.options.unfiled ? this.msg("node.unfiledroot") : this.msg("node.root")),
+                   path: (this.options.unfiled ? "/Unfiled Records" : "/"),
+                   nodeRef: ""
+                }, tree.getRoot(), false);
+          }
 
           // Register tree-level listeners
           tree.subscribe("clickEvent", this.onNodeClicked, this, true);
