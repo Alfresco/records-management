@@ -345,34 +345,55 @@
                    nodeRef: ""
                 }, tree.getRoot(), true);
 
-             //disable expand for unfiledRecordsNode node because items aren't declared to an unfiled record folder
+             // set the options path to unfiled records node to have it selected by default
+             this.options.path = unfiledRecordsNode.data.path;
+
+             // Register tree-level listeners
              tree.subscribe("expand", function (node)
              {
+                //disable expand for unfiledRecordsNode node because items aren't declared to an unfiled record folder
                 if (node === unfiledRecordsNode)
                 {
                    return false;
                 }
              }, this, true);
 
-             //need to subscribe to labelClick event otherwise clicking on the other expandable node labels won't
-             // trigger the expand event
-             tree.subscribe("labelClick", function(node) {
-                node.toggle();
-                this.onNodeClicked;
-             }, this, true);
-
-             //remove filePlanNode if it hasn't children
-             tree.subscribe("expandComplete", function(node)
+             tree.subscribe("expandComplete", function (node)
              {
+                //remove filePlanNode if it hasn't children
                 if (node === filePlanNode && filePlanNode.getNodeCount() === 1)
                 {
                    tree.removeNode(filePlanNode);
+                   return;
                 }
-                else
+
+                filePlanNode.label = this.msg("node.root");
+                filePlanNode.hasIcon = true;
+                Alfresco.rm.module.CopyMoveLinkFileTo.superclass.onExpandComplete.call(this, node);
+
+                //make filePlanNode not selected
+                if (this.selectedNode !== null && this.selectedNode.label === filePlanNode.label)
                 {
-                   filePlanNode.label = this.msg("node.root");
-                   filePlanNode.hasIcon = true;
-                   this.onExpandComplete;
+                   Alfresco.rm.module.CopyMoveLinkFileTo.superclass._showHighlight.call(this, false);
+                }
+             }, this, true);
+
+             tree.subscribe("clickEvent", function (args)
+             {
+                // call onNodeClicked method only
+                // if node is expanded and click event triggers collapse event or
+                // if node is not expanded and click event triggers expand event for the first time
+                // otherwise clickEvent toggles the node (expands the node then collapses it)
+                if((args.node.dynamicLoadComplete && args.node.expanded) ||
+                   (!args.node.dynamicLoadComplete && !args.node.expanded))
+                {
+                   Alfresco.rm.module.CopyMoveLinkFileTo.superclass.onNodeClicked.call(this, args);
+                }
+
+                //make filePlanNode not selected
+                if (this.selectedNode !== null && this.selectedNode.label === filePlanNode.label)
+                {
+                   Alfresco.rm.module.CopyMoveLinkFileTo.superclass._showHighlight.call(this, false);
                 }
              }, this, true);
           }
@@ -385,12 +406,10 @@
                    path: (this.options.unfiled ? "/Unfiled Records" : "/"),
                    nodeRef: ""
                 }, tree.getRoot(), false);
+             // Register tree-level listeners
+             tree.subscribe("clickEvent", this.onNodeClicked, this, true);
+             tree.subscribe("expandComplete", this.onExpandComplete, this, true);
           }
-
-          // Register tree-level listeners
-          tree.subscribe("clickEvent", this.onNodeClicked, this, true);
-          tree.subscribe("expandComplete", this.onExpandComplete, this, true);
-
           // Render tree with this one top-level node
           tree.render();
        }
