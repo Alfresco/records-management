@@ -25,13 +25,15 @@
  #L%
 -->
 <@markup id="rm-resources" target="resources" action="after" scope="global">
-   <@script src="${url.context}/res/rm/js/alfresco-rm.js" group="template-common"/>
-   <@script src="${url.context}/res/rm/js/event-delegator.js" group="template-common"/>
-   <@script src="${url.context}/res/rm/modules/create-site.js" group="template-common"/>
-   <@script src="${url.context}/res/rm/modules/documentlibrary/hold/hold.js" group="template-common" />
-   <@script src="${url.context}/res/rm/modules/documentlibrary/hold/add-to-hold.js" group="template-common" />
+    <@script src="${url.context}/res/rm/js/alfresco-rm.js" group="template-common"/>
+    <@script src="${url.context}/res/rm/js/event-delegator.js" group="template-common"/>
+    <@script src="${url.context}/res/rm/modules/create-site.js" group="template-common"/>
+    <@script src="${url.context}/res/modules/documentlibrary/site-folder.js" group="template-common"/>
+    <@script src="${url.context}/res/rm/modules/documentlibrary/copy-move-link-file-to.js" group="template-common"/>
+    <@script src="${url.context}/res/rm/modules/documentlibrary/hold/hold.js" group="template-common" />
+    <@script src="${url.context}/res/rm/modules/documentlibrary/hold/add-to-hold.js" group="template-common" />
 
-   <@link rel="stylesheet" type="text/css" href="${url.context}/res/rm/modules/documentlibrary/hold/hold.css" />
+    <@link rel="stylesheet" type="text/css" href="${url.context}/res/rm/modules/documentlibrary/hold/hold.css" />
 </@markup>
 
 <@markup id="rm-shareConstants" target="shareConstants" action="after">
