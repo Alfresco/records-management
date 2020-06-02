@@ -389,6 +389,10 @@
                 {
                    Alfresco.rm.module.CopyMoveLinkFileTo.superclass.onNodeClicked.call(this, args);
                 }
+                else
+                {
+                   Alfresco.rm.module.CopyMoveLinkFileTo.superclass._updateSelectedNode.call(this, args.node);
+                }
 
                 //make filePlanNode not selected
                 if (this.selectedNode !== null && this.selectedNode.label === filePlanNode.label)

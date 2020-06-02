@@ -655,7 +655,31 @@
             <evaluator>evaluator.rm.doclib.action.rmSiteExists</evaluator>
             <evaluator>evaluator.rm.doclib.isUserRecordContributor</evaluator>
             <evaluator>evaluator.rm.action.declare-file-to</evaluator>
+         </action>
 
+         <!-- Declare and File Version as Record -->
+         <action id="rm-declare-file-version-to" type="javascript" label="actions.declare-file-version-to"
+                 icon="../../../rm/components/documentlibrary/actions/rm-file-to">
+            <param name="function">onActionDeclareVersionAndFileTo</param>
+            <param name="action">declare-as-version-record</param>
+            <param name="success">onCreateRecordSuccess</param>
+            <param name="successMessage">message.declare-version-as-record.success</param>
+            <param name="failureMessage">message.declare-version-as-record.failure</param>
+            <param name="path">{path}</param>
+            <permissions>
+               <permission allow="true">Write</permission>
+            </permissions>
+            <!-- The same evaluators as for declare version as record: editable by current user, is not locked, is
+            not a working copy, is not synced, is not reject as record and the rm site exists -->
+            <evaluator>evaluator.doclib.action.editableByCurrentUser</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isLocked</evaluator>
+            <evaluator negate="true">evaluator.doclib.action.isWorkingCopy</evaluator>
+            <evaluator negate="true">evaluator.rm.doclib.isRejectedRecord</evaluator>
+            <evaluator>evaluator.rm.doclib.action.hasVersionableAspect</evaluator>
+            <evaluator>evaluator.doclib.action.siteBased</evaluator>
+            <evaluator>evaluator.rm.doclib.action.rmSiteExists</evaluator>
+            <evaluator>evaluator.rm.doclib.isUserRecordContributor</evaluator>
+            <evaluator>evaluator.rm.action.declare-file-to</evaluator>
          </action>
 
          <!--  Declare As Version Record -->
@@ -1029,6 +1053,7 @@
          <actionGroup id="document-browse">
             <action index="400" id="rm-declare-file-to" />
             <action index="410" id="rm-create-record" />
+            <action index="420" id="rm-declare-file-version-to" />
             <action index="420" id="rm-declare-as-version-record" />
             <action index="430" id="dm-recorded-version-config" />
             <action index="440" id="rm-add-to-hold" />
@@ -1037,6 +1062,7 @@
          <actionGroup id="document-details">
             <action index="400" id="rm-declare-file-to" />
             <action index="410" id="rm-create-record" />
+            <action index="420" id="rm-declare-file-version-to" />
             <action index="420" id="rm-declare-as-version-record" />
             <action index="430" id="dm-recorded-version-config" />
             <action index="440" id="rm-add-to-hold" />

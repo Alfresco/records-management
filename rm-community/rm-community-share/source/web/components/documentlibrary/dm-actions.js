@@ -209,6 +209,36 @@
 
    YAHOO.Bubbling.fire("registerAction",
       {
+         actionName: "onActionDeclareVersionAndFileTo",
+         fn: function DLTB_onActionDeclareVersionAndFileTo(assets, owner) {
+            if (!this.modules.copyMoveLinkFileTo)
+            {
+               this.modules.copyMoveLinkFileTo = new Alfresco.rm.module.CopyMoveLinkFileTo(this.id + "-copyMoveLinkFileTo");
+            }
+
+            this.modules.copyMoveLinkFileTo.setOptions(
+               {
+                  mode: "declareVersionAndFile",
+                  siteId: "rm",
+                  containerId: this.options.containerId,
+                  path: this.currentPath,
+                  files: assets,
+                  unfiled: false,
+                  width: "40em"
+               }).showDialog();
+
+            var me = this;
+            this.modules.copyMoveLinkFileTo.onOK = function DLTB_onOK(e, p_obj)
+            {
+               assets.path = me.modules.copyMoveLinkFileTo.selectedNode.data.path.substr(1);
+               me.onActionSimpleRepoAction(assets, owner);
+               this.widgets.dialog.hide();
+            }
+         }
+      });
+
+   YAHOO.Bubbling.fire("registerAction",
+      {
          actionName: "onActionAddToHold",
          fn: function DLTB_onActionAddToHold(assets, owner) {
             if (!this.modules.addToHold)
