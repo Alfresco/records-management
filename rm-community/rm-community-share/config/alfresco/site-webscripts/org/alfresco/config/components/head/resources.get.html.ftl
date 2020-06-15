@@ -28,6 +28,7 @@
     <@script src="${url.context}/res/rm/js/alfresco-rm.js" group="template-common"/>
     <@script src="${url.context}/res/rm/js/event-delegator.js" group="template-common"/>
     <@script src="${url.context}/res/rm/modules/create-site.js" group="template-common"/>
+    <@script src="${url.context}/res/modules/documentlibrary/doclib-actions.js" group="template-common"/>
     <@script src="${url.context}/res/modules/documentlibrary/site-folder.js" group="template-common"/>
     <@script src="${url.context}/res/rm/modules/documentlibrary/copy-move-link-file-to.js" group="template-common"/>
     <@script src="${url.context}/res/rm/modules/documentlibrary/hold/hold.js" group="template-common" />
