@@ -198,10 +198,14 @@
                }).showDialog();
 
             var me = this;
+            currentOwner = owner;
+            currentAssets = assets;
             this.modules.copyMoveLinkFileTo.onOK = function DLTB_onOK(e, p_obj) {
-               assets.path = me.modules.copyMoveLinkFileTo.selectedNode.data.path.substr(1);
-               me.onActionSimpleRepoAction(assets, owner);
+               currentAssets.path = me.modules.copyMoveLinkFileTo.selectedNode.data.path.substr(1);
+               me.onActionSimpleRepoAction(currentAssets, currentOwner);
                this.widgets.dialog.hide();
+               delete currentAssets;
+               delete currentOwner;
             }
          }
 
@@ -228,11 +232,15 @@
                }).showDialog();
 
             var me = this;
+            currentOwner = owner;
+            currentAssets = assets;
             this.modules.copyMoveLinkFileTo.onOK = function DLTB_onOK(e, p_obj)
             {
-               assets.path = me.modules.copyMoveLinkFileTo.selectedNode.data.path.substr(1);
-               me.onActionSimpleRepoAction(assets, owner);
+               currentAssets.path = me.modules.copyMoveLinkFileTo.selectedNode.data.path.substr(1);
+               me.onActionSimpleRepoAction(currentAssets, currentOwner);
                this.widgets.dialog.hide();
+               delete currentAssets;
+               delete currentOwner;
             }
          }
       });
