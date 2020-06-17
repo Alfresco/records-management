@@ -63,10 +63,11 @@
     <@script src="${url.context}/res/components/object-finder/object-finder.js" group="rules"/>
     <@script src="${url.context}/res/modules/form/control-wrapper.js" group="rules"/>
     <@script src="${url.context}/res/components/common/common-component-style-filter-chain.js" group="rules"/>
+
+<#-- DM rule customizations -->
     <@script src="${url.context}/res/components/dm/rules/config/rule-config-action-custom.js" group="rules_custom"></@script>
 
-    <#-- Modified for RM -->
-    <@script src="${url.context}/res/rm/components/rules/rule-config-action-custom.js" group="rules"/>
+<#-- RM customizations -->
     <@script src="${url.context}/res/modules/simple-dialog.js" group="rules"/>
     <@script src="${url.context}/res/modules/documentlibrary/site-folder.js" group="rules"/>
     <@script src="${url.context}/res/modules/documentlibrary/doclib-actions.js" group="rules"/>

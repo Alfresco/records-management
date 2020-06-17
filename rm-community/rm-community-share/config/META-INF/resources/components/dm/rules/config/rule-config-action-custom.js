@@ -61,7 +61,8 @@ if (typeof DM == "undefined" || !DM)
                DeclareAndFileRecord:
                   {
                      text: function (configDef, ruleConfig, configEl) {
-                        this._getParamDef(configDef, "path").displayLabel = this.msg("fileTo.path.label");
+                        this._getParamDef(configDef, "path").displayLabel = this.msg("create-record.path.label");
+                        this._getParamDef(configDef, "hideRecord").displayLabel = this.msg("create-record.hideRecord.label");
                         return configDef;
                      },
                      edit: function (configDef, ruleConfig, configEl) {
@@ -69,7 +70,7 @@ if (typeof DM == "undefined" || !DM)
 
                         configDef.parameterDefinitions.splice(0, 0,
                            {
-                              type: "arca:rm-destination-dialog-button",
+                              type: "arca:dm-fileTo-destination-dialog-button",
                               _buttonLabel: this.msg("button.select-folder"),
                               _destinationParam: "destination-folder"
                            });
@@ -81,9 +82,15 @@ if (typeof DM == "undefined" || !DM)
 
                         var path = this._getParamDef(configDef, "path");
                         path._type = "hidden";
-                        path.displayLabel = this.msg("fileTo.path.label"),
+                        path.displayLabel = this.msg("create-record.path.label"),
                         path._displayLabelToRight = false;
                         path._hideColon = true;
+
+                        var hideRecord = this._getParamDef(configDef, "hideRecord");
+                        hideRecord._type = null;
+                        hideRecord.displayLabel = this.msg("create-record.hideRecord.label"),
+                           hideRecord._displayLabelToRight = false;
+                        hideRecord._hideColon = true;
 
                         return configDef;
                      }
@@ -91,7 +98,7 @@ if (typeof DM == "undefined" || !DM)
             },
          renderers:
             {
-               "arca:rm-destination-dialog-button":
+               "arca:dm-fileTo-destination-dialog-button":
                   {
                      manual: { edit: true },
                      currentCtx: {},
@@ -117,7 +124,7 @@ if (typeof DM == "undefined" || !DM)
                         var selectedPath = ruleConfig.parameterValues && ruleConfig.parameterValues.path;
                         this._createButton(containerEl, configDef, paramDef, ruleConfig, function RCA_destinationDialogButton_onClick(type, obj)
                         {
-                           this.renderers["arca:rm-destination-dialog-button"].currentCtx =
+                           this.renderers["arca:dm-fileTo-destination-dialog-button"].currentCtx =
                               {
                                  configDef: obj.configDef,
                                  ruleConfig: obj.ruleConfig,
@@ -129,7 +136,7 @@ if (typeof DM == "undefined" || !DM)
                                  title: this.msg("dialog.destination.title"),
                                  mode: mode,
                                  files: "",
-                                 siteId: this.options.siteId,
+                                 siteId: "rm",
                                  path: selectedPath,
                                  unfiled: unfiled
                               });
@@ -141,7 +148,7 @@ if (typeof DM == "undefined" || !DM)
                                  var selectedFolder = args[1].selectedFolder;
                                  if (selectedFolder !== null)
                                  {
-                                    var ctx = this.renderers["arca:rm-destination-dialog-button"].currentCtx;
+                                    var ctx = this.renderers["arca:dm-fileTo-destination-dialog-button"].currentCtx;
                                     var path = selectedFolder.path;
                                     if(unfiled)
                                     {

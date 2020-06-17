@@ -40,11 +40,12 @@
     <@script src="${url.context}/res/components/rules/config/rule-config-condition.js" group="rules"/>
     <@script src="${url.context}/res/components/rules/config/rule-config-action.js" group="rules"/>
     <@script src="${url.context}/res/components/rules/rule-details.js" group="rules"/>
-    <@script src="${url.context}/res/components/dm/rules/config/rule-config-action-custom.js" group="rules_custom"></@script>
-    <@script src="${url.context}/res/rm/modules/documentlibrary/copy-move-link-file-to.js" group="rules"/>
-    <@script src="${url.context}/res/rm/modules/documentlibrary/copy-move-link-file-to.js" group="rules_custom"/>
 
-    <@script src="${url.context}/res/rm/components/rules/rule-config-action-custom.js" group="rules"/>
+<#-- DM rule customizations -->
+    <@script src="${url.context}/res/components/dm/rules/config/rule-config-action-custom.js" group="rules_custom"></@script>
+
+<#-- RM customizations -->
+    <@script src="${url.context}/res/rm/modules/documentlibrary/copy-move-link-file-to.js" group="rules"/>
     <@script src="${url.context}/res/modules/simple-dialog.js" group="rules"/>
     <@script src="${url.context}/res/modules/documentlibrary/site-folder.js" group="rules"/>
     <@script src="${url.context}/res/modules/documentlibrary/doclib-actions.js" group="rules"/>
