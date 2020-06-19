@@ -30,6 +30,7 @@
     <@link href="${url.context}/res/components/rules/config/rule-config-type.css" group="rules"/>
     <@link href="${url.context}/res/components/rules/config/rule-config-condition.css" group="rules"/>
     <@link href="${url.context}/res/components/rules/rule-details.css" group="rules"/>
+    <@link href="${url.context}/res/components/documentlibrary/dm-actions.css" group="rules"/>
 </@>
 
 <@markup id="js">

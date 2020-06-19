@@ -39,6 +39,7 @@
     <@link href="${url.context}/res/modules/property-picker.css" group="rules"/>
     <@link href="${url.context}/res/modules/rules/rules-property-picker.css" group="rules"/>
     <@link href="${url.context}/res/components/object-finder/object-finder.css" group="rules"/>
+    <@link href="${url.context}/res/components/documentlibrary/dm-actions.css" group="rules"/>
 </@>
 
 <@markup id="js">
