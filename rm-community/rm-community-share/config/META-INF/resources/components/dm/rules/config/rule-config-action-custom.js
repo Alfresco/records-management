@@ -174,7 +174,7 @@ if (typeof DM == "undefined" || !DM)
                            var me = this;
                            this.widgets.copyMoveLinkFileToDialog._showDialog = function()
                            {
-                              this.widgets.okButton.set("label", me.msg("button.ok"));
+                              this.widgets.okButton.set("label", me.msg("create-record.button"));
                               return Alfresco.rm.module.CopyMoveLinkFileTo.superclass._showDialog.apply(this, arguments);
                            }
 

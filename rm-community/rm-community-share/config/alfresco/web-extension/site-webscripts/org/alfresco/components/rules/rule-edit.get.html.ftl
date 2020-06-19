@@ -73,8 +73,6 @@
     <@script src="${url.context}/res/modules/documentlibrary/site-folder.js" group="rules"/>
     <@script src="${url.context}/res/modules/documentlibrary/doclib-actions.js" group="rules"/>
     <@script src="${url.context}/res/rm/modules/documentlibrary/copy-move-link-file-to.js" group="rules"/>
-    <@script src="${url.context}/res/rm/components/rules/rule-edit.js" group="rules"/>
-
 </@>
 
 <@markup id="widgets">
