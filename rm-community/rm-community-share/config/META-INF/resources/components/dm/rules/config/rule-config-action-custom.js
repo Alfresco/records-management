@@ -104,17 +104,8 @@ if (typeof DM == "undefined" || !DM)
                      currentCtx: {},
                      edit: function (containerEl, configDef, paramDef, ruleConfig, value)
                      {
-                        var unfiledParameter = Alfresco.util.getQueryStringParameter("unfiled");
-                        var unfiled = (configDef.name != "fileTo") && (unfiledParameter == "true");
                         var mode="declareAndFile";
 
-                        if (this.widgets.destinationDialog)
-                        {
-                           this.widgets.destinationDialog.setOptions(
-                              {
-                                 unfiled: unfiled
-                              });
-                        }
                         var selectedPath = ruleConfig.parameterValues && ruleConfig.parameterValues.path;
                         this._createButton(containerEl, configDef, paramDef, ruleConfig, function RCA_destinationDialogButton_onClick(type, obj)
                         {
@@ -124,41 +115,30 @@ if (typeof DM == "undefined" || !DM)
                                  ruleConfig: obj.ruleConfig,
                                  paramDef: obj.paramDef
                               };
-                           this.widgets.destinationDialog = new Alfresco.rm.module.CopyMoveLinkFileTo(this.id + "-destinationDialog");
-                           this.widgets.destinationDialog.setOptions(
+                           this.widgets.copyMoveLinkFileToDialog = new Alfresco.rm.module.CopyMoveLinkFileTo(this.id + "-destinationDialog");
+                           this.widgets.copyMoveLinkFileToDialog.setOptions(
                               {
                                  title: this.msg("dialog.destination.title"),
                                  mode: mode,
                                  files: "",
                                  siteId: "rm",
                                  path: selectedPath,
-                                 unfiled: unfiled
+                                 unfiled: false
                               });
 
                            YAHOO.Bubbling.on("folderSelected", function (layer, args)
                            {
-                              if ($hasEventInterest(this.widgets.destinationDialog, args))
+                              if ($hasEventInterest(this.widgets.copyMoveLinkFileToDialog, args))
                               {
                                  var selectedFolder = args[1].selectedFolder;
                                  if (selectedFolder !== null)
                                  {
                                     var ctx = this.renderers["arca:dm-fileTo-destination-dialog-button"].currentCtx;
                                     var path = selectedFolder.path;
-                                    if(unfiled)
-                                    {
-                                       if((path.match(/\//g)||[]).length < 2)
-                                       {
-                                          path = '/';
-                                       }
-                                       else
-                                       {
-                                          path = path.replace(/^\/.*?\//, '/');
-                                       }
-                                    }
                                     this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "path", path);
                                     Dom.get(this.id + "-recordFolderPath").value = path;
                                     this._updateSubmitElements(ctx.configDef);
-                                    this.widgets.destinationDialog.setOptions({
+                                    this.widgets.copyMoveLinkFileToDialog.setOptions({
                                        path: selectedFolder.path
                                     });
                                  }
@@ -174,14 +154,14 @@ if (typeof DM == "undefined" || !DM)
                            {
                               allowedViewModes.push(Alfresco.module.DoclibGlobalFolder.VIEW_MODE_REPOSITORY, Alfresco.module.DoclibGlobalFolder.VIEW_MODE_USERHOME);
                            }
-                           this.widgets.destinationDialog.setOptions(
+                           this.widgets.copyMoveLinkFileToDialog.setOptions(
                               {
                                  allowedViewModes: allowedViewModes,
                                  nodeRef: this.options.rootNode,
                                  pathNodeRef: pathNodeRef ? new Alfresco.util.NodeRef(pathNodeRef) : null
                               });
 
-                           this.widgets.destinationDialog.onOK = function()
+                           this.widgets.copyMoveLinkFileToDialog.onOK = function()
                            {
                               YAHOO.Bubbling.fire("folderSelected",
                                  {
@@ -192,13 +172,13 @@ if (typeof DM == "undefined" || !DM)
                            }
 
                            var me = this;
-                           this.widgets.destinationDialog._showDialog = function()
+                           this.widgets.copyMoveLinkFileToDialog._showDialog = function()
                            {
                               this.widgets.okButton.set("label", me.msg("button.ok"));
                               return Alfresco.rm.module.CopyMoveLinkFileTo.superclass._showDialog.apply(this, arguments);
                            }
 
-                           this.widgets.destinationDialog.showDialog();
+                           this.widgets.copyMoveLinkFileToDialog.showDialog();
                         });
                         this._createLabel(this._getParamDef(configDef, "path").displayLabel, containerEl);
                         var el = document.createElement("input");

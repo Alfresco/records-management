@@ -28,12 +28,18 @@
 
 function main() {
    model.isRmUser = "false";
+   model.rmSiteExists = "false";
 
    // Check if the user is an RM User
    var conn = remote.connect("alfresco");
    if (isRmUser(conn))
    {
       model.isRmUser = "true";
+   }
+
+   if(isRmSite(conn, "rm"))
+   {
+      model.rmSiteExists ="true";
    }
 }
 

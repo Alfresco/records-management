@@ -329,80 +329,81 @@
           // Add Unfiled Records container as default selected node for dm actions
           if (this.options.mode === "declareVersionAndFile" || this.options.mode === "declareAndFile")
           {
-             var unfiledRecordsNode = new YAHOO.widget.TextNode(
-                {
-                   label: this.msg("node.unfiledroot"),
-                   path: "/",
-                   nodeRef: ""
-                }, tree.getRoot(), false);
-
-             // set the options path to unfiled records node to have it selected by default
-             this.options.path = unfiledRecordsNode.data.path;
-
-             // Register tree-level listeners
-             tree.subscribe("expand", function (node)
+             if (this.options.rmSiteExists)
              {
-                //disable expand for unfiledRecordsNode node because items aren't declared to an unfiled record folder
-                if (node === unfiledRecordsNode)
-                {
-                   return false;
-                }
-             }, this, true);
 
-             // if user doesn't have an rm role don't display the fileplan node
-             if(this.options.isRmUser)
-             {
-                // Add file plan top-level node
-                var filePlanNode = new YAHOO.widget.TextNode(
+                var unfiledRecordsNode = new YAHOO.widget.TextNode(
                    {
-                      label: "",
+                      label: this.msg("node.unfiledroot"),
                       path: "/",
-                      hasIcon: false,
                       nodeRef: ""
-                   }, tree.getRoot(), true);
+                   }, tree.getRoot(), false);
 
-                tree.subscribe("expandComplete", function (node)
-                {
-                   //remove filePlanNode if it hasn't children
-                   if (node === filePlanNode && filePlanNode.getNodeCount() === 1)
+                // set the options path to unfiled records node to have it selected by default
+                this.options.path = unfiledRecordsNode.data.path;
+
+                // Register tree-level listeners
+                tree.subscribe("expand", function (node) {
+                   //disable expand for unfiledRecordsNode node because items aren't declared to an unfiled record folder
+                   if (node === unfiledRecordsNode)
                    {
-                      tree.removeNode(filePlanNode);
-                      return;
-                   }
-
-                   filePlanNode.label = this.msg("node.root");
-                   filePlanNode.hasIcon = true;
-                   Alfresco.rm.module.CopyMoveLinkFileTo.superclass.onExpandComplete.call(this, node);
-
-                   //make filePlanNode not selected
-                   if (this.selectedNode !== null && this.selectedNode.label === filePlanNode.label)
-                   {
-                      Alfresco.rm.module.CopyMoveLinkFileTo.superclass._showHighlight.call(this, false);
+                      return false;
                    }
                 }, this, true);
 
-                tree.subscribe("clickEvent", function (args)
+                // if user doesn't have an rm role don't display the fileplan node
+                if (this.options.isRmUser)
                 {
-                   // call onNodeClicked method only
-                   // if node is expanded and click event triggers collapse event or
-                   // if node is not expanded and click event triggers expand event for the first time
-                   // otherwise clickEvent toggles the node (expands the node then collapses it)
-                   if((args.node.dynamicLoadComplete && args.node.expanded) ||
-                      (!args.node.dynamicLoadComplete && !args.node.expanded))
-                   {
-                      Alfresco.rm.module.CopyMoveLinkFileTo.superclass.onNodeClicked.call(this, args);
-                   }
-                   else
-                   {
-                      Alfresco.rm.module.CopyMoveLinkFileTo.superclass._updateSelectedNode.call(this, args.node);
-                   }
+                   // Add file plan top-level node
+                   var filePlanNode = new YAHOO.widget.TextNode(
+                      {
+                         label: "",
+                         path: "/",
+                         hasIcon: false,
+                         nodeRef: ""
+                      }, tree.getRoot(), true);
 
-                   //make filePlanNode not selected
-                   if (this.selectedNode !== null && this.selectedNode.label === filePlanNode.label)
-                   {
-                      Alfresco.rm.module.CopyMoveLinkFileTo.superclass._showHighlight.call(this, false);
-                   }
-                }, this, true);
+                   tree.subscribe("expandComplete", function (node) {
+                      //remove filePlanNode if it hasn't children
+                      if (node === filePlanNode && filePlanNode.getNodeCount() === 1)
+                      {
+                         tree.removeNode(filePlanNode);
+                         return;
+                      }
+
+                      filePlanNode.label = this.msg("node.root");
+                      filePlanNode.hasIcon = true;
+                      Alfresco.rm.module.CopyMoveLinkFileTo.superclass.onExpandComplete.call(this, node);
+
+                      //make filePlanNode not selected
+                      if (this.selectedNode !== null && this.selectedNode.label === filePlanNode.label)
+                      {
+                         Alfresco.rm.module.CopyMoveLinkFileTo.superclass._showHighlight.call(this, false);
+                      }
+                   }, this, true);
+
+                   tree.subscribe("clickEvent", function (args) {
+                      // call onNodeClicked method only
+                      // if node is expanded and click event triggers collapse event or
+                      // if node is not expanded and click event triggers expand event for the first time
+                      // otherwise clickEvent toggles the node (expands the node then collapses it)
+                      if ((args.node.dynamicLoadComplete && args.node.expanded) ||
+                         (!args.node.dynamicLoadComplete && !args.node.expanded))
+                      {
+                         Alfresco.rm.module.CopyMoveLinkFileTo.superclass.onNodeClicked.call(this, args);
+                      }
+                      else
+                      {
+                         Alfresco.rm.module.CopyMoveLinkFileTo.superclass._updateSelectedNode.call(this, args.node);
+                      }
+
+                      //make filePlanNode not selected
+                      if (this.selectedNode !== null && this.selectedNode.label === filePlanNode.label)
+                      {
+                         Alfresco.rm.module.CopyMoveLinkFileTo.superclass._showHighlight.call(this, false);
+                      }
+                   }, this, true);
+                }
              }
           }
           else
