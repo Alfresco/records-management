@@ -88,3 +88,15 @@ function isRmSite(conn, site)
 
    return isRmSite;
 }
+
+function isRmUser(conn) {
+   var roles = conn.get("/api/rma/admin/rmroles?user=" + encodeURIComponent(user.id));
+   var rolesData = eval('(' + roles + ')').data;
+
+   if (isEmpty(rolesData))
+   {
+      // No roles found or there is no file plan
+      return false;
+   }
+   return true;
+}

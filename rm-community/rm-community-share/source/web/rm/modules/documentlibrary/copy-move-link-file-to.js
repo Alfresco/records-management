@@ -350,7 +350,7 @@
              }, this, true);
 
              // if user doesn't have an rm role don't display the fileplan node
-             if(this.options.files.node.isVisibleForCurrentUser)
+             if(this.options.isRmUser)
              {
                 // Add file plan top-level node
                 var filePlanNode = new YAHOO.widget.TextNode(

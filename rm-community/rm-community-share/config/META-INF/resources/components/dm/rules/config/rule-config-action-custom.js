@@ -106,14 +106,8 @@ if (typeof DM == "undefined" || !DM)
                      {
                         var unfiledParameter = Alfresco.util.getQueryStringParameter("unfiled");
                         var unfiled = (configDef.name != "fileTo") && (unfiledParameter == "true");
-                        var mode;
-                        switch(configDef.name)
-                        {
-                           case "moveTo": mode = "move"; break;
-                           case "copyTo": mode = "copy"; break;
-                           case "linkTo": mode = "link"; break;
-                           default: mode = "file"; break;
-                        }
+                        var mode="declareAndFile";
+
                         if (this.widgets.destinationDialog)
                         {
                            this.widgets.destinationDialog.setOptions(
