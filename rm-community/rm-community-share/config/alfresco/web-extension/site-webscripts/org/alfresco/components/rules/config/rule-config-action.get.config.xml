@@ -71,7 +71,6 @@
          <action name="recordable-version-config"/>
          <action name="create-record"/>
          <action name="activiti-start-process"/>
-
       </group>
       <group>
          <action name="*"/>
