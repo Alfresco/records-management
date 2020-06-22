@@ -34,7 +34,6 @@
          <action name="check-out"/>
       </group>
       <group>
-         <action name="tag"/>
          <action name="link-category"/>
       </group>
       <group>
@@ -55,9 +54,6 @@
          <action name="extract-metadata"/>
       </group>
       <group>
-         <action name="create-thumbnail"/>
-      </group>
-      <group>
          <action name="import"/>
       </group>
       <group>
@@ -70,7 +66,12 @@
          <action name="set-property-value"/>
       </group>
       <group>
+         <action name="declare-as-version-record"/>
+         <action name="hide-record"/>
+         <action name="recordable-version-config"/>
          <action name="create-record"/>
+         <action name="activiti-start-process"/>
+
       </group>
       <group>
          <action name="*"/>

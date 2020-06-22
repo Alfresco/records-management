@@ -104,7 +104,7 @@ if (typeof DM == "undefined" || !DM)
                      currentCtx: {},
                      edit: function (containerEl, configDef, paramDef, ruleConfig, value)
                      {
-                        var mode="declareAndFile";
+                        var mode = "declareAndFile";
 
                         var selectedPath = ruleConfig.parameterValues && ruleConfig.parameterValues.path;
                         this._createButton(containerEl, configDef, paramDef, ruleConfig, function RCA_destinationDialogButton_onClick(type, obj)
@@ -134,7 +134,7 @@ if (typeof DM == "undefined" || !DM)
                                  if (selectedFolder !== null)
                                  {
                                     var ctx = this.renderers["arca:dm-fileTo-destination-dialog-button"].currentCtx;
-                                    var path = selectedFolder.path;
+                                    var path = (selectedFolder.path !== "/") ? selectedFolder.path : "";
                                     this._setHiddenParameter(ctx.configDef, ctx.ruleConfig, "path", path);
                                     Dom.get(this.id + "-recordFolderPath").value = path;
                                     this._updateSubmitElements(ctx.configDef);
@@ -195,161 +195,6 @@ if (typeof DM == "undefined" || !DM)
 
                         containerEl.appendChild(el);
 
-                        // create an autocomplete div which will get populated with the drop down containing
-                        // the autocomplete suggestions
-                        var autoCompleteDiv = document.createElement("div");
-                        containerEl.appendChild(autoCompleteDiv);
-                        var dataSource = new YAHOO.util.XHRDataSource(Alfresco.constants.PROXY_URI + "api/rm/rm-substitutionsuggestions");
-                        dataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
-                        dataSource.responseSchema =
-                           {
-                              resultsList : "substitutions"
-                           };
-
-                        // create the auto complete widget.
-                        var autoComp = new YAHOO.widget.AutoComplete(el, autoCompleteDiv, dataSource);
-                        // sanity check as server should limit number of results based on configuration
-                        autoComp.maxResultsDisplayed = 30;
-
-                        // fix any css applied by creating the autocomplete widget and tweak a couple of other styles
-                        YUIDom.setStyle(autoCompleteDiv, "width", "500px");
-                        YUIDom.setStyle(el, "position", "relative");
-                        YUIDom.setStyle(el, "width", "500px");
-
-                        // format the items in the autosuggest list
-                        var me = this;
-                        autoComp.formatResult = function(oResultData, sQuery, sResultMatch) {
-                           var prefix = "";
-                           var postfix = "";
-                           var message = "";
-                           if(sResultMatch.indexOf("/") == 0)
-                           {
-                              message =
-                                 "<strong><code><span class='substitutionSuggestion'>"
-                                 + sResultMatch
-                                 + "</span></code></strong>";
-                           }
-                           else if(sResultMatch.indexOf("node.") == 0)
-                           {
-                              message = me.msg("file-to.substitution." + sResultMatch.replace(/:/g,'.') + ".label");
-                              message =
-                                 "<span class='substitutionSuggestion'>"
-                                 + (message.indexOf("file-to.substitution.") != -1 ? " <em>{" + sResultMatch + "}</em>" : message + " <em>{" + sResultMatch + "}</em>")
-                                 + "</span>";
-                           }
-                           else
-                           {
-                              message = me.msg("file-to.substitution." + sResultMatch + ".label");
-                              message =
-                                 "<span class='substitutionSuggestion'>"
-                                 + (message.indexOf("file-to.substitution.") != -1 ? " <em>{" + sResultMatch + "}</em>" : message + " <em>{" + sResultMatch + "}</em>")
-                                 + "</span>";
-                           }
-                           return message;
-                        };
-
-                        // work in both directions from the cursor to get the current fragment to send to the
-                        // substitution suggestions api
-                        autoComp.generateRequest = function(sQuery)
-                        {
-                           Selector.query("[param=" + "path" + "]")[0].value = el.value;
-                           var fragmentDetails = getAutoCompleteFragment(el.value, getCursorPosition(el));
-                           autoCompleteSelectPreFragment = fragmentDetails[0];
-                           var fragment = fragmentDetails[1];
-                           autoCompleteSelectPostFragment = fragmentDetails[2];
-                           var parameterString = "?fragment=" + fragment.replace(/ /g,'+') + "&path=";
-                           if((autoCompleteSelectPreFragment.indexOf("{") == -1) && (autoCompleteSelectPreFragment.indexOf("}") == -1))
-                           {
-                              parameterString += autoCompleteSelectPreFragment.replace(/ /g,'+');
-                           }
-                           parameterString += "&unfiled=" + unfiled;
-                           parameterString = Alfresco.util.encodeURIPath(parameterString);
-                           return parameterString;
-                        }
-
-                        // handle the autocomplete selection handler so we place the suggestion in the
-                        // current path value at the correct place rather than the default behaviour
-                        // of overwriting the whole thing
-                        var itemSelectHandler = function(sType, aArgs)
-                        {
-                           var oData = aArgs[2];
-                           var selectedValue = oData[0];
-                           var path = autoCompleteSelectPreFragment;
-                           if(selectedValue.indexOf("/") == 0)
-                           {
-                              if((autoCompleteSelectPreFragment.length > 0) && (autoCompleteSelectPreFragment.charAt(autoCompleteSelectPreFragment.length - 1) == "/"))
-                              {
-                                 path += selectedValue.substring(1);
-                              }
-                              else
-                              {
-                                 path += selectedValue;
-                              }
-                           }
-                           else
-                           {
-                              if(!((autoCompleteSelectPreFragment.length > 0) && (autoCompleteSelectPreFragment.charAt(autoCompleteSelectPreFragment.length - 1) == "{")))
-                              {
-                                 path += "{";
-                              }
-                              path += selectedValue;
-                              if(!((autoCompleteSelectPostFragment.length > 0) && (autoCompleteSelectPostFragment.charAt(0) == "}")))
-                              {
-                                 path += "}";
-                              }
-                           }
-                           path += autoCompleteSelectPostFragment;
-                           el.value = path;
-                        };
-                        autoComp.itemSelectEvent.subscribe(itemSelectHandler);
-
-                        function getCursorPosition(textField)
-                        {
-                           if(!textField) return;
-                           if('selectionStart' in textField)
-                           {
-                              return textField.selectionStart;
-                           }
-                           else if(document.selection)
-                           {
-                              // IE8
-                              input.focus();
-                              var sel = document.selection.createRange();
-                              var selLen = document.selection.createRange().text.length;
-                              sel.moveStart('character', -input.value.length);
-                              return sel.text.length - selLen;
-                           }
-                        }
-
-                        // get the auto complete fragment from the whole path by traveling in both directions
-                        // from the cursor position looking for curly braces and path separators
-                        function getAutoCompleteFragment(fullPathText, cursorPosition)
-                        {
-                           var fragment = fullPathText;
-                           var preFragment = "";
-                           var postFragment = "";
-                           if(cursorPosition != undefined)
-                           {
-                              var preCursorText = fullPathText.substring(0, cursorPosition);
-                              var postCursorText = fullPathText.substring(cursorPosition);
-                              var lastPathDelim = preCursorText.lastIndexOf('/');
-                              var lastStartSubstitutionDelim = preCursorText.lastIndexOf('{');
-                              var lastEndSubstitutionDelim = preCursorText.lastIndexOf('}');
-                              var startFragment = Math.max(lastPathDelim, lastStartSubstitutionDelim, lastEndSubstitutionDelim);
-                              var firstPathDelim = postCursorText.indexOf('/');
-                              var firstStartSubstitutionDelim = postCursorText.indexOf('{');
-                              var firstEndSubstitutionDelim = postCursorText.indexOf('}');
-                              var endFragment = Math.min(
-                                 firstPathDelim == -1 ? Number.MAX_VALUE : firstPathDelim,
-                                 firstStartSubstitutionDelim == -1 ? Number.MAX_VALUE : firstStartSubstitutionDelim,
-                                 firstEndSubstitutionDelim == -1 ? Number.MAX_VALUE : firstEndSubstitutionDelim
-                              );
-                              preFragment = preCursorText.substring(0, startFragment + 1);
-                              fragment = preCursorText.substring(startFragment + 1) + (endFragment == -1 ? postCursorText : postCursorText.substring(0, endFragment));
-                              postFragment = postCursorText.substring(endFragment);
-                           }
-                           return [preFragment, fragment, postFragment];
-                        }
                      }
                   },
                "arca:record-path-help-icon":
