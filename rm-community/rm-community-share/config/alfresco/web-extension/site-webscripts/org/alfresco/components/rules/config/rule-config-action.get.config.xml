@@ -66,10 +66,10 @@
          <action name="set-property-value"/>
       </group>
       <group>
-         <action name="declare-as-version-record"/>
-         <action name="hide-record"/>
-         <action name="recordable-version-config"/>
          <action name="create-record"/>
+         <action name="declare-as-version-record"/>
+         <action name="recordable-version-config"/>
+         <action name="hide-record"/>
          <action name="activiti-start-process"/>
       </group>
       <group>

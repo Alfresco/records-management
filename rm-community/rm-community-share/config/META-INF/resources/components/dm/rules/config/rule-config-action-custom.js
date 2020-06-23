@@ -62,7 +62,7 @@ if (typeof DM == "undefined" || !DM)
                   {
                      text: function (configDef, ruleConfig, configEl) {
                         this._getParamDef(configDef, "path").displayLabel = this.msg("create-record.path.label");
-                        this._getParamDef(configDef, "hideRecord").displayLabel = this.msg("create-record.hideRecord.label");
+                        this._getParamDef(configDef, "hide-record").displayLabel = this.msg("create-record.hide-record.label");
                         return configDef;
                      },
                      edit: function (configDef, ruleConfig, configEl) {
@@ -86,10 +86,10 @@ if (typeof DM == "undefined" || !DM)
                         path._displayLabelToRight = false;
                         path._hideColon = true;
 
-                        var hideRecord = this._getParamDef(configDef, "hideRecord");
+                        var hideRecord = this._getParamDef(configDef, "hide-record");
                         hideRecord._type = null;
-                        hideRecord.displayLabel = this.msg("create-record.hideRecord.label"),
-                           hideRecord._displayLabelToRight = false;
+                        hideRecord.displayLabel = this.msg("create-record.hide-record.label"),
+                        hideRecord._displayLabelToRight = true;
                         hideRecord._hideColon = true;
 
                         return configDef;
