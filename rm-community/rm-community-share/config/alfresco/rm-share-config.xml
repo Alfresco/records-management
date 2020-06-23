@@ -270,7 +270,6 @@
          <js src="components/documentlibrary/dm-actions.js" />
          <js src="rm/components/documentlibrary/actions.js" />
       </dependencies>
-      <dependencies />
    </config>
 
    <!-- Document Library Actions config section -->

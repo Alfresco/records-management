@@ -39,6 +39,8 @@
    </div>
 </div>
 <#assign treeConfig = config.scoped["DocumentLibrary"]["tree"]!>
+<#assign isRmUser = isRmUser>
+<#assign rmSiteExists = rmSiteExists>
 <#if treeConfig.getChildValue??>
    <#assign evaluateChildFoldersSite = treeConfig.getChildValue("evaluate-child-folders")!"true">
    <#assign maximumFolderCountSite = treeConfig.getChildValue("maximum-folder-count")!"-1">
@@ -48,6 +50,8 @@
    Alfresco.util.ComponentManager.get("${el}").setOptions(
    {
       evaluateChildFolders: ${evaluateChildFolders!"true"},
-      maximumFolderCount: ${(maximumFolderCount!"-1")}
+      maximumFolderCount: ${(maximumFolderCount!"-1")},
+      isRmUser : ${isRmUser!"false"},
+      rmSiteExists : ${rmSiteExists}
    });
 //]]></script>
