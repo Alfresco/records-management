@@ -394,7 +394,7 @@
                       }
                       else
                       {
-                         Alfresco.rm.module.CopyMoveLinkFileTo.superclass._updateSelectedNode.call(this, args.node);
+                         Alfresco.rm.module.CopyMoveLinkFileTo.superclass._updateSelectedNode.call(args.node);
                       }
 
                       //make filePlanNode not selected
