@@ -24,17 +24,6 @@
       <maven.javadoc.skip>false</maven.javadoc.skip>
    </properties>
 
-   <distributionManagement>
-      <repository>
-         <id>alfresco-internal</id>
-         <url>https://artifacts.alfresco.com/nexus/content/repositories/internal-releases/</url>
-      </repository>
-      <snapshotRepository>
-         <id>alfresco-internal-snapshots</id>
-         <url>https://artifacts.alfresco.com/nexus/content/repositories/internal-snapshots/</url>
-      </snapshotRepository>
-   </distributionManagement>
-
    <dependencies>
       <dependency>
          <groupId>org.alfresco</groupId>
