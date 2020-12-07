@@ -28,7 +28,7 @@
 package org.alfresco.module.org_alfresco_module_rm_share.evaluator;
 
 import org.alfresco.web.evaluator.BaseEvaluator;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 
 /**
