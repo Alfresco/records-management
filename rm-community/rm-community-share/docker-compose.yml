@@ -132,4 +132,4 @@ services:
             - 8161:8161 # Web Console
             - 5672:5672 # AMQP
             - 61616:61616 # OpenWire
-            - 61613:61617 # STOMP
+            - 61613:61613 # STOMP
