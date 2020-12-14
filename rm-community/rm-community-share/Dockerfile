@@ -1,5 +1,5 @@
 ### Apply AGS community share AMP to Share image
-FROM quay.io/alfresco/alfresco-share:7.0.0-A13
+FROM quay.io/alfresco/alfresco-share:7.0.0-M3
 
 ### Copy the AMP from build context to amps_share
 COPY target/alfresco-governance-services-community-share-*.amp /usr/local/tomcat/amps_share/
