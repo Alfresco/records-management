@@ -167,7 +167,7 @@
                      errorMessage += this.fileMsg(result.name, result.error);
                   }
                }
-            
+
                Alfresco.util.PopupManager.displayPrompt(
                {
                   title: "Error",
@@ -351,8 +351,8 @@
                    }
                 }, this, true);
 
-                // if user doesn't have an rm role don't display the fileplan node
-                if (this.options.isRmUser)
+                // if user doesn't have an rm role or is not an alfresco administrator don't display the fileplan node
+                if (this.options.isRmUser || this.options.isAdmin)
                 {
                    // Add file plan top-level node
                    var filePlanNode = new YAHOO.widget.TextNode(
