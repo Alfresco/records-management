@@ -28,6 +28,7 @@
 
 function main() {
    model.isRmUser = "false";
+   model.isAdmin = "false";
    model.rmSiteExists = "false";
 
    // Check if the user is an RM User
@@ -35,6 +36,12 @@ function main() {
    if (isRmUser(conn))
    {
       model.isRmUser = "true";
+   }
+
+   //Check if the user is an alfresco administrator
+   if (isAdmin(conn))
+   {
+      model.isAdmin = "true";
    }
 
    if(isRmSite(conn, "rm"))
