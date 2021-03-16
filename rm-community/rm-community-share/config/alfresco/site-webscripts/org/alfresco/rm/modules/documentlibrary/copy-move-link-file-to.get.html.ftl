@@ -40,6 +40,7 @@
 </div>
 <#assign treeConfig = config.scoped["DocumentLibrary"]["tree"]!>
 <#assign isRmUser = isRmUser>
+<#assign isAdmin = isAdmin>
 <#assign rmSiteExists = rmSiteExists>
 <#if treeConfig.getChildValue??>
    <#assign evaluateChildFoldersSite = treeConfig.getChildValue("evaluate-child-folders")!"true">
@@ -52,6 +53,7 @@
       evaluateChildFolders: ${evaluateChildFolders!"true"},
       maximumFolderCount: ${(maximumFolderCount!"-1")},
       isRmUser : ${isRmUser!"false"},
+      isAdmin : ${isAdmin!"false"},
       rmSiteExists : ${rmSiteExists}
    });
 //]]></script>
