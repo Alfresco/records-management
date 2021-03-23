@@ -245,61 +245,6 @@
          }
       });
 
-   YAHOO.Bubbling.fire("registerAction",
-      {
-         actionName: "onActionAddToHold",
-         fn: function DLTB_onActionAddToHold(assets, owner) {
-            if (!this.modules.addToHold)
-            {
-               this.modules.addToHold = new Alfresco.rm.module.AddToHold(this.id + "-listofholds");
-            }
-            var itemNodeRef;
-            if (YAHOO.lang.isArray(assets))
-            {
-               itemNodeRef = [];
-               for (var i = 0, l = assets.length; i < l; i++)
-               {
-                  itemNodeRef.push(assets[i].nodeRef);
-               }
-            }
-            else
-            {
-               itemNodeRef = assets.nodeRef;
-            }
-            this.modules.addToHold.setOptions({
-               itemNodeRef: itemNodeRef
-            }).show();
-         }
-
-      });
-
-   YAHOO.Bubbling.fire("registerAction",
-      {
-         actionName: "onActionRemoveFromHold",
-         fn: function DLTB_onActionRemoveFromHold(assets, owner) {
-            if (!this.modules.removeFromHold)
-            {
-               this.modules.removeFromHold = new Alfresco.rm.module.RemoveFromHold(this.id + "-listofholds");
-            }
-            var itemNodeRef;
-            if (YAHOO.lang.isArray(assets))
-            {
-               itemNodeRef = [];
-               for (var i = 0, l = assets.length; i < l; i++)
-               {
-                  itemNodeRef.push(assets[i].nodeRef);
-               }
-            } else
-            {
-               itemNodeRef = assets.nodeRef;
-            }
-            this.modules.removeFromHold.setOptions({
-               itemNodeRef: itemNodeRef
-            }).show();
-         }
-
-      });
-
    onRejectedRecordInfo = function RM_onRejectedRecordInfo(nodeRef, displayName, rejectReason, userId, date)
    {
       new Alfresco.module.SimpleDialog("rejectedRecordInfoDialog").setOptions(
