@@ -1005,22 +1005,23 @@
             <action index="415" id="dm-recorded-version-config" />
          </actionGroup>
 
-          <actionGroup id="rm-frozencontent-browse">
-              <action index="400" id="document-view-content" />
-              <action index="410" id="document-download" />
-              <action index="420" id="document-manage-granular-permissions" />
-          </actionGroup>
+         <actionGroup id="rm-frozencontent-browse">
+            <action index="400" id="document-view-content" />
+            <action index="410" id="document-download" />
+            <action index="420" id="document-manage-granular-permissions" />
+            <action index="440" id="rm-remove-from-hold" />
+         </actionGroup>
 
-          <actionGroup id="rm-doclib-frozencontent-browse">
-              <action index="400" id="document-view-content" />
-              <action index="410" id="document-download" />
-              <action index="420" id="document-manage-granular-permissions" />
-          </actionGroup>
+         <actionGroup id="rm-doclib-frozencontent-browse">
+            <action index="400" id="document-view-content" />
+            <action index="410" id="document-download" />
+            <action index="420" id="document-manage-granular-permissions" />
+         </actionGroup>
 
-          <actionGroup id="rm-doclib-frozencontent-details">
-              <action index="400" id="document-view-content" />
-              <action index="420" id="document-manage-granular-permissions" />
-          </actionGroup>
+         <actionGroup id="rm-doclib-frozencontent-details">
+            <action index="400" id="document-view-content" />
+            <action index="420" id="document-manage-granular-permissions" />
+         </actionGroup>
 
       </actionGroups>
    </config>
