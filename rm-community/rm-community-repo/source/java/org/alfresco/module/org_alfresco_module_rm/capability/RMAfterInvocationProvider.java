@@ -203,13 +203,13 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
             {
                 return decide(authentication, object, config, (AssociationRef) returnedObject);
             }
-            else if (ResultSet.class.isAssignableFrom(returnedObject.getClass()))
-            {
-                return decide(authentication, object, config, (ResultSet) returnedObject);
-            }
             else if (PagingLuceneResultSet.class.isAssignableFrom(returnedObject.getClass()))
             {
                 return decide(authentication, object, config, (PagingLuceneResultSet) returnedObject);
+            }
+            else if (ResultSet.class.isAssignableFrom(returnedObject.getClass()))
+            {
+                return decide(authentication, object, config, (ResultSet) returnedObject);
             }
             else if (QueryEngineResults.class.isAssignableFrom(returnedObject.getClass()))
             {
@@ -420,7 +420,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 
     private ResultSet decide(Authentication authentication, Object object, ConfigAttributeDefinition config, PagingLuceneResultSet returnedObject)
     {
-        ResultSet raw = returnedObject.getWrapped();
+        ResultSet raw = ((FilteringResultSet) returnedObject.getWrapped()).getUnFilteredResultSet();
         ResultSet filteredForPermissions = decide(authentication, object, config, raw);
         return new PagingLuceneResultSet(filteredForPermissions, returnedObject.getResultSetMetaData().getSearchParameters(), nodeService);
     }
@@ -563,25 +563,28 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 	            }
             }
 
-            // Bug out if we are limiting by size
-            if ((maxSize != null) && (filteringResultSet.length() > maxSize.intValue()))
+        }
+
+        filteringResultSet.setNumberFound(inclusionMask.cardinality());
+
+        // Bug out if we are limiting by size
+        if ((maxSize != null) && (filteringResultSet.length() > maxSize.intValue()))
+        {
+            for (int i = inclusionMask.cardinality(); i > maxSize; i--)
             {
-                // Remove the last match to fix the correct size
                 inclusionMask.set(i, false);
-                filteringResultSet.setResultSetMetaData(new SimpleResultSetMetaData(LimitBy.FINAL_SIZE, PermissionEvaluationMode.EAGER, returnedObject.getResultSetMetaData()
-                        .getSearchParameters()));
-                break;
             }
+
+            filteringResultSet.setResultSetMetaData(new SimpleResultSetMetaData(LimitBy.FINAL_SIZE, PermissionEvaluationMode.EAGER, returnedObject.getResultSetMetaData()
+                    .getSearchParameters()));
         }
 
         if (maxSize != null)
         {
-            LimitBy limitBy = returnedObject.length() > maxSize ? LimitBy.FINAL_SIZE : LimitBy.UNLIMITED;
+            LimitBy limitBy = inclusionMask.cardinality() > maxSize ? LimitBy.FINAL_SIZE : LimitBy.UNLIMITED;
             filteringResultSet.setResultSetMetaData(new SimpleResultSetMetaData(limitBy,
                     PermissionEvaluationMode.EAGER, returnedObject.getResultSetMetaData().getSearchParameters()));
         }
-
-        filteringResultSet.setNumberFound(returnedObject.getNumberFound());
 
         return filteringResultSet;
     }
