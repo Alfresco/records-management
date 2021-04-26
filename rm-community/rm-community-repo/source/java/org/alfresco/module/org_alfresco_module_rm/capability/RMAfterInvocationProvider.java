@@ -348,7 +348,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 
         for (ConfigAttributeDefintion cad : supportedDefinitions)
         {
-            NodeRef testNodeRef = null;
+            NodeRef testNodeRef;
 
             if (cad.parent)
             {
@@ -392,7 +392,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 
         for (ConfigAttributeDefintion cad : supportedDefinitions)
         {
-            NodeRef testNodeRef = null;
+            NodeRef testNodeRef;
 
             if (cad.parent)
             {
@@ -461,22 +461,23 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 
         BitSet inclusionMask = new BitSet(returnedObject.length());
         RMFilteringResultSet filteringResultSet = new RMFilteringResultSet(returnedObject, inclusionMask);
+        filteringResultSet.setNumberFound(returnedObject.getNumberFound());
 
         List<ConfigAttributeDefintion> supportedDefinitions = extractSupportedDefinitions(config);
 
         Integer maxSize = null;
         if (returnedObject.getResultSetMetaData().getSearchParameters().getMaxItems() >= 0)
         {
-            maxSize = Integer.valueOf(returnedObject.getResultSetMetaData().getSearchParameters().getMaxItems());
+            maxSize = returnedObject.getResultSetMetaData().getSearchParameters().getMaxItems();
         }
         if ((maxSize == null) && (returnedObject.getResultSetMetaData().getSearchParameters().getLimitBy() == LimitBy.FINAL_SIZE))
         {
-            maxSize = Integer.valueOf(returnedObject.getResultSetMetaData().getSearchParameters().getLimit());
+            maxSize = returnedObject.getResultSetMetaData().getSearchParameters().getLimit();
         }
         // Allow for skip
         if ((maxSize != null) && (returnedObject.getResultSetMetaData().getSearchParameters().getSkipCount() >= 0))
         {
-            maxSize = Integer.valueOf(maxSize + returnedObject.getResultSetMetaData().getSearchParameters().getSkipCount());
+            maxSize = maxSize + returnedObject.getResultSetMetaData().getSearchParameters().getSkipCount();
         }
 
         if (supportedDefinitions.size() == 0)
@@ -485,9 +486,9 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
             {
                 return returnedObject;
             }
-            else if (returnedObject.length() > maxSize.intValue())
+            else if (returnedObject.length() > maxSize)
             {
-                for (int i = 0; i < maxSize.intValue(); i++)
+                for (int i = 0; i < maxSize; i++)
                 {
                     inclusionMask.set(i, true);
                 }
@@ -517,13 +518,6 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 
         // record the start time
         long startTimeMillis = System.currentTimeMillis();
-
-        // set the default, unlimited resultset type
-        filteringResultSet.setResultSetMetaData(
-                new SimpleResultSetMetaData(
-                        returnedObject.getResultSetMetaData().getLimitedBy(),
-                        PermissionEvaluationMode.EAGER,
-                        returnedObject.getResultSetMetaData().getSearchParameters()));
 
         for (int i = 0; i < returnedObject.length(); i++)
         {
@@ -565,18 +559,18 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 
         }
 
-        filteringResultSet.setNumberFound(inclusionMask.cardinality());
+        if (returnedObject.length() != 0 ) {
+            filteringResultSet.setNumberFound(filteringResultSet.length());
 
-        // Bug out if we are limiting by size
-        if ((maxSize != null) && (filteringResultSet.length() > maxSize.intValue()))
-        {
-            for (int i = inclusionMask.cardinality(); i > maxSize; i--)
-            {
-                inclusionMask.set(i, false);
+            // Bug out if we are limiting by size
+            if (maxSize != null && filteringResultSet.length() > maxSize) {
+                for (int i = inclusionMask.cardinality(); i >= maxSize; i--) {
+                    inclusionMask.set(i, false);
+                }
+                filteringResultSet.setResultSetMetaData(new SimpleResultSetMetaData(LimitBy.FINAL_SIZE, PermissionEvaluationMode.EAGER, returnedObject.getResultSetMetaData()
+                        .getSearchParameters()));
+                return filteringResultSet;
             }
-
-            filteringResultSet.setResultSetMetaData(new SimpleResultSetMetaData(LimitBy.FINAL_SIZE, PermissionEvaluationMode.EAGER, returnedObject.getResultSetMetaData()
-                    .getSearchParameters()));
         }
 
         if (maxSize != null)
@@ -695,7 +689,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
             {
                 if (cad.mode.equalsIgnoreCase("FilterNode"))
                 {
-                    NodeRef testNodeRef = null;
+                    NodeRef testNodeRef;
                     if (cad.parent)
                     {
                         if (StoreRef.class.isAssignableFrom(nextObject.getClass()))
@@ -761,7 +755,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
                     // Null allows
                     if (isUnfiltered(testNodeRef))
                     {
-                        // Continue to next ConfigAttributeDefintion
+                        // Continue to next ConfigAttributeDefinition
                         continue;
                     }
 
@@ -770,7 +764,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
                         checkRead(testNodeRef) != AccessDecisionVoter.ACCESS_GRANTED)
                     {
                         allowed = false;
-                        // No point evaluating more ConfigAttributeDefintions
+                        // No point evaluating more ConfigAttributeDefinitions
                         break;
                     }
                 }
@@ -810,7 +804,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
     private Object[] decide(Authentication authentication, Object object, ConfigAttributeDefinition config, Object[] returnedObject)
     {
         // Assumption: value is not null
-        BitSet incudedSet = new BitSet(returnedObject.length);
+        BitSet includedSet = new BitSet(returnedObject.length);
 
         List<ConfigAttributeDefintion> supportedDefinitions = extractSupportedDefinitions(config);
 
@@ -824,12 +818,12 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
             Object current = returnedObject[i];
 
             int parentReadCheck = checkRead(getParentReadCheckNode(current));
-            int childReadChek = checkRead(getChildReadCheckNode(current));
+            int childReadCheck = checkRead(getChildReadCheckNode(current));
 
             for (ConfigAttributeDefintion cad : supportedDefinitions)
             {
-                incudedSet.set(i, true);
-                NodeRef testNodeRef = null;
+                includedSet.set(i, true);
+                NodeRef testNodeRef;
                 if (cad.parent)
                 {
                     if (StoreRef.class.isAssignableFrom(current.getClass()))
@@ -888,28 +882,28 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
                     continue;
                 }
 
-                int readCheck = childReadChek;
+                int readCheck = childReadCheck;
                 if (cad.parent)
                 {
                     readCheck = parentReadCheck;
                 }
 
-                if (incudedSet.get(i) && (testNodeRef != null) && (readCheck != AccessDecisionVoter.ACCESS_GRANTED))
+                if (includedSet.get(i) && (testNodeRef != null) && (readCheck != AccessDecisionVoter.ACCESS_GRANTED))
                 {
-                    incudedSet.set(i, false);
+                    includedSet.set(i, false);
                 }
 
             }
         }
 
-        if (incudedSet.cardinality() == returnedObject.length)
+        if (includedSet.cardinality() == returnedObject.length)
         {
             return returnedObject;
         }
         else
         {
-            Object[] answer = new Object[incudedSet.cardinality()];
-            for (int i = incudedSet.nextSetBit(0), p = 0; i >= 0; i = incudedSet.nextSetBit(++i), p++)
+            Object[] answer = new Object[includedSet.cardinality()];
+            for (int i = includedSet.nextSetBit(0), p = 0; i >= 0; i = includedSet.nextSetBit(++i), p++)
             {
                 answer[p] = returnedObject[i];
             }
@@ -919,7 +913,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 
     private NodeRef getParentReadCheckNode(Object current)
     {
-        NodeRef testNodeRef = null;
+        NodeRef testNodeRef;
         if (StoreRef.class.isAssignableFrom(current.getClass()))
         {
             testNodeRef = null;
@@ -946,7 +940,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 
     private NodeRef getChildReadCheckNode(Object current)
     {
-        NodeRef testNodeRef = null;
+        NodeRef testNodeRef;
         if (StoreRef.class.isAssignableFrom(current.getClass()))
         {
             testNodeRef = nodeService.getRootNode((StoreRef) current);
