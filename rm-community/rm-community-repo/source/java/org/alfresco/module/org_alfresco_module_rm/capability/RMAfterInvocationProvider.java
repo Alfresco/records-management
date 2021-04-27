@@ -562,9 +562,18 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
         if (returnedObject.length() != 0 ) {
             filteringResultSet.setNumberFound(filteringResultSet.length());
 
-            // Bug out if we are limiting by size
-            if (maxSize != null && filteringResultSet.length() > maxSize) {
-                for (int i = inclusionMask.cardinality(); i >= maxSize; i--) {
+            if (maxSize == 0)
+            {
+                inclusionMask.set(0, filteringResultSet.length(), false);
+                filteringResultSet.setResultSetMetaData(new SimpleResultSetMetaData(LimitBy.FINAL_SIZE, PermissionEvaluationMode.EAGER, returnedObject.getResultSetMetaData()
+                        .getSearchParameters()));
+                return filteringResultSet;
+            }
+            else if (maxSize != null && filteringResultSet.length() > maxSize)
+            {
+                // Bug out if we are limiting by size
+                for (int i = filteringResultSet.length(); i > maxSize; i--)
+                {
                     inclusionMask.set(i, false);
                 }
                 filteringResultSet.setResultSetMetaData(new SimpleResultSetMetaData(LimitBy.FINAL_SIZE, PermissionEvaluationMode.EAGER, returnedObject.getResultSetMetaData()
@@ -575,7 +584,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 
         if (maxSize != null)
         {
-            LimitBy limitBy = inclusionMask.cardinality() > maxSize ? LimitBy.FINAL_SIZE : LimitBy.UNLIMITED;
+            LimitBy limitBy = filteringResultSet.length() > maxSize ? LimitBy.FINAL_SIZE : LimitBy.UNLIMITED;
             filteringResultSet.setResultSetMetaData(new SimpleResultSetMetaData(limitBy,
                     PermissionEvaluationMode.EAGER, returnedObject.getResultSetMetaData().getSearchParameters()));
         }
