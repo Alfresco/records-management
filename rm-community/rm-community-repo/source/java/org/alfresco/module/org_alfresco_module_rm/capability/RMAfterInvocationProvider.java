@@ -528,6 +528,13 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
         // record the start time
         long startTimeMillis = System.currentTimeMillis();
 
+        // set the default, unlimited resultset type
+        filteringResultSet.setResultSetMetaData(
+                new SimpleResultSetMetaData(
+                        returnedObject.getResultSetMetaData().getLimitedBy(),
+                        PermissionEvaluationMode.EAGER,
+                        returnedObject.getResultSetMetaData().getSearchParameters()));
+
         for (int i = 0; i < returnedObject.length(); i++)
         {
             long currentTimeMillis = System.currentTimeMillis();
