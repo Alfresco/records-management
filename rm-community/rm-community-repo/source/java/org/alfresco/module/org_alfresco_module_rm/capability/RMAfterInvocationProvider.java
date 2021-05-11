@@ -50,6 +50,7 @@ import org.alfresco.module.org_alfresco_module_rm.util.AuthenticationUtil;
 import org.alfresco.repo.search.SimpleResultSetMetaData;
 import org.alfresco.repo.search.impl.lucene.PagingLuceneResultSet;
 import org.alfresco.repo.search.impl.querymodel.QueryEngineResults;
+import org.alfresco.repo.search.impl.querymodel.impl.db.DBResultSet;
 import org.alfresco.repo.security.permissions.PermissionCheckCollection;
 import org.alfresco.repo.security.permissions.PermissionCheckValue;
 import org.alfresco.repo.security.permissions.PermissionCheckedCollection.PermissionCheckedCollectionMixin;
@@ -420,7 +421,15 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 
     private ResultSet decide(Authentication authentication, Object object, ConfigAttributeDefinition config, PagingLuceneResultSet returnedObject)
     {
-        ResultSet raw = ((FilteringResultSet) returnedObject.getWrapped()).getUnFilteredResultSet();
+        ResultSet raw;
+        if (((FilteringResultSet) returnedObject.getWrapped()).getUnFilteredResultSet() instanceof DBResultSet)
+        {
+            raw = returnedObject.getWrapped();
+        }
+        else
+        {
+            raw = ((FilteringResultSet) returnedObject.getWrapped()).getUnFilteredResultSet();
+        }
         ResultSet filteredForPermissions = decide(authentication, object, config, raw);
         return new PagingLuceneResultSet(filteredForPermissions, returnedObject.getResultSetMetaData().getSearchParameters(), nodeService);
     }
@@ -564,7 +573,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 
             // Bug out if we are limiting by size
             if (maxSize != null && filteringResultSet.length() > maxSize) {
-                for (int i = inclusionMask.cardinality(); i >= maxSize; i--) {
+                for (int i = filteringResultSet.length(); i >= maxSize; i--) {
                     inclusionMask.set(i, false);
                 }
                 filteringResultSet.setResultSetMetaData(new SimpleResultSetMetaData(LimitBy.FINAL_SIZE, PermissionEvaluationMode.EAGER, returnedObject.getResultSetMetaData()
