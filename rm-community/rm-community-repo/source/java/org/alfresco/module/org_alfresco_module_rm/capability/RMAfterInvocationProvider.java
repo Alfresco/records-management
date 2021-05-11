@@ -572,8 +572,10 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
             filteringResultSet.setNumberFound(filteringResultSet.length());
 
             // Bug out if we are limiting by size
-            if (maxSize != null && filteringResultSet.length() > maxSize) {
-                for (int i = filteringResultSet.length(); i >= maxSize; i--) {
+            if (maxSize != null && filteringResultSet.length() > maxSize)
+            {
+                for (int i = filteringResultSet.length(); i >= maxSize; i--)
+                {
                     inclusionMask.set(i, false);
                 }
                 filteringResultSet.setResultSetMetaData(new SimpleResultSetMetaData(LimitBy.FINAL_SIZE, PermissionEvaluationMode.EAGER, returnedObject.getResultSetMetaData()
