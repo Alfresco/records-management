@@ -503,7 +503,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
                 }
                 filteringResultSet.setResultSetMetaData(
                         new SimpleResultSetMetaData(
-                                returnedObject.getResultSetMetaData().getLimitedBy(),
+                                LimitBy.FINAL_SIZE,
                                 PermissionEvaluationMode.EAGER,
                                 returnedObject.getResultSetMetaData().getSearchParameters()));
                 filteringResultSet.setNumberFound(returnedObject.getNumberFound());
