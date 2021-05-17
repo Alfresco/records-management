@@ -581,7 +581,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
             // Bug out if we are limiting by size
             if (maxSize != null && filteringResultSet.length() > maxSize)
             {
-                for (int i = filteringResultSet.length(); i >= maxSize; i--)
+                for (int i = filteringResultSet.length() - 1; i >= maxSize; i--)
                 {
                     inclusionMask.set(i, false);
                 }
