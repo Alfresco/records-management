@@ -575,7 +575,8 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
 
         }
 
-        if (returnedObject.length() != 0 ) {
+        if (returnedObject.length() != 0 )
+        {
             filteringResultSet.setNumberFound(filteringResultSet.length());
 
             // Bug out if we are limiting by size
