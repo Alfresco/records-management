@@ -49,6 +49,7 @@ import org.alfresco.module.org_alfresco_module_rm.model.RecordsManagementModel;
 import org.alfresco.module.org_alfresco_module_rm.util.AuthenticationUtil;
 import org.alfresco.repo.search.SimpleResultSetMetaData;
 import org.alfresco.repo.search.impl.lucene.PagingLuceneResultSet;
+import org.alfresco.repo.search.impl.lucene.SolrJSONResultSet;
 import org.alfresco.repo.search.impl.querymodel.QueryEngineResults;
 import org.alfresco.repo.search.impl.querymodel.impl.db.DBResultSet;
 import org.alfresco.repo.security.permissions.PermissionCheckCollection;
@@ -84,6 +85,7 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
     private AuthenticationUtil authenticationUtil;
     private int maxPermissionChecks;
     private long maxPermissionCheckTimeMillis;
+    private boolean postProcessDenies = false;
 
     public boolean supports(ConfigAttribute configAttribute)
     {
@@ -131,6 +133,12 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
     {
         this.maxPermissionCheckTimeMillis = maxPermissionCheckTimeMillis;
     }
+
+    public void setPostProcessDenies(boolean postProcessDenies)
+    {
+        this.postProcessDenies = postProcessDenies;
+    }
+
 
     /**
      * Sets the authentication util
@@ -203,6 +211,11 @@ public class RMAfterInvocationProvider extends RMSecurityCommon
             else if (AssociationRef.class.isAssignableFrom(returnedObject.getClass()))
             {
                 return decide(authentication, object, config, (AssociationRef) returnedObject);
+            }
+            else if (SolrJSONResultSet.class.isAssignableFrom(returnedObject.getClass()) &&
+                    !postProcessDenies && ((SolrJSONResultSet)returnedObject).getProcessedDenies())
+            {
+                return returnedObject;
             }
             else if (PagingLuceneResultSet.class.isAssignableFrom(returnedObject.getClass()))
             {

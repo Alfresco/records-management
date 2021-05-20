@@ -159,6 +159,9 @@
         <property name="maxPermissionChecks">
             <value>${system.acl.maxPermissionChecks}</value>
         </property>
+        <property name="postProcessDenies">
+            <value>${security.postProcessDenies}</value>
+        </property>
         <property name="authenticationUtil" ref="rm.authenticationUtil" />
     </bean>
 
