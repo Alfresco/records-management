@@ -18,7 +18,6 @@
       <alfresco.repo.url>http://localhost:8080/alfresco</alfresco.repo.url>
       <alfresco.share.artifactId>share</alfresco.share.artifactId>
       <ags.artifactId>alfresco-governance-services-community-share</ags.artifactId>
-      <alfresco.aikau.version>1.0.104</alfresco.aikau.version>
       <app.filtering.enabled>true</app.filtering.enabled>
       <image.name>alfresco/alfresco-governance-share-community</image.name>
       <maven.javadoc.skip>false</maven.javadoc.skip>
@@ -205,17 +204,6 @@
    </build>
 
    <dependencies>
-      <dependency>
-         <groupId>org.alfresco</groupId>
-         <artifactId>aikau</artifactId>
-         <version>${alfresco.aikau.version}</version>
-         <exclusions>
-            <exclusion>
-               <groupId>*</groupId>
-               <artifactId>*</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
       <dependency>
          <groupId>${alfresco.groupId}</groupId>
          <artifactId>share</artifactId>
