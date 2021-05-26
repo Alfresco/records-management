@@ -145,9 +145,9 @@
                   </goals>
                   <configuration>
                      <systemPropertyVariables>
-                        <db.name>${alfresco.test.db.name}</db.name>
-                        <db.driver>org.postgresql.Driver</db.driver>
-                        <db.url>jdbc:postgresql://localhost:${database.port}/${alfresco.test.db.name}</db.url>
+                        <db.name>${db.name}</db.name>
+                        <db.driver>${alfresco.db.datasource.class}</db.driver>
+                        <db.url>${alfresco.db.url}</db.url>
                         <dir.root>${project.build.directory}/alf-data-test</dir.root>
                      </systemPropertyVariables>
                      <skipTests>${skip.integrationtests}</skipTests>
@@ -668,13 +668,18 @@
          </build>
       </profile>
       <profile>
-         <id>start-db</id>
-         <activation>
-            <property>
-               <name>skip.integrationtests</name>
-               <value>false</value>
-            </property>
-         </activation>
+         <id>start-postgres</id>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>io.fabric8</groupId>
+                  <artifactId>docker-maven-plugin</artifactId>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+      <profile>
+         <id>start-mysql</id>
          <build>
             <plugins>
                <plugin>
