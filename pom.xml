@@ -643,6 +643,7 @@
       <mysql.version>5.7.23</mysql.version>
       <mysql.port>3306</mysql.port>
       <mysql.local.port>3307</mysql.local.port>
+      <skip.surefire.tests>${skipTests}</skip.surefire.tests>
 
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -956,6 +957,7 @@
                   <argLine>
                      --illegal-access=permit
                   </argLine>
+                  <skipTests>${skip.surefire.tests}</skipTests>
                </configuration>
             </plugin>
             <plugin>

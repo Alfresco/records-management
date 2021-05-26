@@ -52,7 +52,8 @@ Use start-mysql profile in order to execute the integration tests using MySQL:
 mvn clean install -Pstart-mysql
 ```
 
-Unit tests will be executed every time before you start Alfresco/Share.
+Unit tests will be executed every time when building Alfresco/Share. Use `-Dskip.surefire.tests` in order to run
+ only the integration tests.
 
 ## Running UI Automation tests
 To run the automated UI tests, change to the rm-automation directory and run:
