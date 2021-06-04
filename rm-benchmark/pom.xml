@@ -14,7 +14,7 @@
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <server.version>2.1.4</server.version>
-      <httpclient.version>4.5.2</httpclient.version>
+      <httpclient.version>4.5.13</httpclient.version>
       <mongo.config.host>localhost</mongo.config.host>
       <suiteXmlFile>testng.xml</suiteXmlFile>
       <bm.tomcat.port>9090</bm.tomcat.port>
